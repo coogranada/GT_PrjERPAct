@@ -1,0 +1,324 @@
+<div>
+    <form method="get" [formGroup]="referenciasFrom">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-xs-12 col-md-12 col-lg-12" id="1">
+                    <div class="col-md-3">
+                        <div class="form-group" id="1">
+                            <label class="textBlod">Tipo referencia: </label>
+                            <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                            <select class="form-control" formControlName="TipoReferencia" name="select" (change)="validarTipoReferencia(referenciasFrom.value); GenericoSelect('TipoReferencia',referenciasFrom)" [attr.disabled]="bloquearForm">
+                            <option value="0">-- Seleccione --</option>
+                            <option *ngFor="let dataReferencia of dataReferencias" [ngValue]="dataReferencia">
+                            {{dataReferencia.Nombre}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="RefComerciales" [hidden]="ocultarComerciales">
+                        <div class="col-md-3">
+                            <div class="form-group" id="1">
+                                <label class="textBlod">Nombre/Empresa: </label>
+                                <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                                <input type="text" formControlName="NombreEmpresa" id="nombreEmpresa" class="form-control">
+                                <span class="help-block validationSpan" *ngIf="referenciasFrom.controls['NombreEmpresa'].errors?.['required'] && (referenciasFrom.controls['NombreEmpresa'].dirty || referenciasFrom.controls['NombreEmpresa'].touched)">
+                                El nombre/empresa es obligatorio.
+                                </span>
+                                <span class="help-block validationSpan" *ngIf="referenciasFrom.controls['NombreEmpresa'].errors?.['pattern'] && (referenciasFrom.controls['NombreEmpresa'].dirty || referenciasFrom.controls['NombreEmpresa'].touched)">
+                                 El nombre/empresa no acepta caracteres especiales.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group" id="1">
+                                <label class="textBlod">Teléfono 1: </label>
+                                <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                                <input type="text" formControlName="TelefonoUno" class="form-control" minlength="7" maxlength="10">
+                                <span class="help-block validationSpan" *ngIf="referenciasFrom.controls['TelefonoUno'].errors?.['required'] && (referenciasFrom.controls['TelefonoUno'].dirty || referenciasFrom.controls['TelefonoUno'].touched)">
+                                El teléfono 1 es obligatorio.
+                                </span>
+                                <span class="help-block validationSpan" *ngIf="referenciasFrom.controls['TelefonoUno'].errors?.['pattern'] && (referenciasFrom.controls['TelefonoUno'].dirty || referenciasFrom.controls['TelefonoUno'].touched)">
+                                El teléfono 1 solo acepta números, tamaño mínimo: 7 y máximo: 10
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group" id="2">
+                                <label class="textBlod">Teléfono 2: </label>
+                                <span class="textBigRed" *ngIf="obligatoriCliente"></span>
+                                <input type="text" formControlName="TelefonoDos" class="form-control" minlength="7" maxlength="10">
+                                <span class="help-block validationSpan" *ngIf="referenciasFrom.controls['TelefonoDos'].errors?.['pattern'] && (referenciasFrom.controls['TelefonoDos'].dirty || referenciasFrom.controls['TelefonoDos'].touched)">
+                                El teléfono 2 solo acepta números, tamaño mínimo: 7 y máximo: 10
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div id="RefFinancieras" [hidden]="ocultarFinancieras">
+                        <div class="col-md-3">
+                            <div class="form-group" id="1">
+                                <label class="textBlod">Entidad: </label>
+                                <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                                <input type="text" formControlName="Entidad" id="entidad" class="form-control">
+                                <span class="help-block validationSpan" *ngIf="referenciasFrom.controls['Entidad'].errors?.['required'] && (referenciasFrom.controls['Entidad'].dirty || referenciasFrom.controls['Entidad'].touched)">
+                                La entidad es obligatoria.
+                                 </span>
+                                <span class="help-block validationSpan" *ngIf="referenciasFrom.controls['Entidad'].errors?.['pattern'] && (referenciasFrom.controls['Entidad'].dirty || referenciasFrom.controls['Entidad'].touched)">
+                                La entidad no acepta caracteres especiales.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group" id="1">
+                                <label class="textBlod">Teléfono:</label>
+                                <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                                <input type="text" formControlName="Telefono" class="form-control" minlength="7" maxlength="10">
+                                <span class="help-block validationSpan" *ngIf="referenciasFrom.controls['Telefono'].errors?.['pattern'] && (referenciasFrom.controls['Telefono'].dirty || referenciasFrom.controls['Telefono'].touched)">
+                                El teléfono solo acepta números, tamaño mínimo: 7 y máximo: 7
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group" id="2">
+                                <label class="textBlod">Oficina: </label>
+                                <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                                <input type="text" formControlName="Oficina" id="oficina" class="form-control">
+                                <span class="help-block validationSpan" *ngIf="referenciasFrom.controls['Oficina'].errors?.['required'] && (referenciasFrom.controls['Oficina'].dirty || referenciasFrom.controls['Oficina'].touched)">
+                                La oficina es obligatoria.
+                                </span>
+                                <span class="help-block validationSpan" *ngIf="referenciasFrom.controls['Oficina'].errors?.['pattern'] && (referenciasFrom.controls['Oficina'].dirty || referenciasFrom.controls['Oficina'].touched)">
+                                La oficina no acepta caracteres especiales.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-12 col-lg-12" id="2">
+                    <div id="RefComerciales" [hidden]="ocultarComerciales">
+
+
+                        <div class="ocultarUbicacion">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="textBlod">País:</label>
+                                    <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                                    <select class="form-control" formControlName="Pais" name="select" [attr.disabled]="bloquearForm" (change)="GetDepartamentosList(referenciasFrom.value)">
+                                        <option value="">-- Seleccione --</option>
+                                        <option *ngFor="let pais of dataPais" [value]="pais.IdPais">
+                                        {{pais.Descripcion}}</option>
+                                        </select>
+                                    <span class="help-block validationSpan" *ngIf="referenciasFrom.controls['Pais'].errors?.['required']  && (referenciasFrom.controls['Departamento'].dirty || referenciasFrom.controls['Departamento'].touched)">
+                                        El país es obligatorio.
+                                        </span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="textBlod">Departamento: </label>
+                                    <span class="textBigRed">*</span>
+                                    <!-- <input formControlName="Departamento" autocomplete="on" max-num-list="18" ngui-auto-complete
+                        [source]="dataDepartamentos" value-property-name="dataDepartamento" display-property-name="Descripcion"
+                        list-formatter="Descripcion" class="form-control" [attr.disabled]="bloqDeparta"
+                        (blur)="GetCiudadList(referenciasFrom.value)" (change)="LimpiarCiudad()"> -->
+                                    <select class="form-control" formControlName="Departamento" name="select" [attr.disabled]="bloqDeparta" (change)="GetCiudadList(referenciasFrom.value)">
+                                        <option value="">-- Seleccione --</option>
+                                        <option *ngFor="let depart of dataDepartamentos" [value]="depart.IdDepartamento">
+                                        {{depart.Descripcion}}</option>
+                                        </select>
+                                    <span class="help-block validationSpan" *ngIf="referenciasFrom.controls['Departamento'].errors?.['required'] && (referenciasFrom.controls['Departamento'].dirty || referenciasFrom.controls['Departamento'].touched)">
+                                        El departamento es obligatorio.
+                                        </span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="textBlod">Ciudad: </label>
+                                    <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                                    <!-- <input formControlName="Ciudad" autocomplete="on" max-num-list="18" ngui-auto-complete [source]="dataCiudades"
+                        value-property-name="IdCiudad" display-property-name="Descripcion" list-formatter="Descripcion"
+                        class="form-control" [attr.disabled]="bloqCiudad" (blur)="validarCiudadList(referenciasFrom.value)"> -->
+                                    <select class="form-control" formControlName="Ciudad" name="select" [attr.disabled]="bloqCiudad" (change)="validarCiudadList(referenciasFrom.value)">
+                                        <option value="">-- Seleccione --</option>
+                                        <option *ngFor="let ciudad of dataCiudades" [value]="ciudad.IdCiudad">
+                                        {{ciudad.Descripcion}}</option>
+                                        </select>
+                                    <span class="help-block validationSpan" *ngIf="referenciasFrom.controls['Ciudad'].errors?.['required'] && (referenciasFrom.controls['Ciudad'].dirty || referenciasFrom.controls['Ciudad'].touched)">
+                                        La ciudad es obligatoria.
+                                        </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="RefFinancieras" [hidden]="ocultarFinancieras">
+                        <div class="col-md-3">
+                            <div class="form-group" id="2">
+                                <label class="textBlod">Producto: </label>
+                                <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                                <input type="text" formControlName="Producto" id="producto" class="form-control">
+                                <span class="help-block validationSpan" *ngIf="referenciasFrom.controls['Producto'].errors?.['required'] && (referenciasFrom.controls['Producto'].dirty || referenciasFrom.controls['Producto'].touched)">
+                                El producto es obligatorio.
+                                </span>
+                                <span class="help-block validationSpan" *ngIf="referenciasFrom.controls['Producto'].errors?.['pattern'] && (referenciasFrom.controls['Producto'].dirty || referenciasFrom.controls['Producto'].touched)">
+                                El producto no acepta caracteres especiales.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="row">
+    <!--Botones-->
+    <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+        <input type="submit" *ngIf="mostrarAgregar" class="btn Gt-btn-verde" value="Agregar" (click)="AgregarReferencias(referenciasFrom.value)" /> &nbsp;
+        <input type="submit" *ngIf="mostrarLimpiar" class="btn Gt-btn-morado" value="Limpiar" (click)="Limpiarformulario()" /> &nbsp;
+        <input type="submit" *ngIf="mostrarSiguiente" class="btn Gt-btn-verde" value="Siguiente" (click)="GuardarReferencias()" [disabled]="" /> &nbsp;
+        <input type="submit" *ngIf="mostrarActualizar" class="btn Gt-btn-verde" value="Actualizar" (click)="ActualizarReferencias()" [disabled]="!EnableUpdateReferencias" />
+    </div>
+</div>
+<br>
+<div class="col-xs-12 col-md-12 col-lg-12" *ngIf="itemsReferencias.length <= 0">
+    <br>
+    <div class="alert alert-secondary" role="alert">
+        No hay registros
+    </div>
+</div>
+<div class="col-xs-12 col-md-12 col-lg-12" *ngIf="itemsReferencias.length > 0">
+    <div class="col-xs-12 col-md-12 col-lg-12" style="padding:10px;">
+        <span><strong>Comerciales</strong></span>
+    </div>
+    <div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat">
+        <!--Tabla-->
+        <div class="table-responsive scrollTabla">
+            <table id="tablaIngresos" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>
+                            <strong>Empresa/Entidad</strong>
+                        </th>
+                        <th>
+                            <strong>Teléfono 1</strong>
+                        </th>
+                        <th>
+                            <strong>Teléfono 2</strong>
+                        </th>
+                        <th>
+                            <strong>Ubicación</strong>
+                        </th>
+                        <th>
+                            <strong>Opciones</strong>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let referenciasItem of itemsReferencias; let i = index">
+                    <tr *ngIf="referenciasItem.TipoReferencia.Id === 1" class="filrefcom_{{i}}" (click)="CambiarColor(i,1)">
+                        <td class="text-capitalize">
+                            {{referenciasItem.NombreEmpresa}}
+                        </td>
+                        <td>
+                            {{referenciasItem.TelefonoUno}}
+                        </td>
+                        <td *ngIf="referenciasItem.TelefonoDos === '' || referenciasItem.TelefonoDos === undefined || referenciasItem.TelefonoDos === null">
+                            N/A
+                        </td>
+                        <td *ngIf="referenciasItem.TelefonoDos !== '' && referenciasItem.TelefonoDos !== undefined && referenciasItem.TelefonoDos !== null">
+                            {{referenciasItem.TelefonoDos}}
+                        </td>
+                        <td *ngIf="referenciasItem.Ciudad !== undefined && referenciasItem.Ciudad !== null && referenciasItem.Ciudad !=='' && referenciasItem.Ciudad !== 0 
+                    && referenciasItem.Departamento !== undefined && referenciasItem.Departamento !== null && referenciasItem.Departamento !=='' && referenciasItem.Departamento !== 0 
+                    && referenciasItem.Pais !== undefined && referenciasItem.Pais !== null && referenciasItem.Pais !=='' && referenciasItem.Pais !== 0 ">
+                            {{referenciasItem.Ciudad.Descripcion}}
+                        </td>
+                        <td *ngIf="referenciasItem.Pais !== undefined && referenciasItem.Pais !== null && referenciasItem.Pais !==''
+               && referenciasItem.Pais !== 0 && (referenciasItem.Ciudad === null || referenciasItem.Ciudad === undefined)">
+                            {{referenciasItem.Pais.Descripcion}}
+                        </td>
+                        <td *ngIf="(referenciasItem.Ciudad === undefined || referenciasItem.Ciudad === null) &&
+            (referenciasItem.Pais === undefined || referenciasItem.Pais === null)">
+                            N/A
+                        </td>
+                        <td>
+                            <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="activarBtnOpciones" (click)="MapearReferencia(i,referenciasItem)">
+                <i class="icon-pencil"></i>
+              </button>&nbsp;
+                            <button class="btn Gt-btn-morado btn-icon legitRipple" *ngIf="activarBtnOpciones" (click)="EliminarReferencia(i)">
+                <i class="icon-bin2 "></i>
+              </button>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-md-12 col-lg-12" *ngIf="itemsReferencias.length <= 0">
+    <br>
+    <div class="alert alert-secondary" role="alert">
+        No hay registros
+    </div>
+</div>
+<div class="col-xs-12 col-md-12 col-lg-12" *ngIf="itemsReferencias.length > 0">
+    <div class="col-xs-12 col-md-12 col-lg-12" style="padding:10px;">
+        <span><strong>Financieras</strong></span>
+    </div>
+    <div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat">
+        <!--Tabla-->
+        <div class="table-responsive scrollTabla">
+            <table id="tablaIngresos" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>
+                            <strong>Empresa/Entidad</strong>
+                        </th>
+                        <th>
+                            <strong>Teléfono</strong>
+                        </th>
+                        <th>
+                            <strong>Oficina</strong>
+                        </th>
+                        <th>
+                            <strong>Producto</strong>
+                        </th>
+                        <th>
+                            <strong>Opciones</strong>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let referenciasItem of itemsReferencias; let i = index">
+                    <tr *ngIf="referenciasItem.TipoReferencia.Id === 3" class="filReffin_{{i}}" (click)="CambiarColor(i,2)">
+                        <td class="text-capitalize">
+                            {{referenciasItem.Entidad}}
+                        </td>
+                        <td>
+                            {{referenciasItem.Telefono}}
+                        </td>
+                        <td *ngIf="referenciasItem.Oficina !== 0 && referenciasItem.Oficina !== null && referenciasItem.Oficina !== undefined
+                        && referenciasItem.Oficina !== ''">
+                            {{referenciasItem.Oficina}}
+                        </td>
+                        <td *ngIf="referenciasItem.Oficina === 0 || referenciasItem.Oficina === null || referenciasItem.Oficina ===undefined
+                        || referenciasItem.Oficina === ''">
+                            N/A
+                        </td>
+                        <td>
+                            {{referenciasItem.Producto}}
+                        </td>
+                        <td>
+                            <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="activarBtnOpciones" (click)="MapearReferencia(i,referenciasItem)">
+                <i class="icon-pencil"></i>
+              </button>&nbsp;
+                            <button class="btn Gt-btn-morado btn-icon legitRipple" *ngIf="activarBtnOpciones" (click)="EliminarReferencia(i)">
+                <i class="icon-bin2 "></i>
+              </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,215 @@
+<!-- Masked inputs -->
+<form method="get" [formGroup]="financieraFrom">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="textBlod">Categoría: </label>
+                    <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                    <select class="form-control" name="select" formControlName="Categoria" (change)="GetConceptos(financieraFrom.value.Categoria)" [attr.disabled]="bloquearForm">
+              <option value="0">-- Seleccione --</option>
+              <option *ngFor="let categorias of dataCategoria" [ngValue]="categorias">
+                {{categorias.Descripcion}}
+              </option>
+            </select>
+                    <span class="help-block validationSpan" *ngIf="financieraFrom.controls['Categoria'].errors?.required && (financieraFrom.controls['Categoria'].dirty || financieraFrom.controls['Categoria'].touched)">
+              La categoría es obligatoria.
+            </span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="textBlod">Concepto: </label>
+                    <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                    <select class="form-control" name="select" formControlName="Concepto" (change)="GenericoSelect('Concepto',financieraFrom)" [attr.disabled]="bloquearForm">
+              <option value="0">-- Seleccione --</option>
+              <option *ngFor="let conceptos of dataConceptos" [ngValue]="conceptos">
+                {{conceptos.Descripcion}}
+              </option>
+            </select>
+                    <span class="help-block validationSpan" *ngIf="financieraFrom.controls['Concepto'].errors?.required && (financieraFrom.controls['Concepto'].dirty || financieraFrom.controls['Concepto'].touched)">
+                El concepto es obligatorio.
+              </span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="textBlod">Valor : </label>
+                    <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                    <input type="text" class="form-control" formControlName="Valor" currencyMask [attr.disabled]="bloquearForm" (blur)="validarValor()">
+                    <span class="help-block validationSpan" *ngIf="financieraFrom.controls['Valor'].errors?.required && (financieraFrom.controls['Valor'].dirty || financieraFrom.controls['Valor'].touched)">
+                El valor es obligatorio.
+              </span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="textBlod">Observación: </label>
+                    <input type="text" class="form-control Capitalice" id="Observa" formControlName="Observacion" [attr.disabled]="bloquearForm">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="row">
+    <!--Botones-->
+    <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+        <input type="submit" *ngIf="mostrarAgregar" class="btn Gt-btn-verde" value="Agregar" (click)="AgregarFinanciero()" /> &nbsp;
+        <input type="submit" *ngIf="mostrarLimpiar" class="btn Gt-btn-morado" value="Limpiar" (click)="LimpiarFormulario()" /> &nbsp;
+        <input type="submit" *ngIf="mostrarSiguiente" class="btn Gt-btn-verde" value="Siguiente" (click)="GuardarFinanciero()" /> &nbsp;
+        <input type="submit" *ngIf="mostrarActualizar" class="btn Gt-btn-verde" value="Actualizar" (click)="ActualizarFinanciero()" [disabled]="!EnableUpdateFinanciero" />
+    </div>
+</div>
+<br>
+<div class="col-xs-12 col-md-12 col-lg-12" style="padding:10px;">
+    <span> <strong>Ingresos financieros mensuales</strong></span>
+</div>
+<div class="col-xs-12 col-md-12 col-lg-12" *ngIf="dataTableIngresos.length <= 0 && dataTableIngresos.length <= 0">
+    <br>
+    <div class="alert alert-secondary" role="alert">
+        No hay registros
+    </div>
+</div>
+<div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="dataTableIngresos.length > 0 || dataTableIngresos.length> 0">
+    <!--Tabla-->
+    <div class="table-responsive scrollTabla">
+        <table id="tablaIngresos" class="table table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        <strong>Categoría</strong>
+                    </th>
+                    <th>
+                        <strong>Concepto</strong>
+                    </th>
+                    <th>
+                        <strong>Valor</strong>
+                    </th>
+                    <th>
+                        <strong>Observación</strong>
+                    </th>
+                    <th>
+                        <strong>Opciones</strong>
+                    </th>
+                </tr>
+            </thead>
+            <tbody *ngFor="let itemIngresos of dataTableIngresos; let i = index">
+                <tr *ngIf="itemIngresos.Categoria.Id === 1" class="filIngresos_{{i}}" (click)="CambiarColor(i,1)">
+                    <td>
+                        {{itemIngresos.Categoria.Descripcion}}
+                    </td>
+                    <td>
+                        {{itemIngresos.Concepto.Descripcion}}
+                    </td>
+                    <td>
+                        $ {{itemIngresos.Valor | currency:'':'' : '1.0'}}
+                    </td>
+                    <td class="Capitalice" *ngIf="itemIngresos.Observacion !== '' && itemIngresos.Observacion !== null ">
+                        <p>{{itemIngresos.Observacion}}</p>
+                    </td>
+                    <td *ngIf="itemIngresos.Observacion === '' || itemIngresos.Observacion === null">
+                        N/A
+                    </td>
+                    <td>
+                        <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="activarBtnOpciones" (click)="MapearFinanciero(i,itemIngresos)">
+              <i class="icon-pencil"></i>
+            </button>&nbsp;
+                        <button class="btn Gt-btn-morado btn-icon legitRipple" *ngIf="activarBtnOpciones" (click)="EliminarFinanciero(i,itemIngresos)">
+              <i class="icon-bin2 "></i>
+            </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<br>
+<div class="col-xs-12 col-md-12 col-lg-12" style="padding:10px;">
+    <span> <strong>Egresos financieros mensuales</strong></span>
+</div>
+<div class="col-xs-12 col-md-12 col-lg-12" *ngIf="dataTableEgresos.length <= 0 && dataTableEgresos.length <= 0">
+    <br>
+    <div class="alert alert-secondary" role="alert">
+        No hay registros
+    </div>
+</div>
+<div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="dataTableEgresos.length > 0 || dataTableEgresos.length> 0">
+    <!--Tabla-->
+    <div class="table-responsive scrollTabla">
+        <table id="tablaIngresos" class="table table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        <strong>Categoría</strong>
+                    </th>
+                    <th>
+                        <strong>Concepto</strong>
+                    </th>
+                    <th>
+                        <strong>Valor</strong>
+                    </th>
+                    <th>
+                        <strong>Observación</strong>
+                    </th>
+                    <th>
+                        <strong>Opciones</strong>
+                    </th>
+                </tr>
+            </thead>
+            <tbody *ngFor="let itemEgresos of dataTableEgresos; let i = index">
+                <tr *ngIf="itemEgresos.Categoria.Id === 2" class="filEgresos_{{i}}" (click)="CambiarColor(i,2)">
+                    <td>
+                        {{itemEgresos.Categoria.Descripcion}}
+                    </td>
+                    <td>
+                        {{itemEgresos.Concepto.Descripcion}}
+                    </td>
+                    <td>
+                        $ {{itemEgresos.Valor | currency:'':'' : '1.0'}}
+                    </td>
+                    <td class="Capitalice" *ngIf="itemEgresos.Observacion !== '' && itemEgresos.Observacion !== null ">
+                        <p>{{itemEgresos.Observacion}}</p>
+                    </td>
+                    <td *ngIf="itemEgresos.Observacion === '' || itemEgresos.Observacion === null">
+                        N/A
+                    </td>
+                    <td>
+                        <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="activarBtnOpciones" (click)="MapearFinanciero(i,itemEgresos)">
+              <i class="icon-pencil"></i>
+            </button>&nbsp;
+                        <button class="btn Gt-btn-morado btn-icon legitRipple" *ngIf="activarBtnOpciones" (click)="EliminarFinanciero(i,itemEgresos)">
+              <i class="icon-bin2 "></i>
+            </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<br>
+<div>
+    <div class="col-xs-4 col-md-6 col-lg-12 ">
+        <!--Totales-->
+        <div class="col-xs-12 col-md-12 col-lg-12" style="padding:10px;">
+            <label class="text-semibold textBlod">Totales</label>
+        </div>
+        <div class="col-xs-12 col-md-12 col-lg-12 panel panel-default"><br>
+            <div class="col-xs-12 col-md-12 col-lg-6">
+                <label tooltip="El total ingresos es el resultado de la suma de todos los ingresos." placement="top" show-delay="500">
+          <strong>Total ingresos:
+            $ {{ SumaIngresos | currency:'':'' : '1.0'}}
+          </strong>
+        </label>
+            </div>
+            <div class="col-xs-12 col-md-12 col-lg-6">
+                <label tooltip="El total egresos es el resultado de la suma de todos los egresos." placement="top" show-delay="500">
+          <strong>Total egresos:
+            $ {{ SumaEgresos | currency:'':'' : '1.0'}}
+          </strong>
+        </label>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- /masked inputs -->

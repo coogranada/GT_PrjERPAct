@@ -1,0 +1,155 @@
+<div class="panel panel-white">
+        <div class="panel-heading">
+            <h6 class="panel-title">Datos</h6>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a data-toggle="modal" data-target="#ModalAyuda"><i class="icon-question6 " title="Ayuda" data-popup="tooltip" data-trigger="hover" data-placement="top"></i></a></li>
+                    <li>
+                        <a data-action="collapse"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <form method="get" [formGroup]="llaveForm">
+            <div class="panel-body">
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <div class="row">
+                        <div class="col-xs-12 col-md-3 col-lg-3">
+                            <div class="form-group">
+                                <label>Llave publica A:</label>
+                                <input type="text" class="form-control" formControlName="llavePA" />
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-3 col-lg-3">
+                            <div class="form-group">
+                                <label>Llave publica B:</label>
+                                <input type="text" class="form-control" formControlName="llavePB" />
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-3 col-lg-3">
+                            <div class="col-xs-12 col-md-4 col-lg-4">
+                                <div   >
+                                    <span tooltip="generar llave publica" placement="top" show-delay="500">
+                                        <button style="cursor: pointer;" [disabled]="generateBool" class="btn Gt-btn-verde btn-icon legitRipple" style="top: 20px"  (click)="GetGenerarLlaves()">
+                                            <i class="icon-sync" aria-hidden="true"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-4 col-lg-4">
+                                <div >
+                                    <span tooltip="refrescar la llave publica" placement="top" show-delay="500">
+                                        <button style="cursor: pointer;"  class="btn Gt-btn-morado btn-icon legitRipple" [disabled]="!generateBool" style="top: 20px"  (click)="Back()">
+                                            <i class="icon-reset" aria-hidden="true" ></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="showForm">
+                        <div class="col-xs-12 col-md-3 col-lg-3">
+                            <div class="form-group">
+                                <label>Proveedor:</label><span class="text-danger ObligatorioGrande">*</span>
+                                <select class="form-control form-control-lg" id="select" formControlName="proveedor">
+                                    <option value="" selected="true">--Seleccione--</option>
+                                    <option *ngFor="let item of dataListProveedores"  [value]="item.Nit">{{item.Proveedor}}</option>
+                                </select>
+                                <span class="help-block validationSpan" *ngIf="llaveForm.controls['proveedor'].errors?.['required'] && (llaveForm.controls['proveedor'].dirty || llaveForm.controls['proveedor'].touched)">El proveedor es obligatorio.</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-3 col-lg-3">
+                            <div class="form-group">
+                                <label>Llave transaccional A :</label><span class="text-danger  ObligatorioGrande"> *</span>
+                                <input type="text" class="form-control" formControlName="llaveTranA" />
+                                <span class="help-block validationSpan" *ngIf="llaveForm.controls['llaveTranA'].errors?.['required'] && (llaveForm.controls['llaveTranA'].dirty || llaveForm.controls['llaveTranA'].touched)">La llave es obligatoria.</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 col-lg-6">
+                            <div class="form-group">
+                                <label>Observación llave A   :</label><span class="text-danger  ObligatorioGrande"> *</span>
+                                <input type="text" class="form-control" formControlName="observacionLlaveA" />
+                                <span class="help-block validationSpan" *ngIf="llaveForm.controls['observacionLlaveA'].errors?.['required'] && (llaveForm.controls['observacionLlaveA'].dirty || llaveForm.controls['observacionLlaveA'].touched)">La observacion llave Aes obligatoria.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="showForm">   
+                        <div class="col-xs-12 col-md-3 col-lg-3">
+                            <div class="form-group">
+                                <label>Tipo de llave :</label><span class="text-danger ObligatorioGrande">*</span>
+                                <input type="text" class="form-control" formControlName="tipoLlave" />
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-3 col-lg-3">
+                            <div class="form-group">
+                                <label>Llave transaccional B :</label><span class="text-danger  ObligatorioGrande"> *</span>
+                                <input type="text" class="form-control" formControlName="llaveTranB" />
+                                <span class="help-block validationSpan" *ngIf="llaveForm.controls['llaveTranB'].errors?.['required'] && (llaveForm.controls['llaveTranB'].dirty || llaveForm.controls['llaveTranB'].touched)">La llave es obligatoria.</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 col-lg-6">
+                            <div class="form-group">
+                                <label>Observación llave B   :</label><span class="text-danger  ObligatorioGrande"> *</span>
+                                <input type="text" class="form-control" formControlName="observacionLlaveB" />
+                                <span class="help-block validationSpan" *ngIf="llaveForm.controls['observacionLlaveB'].errors?.['required'] && (llaveForm.controls['observacionLlaveB'].dirty || llaveForm.controls['observacionLlaveB'].touched)">La observacion llave B es obligatoria.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                        <input type="submit" class="btn Gt-btn-verde" value="Guardar" *ngIf="showForm" (click)="GuardarLlaves()" [disabled]="!this.llaveForm.valid" /> 
+                        <input type="submit" class="btn Gt-btn-verde" value="Actualizar" *ngIf="generateBool && !showForm" (click)="CambiarLlaves()"  /> &nbsp;
+                        <input type="submit" class="btn Gt-btn-morado" value="Nuevo" *ngIf="!showForm" (click)="showForm = true" />&nbsp;
+                        <input type="submit" class="btn Gt-btn-morado" value="Limpiar" *ngIf="showForm" (click)="Clear()" />
+                    </div>
+                </div>
+            </div>
+            <ngx-loading [show]="loading" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}"></ngx-loading>
+        </form>
+</div>
+
+<div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatos">
+    <div class="panel-body ">
+        <div class="table-responsive scrollTabla">
+            <table id="TablaAreas" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th><strong>Proveedor</strong></th>
+                        <th><strong>Llave TX</strong></th>
+                        <th><strong>HASH</strong></th>
+                        <th><strong>Tipo Llave</strong></th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let resultLlave of dataLlavesResult">
+                    <tr>
+                        <td>{{resultLlave.Proveedor}}</td>
+                        <td>{{resultLlave.Name}}</td>
+                        <td>{{resultLlave.Hash}}</td>
+                        <td>{{resultLlave.Observacion}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- Modal Ayuda -->
+<div id="ModalAyuda" class="modal fade">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title"><i class="icon-question6"></i> Ayuda</h6>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li>Todos los campos marcados con <span class="text-danger  ObligatorioGrande">*</span> son obligatorios.</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ Fin Modal Ayuda -->

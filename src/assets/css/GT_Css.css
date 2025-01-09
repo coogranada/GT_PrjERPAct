@@ -1,0 +1,657 @@
+/*Panel encabezado*/
+
+.Gt-ColorMorado {
+    background-color: rgb(133, 38, 98);
+    border-color: rgb(133, 38, 98);
+    color: #fff;
+}
+
+
+/*Fin Panel encabezado*/
+
+
+/*Active del menu*/
+
+.sidebar-default .navigation>li.active>a,
+.sidebar-default .navigation>li.active>a:hover,
+.sidebar-default .navigation>li.active>a:focus {
+    background-color: rgba(160, 0, 87, 0.20);
+    color: #333333;
+}
+
+
+/*Fin Active del menu*/
+
+.Gt-btn-verde {
+    color: #fff;
+    background-color: rgb(38, 144, 81);
+    border-color: rgb(38, 144, 81);
+}
+
+
+/*Fin Boton color verde*/
+
+
+/*Hover del boton color verde*/
+
+.Gt-btn-verde:hover {
+    color: #fff;
+    background-color: rgba(13, 165, 80, 0.50);
+    border-color: rgba(13, 165, 80, 0.50);
+}
+
+
+/*Fin Hover del boton color verde*/
+
+
+/*Boton color morado*/
+
+.Gt-btn-morado {
+    color: #fff;
+    background-color: rgb(133, 38, 98);
+    border-color: rgb(133, 38, 98);
+}
+
+
+/*Fin Boton color morado*/
+
+
+/*Hover del boton color morado*/
+
+.Gt-btn-morado:hover {
+    color: #fff;
+    background-color: rgba(133, 38, 98);
+    border-color: rgba(133, 38, 98);
+}
+
+
+/*Fin Hover del boton color amarillo*/
+
+
+/*Boton color amarillo*/
+
+.Gt-btn-amarillo {
+    color: #fff;
+    background-color: #EEBB1C;
+    border-color: #EEBB1C;
+}
+
+
+/*Fin Boton color amarillo*/
+
+
+/*Hover del boton color amarillo*/
+
+.Gt-btn-amarillo:hover {
+    color: #fff;
+    background-color: #EEBB1C;
+    border-color: #EEBB1C;
+}
+
+
+/*Fin Hover del boton color amarillo*/
+
+
+/*Boton color Rojo*/
+
+.Gt-btn-rojo {
+    color: #fff;
+    background-color: #868686;
+    border-color: #868686;
+}
+
+
+/*Fin Boton color Rojo*/
+
+
+/*Hover del boton color Rojo*/
+
+.Gt-btn-red:hover {
+    color: #fff;
+    background-color: #F44336;
+    border-color: #F44336;
+}
+
+.Gt-btn-red {
+    color: #fff;
+    background-color: #F44336;
+    border-color: #F44336;
+}
+
+
+/*Fin Boton color Rojo*/
+
+
+/*Hover del boton color Rojo*/
+
+.Gt-btn-rojo:hover {
+    color: #fff;
+    background-color: #F44336;
+    border-color: #F44336;
+}
+
+
+/*Fin Hover del boton color Rojo*/
+
+
+/*Linea progress de la parte inicial de la pagina*/
+
+.pace .pace-progress {
+    background: rgb(38, 144, 81) !important;
+    position: fixed !important;
+    z-index: 2000 !important;
+    top: 0 !important;
+    width: 100% !important;
+    right: 100% !important;
+    height: 2px !important;
+}
+
+
+/*Fin Linea progress de la parte inicial de la pagina*/
+
+
+/*Tamaño de las imagenes de la pagina Aplicaciones colaborativas*/
+
+.imagenesAppColaborativas {
+    height: 132px !important;
+}
+
+
+/*Fin tamaño de las imagenes de la pagina Aplicaciones colaborativas*/
+
+
+/*Botón de la pagina Aplicaciones colaborativas*/
+
+.btnAppColaborativas {
+    text-align: center !important;
+    padding-bottom: 20px;
+    padding-top: 10px;
+}
+
+
+/*Botón de la pagina Aplicaciones colaborativas*/
+
+
+/*Logo del panel el encabezado*/
+
+.navbar-brand>img {
+    margin-top: -10px !important;
+    height: 42px !important;
+}
+
+
+/*Fin logo del panel el encabezado*/
+
+
+/*Alerta mayúscula*/
+
+.alerta_mayuscula {
+    color: rgb(238, 187, 28);
+    text-shadow: 1px 1px 1px black;
+}
+
+
+/*Fin alerta mayúscula*/
+
+
+/*Texto de color negro*/
+
+.texto_negro {
+    color: #852662 !important;
+}
+
+
+/*Fin texto de color negro*/
+
+
+/*Borde de color morado*/
+
+.border_morado {
+    border-color: rgb(133, 38, 98);
+}
+
+
+/*Fin borde de color morado*/
+
+
+/*Texto de color morado*/
+
+.texto_morado {
+    color: rgb(160, 0, 87);
+}
+
+
+/*Fin Texto de color morado*/
+
+
+/*Borde de color amarillo*/
+
+.border_amarillo {
+    border-color: rgb(238, 187, 28);
+}
+
+
+/*Fin Borde de color amarillo*/
+
+
+/*Texto de color amarillo*/
+
+.texto_amarillo {
+    color: rgb(238, 187, 28);
+}
+
+
+/*Fin texto de color amarillo*/
+
+
+/*Borde de color verde*/
+
+.border_verde {
+    border-color: rgb(38, 144, 81) !important;
+}
+
+
+/*Fin borde de color verde*/
+
+
+/*Texto de color verde*/
+
+.texto_verde {
+    color: rgb(38, 144, 81) !important;
+}
+
+
+/*Fin Texto de color verde*/
+
+
+/*Color informativo*/
+
+.bg-informativo {
+    background-color: rgb(238, 187, 28);
+    border-color: rgb(238, 187, 28);
+    color: #fff;
+}
+
+
+/*Fin Color informativo*/
+
+
+/*Color correcto*/
+
+.bg-correcto {
+    background-color: rgb(38, 144, 81);
+    border-color: rgb(38, 144, 81);
+    color: #fff;
+}
+
+
+/*Fin color correcto*/
+
+
+/*Color morado*/
+
+.bg-morado {
+    background-color: rgb(133, 38, 98);
+    border-color: rgb(133, 38, 98);
+    color: #fff;
+}
+
+
+/*Fin Color morado*/
+
+.bg-verde {
+    background-color: rgb(38, 144, 81);
+    border-color: rgb(38, 144, 81);
+    color: #fff;
+}
+
+
+/*Scroll tabla*/
+
+.scrollTabla {
+    max-height: 500px;
+    overflow-y: scroll;
+}
+
+.scrollTablaHistorial {
+    max-height: 180px;
+    overflow-y: scroll;
+}
+
+
+/*Scroll tabla*/
+
+
+/*Color del focus del campo*/
+
+.form-control:focus {
+    outline: 0;
+    border-color: transparent;
+    border-bottom-color: rgb(38, 144, 81) !important;
+    -webkit-box-shadow: 0 1px 0 rgb(38, 144, 81) !important;
+    box-shadow: 0 1px 0 rgb(38, 144, 81) !important;
+}
+
+
+/*Fin Color del focus del campo*/
+
+
+/*Color verde de la parte inferior del tab*/
+
+.colorBottomTab {
+    border-bottom: 1px solid rgb(38, 144, 81) !important;
+}
+
+
+/*Fin Color verde de la parte inferior del tab*/
+
+.colorTopTab {
+    border-top: 1px solid rgb(38, 144, 81) !important;
+}
+
+
+/* Color verde de la parte izquierda del tab*/
+
+.colorBottomTab>li.active>a,
+.colorBottomTab>li.active>a:hover,
+.colorBottomTab>li.active>a:focus {
+    border-width: 0 0 0 2px;
+    border-left-color: rgb(38, 144, 81) !important;
+    background-color: #f5f5f5;
+}
+
+
+/*Fin Color verde de la parte izquierda del tab*/
+
+.colorBottomTab>li.active>a:after {
+    background-color: rgb(38, 144, 81) !important;
+}
+
+
+/* Texto del tab cuando esta en responsive movil*/
+
+.nav-tabs:before {
+    content: '' !important;
+    color: inherit !important;
+    margin-top: 7px !important;
+    margin-left: 16px !important;
+    margin-bottom: 15px !important;
+    opacity: 0.5 !important;
+    filter: alpha(opacity=50) !important;
+}
+
+
+/*Fin Texto del tab cuando esta en responsive movil*/
+
+
+/*Bloqueo de la pagina cuando se hace una peticion*/
+
+.Cargando {
+    /* background-color: #455A64;
+    color: #fff;
+    border-radius: 3px;
+    padding: 15px 15px 10px 15px; */
+    background-color: '#1b20245c';
+    opacity: 0.7;
+    z-index: 1200;
+    cursor: 'wait';
+}
+
+.Cargando>i {
+    display: block;
+    margin-bottom: 10px;
+}
+
+
+/*Fin bloqueo de la pagina cuando se hace una peticion*/
+
+
+/*Border para la tabla*/
+
+.tablaBorder {
+    border-bottom: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
+
+
+/*Fin border para la tabla*/
+
+
+/*Color del dia del calendario seleccionado*/
+
+.picker__day--selected,
+.picker__day--selected:hover,
+.picker--focused .picker__day--selected {
+    background-color: rgb(133, 38, 98) !important;
+}
+
+.picker__day--highlighted,
+.picker__day--highlighted:hover,
+.picker--focused .picker__day--highlighted {
+    background-color: rgb(133, 38, 98) !important;
+}
+
+.picker__day--today:before {
+    border-top: 6px solid rgb(133, 38, 98) !important;
+}
+
+.picker__button--today:before {
+    border-top: 6px solid rgb(38, 144, 81) !important;
+}
+
+
+/*Fin Color del dia del calendario seleccionado*/
+
+
+/*Campo Checkbox*/
+
+.CampoCheckbox {
+    background-color: #f5f5f5 !important;
+    border-color: #f5f5f5 !important;
+    color: #fff !important;
+    padding: 8px 16px !important;
+    font-size: 13px !important;
+    font-weight: normal !important;
+    line-height: 1 !important;
+    text-align: center !important;
+    border-radius: 3px !important;
+    white-space: nowrap !important;
+    vertical-align: middle !important;
+    display: table-cell !important;
+}
+
+
+/*Fin Campo Checkbox*/
+
+
+/*Firma del reporte GMF*/
+
+.firma {
+    padding: 0px 0px !important;
+    vertical-align: top !important;
+    border-top: 1px solid #bdb0b0 !important;
+}
+
+
+/*Fin Firma del reporte GMF*/
+
+
+/*Huella del reporte GMF*/
+
+.huellaDactilar {
+    border: 1px solid #bdb0b0 !important;
+    padding: 0px 0px !important;
+    vertical-align: top !important;
+}
+
+
+/*Fin Huella del reporte GMF*/
+
+
+/*Tabla del reporte GMF*/
+
+.tablaGMF {
+    border: 1px solid #bdb0b0 !important;
+}
+
+
+/*Fin Tabla del reporte GMF*/
+
+
+/*Modal del GMF*/
+
+.modalGmf {
+    width: 700px !important;
+}
+
+
+/*Fin Modal del GMF*/
+
+
+/*Imagen del reporte GMF*/
+
+.imagenFormato {
+    width: 100%;
+}
+
+
+/*Imagen del reporte GMF*/
+
+
+/*Alerta del GMF*/
+
+.alertaGmf {
+    background-color: rgba(160, 0, 87, 0.13);
+    border-color: rgba(160, 0, 87, 0.13);
+    color: rgb(133, 38, 98);
+}
+
+
+/*Alerta del GMF*/
+
+
+/*Reporte naturales*/
+
+
+/*Modal del FormatoNaturales*/
+
+
+/*.modalFormatoNaturales {
+    width: 1200px !important;
+}*/
+
+
+/*Fin Modal del FormatoNaturales*/
+
+.FormatoNaturalesBorder {
+    border: 1px solid #ddd !important;
+    padding: 2px 2px 0px 2px;
+}
+
+.FormatoNaturalesRight {
+    border-right: 1px solid #ddd !important;
+    padding: 2px 2px 0px 2px;
+}
+
+.FormatoNaturalesLeft {
+    border-left: 1px solid #ddd !important;
+    padding: 2px 2px 0px 2px;
+}
+
+.FormatoNaturalesBottom {
+    border-bottom: 1px solid #ddd !important;
+    padding: 2px 2px 0px 2px;
+}
+
+.FormatoNaturalesTop {
+    border-top: 1px solid #ddd !important;
+    padding: 2px 2px 0px 2px;
+}
+
+
+/*Imagen del reporte GMF*/
+
+.imagenFormatoNaturales {
+    width: 65% !important;
+}
+
+.checkboxFormatoNaturales {
+    height: 18px !important;
+    width: 18px !important;
+}
+
+.rotarTexto {
+    -webkit-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+}
+
+
+/*Imagen del reporte GMF*/
+
+.paddingFormatoNaturales {
+    padding: 10px;
+}
+
+.checkboxFormatoNaturales {
+    height: 18px !important;
+    width: 18px !important;
+}
+
+.TablaSinBorderFormatoNaturales>thead>tr>th,
+.TablaSinBorderFormatoNaturales>tbody>tr>th,
+.TablaSinBorderFormatoNaturales>tfoot>tr>th,
+.TablaSinBorderFormatoNaturales>thead>tr>td,
+.TablaSinBorderFormatoNaturales>tbody>tr>td,
+.TablaSinBorderFormatoNaturales>tfoot>tr>td {
+    padding: 12px 20px !important;
+    line-height: 1.5384616 !important;
+    vertical-align: top !important;
+    border-top: 0px solid #ddd !important;
+}
+
+
+/*Active del tabla*/
+
+ActiveTabla {
+    background-color: rgba(160, 0, 87, 0.20);
+}
+
+
+/*Fin Active del tabla*/
+
+.tablaFormatoRetiro {
+    border: 1px solid #bdb0b0 !important;
+}
+
+.table-sinBorder {
+    border: 0px !important;
+}
+
+.modalRetiro {
+    width: 850px !important;
+}
+
+.modalConciliacionComisiones {
+    width: 900px !important;
+}
+
+.imagenConciliacionComisiones {
+    width: 100%;
+}
+
+.tablaConciliacionComisiones {
+    border: 1px solid #bdb0b0 !important;
+}
+
+.ObligatorioGrande {
+    font-size: 25px !important;
+    margin-top: -5px !important;
+    margin-left: 6px;
+    position: absolute;
+}
+
+.modalGestion {
+    width: 900px !important;
+}

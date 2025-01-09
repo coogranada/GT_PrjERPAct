@@ -1,0 +1,160 @@
+<div>
+    <form method="get" [formGroup]="accionistasFrom">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-xs-12 col-md-12 col-lg-12" id="1">
+                    <div class="col-md-4">
+                        <div class="form-group" id="1">
+                            <label class="textBlod">Número: </label>
+                            <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                            <input type="text" class="form-control" formControlName="NumeroDocumento" [attr.disabled]="bloquearForm" maxlength="15" (blur)="GetAccionista()" (keypress)="limpiarInputs()">
+                            <span class="help-block validationSpan" *ngIf="accionistasFrom.controls['NumeroDocumento'].errors?.['required'] && (accionistasFrom.controls['NumeroDocumento'].dirty || accionistasFrom.controls['NumeroDocumento'].touched)">
+                El número es obligatorio.
+              </span>
+                            <span class="help-block validationSpan" *ngIf="accionistasFrom.controls['NumeroDocumento'].errors?.['pattern'] && (accionistasFrom.controls['NumeroDocumento'].dirty || accionistasFrom.controls['NumeroDocumento'].touched)">
+                El campo número solo acepta <span *ngIf="mostrarNumero">números</span> <span *ngIf="mostrarLetras">letras y
+                  números</span>. Mínimo: 4 - Maximo 15.
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group" id="1">
+                            <label class="textBlod">Tipo documento: </label>
+                            <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                            <select class="form-control" name="select" formControlName="TipoDocumento" (change)="GenericoSelect('TipoDocumento',accionistasFrom); validarTipoDocumento()" [attr.disabled]="bloquearFormAcc">
+                <option value="0">-- Seleccione --</option>
+                <option *ngFor="let tipoDocumento of dataTipoDocumento" [ngValue]="tipoDocumento">
+                  {{tipoDocumento.Descripcion}}
+                </option>
+              </select>
+                            <span class="help-block validationSpan" *ngIf="accionistasFrom.controls['TipoDocumento'].errors?.['required'] && (accionistasFrom.controls['TipoDocumento'].dirty || accionistasFrom.controls['TipoDocumento'].touched)">
+                El tipo documento es obligatorio.
+              </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group" id="1">
+                            <label class="textBlod">Razón social o nombre completo: </label>
+                            <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                            <input type="text" class="form-control" formControlName="RazonNombre" id="razonNombre" [attr.disabled]="bloquearFormAcc">
+                            <span class="help-block validationSpan" *ngIf="accionistasFrom.controls['RazonNombre'].errors?.['required'] && (accionistasFrom.controls['RazonNombre'].dirty || accionistasFrom.controls['RazonNombre'].touched)">
+                La razón social o nombre completo es obligatorio.
+              </span>
+                            <span class="help-block validationSpan" *ngIf="accionistasFrom.controls['RazonNombre'].errors?.['pattern'] && (accionistasFrom.controls['RazonNombre'].dirty || accionistasFrom.controls['RazonNombre'].touched)">
+                La razón social o nombre completo no acepta caracteres especiales.
+              </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-12 col-lg-12" id="2">
+                    <div class="col-md-4">
+                        <div class="form-group" id="2">
+                            <label class="textBlod">Es o esta vinculado con un PEP: </label>
+                            <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                            <select class="form-control" name="select" formControlName="EsPeps" (change)="GenericoSelect('EsPeps',accionistasFrom)" [attr.disabled]="bloquearForm">
+                <option value="0">-- Seleccione --</option>
+                <option [value]="1">Si</option>
+                <option [value]="2">No</option>
+              </select>
+                            <span class="help-block validationSpan" *ngIf="accionistasFrom.controls['EsPeps'].errors?.required && (accionistasFrom.controls['EsPeps'].dirty || accionistasFrom.controls['EsPeps'].touched)">
+                Es o esta vinculado con un PEP es obligatorio.
+              </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group" id="2">
+                            <label class="textBlod">% Participación: </label>
+                            <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                            <input type="text" class="form-control" formControlName="Participacion" [attr.disabled]="bloquearForm" min="5" maxlength="3" (blur)="validarParticipacion()">
+                            <span class="help-block validationSpan" *ngIf="accionistasFrom.controls['Participacion'].errors?.['required'] && (accionistasFrom.controls['Participacion'].dirty || accionistasFrom.controls['Participacion'].touched)">
+                La participación es obligatoria.
+              </span>
+                            <span class="help-block validationSpan" *ngIf="accionistasFrom.controls['Participacion'].errors?.['pattern'] && (accionistasFrom.controls['Participacion'].dirty || accionistasFrom.controls['Participacion'].touched)">
+                La participación solo acepta números.  máximo 100 %.
+              </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="row">
+    <!--Botones-->
+    <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+        <input type="submit" *ngIf="mostrarAgregar" class="btn Gt-btn-verde" value="Agregar" (click)="AgregarAccionistas()" /> &nbsp;
+        <input type="submit" *ngIf="mostrarLimpiar" class="btn Gt-btn-morado" value="Limpiar" (click)="LimpiarFormulario()" /> &nbsp;
+        <input type="submit" *ngIf="mostrarSiguiente" class="btn Gt-btn-verde" value="Siguiente" (click)="GuardarAccionistas()" /> &nbsp;
+        <input type="submit" *ngIf="mostrarActualizar" class="btn Gt-btn-verde" value="Actualizar" (click)="ActualizarAccionistas()" [disabled]="!EnableUpdateAccionistas" />
+    </div>
+</div>
+<br>
+<div class="col-xs-12 col-md-12 col-lg-12" *ngIf="itemAccionistas.length <= 0">
+    <br>
+    <div class="alert alert-secondary" role="alert">
+        No hay registros
+    </div>
+</div>
+<div class="col-xs-12 col-md-12 col-lg-12" *ngIf="itemAccionistas.length > 0">
+    <div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat">
+        <!--Tabla-->
+        <div class="table-responsive scrollTabla">
+            <table id="tablaIngresos" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>
+                            <strong>Tipo documento</strong>
+                        </th>
+                        <th>
+                            <strong>Número documento</strong>
+                        </th>
+                        <th>
+                            <strong>Razón social</strong>
+                        </th>
+                        <th>
+                            <strong>Vinculado PEP</strong>
+                        </th>
+                        <th>
+                            <strong>% Participación</strong>
+                        </th>
+                        <th>
+                            <strong>Opciones</strong>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let accionistasItem of itemAccionistas; let i = index">
+                    <tr class="filAcci_{{i}}" (click)="CambiarColor(i,1)">
+                        <td>
+                            {{accionistasItem.TipoDocumento.Descripcion}}
+                        </td>
+                        <td>
+                            {{accionistasItem.NumeroDocumento}}
+                        </td>
+                        <td>
+                            {{accionistasItem.RazonNombre}}
+                        </td>
+                        <td>
+                            <span *ngIf="accionistasItem.EsPeps === '1' && accionistasItem.EsPeps !== '2'">
+                  Si
+                </span>
+                            <span *ngIf="accionistasItem.EsPeps === '2' && accionistasItem.EsPeps !== '1'">
+                  No
+                </span>
+                        </td>
+                        <td>
+                            {{accionistasItem.Participacion}} %
+                        </td>
+                        <td>
+                            <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="activarBtnOpciones" (click)="MapperAccionista(i,accionistasItem)">
+                <i class="icon-pencil"></i>
+              </button>&nbsp;
+                            <button class="btn Gt-btn-morado btn-icon legitRipple" *ngIf="activarBtnOpciones" (click)="EliminarAccionista(i)">
+                <i class="icon-bin2 "></i>
+              </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

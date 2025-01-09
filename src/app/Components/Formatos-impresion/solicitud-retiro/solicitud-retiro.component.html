@@ -1,0 +1,236 @@
+<body class="navbar-bottom login-container" id="Contenido">
+
+      <button type="button" class="btn Gt-btn-morado doNotPrint"
+        data-toggle="modal" style="visibility:hidden"
+        data-target="#ModalRetiroAsociados" 
+        #abrirSolicituRetiro>Abrir 
+        <i class="icon-play3 position-right"></i>
+     </button>
+
+      <!-- Modal ReporteExoneracion -->
+      <div id="ModalRetiroAsociados" class="modal fade" data-backdrop="static" >
+        <div class="modal-dialog modal-full-retiro">
+          <div class="modal-content">
+            <div class="modal-header doNotPrint">
+              <!-- <button type="button" class="close" onclick="CerrarModal('ModalRetiroAsociados')">&times;</button> -->
+            </div>
+            <div class="modal-body" style="margin-top: 4% !important">
+              <br />
+              <div class="col-sm-12 col-xs-12 col-lg-12" id="printSolicitudRetiro">
+                <div class=" col-sm-12 col-xs-12 col-lg-12  text-center ">
+                  <br />
+                  <div class="col-sm-4 col-xs-4 col-lg-4">
+                    <img src="../../../../assets/images/GT/logo-coogranada.png" class="content-group mt-10 imagenFormato"
+                      alt="">
+                  </div>
+
+                  <div class="col-sm-8 col-xs-8 col-lg-8 text-right">
+                    <h6 class="text-uppercase text-bold">SOLICITUD DE RETIROS DE ASOCIADOS</h6>
+                  </div>
+                  <div class="col-sm-8 col-xs-8 col-lg-8 text-right" *ngIf="reimpresionActiva">
+                    <h6 class="text-uppercase text-bold">Reimpresión</h6>
+                  </div>
+                </div>
+                <div class="col-sm-12 col-xs-12 col-lg-12 text-right">
+                  <br />
+                </div>
+
+                <!--Datos asociado-->
+                <div class="col-sm-12 col-xs-12 col-lg-12 ">
+                  <ul class="list list-unstyled text-left">
+                    <li class="">Yo, <span id="rptNombre" class="text-semibold"><strong> {{objInfoRetiro.Nombre}}
+                        </strong></span></li>
+                  </ul>
+                </div>
+
+                <div class="col-sm-4 col-xs-4 col-lg-4 ">
+                  <ul class="list list-unstyled text-left">
+                    <li class="">Identificado con documento No.
+                      <span id="rptNumeroIdentificacion" class="text-semibold"><strong> {{objInfoRetiro.Documento}}
+                        </strong></span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="col-sm-6 col-xs-6 col-lg-6">
+                  <ul class="list list-unstyled text-left">
+                    <li class="">de <span id="rptLugarExpedicion" class="text-semibold"> <strong>
+                          {{objInfoRetiro.CiudadExpedicion}} </strong></span></li>
+                  </ul>
+                </div>
+                <div class="col-sm-12 col-xs-12 col-lg-12 content-group text-justify ">
+                  <p id="rptPrimerParrafo">
+                    Presento solicitud de retiro Voluntario como asociado de COOGRANADA, Cooperativa de Ahorro y
+                    Crédito,
+                    y la devolución de mis aportes. Entre las razones que motivan mi retiro se encuentra:
+                  </p>
+                </div>
+                <!--Fin Datos asociado-->
+                <!--Motivo de retiro-->
+                <div class="col-sm-12 col-xs-12 col-lg-12 content-group text-justify"
+                  style="text-align: center; font-size: 15px; font-weight: bold;">
+                  <span>{{objInfoRetiro.Motivo}}</span>
+                  <br>
+                </div>
+                <div class="col-sm-12 col-xs-12 col-lg-12 content-group text-justify"
+                  style="text-align: center; font-size: 14px;"
+                  *ngIf="objInfoRetiro.Otro !== null && objInfoRetiro.Otro !== undefined">
+                  <span><strong>Cual: </strong></span>
+                  <span>{{objInfoRetiro.Otro}}</span>
+                </div>
+
+                <div class="col-sm-12 col-xs-12 col-lg-12 content-group text-justify ">
+                  <br />
+                  <p>
+                    Manifiesto que me han informado las condiciones de retiro:
+                  </p>
+                  <p>
+                    Que para presentar y aprobar la solicitud de retiro debo estar a paz y salvo por todo concepto con
+                    COOGRANADA
+                    y cumplir los demas requisitos aplicables.
+                  </p>
+                  <p>
+                    Que la devolución de aportes se realizará de acuerdo a los plazos establecidos por los Estatutos
+                    de la cooperativa.
+                  </p>
+                </div>
+                <!--Fin motivo de retiro-->
+                <!--Fin motivo de retiro-->
+                <!--Datos asociado-->
+                <div class="col-sm-6 col-xs-6 col-lg-6">
+                  <ul class="list list-unstyled text-left">
+                    <li class="text-bold">Dirección Principal: {{objInfoRetiro.Direccion}} <span id="rptDireccion"
+                        class="text-semibold"></span>
+                    </li>
+                    <li class="text-bold">Celular: {{objInfoRetiro.Celular}}<span id="rptCelular"
+                        class="text-semibold"></span></li>
+                    <li class="text-bold">Empresa: {{objInfoRetiro.Empresa}}<span id="rptEmpresa"
+                        class="text-semibold"></span></li>
+
+                  </ul>
+                </div>
+                <div class="col-sm-6 col-xs-6 col-lg-6">
+                  <ul class="list list-unstyled text-left">
+                    <li class="text-bold">Teléfono: {{objInfoRetiro.Telefono}} <span id="rptTelefono"
+                        class="text-semibold"></span></li>
+                    <li class="text-bold">E-mail: {{objInfoRetiro.Email}} <span id="rptEmail" class="text-semibold"></span>
+                    </li>
+                    <li class="text-bold">Teléfono Empresa: {{objInfoRetiro.TelefonoEmpresa}} <span id="rptTelefonoEmpresa"
+                        class="text-semibold"></span></li>
+                  </ul>
+                  <br /> <br />
+                </div>
+                <!--Fin Datos asociado-->
+                <!--Huella y firma-->
+                <div class=" col-sm-12 col-xs-12 col-lg-12">
+                  <div class="col-sm-5 col-xs-5 col-lg-5"></div>
+                  <div class="col-sm-2 col-xs-2 col-lg-2">
+                    <div class="panel text-center huellaDactilar">
+                      <div class="panel-body">
+                        <div class=" col-sm-12 col-xs-12 col-lg-12"><br /> </div>
+                        <div class=" col-sm-12 col-xs-12 col-lg-12"><br /> </div>
+                        <div class=" col-sm-12 col-xs-12 col-lg-12"><br /> </div>
+                        <div class=" col-sm-12 col-xs-12 col-lg-12"><br /> </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-1 col-xs-1 col-lg-1"></div>
+                  <div class="col-sm-4 col-xs-4 col-lg-4 text-center">
+                    <div class="panel-body">
+                      <div class=" col-sm-12 col-xs-12 col-lg-12">
+                        {{objInfoRetiro.NombreAsesor}}
+                      </div>
+                    </div>
+                    <div class="content-group">
+                      <div class="table-responsive no-border">
+                        <table class="table cke_show_border">
+                          <tbody>
+                            <tr class="colum">
+                              <th class="text-center firma">Nombre del asesor</th>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                  <br />
+                  <div class="col-sm-1 col-xs-1 col-lg-1"></div>
+                  <div class="col-sm-4 col-xs-4 col-lg-4 text-center">
+                    <div class="panel-body">
+                      <div class=" col-sm-12 col-xs-12 col-lg-12"><br /> </div>
+                    </div>
+                    <div class="content-group">
+                      <div class="table-responsive no-border">
+                        <table class="table cke_show_border">
+                          <tbody>
+                            <tr class="colum">
+                              <th class="text-center firma">Firma del Asesor</th>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class=" col-sm-12 col-xs-12 col-lg-12">
+                  <div class="col-sm-4 col-xs-4 col-lg-4 text-center">
+                    <div class="content-group">
+                      <div class="table-responsive no-border">
+                        <table class="table cke_show_border">
+                          <tbody>
+                            <tr class="colum">
+                              <th class="text-center firma">Firma del titular</th>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4 col-xs-4 col-lg-4">
+                    <div class="table-responsive no-border">
+                      <table class="table cke_show_border">
+                        <tbody>
+                          <tr class="colum">
+                            <th class="text-center firma">Huella dactilar</th>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <!--Huella y firma-->
+                <div class="col-sm-12 col-xs-12 col-lg-12">
+
+                </div>
+                <!--Datos Aprobacion-->
+                <div class="col-sm-12 col-xs-12 col-lg-12 tablaFormatoRetiro">
+                  <div class="col-sm-6 col-xs-6 col-lg-6">
+                    <label class="text-bold">
+                      FECHA DE APROBACIÓN CONSEJO:
+                    </label>
+                  </div>
+                  <div class="col-sm-2 col-xs-2 col-lg-2">
+                  </div>
+                  <div class="col-sm-3 col-xs-3 col-lg-3">
+                    NRO. DE ACTA
+                  </div>
+                  <div class="col-sm-1 col-xs-1 col-lg-1">
+                  </div>
+                  <br /> <br />
+                </div>
+                <!--Datos Aprobacion-->
+              </div>
+            </div>
+            <div class="col-sm-12 col-xs-12 col-lg-12">
+              <br />
+              <br />
+            </div>
+            <div class="modal-footer doNotPrint">
+              <button type="button" class="btn Gt-btn-morado"  data-dismiss="modal">Cerrar</button>
+              <button type="button" class="btn Gt-btn-verde" (click)="print()">Imprimir</button>              
+            </div>
+          </div>
+        </div>
+      </div>
+
+</body>

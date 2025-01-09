@@ -1,0 +1,1813 @@
+<head>
+    <style>
+        h1.SaltoDePagina {
+            page-break-after: always !important;
+        }
+        
+        @media all {
+            div.saltopagina {
+                display: none;
+            }
+        }
+        
+        @media print {
+            div.saltopagina {
+                display: block;
+                page-break-before: always;
+            }
+        }
+    </style>
+</head>
+
+<body class="navbar-bottom login-container" id="Contenido">
+    <button type="button" class="btn Gt-btn-morado" style="visibility:hidden" data-toggle="modal" data-target="#ModalFormatoNaturales" #openSolicitud>
+        Abrir <i class="icon-play3 position-right"></i>
+    </button>
+    <!-- Modal ReporteExoneracion -->
+    <div id="ModalFormatoNaturales" class="modal fade">
+        <div class="modal-dialog modal-full-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body" id='FormatoDeServicios' style="font-size: 11px;">
+                    <!-- Encabezado -->
+                    <div class="col-sm-12 col-xs-12 col-lg-12  text-center ">
+                        <div class="col-sm-4 col-xs-4 col-lg-4">
+                            <img src="../../../../assets/images/GT/logo-coogranada.png" class="content-group mt-10 imagenFormatoNaturales" alt="">
+                        </div>
+
+                        <div class="col-sm-8 col-xs-8 col-lg-8 text-right">
+                            <h5 class="text-uppercase text-center text-bold">Solicitud de servicios</h5>
+                            <h6 class="text-center text-bold">Persona Natural</h6>
+                            <p class="text-center letraGrande text-bold">{{esReimpresa}} {{fechaImpresion | date:'dd-MMM-yyyy HH:mm a'}}</p>
+                        </div>
+                        <br />
+                    </div>
+                    <!-- Fin Encabezado -->
+
+
+                    <!--Servicio solicitado y como conocio a coogranada -->
+                    <div class="col-sm-12 col-xs-12 col-lg-12 bg-morado FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop bagGrey">
+                        <div class="col-xs-6 col-md-6 col-lg-6 bg-morado text-center FormatoNaturalesRight bagGrey">
+                            <label class="text-bold ">Servicio solicitado </label>
+                        </div>
+                        <div class="col-xs-6 col-md-6 col-lg-6 text-center bagGrey">
+                            <label class="text-bold">Medio por el que conoció a Coogranada</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-6 col-md-6 col-lg-6 FormatoNaturalesRight">
+                            <div class="col-xs-4 col-md-4 col-lg-4" *ngIf="servVinculacion">
+                                <label class="letraGrande">Vinculación</label>
+                            </div>
+                            <div class="col-xs-4 col-md-4 col-lg-4" *ngIf="Servcredito">
+                                <label class="letraGrande">Credito</label>
+                            </div>
+                            <div class="col-xs-4 col-md-4 col-lg-4" *ngIf="ServActualiza">
+                                <label class="letraGrande">Actualizacion de datos</label>
+                            </div>
+
+                            <!-- FALTA -->
+                        </div>
+                        <div class="col-xs-6 col-md-6 col-lg-6">
+                            <div class="col-xs-6 col-md-6 col-lg-3">
+                                <label class="letraGrande">{{naturalesAllModel.ConocioCoogranada}}</label>
+                            </div>
+                            <div class="col-xs-6 col-md-6 col-lg-3">
+                                <label class="letraGrande">{{naturalesAllModel.Cual}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Fin Servicio solicitado y como conocio a coogranada -->
+
+
+                    <!-- informacion si es para credito y tipo  de usuario -->
+                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-6 col-md-6 col-lg-6 FormatoNaturalesRight">
+                            <div class="col-xs-4 col-md-4 col-lg-4 text-center">
+                                <label class="text-bold">Monto solicitado</label>
+                            </div>
+                            <div class="col-xs-4 col-md-4 col-lg-4 text-center">
+                                <label class="text-bold">Plazo deseado</label>
+                            </div>
+                            <div class="col-xs-4 col-md-4 col-lg-4 text-center">
+                                <label class="text-bold">Destino</label>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 col-md-6 col-lg-6 text-center Gt-ColorMorado">
+                            <label class="text-bold">Tipo de usuario</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-6 col-md-6 col-lg-6 FormatoNaturalesRight">
+                            <div class="col-xs-4 col-md-4 col-lg-4">
+                                <label class="letraGrande"> 
+                                    <span *ngIf="naturalesServicio.MontoSolicitado !== null && naturalesServicio.MontoSolicitado !== undefined" >$</span>
+                                    {{naturalesServicio.MontoSolicitado | currency:'':'' : '1.0'}}
+                                </label>
+                            </div>
+                            <div class="col-xs-4 col-md-4 col-lg-4 ">
+                                <label class="letraGrande">{{naturalesServicio.PlazoDeseado}}</label>
+                            </div>
+                            <div class="col-xs-4 col-md-4 col-lg-4 ">
+                                <label class="letraGrande Capitalice">{{naturalesServicio.Destino}}</label>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 col-md-6 col-lg-6">
+                            <label class="letraGrande">{{naturalesAllModel.TipoDeCliente}}</label>
+                            <!-- FALTA -->
+                        </div>
+                    </div>
+                    <!-- Fin  informacion si es para credito y tipo  de usuario -->
+
+
+                    <!-- Oficina, Asesor, Fecha de solicitud y numero de radicado-->
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-6 col-md-6 col-lg-6 text-center FormatoNaturalesRight">
+                            <div class="col-xs-6 col-md-6 col-lg-6">
+                                <label class="text-bold">Oficina</label>
+                            </div>
+                            <div class="col-xs-6 col-md-6 col-lg-6 text-center">
+                                <label class="text-bold">Asesor</label>
+                            </div>
+                        </div>
+                        <div class="col-xs-4 col-md-4 col-lg-4 text-center Gt-ColorMorado FormatoNaturalesRight">
+                            <label class="text-bold">Fecha de solicitud</label>
+                            <label class="textGray">(DD/MM/AAAA)</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 text-center">
+                            <label class="text-bold">Número radicado</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-6 col-md-6 col-lg-6">
+                            <div class="col-xs-6 col-md-6 col-lg-6">
+                                <label class="letraGrande">{{naturalesServicio.Oficina}}</label>
+                            </div>
+                            <div class="col-xs-6 col-md-6 col-lg-6">
+                                <label class="letraGrande">{{naturalesServicio.Asesor}}</label>
+                            </div>
+                        </div>
+                        <div class="col-xs-4 col-md-4 col-lg-4 FormatoNaturalesLeft FormatoNaturalesRight ">
+                            <div class="col-xs-4 col-md-4 col-lg-4 text-center ">
+                                <label class="letraGrande">{{naturalesAllModel.DiaFechaSoli}}</label>
+                            </div>
+                            <div class="col-xs-4 col-md-4 col-lg-4 text-center">
+                                <label class="letraGrande">{{naturalesAllModel.MesFechaSoli}}</label>
+                            </div>
+                            <div class="col-xs-4 col-md-4 col-lg-4 text-center">
+                                <label class="letraGrande">{{naturalesAllModel.AnoFechaSoli}}</label>
+                            </div>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label></label>
+                        </div>
+                    </div>
+                    <!-- Fin Oficina, Asesor, Fecha de solicitud y numero de radicado-->
+
+                    <!--Información personal-->
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesBorder bg-morado text-center">
+                        <label class="text-bold text-uppercase">* Información personal</label>
+                        <!-- <img src="../../../../assets/images/InfoPersonal.PNG">  -->
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12 text-center FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <!--Titulos tipo iden numero lugarexpedi-->
+                        <div class="col-xs-4 col-md-4 col-lg-4">
+                            <!--titulo identificacion-->
+                            <label class="text-bold">*Tipo de identificación</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 text-center FormatoNaturalesLeft">
+                            <!--titulo Numero-->
+                            <label class="text-bold">*Número</label>
+                        </div>
+                        <div class="col-xs-4 col-md-4 col-lg-4 text-center Gt-ColorMorado  FormatoNaturalesLeft">
+                            <!--titulo Fecha expedicion-->
+                            <label class="text-bold">Fecha de expedición</label>&nbsp;&nbsp;
+                            <label class="textGray">(DD/MM/AAAA)</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 text-center FormatoNaturalesLeft">
+                            <!--titulo Lugar Expedicion-->
+                            <label class="text-bold">Lugar expedición</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <!--tipo iden numero lugarexpedi-->
+                        <div class="col-xs-4 col-md-4 col-lg-4 FormatoNaturalesRight">
+                            <!--Tipo de documento-->
+                            <label class="letraGrande">{{naturalesAllModel.TipoDocumento}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <!--Numero de documento-->
+                            <label class="letraGrande">{{naturalesAllModel.NumeroDocumento}}</label>
+                        </div>
+                        <div class="col-xs-4 col-md-4 col-lg-4 FormatoNaturalesLeft">
+                            <!--Fecha expedicion-->
+                            <div class="col-xs-4 col-md-4 col-lg-4 text-center ">
+                                <label class="letraGrande">{{naturalesAllModel.DiaFechaExpe}}</label>
+                            </div>
+                            <div class="col-xs-4 col-md-4 col-lg-4 text-center">
+                                <label class="letraGrande">{{naturalesAllModel.MesFechaExpe}}</label>
+                            </div>
+                            <div class="col-xs-4 col-md-4 col-lg-4 text-center">
+                                <label class="letraGrande">{{naturalesAllModel.AnofechaExpe}}</label>
+                            </div>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesLeft">
+                            <!--Ciudad de expedicion-->
+                            <label class="letraGrande">{{naturalesAllModel.LugarExpedicon}}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <!--Nombres y genero-->
+                        <div class="col-xs-2 col-md-2 col-lg-2 text-center FormatoNaturalesRight">
+                            <label class="text-bold">*Primer apellido</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 text-center FormatoNaturalesRight">
+                            <label class="text-bold">*Segundo apellido</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 text-center FormatoNaturalesRight">
+                            <label class="text-bold">*Primer nombre</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 text-center FormatoNaturalesRight">
+                            <label class="text-bold">*Segundo nombre</label>
+                        </div>
+                        <div class="col-xs-4 col-md-4 col-lg-4 text-center">
+                            <label class="text-bold">*Genero</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <!--Nombres y genero-->
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande Capitalice">{{naturalesAllModel.PrimerApellido}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight ">
+                            <label class="letraGrande Capitalice">{{naturalesAllModel.SegundoApellido}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande Capitalice">{{naturalesAllModel.PrimerNombre}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande Capitalice">{{naturalesAllModel.SegundoNombre}}</label>
+                        </div>
+                        <div class="col-xs-4 col-md-4 col-lg-4">
+                            <label class="letraGrande Capitalice">{{naturalesAllModel.Genero}}</label>
+                        </div>
+                    </div>
+
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight  FormatoNaturalesTop">
+                        <!--Titulos Ciudad fecha y departa-->
+                        <div class="col-xs-4 col-md-4 col-lg-4 text-center">
+                            <label class="text-bold">*Ciudad de nacimiento</label>
+                        </div>
+                        <div class="col-xs-4 col-md-4 col-lg-4 text-center FormatoNaturalesLeft Gt-ColorMorado">
+                            <label class="text-bold">*Fecha de nacimiento</label>&nbsp;&nbsp;
+                            <label class="textGray">(DD/MM/AAAA)</label>
+                        </div>
+                        <div class="col-xs-4 col-md-4 col-lg-4 text-center FormatoNaturalesLeft">
+                            <label class="text-bold">*Departamento</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <!--Fecha nacimiento ciudad y departame-->
+                        <div class="col-xs-4 col-md-4 col-lg-4">
+                            <label class="letraGrande">{{naturalesAllModel.CiudadNto}}</label>
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1 text-center FormatoNaturalesLeft FormatoNaturalesRight ">
+                            <label class="letraGrande">{{naturalesAllModel.DiaFechaNaci}}</label>
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1 text-center FormatoNaturalesRight">
+                            <label class="letraGrande">{{naturalesAllModel.MesFechaNaci}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 text-center">
+                            <label class="letraGrande">{{naturalesAllModel.AnoFechaNaci}}</label>
+                        </div>
+                        <div class="col-xs-4 col-md-4 col-lg-4 FormatoNaturalesLeft">
+                            <label class="letraGrande">{{naturalesAllModel.Departamento}}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
+                        <!--titulos Pais estado civil-->
+                        <div class="col-xs-3 col-md-3 col-lg-3 text-center">
+                            <label class="text-bold">País</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 text-center Gt-ColorMorado FormatoNaturalesLeft">
+                            <label class="text-bold">Estado civil</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 text-center FormatoNaturalesLeft">
+                            <label class="text-bold">*Número de personas a cargo</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 text-center Gt-ColorMorado FormatoNaturalesLeft">
+                            <label class="text-bold">Nivel de estudios</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <!--Estados civiles-->
+                        <div class="col-xs-3 col-md-3 col-lg-3">
+                            <label class="letraGrande">{{naturalesAllModel.Pais}}</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesLeft">
+                            <label class="letraGrande">{{naturalesAllModel.EstadoCivil}}</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesLeft">
+                            <label class="letraGrande">{{naturalesAllModel.NumeroPersonasCargo}}</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesLeft">
+                            <label class="letraGrande">{{naturalesAllModel.NivelEstudio}}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
+                        <!--titulo profe,nacionalidad,numerocelular,correo electronico-->
+                        <div class="col-xs-3 col-md-4 col-lg-4 text-center FormatoNaturalesRight">
+                            <label class="text-bold">Título profesional</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 text-center FormatoNaturalesRight ">
+                            <label class="text-bold">*Nacionalidad</label>
+
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 text-center FormatoNaturalesRight  ">
+                            <label class="text-bold">*Número de celular</label>
+                        </div>
+                        <div class="col-xs-4 col-md-4 col-lg-4 text-center">
+                            <label class="text-bold">*Correo electrónico</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
+                        <!--profesi,nacionalidad,numerocelular,correo electronico-->
+                        <div class="col-xs-3 col-md-4 col-lg-4 FormatoNaturalesRight">
+                            <label class="letraGrande">{{naturalesAllModel.tituloProfesional}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight ">
+                            <label class="letraGrande">{{naturalesAllModel.Nacionalidad}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight ">
+                            <label class="letraGrande">{{naturalesAllModel.NumeroCelular}}</label>
+                        </div>
+                        <div class="col-xs-4 col-md-4 col-lg-4 ">
+                            <label class="letraGrande">{{naturalesAllModel.CorreoElectronico}}</label>
+                        </div>
+                    </div>
+                    <!--Fin Información personal-->
+
+
+
+
+
+                    <!-- Ubicación de la residencia -->
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesBorder bg-morado text-center">
+                        <label class="text-bold text-uppercase">* Ubicación de la residencia</label>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight  FormatoNaturalesTop">
+                        <!--titulo direcc,barrio,municipio,departamento,pais-->
+                        <div class="col-xs-3 col-md-3 col-lg-6 FormatoNaturalesRight">
+                            <label class="text-bold">*Dirección</label>
+                        </div>
+                        <div class="col-xs-4 col-md-4 col-lg-6  FormatoNaturalesRight">
+                            <label class="letraGrande">{{naturalesAllModel.Direccion}}</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-3 col-md-3 col-lg-3 text-center FormatoNaturalesRight">
+                            <label class="Capitalice text-bold">Barrio</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3  text-center FormatoNaturalesRight">
+                            <label class="text-bold">Municipio</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 text-center FormatoNaturalesRight">
+                            <label class="text-bold">Departamento</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 text-center">
+                            <label class="text-bold">Pais</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-3 col-md-3 col-lg-3 text-center FormatoNaturalesRight">
+                            <label class="Capitalice letraGrande">{{naturalesAllModel.BarrioReside}}</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3  text-center FormatoNaturalesRight">
+                            <label class="letraGrande">{{naturalesAllModel.CiudadReside}}</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 text-center FormatoNaturalesRight">
+                            <label class="letraGrande">{{naturalesAllModel.DepartamentoReside}}</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 text-center">
+                            <label class="letraGrande">{{naturalesAllModel.PaisReside}}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
+                        <!--Titulo telefono, vivienda, antiguedad, nombre arrendador,nombre arrendador-->
+                        <div class="col-xs-2 col-md-2 col-lg-2  FormatoNaturalesRight">
+                            <label class="text-bold">*Teléfono</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3  FormatoNaturalesRight">
+                            <label class="text-bold">Tipo de vivienda</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 Gt-ColorMorado  FormatoNaturalesRight">
+                            <label class="text-bold">Antigüedad de la vivienda</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3  FormatoNaturalesRight">
+                            <label class="text-bold">Nombre arrendador</label>
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1 ">
+                            <label class="text-bold">*Teléfono</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
+                        <!--Titulo telefono, vivienda, antiguedad, nombre arrendador,nombre arrendador-->
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande">{{naturalesAllModel.Telefono}}</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesRight">
+                            <label class="letraGrande">{{naturalesAllModel.TipoVivienda}}</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 text-center FormatoNaturalesRight">
+                            <div class="col-xs-12 col-md-12 col-lg-12">
+                                <div class="col-xs-6 col-md-6 col-lg-6 FormatoNaturalesRight">
+                                    <label class="letraGrande">{{naturalesAllModel.AnoFechaAnti}}</label>
+                                </div>
+                                <div class="col-xs-6 col-md-6 col-lg-6">
+                                    <label class="letraGrande">{{naturalesAllModel.MesFechaAnti}}</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesRight">
+                            <label class="letraGrande">{{naturalesAllModel.NombreArrendador}}</label>
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">
+                            <label class="letraGrande">{{naturalesAllModel.TelefonoArrendador}}</label>
+                        </div>
+                    </div>
+
+                    <!--Fin  Ubicación de la residencia -->
+
+                    <!-- Información laboral -->
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesBorder bg-morado text-center">
+                        <label class="text-bold text-uppercase">* Información laboral</label>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
+                        <!-- titulos activdad economica, ciiu ocupacion-->
+                        <div class="col-xs-4 col-md-4 col-lg-4 text-center FormatoNaturalesRight">
+                            <label class="text-bold">*Actividad económica</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 text-center FormatoNaturalesRight">
+                            <label class="text-bold">*CIIU</label>
+                        </div>
+                        <div class="col-xs-6 col-md- col-lg-6 Gt-ColorMorado text-center FormatoNaturalesRight">
+                            <label class="text-bold">* Tipo de ocupación</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft  FormatoNaturalesRight FormatoNaturalesTop">
+                        <!-- Activdad economica, ciiu ocupacion-->
+                        <div class="col-xs-4 col-md-4 col-lg-4 FormatoNaturalesRight">
+                            <label class="letraGrande">{{naturalesAllModel.ActividadEconomica}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande">{{naturalesAllModel.CodigoCiiu}}</label>
+                        </div>
+                        <!--Tipo de ocupacion-->
+                        <div class="col-xs-6 col-md-6 col-lg-">
+                            <label class="letraGrande">{{naturalesAllModel.TipoOcupacion}}</label>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <!--Direccion laboral-->
+                        <div class="col-xs-3 col-md-3 col-lg-3 text-center FormatoNaturalesRight">
+                            <label class="text-bold">* Dirección de la empresa</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-6 FormatoNaturalesRight">
+                            <label class="letraGrande">{{naturalesAllModel.DireccionLaboral}}</label>
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1 text-center FormatoNaturalesRight">
+                            <label class="text-bold">Telefono</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="letraGrande">{{naturalesAllModel.TelefonoLaboral}}</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-3 col-md-3 col-lg-3 text-center FormatoNaturalesRight">
+                            <label class="Capitalice text-bold">Barrio</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3  text-center FormatoNaturalesRight">
+                            <label class="text-bold">Municipio</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 text-center FormatoNaturalesRight">
+                            <label class="text-bold">Departamento</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 text-center">
+                            <label class="text-bold">Pais</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+
+                        <div class="col-xs-3 col-md-3 col-lg-3  FormatoNaturalesRight">
+                            <label class="letraGrande Capitalice">{{naturalesAllModel.BarrioLaboral}}</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesRight">
+                            <label class="letraGrande">{{naturalesAllModel.CiudadLaboral}}</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesRight">
+                            <label class="letraGrande">{{naturalesAllModel.DepartamentoLaboral }}</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3">
+                            <label class="letraGrande">{{naturalesAllModel.PaisLaboral}}</label>
+                        </div>
+                    </div>
+                    <!-- Empresa cargo y eps-->
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-3 col-md-3 col-lg-3 text-center FormatoNaturalesRight">
+                            <label class="Capitalice text-bold">* Empresa donde labora</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3  text-center FormatoNaturalesRight">
+                            <label class="text-bold">Nit de la empresa</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 text-center FormatoNaturalesRight">
+                            <label class="text-bold">Cargo u oficio</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 text-center">
+                            <label class="text-bold">EPS</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-3 col-md-3 col-lg-3  FormatoNaturalesRight">
+                            <label class="letraGrande Capitalice">{{naturalesAllModel.EmpresaLabora}}</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesRight">
+                            <label class="letraGrande">{{naturalesAllModel.NitLabora}}</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesRight">
+                            <label class="letraGrande">{{naturalesAllModel.CargoOficio}}</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3">
+                            <label class="letraGrande">{{naturalesAllModel.Eps}}</label>
+                        </div>
+                    </div>
+
+
+                    <!-- Administra recursos publicos, antiguedad empresa, nro empleados y tipo local-->
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight  FormatoNaturalesTop">
+                        <div class="col-xs-3 col-md-3 col-lg-3 text-center FormatoNaturalesRight">
+                            <label class="text-bold">Administra recursos públicos</label>
+                        </div>
+                        <div class="col-xs-4 col-md-4 col-lg-4 text-center Gt-ColorMorado  FormatoNaturalesRight">
+                            <label class="text-bold">Antigüedad en la empresa/negocio</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 text-center FormatoNaturalesRight">
+                            <label class="text-bold">Número de empleados</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 text-center ">
+                            <label class="text-bold">Tipo de local</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-3 col-md-3 col-lg-3">
+                            <label class="letraGrande">{{naturalesAllModel.AdministraRecursosPublicos}}
+
+                            </label>
+                        </div>
+                        <div class="col-xs-4 col-md-4 col-lg-4 FormatoNaturalesLeft FormatoNaturalesRight">
+                            <div class="col-xs-12 col-md-12 col-lg-12 ">
+                                <div class="col-xs-6 col-md-6 col-lg-6  FormatoNaturalesRight">
+                                    <label class="letraGrande">{{naturalesAllModel.AnosAntiguedadEmpresa}}</label>
+                                </div>
+                                <div class="col-xs-6 col-md-6 col-lg-6">
+                                    <label class="letraGrande">{{naturalesAllModel.MesesAntiguedadEmpresa}}</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesRight">
+                            <label class="letraGrande">{{naturalesAllModel.NEmpleados}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label>{{naturalesAllModel.TipoLocalLaboral}}</label>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesRight">
+                            <label class="text-bold">Nombre arrendador</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3">{{naturalesAllModel.NomArrendadorLaboral}}
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3  FormatoNaturalesLeft FormatoNaturalesRight">
+                            <label class="text-bold">Teléfono del arrendador</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3">{{naturalesAllModel.TeleArrendadorLaboral}}
+                        </div>
+                    </div>
+                    <!--Fin Información laboral -->
+
+
+
+                    <!--Información correspondencia-->
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesBorder bg-morado text-center">
+                        <label class="text-bold text-uppercase">ENVÍO DE INFORMACIÓN POR CORRESPONDENCIA</label>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-6 col-md-6 col-lg-4 FormatoNaturalesRight">
+                            <label>En qué dirección desea recibir su correspondencia:</label>
+                        </div>
+                        <div class="col-xs-6 col-md-6 col-lg-6">
+                            <label class="letraGrande">{{naturalesAllModel.Correspondencia}}</label>
+                        </div>
+                    </div>
+                    <!--Fin Información correspondencia -->
+
+
+                    <!--Entrevista-->
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesBorder bg-morado text-center">
+                        <label class="text-bold text-uppercase">Entrevista</label>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-6 col-md-6 col-lg-4">
+                            <label>¿Administra dineros de terceros a su nombre?</label>
+                        </div>
+                        <div class="col-xs-6 col-md-6 col-lg-6">
+                            <div class="col-xs-12 col-md-3 col-lg-3 ">
+                                <label class="letraGrande">
+                                    {{naturalesAllModel.Administradineros}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-4 col-md-6 col-lg-4">
+                            <label>¿Posee otra actividad económica secundaria que le reporte ingresos?</label>
+                        </div>
+                        <div class="col-xs-8 col-md-6 col-lg-8">
+                            <div class="col-xs-1 col-md-1 col-lg-1">
+                                <label class="letraGrande">{{naturalesAllModel.OtraActividad}}</label>
+                            </div>
+                            <div class="col-xs-2 col-md-3 col-lg-1">
+                                <label>¿Cuál?</label>
+                            </div>
+                            <div class="col-xs-4 col-md-2 col-lg-4">
+                                <label class="letraGrande Capitalice">{{naturalesAllModel.CualActivdad}}</label>
+                            </div>
+                            <div class="col-xs-2 col-md-4 col-lg-2">
+                                <label>¿Por qué valor?</label>
+                            </div>
+                            <div class="col-xs-3 col-md-2 col-lg-3">
+                                <label class="letraGrande" currencyMask>$
+                                    {{naturalesAllModel.GanaActividad | currency:'':'' : '1.0'}} </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesBottom FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-6 col-md-6 col-lg-5">
+                            <label>¿Cuál es el valor promedio mensual de consignaciones que realiza en sus
+                                productos?</label>
+                        </div>
+                        <div class="col-xs-6 col-md-6 col-lg-6">
+                            <div class="col-xs-3 col-md-3 col-lg-6">
+                                <label class="letraGrande">$
+                                    {{naturalesAllModel.ValorPromedio | currency:'':'' : '1.0'}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Fin Entrevista-->
+
+
+
+                    <!--Información financiera-->
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesBorder bg-morado text-center">
+                        <label class="text-bold text-uppercase">INFORMACIÓN FINANCIERA</label>
+                    </div>
+
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom bg-morado">
+                        <div class="col-xs-6 col-md-6 col-lg-6 text-center FormatoNaturalesRight">
+                            <label class="text-bold">INGRESOS</label>
+                        </div>
+                        <div class="col-xs-6 col-md-6 col-lg-6 text-center">
+                            <label class="text-bold">EGRESOS</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
+                        <div class="col-xs-4 col-md-4 col-lg-4">
+                            <label> <label class="text-bold">1.</label> Salario/ventas </label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande">${{naturalesAllModel.Salario | currency:'':'': '1.0'}}</label>
+                        </div>
+                        <div class="col-xs-4 col-md-4 col-lg-4">
+                            <label> <label class="text-bold">1.</label> Valor arriendo</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="letraGrande">${{naturalesAllModel.ValorArriendo | currency:'':'' : '1.0'}}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
+                        <div class="col-xs-4 col-md-4 col-lg-4">
+                            <label> <label class="text-bold">2.</label> Comisiones</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande">${{naturalesAllModel.Comisiones | currency:'':'' : '1.0'}}</label>
+                        </div>
+                        <div class="col-xs-4 col-md-4 col-lg-4">
+                            <label><label class="text-bold">2.</label>Obligaciones financieras</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="letraGrande">${{naturalesAllModel.ObligacionesFinancieras | currency:'':'' : '1.0'}}</label>
+                        </div>
+                    </div>
+
+
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
+                        <div class="col-xs-4 col-md-4 col-lg-4">
+                            <label> <label class="text-bold">3.</label> Arriendos</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande">${{naturalesAllModel.Arriendos | currency:'':'' : '1.0'}}</label>
+                        </div>
+                        <div class="col-xs-4 col-md-4 col-lg-4">
+                            <label> <label class="text-bold">3.</label> Otras obligaciones</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="letraGrande">${{naturalesAllModel.OtrasObligaciones | currency:'':'' : '1.0'}}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
+                        <div class="col-xs-4 col-md-4 col-lg-4">
+                            <label> <label class="text-bold">4.</label> Otros ingresos</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande">${{naturalesAllModel.OtrosIngresos | currency:'':'' : '1.0'}}</label>
+                        </div>
+                        <div class="col-xs-4 col-md-4 col-lg-4">
+                            <label><label class="text-bold">4.</label> Gastos familiares</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="letraGrande">${{naturalesAllModel.GastosFamiliares | currency:'':'' : '1.0'}}</label>
+                        </div>
+                    </div>
+
+
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
+                        <div class="col-xs-4 col-md-4 col-lg-4">
+                            <label> <label class="text-bold">5.</label>Total ingresos <label class="text-bold">(1+2+3+4)</label></label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande">${{naturalesAllModel.TotalIngresos | currency:'':'' : '1.0'}}</label>
+                        </div>
+                        <div class="col-xs-4 col-md-4 col-lg-4">
+                            <label> <label class="text-bold">5.</label>Otros egresos</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="letraGrande">${{naturalesAllModel.OtrosEgresos | currency:'':'' : '1.0'}}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
+                        <div class="col-xs-4 col-md-4 col-lg-4">
+                            <label> <label class="text-bold">6.</label>Costos y gastos</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande">${{naturalesAllModel.CostosGastos | currency:'':'' : '1.0'}}</label>
+                        </div>
+                        <div class="col-xs-4 col-md-4 col-lg-4">
+                            <label>Total egresos <label class="text-bold">(1+2+3+4+5)</label></label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="letraGrande">${{naturalesAllModel.TotalEgresos | currency:'':'' : '1.0'}}</label>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
+                        <div class="col-xs-4 col-md-4 col-lg-4">
+                            <label>Total ingresos operacionales <label class="text-bold">(5-6)</label></label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande">${{naturalesAllModel.TotalIngresosOperacionales | currency:'':'' : '1.0'}}</label>
+                        </div>                        
+                    </div>
+
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
+                        <div class="col-xs-4 col-md-4 col-lg-4">
+                            <label> Descripción de otros ingresos </label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="text-bold">Total activos</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesBorder">
+                            <label class="letraGrande">${{naturalesAllModel.TotalActivos | currency:'':'' : '1.0'}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="text-bold">Total pasivos</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesBorder">
+                            <label class="letraGrande">${{naturalesAllModel.TotalPasivos | currency:'':'' : '1.0'}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="text-bold">Total patrimonio</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesBorder">
+                            <label class="letraGrande">${{naturalesAllModel.TotalPatrimonio| currency:'':'' : '1.0'}}</label>
+                        </div>
+
+                    </div>
+                    <!--Fin Información financiera-->
+
+
+
+                    <!--Activos-->
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesBorder bg-morado text-center">
+                        <label class="text-bold text-uppercase">ACTIVOS</label>
+                    </div>
+                    <!--Propiedad-->
+                    <div class="col-xs-12 col-md-12 col-lg-12 text-center Gt-ColorMorado FormatoNaturalesBorder ">
+                        <label class="text-bold ">Bien inmueble</label>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="text-bold">Propiedad</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="text-bold">Dirección</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="text-bold">Municipio</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 ">
+                            <label class="text-bold">Valor comercial</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="text-bold">Valor deuda</label>
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">
+                            <label class="text-bold">A favor</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom" *ngFor="let Propiedad of ArrayPropiedad">
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="letraGrande">{{Propiedad.TipoActivo}} &nbsp;</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="letraGrande">{{Propiedad.Direccion}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="letraGrande">{{Propiedad.Ciudad}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="letraGrande">${{Propiedad.Valor | currency:'':'' : '1.0'}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="letraGrande">${{Propiedad.ValorDeuda | currency:'':'' : '1.0'}}</label>
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">
+                            <label class="letraGrande">{{Propiedad.Afavor}}</label>
+                        </div>
+
+                    </div>
+                    <!-- fin  Propiedad-->
+                    <!--Vehiculo-->
+                    <div class="col-xs-12 col-md-12 col-lg-12 text-center Gt-ColorMorado FormatoNaturalesBorder ">
+                        <label class="text-bold ">Vehiculo</label>
+                    </div>
+
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="text-bold">Vehiculo</label>
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">
+                            <label class="text-bold">Marca</label>
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">
+                            <label class="text-bold">Modelo</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="text-bold">Placa</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="text-bold">Valor comercial</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="text-bold">Valor deuda</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="text-bold">A favor</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom" *ngFor="let Propiedad of ArrayVehiculo">
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="letraGrande">{{Propiedad.TipoActivo}}</label>
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">
+                            <label class="letraGrande Capitalice">{{Propiedad.Marca}}</label>
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">
+                            <label class="letraGrande">{{Propiedad.Modelo}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="letraGrande CapitaliceMayus">{{Propiedad.Placa}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="letraGrande">${{Propiedad.Valor | currency:'':'' : '1.0'}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 ">
+                            <label class="letraGrande">${{Propiedad.ValorPignorado | currency:'':'' : '1.0'}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 ">
+                            <label class="letraGrande">{{Propiedad.Afavor}}</label>
+                        </div>
+
+                    </div>
+                    <!--Fin Vehiculos-->
+
+                    <!--Otros-->
+                    <div class="col-xs-12 col-md-12 col-lg-12 text-center Gt-ColorMorado FormatoNaturalesBorder ">
+                        <label class="text-bold ">Otros</label>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="text-bold">Activo</label>
+                        </div>
+                        <div class="col-xs-4 col-md-2 col-lg-4">
+                            <label class="text-bold">Ciudad</label>
+                        </div>
+                        <div class="col-xs-3 col-md-2 col-lg-3">
+                            <label class="text-bold">Descripción</label>
+                        </div>
+                        <div class="col-xs-3 col-md-2 col-lg-3">
+                            <label class="text-bold">Valor comercial</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom" *ngFor="let otros of ArrayOtros">
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="letraGrande">{{otros.TipoActivo}} &nbsp;</label>
+                        </div>
+                        <div class="col-xs-4 col-md-2 col-lg-4 ">
+                            <label class="letraGrande">{{otros.Ciudad}}</label>
+                        </div>
+                        <div class="col-xs-3 col-md-2 col-lg-3">
+                            <label class="letraGrande">{{otros.Descripcion}}</label>
+                        </div>
+                        <div class="col-xs-3 col-md-2 col-lg-3 ">
+                            <label class="letraGrande">${{otros.Valor | currency:'':'' : '1.0'}}</label>
+                        </div>
+                    </div>
+                    <!--Fin Otros-->
+
+                    <!--Fin Activos-->
+
+
+                    <!--INFORMACIÓN DEL CONYUGUE-->
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesBorder bg-morado text-center">
+                        <label class="text-bold text-uppercase"> INFORMACIÓN DEL CONYUGUE</label>
+                    </div>
+
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="text-bold">Tipo de documento</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="text-bold">Número</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="text-bold">Primer apellido</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="text-bold">Segundo apellido</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="text-bold">Primer nombre</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 ">
+                            <label class="text-bold">Primer nombre</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande">{{naturalesAllModel.TipoDocConyugue}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande">{{naturalesAllModel.DocumentoConyugue}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande Capitalice">{{naturalesAllModel.PrimerApellidoConyugue}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande Capitalice">{{naturalesAllModel.SegundoApellidoConyugue}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande Capitalice">{{naturalesAllModel.PrimerNombreConyugue}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="letraGrande Capitalice">{{naturalesAllModel.SegundoNombreConyugue}}</label>
+                        </div>
+                    </div>
+
+
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-2 col-md-2 col-lg-2 text-center FormatoNaturalesRight">
+                            <label class="text-bold">Teléfono residencia</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 text-center FormatoNaturalesRight">
+                            <label class="text-bold">Número celular</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 text-center FormatoNaturalesRight">
+                            <label class="text-bold">Empresa donde labora</label>
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1 text-center Gt-ColorMorado FormatoNaturalesRight">
+                            <label class="text-bold">Ocupación</label>
+                        </div>
+                        <div class="col-xs-4 col-md-4 col-lg-4 text-center ">
+                            <label class="text-bold">Detalle de la ocupación para otros </label>
+                        </div>
+                    </div>
+
+
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande">{{naturalesAllModel.TelefonoRConyugue}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight ">
+                            <label class="letraGrande">{{naturalesAllModel.CelularConyugue}}</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesRight">
+                            <label class="letraGrande">{{naturalesAllModel.EmpresaLaboraConyugue}}</label>
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1 FormatoNaturalesRight">
+                            <label class="letraGrande">{{naturalesAllModel.OcupacionConyugue}}</label>
+                        </div>
+                        <div class="col-xs-4 col-md-4 col-lg-4 FormatoNaturalesRight ">
+                            <label class="letraGrande Capitalice">{{naturalesAllModel.DetallesOcupacionConyugue}}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-2 col-md-2 col-lg-2 text-center FormatoNaturalesRight">
+                            <label class="text-bold">Ingresos</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 text-center FormatoNaturalesRight">
+                            <label class="text-bold">Egresos</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 text-center FormatoNaturalesRight">
+                            <label class="text-bold">Nit de la empresa</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 text-center FormatoNaturalesRight ">
+                            <label class="text-bold">Antigüedad empresa</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 text-center">
+                            <label class="text-bold">Teléfono empresa</label>
+                        </div>
+                    </div>
+
+
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande">{{naturalesAllModel.IngresosConyugue | currency:'':'' : '1.0'}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande">{{naturalesAllModel.EgresosConyugue | currency:'':'' : '1.0'}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande">{{naturalesAllModel.NitEmpresaConyugue}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <div class="col-xs-6 col-md-6 col-lg-6">
+                                <label class="letraGrande">{{naturalesAllModel.AnosAntiguedadEmpresaConyugue}}</label>
+                            </div>
+                            <div class="col-xs-6 col-md-6 col-lg-6">
+                                <label class="letraGrande">{{naturalesAllModel.MesesAntiguedadEmpresaConyugue}}</label>
+                            </div>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="letraGrande">{{naturalesAllModel.TelefonoEmpresaConyugue}}</label>
+                        </div>
+                    </div>
+
+                    <!--Fin INFORMACIÓN DEL CONYUGUE-->
+
+
+                    <!--OPERACIONES DE MONEDA EXTRANJERA-->
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesBorder bg-morado text-center">
+                        <label class="text-bold text-uppercase"> OPERACIONES DE MONEDA EXTRANJERA </label>
+                    </div>
+                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight">
+                        <div class="col-xs-3 col-md-3 col-lg-3">
+                            <label>¿Realiza operaciones de moneda extranjera?</label> &nbsp;&nbsp;&nbsp;
+                            <label class="letraGrande">{{naturalesAllModel.OperacionMonedaExtrangera}}</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3">
+                            <label>Entidad</label> &nbsp;&nbsp; <label class="letraGrande">{{naturalesAllModel.Entidad}}</label>
+                        </div>
+                        <div class="col-xs-3 col-md-2 col-lg-3">
+                            <div class="col-xs-12 col-md-2 col-lg-12">
+                                <div class="col-xs-4 col-md-2 col-lg-4" *ngIf="mostrarImporta">
+                                    <label class="letraGrande">Importa</label>
+                                </div>
+                                <div class="col-xs-4 col-md-2 col-lg-4" *ngIf="mostrarExporta">
+                                    <label class="letraGrande">Exporta</label>
+                                </div>
+                                <div class="col-xs-4 col-md-2 col-lg-4" *ngIf="mostrarGiros">
+                                    <label class="letraGrande">Giros</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-3 col-md-2 col-lg-3">
+                            <label>Tipo producto</label> &nbsp;&nbsp; <label class="letraGrande">{{naturalesAllModel.TipoProducto}}</label>
+                        </div>
+                    </div>
+
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-3 col-md-3 col-lg-3">
+                            <label>País: </label> &nbsp; <label class="letraGrande">{{naturalesAllModel.PaiseEntrevista}}</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3">
+                            <label>Moneda: </label> &nbsp; <label class="letraGrande">{{naturalesAllModel.Moneda}}</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3">
+                            <label>Monto promedio mes: </label> &nbsp; <label class="letraGrande">${{naturalesAllModel.MontoPromedio | currency:'':'' : '1.0'}}</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3">
+                            <label>Ciudad: </label> &nbsp; <label class="letraGrande">{{naturalesAllModel.Ciudadoperacion}}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-3 col-md-3 col-lg-3">
+                            <label>¿Tiene inversiones en moneda extranjera? </label>
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">
+                            <label class="letraGrande">{{naturalesAllModel.TieneInversionMonedaExtrangera}}</label>
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">
+                            <label>Pais</label>
+                        </div>
+                        <div class="col-xs-3 col-md-1 col-lg-3">
+                            <label class="letraGrande">
+                            {{naturalesAllModel.PaisTiene}}
+                            </label>
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">
+                            <label>Moneda</label>
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">
+                            <label class="letraGrande">
+                            {{naturalesAllModel.MonedaTiene}}
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-3 col-md-4 col-lg-3">
+                            <label>¿Posee cuentas en moneda extranjera?</label>
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">
+                            <label class="letraGrande">
+                            {{naturalesAllModel.PoseeCuentaMonedaExtrangera}}
+                            </label>
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">
+                            <label>Cuenta</label>
+                        </div>
+                        <div class="col-xs-3 col-md-1 col-lg-2">
+                            <label class="letraGrande">
+                            {{naturalesAllModel.CuentaMonedaExtrangera}}
+                        </label>
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">
+                            <label>Pais</label>
+                        </div>
+                        <div class="col-xs-3 col-md-1 col-lg-2">
+                            <label class="letraGrande">
+                            {{naturalesAllModel.PaisPosee}}
+                            </label>
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">
+                            <label>Moneda</label>
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">
+                            <label class="letraGrande">
+                            {{naturalesAllModel.MonedaPosee}}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-3 col-md-4 col-lg-4">
+                            <label>Declaro que no realizo transacciones en moneda extranjera</label>
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">
+                            <label class="letraGrande">
+                                {{naturalesAllModel.DeclaroQueNoTransacciones}}
+                            </label>
+                        </div>
+                    </div>
+
+                    <!--Fin OPERACIONES DE MONEDA EXTRANJERA-->
+
+
+                    <!-- DECLARACIÓN DE ORIGEN DE FONDOS-->
+
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesBorder bg-morado text-center">
+                        <label class="text-bold text-uppercase">DECLARACIÓN DE ORIGEN DE FONDOS </label>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesBorder text-justify">
+                        <p class="paddingNaturales">
+                            Yo ___________________________ identificado con documento de identidad N° ___________________Expedido en ___________________obrando en nombre propio y/o de la persona que represento, de manera voluntaria y dando certeza de que todo lo aquí consignado
+                            es cierto, realizo la siguiente declaración de origen de fondos de Coogranada con el propósito de que se pueda dar cumplimiento a lo señalado en la circular externa 007 de 2008, expedida por la Súper Intendencia de la Economía
+                            Solidaria, el estatuto orgánico del sistema financiero (Decreto 663 de 1993), ley 190 de 1995, estatuto anticorrupción y demás normas legales concordantes para la apertura y manejo de cuentas corrientes de ahorros y certificados
+                            de depósitos a término, declaro que:
+                            <br /> 1.Los recursos y bienes que entrego y entregaré a Coogranada, provienen de mi actividad principal y de las siguientes fuentes (detalle de la ocupación oficio, profesión, actividad, negocio, etc.) _____________________________________________________________________________________________________
+                            <br /> 2.Los recursos y demás activos que entrego y entregaré a Coogranada, no provienen de ninguna actividad ilícita de las contempladas en el código penal colombiano o en cualquier norma que lo modifique o adicione.
+                            <br /> 3.No admitiré que terceros efectúen depósitos a mis cuentas con fondos provenientes de las actividades ilícitas contempladas en el código penal colombiano o cualquier norma que lo modifique o adicione, ni efectuare transacciones
+                            destinadas a tales actividades a favor de las personas relacionadas con las mismas.
+                            <br /> 4.Autorizo a saldar cuentas y depósitos de cualquier tipo que mantenga con Coogranada, en caso de infracción o falsedad de cualquiera de los numerales anteriores, eximiendo a Coogranada de toda la responsabilidad que
+                            se derive de información errónea o falsa que yo hubiere proporcionado en este documento o de la violación de los compromisos aquí adquiridos.
+                        </p>
+                    </div>
+
+                    <!--Fin DECLARACIÓN DE ORIGEN DE FONDOS-->
+
+
+                    <!-- Referencias-->
+
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesBorder bg-morado text-center">
+                        <label class="text-bold text-uppercase">* REFERENCIAS</label>
+                    </div>
+                    <!-- Familiares (que no vivan con usted)-->
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesBorder bg-morado  text-center">
+                        <label class="text-bold">Familiares (que no vivan con usted)</label>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight">
+                        <div class="col-xs-4 col-md-4 col-lg-4 FormatoNaturalesRight">
+                            <label class="text-bold">Nombre</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="text-bold">Parentesco</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="text-bold">Teléfono residencia</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="text-bold">Número celular</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="text-bold">Teléfono empresa</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop" *ngFor="let Familiar of ArrayFamiliar">
+                        <div class="col-xs-4 col-md-4 col-lg-4 FormatoNaturalesRight">
+                            <label class="letraGrande Capitalice">{{Familiar.Nombre}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande">{{Familiar.parentesco}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande">{{Familiar.Telefono1}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande">{{Familiar.Telefono2}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="letraGrande">{{Familiar.Telefono3}}</label>
+                        </div>
+                    </div>
+
+                    <!-- Fin Familiares (que no vivan con usted)-->
+                    <!-- Personales (que no sean familiares)-->
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesBorder  bg-morado  text-center">
+                        <label class="text-bold">Personales (que no sean familiares) </label>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight  ">
+                        <div class="col-xs-4 col-md-4 col-lg-4 FormatoNaturalesRight">
+                            <label class="text-bold">Nombre</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="text-bold">Relación</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="text-bold">Teléfono residencia</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="text-bold">Número celular</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label class="text-bold">Teléfono empresa</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop" *ngFor="let Personal of ArrayPersonal">
+                        <div class="col-xs-4 col-md-4 col-lg-4 FormatoNaturalesRight">
+                            <label class="letraGrande Capitalice">{{Personal.Nombre}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande">{{Personal.parentesco}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande">{{Personal.Telefono1}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande">{{Personal.Telefono2}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 ">
+                            <label class="letraGrande">{{Personal.Telefono3}}</label>
+                        </div>
+                    </div>
+
+
+                    <!--Fin Personales (que no sean familiares)-->
+                    <!-- Comerciales-->
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesBorder   bg-morado text-center">
+                        <label class="text-bold">Comerciales</label>
+                    </div>
+                    <!-- Comercial -->
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight  ">
+                        <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesRight">
+                            <label class="text-bold">Nombre/Empresa</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesRight">
+                            <label class="text-bold">Teléfono</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesRight">
+                            <label class="text-bold">Ciudad</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3">
+                            <label class="text-bold">Servicios o producto</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom" *ngFor="let Comercial of ArrayComercial">
+                        <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesRight">
+                            <label class="letraGrande">{{Comercial.Nombre}}</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesRight">
+                            <label class="letraGrande">{{Comercial.Telefono}}</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesRight">
+                            <label class="letraGrande">{{Comercial.Ciudad}}</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3">
+                            <label class="letraGrande ">{{Comercial.Servicio}}</label>
+                        </div>
+                    </div>
+                    <!-- Fin Comercial -->
+                    <!--Fin Comerciales-->
+
+                    <!--Fin Financieras-->
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesBorder bg-morado  text-center">
+                        <label class="text-bold">Financieras</label>
+                    </div>
+                    <!-- Financiera 1-->
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight ">
+                        <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesRight">
+                            <label class="text-bold">Entidad</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="text-bold">Teléfono</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="text-bold">Oficina</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="text-bold">Servicios o producto</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3">
+                            <label class="text-bold">Número producto</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom" *ngFor="let Financiera of ArrayFinanciaria">
+                        <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesRight">
+                            <label class="letraGrande">{{Financiera.Nombre}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande">{{Financiera.Telefono}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande">{{Financiera.Oficina}}</label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande ">{{Financiera.Servicio}}</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3">
+                            <label class="letraGrande">{{Financiera.NroServicio}}</label>
+                        </div>
+                    </div>
+                    <!-- Fin Financiera -->
+                    <!--Fin Financieras-->
+
+                    <!-- Fin  Referencias-->
+
+
+                    <!-- INFORMACIÓN SOBRE PEPS-->
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesBorder bg-morado text-center">
+                        <label class="text-bold text-uppercase">
+                            INFORMACIÓN SOBRE PEPS
+                        </label>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-8 col-md-8 col-lg-6">
+                            <label>¿Es usted una persona expuesta políticamente o públicamente?</label>
+                        </div>
+                        <div class="col-xs-4 col-md-4 col-lg-4">
+                            <label class="letraGrande">{{naturalesAllModel.PersonaPEPS}}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-8 col-md-8 col-lg-6">
+                            <label>¿Maneja recursos públicos?</label>
+                        </div>
+                        <div class="col-xs-4 col-md-4 col-lg-4">
+                            <label class="letraGrande">{{naturalesAllModel.ManejaRecursosPublicos}}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
+                        <div class="col-xs-8 col-md-8 col-lg-6">
+                            <label>¿Por su cargo o actividad ejerce algún grado de poder público?</label>
+                        </div>
+                        <div class="col-xs-4 col-md-4 col-lg-4">
+                            <label class="letraGrande">{{naturalesAllModel.PorCargoPoderPublico}}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
+                        <div class="col-xs-8 col-md-8 col-lg-6">
+                            <label>¿Por su actividad u oficio, goza usted de reconocimiento público?</label>
+                        </div>
+                        <div class="col-xs-4 col-md-4 col-lg-4">
+                            <label class="letraGrande">{{naturalesAllModel.PorActividadPoderPublico}}</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-8 col-md-8 col-lg-6">
+                            <label>¿Existe algún vínculo entre usted y una persona considerada públicamente
+                                expuesta?</label>
+                        </div>
+                        <div class="col-xs-4 col-md-4 col-lg-4">
+                            <label class="letraGrande">{{naturalesAllModel.VinculoEntreUnPeps}}</label>
+                        </div>
+                    </div>
+                    <br />
+
+
+                    <!-- Relaciones peps -->
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
+                        <div class="col-sm-3 col-xs-3 col-lg-3 FormatoNaturalesRight text-center">
+                            <label class="text-center  text-bold">Apellidos y nombre</label>
+                        </div>
+                        <div class="col-sm-3 col-xs-3 col-lg-3 FormatoNaturalesRight">
+                            <label class="text-center text-bold">Identificación</label>
+                        </div>
+                        <div class="col-sm-2 col-xs-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="text-center text-bold">Cargo</label>
+                        </div>
+                        <div class="col-sm-2 col-xs-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="text-center text-bold">Periodo</label>
+                        </div>
+                        <div class="col-sm-2 col-xs-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="text-center text-bold">Parentesco</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop " *ngFor="let pepsArry of ArrayPeps">
+                        <div class="col-sm-3 col-xs-3 col-lg-3 FormatoNaturalesRight">
+                            <label class="letraGrande Capitalice">{{pepsArry.NombrePeps}}</label>
+                        </div>
+                        <div class="col-sm-3 col-xs-3 col-lg-3 FormatoNaturalesRight">
+                            <label class="letraGrande">{{pepsArry.DocumentoPeps}}</label>
+                        </div>
+                        <div class="col-sm-2 col-xs-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande">{{pepsArry.Cargo}}</label>
+                        </div>
+                        <div class="col-sm-2 col-xs-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande">{{pepsArry.Periodo}}</label>
+                        </div>
+                        <div class="col-sm-2 col-xs-2 col-lg-2">
+                            <label class="letraGrande">{{pepsArry.Parentesco}}</label>
+                        </div>
+                    </div>
+
+                    <!-- Fin Relaciones peps -->
+
+                    <!--Fin INFORMACIÓN SOBRE PEPS-->
+
+                    <!-- DILIGENCIAR SI USTED ES CODEUDOR-->
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesBorder bg-morado text-center">
+                        <label class="text-bold text-uppercase">
+                            DILIGENCIAR SI USTED ES CODEUDOR
+                        </label>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight ">
+
+                        <div class="col-xs-4 col-md-4 col-lg-4 FormatoNaturalesRight">
+                            <label class="text-bold">*Nombre del deudor</label>
+                        </div>
+
+                        <div class="col-xs-4 col-md-4 col-lg-4 FormatoNaturalesRight">
+                            <label class="text-bold">*Tipo de identificación</label>
+                        </div>
+
+                        <div class="col-xs-4 col-md-4 col-lg-4">
+                            <label class="text-bold">*Número</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
+                        <div class="col-xs-4 col-md-4 col-lg-4 FormatoNaturalesRight">
+                            <label class="letraGrande">{{naturalesServicio.NombreDeudor}}</label>
+                        </div>
+                        <div class="col-xs-4 col-md-4 col-lg-4 FormatoNaturalesRight ">
+                            <label class="letraGrande">{{naturalesServicio.TipoIdentificacion}}</label>
+                        </div>
+                        <div class="col-xs-4 col-md-4 col-lg-4">
+                            <label class="letraGrande">{{naturalesServicio.NumeroDocDeudor}}</label>
+                        </div>
+                    </div>
+
+                    <!--  AUTORIZACIONES PARA LA PROTECCIÓN DE DATOS PERSONALES-->
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesBorder bg-morado text-center">
+                        <label class="text-bold text-uppercase">
+                            AUTORIZACIONES PARA LA PROTECCIÓN DE DATOS PERSONALES
+                        </label>
+                    </div>
+
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesBorder paddingNaturales text-justify">
+                        <p>
+                            En el cumplimiento de la ley 1581 del 2012 y sus decretos complementarios, se le comunica que la información personal suministrada por usted en el presente documento se encuentra bajo la custodia de la Cooperativa San Pio X COOGRANADA o por cualquier
+                            entidad del grupo, la cual cuenta con unas políticas de tratamiento de los mismos, que pueden ser consultadas en http://www.coogranada.coop/, del mismo modo puede ejercer los derechos de conocer, corregir, aclarar o suprimir
+                            los datos recolectados o revocar esta autorización, de forma gratuita y en cualquier momento comunicándose al correo electrónico protecciondedatos&#64;coogranada.com.co, al teléfono 034 204 11 55 o directamente en las oficinas
+                            ubicadas en la ciudad de Medellín, Calle 46 #52 A-14, Piso 3; los datos suministrados que se encuentran descritos como sensibles son de carácter facultativos en su respuesta; La información contenida en esta base de datos será
+                            utilizada y tiene como única la identificación plena de la persona, con que se tiene una relación de carácter cooperativa(Asociado) y personas que gozan de los servicios de la Cooperativa sin ser Asociados, lo anterior con
+                            el fin de establecer comunicación, gestionar la cartera, obtener una adecuada segmentación sociodemográfica, consultas en centrales de riesgo y gestión interna; al regresar el presente documento con su firma usted está otorgando
+                            la autorización para realizar el mencionado tratamiento
+                        </p>
+                    </div>
+                    <!-- Fin AUTORIZACIONES PARA LA PROTECCIÓN DE DATOS PERSONALES-->
+
+                    <!-- DECLARACIONES Y AUTORIZACIONES -->
+
+                    <!-- Fin DECLARACIONES Y AUTORIZACIONES -->
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesBorder bg-morado text-center">
+                        <label class="text-bold text-uppercase">
+                            DECLARACIONES Y AUTORIZACIONES
+                        </label>
+                    </div>
+
+                    <p class="paddingNaturales text-justify">
+                        <span><span class="text-bold">AUTORIZACIÓN CONSULTA EN CENTRALES DE RIESGOS: </span>Autorizo de manera irrevocable a la COOPERATIVA COOGRANADA, para que con fines estadísticos de información comercial y de evaluación de riesgos,
+                        consultar en centrales de riesgos el comportamiento comercial, hábitos de pago, manejo de crédito y obligaciones contraídas con anterioridad o posterioridad a la firma de este documento. Autorizo además cuando se requiera, reportar
+                        información a centrales de riesgos y entidades de crédito de toda conformidad con las normas legales.
+                        </span>
+                        <br>
+                        <span><span class="text-bold">COMUNICACIONES:</span> Autorizo de manera expresa a LA COOPERATIVA COOGRANADA, para que esta me envíe comunicaciones que considere pertinentes, de tipo comercial o de información sobre el estado de
+                        los productos con LA COOPERATIVA COOGRANADA, utilizando para tal fin cualquier medio idóneo escrito, electrónico, etc.), asumiendo (el costo que eventualmente genere la recepción de éstas o los productos o servicios tramitados
+                        o transados por cualquiera de estos medios. Así mismo, autorizo (amos) a LA COOPERATIVA COOGRANADA para que mis conversaciones relacionadas con mis negocios y/o cobranzas puedan ser grabadas o escuchadas en cualquier momento.
+                        </span>
+                        <br>
+                        <span><span class="text-bold">VERACIDAD DE LA INFORMACIÓN:</span> Hago constar que la información suministrada para efectos de la aprobación y acceder a productos y servicios es veraz y verificable, y que conozco la obligación
+                        legal de actualizar esta información debidamente como mínimo una vez al año o cuando LA COOPERATIVA COOGRANADA lo requiera y de manera voluntaria y oportuna cuando surja algún cambio y de no hacerlo, acepto el bloqueo y la cancelación
+                        de mis productos y servicios.
+                        </span>
+
+                        <span><span class="text-bold">AVISO OPORTUNO DEL DEUDOR:</span> Los potenciales deudores de Coogranada deberán informar oportunamente de cualquier problema que pueda poner en riesgo el pago adecuado de la deuda.
+                        </span>
+                        <br>
+                        <span><span class="text-bold">CONOCIMIENTO DE DERECHOS Y DEBERES</span> (Solo para la Vinculación): Declaro que conozco los derechos y deberes en calidad de asociado de la Cooperativa, y acataré las normas y leyes, estatutos y
+                        reglamentos aplicables.
+                        </span>
+                        <br>
+                        <span><span class="text-bold">AUTORIZACIÓN DÉBITO AUTOMÁTICO:</span> Autorizo a la COOPERATIVA COOGRANDA a realizar débito automático, para el pago de mis aportes sociales anuales para permanecer activos.
+                        </span>
+                        <br>
+                        <span> <span class="text-bold">BENEFICIOS ASOCIADOS:</span> Los beneficios sociales que entrega la COOPERATIVA COOGRANADA a sus asociados aplican condiciones y restricciones, además pueden variar de acuerdo a las políticas de la
+                        Cooperativa. </span>
+                    </p>
+
+                    <table>
+                        <tr>
+                            <td>
+                                <!--Huella y firma-->
+                                <h1 class=SaltoDePagina> </h1>
+                                <div class=" col-sm-12 col-xs-12 col-lg-12 saltopagina">
+                                    <div class="col-sm-2 col-xs-2 col-lg-2">
+                                        <br />
+                                        <br />
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-xs-12 col-lg-12">
+                                    <div class="col-sm-1 col-xs-1 col-lg-1">
+                                    </div>
+
+                                    <div class="col-sm-6 col-xs-6 col-lg-6">
+                                        <div class="col-sm-12 col-xs-6 col-lg-12">
+                                            Firma: ______________________________
+                                            <br>
+                                        </div>
+                                        <div class="col-sm-12 col-xs-6 col-lg-12">
+                                            <br><br>
+                                        </div>
+                                        <div class="col-sm-12 col-xs-6 col-lg-12">
+                                            C.C: ______________________________
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-2 col-xs-2 col-lg-2">
+                                        <div class="panel text-center huellaDactilar">
+                                            <div class="panel-body">
+                                                <div class=" col-sm-12 col-xs-12 col-lg-12"><br /> </div>
+                                                <div class=" col-sm-12 col-xs-12 col-lg-12"><br /> </div>
+                                                <div class=" col-sm-12 col-xs-12 col-lg-12"><br /> </div>
+                                                <div class=" col-sm-12 col-xs-12 col-lg-12"><br /> </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Huella y firma-->
+
+
+                                <div class=" col-sm-12 col-xs-12 col-lg-12">
+                                    <div class="col-sm-2 col-xs-2 col-lg-2">
+                                        <br />
+                                    </div>
+                                </div>
+
+
+                            </td>
+                        </tr>
+                    </table>
+                    <!-- ESPACIO RESERVADO PARA LA COOPERATIVA (ENTREVISTA) -->
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesBorder bg-morado text-center">
+                        <label class="text-bold text-uppercase">ESPACIO RESERVADO PARA LA COOPERATIVA (ENTREVISTA)
+                        </label>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-7 col-md-7 col-lg-7 FormatoNaturalesLeft FormatoNaturalesTop">
+                            <label>Nombre del funcionario que realizó la entrevista</label>
+                        </div>
+
+                        <div class="col-xs-2 col-md-2 col-lg-2 text-center  FormatoNaturalesLeft FormatoNaturalesTop">
+                            <label>Fecha de solicitud</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesLeft FormatoNaturalesTop">
+                            <div class="col-xs-4 col-md-4 col-lg-4 text-center ">
+                                <label></label><br />
+                            </div>
+                            <div class="col-xs-4 col-md-4 col-lg-4 text-center FormatoNaturalesLeft">
+                                <label></label><br />
+                            </div>
+                            <div class="col-xs-4 col-md-4 col-lg-4 text-center FormatoNaturalesLeft">
+                                <label></label><br />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-7 col-md-7 col-lg-7 FormatoNaturalesLeft FormatoNaturalesTop">
+                            <label> Nombre del funcionario que realizó la verificación</label>
+                        </div>
+
+                        <div class="col-xs-2 col-md-2 col-lg-2 text-center   FormatoNaturalesLeft FormatoNaturalesTop">
+                            <label>Fecha verificación</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesLeft FormatoNaturalesTop">
+                            <div class="col-xs-4 col-md-4 col-lg-4 text-center ">
+                                <label></label><br />
+                            </div>
+                            <div class="col-xs-4 col-md-4 col-lg-4 text-center FormatoNaturalesLeft">
+                                <label></label><br />
+                            </div>
+                            <div class="col-xs-4 col-md-4 col-lg-4 text-center FormatoNaturalesLeft">
+                                <label></label><br />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-10 col-md-10 col-lg-10 text-center ">
+                            <label>Observaciones </label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 text-center Gt-ColorMorado">
+                            <label>Hora</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-10 col-md-10 col-lg-10 text-center">
+                            <label><br /></label>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2 text-center">
+                            <label class="text-bold"><br /><br /></label>
+                        </div>
+                    </div>
+
+
+                    <!-- Fin ESPACIO RESERVADO PARA LA COOPERATIVA (ENTREVISTA)-->
+
+                    <div class=" col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesTop">
+                        <div class="col-sm-2 col-xs-2 col-lg-2">
+                            <br />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn Gt-btn-verde" onclick="Imprimir('FormatoDeServicios')">Imprimir</button>
+                    <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ Fin ReporteExoneracion -->
+    <!-- Modal AyudaPanelDatos -->
+    <div id="ModalAyudaPanelDatos" class="modal fade">
+        <div class="modal-dialog ">
+            <div class="modal-content">
+                <div class="modal-header bg-morado">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h6 class="modal-title"><i class="icon-question6"></i> Ayuda</h6>
+                </div>
+                <div class="modal-body">
+                    <ul>
+                        <li>Todos los campos marcados con <span class="text-danger">*</span> son obligatorios.</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ Fin ModalAyudaPanelDatos -->
+</body>
+<ngx-loading [show]="loading" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+</ngx-loading>
+<!-- *ngIf="CargarAppComponet" -->
+<!-- (viasEmit)="recibirInfoAppVias($event)"
+(profesionEmit)="recibirInfoAppProfe($event)"
+(letraEmit)="recibirInfoAppLetras($event)" 
+(cargosEmit)="recibirInfoAppCargo($event)"
+(marcaEmit)="recibirInfoAppMarcas($event)"-->
+<!-- (conceptoAllEmit)="recibirInfoAppConcepAll($event)"
+(oficinasEmit)="recibirInfoAppOficinas($event)" -->
+<!-- (tipoEmpleoEmit)="recibirInfoAppTipoEmpleo($event)"
+(activosAllEmit)="recibirInfoAppActivoAll($event)" -->
+
+<!-- (divisasEmit)="recibirInfoAppDivisa($event)"
+(estadoSeguroEmit)="recibirInfoAppEstadoSeg($event)"
+(segurosEmit)="recibirInfoAppSeg($event)"
+(cardinalEmit)="recibirInfoAppCardi($event)"
+(inmuebleEmit)="recibirInfoAppInmue($event)"
+(tipoActivoEmit)="recibirInfoAppTipoActivo($event)"
+(estadoEmit)="recibirInfoAppEstado($event)" 
+(periodosPagoEmit)="recibirInfoAppPeriodoPago($event)"
+(tipoOcupacionEmit)="recibirInfoAppTipoOcupa($event)"
+(tipoContratoEmit)="recibirInfoAppContratos($event)"
+(parentescosEmit)="recibirInfoAppParen($event)"
+(motivoIngresoEmit)="recibirInfoAppMotivo($event)" 
+-->
+
+<!-- <app-root #AppComponent 
+(parentescosPepsEmit)="recibirInfoAppParenPeps($event)"
+(tipoContactoEmit)="recibirInfoAppConta($event)"">
+</app-root> -->

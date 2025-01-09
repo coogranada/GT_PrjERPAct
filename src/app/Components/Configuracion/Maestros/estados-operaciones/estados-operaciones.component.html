@@ -1,0 +1,148 @@
+<form>
+    <div class="panel panel-white">
+        <div class="panel-heading">
+            <h6 class="panel-title">Datos</h6>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a data-toggle="modal" data-target="#ModalAyuda"><i class="icon-question6 " title="Ayuda" data-popup="tooltip"
+                data-trigger="hover" data-placement="top"></i></a></li>
+                    <li>
+                        <a data-action="collapse"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <form method="get" [formGroup]="estadosOperacionesFrom" (ngSubmit)="estadosOperacionesFrom.reset()">
+            <div class="panel-body">
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <div class="row">
+                        <div class="col-xs-12 col-md-3 col-lg-3">
+                            <div class="form-group">
+                                <label>Operación:</label><span class="text-danger ObligatorioGrande"> *</span>
+                                <select class="form-control" formControlName="IdOperacion" name="select">
+                                    <option *ngFor="let operacion of dataOperacion" [value]="operacion.IdOperacion">{{operacion.Descripcion}}</option>
+                                </select>
+                                <span class="help-block validationSpan" *ngIf="estadosOperacionesFrom.controls['IdOperacion'].errors?.['required'] && (estadosOperacionesFrom.controls['IdOperacion'].dirty || estadosOperacionesFrom.controls['IdOperacion'].touched)">
+                                    La operación es obligatoria.</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-3 col-lg-3">
+                            <div class="form-group">
+                                <label>Estado:</label><span class="text-danger ObligatorioGrande"> *</span>
+                                <select class="form-control" formControlName="IdEstado" name="select">
+                                    <option *ngFor="let estados of dataEstados" [value]="estados.IdEstado">{{estados.Descripcion}}</option>
+                                </select>
+                                <span class="help-block validationSpan" *ngIf="estadosOperacionesFrom.controls['IdEstado'].errors?.['required'] && (estadosOperacionesFrom.controls['IdEstado'].dirty || estadosOperacionesFrom.controls['IdEstado'].touched)">
+                            El estado es obligatorio.</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-3 col-lg-3">
+                            <div class="form-group">
+                                <label>Perfil:</label><span class="text-danger ObligatorioGrande"> *</span>
+                                <select class="form-control" formControlName="IdPerfil" name="select" (change)="ObtenerModulosPermitidos()">
+                                <option *ngFor="let perfiles of dataPerfil" [value]="perfiles.IdPerfil">{{perfiles.Nombre}}</option>
+                                </select>
+                                <span class="help-block validationSpan" *ngIf="estadosOperacionesFrom.controls['IdPerfil'].errors?.['required'] && (estadosOperacionesFrom.controls['IdPerfil'].dirty || estadosOperacionesFrom.controls['IdPerfil'].touched)">
+                                    El perfil es obligatorio. </span>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-3 col-lg-3">
+                            <div class="form-group">
+                                <label>Modulo:</label><span class="text-danger ObligatorioGrande"> *</span>
+                                <select class="form-control" formControlName="IdModulo" name="select">
+                                    <option value="0">-- Seleccione --</option>
+                                    <option *ngFor="let modulos of dataModulos" [value]="modulos.IdModulo">{{modulos.Nombre}}</option>
+                                </select>
+                                <span class="help-block validationSpan" *ngIf="estadosOperacionesFrom.controls['IdModulo'].errors?.['required'] && (estadosOperacionesFrom.controls['IdModulo'].dirty || estadosOperacionesFrom.controls['IdModulo'].touched)">
+                                El modulo es obligatorio. </span>
+                            </div>
+                        </div>
+                    </div>
+                    <br /><br />
+                </div>
+                <div class="row">
+                    <br /><br />
+                    <div class="col-xs-12 col-md-4 col-lg-4">
+                        <div class="form-group">
+
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-8 col-lg-8 text-right">
+                        <input type="submit" class="btn Gt-btn-verde" value="Guardar" (click)="GuardarEstadosXOperacion()" [disabled]="!estadosOperacionesFrom.valid" /> &nbsp; &nbsp;
+                        <input type="submit" class="btn Gt-btn-morado" value="Nuevo" />
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatos" *ngIf="dataEstadoOperacion === null">
+        <div class="panel-body ">
+            <div class="table-responsive scrollTabla">
+                <span>No hay registros</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatos" *ngIf="dataEstadoOperacion !== null">
+        <div class="panel-body ">
+            <div class="table-responsive scrollTabla">
+                <table id="TablaAreas" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th><strong>Operación</strong></th>
+                            <th><strong>Estado</strong></th>
+                            <th><strong>Perfil</strong></th>
+                            <th><strong>Modulo</strong></th>
+                            <th><strong>Opciones</strong></th>
+                        </tr>
+                    </thead>
+                    <tbody *ngFor="let resultOperEsta of dataEstadoOperacion">
+                        <tr>
+                            <td>
+                                {{resultOperEsta.DescripcionOperacion}}
+                            </td>
+                            <td>
+                                {{resultOperEsta.DescripcionEstado}}
+                            </td>
+                            <td>
+                                {{ resultOperEsta.DescripcionPerfil}}
+                            </td>
+                            <td>
+                                {{ resultOperEsta.DescripcionModulo}}
+                            </td>
+                            <td>
+                                <a (click)="EliminarEstadosXOperacion(resultOperEsta)">Eliminar</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+    <ngx-loading [show]="loading" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+    </ngx-loading>
+</form>
+<!-- <app-root (permisosEmit)="getPermisos($event)">
+</app-root> -->
+<!-- Modal Ayuda -->
+<div id="ModalAyuda" class="modal fade">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title"><i class="icon-question6"></i> Ayuda</h6>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li>Todos los campos marcados con <span class="text-danger ObligatorioGrande">*</span> son obligatorios.</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ Fin Modal Ayuda -->

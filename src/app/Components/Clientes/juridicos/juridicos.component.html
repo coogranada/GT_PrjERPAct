@@ -1,0 +1,530 @@
+<form>
+    <div class="panel panel-white">
+        <!-- Panel operaciones juridico-->
+        <div class="panel-heading doNotPrint">
+            <h6 class="panel-title">Datos {{OpcionSeleccionada}}</h6>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li>
+                        <a data-toggle="modal" data-target="#ModalAyuda">
+                            <i class="icon-question6 " title="Ayuda" data-popup="tooltip" data-trigger="hover" data-placement="top"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a data-action="collapse"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="panel-body doNotPrint">
+            <!--Operaciones,Buscar-->
+            <form method="get" [formGroup]="juridicosFrom">
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <div class="row">
+                        <div class="col-xs-12 col-md-3 col-lg-3">
+                            <div class="form-group">
+                                <label class="textBlod">Operación:</label>
+                                <span class="grande"> *</span>
+                                <select class="form-control" name="select" id="operacionJs" formControlName="operacion" (change)="OperacionSeleccionada()">
+                                   <option *ngFor="let operacionJuridicos of dataOperaciones" [value]="operacionJuridicos.IdOperaciones">
+                                    {{operacionJuridicos.Descripcion}}
+                                   </option>
+                                </select>
+                 <span class="help-block validationSpan" *ngIf="juridicosFrom.controls['operacion'].errors?.['required'] && (juridicosFrom.controls['operacion'].dirty || juridicosFrom.controls['operacion'].touched)">
+                  La operación es obligatoria.
+                </span>
+                            </div>
+                        </div>
+                        <input value="" id="ProDescripcionOpe" type="hidden">
+                        <input value="" id="OperacionMarcada" type="hidden">
+
+                        <div class="col-xs-12 col-md-3 col-lg-2">
+                            <div class="form-group">
+                                <label class="textBlod">Buscar:</label>
+                                <span class="text-danger"> </span>
+                                <span tooltip="Nit" placement="top" show-delay="500">
+                <input type="text" class="form-control" title="Nit" formControlName="buscar" [attr.disabled]="bloquearBuscar" id="BuscarDocumento"
+                    (keypress)="limpiarNit('nombre')">
+                </span>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-3 col-lg-3">
+                            <div class="form-group">
+                                <label class="hiddenText"> Nombre</label>
+                                <span class="text-danger"> </span>
+                                <span tooltip="Razón social" placement="top" show-delay="500">
+                <input type="text" class="form-control" title="Razón social" formControlName="nombre" [attr.disabled]="bloquearNombre" id="BuscarNombre"
+                 (keypress)="limpiarRazon('buscar')">
+                </span>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-3 col-lg-2">
+                            <button type="button" *ngIf="!btnBuscar" class="btn Gt-btn-verde btn-icon" (click)="BotonBuscarJuridico()">
+                                <i class="icon-search4"></i>
+                            </button>
+                            <div class="form-group" *ngIf="mostrarOficina">
+                                <label class="textBlod">Oficina:</label>
+                                <span class="grande"></span>
+                                <input ngui-auto-complete formControlName="oficina" id="oficinaJuridico" [source]="dataOficinas" [attr.disabled]="bloquearOficina" value-property-name="Valor" display-property-name="Descripcion" list-formatter="Descripcion" class="form-control" (blur)="SeleccionarOficina()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="panel panel-white">
+        <!-- Panel datos juridico-->
+        <form method="get">
+            <div class="panel-body">
+                <div class="col-xs-12 col-md-3 col-lg-3">
+                    <div class="container">
+                        <div class="tabbable">
+                            <!--Tabs juridicos NavTab-->
+                            <ul class="nav nav-tabs">
+                                <li [ngClass]="{'activar': activarBasico === true }" id="juridicoTab" (click)="organizarTab(1)">
+                                    <a data-toggle="tab" href="#juridico">Datos basicos</a>
+                                </li>
+                                <li [ngClass]="{'activar': activarContacto === true }" id="contactoTab" (click)="organizarTab(2)">
+                                    <a data-toggle="tab" href="#contacto">Contacto</a>
+                                </li>
+                                <li [ngClass]="{'activar': activarFinanciero === true }" id="financieroTab" (click)="organizarTab(3)">
+                                    <a data-toggle="tab" href="#financiero">Financiero</a>
+                                </li>
+                                <li [ngClass]="{'activar': activarPatrimonio === true }" id="patrimonioTab" (click)="organizarTab(4)">
+                                    <a data-toggle="tab" href="#patrimonio">Patrimonio</a>
+                                </li>
+                                <li [ngClass]="{'activar': activarRepLegal === true }" id="repLegalTab" (click)="organizarTab(5)">
+                                    <a data-toggle="tab" href="#RepLegal">Representante</a>
+                                </li>
+                                <!-- <li [ngClass]="{'activar': activarContactoRep === true }" id="contactoTabRep" (click)="organizarTab(6)">
+                  <a data-toggle="tab" href="#contactoRep">Contacto representante</a>
+                </li> -->
+                                <li [ngClass]="{'activar': activarAccionista === true }" id="accionistasTab" (click)="organizarTab(7)">
+                                    <a data-toggle="tab" href="#accionistas">Accionistas</a>
+                                </li>
+                                <li [ngClass]="{'activar': activarReferencias === true }" id="referenciaTab" (click)="organizarTab(8)">
+                                    <a data-toggle="tab" href="#referencias">Referencias</a>
+                                </li>
+                                <li [ngClass]="{'activar': activarEntrevista === true }" id="entrevistaTab" (click)="organizarTab(9)">
+                                    <a data-toggle="tab" href="#entrevista">Entrevista</a>
+                                </li>
+                                <li [ngClass]="{'activar': activarHistorial === true }" id="hitorialTab" (click)="organizarTab(10)">
+                                    <a data-toggle="tab" href="#historial">Historial</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tab-content">
+                            <!--Tabs juridicos info-->
+
+                            <div id="juridico" class="tab-pane fade in active">
+                                <app-info-juridicos *ngIf="condicionBaisco" #infoJuridicoComponent (emitEvent)="SiguienteTab($event)" [infoTabAllInfo]="infoTabAll" [DataBasico]="DataBasico" [DataInfoJuridico]="DataInfoJuridico" [mostrarActualizar]="mostrarBotonesActualizar" [mostrarSiguiente]="mostrarBotonesSiguiente"
+                                    [mostrarNuevoInfo]="mostrarBotonesLimpiarInfo" [mostrarCambiar]="mostrarBotonesCambiar"></app-info-juridicos>
+                            </div>
+
+                            <div id="contacto" class="tab-pane fade">
+                                <app-contacto *ngIf="condicion" #contactoComponet (emitEvent)="SiguienteTab($event)" [infoTabAllContacto]="infoTabAll" [mostrarActualizar]="mostrarBotonesActualizar" [mostrarAgregar]="mostrarBotonesAgregar" [mostrarSiguiente]="mostrarBotonesSiguiente"
+                                    [mostrarLimpiar]="mostrarBotonesLimpiar" [activarBtnOpciones]="ActivarBtnOpciones"></app-contacto>
+
+                            </div>
+
+                            <div id="financiero" class="tab-pane fade">
+                                <app-financiera *ngIf="condicion" #financieraComponent (emitEvent)="SiguienteTab($event)" [infoTabAllReferencia]="infoTabAll" [mostrarActualizar]="mostrarBotonesActualizar" [mostrarAgregar]="mostrarBotonesAgregar" [mostrarSiguiente]="mostrarBotonesSiguiente"
+                                    [mostrarLimpiar]="mostrarBotonesLimpiar" [activarBtnOpciones]="ActivarBtnOpciones"></app-financiera>
+                            </div>
+
+                            <div id="patrimonio" class="tab-pane fade">
+                                <app-patrimonio *ngIf="condicion" #patrimonioComponent (emitEvent)="SiguienteTab($event)" [infoTabAllPatrimonio]="infoTabAll" [mostrarActualizar]="mostrarBotonesActualizar" [mostrarSiguiente]="mostrarBotonesSiguiente" [mostrarLimpiar]="mostrarBotonesLimpiar"></app-patrimonio>
+                            </div>
+
+                            <div id="RepLegal" class="tab-pane fade">
+                                <app-representante-legal *ngIf="condicion" #representanteComponent (emitEvent)="SiguienteTab($event)" [infoTabAllRepresentante]="infoTabAll" [mostrarActualizar]="mostrarBotonesActualizar" [mostrarSiguiente]="mostrarBotonesSiguiente" [mostrarLimpiar]="mostrarBotonesLimpiar"></app-representante-legal>
+                            </div>
+
+                            <div id="accionistas" class="tab-pane fade">
+                                <app-accionistas *ngIf="condicion" #accionistasComponent (emitEvent)="SiguienteTab($event)" [infoTabAllAccionista]="infoTabAll" [mostrarActualizar]="mostrarBotonesActualizar" [mostrarAgregar]="mostrarBotonesAgregar" [mostrarSiguiente]="mostrarBotonesSiguiente"
+                                    [mostrarLimpiar]="mostrarBotonesLimpiar" [activarBtnOpciones]="ActivarBtnOpciones"></app-accionistas>
+                            </div>
+
+                            <div id="referencias" class="tab-pane fade">
+                                <app-referencias *ngIf="condicion" #referenciasComponent (emitEvent)="SiguienteTab($event)" [infoTabAllReferencias]="infoTabAll" [mostrarActualizar]="mostrarBotonesActualizar" [mostrarAgregar]="mostrarBotonesAgregar" [mostrarSiguiente]="mostrarBotonesSiguiente"
+                                    [mostrarLimpiar]="mostrarBotonesLimpiar" [activarBtnOpciones]="ActivarBtnOpciones"></app-referencias>
+                            </div>
+
+                            <div id="entrevista" class="tab-pane fade">
+                                <app-entrevista *ngIf="condicion" #entrevistaComponent (emitEvent)="SiguienteTab($event)" [infoTabAllEntrevista]="infoTabAll" [mostrarActualizar]="mostrarBotonesActualizar" [mostrarAgregar]="mostrarBotonesAgregar" [mostrarSiguiente]="mostrarBotonesSiguiente"
+                                    [mostrarMarcarDesmarcar]="mostrarBotonesMarcarDesmarcar" [mostrarLimpiar]="mostrarBotonesLimpiar"></app-entrevista>
+                            </div>
+
+                            <div id="historial" class="tab-pane fade">
+                                <app-historial *ngIf="condicion" #historialComponent (emitEvent)="SiguienteTab($event)"></app-historial>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ngx-loading [show]="loading" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+            </ngx-loading>
+        </form>
+    </div>
+</form>
+<!-- Comunicacion componentes-->
+<div class="col-xs-12 col-md-12 col-lg-12">
+    <app-solicitudes-gestiones #SolicitudGestion></app-solicitudes-gestiones>
+
+    <app-solicitud-retiro [motivosData]="this.dataMotivos" informacionRetiro='{{motivoEnvioJson}}' infoRetiroReimprimir='{{motivoEnvioRetiroJson}}' #solicitudRetiro #SolicitudReimprimir></app-solicitud-retiro>
+    <button type="button" style="visibility:hidden" #AbrirSolicitudGestion (click)="SolicitudGestion.AbrirSolicitudGestion(Modulo, CuentaSolicitud, DocumentoSolicitud)"></button>
+
+</div>
+<!-- botones Tabs-->
+<div>
+    <button type="button" style="visibility:hidden" data-toggle="tab" href="#juridico" #botonBasico class="btn Gt-btn-verde btn-icon legitRipple">
+    </button>
+    <button type="button" style="visibility:hidden" data-toggle="tab" href="#contacto" #botonContacto class="btn Gt-btn-verde btn-icon legitRipple">
+    </button>
+
+    <button type="button" style="visibility:hidden" data-toggle="tab" href="#financiero" #botonFinanciero class="btn Gt-btn-verde btn-icon legitRipple">
+    </button>
+
+    <button type="button" style="visibility:hidden" data-toggle="tab" href="#patrimonio" #botonPatrimonio class="btn Gt-btn-verde btn-icon legitRipple">
+    </button>
+
+    <button type="button" style="visibility:hidden" data-toggle="tab" href="#RepLegal" #botonRepresentante class="btn Gt-btn-verde btn-icon legitRipple">
+    </button>
+
+    <button type="button" style="visibility:hidden" data-toggle="tab" href="#contactoRep" #botonConRepresentante class="btn Gt-btn-verde btn-icon legitRipple">
+    </button>
+
+    <button type="button" style="visibility:hidden" data-toggle="tab" href="#accionistas" #botonAccionistas class="btn Gt-btn-verde btn-icon legitRipple">
+    </button>
+
+    <button type="button" style="visibility:hidden" data-toggle="tab" href="#referencias" #botonReferencia class="btn Gt-btn-verde btn-icon legitRipple">
+    </button>
+
+    <button type="button" style="visibility:hidden" data-toggle="tab" href="#entrevista" #botonEntrevista class="btn Gt-btn-verde btn-icon legitRipple">
+    </button>
+
+    <button type="button" style="visibility:hidden" data-toggle="tab" href="#historial" #botonHistorial class="btn Gt-btn-verde btn-icon legitRipple">
+    </button>
+
+    <button type="button" style="visibility:hidden" #AbrirModalServicios class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#ModalServicios" id="openServicios">
+      </button>
+
+    <button type="button" style="visibility:hidden" #AbrirModalCorrespondencia class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#ModalCorrespondencia" id="openServicios">
+      </button>
+</div>
+<!--Fin botones tab-->
+
+<!--Solicitud de servicios Juridicos-->
+<app-solicitud-servicios-juridicos #SolicitudServicios [EsReImpresion]="esReimpresion" [GetData]="dataSendPrint" [GetServiceSolicited]="dataServiceSolicited">
+</app-solicitud-servicios-juridicos>
+
+<!--Fin solicitud servicios-->
+
+<!--Botones para abrir modales-->
+<button type="button" style="visibility:hidden" #AbrirListaJuridicosModal class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#ModalListaJuridicos">
+    <i class="icon-search4"></i>
+  </button>
+<button type="button" style="visibility:hidden" #AbrirRetiro class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#ModalSolicitudRetiro">
+  </button>
+<button type="button" style="visibility:hidden" #openSolicitudRetiro (click)="solicitudRetiro.abrirRetiro()">
+  </button>
+<button type="button" style="visibility:hidden" #openSolicitudRetiroReimprimir (click)="SolicitudReimprimir.reimprimirJuridico(juridico,retiro)">
+  </button>
+<!--Fin botones abrir modales-->
+
+<!-- Modal Ayuda -->
+<div id="ModalAyuda" class="modal fade">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title"><i class="icon-question6"></i> Ayuda</h6>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li>Todos los campos marcados con <span class="text-danger  ObligatorioGrande">*</span> son obligatorios.</li>
+                    <li>Presione doble clic en el registro de la tabla para habilitar los botones.</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ Fin Modal Ayuda -->
+
+<!--Modal lista de juridicos-->
+<div id="ModalListaJuridicos" class="modal">
+    <div class="modal-full">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title text-center">Asociados juridicos</h6>
+            </div>
+            <div class="modal-body">
+                <div *ngIf="listaJuridicos.length <= 0" class="text-center">
+                    <br>
+                    <label>No se encontraron resultados con los parámetros ingresados.</label>
+                    <br>
+                </div>
+                <div class="table-responsive scrollTabla" *ngIf="listaJuridicos.length > 0">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th><strong>Nit</strong></th>
+                                <th><strong>Razón social</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let resultJuridico of listaJuridicos">
+                            <tr (click)="consultarJuridicosNit(resultJuridico.Nit)">
+                                <td data-dismiss="modal">
+                                    {{resultJuridico.Nit}}
+                                </td>
+                                <td data-dismiss="modal">
+                                    {{resultJuridico.RazonSocial}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--fin modal lista juridicos-->
+
+<!-- Modal para la consulta de servicio-->
+<!--Modal con la info de creditos-->
+<div class="modal" id="ModalServicios" tabindex="-1" role="dialog" aria-labelledby="ModalServiciosTitle" aria-hidden="true" style="top: 50px !important" data-backdrop="static" data-keyboard="false">
+
+    <form method="get" [formGroup]="serviciosFrom">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-morado">
+                    <div class="col-sm-12 col-xs-12 col-lg-12 text-center" id="ReporteExoneracion">
+                        <div class="row">
+                            <h6 class="text-bold">Servicio crédito</h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body">
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-4 col-lg-6">
+                                    <div class="form-group">
+                                        <label>Monto solicitado:</label>
+                                        <span class="text-danger"></span>
+                                        <input type="text" currencyMask class="form-control" formControlName="montoSolicitado" [attr.disabled]="bloquearModalServicios" />
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-4 col-lg-6">
+                                    <div class="form-group">
+                                        <label>Plazo deseado en meses:</label>
+                                        <span class="text-danger"></span>
+                                        <input type="text" class="form-control" formControlName="plazoDeseado" maxlength="3" min="1" max="180" (blur)="valirdarPlazo();" [attr.disabled]="bloquearModalServicios" />
+                                        <span class="help-block validationSpan" *ngIf="serviciosFrom.controls['plazoDeseado'].errors?.pattern">
+                      El plazo deseado solo acepta números.
+                    </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                        </div>
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-4 col-lg-6">
+                                    <div class="form-group">
+                                        <label>Destino:</label>
+                                        <span class="text-danger"></span>
+                                        <input type="text" class="form-control Capitalice" id="destinoModal" formControlName="Destino" #destinoServicio (input)="validarCaracteresEspecialesDestino()" [attr.disabled]="bloquearModalServicios" />
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-4 col-lg-6">
+                                    <div class="form-group">
+                                        <label>Oficina:</label>
+                                        <span class="text-danger"></span>
+                                        <input type="text" class="form-control" [attr.disabled]="BlockServicios" formControlName="Oficina" />
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                        </div>
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-4 col-lg-6">
+                                    <div class="form-group">
+                                        <label>Asesor:</label>
+                                        <span class="text-danger"></span>
+                                        <input type="text" class="form-control" [attr.disabled]="BlockServicios" formControlName="Asesor" />
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-4 col-lg-6">
+                                    <div class="form-group">
+                                        <label>Es una vinculación ?</label>
+                                        <span class="text-danger"></span>
+                                        <div class="checkbox checkbox-switchery switchery-lg">
+                                            <label>
+                        <input type="checkbox" class="switchery" formControlName="esVinculacion" [attr.disabled]="BlockVincula">
+                      </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                        </div>
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <span class="help-block validationSpan" *ngIf="motrarErrorCredito">
+                Los campos monto, plazo deseado y destino son obligatorios.
+              </span>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-header bg-morado">
+                    <div class="col-sm-12 col-xs-12 col-lg-12 text-center" id="ReporteExoneracion">
+                        <div class="row">
+                            <h6 class="text-bold">Diligenciar si usted es codeudor</h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body">
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-4 col-lg-4">
+                                    <div class="form-group">
+                                        <label class="textNegrilla">Documento deudor:</label>
+                                        <span class="grande"> </span>
+                                        <input type="text" class="form-control" formControlName="NumeroDocumento" [attr.disabled]="BlockDeudor" maxlength="15" (blur)="consultarDeudor(serviciosFrom.controls['NumeroDocumento'].value)" (keypress)="bloquearServicios(serviciosFrom.controls['NumeroDocumento'].value)"
+                                        />
+                                        <span class="help-block validationSpan" *ngIf="serviciosFrom.controls['NumeroDocumento'].errors?.pattern">
+                      El número documento solo acepta números.
+                    </span>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-4 col-lg-8">
+                                    <div class="form-group">
+                                        <label class="textNegrilla">Nombre</label>
+                                        <span class="grande"> </span>
+                                        <input type="text" class="form-control SoloMinuscula" [attr.disabled]="BlockServicios" formControlName="NombreDeudor" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <span class="help-block validationSpan" *ngIf="motrarErrorDeudor">
+                El número del documento no puede ser igual al que se esta imprimiendo
+              </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn Gt-btn-verde" (click)="AbrirImpresionJuridicos()" [disabled]="serviciosFrom.invalid">Aceptar</button>
+                    <button type="button" style="visibility:hidden" #AbrirSolicituJuridico data-dismiss="modal" (click)="SolicitudServicios.AbrirSolicitud(documentoConsultar)"></button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!---->
+<!--Modal para motivos del retiro-->
+<div class="modal" id="ModalSolicitudRetiro" tabindex="-1" role="dialog" aria-labelledby="ModalServiciosTitle" aria-hidden="true" style="top: 50px !important" data-backdrop="static" data-keyboard="false">
+    <!--Modal con los motivos de retiro-->
+    <form method="get" [formGroup]="solicitudRetiroForm">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-morado">
+                    <div class="col-sm-12 col-xs-12 col-lg-12 text-center" id="ReporteExoneracion">
+                        <h6 class="text-bold">Motivo del retiro</h6>
+                    </div>
+                </div>
+
+                <div class="modal-body">
+                    <div class="panel-body">
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <label>¿Por qué?</label>
+                                        <span class="grande"> *</span>
+                                        <select class="form-control" formControlName="idMotivo" name="select" (change)="validarOtroMotivo()">
+                      <option value="0" disabled> -- Seleccione --</option>
+                      <option *ngFor="let observacion of dataMotivos" [value]="observacion.IdRazonRetiro">
+                        {{observacion.Descripcion}}
+                      </option>
+                    </select>
+                                        <span class="help-block validationSpan" *ngIf="mostrarErrorMotivo">
+                      El motivo de retiro es obligatorio.
+                    </span>
+                                    </div>
+
+                                    <div class="form-group" *ngIf="ObservacionRetiro">
+                                        <label>Descripción</label>
+                                        <span class="grande"> *</span>
+                                        <textarea class="form-control" rows="3" cols="50" formControlName="ObservacionMotivo"></textarea>
+                                        <span class="help-block validationSpan" *ngIf="mostarErrorMotivoDescripcion">
+                      La descripción es obligatoria.
+                    </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn Gt-btn-verde doNotPrint" (click)="SetDataSolicituretiro()">Guardar</button>
+                    <button type="button" class="btn Gt-btn-morado doNotPrint" data-dismiss="modal" (click)="ResetOperation()">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!---->
+<!--Modal de correspondecia-->
+<div class="modal" id="ModalCorrespondencia" tabindex="-1" role="dialog" aria-labelledby="ModalCambioEstadoTitle" aria-hidden="true" style="top: 150px !important" data-backdrop="static" data-keyboard="false">
+    <form method="get" [formGroup]="Correspondenciasform">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-morado">
+                    <h5 class="modal-title" id="exampleModalLongTitle">¿Dónde desea recibir su correspondencia?</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-12 col-lg-12">
+                                <div class="form-group">
+                                    <label>Seleccione una opción:</label>
+                                    <span class="text-danger"> *</span>
+                                    <select class="form-control" formControlName="SeleccionCorrespondencia" name="select" (change)="ValidarCorrespondencia()">
+                    <option value="0">-- Seleccione --</option>
+                    <option *ngFor="let  itemContactos of dataCorrespondencia" [value]="itemContactos.IdDatoContacto">
+                      {{itemContactos.Descripcion}}
+                    </option>
+                  </select>
+                                    <span class="help-block validationSpan" *ngIf="mostrarErrorCorrespondencia">
+                    El campo es obligatorio.
+                  </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" style="visibility:hidden" #CerrarCorrespondencia class="btn Gt-btn-morado" data-dismiss="modal">
+            Guardar
+          </button>
+                    <button type="button" class="btn Gt-btn-morado" (click)="AbrirCorrespondenciaImpresion()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

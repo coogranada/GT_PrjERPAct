@@ -1,0 +1,35 @@
+export class SolicitudServiciosModel {
+    ListObjetoSocial: any[] = [];
+    ListTipoDocumento: any[] = [];
+    ListOficinas: any[] = [];
+    ListRelaciones: any[] = [];
+    ListTipoLocal: any[] = [];
+    ListTipoSociedad: any[] = [];
+    ListPais: any[] = [];
+    ListDepartamento: any[] = [];
+    ListCiudad: any[] = [];
+    ListBarrios: any[] = [];
+    ListConocioCoogra: any[] = [];
+    ListVias: any[] = [];
+    ListLetras: any[] = [];
+    ListTipoContato: any[] = [];
+    ListMoneda: any[] = [];
+    ListCategorias: any[] = [];
+    ListTipoReferencias: any[] = [];
+    ListCargos: any[] = [];
+    ListProfesion: any[] = [];
+    ListConceptos: any[] = [];
+    ListInmuebles: any[] = [];
+    ListCIIU: any[] = [];
+}
+export class ServiceSolictedModel {
+    Asesor: string = "";
+    Destino: string = "";
+    Oficina: string = "";
+    EsVinculacion: boolean = false;
+    Monto: string = "";
+    Plazo: string = "";
+    DocumentoDeudor: string = "";
+    NombreDeudor: string = "";
+    TipoDoc: number = 0;
+}

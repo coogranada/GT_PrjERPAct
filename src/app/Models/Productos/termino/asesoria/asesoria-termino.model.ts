@@ -1,0 +1,26 @@
+export class LogDataOnEditAsesoria {
+    ProductoAnterior?: number = 0;
+    ProductoActualiza?: number = 0;
+    PlazoAnterior?: number = 0;
+    PlazoActualiza?: number = 0;
+    ValorTituloAnterior?: number = 0;
+    ValorTituloActualiza?: number = 0;
+    FrecuenciaPagoAnterior?: number = 0;
+    FrecuenciaPagoActualiza?: number = 0;
+    InteresBrutoAnterior?: number = 0;
+    InteresBrutoActualiza?: number = 0;
+    RetencionAnterior?: number = 0;
+    RetencionActualiza?: number = 0;
+    AportesAnterior?: number = 0;
+    AportesActualiza?: number = 0;
+    InteresNetoAnterior?: number = 0;
+    InteresNetoActualiza?: number = 0;
+    TotalInteresBrutoAnterior?: number = 0;
+    TotalInteresBrutoActualiza?: number = 0;
+    TotalRetencionAnterior?: number = 0;
+    TotalRetencionActualiza?: number = 0;
+    TotalAportesAnterior?: number = 0;
+    TotalAportesActualiza?: number = 0;
+    TotalInteresNetoAnterior?: number = 0;
+    TotalInteresNetoActualiza?: number = 0;
+  }

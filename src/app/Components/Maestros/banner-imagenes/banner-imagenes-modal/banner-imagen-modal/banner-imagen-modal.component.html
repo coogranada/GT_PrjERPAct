@@ -1,0 +1,36 @@
+
+<div class="container-all">
+    <input type="radio" id="00" name="image-salide" hidden />
+    <input type="radio" id="11" name="image-salide" hidden />
+    <input type="radio" id="22" name="image-salide" hidden />
+    <input type="radio" id="33" name="image-salide" hidden />
+
+    <div class="slide">
+        <div class="item-slide" *ngFor="let itemArray of bannerArray ; let i = index">
+            <a href="{{itemArray.urlImg !== null ? itemArray.urlImg:'#' }}" target="_blank">
+                <img class="resize_fit_center" src="data:image/png;base64,{{itemArray.Base64String}}" alt="">
+            </a>
+        </div>
+    </div>
+
+    <div class="pagination">
+        <label class="pagination-item" *ngFor="let itemArray of bannerArray ; let i = index" for="{{i}}">
+                <img src="data:image/png;base64,{{itemArray.Base64String}}" alt="">
+        </label>
+    </div>
+
+    <!-- <div class="slide">
+        <div class="item-slide" *ngFor="let itemArray of bannerArray ; let i = index">
+            <a href="{{itemArray.urlImg !== null ? itemArray.urlImg:'#' }}" target="_blank">
+                <img class="resize_fit_center" src="data:image/png;base64,{{itemArray.Base64String}}" alt="">
+            </a>
+    
+        </div>
+    </div>
+    <div class="pagination">
+        <label class="pagination-item" *ngFor="let itemArray of bannerArray ; let i = index" for="{{i}}">
+            <img src="data:image/png;base64,{{itemArray.Base64String}}" alt="">
+        </label>
+    </div> -->
+
+</div>

@@ -1,0 +1,36 @@
+@media print {
+    .doNotPrint {
+        display: none !important;
+    }
+}
+
+.navigation-main ul {
+    display: block !important;
+  }
+  
+  .navigation-main li ul {
+    display: block !important;  /* Evita el colapso */
+  }
+  
+  /* También puedes eliminar el comportamiento de acordeón de colapso */
+ 
+
+  /* Iconos que indican si el submenú está abierto o cerrado */
+  .icon-arrow-down, .icon-arrow-up {
+    margin-left: auto;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  /* Estilo del submenú (se oculta cuando el menú no está abierto) */
+  
+  
+  ul.ng-trigger {
+    transition: height 30s ease;
+  }
+  
+  /* Mostrar el submenú cuando está abierto */
+  ul[ngIf="isUsuarioMenuOpen"] {
+    display: block;
+  }
+  

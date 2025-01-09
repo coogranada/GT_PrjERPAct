@@ -1,0 +1,120 @@
+<form>
+    <div class="panel panel-white">
+        <div class="panel-heading">
+            <h6 class="panel-title">Sesiones</h6>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li>
+                        <a data-toggle="modal" data-target="#ModalAyuda">
+                            <i class="icon-question6 " title="Ayuda" data-popup="tooltip" data-trigger="hover" data-placement="top"> </i>
+                        </a>
+                    </li>
+                    <li>
+                        <a data-action="collapse"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>  
+        <div class="tabbable">
+            <span tooltip="Actualizar listas" placement="top" show-delay="500" style="margin: 0px 100px 1px 90%;">
+                <button class="btn Gt-btn-verde btn-icon legitRipple" (click)="GetsesionAll()">
+                    <i class="icon-spinner11"></i>
+                </button>
+            </span>
+        </div>
+        <div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatos" *ngIf="dataSession.length > 0">
+            <div class="panel-body">
+                <span>Usuarios en la aplicacion:  <strong>{{dataSession.length}}</strong></span>&nbsp;
+                <span>Usuarios <strong><span class="labelSucces">conectados:  {{UserOnSession.length}}</span></strong></span>&nbsp;
+                <span>Usuarios <strong><span class="labelDanger">desconectados:  {{UserOffSession.length}}</span></strong></span>&nbsp;
+                <br>
+                <div class="table-responsive scrollTabla">
+                    <table id="TablaAreas" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th><strong>Usuario</strong></th>
+                                <th><strong>Estado</strong></th>
+                                <th><strong>Oficina</strong></th>
+                                <th><strong>Fecha Inicio sesion</strong></th>
+                                <th><strong>Opciones</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let resultSesiones of dataSession">
+                            <tr>
+                                <td>
+                                    {{resultSesiones.NameUsuario}}
+                                </td>
+                                <td>
+                                    <div class="btn-group" *ngIf="resultSesiones.Estado">
+                                        <span class="label label-success">En sesión</span>
+                                    </div>
+                                    <div class="btn-group" *ngIf="!resultSesiones.Estado">
+                                        <span class="label label-danger">Inactivo</span>
+                                    </div>
+                                </td>
+                                <td >
+                                    <div class="btn-group" *ngIf="resultSesiones.Oficina !== null && resultSesiones.Oficina !== undefined && resultSesiones.Oficina !== ''">
+                                        <span>{{resultSesiones.Oficina}}</span>
+                                    </div>
+                                    <div class="btn-group" *ngIf="resultSesiones.Oficina === null || resultSesiones.Oficina === undefined || resultSesiones.Oficina === ''">
+                                        <span>N/A</span>
+                                    </div>                       
+                                </td>
+                                <td *ngIf="resultSesiones.FechaInicioSesion !== null && resultSesiones.FechaInicioSesion !== undefined && resultSesiones.FechaInicioSesion !== ''">
+                                    {{resultSesiones.FechaInicioSesion}}
+                                </td>
+                                <td *ngIf="resultSesiones.FechaInicioSesion === null || resultSesiones.FechaInicioSesion === undefined || resultSesiones.FechaInicioSesion === ''">
+                                    N/A
+                                </td>
+                                <td>
+                                   <div class="btn-group" *ngIf="resultSesiones.Estado">
+                                        <button class="btn Gt-btn-red btn-icon legitRipple" data-toggle="modal" data-target="#Modal" title="Cerrar sesion"
+                                        (click)="CerrarSesion(resultSesiones.IdUsuario)">
+                                            <i class="glyphicon glyphicon-off"></i>
+                                        </button>
+                                    </div>
+                                    <div class="btn-group" *ngIf="!resultSesiones.Estado">
+                                        <span>N/A</span>
+                                    </div>
+                                </td>
+                                
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                </div>
+                <br>
+                <span tooltip="Cerrar todas las sesiones" placement="top" show-delay="500" style="margin: 0px 100px 1px 85%;">
+                    <button class="btn Gt-btn-red btn-icon legitRipple" data-toggle="modal" data-target="#Modal" title="Cerrar sesion"
+                        (click)="CerrarSesionAll()">
+                        <i class="glyphicon glyphicon-off"></i> Cerrar todas
+                    </button>
+                </span>
+            </div>
+        </div>
+        <div class="col-xs-12 col-md-12 col-lg-12 panel panel-default" *ngIf="dataSession.length <= 0">
+            <br>
+            <div class="alert alert-secondary" role="alert">
+                Aun no hay usuarios conectados.
+            </div>
+        </div>
+    </div>
+</form>
+<div id="ModalAyuda" class="modal fade">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title"><i class="icon-question6"></i> Ayuda</h6>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li>En este espacio encontrara los usuarios conectados y desconectados de la aplicación.</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

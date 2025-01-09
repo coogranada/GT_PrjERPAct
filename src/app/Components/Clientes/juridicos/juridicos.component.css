@@ -1,0 +1,103 @@
+.grande {
+    font-size: 25px !important;
+    color: #D84315;
+    margin-top: -5px !important;
+    margin-left: 6px;
+    position: absolute;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.textBlod {
+    color: #565656;
+    font-weight: bold;
+}
+
+.textBigRed {
+    font-size: 25px !important;
+    color: #D84315;
+    margin-top: -5px !important;
+    margin-left: 6px;
+    position: absolute;
+}
+
+.hiddenText {
+    color: white;
+}
+
+.activar {
+    border-bottom-color: transparent;
+    cursor: default;
+    cursor: pointer;
+    background-color: rgb(38, 144, 81);
+    border: 1px solid rgb(38, 144, 81);
+    color: #fff;
+}
+
+.activar a {
+    color: white;
+}
+
+.bloquearTab {
+    pointer-events: none;
+}
+
+.bloquearTab :hover {
+    cursor: no-drop;
+}
+
+.Capitalice {
+    text-transform: capitalize;
+}
+
+.SoloMinuscula {
+    text-transform: lowercase;
+}
+
+p {
+    text-transform: lowercase;
+}
+
+p::first-letter {
+    text-transform: capitalize
+}
+
+.Mayusculas {
+    text-transform: uppercase;
+}

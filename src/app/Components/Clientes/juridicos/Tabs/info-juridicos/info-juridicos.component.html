@@ -1,0 +1,442 @@
+<!-- Masked inputs -->
+<div>
+    <form method="get" [formGroup]="infoJuridicoFrom">
+        <div class="panel-body">
+            <div class="row">
+                <!-- {{dataShared}} -->
+                <div class="col-xs-12 col-md-12 col-lg-12" id="1">
+                    <div class="col-md-3">
+                        <div class="form-group" id="1">
+                            <label class="textBlod">Tipo relación: </label>
+                            <span class="textBigRed">*</span>
+                            <select class="form-control" formControlName="Relacion" id="relacion" name="select" [attr.disabled]="bloquearRelacion" (change)="GenericoSelect('Relacion',infoJuridicoFrom); ValidarTipoCliente()">
+                  <option value="0">-- Seleccione --</option>
+                  <option *ngFor="let relacion of dataRelacion" [value]="relacion.Clase">
+                     {{relacion.Descripcion}}
+                  </option>
+                </select>
+                            <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['Relacion'].errors?.['required'] && (infoJuridicoFrom.controls['Relacion'].dirty || infoJuridicoFrom.controls['Relacion'].touched)">
+                  El tipo relación es obligatorio.
+                </span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group" id="1">
+                            <label class="textBlod">Nit : </label>
+                            <span class="textBigRed">*</span>
+                            <input type="text" class="form-control" formControlName="Nit" id="nit" [attr.disabled]="bloquearNit" maxlength="10" (keypress)="SoloNumerosInput('nit')" (blur)="ValidarJuridicosRegistrados()">
+                            <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['Nit'].errors?.['required'] && (infoJuridicoFrom.controls['Nit'].dirty || infoJuridicoFrom.controls['Nit'].touched)">
+                      El nit es obligatorio.
+                    </span>
+                            <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['Nit'].errors?.['pattern']  && (infoJuridicoFrom.controls['Nit'].dirty || infoJuridicoFrom.controls['Nit'].touched)">
+                      El nit solo acepta números.
+                    </span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group" id="1">
+                            <label class="textBlod">Razón social: </label>
+                            <span class="textBigRed">*</span>
+                            <input type="text" class="form-control Capitalice" id="razonSocial" formControlName="RazonSocial" [attr.disabled]="bloquearRazonSocial">
+                            <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['RazonSocial'].errors?.['required'] && (infoJuridicoFrom.controls['RazonSocial'].dirty || infoJuridicoFrom.controls['RazonSocial'].touched)">
+                      La razón social es obligatoria.
+                    </span>
+                            <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['RazonSocial'].errors?.['pattern']  && (infoJuridicoFrom.controls['RazonSocial'].dirty || infoJuridicoFrom.controls['RazonSocial'].touched)">
+                      La razón social solo acepta números y letras. 
+                    </span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group" id="1">
+                            <label class="textBlod">Como conoció a Coogranada: </label>
+                            <span class="textBigRed" *ngIf="obliConocio">*</span>
+                            <select class="form-control" formControlName="Conocio" name="select" [attr.disabled]="bloquearForm" (change)="GenericoSelect('Conocio',infoJuridicoFrom); ValidarMetodoConocio()">
+                  <option value="0">-- Seleccione --</option>
+                  <option *ngFor="let metodos of metodosConocio" [value]="metodos.Value">
+                    {{metodos.Descripcion}}
+                  </option>
+                </select>
+                            <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['Conocio'].errors?.['required'] && (infoJuridicoFrom.controls['Conocio'].dirty || infoJuridicoFrom.controls['Conocio'].touched)">
+                    Como conoció a Coogranada es obligatorio.
+                  </span>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-12" id="2" *ngIf="MostrarOtroPor">
+                        <div class="col-md-3">
+                            <div class="form-group" id="1">
+                                <label class="textBlod">Otro / Por: </label>
+                                <span class="textBigRed">*</span>
+                                <input type="text" class="form-control Capitalice" id="idOtroPor" formControlName="OtroPor" [attr.disabled]="bloquearForm" (keyup)="OtroPorCapitalice()">
+                                <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['OtroPor'].errors?.['required'] && (infoJuridicoFrom.controls['OtroPor'].dirty || infoJuridicoFrom.controls['OtroPor'].touched)">
+                    El campo otro / por es obligatorio.
+                  </span>
+                                <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['OtroPor'].errors?.['pattern']  && (infoJuridicoFrom.controls['OtroPor'].dirty || infoJuridicoFrom.controls['OtroPor'].touched)">
+                    El campo otro / por solo acepta letras y números.
+                  </span>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-12 col-lg-12" id="2">
+                    <div class="col-md-3">
+                        <div class="form-group" id="2">
+                            <label class="textBlod">Fecha constitución: </label>
+                            <span class="textBigRed" *ngIf="obliFecha">*</span>
+                            <input type="date" class="form-control" formControlName="FechaConstitucion" [attr.disabled]="bloquearForm" min="1900-01-01" max="9999-01-01" (blur)="ValidarFechaConstitucion()">
+                            <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['FechaConstitucion'].errors?.['required'] && (infoJuridicoFrom.controls['FechaConstitucion'].dirty || infoJuridicoFrom.controls['FechaConstitucion'].touched)">
+                  La fecha de constitución es obligatoria.
+                </span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group" id="2">
+                            <label class="textBlod">Estrato: </label>
+                            <span class="textBigRed" *ngIf="obliEstrato">*</span>
+                            <select class="form-control" formControlName="Estrato" name="select" [attr.disabled]="bloquearForm" (change)="GenericoSelect('Estrato',infoJuridicoFrom)">
+                  <option value="0">-- Seleccione --</option>
+                  <option [value]="1">1</option>
+                  <option [value]="2">2</option>
+                  <option [value]="3">3</option>
+                  <option [value]="4">4</option>
+                  <option [value]="5">5</option>
+                  <option [value]="6">6</option>
+                </select>
+                            <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['Estrato'].errors?.['required'] && (infoJuridicoFrom.controls['Estrato'].dirty || infoJuridicoFrom.controls['Estrato'].touched)">
+                  El estrato es obligatorio.
+                </span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group" id="2">
+                            <label class="textBlod">CIIU: </label>
+                            <span class="textBigRed">*</span>
+                            <input formControlName="Ciiu" class="form-control" id="ciiu" [attr.disabled]="bloquearForm" (blur)="validarCiiuList(infoJuridicoFrom.value)" (keypress)="limpiarActividad(); SoloNumerosInput('ciiu')">
+                            <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['Ciiu'].errors?.['required'] && (infoJuridicoFrom.controls['Ciiu'].dirty || infoJuridicoFrom.controls['Ciiu'].touched)">
+                  El ciiu es obligatorio.
+                </span>
+                        </div>
+                    </div>
+                    <!-- <div class="col-md-1">
+              <div class="form-group" id="2">
+                <br>
+                <button type="button" class="btn Gt-btn-verde btn-icon legitRipple" [attr.disabled]="bloquearForm"
+                  (click)="BuscarCiiuList()">
+                  <i class="icon-search4"></i>
+                </button>
+              </div>
+            </div> -->
+                    <div class="col-md-3">
+                        <div class="form-group" id="2">
+                            <label class="textBlod">Actividad económica: </label>
+                            <span class="textBigRed">*</span>
+                            <!-- <input type="text" class="form-control" formControlName="" [attr.disabled]="bloquearForm"> -->
+                            <input formControlName="ActividadEconomica" max-num-list="18" ngui-auto-complete [accept-user-input]="false" [source]="dataListCiiu" value-property-name="dataListCiiu" display-property-name="Descripcion" list-formatter="Descripcion"
+                                class="form-control" [attr.disabled]="bloquearForm" (change)="cargarCiiu()" (blur)="cargarCiiu()">
+                            <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['ActividadEconomica'].errors?.['required'] && (infoJuridicoFrom.controls['ActividadEconomica'].dirty || infoJuridicoFrom.controls['ActividadEconomica'].touched)">
+                  La actividad económica es obligatoria.
+                </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-12 col-lg-12" id="3">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="textBlod">País: </label>
+                            <span class="textBigRed" *ngIf="obliPais">*</span>
+                            <select class="form-control" formControlName="Pais" name="select" [attr.disabled]="bloquearForm" (change)="GetDepartamentosList(infoJuridicoFrom.value)">
+                    <option value="">-- Seleccione --</option>
+                    <option *ngFor="let pais of dataPais" [value]="pais.IdPais">
+                      {{pais.Descripcion}}</option>
+                  </select>
+                            <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['Pais'].errors?.['required'] && (infoJuridicoFrom.controls['Pais'].dirty || infoJuridicoFrom.controls['Pais'].touched)">
+                    El pais es obligatorio.
+                  </span>
+                        </div>
+
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="textBlod">Departamento: </label>
+                            <span class="textBigRed" *ngIf="obliDepart">*</span>
+                            <select class="form-control" formControlName="Departamento" name="select" [attr.disabled]="bloqDeparta" (change)="GetCiudadList(infoJuridicoFrom.value)">
+                    <option value="">-- Seleccione --</option>
+                    <option *ngFor="let depart of dataDepartamentos" [value]="depart.IdDepartamento">
+                      {{depart.Descripcion}}</option>
+                  </select>
+                            <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['Departamento'].errors?.['required'] && (infoJuridicoFrom.controls['Departamento'].dirty || infoJuridicoFrom.controls['Departamento'].touched)">
+                    El departamento es obligatorio.
+                  </span>
+
+                        </div>
+
+
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="textBlod">Ciudad: </label>
+                            <span class="textBigRed" *ngIf="obliCiudad">*</span>
+                            <select class="form-control" formControlName="Ciudad" name="select" [attr.disabled]="bloqCiudad" (change)="validarCiudadList(infoJuridicoFrom.value)">
+                    <option value="">-- Seleccione --</option>
+                    <option *ngFor="let ciudad of dataCiudades" [value]="ciudad.IdCiudad">
+                      {{ciudad.Descripcion}}</option>
+                  </select>
+                            <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['Ciudad'].errors?.['required'] && (infoJuridicoFrom.controls['Ciudad'].dirty || infoJuridicoFrom.controls['Ciudad'].touched)">
+                    El ciudad es obligatoria.
+                  </span>
+                        </div>
+
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group" id="3">
+                            <label class="textBlod">Tipo local: </label>
+                            <span class="textBigRed" *ngIf="obliLocal">*</span>
+                            <select class="form-control" formControlName="TipoLocal" name="select" [attr.disabled]="bloquearForm" (change)="GenericoSelect('TipoLocal',infoJuridicoFrom)">
+                  <option value="0">-- Seleccione --</option>
+                  <option [value]="1">Propio</option>
+                  <option [value]="2">Arrendado</option>
+                </select>
+                            <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['TipoLocal'].errors?.['required'] && (infoJuridicoFrom.controls['TipoLocal'].dirty || infoJuridicoFrom.controls['TipoLocal'].touched)">
+                    El tipo local es obligatorio.
+                  </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-12 col-lg-12" id="4">
+                    <div class="col-md-3">
+                        <div class="form-group" id="4">
+                            <label class="textBlod">Objeto social: </label>
+                            <span class="textBigRed" *ngIf="obliObjeto">*</span>
+                            <select class="form-control" name="select" formControlName="ObjetoSocial" [attr.disabled]="bloquearForm" (change)="GenericoSelect('ObjetoSocial',infoJuridicoFrom);validarTipoSociedad()">
+                  <option value="0">-- Seleccione --</option>
+                  <option *ngFor="let objetoSocial of dataObjetoSocial" [value]="objetoSocial.IdObjetoSocial">
+                        {{objetoSocial.Descripcion}}
+                  </option>
+                </select>
+                            <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['ObjetoSocial'].errors?.['required'] && (infoJuridicoFrom.controls['ObjetoSocial'].dirty || infoJuridicoFrom.controls['ObjetoSocial'].touched)">
+                  El objeto social es obligatorio.
+                </span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group" id="4">
+                            <label class="textBlod"> Tipo sociedad:</label>
+                            <span class="textBigRed">*</span>
+                            <select class="form-control" name="select" formControlName="TipoSociedad" [attr.disabled]="bloquearForm" (change)="GenericoSelect('TipoSociedad' ,infoJuridicoFrom)">
+                  <option value="0">-- Seleccione --</option>
+                  <option *ngFor="let tipoSociedad of dataTiposociedad" [value]="tipoSociedad.IdTipoSociedad">
+                    {{tipoSociedad.Descripcion}}
+                  </option>
+                </select>
+                            <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['TipoSociedad'].errors?.['required'] && (infoJuridicoFrom.controls['TipoSociedad'].dirty || infoJuridicoFrom.controls['TipoSociedad'].touched)">
+                  El tipo sociedad es obligatorio.
+                </span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group" id="4">
+                            <label class="textBlod"> Estado:</label>
+                            <span class="textBigRed">*</span>
+                            <select class="form-control" formControlName="Estado" id="estadoJur" name="select" (change)="GenericoSelect('Estado',infoJuridicoFrom)" [attr.disabled]="bloquearEstado">
+                            <option value="0">-- Seleccione --</option>
+                            <option *ngFor="let tipoEstado of dataEstados" [ngValue]="tipoEstado">
+                            {{tipoEstado.Descripcion}}
+                            </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2" *ngIf="MostrarConvenio">
+                        <div class="form-group" id="4">
+                            <label class="textBlod"> Convenio:</label>
+                            <span class="textBigRed"></span>
+                            <input class="form-control" [attr.disabled]="true" type="text" formControlName="nomina">
+                        </div>
+                    </div>
+                    <div class="col-md-1" *ngIf="MostrarConvenio">
+                        <div class="form-group" id="4">
+                            <label class="textBlod"> Nro:</label>
+                            <span class="textBigRed"></span>
+                            <input class="form-control" [attr.disabled]="true" type="text" formControlName="nro">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <div class="col-xs-6 col-md-6 col-lg-6">
+                        <div class="col-md-3 col-lg-3">
+                            <label class="textBlod">Asesor : </label>
+                            <span class="textBigRed">*</span>
+                            <input type="text" class="form-control" [attr.disabled]="bloquearAsesor" formControlName="CodigoAsesor" maxlength="3" (blur)="GetAsesorCodigo()" (keypress)="LimpiarIdAsesorNombre()">
+                            <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['CodigoAsesor'].errors?.['pattern']  && (infoJuridicoFrom.controls['CodigoAsesor'].dirty || infoJuridicoFrom.controls['CodigoAsesor'].touched)">
+                    El codigo solo acepta números.
+                  </span>
+
+                        </div>
+                        <div class="col-md-8 col-lg-8">
+                            <label class="hiddenText">Nit : </label>
+                            <span class="hiddenText">*</span>
+                            <input type="text" class="form-control" [attr.disabled]="bloquearAsesor" id="asesor" formControlName="NombreAsesor" (keypress)="LimpiarIdAsesorCodigo()">
+                            <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['NombreAsesor'].errors?.['pattern']  && (infoJuridicoFrom.controls['NombreAsesor'].dirty || infoJuridicoFrom.controls['NombreAsesor'].touched)">
+                                 La Asesor solo acepta letras.
+                                </span>
+                        </div>
+                        <div class="col-md-1 col-lg-1">
+                            <br>
+                            <button type="button" class="btn Gt-btn-verde btn-icon legitRipple" [attr.disabled]="disableAsesorPpal" (click)="GetAsesorAll()">
+                                <i class="icon-search4"></i>
+                                </button>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-md-6 col-lg-6">
+                        <div class="col-md-4 col-lg-4">
+                            <label class="textBlod">Asesor Externo: </label>
+                            <span class="textBigRed"></span>
+                            <input type="text" class="form-control" [attr.disabled]="bloquearAsesorExt" formControlName="CodigoAsesorExt" maxlength="3" (blur)="GetAsesorExternoCodigo()" (keypress)="LimpiarIdAsesorExternoNombre()">
+                            <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['CodigoAsesorExt'].errors?.['pattern']  && (infoJuridicoFrom.controls['CodigoAsesorExt'].dirty || infoJuridicoFrom.controls['CodigoAsesorExt'].touched)">
+                 El codigo solo acepta números.
+                </span>
+                        </div>
+                        <div class="col-md-5 col-lg-5">
+                            <label class="hiddenText">Nit: </label>
+                            <span class="hiddenText">*</span>
+                            <input type="text" class="form-control" [attr.disabled]="bloquearAsesorExt" id="asesorExterno" formControlName="NombreAsesorExt" (keypress)="LimpiarIdAsesorExternoCodigo()">
+                            <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['NombreAsesorExt'].errors?.['pattern']  && (infoJuridicoFrom.controls['NombreAsesorExt'].dirty || infoJuridicoFrom.controls['NombreAsesorExt'].touched)">
+                    La Asesor Externo solo acepta letras.
+                  </span>
+                        </div>
+                        <div class="col-md-3 col-lg-3">
+                            <br>
+                            <button type="button" class="btn Gt-btn-verde btn-icon legitRipple" [attr.disabled]="disableAsesorExt" (click)="GetAsesorExternoAll()">
+                    <i class="icon-search4"></i>
+                  </button>
+                            <button type="button" title="Desbloquear campos asesor" target="_blank" data-popup="tooltip" class="btn Gt-btn-verde btn-icon legitRipple" [attr.disabled]="AsessorNecesario" (click)="DesbloquearAsesorExterno()">
+                    <i class="icon-unlocked2"></i>
+                  </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <!--Botones-->
+        <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+            <input type="submit" *ngIf="mostrarSiguiente" class="btn Gt-btn-verde" value="Siguiente" (click)="GuardarInfoJurico()" /> &nbsp;
+            <input type="submit" *ngIf="mostrarActualizar" class="btn Gt-btn-verde" value="Actualizar" (click)="ActualizarInfoJuridico()" /> &nbsp;
+            <input type="submit" *ngIf="mostrarCambiar" class="btn Gt-btn-verde" value="Cambiar" (click)="GestionarOperaciones()" /> &nbsp;
+            <!-- <input type="submit" *ngIf="mostrarNuevoInfo" class="btn Gt-btn-morado" value="Nuevo" (click)="limpiarFormulario()" /> -->
+        </div>
+    </div>
+</div>
+<!-- /masked inputs -->
+
+<button type="button" style="visibility:hidden" #BuscarAsesoresExt class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#ModalBuscarAsesor">
+</button>
+<button type="button" style="visibility:hidden" #BuscarAsesoresPpal class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#ModalBuscarAsesorPpal">
+</button>
+<button type="button" style="visibility:hidden" #BuscarActividad class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#ModalBuscarActividad">
+</button>
+<button type="button" style="visibility:hidden" #AbrirDescripcion class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#ModalDescripcionApruebaNiega">
+</button>
+
+<!-- Modal BuscarAsesores Externos -->
+<div id="ModalBuscarAsesor" class="modal">
+    <div class="modal-full">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Asesores</h6>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive scrollTabla">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th><strong>Asesor</strong></th>
+                                <th><strong>Nombre completo</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let resultAsesor of dataAsesorExterno">
+                            <tr (click)="GetAsesorExternoCodigoFirst(resultAsesor.intIdAsesor)">
+                                <td data-dismiss="modal">
+                                    {{resultAsesor.intIdAsesor}}
+                                </td>
+                                <td data-dismiss="modal">
+                                    {{resultAsesor.Nombre}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal BuscarAsesores -->
+<div id="ModalBuscarAsesorPpal" class="modal">
+    <div class="modal-full">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Asesores</h6>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive scrollTabla">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th><strong>Asesor</strong></th>
+                                <th><strong>Nombre completo</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let resultAsesor of dataAsesorPpal">
+                            <tr (click)="GetAsesorCodigoFirst(resultAsesor.IdAsesor)">
+                                <td data-dismiss="modal">
+                                    {{resultAsesor.IdAsesor}}
+                                </td>
+                                <td data-dismiss="modal">
+                                    {{resultAsesor.Nombre}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Aprueba o niega -->
+<div class="modal" id="ModalDescripcionApruebaNiega" tabindex="-1" role="dialog" aria-labelledby="ModalServiciosTitle" aria-hidden="true" style="top: 50px !important" data-backdrop="static" data-keyboard="false">
+    <form method="get" [formGroup]="DescripcionNegacionForm">
+        <div class="modal-header">
+            <div class="modal-content modal-full">
+                <div class="modal-header bg-morado">
+                    <h6 class="modal-title">Descripción</h6>
+                </div>
+                <div class="modal-body">
+                    <div class="col-xs-11 col-md-11 col-lg-11">
+                        <label class="textBlod">Descripción de la negación:</label>
+                        <textarea rows="4" formControlName="DescripcionNegacion" cols="4" id="txtObservacion" class="form-control" (keypress)="validarDescripcion()"></textarea>
+                        <span class="help-block validationSpan" *ngIf="mostrarSpanAlertaNegacion">
+              La descripción es obligatoria.
+            </span>
+                        <br>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn Gt-btn-verde doNotPrint" (click)="GuardarDescripcionNegado()">Guardar</button>
+                    <button type="button" style="visibility:hidden" #CerrarDescripcion class="btn Gt-btn-verde btn-icon legitRipple" data-dismiss="modal">
+          </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

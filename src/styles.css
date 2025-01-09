@@ -1,0 +1,36 @@
+/* You can add global styles to this file, and also import other style files */
+/* Estilo para notificaciones de éxito */
+.success {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  /* Estilo para notificaciones de error */
+  .error {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  /* Estilo para notificaciones de advertencia */
+  .warn {
+    background-color: #ff9800;
+    color: white;
+  }
+  
+  /* Estilo para notificaciones de información */
+  .info {
+    background-color: #2196f3;
+    color: white;
+  }
+
+  *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  .toast-bottom-right {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+  }

@@ -1,0 +1,456 @@
+<div>
+    <form method="get" [formGroup]="contactoFrom">
+        <div class="panel-body" id="Formulario">
+            <div class="row">
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <!--Fromulario-->
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="textBlod">Tipo contacto: </label>
+                            <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                            <select class="form-control" formControlName="TipoContacto" name="select" [attr.disabled]="bloquearForm" (change)="validarTipoContacto(contactoFrom.value); GenericoSelect('TipoContacto',contactoFrom)">
+                                <option value="0">-- Seleccione --</option>
+                                <option *ngFor="let dataContactos of dataContacto" [ngValue]="dataContactos">
+                                    {{dataContactos.Nombre}}
+                                </option>
+                            </select>
+                            <span class="help-block validationSpan" *ngIf="contactoFrom.controls['TipoContacto'].errors?.['required']  && (contactoFrom.controls['TipoContacto'].dirty || contactoFrom.controls['TipoContacto'].touched)">
+                                El tipo contacto es obligatorio.
+                            </span>
+                        </div>
+
+                    </div>
+                    <div [hidden]="ocultarUbicacion">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="textBlod">País: </label>
+                                <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                                <select class="form-control" formControlName="Pais" name="select" [attr.disabled]="bloquearForm" (change)="GetDepartamentosList(contactoFrom.value)">
+                                        <option value="">-- Seleccione --</option>
+                                        <option *ngFor="let pais of dataPais" [value]="pais.IdPais">
+                                            {{pais.Descripcion}}</option>
+                                    </select>
+                                <span class="help-block validationSpan" *ngIf="contactoFrom.controls['Pais'].errors?.['required']   && (contactoFrom.controls['Departamento'].dirty || contactoFrom.controls['Departamento'].touched)">
+                                    El país es obligatorio.
+                                </span>
+                            </div>
+
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="textBlod">Departamento: </label>
+                                <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                                <select class="form-control" formControlName="Departamento" name="select" [attr.disabled]="bloqDeparta" (change)="GetCiudadList(contactoFrom.value)">
+                                        <option value="">-- Seleccione --</option>
+                                        <option *ngFor="let depart of dataDepartamentos" [value]="depart.IdDepartamento">
+                                            {{depart.Descripcion}}</option>
+                                    </select>
+                                <span class="help-block validationSpan" *ngIf="contactoFrom.controls['Departamento'].errors?.['required']  && (contactoFrom.controls['Departamento'].dirty || contactoFrom.controls['Departamento'].touched)">
+                                    El departamento es obligatorio.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="textBlod">Ciudad: </label>
+                                <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                                <select class="form-control" formControlName="Ciudad" name="select" [attr.disabled]="bloqCiudad" (change)="validarCiudadList(contactoFrom.value);  GetBarrioList(contactoFrom.value)">
+                                        <option value="">-- Seleccione --</option>
+                                        <option *ngFor="let ciudad of dataCiudades" [value]="ciudad.IdCiudad">
+                                            {{ciudad.Descripcion}}</option>
+                                    </select>
+                                <span class="help-block validationSpan" *ngIf="contactoFrom.controls['Ciudad'].errors?.['required']  && (contactoFrom.controls['Ciudad'].dirty || contactoFrom.controls['Ciudad'].touched)">
+                                    La ciudad es obligatoria.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="textBlod">Barrio: </label>
+                                <span class="textBigRed"></span>
+                                <!-- <input formControlName="Barrio" autocomplete="on" max-num-list="18" ngui-auto-complete [source]="dataBarrios"
+                                    value-property-name="IdBarrio" display-property-name="Descripcion" list-formatter="Descripcion"
+                                    class="form-control" [attr.disabled]="bloqBarrio" (blur)="validarBarrioList(contactoFrom.value)"> -->
+                                <select class="form-control" formControlName="Barrio" name="select" [attr.disabled]="bloqBarrio">
+                                        <option value="">-- Seleccione --</option>
+                                        <option *ngFor="let barrio of dataBarrios" [value]="barrio.IdBarrio">
+                                            {{barrio.Descripcion}}</option>
+                                    </select>
+                                <span class="help-block validationSpan" *ngIf="contactoFrom.controls['Barrio'].errors?.['required']  && (contactoFrom.controls['Barrio'].dirty || contactoFrom.controls['Barrio'].touched)">
+                                    La ciudad es obligatoria.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="textBlod">Contacto principal:</label>
+                            <span class="textBigRed"></span>
+                            <div class="checkbox checkbox-switchery switchery-lg">
+                                <label>
+                                    <input type="checkbox" class="switchery" formControlName="contactoPpal"
+                                        [attr.disabled]="bloquearContPpal">
+                                </label>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <br>
+                </div>
+                <!--Direccion-->
+                <div class="col-xs-12 col-md-12 col-lg-12" [hidden]="ocultarDireccion">
+                    <!--Direccion-->
+                    <div class="col-xs-12 col-md-12 col-lg-12" style="padding-bottom: 15px">
+                        <label><strong>Dirección:</strong> (Diligencie los siguientes campos para formar la dirección)
+                        </label>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-2">
+                        <div class="form-group">
+                            <label class="">Tipo vía</label>
+                            <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                            <select class="form-control" formControlName="Vias" id="via" name="select" (change)="ConcatenarDireccion('via',contactoFrom.value.Vias)">
+                                <option value="0" disabled> -- Seleccione --</option>
+                                <option *ngFor="let vias of dataVias" [ngValue]="vias">
+                                    {{vias.Descripcion}}</option>
+                            </select>
+                            <span class="help-block validationSpan" *ngIf="contactoFrom.controls['Vias'].errors?.['required']  && (contactoFrom.controls['Vias'].dirty || contactoFrom.controls['Vias'].touched)">
+                                El tipo vía es obligatoria.
+                            </span>
+                        </div>
+
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-2">
+                        <div class="form-group" *ngIf="descripcionNumero">
+                            <label class="">Número</label>
+                            <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                            <input type="text" class="form-control" id="NumeroUno" formControlName="NumeroUno" (blur)="ConcatenarDireccion('num',contactoFrom.value.NumeroUno)" (input)="validarNumeros()" />
+                            <span class="help-block validationSpan" *ngIf="contactoFrom.controls['NumeroUno'].errors?.['required']  && (contactoFrom.controls['NumeroUno'].dirty || contactoFrom.controls['NumeroUno'].touched)">
+                                El número es obligatorio.
+                            </span>
+                        </div>
+                        <div class="form-group" *ngIf="!descripcionNumero">
+                            <label class="">Descripción</label>
+                            <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                            <input type="text" class="form-control" id="DescripcionVereda" formControlName="NumeroUno" (blur)="ConcatenarDireccion('num',contactoFrom.value.NumeroUno)" (input)="validarNumeros()" />
+                            <span class="help-block validationSpan" *ngIf="contactoFrom.controls['DescripcionVereda'].errors?.['required']  && (contactoFrom.controls['DescripcionVereda'].dirty || contactoFrom.controls['NumeroUno'].touched)">
+                                 La descripción es obligatoria.
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-1">
+                        <div class="form-group">
+                            <label class="">Letra</label>
+                            <select class="form-control" formControlName="Letra" name="select" (change)="ConcatenarDireccion('letra',contactoFrom.value.Letra)" [attr.disabled]="bloquearCampoDir">
+                                <option value="0" disabled> -- Seleccione --</option>
+                                <option value=""> </option>
+                                <option *ngFor="let letra of dataLetras" [ngValue]="letra">{{letra.Descripcion}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-1">
+                        <div class="form-group">
+                            <label class="hiddenText">Complemento</label>
+                            <select class="form-control" formControlName="CardiDos" name="select" (change)="ConcatenarDireccion('cardDos',contactoFrom.value.CardiDos)" [attr.disabled]="bloquearCampoDir">
+                                <option value="0" disabled> --Seleccione--</option>
+                                <option value=""> </option>
+                                <option *ngFor="let cardinal of dataCardinal" [ngValue]="cardinal">
+                                    {{cardinal.Descripcion}}
+                                </option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-1">
+                        <div class="form-group">
+                            <label class="">Número</label>
+                            <input type="text" class="form-control" id="NumeroDos" formControlName="NumeroDos" (blur)="ConcatenarDireccion('numDos',contactoFrom.value.NumeroDos)" (input)="validarNumeroDos()" [attr.disabled]="bloquearCampoDir" />
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-1">
+                        <div class="form-group">
+                            <label class="">Letra</label>
+                            <select class="form-control" formControlName="LetraDos" name="select" (change)="ConcatenarDireccion('letraDos',contactoFrom.value.LetraDos)" [attr.disabled]="bloquearCampoDir">
+                                <option value="0" disabled> --Seleccione --</option>
+                                <option value=""> </option>
+                                <option *ngFor="let letra of dataLetras" [ngValue]="letra">{{letra.Descripcion}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-1">
+                        <div class="form-group">
+                            <label class="hiddenText">Complemento</label>
+                            <select class="form-control" formControlName="Cardi" name="select" (change)="ConcatenarDireccion('card',contactoFrom.value.Cardi)" [attr.disabled]="bloquearCampoDir">
+                                <option value="0" disabled> --Seleccione--</option>
+                                <option value=""> </option>
+                                <option *ngFor="let cardinal of dataCardinal" [ngValue]="cardinal">
+                                    {{cardinal.Descripcion}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-1">
+                        <div class="form-group">
+                            <label class="">Número </label>
+                            <input type="text" class="form-control" id="NumeroTres" formControlName="NumeroTres" (blur)="ConcatenarDireccion('numTres',contactoFrom.value.NumeroTres)" (input)="validarNumeroTres()" [attr.disabled]="bloquearCampoDir" />
+
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-1">
+                        <div class="form-group">
+                            <label class="">Inmueble</label>
+                            <select class="form-control" formControlName="Imuebles" name="select" (change)="ConcatenarDireccion('inmu',contactoFrom.value.Imuebles)" [attr.disabled]="bloquearCampoDir">
+                                <option value="0" disabled> --Seleccione--</option>
+                                <option value=""> </option>
+                                <option *ngFor="let imueble of dataImuebles" [ngValue]="imueble">{{imueble.Descripcion}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-1">
+                        <div class="form-group">
+                            <label class="">Número</label>
+                            <input type="text" class="form-control" id="NumeroCuatro" formControlName="NumeroCuatro" (blur)="ConcatenarDireccion('numCuatro',contactoFrom.value.NumeroCuatro)" (input)="validarNumeroCuatro()" [attr.disabled]="bloquearCampoDir" />
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-md-6 col-lg-6">
+                        <div class="form-group">
+                            <label class="">Observación</label>
+                            <input type="text" class="form-control" id="observacion" formControlName="Observacion" (blur)="ConcatenarDireccion('observa',contactoFrom.value.Observacion)" [attr.disabled]="bloquearCampoDir" />
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-1">
+                        <div class="form-group">
+                            <label class="hiddenText">Limpiar</label>
+                            <label tooltip="Limpiar dirección." placement="top" show-delay="500">
+                                <button class="btn Gt-btn-verde btn-icon legitRipple" (click)="LimpiarCamposDireccion()">
+                                    <i class="icon-rotate-ccw3"></i>
+                                </button>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="col-xs-12 col-md-12 col-lg-12" [hidden]="ocultarDireccion">
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <div class="form-group">
+                            Dirección seleccionada: {{Via}} {{Numero}} {{Letra}} {{CardinalDos}} {{NumeroDos}} {{LetraDos}} {{Cardinal}} {{NumeroTres}} {{inmueble}} {{NumeroCuatro}} {{Observacion}}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-12 col-lg-12" [hidden]="ocultarDireccionSeleccionada">
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <div class="form-group">
+                            Dirección anterior: {{DireccionSeleccionada}}
+                        </div>
+                    </div>
+                </div>
+                <!--Telefono-->
+                <div class="col-xs-12 col-md-12 col-lg-12" [hidden]="ocultarTelefonos">
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <div class="form-group">
+                            <label class="textBlod">Número:</label>
+                            <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                            <input type="text" class="form-control" formControlName="Telefonos" minlength="7" maxlength="7" />
+                            <span class="help-block validationSpan" *ngIf="contactoFrom.controls['Telefonos'].errors?.['required']  && (contactoFrom.controls['Telefonos'].dirty || contactoFrom.controls['Telefonos'].touched)">
+                                El número es obligatorio.
+                            </span>
+                            <span class="help-block validationSpan" *ngIf="contactoFrom.controls['Telefonos'].errors?.['pattern']  && (contactoFrom.controls['Telefonos'].dirty || contactoFrom.controls['Telefonos'].touched)">
+                                El número  solo acepta números. </span>
+                            <span class="help-block validationSpan" *ngIf="contactoFrom.controls['Telefonos'].errors?.['maxlength']">
+                                El número  acepta máximo 7 números.
+                            </span>
+                            <span class="help-block validationSpan" *ngIf="contactoFrom.controls['Telefonos'].errors?.['minlength']">
+                                El número  acepta mínimo 7 números.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <!--Email-->
+                <div class="col-xs-12 col-md-12 col-lg-12" [hidden]="ocultarEmail">
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <div class="form-group">
+                            <label class="textBlod">Email:</label>
+                            <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                            <input type="email" class="form-control" formControlName="Email" />
+                            <span class="help-block validationSpan" *ngIf="contactoFrom.controls['Email'].errors?.['required']  && (contactoFrom.controls['Email'].dirty || contactoFrom.controls['Email'].touched)">
+                                El email es obligatorio.
+                            </span>
+                            <span class="help-block validationSpan" *ngIf="contactoFrom.controls['Email'].errors?.['pattern']  && (contactoFrom.controls['Email'].dirty || contactoFrom.controls['Email'].touched)">
+                                El email no tiene el formato correcto.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <!--Celular-->
+                <div class="col-xs-12 col-md-12 col-lg-12" [hidden]="ocultarCelular">
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <div class="form-group">
+                            <label class="textBlod">Celular:</label>
+                            <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                            <input type="text" class="form-control" formControlName="Celular" minlength="10" maxlength="10" />
+                            <span class="help-block validationSpan" *ngIf="contactoFrom.controls['Celular'].errors?.['required']  && (contactoFrom.controls['Celular'].dirty || contactoFrom.controls['Celular'].touched)">
+                                El celular es obligatorio.
+                            </span>
+                            <span class="help-block validationSpan" *ngIf="contactoFrom.controls['Celular'].errors?.['pattern']  && (contactoFrom.controls['Celular'].dirty || contactoFrom.controls['Celular'].touched)">
+                                El celular solo acepta números. </span>
+                            <span class="help-block validationSpan" *ngIf="contactoFrom.controls['Celular'].errors?.['maxlength']">
+                                El celular acepta máximo 10 números.
+                            </span>
+                            <span class="help-block validationSpan" *ngIf="contactoFrom.controls['Celular'].errors?.['minlength']">
+                                El celular acepta mínimo 10 números.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="row">
+    <!--Botones-->
+    <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+        <input type="submit" *ngIf="mostrarAgregar" class="btn Gt-btn-verde" value="Agregar" (click)="AgregarContacto()" [disabled]="contactoFrom.invalid" /> &nbsp;
+        <input type="submit" *ngIf="mostrarLimpiar" class="btn Gt-btn-morado" value="Limpiar" (click)="LimpiarFormulario()" /> &nbsp;
+        <input type="submit" *ngIf="mostrarSiguiente" class="btn Gt-btn-verde" value="Siguiente" (click)="GuardarContactos()" [disabled]="dataTable.length <= 0" /> &nbsp;
+        <input type="submit" *ngIf="mostrarActualizar" class="btn Gt-btn-verde" value="Actualizar" (click)="Actualizarcontactos()" [disabled]="!EnableUpdateContacto" />
+    </div>
+</div>
+<br>
+<!--Tabla-->
+<div class="col-xs-12 col-md-12 col-lg-12" *ngIf="dataTable.length <= 0">
+    <br>
+    <div class="alert alert-secondary" role="alert">
+        No hay registros
+    </div>
+</div>
+<div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="dataTable.length > 0">
+    <div class="table-responsive scrollTabla">
+        <table id="tablaIngresos" class="table table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        <strong>Tipo contacto</strong>
+                    </th>
+                    <th class="column_direccion">
+                        <strong>Descripción</strong>
+                    </th>
+                    <th class="column_Ciudad">
+                        <strong>Ubicación</strong>
+                    </th>
+                    <th>
+                        <strong>Principal</strong>
+                    </th>
+                    <th>
+                        <strong>Opciones</strong>
+                    </th>
+                </tr>
+            </thead>
+            <tbody *ngFor="let itemContacto of dataTable; let i = index">
+                <tr *ngIf="itemContacto.TipoContacto.Id === 8" class="filContacto_{{i}}" (click)="CambiarColor(i,1)">
+                    <td>
+                        {{itemContacto.TipoContacto.Nombre}}
+                    </td>
+                    <td class="column_direccion columnDireccion: itemContacto.DescripcionAdress.length = 30">
+                        {{itemContacto.DescripcionAdress}}
+                    </td>
+                    <td *ngIf="itemContacto.Ciudad !== undefined && itemContacto.Ciudad !== null && itemContacto.Ciudad !=='' && itemContacto.Ciudad !== 0 
+                            && itemContacto.Departamento !== undefined && itemContacto.Departamento !== null && itemContacto.Departamento !=='' && itemContacto.Departamento !== 0 
+                            && itemContacto.Pais !== undefined && itemContacto.Pais !== null && itemContacto.Pais !=='' && itemContacto.Pais !== 0 " class="column_Ciudad columnCiudad : itemContacto.Pais.Descripcion.length = 30">
+
+                        {{itemContacto.Pais.Descripcion}} -{{itemContacto.Departamento.Descripcion}} - {{itemContacto.Ciudad.Descripcion}}
+                        <span *ngIf="itemContacto.Barrio !== undefined && itemContacto.Barrio !== null && itemContacto.Barrio !==''
+                                                     && itemContacto.Barrio !== 0">
+                                - {{itemContacto.Barrio.Descripcion}}
+                            </span>
+                    </td>
+                    <td *ngIf="itemContacto.Pais !== undefined && itemContacto.Pais !== null && itemContacto.Pais !==''
+                            && itemContacto.Pais !== 0 && itemContacto.Ciudad == null || itemContacto.Ciudad == undefined">
+                        {{itemContacto.Pais.Descripcion}}
+                    </td>
+                    <td>
+                        <input type="checkbox" disabled="true" [checked]="itemContacto.contactoPpal">
+                    </td>
+                    <td>
+                        <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="activarBtnOpciones" (click)="MapearContacto(itemContacto, i)">
+                            <i class="icon-pencil"></i>
+                        </button>&nbsp;
+                        <button class="btn Gt-btn-morado btn-icon legitRipple" *ngIf="activarBtnOpciones" (click)="EliminarContacto(i, itemContacto)">
+                            <i class="icon-bin2 "></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr *ngIf="itemContacto.TipoContacto.Id === 3" class="filContacto_{{i}}" (click)="CambiarColor(i,1)">
+                    <td>
+                        {{itemContacto.TipoContacto.Nombre}}
+                    </td>
+                    <td>
+                        {{itemContacto.Email}}
+                    </td>
+                    <td>
+                        N/A
+                    </td>
+                    <td>
+                        <input type="checkbox" disabled="true" [checked]="itemContacto.contactoPpal">
+                    </td>
+                    <td>
+                        <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="activarBtnOpciones" (click)="MapearContacto(itemContacto, i)">
+                            <i class="icon-pencil"></i>
+                        </button>&nbsp;
+                        <button class="btn Gt-btn-morado btn-icon legitRipple" *ngIf="activarBtnOpciones" (click)="EliminarContacto(i, itemContacto)">
+                            <i class="icon-bin2 "></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr *ngIf="itemContacto.TipoContacto.Id === 7" class="filContacto_{{i}}" (click)="CambiarColor(i,1)">
+                    <td>
+                        {{itemContacto.TipoContacto.Nombre}}
+                    </td>
+                    <td>
+                        {{itemContacto.Telefonos}}
+                    </td>
+                    <td>
+                        N/A
+                    </td>
+                    <td>
+                        <input type="checkbox" disabled="true" [checked]="itemContacto.contactoPpal">
+                    </td>
+                    <td>
+                        <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="activarBtnOpciones" (click)="MapearContacto(itemContacto, i)">
+                            <i class="icon-pencil"></i>
+                        </button>&nbsp;
+                        <button class="btn Gt-btn-morado btn-icon legitRipple" *ngIf="activarBtnOpciones" (click)="EliminarContacto(i, itemContacto)">
+                            <i class="icon-bin2 "></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr *ngIf="itemContacto.TipoContacto.Id === 6" class="filContacto_{{i}}" (click)="CambiarColor(i,1)">
+                    <td>
+                        {{itemContacto.TipoContacto.Nombre}}
+                    </td>
+                    <td>
+                        {{itemContacto.Celular}}
+                    </td>
+                    <td>
+                        N/A
+                    </td>
+                    <td>
+                        <input type="checkbox" disabled="true" [checked]="itemContacto.contactoPpal">
+                    </td>
+                    <td>
+                        <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="activarBtnOpciones" (click)="MapearContacto(itemContacto, i)">
+                            <i class="icon-pencil"></i>
+                        </button>&nbsp;
+                        <button class="btn Gt-btn-morado btn-icon legitRipple" *ngIf="activarBtnOpciones" (click)="EliminarContacto(i, itemContacto)">
+                            <i class="icon-bin2 "></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

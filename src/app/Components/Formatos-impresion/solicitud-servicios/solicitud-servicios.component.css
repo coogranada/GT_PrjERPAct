@@ -1,0 +1,23 @@
+.letraGrande {
+   font-size: 15px;
+}
+
+.Capitalice{
+    text-transform: capitalize;
+}
+
+.CapitaliceMayus {
+    text-transform: uppercase;
+}
+
+.textGray {
+    color: #e6e6e6;
+}
+
+.paddingNaturales {
+    padding: 1px;
+}
+
+@media print{
+   
+}

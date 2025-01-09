@@ -1,0 +1,258 @@
+<form method="get" [formGroup]="entrevistaForm">
+    <div class="col-xs-12 col-md-12 col-lg-12">
+        <div class="table-responsive ">
+            <table id="tablaIngresos" class="table table-hover container-scroll">
+                <thead>
+                    <tr class="bg-morado">
+                        <th class="text-center" colspan="6">OPERACIONES EN MONEDA EXTRANJERA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="2">¿Realiza operaciones en moneda extranjera? </td>
+                        <td colspan="1">
+                            Si <input type="checkbox" class="switchery" formControlName="RPregunta6Si" [attr.disabled]="bloquearForm" (click)="ValidarSeleccion('si', 6)"> No <input type="checkbox" class="switchery" formControlName="RPregunta6No" [attr.disabled]="bloquearForm"
+                                (click)="ValidarSeleccion('No', 6)">
+                            <br>
+                        </td>
+                        <td>
+                            <input type="text" [attr.disabled]="DesbloquearRespuesta3" class="form-control SoloMinuscula" pattern="[a-zA-ZñÑ ]*" id="enQueEntidad" formControlName="RPregunta7Si" placeholder="En que entidad?" (keydown)="habilitarActualizar()">
+                            <span class="help-block validationSpan" *ngIf="entrevistaForm.controls['RPregunta7Si'].errors?.['pattern']  && 
+                                                                                (entrevistaForm.controls['RPregunta7Si'].dirty || entrevistaForm.controls['RPregunta7Si'].touched)">
+                                La entidad solo acepta letras. </span>
+                        </td>
+                        <td colspan="2">
+                            Importa <input type="checkbox" class="switchery" formControlName="RPregunta8Si" [attr.disabled]="DesbloquearRespuesta3"> Exporta <input type="checkbox" class="switchery" formControlName="RPregunta9Si" [attr.disabled]="DesbloquearRespuesta3">                            Giros <input type="checkbox" class="switchery" formControlName="RPregunta10Si" [attr.disabled]="DesbloquearRespuesta3">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="text" [attr.disabled]="DesbloquearRespuesta3" class="form-control SoloMinuscula" pattern="[a-zA-ZñÑ ]*" formControlName="RPregunta11Si" id="tipoProducto" placeholder="Tipo producto" (keydown)="habilitarActualizar()">
+                            <span class="help-block validationSpan" *ngIf="entrevistaForm.controls['RPregunta11Si'].errors?.['required']  && 
+                                                                                (entrevistaForm.controls['RPregunta11Si'].dirty || entrevistaForm.controls['RPregunta11Si'].touched)">
+                                El tipo producto es obligatorio.
+                            </span>
+                            <span class="help-block validationSpan" *ngIf="entrevistaForm.controls['RPregunta11Si'].errors?.['pattern']  &&
+                                                                                    (entrevistaForm.controls['RPregunta11Si'].dirty || entrevistaForm.controls['RPregunta11Si'].touched)">
+                                El tipo producto solo acepta letras. </span>
+                        </td>
+                        <td>
+                            <select [attr.disabled]="DesbloquearRespuesta3" class="form-control" formControlName="RPregunta12Si" name="select" (change)="habilitarActualizar()">
+                                <option value="" selected style="color: #DFDFDF">-- País --</option>
+                                <option *ngFor="let pais of dataPais" [value]="pais.IdPais">
+                                {{pais.Descripcion}}</option>
+                            </select>
+                            <span class="help-block validationSpan" *ngIf="entrevistaForm.controls['RPregunta12Si'].errors?.['required']  && 
+                                                                                (entrevistaForm.controls['RPregunta12Si'].dirty || entrevistaForm.controls['RPregunta12Si'].touched)">
+                                El país es obligatorio.
+                            </span>
+                        </td>
+                        <td>
+                            <select [attr.disabled]="DesbloquearRespuesta3" class="form-control" formControlName="RPregunta25Si" name="select" (change)="habilitarActualizar()">
+                                <option disabled value="" selected style="color: #DFDFDF">-- Moneda --</option>
+                                <option *ngFor="let DataDivisas of dataDivisas" [ngValue]="DataDivisas">{{DataDivisas.Descripcion}}
+                                </option>
+                            </select>
+                            <span class="help-block validationSpan" *ngIf="entrevistaForm.controls['RPregunta25Si'].errors?.['required']  && 
+                                (entrevistaForm.controls['RPregunta25Si'].dirty || entrevistaForm.controls['RPregunta25Si'].touched)">
+                                La moneda es obligatoria.
+                            </span>
+                        </td>
+                        <td>
+                            <input type="text" [attr.disabled]="DesbloquearRespuesta3" class="form-control SoloMinuscula" pattern="[a-zA-ZñÑ ]*" id="RPre24" formControlName="RPregunta13Si" id="ciudad" placeholder="Ciudad" (keydown)="habilitarActualizar()">
+                            <span class="help-block validationSpan" *ngIf="entrevistaForm.controls['RPregunta13Si'].errors?.['required']  && 
+                                                        (entrevistaForm.controls['RPregunta13Si'].dirty || entrevistaForm.controls['RPregunta13Si'].touched)">
+                                La ciudad es obligatoria.
+                            </span>
+                            <span class="help-block validationSpan" *ngIf="entrevistaForm.controls['RPregunta13Si'].errors?.['pattern']  &&
+                                                        (entrevistaForm.controls['RPregunta13Si'].dirty || entrevistaForm.controls['RPregunta13Si'].touched)">
+                                La ciudad solo acepta letras. </span>
+                        </td>
+                        <td>
+                            <input type="text" [attr.disabled]="DesbloquearRespuesta3" class="form-control" currencyMask formControlName="RPregunta24Si" placeholder="Monto promedio" (keydown)="habilitarActualizar()">
+                            <span class="help-block validationSpan" *ngIf="entrevistaForm.controls['RPregunta24Si'].errors?.['required']  && 
+                                                        (entrevistaForm.controls['RPregunta24Si'].dirty || entrevistaForm.controls['RPregunta24Si'].touched)">
+                                El monto promedio es obligatorio.
+                            </span>
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">¿Tiene inversiones en moneda extranjera? </td>
+                        <td colspan="1">
+                            Si <input type="checkbox" class="switchery" formControlName="RPregunta14Si" [attr.disabled]="bloquearForm" (click)="ValidarSeleccion('si', 14)"> No <input type="checkbox" class="switchery" formControlName="RPregunta14No" [attr.disabled]="bloquearForm"
+                                (click)="ValidarSeleccion('No', 14)">
+                        </td>
+                        <td>
+                            <select [attr.disabled]="DesbloquearRespuesta13" class="form-control" formControlName="RPregunta15Si" name="select" (change)="habilitarActualizar()">
+                                <option value="" selected style="color: #DFDFDF">-- País --</option>
+                                <option *ngFor="let pais of dataPais" [value]="pais.IdPais">
+                                {{pais.Descripcion}}</option>
+                            </select>
+                            <span class="help-block validationSpan" *ngIf="entrevistaForm.controls['RPregunta15Si'].errors?.['required']  && 
+                                                    (entrevistaForm.controls['RPregunta15Si'].dirty || entrevistaForm.controls['RPregunta15Si'].touched)">
+                                El país es obligatorio.
+                            </span>
+                        </td>
+                        <td>
+                            <select [attr.disabled]="DesbloquearRespuesta13" class="form-control" formControlName="RPregunta16Si" name="select" (change)="habilitarActualizar()">
+                                <option disabled value="" selected style="color: #DFDFDF">-- En que moneda --</option>
+                                <option *ngFor="let DataDivisas of dataDivisas" [ngValue]="DataDivisas">{{DataDivisas.Descripcion}}
+                                </option>
+                            </select>
+                            <span class="help-block validationSpan" *ngIf="entrevistaForm.controls['RPregunta16Si'].errors?.['required']  && 
+                                                    (entrevistaForm.controls['RPregunta16Si'].dirty || entrevistaForm.controls['RPregunta16Si'].touched)">
+                                La moneda es obligatoria.
+                            </span>
+                        </td>
+                        <td>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">¿Posee cuentas en moneda extranjera?</td>
+                        <td colspan="1">
+                            Si <input type="checkbox" class="switchery" formControlName="RPregunta17Si" [attr.disabled]="bloquearForm" (click)="ValidarSeleccion('si', 17)"> No <input type="checkbox" class="switchery" formControlName="RPregunta17No" [attr.disabled]="bloquearForm"
+                                (click)="ValidarSeleccion('No', 17)">
+                        </td>
+                        <td>
+                            <input type="text" [attr.disabled]="DesbloquearRespuesta16" class="form-control SoloMinuscula" pattern="[a-zA-ZñÑ ]*" id="RPre24" formControlName="RPregunta29Si" placeholder="N° cuenta" (keydown)="habilitarActualizar()">
+                            <span class="help-block validationSpan" *ngIf="entrevistaForm.controls['RPregunta29Si'].errors?.['required']  && 
+                                             (entrevistaForm.controls['RPregunta29Si'].dirty || entrevistaForm.controls['RPregunta29Si'].touched)">
+                                El Numero cuenta es obligatorio.
+                            </span>
+                        </td>
+                        <td>
+                            <select [attr.disabled]="DesbloquearRespuesta16" class="form-control" formControlName="RPregunta18Si" name="select" (change)="habilitarActualizar()">
+                                <option value="" selected style="color: #DFDFDF">-- País --</option>
+                                <option *ngFor="let pais of dataPais" [value]="pais.IdPais">
+                                {{pais.Descripcion}}</option>
+                                
+                            </select>
+                            <span class="help-block validationSpan" *ngIf="entrevistaForm.controls['RPregunta18Si'].errors?.['required']  && 
+                                                    (entrevistaForm.controls['RPregunta18Si'].dirty || entrevistaForm.controls['RPregunta18Si'].touched)">
+                                El país es obligatorio.
+                            </span>
+                        </td>
+                        <td>
+                            <select [attr.disabled]="DesbloquearRespuesta16" class="form-control" formControlName="RPregunta19Si" name="select" (change)="habilitarActualizar()">
+                                <option disabled value="" selected style="color: #DFDFDF">-- En que moneda --</option>
+                                <option *ngFor="let DataDivisas of dataDivisas" [ngValue]="DataDivisas">{{DataDivisas.Descripcion}}
+                                </option>
+                            </select>
+                            <span class="help-block validationSpan" *ngIf="entrevistaForm.controls['RPregunta19Si'].errors?.['required']  && 
+                                                    (entrevistaForm.controls['RPregunta19Si'].dirty || entrevistaForm.controls['RPregunta19Si'].touched)">
+                                La moneda es obligatoria.
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">Declaro que no realizo transacciones en moneda extranjera</td>
+                        <td colspan="1">
+                            Si <input type="checkbox" class="switchery" formControlName="RPregunta28Si" [attr.disabled]="bloquearForm" (click)="ValidarSeleccion('si', 28)"> No <input type="checkbox" class="switchery" formControlName="RPregunta28No" [attr.disabled]="bloquearForm"
+                                (click)="ValidarSeleccion('No', 28)">
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+            <br><br>
+        </div>
+    </div>
+
+    <br>
+    <div class="col-xs-12 col-md-3 col-lg-3">
+        <div class="container">
+            <form method="get" [formGroup]="tratamientoForm">
+                <br>
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-md-12 col-lg-6 alert alert-secondary" role="alert">
+                        <!--Tratamiento de datos-->
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                                <label class="hiddenText">Tratamiento</label>
+                                <div class="checkbox checkbox-switchery switchery-lg">
+                                    <label>
+                                    <input type="checkbox" class="switchery" formControlName="checkTratamiento" [attr.disabled]="bloquearFechaManual"
+                                        #tratamientodatos>
+                                    <label>
+                                        He leído y autorizo a la COOPERATIVA COOGRANADA, para que realice el tratamiento de
+                                        mis datos.
+                                    </label>
+                                    </label>
+                                    <br><br>
+                                </div>
+                                <div *ngIf="MostrarFechaTratamiento" style="height: 113px; padding: 34px 73px;">
+                                    <div class="form-group">
+                                        <label class="textNegrilla">Fecha actualización:</label>
+                                        <input type="date" class="form-control" formControlName="fechaTrataManual" [attr.disabled]="bloquearCheckTratamiento" format="YYYY MMMM DD" min="1900-01-01" max="9999-01-01" (blur)="validarFechaTratamiento()" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-6 alert alert-secondary" role="alert">
+                        <!--Debito automatico-->
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                                <label class="hiddenText">Debito automatico</label>
+                                <div class="checkbox checkbox-switchery switchery-lg">
+                                    <label>
+                                    <input type="checkbox" class="switchery" formControlName="checkDebitoAutomatico" [attr.disabled]="bloquearCheckDebito"
+                                        #tratamientodatos  (click)="cambioCheck()">
+                                    <label>
+                                        Autorizo a la COOPERATIVA COOGRANADA, a realizar débito automático, para el pago de
+                                        mis aportes
+                                        sociales anuales para
+                                        permanecer activo.
+                                    </label>
+                                    </label>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-6 alert alert-secondary" role="alert">
+                        <!--Exento del GMF-->
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                                <label class="hiddenText">Extento GMF</label>
+                                <div class="checkbox checkbox-switchery switchery-lg">
+                                    <label>
+                                    <input type="checkbox" class="switchery" formControlName="checkExentoGMF"
+                                        [attr.disabled]="bloquearCheckExento" #tratamientodatos (click)="cambioCheck()">
+                                    <label>
+                                        Se encuentra exento del GMF
+                                    </label>
+                                    </label>
+                                </div>
+                                <div *ngIf="MostrarFechaExento" style="height: 113px; padding: 34px 73px;">
+                                    <div class="form-group">
+                                        <label class="textNegrilla">Fecha actualización:</label>
+                                        <input type="date" class="form-control" formControlName="fechaTrataManual" [attr.disabled]="bloquearFechaExento" format="YYYY MMMM DD" min="1900-01-01" max="9999-01-01" (blur)="validarFechaTratamiento()" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <div class="row">
+                    <!--Botones-->
+                    <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                        <input type="submit" *ngIf="mostrarMarcarDesmarcar" class="btn Gt-btn-verde" value="{{labelBoton}}" (click)="EditarTratamiento()" /> &nbsp;
+                        <input type="submit" *ngIf="mostrarSiguiente" class="btn Gt-btn-verde" value="Guardar Juridico" (click)="GuardarJuridicoCompleto()" /> &nbsp;
+                        <input type="submit" *ngIf="mostrarActualizar" class="btn Gt-btn-verde" value="Actualizar" (click)="ActualizarEntrevista()" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <ngx-loading [show]="loading" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+    </ngx-loading>
+</form>

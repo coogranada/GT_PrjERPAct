@@ -1,0 +1,345 @@
+option:hover {
+    background-color: yellow !important;
+}
+
+.ocultarLabel {
+    color: white;
+}
+
+.Capitalice {
+    text-transform: capitalize;
+}
+
+.SoloMinuscula {
+    text-transform: lowercase;
+}
+
+p {
+    text-transform: lowercase;
+}
+
+p::first-letter {
+    text-transform: capitalize
+}
+
+.Mayusculas {
+    text-transform: uppercase;
+}
+
+.tutor {
+    border: 1px solid #43A047 !important;
+    padding: inherit;
+    padding-top: 1%;
+    border-radius: 0.3em;
+    background: #f4f7f4;
+}
+
+.textGreen {
+    color: #205823;
+}
+
+.textNegrilla {
+    color: #565656;
+    font-weight: bold;
+}
+
+.tutorInfo {
+    position: relative;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    color: #205823;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.activar {
+    border-bottom-color: transparent;
+    cursor: default;
+    cursor: pointer;
+    background-color: rgb(38, 144, 81);
+    border: 1px solid rgb(38, 144, 81);
+}
+
+.activar a {
+    color: white !important;
+}
+
+.CostosGastos {
+    color: #D84315;
+}
+
+.disableTab {
+    pointer-events: none;
+}
+
+.disableTab :hover {
+    cursor: no-drop;
+    /* cursor: not-allowed; */
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.grande {
+    font-size: 25px !important;
+    color: #D84315;
+    margin-top: -5px !important;
+    margin-left: 6px;
+    position: absolute;
+}
+
+.radioNatural {
+    display: none;
+}
+
+.btn-radio {
+    cursor: pointer;
+    display: inline-block;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.btn-radio:not(:first-child) {
+    margin-left: 20px;
+}
+
+@media screen and (max-width: 480px) {
+    .btn-radio {
+        display: block;
+        float: none;
+    }
+    .btn-radio:not(:first-child) {
+        margin-left: 0;
+        margin-top: 15px;
+    }
+}
+
+.btn-radio svg {
+    fill: none;
+    vertical-align: middle;
+}
+
+.btn-radio svg circle {
+    stroke-width: 2;
+    stroke: #C8CCD4;
+}
+
+.btn-radio svg path {
+    stroke: rgb(38, 144, 81);
+}
+
+.btn-radio svg path.inner {
+    stroke-width: 6;
+    stroke-dasharray: 19;
+    stroke-dashoffset: 19;
+}
+
+.btn-radio svg path.outer {
+    stroke-width: 2;
+    stroke-dasharray: 57;
+    stroke-dashoffset: 57;
+}
+
+.btn-radio input {
+    display: none;
+}
+
+.btn-radio input:checked+svg path {
+    transition: all 0.4s ease;
+}
+
+.btn-radio input:checked+svg path.inner {
+    stroke-dashoffset: 38;
+    transition-delay: 0.3s;
+}
+
+.btn-radio input:checked+svg path.outer {
+    stroke-dashoffset: 0;
+}
+
+.btn-radio span {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.DivFechas {
+    text-align: center;
+    border: 1px solid #d0cece;
+    border-radius: 0.2em;
+}
+
+.organizarModal {
+    padding-right: 35% !important;
+}
+
+.quietarPadding [class*="col-"] {
+    padding: 0;
+}
+
+.eliminarHover:hover {
+    background: none
+}
+
+@media print {
+    .doNotPrint {
+        display: none !important;
+    }
+}
+
+.container-scroll {
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+
+/* propiedades de la tablas */
+
+.FilaFija {
+    position: sticky !important;
+    left: 0;
+    background: #fff;
+}
+
+.scrollTabla {
+    max-height: 500px;
+    overflow-y: scroll;
+}
+
+.encabezadoTablas {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #ffffff;
+}
+
+.columnTipoC {
+    min-width: 200px !important;
+}
+
+.columnOpciones {
+    min-width: 200px !important;
+}
+
+.columnCiudad {
+    min-width: 320px !important;
+}
+
+.columnactivo {
+    min-width: 200px !important;
+}
+
+.columnafavor {
+    min-width: 200px !important;
+}
+
+.columnDireccion {
+    min-width: 300px !important;
+}
+
+.columnNombre {
+    min-width: 160px !important;
+}
+
+.columnTelefono {
+    min-width: 180px !important;
+}
+
+.columnLaboral {
+    min-width: 180px !important;
+}
+
+.columnRazonS {
+    min-width: 300px !important;
+}
+
+.columtDoc {
+    min-width: 200px !important;
+}
+
+.columnAntiguedad {
+    min-width: 160px !important;
+}
+
+.columnReferencia {
+    min-width: 220px !important;
+}
+
+.columtdetalle {
+    min-width: 200px !important;
+}
+
+.columnDseguro {
+    min-width: 170px !important;
+}
+
+.columnSeguro {
+    min-width: 200px !important;
+}
+
+.columnNomnbreU {
+    min-width: 300px !important;
+}
+
+.columnFechaRet {
+    min-width: 200px !important;
+}
+
+.columnMotivo {
+    min-width: 300px !important;
+}
+
+.columnDesResp {
+    min-width: 300px !important;
+}
+
+.columnDetallese {
+    min-width: 300px !important;
+}
+
+#imagenAlerta {
+    width: 200px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+}

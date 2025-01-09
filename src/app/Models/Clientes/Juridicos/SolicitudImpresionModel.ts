@@ -1,0 +1,129 @@
+export class ServicioSolicitadoModel {
+    MontoSolicitado: string = "";
+    PlazoDeseado: string = "";
+    Destino: string = "";
+    Oficina: string = "";
+    Asesor: string = "";
+    TipoUsuario: string = "";
+    FechaSolicitud: string = "";
+    EsVinculacion: string = "";
+    ConocioCoogranada: string = "";
+    DocumentoDeudor: string = "";
+    NombreDeudor: string = "";
+    TipoDocumento: string = "";
+}
+export class InformacionPersonal {
+    DiaSolicitud: string = "";
+    MesSolicitud: string = "";
+    YearSolicitud: string = "";
+    Nit: string = "";
+    RazonSocial: string = "";
+    DiaConstitucion: string = "";
+    MesConstitucion: string = "";
+    YearConstitucion: string = "";
+    Ciudad: string = "";
+    Departamento: string = "";
+    Pais: string = "";
+    DireccionPpal: string = "";
+    Email: string = "";
+    Telefono: string = "";
+    Fax: string = "";
+    CIIU: string = "";
+    ActividadEconomica: string = "";
+    TiposSociedad: string = "";
+    TipoLocal: string = "";
+    ObjetoSocial: string = "";
+    DireccionCorrespondencia: string = "";
+    tipoUsuarioRelacion: string = "";
+}
+export class UbicacionEmpresa {
+    DireccionOficinaPpal: string = "";
+    Municipio: string = "";
+    Departamento: string = "";
+    Pais: string = "";
+    Barrio: string = "";
+    TipoLocal: string = "";
+    Telefono: string = "";
+    Celular: string = "";
+    Email: string = "";
+    Estrato: string = "";
+}
+export class InfoRepresentateLegal {
+    Nombre: string = "";
+    PrimerApellido: string = "";
+    SegundoApellido: string = "";
+    TipoIdentificacion: string = "";
+    Numero: string = "";
+    lugarExpedicion: string = "";
+    lugarNacimiento: string = "";
+    DiaExpedicion: string = "";
+    MesExpedicion: string = "";
+    YearExpedicion: string = "";
+    DiaNacimiento: string = "";
+    MesNacimiento: string = "";
+    YearNacimiento: string = "";
+    FechaNacimiento: string = "";
+    Cargo: string = "";
+    Profesion: string = "";
+    DireccionResidencia: string = "";
+    Ciudad: string = "";
+    Telefono: string = "";
+    Email: string = "";
+    EsPeps: string = "";
+    ManejaRecursos: string = "";
+}
+export class InformacionFinanciera {
+    IngresosOperativos: number = 0;
+    Otros: number = 0;
+    TotalIngresos: number = 0;
+    CostosAdministracion: number = 0;
+    Gastosfinancieros: number = 0;
+    OtrosGastos: number = 0;
+    TotalEgresos: number = 0;
+    ActivoCorrientes: number = 0;
+    ActivosNoCorrientes: number = 0;
+    OtrosActivos: number = 0;
+    TotalActivos: number = 0;
+    ObligacionesFinancieras: number = 0;
+    CuentasPorPagar: number = 0;
+    OtrosPasivos: number = 0;
+    TotalPatrimonio: number = 0;
+}
+export class InformacionAccionistas {
+    TipoIdentificacion: string = "";
+    Numero: string = "";
+    RazonSocialNombreCompleto: string = "";
+    VinculadoPEP: string = "";
+    Participacion: string = "";
+}
+export class InformacionEntrevista {
+    RealizaMonedaExtrangera: string = "";
+    Entidad: string = "";
+    TipoProducto: string = "";
+    Pais: string = "";
+    Ciudad: string = "";
+    Moneda: string = "";
+    InversionesMonedaExtrangera: string = "";
+    PaisInversion: string = "";
+    MonedaInversion: string = "";
+    CuentaMonedaExtrangera: string = "";
+    NumeroCuentaExtrangera: string = "";
+    PaisCuenta: string = "";
+    MonedaCuenta: string = "";
+    MontoPromedio: string = "";
+    NoRealizaTransacciones: string = "";
+    Importa: string = "";
+    Exporta: string = "";
+    Giros: string = "";
+}
+export class InformacionReferencias {
+    NombreEmpresa: string = "";
+    TelefonoUno: string = "";
+    TelefonoDos: string = "";
+    Ciudad: string = "";
+    Pais: string = "";
+    Entidad: string = ""
+    Telefono: string = "";
+    Oficina: string = "";
+    Producto: string = "";
+}

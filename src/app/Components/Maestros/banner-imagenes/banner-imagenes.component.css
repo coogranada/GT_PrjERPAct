@@ -1,0 +1,144 @@
+img {
+    width:  100%;
+    height: auto;
+}
+
+.container-all {
+    position: relative;
+    max-width: 100%;
+    width: 100%;
+    border-radius: 3px;
+    overflow: hidden;
+    height: 460px;
+}
+
+.slide {
+    display: flex;
+    transform: translate3d(0,0,0);
+    transition: all 20s;
+    animation-name: autoplay;
+    animation-duration: 80s; 
+    animation-direction: alternate;
+    animation-iteration-count: infinite;
+    animation-fill-mode: forwards;
+    transition-duration: 9s;
+}
+
+.item-slide {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    flex-grow: 0;
+    max-width: 100%;
+    height: 460px;
+    line-height: 115px;
+    text-align: center;
+
+}
+
+.resize_fit_center {
+       max-width:100%;
+       max-height:100%;
+       vertical-align: middle;
+}
+
+.pagination {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    display: flex;
+    flex-wrap:  wrap;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.pagination-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid rgb(160, 0, 87);
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+    overflow: hidden;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.5);
+    margin: 0 10px;
+    text-align: center;
+    /* transition: all 10s; */
+    transition: all 300ms;
+}
+
+.pagination-item:hover{
+    transform: scale(2);
+}
+
+.pagination-item img {
+    display: inline-block;
+    max-width: none;
+    height: 100%;
+    transform: scale(1);
+    opacity: 0;
+    transition: all 300ms;
+    /* width: 100%; */
+}
+
+.pagination-item:hover img {
+    opacity: 1; 
+    transform: scale(1);
+}
+
+input[id="0"]:checked ~ .slide {
+    animation: none;
+    transform: translate3d(0,0,0);
+}
+
+input[id="0"]:checked ~ .pagination .pagination-item[for="0"] {
+    background: rgb(160, 0, 87);
+}
+
+input[id="1"]:checked ~ .slide{
+    animation: none;
+    transform: translate3d(calc(-100% * 1),0,0);
+}
+
+input[id="1"]:checked ~ .pagination .pagination-item[for="1"] {
+    background:rgb(160, 0, 87);
+}
+
+input[id="2"]:checked ~ .slide{
+    animation: none;
+    transform: translate3d(calc(-100% * 2),0,0);
+}
+
+input[id="2"]:checked ~ .pagination .pagination-item[for="2"] {
+    background: rgb(160, 0, 87);
+}
+
+input[id="3"]:checked ~ .slide{
+    animation: none;
+    transform: translate3d(calc(-100% * 3),0,0);
+}
+
+input[id="3"]:checked ~ .pagination .pagination-item[for="3"] {
+    background:  rgb(160, 0, 87);
+}
+
+
+
+@keyframes autoplay {
+    25% {
+        transform:  translate3d(calc(-100% * 0), 0, 0);
+    }
+    50% {
+        transform:  translate3d(calc(-100% * 1), 0, 0);
+    }
+    75%{
+        transform:  translate3d(calc(-100% * 2), 0, 0);
+    }
+    100%{
+        transform:  translate3d(calc(-100% * 3), 0, 0);
+    }
+}

@@ -1,0 +1,30 @@
+<div class="col-xs-12 col-md-12 col-lg-12" style="margin-top: 10px;" *ngIf="dataTrasabilidad.length <= 0">
+    <br>
+    <div class="alert alert-secondary" role="alert">
+        No hay registros
+    </div>
+</div>
+<br>
+<div class="col-xs-12 col-md-12 col-lg-12 panel panel-default margin-top: 10px" *ngIf="dataTrasabilidad.length > 0">
+    <div class="table-responsive scrollTabla">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th><strong>Fecha</strong></th>
+                    <th><strong>Oficina</strong></th>
+                    <th><strong>Usuario responsable</strong></th>
+                    <th><strong>Operación</strong></th>
+                </tr>
+            </thead>
+            <tbody *ngFor="let resultTrasa of dataTrasabilidad let i = index">
+                <tr class="filtrasa_{{i}}" (click)="CambiarColor(i,1)">
+                    <td> {{resultTrasa.FechaModifica | date: "yyyy/MM/dd HH:mm:ss"}}</td>
+                    <td> {{resultTrasa.Oficina}} </td>
+                    <td> {{resultTrasa.NombreUsuario}} </td>
+                    <td> {{resultTrasa.Operacion}} </td>
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

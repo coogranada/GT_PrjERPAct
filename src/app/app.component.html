@@ -1,0 +1,20 @@
+<ngx-toast-notifier class="toast-top-right" ></ngx-toast-notifier>
+<router-outlet></router-outlet>
+    <!-- /main sidebar -->
+<button type="button" style="visibility:hidden" #btnModalBanner class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#ModalImaganesBanner">
+<button type="button" style="visibility:hidden" class="close" #btnModelaBannerCloset data-dismiss="modal">&times;</button>
+    <button type="button" style="visibility:hidden" #btnAutomaticLogout class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#ModalLogoutAutomatic">
+</button>
+      <!--Modal de cerrar sesion-->
+<div class="modal fade bd-example-modal-lg" id="ModalLogoutAutomatic" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="width: 65%; position: fixed; margin: 0px auto;">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+              <label for="">Su sesion ha expirado.</label>
+          </div>
+      </div>
+  </div>
+</div>

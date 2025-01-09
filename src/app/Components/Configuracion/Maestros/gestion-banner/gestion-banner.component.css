@@ -1,0 +1,21 @@
+.bannerContent {
+    display: inline-block;
+    padding: 10px;
+}
+
+.bannerContent img {
+    width: 100%;
+    padding: 10px;
+    height: 150px;
+    border: 1px solid #cac7c7;
+    border-radius: 0.1em;
+}
+
+.contentBannerImg {
+    padding-bottom: 10px;
+}
+
+.center-btn {
+    margin: 5px 0px 5px 150px;
+}
+

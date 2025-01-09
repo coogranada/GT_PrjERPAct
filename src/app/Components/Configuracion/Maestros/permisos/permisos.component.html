@@ -1,0 +1,116 @@
+<form method="get" [formGroup]="permisosForm">
+    <div class="panel panel-white">
+        <div class="panel-heading">
+            <h6 class="panel-title">Datos</h6>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a data-toggle="modal" data-target="#ModalAyuda"><i class="icon-question6 " title="Ayuda" data-popup="tooltip" data-trigger="hover" data-placement="top"></i></a></li>
+                    <li>
+                        <a data-action="collapse"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <div class="row">
+                    <div class="col-xs-12 col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label>Perfil:</label>
+                            <span class="text-danger ObligatorioGrande"> *</span>
+                            <select class="form-control" formControlName="selectPermiso" name="select" (change)="ObtenerAllPermisos()">
+                        <option *ngFor="let permisos of dataResult" [value]="permisos.IdPerfil"  >{{permisos.Nombre}}</option>
+                      </select>
+                            <span class="help-block validationSpan" *ngIf="permisosForm.controls['selectPermiso'].errors?.['required'] && (permisosForm.controls['selectPermiso'].dirty || permisosForm.controls['selectPermiso'].touched)">
+                    El perfil es obligatorio.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+        </div>
+    </div>
+
+    <div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatos" *ngIf="PermitidosResult !== compsreUndefined || DenegadosResult !== compsreUndefined">
+        <div class="panel-body ">
+            <div class="row">
+                <div class="col-xs-10 col-md-4">
+                    <div class="table-responsive scrollTabla">
+                        <table id="TablaAreas" class="table table-hover tablaBorder table-fixed">
+                            <thead>
+                                <tr>
+                                    <th><strong>Denegados</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody *ngFor="let denegados of DenegadosResult; let i = index" (click)="setClickedRowAdd(i + 1)" [class.active]="i+1 === selectedRowAdd">
+                                <tr>
+                                    <td style="cursor: pointer" (click)="AddPermisos(denegados)">
+                                        {{denegados.Descripcion}}
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+                <div class="col-xs-10 col-md-2">
+                    <input type="submit" id="btnAgregar" class="btn Gt-btn-verde" value="Agregar" (click)="sendPermisos()" [class.disabled]="bloqueoAgregar" [disabled]="!permisosForm.valid && bloqueoAgregar !== false" />
+                </div>
+
+                <div class="col-xs-10 col-md-4">
+                    <div class="table-responsive scrollTabla">
+                        <table id="TablaAreas" class="table table-hover tablaBorder table-fixed">
+                            <thead>
+                                <tr>
+                                    <th><strong>Permitidos</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody *ngFor="let permitidos of PermitidosResult; let a = index" (click)="setClickedRowRemove(a + 1)" [class.active]="a+1 === selectedRowRemove">
+                                <tr>
+                                    <td style="cursor: pointer" (click)="RemovePermisos(permitidos)">
+                                        {{permitidos.Descripcion}}
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+                <div class="col-xs-10 col-md-2">
+                    <input type="submit" id="btnEliminar" class="btn Gt-btn-morado" value="Eliminar" (click)="returnPermisos()" [class.disabled]="bloqueoEliminar" [disabled]="!permisosForm.valid || bloqueoEliminar" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" *ngIf="PermitidosResult === compsreUndefined || PermitidosResult === compsreUndefined">
+        <div class="panel-body ">
+            <div class="row">
+                <div class="col-xs-6 col-md-4">
+                    Debe seleccionar un Perfil
+                </div>
+            </div>
+        </div>
+    </div>
+    <ngx-loading [show]="loading" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}"></ngx-loading>
+</form>
+
+<div id="ModalAyuda" class="modal fade">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title"><i class="icon-question6"></i> Ayuda</h6>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li>Todos los campos marcados con <span class="text-danger ObligatorioGrande">*</span> son obligatorios.</li>
+                    <li>Seleccione un perfil para habilitar los permisos </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

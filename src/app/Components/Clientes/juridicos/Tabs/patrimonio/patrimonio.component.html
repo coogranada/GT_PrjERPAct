@@ -1,0 +1,129 @@
+<!-- Masked inputs -->
+<form method="get" [formGroup]="patrimonioFrom">
+    <div>
+        <div class="panel-body">
+            <div class="text-left" role="alert">
+                <span class="textBlod">Activos</span>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="textBlod">Activos corrientes: </label>
+                        <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                        <input type="text" class="form-control" formControlName="ActivosCorrientes" currencyMask [attr.disabled]="bloquearForm" (blur)="SumarActivos(); validValueActivoCorriente();" value="0">
+                        <span class="help-block validationSpan" *ngIf="patrimonioFrom.controls['ActivosCorrientes'].errors?.['required']  && (patrimonioFrom.controls['ActivosCorrientes'].dirty || patrimonioFrom.controls['ActivosCorrientes'].touched)">
+              Activos corrientes es obligatorio.
+            </span>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="textBlod">Activos no corrientes: </label>
+                        <span class="textBigRed"></span>
+                        <input type="text" class="form-control" formControlName="ActivosNoCorrientes" currencyMask [attr.disabled]="bloquearForm" (blur)="SumarActivos()" value="0">
+                        <span class="help-block validationSpan" *ngIf="patrimonioFrom.controls['ActivosNoCorrientes'].errors?.['required']  && (patrimonioFrom.controls['ActivosNoCorrientes'].dirty || patrimonioFrom.controls['ActivosNoCorrientes'].touched)">
+              Activos no corrientes es obligatorio.
+            </span>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="textBlod">Otros activos : </label>
+                        <span class="textBigRed"></span>
+                        <input type="text" class="form-control" formControlName="OtrosActivos" currencyMask [attr.disabled]="bloquearForm" (blur)="SumarActivos()" value="0">
+                        <span class="help-block validationSpan" *ngIf="patrimonioFrom.controls['OtrosActivos'].errors?.['required']  && (patrimonioFrom.controls['OtrosActivos'].dirty || patrimonioFrom.controls['OtrosActivos'].touched)">
+              Otros activos es obligatorio.
+            </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="panel-body">
+            <div class="text-left" role="alert">
+                <span class="textBlod">Pasivos</span>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="textBlod">Obligaciones financieras: </label>
+                        <span class="textBigRed"></span>
+                        <input type="text" class="form-control" formControlName="ObligacionesFinancieras" currencyMask [attr.disabled]="bloquearForm" (blur)="SumarPasivos()" value="0">
+                        <span class="help-block validationSpan" *ngIf="patrimonioFrom.controls['ObligacionesFinancieras'].errors?.['required']  && (patrimonioFrom.controls['ObligacionesFinancieras'].dirty || patrimonioFrom.controls['ObligacionesFinancieras'].touched)">
+              Obligaciones financieras es obligatorio.
+            </span>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="textBlod">Cuentas por pagar: </label>
+                        <span class="textBigRed"></span>
+                        <input type="text" class="form-control" formControlName="CuentaPorPagar" currencyMask [attr.disabled]="bloquearForm" (blur)="SumarPasivos()" value="0">
+                        <span class="help-block validationSpan" *ngIf="patrimonioFrom.controls['CuentaPorPagar'].errors?.['required']  && (patrimonioFrom.controls['CuentaPorPagar'].dirty || patrimonioFrom.controls['CuentaPorPagar'].touched)">
+              Cuentas por pagar es obligatorio.
+            </span>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="textBlod">Otros pasivos: </label>
+                        <span class="textBigRed"></span>
+                        <input type="text" class="form-control" formControlName="OtrosPasivos" currencyMask [attr.disabled]="bloquearForm" (blur)="SumarPasivos()" value="0">
+                        <span class="help-block validationSpan" *ngIf="patrimonioFrom.controls['OtrosPasivos'].errors?.['required']  && (patrimonioFrom.controls['OtrosPasivos'].dirty || patrimonioFrom.controls['OtrosPasivos'].touched)">
+              Otros pasivos es obligatorio.
+            </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="col-xs-4 col-md-6 col-lg-12 ">
+            <!--Totales-->
+            <div class="col-xs-12 col-md-12 col-lg-12" style="padding:10px;">
+                <label class="text-semibold textBlod">Totales</label>
+            </div>
+            <div class="col-xs-12 col-md-12 col-lg-12 panel panel-default"><br>
+                <div class="col-xs-12 col-md-12 col-lg-4">
+                    <label tooltip="Es el resultado de la suma de todos los activos." placement="top" show-delay="500">
+            <strong>Total activos: 
+              $ {{ SumaActivos | currency:'':'' : '1.0'}}
+            </strong>
+          </label>
+                </div>
+                <div class="col-xs-12 col-md-12 col-lg-4">
+                    <label tooltip="Es el resultado de la suma de todos los pasivos." placement="top" show-delay="500">
+            <strong>Total pasivos:
+              $ {{ SumaPasivos | currency:'':'' : '1.0'}}
+            </strong>
+          </label>
+                </div>
+                <div class="col-xs-12 col-md-12 col-lg-4">
+                    <label tooltip="Es la diferencia entre el total de activos menos el total de pasivos." placement="top" show-delay="500">
+            <strong>Total patrimonio:
+              $ {{ TotalPatrimonio | currency:'':'' : '1.0'}}
+            </strong>
+          </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="row">
+    <!--Botones-->
+    <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+        <input type="submit" *ngIf="mostrarLimpiar" class="btn Gt-btn-morado" value="Limpiar" (click)="limpiarFormulario()" /> &nbsp;
+        <input type="submit" *ngIf="mostrarSiguiente" class="btn Gt-btn-verde" value="Siguiente" (click)="GuardarPatrimonio()" /> &nbsp;
+        <input type="submit" *ngIf="mostrarActualizar" class="btn Gt-btn-verde" value="Actualizar" (click)="ActualizarPatrimonio()" />
+    </div>
+</div>
+<br>

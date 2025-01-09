@@ -1,0 +1,105 @@
+<!-- /main navbar -->
+<div class="navbar navbar-inverse Gt-ColorMorado">
+    <div class="navbar-header">
+        <a class="navbar-brand" href="['/']"><img src="../../../assets/images/GT/logo-coogranada-blanco.png" alt=""></a>
+        <ul class="nav navbar-nav pull-right visible-xs-block">
+            <!-- <li><a data-toggle="collapse" data-target="#navbar-mobile"><i class="icon-tree5"></i></a></li> -->
+        </ul>
+    </div>
+</div>
+<!-- Page container -->
+<div class="page-container">
+    <!-- Page content -->
+    <div class="page-content">
+        <!-- Main content -->
+
+        <div class="content-wrapper">
+            <form method="get" [formGroup]="loginFrom">
+                <div class="panel panel-body login-form" style="width: 350px; margin: 0 auto;">
+                    <div class="heading-elements">
+                        <ul class="icons-list">
+                            <li><a data-toggle="modal" data-target="#ModalAyuda"><i class=" icon-question6 " title="Ayuda" data-popup="tooltip" data-trigger="hover" data-placement="top"></i></a></li>
+                        </ul>
+                    </div>
+                    <div class="text-center">
+                        <div class="icon-object border_morado texto_morado"><i class=" icon-users2"></i></div>
+                        <h5 class="content-group">Iniciar sesión<small class="display-block">Bienvenido!</small></h5>
+                    </div>
+                    <div class="form-group has-feedback has-feedback-left">
+                        <input type="text" class="form-control" formControlName="Usuario" placeholder="*Usuario" />
+                        <div class="form-control-feedback">
+                            <i class="icon-user text-muted"></i>
+                        </div>
+                        <span class="help-block validationSpan" *ngIf="loginFrom.controls['Usuario'].errors?.['required'] && (loginFrom.controls['Usuario'].dirty || loginFrom.controls['Usuario'].touched)">
+                          El usuario es obligatorio. </span>
+
+                    </div>
+                    <div class="form-group has-feedback has-feedback-left">
+                        <input type="password" class="form-control" formControlName="Clave" placeholder="*Contraseña" />
+                        <div class="form-control-feedback">
+                            <i class="icon-lock2 text-muted"></i>
+                        </div>
+                        <span class="help-block validationSpan" *ngIf="loginFrom.controls['Clave'].errors?.['required'] && (loginFrom.controls['Clave'].dirty || loginFrom.controls['Clave'].touched)">
+                          La constraseña es obligatorio. </span>
+
+                        <br />
+                        <i class="icon-alert alerta_mayuscula" id="BloqMayusIcono" style="visibility:hidden"></i><span id="BloqMayusTexto" style="visibility:hidden"> Bloq Mayús Activo.</span>
+                    </div>
+                    <div class="form-group has-feedback has-feedback-left">
+                        <span class="help-block validationSpan" *ngIf="isLoginError">Usuario o contraseña incorrectos </span>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn Gt-btn-verde btn-block" value="Login" (click)="isAuthenticated()" [disabled]="!loginFrom.valid">Iniciar <i class="icon-arrow-right14 position-right"></i></button>
+                    </div>
+
+                    <div class="content-divider text-muted form-group"><span>Síguenos en</span></div>
+                    <ul class="list-inline form-group list-inline-condensed text-center">
+                        <li><a href="https://www.facebook.com/coogranada" title="Facebook" target="_blank" data-popup="tooltip" data-placement="bottom" class="btn border-indigo text-indigo btn-flat btn-icon btn-rounded"><i class="icon-facebook"></i></a></li>
+                        <li><a href="https://www.instagram.com/coogranada" title="Instagram" target="_blank" data-popup="tooltip" data-placement="bottom" class="btn border-grey text-grey btn-flat btn-icon btn-rounded"><i class="icon-instagram"></i></a></li>
+                        <li><a href="https://www.youtube.com/user/Coogranada1963" target="_blank" title="Youtube" data-popup="tooltip" data-trigger="hover" data-placement="bottom" class="btn border-danger text-danger btn-flat btn-icon btn-rounded"><i class="icon-youtube"></i></a></li>
+                        <li><a href="https://twitter.com/coogranada" title="Twitter" target="_blank" data-popup="tooltip" data-trigger="hover" data-placement="bottom" class="btn border-info text-info btn-flat btn-icon btn-rounded"><i class="icon-twitter"></i></a></li>
+                        <li><a href="http://www.coogranada.coop/radio/" target="_blank" title="Radio" data-popup="tooltip" data-trigger="hover" data-placement="bottom" class="btn border_morado texto_morado btn-flat btn-icon btn-rounded"><i class="icon-radio"></i></a></li>
+                        <li><a href="https://www.linkedin.com/company/coogranada" target="_blank" title="LinkedIn" data-popup="tooltip" data-trigger="hover" data-placement="bottom" class="btn border-indigo text-indigo btn-flat btn-icon btn-rounded"><i class="icon-linkedin"></i></a></li>
+                    </ul>
+                    <ngx-loading [show]="loading" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+                    </ngx-loading>
+                </div>
+            </form>
+        </div>
+        <!-- /main content -->
+    </div>
+    <!-- /page content -->
+</div>
+<!-- /page container -->
+<!-- Footer -->
+<div class="navbar navbar-default navbar-fixed-bottom footer">
+    <ul class="nav navbar-nav visible-xs-block">
+        <li><a class="text-center collapsed" data-toggle="collapse" data-target="#footer"><i class="icon-circle-up2"></i></a></li>
+    </ul>
+    <div class="navbar-collapse collapse" id="footer">
+        <div class="navbar-text">
+            Copyright &copy; {{FechaActual | date:'yyyy'}} - <a target="_blank" href="http://www.coogranada.coop/" class="navbar-link">Coogranada</a>
+        </div>
+    </div>
+</div>
+<!-- /footer -->
+
+<!-- Modal Ayuda -->
+<div id="ModalAyuda" class="modal fade">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title"><i class="icon-question6"></i> Ayuda</h6>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li>Todos los campos marcados con <span class="text-danger">*</span> son obligatorios.</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

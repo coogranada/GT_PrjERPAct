@@ -1,0 +1,18 @@
+/* body{
+    overflow-x: hidden !important;
+}
+.modal {
+    overflow-x: hidden !important;
+    overflow-y: auto;
+} */
+
+@media print{
+    .doNotPrint{display:none !important;}
+}
+
+
+.modal-full-retiro {
+    width: 75% !important;
+    margin-top: 10px !important;
+    margin-bottom: 20px !important;
+}

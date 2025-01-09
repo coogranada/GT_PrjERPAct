@@ -1,0 +1,390 @@
+<div class="panel panel-white">
+    <div class="panel-heading">
+        <h6 class="panel-title"></h6>
+        <div class="heading-elements">
+            <ul class="icons-list">
+                <li><a data-toggle="modal" data-target="#ModalAyuda"><i class=" icon-question6 " title="Ayuda" data-popup="tooltip"  data-trigger="hover" data-placement="top"></i></a></li>
+                <li>
+                    <a data-action="collapse"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="panel-body">
+        <form method="get" [formGroup]="GestionesOperacionesForm">
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <div class="tabbable">
+                    <span tooltip="Actualizar listas" placement="top" show-delay="500" style="margin: 0px 100px 1px 91%;">
+                        <button class="btn Gt-btn-verde btn-icon legitRipple" (click)="Obtener()">
+                            <i class="icon-spinner11"></i>
+                        </button>
+                    </span>
+                </div>
+                <div class="tabbable">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#basic-tab1" data-toggle="tab">Pendientes</a></li>
+                        <li><a href="#basic-tab2" data-toggle="tab">Gestionadas</a></li>
+                        <li><a href="#basic-tab3" data-toggle="tab">Enviadas pendientes</a></li>
+                        <li><a href="#basic-tab4" data-toggle="tab">Enviadas gestionadas</a></li>
+                        <li><a href="#basic-tab5" data-toggle="tab">Todas</a></li>
+                    </ul>
+                    
+
+                    <div class="tab-content">
+                        <!-- tab1 -->
+                        <div class="tab-pane active panel panel-default" id="basic-tab1">
+                            <!-- Pendiente -->
+                            <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="GestionesPendientes.length <= 0">
+                                <br>
+                                <div class="alert alert-secondary" role="alert">
+                                    Aún no hay operaciones
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="GestionesPendientes.length > 0">
+                                <div class="table-responsive scrollTabla">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-bold">Código</th>
+                                                <th class="text-bold">Fecha</th>
+                                                <th class="text-bold">Estado</th>
+                                                <th class="text-bold">Gestión</th>
+                                                <th class="text-bold">Remitente</th>
+                                                <th class="text-bold text-center">Detalles</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let gestionPendientes of GestionesPendientes" >
+                                                <td>
+                                                    <label># {{gestionPendientes.IdGestionOperacion}}</label>
+                                                </td>
+                                                <td>
+                                                    <label>{{gestionPendientes.FechaSolicitud | date : "yyyy/MM/dd HH:mm" }}</label>
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group">
+                                                        <span class="label label-default">Pendiente</span>
+                                                    </div>
+                                                </td>
+
+                                                <td class="tdPequeno">
+                                                    <span class="text-semibold">{{gestionPendientes.NombreOperacion}}</span>
+                                                    <span class="display-block text-muted">El usuario {{gestionPendientes.NombreUsuarioSolicita}}, ha solicitado la gestión de una operación.</span>
+                                                </td>
+                                                <td>
+                                                    <label>{{gestionPendientes.NombreUsuarioSolicita}}</label>
+                                                </td>
+                                                <td>
+                                                    <span tooltip="Ver detalle" placement="top" show-delay="500">
+                                                    <button class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#Modal" 
+                                                        (click)="VerDetalle(gestionPendientes)" ><i class="icon-eye2"></i></button></span>
+                                                    &nbsp;
+                                                    <span tooltip="Procesar" placement="top" show-delay="500">
+                                                    <button  class="btn Gt-btn-amarillo  btn-icon legitRipple" type="button"
+                                                        (click)="Procesar(gestionPendientes)"><i class="icon-new-tab"></i></button></span>
+                                                    &nbsp;
+                                                    <span tooltip="Gestionar" placement="top" show-delay="500">
+                                                    <button  class="btn Gt-btn-morado btn-icon legitRipple" data-toggle="modal" data-target="#Modal"
+                                                        (click)="Gestionar(gestionPendientes)"><i class="icon-user-check"></i></button></span>
+                                                    &nbsp;
+                                                    <span tooltip="Rechazar" placement="top" show-delay="500">
+                                                    <button   class="btn Gt-btn-rojo btn-icon legitRipple" data-toggle="modal" data-target="#Modal" 
+                                                        (click)="Rechazar(gestionPendientes)" ><i class="icon-cross2"></i></button></span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- / Pendiente  -->
+
+                        </div>
+                        <!-- / tab1 -->
+
+                        <!-- tab2 -->
+                        <div class="tab-pane panel panel-default" id="basic-tab2">
+                            <!-- Gestionada -->
+                            <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="GestionesGestionadas.length <= 0">
+                                <br>
+                                <div class="alert alert-secondary" role="alert">
+                                    Aún no hay operaciones
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="GestionesGestionadas.length > 0">
+                                <div class="table-responsive scrollTabla">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-bold">Código</th>
+                                                <th class="text-bold">Fecha</th>
+                                                <th class="text-bold">Estado</th>
+                                                <th class="text-bold">Gestión</th>
+                                                <th class="text-bold">Remitente</th>
+                                                <th class="text-bold">Detalles</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let gestion of GestionesGestionadas">
+                                                <td>
+                                                    <label># {{gestion.IdGestionOperacion}}</label>
+                                                </td>
+                                                <td>
+                                                    <label>{{gestion.FechaSolicitud | date : "yyyy/MM/dd HH:mm" }}</label>
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group">
+                                                        <span class="label label-success">Gestionada</span>
+                                                    </div>
+                                                </td>
+
+                                                <td>
+                                                    <span class="text-semibold">{{gestion.NombreOperacion}}</span>
+                                                    <span class="display-block text-muted">El usuario {{gestion.NombreUsuarioSolicita}}, ha gestionado una operación.</span>
+                                                </td>
+                                                <td>
+                                                    <label>{{gestion.NombreUsuarioSolicita}}</label>
+                                                </td>
+                                                <td>
+                                                    <span tooltip="Ver detalle" placement="top" show-delay="500">
+                                                    <button  class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#Modal" 
+                                                    (click)="VerDetalle(gestion)"> <i class="icon-eye2"></i></button></span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- / Gestionada  -->
+                        </div>
+                        <!-- / tab2 -->
+
+                        <!-- tab3 -->
+                        <div class="tab-pane panel panel-default" id="basic-tab3">
+                            <!-- Enviadas Pendientes-->
+                            <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="GestionesEnviadasPendientes.length <= 0">
+                                <br>
+                                <div class="alert alert-secondary" role="alert">
+                                    Aún no hay operaciones
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="GestionesEnviadasPendientes.length > 0">
+                                <div class="table-responsive scrollTabla">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-bold">Código</th>
+                                                <th class="text-bold">Fecha</th>
+                                                <th class="text-bold">Estado</th>
+                                                <th class="text-bold">Gestión</th>
+                                                <th class="text-bold">Destinatario</th>
+                                                <th class="text-bold text-center">Detalles</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let gestion of GestionesEnviadasPendientes">
+                                                <td>
+                                                    <label># {{gestion.IdGestionOperacion}}</label>
+                                                </td>
+                                                <td>
+                                                    <label>{{gestion.FechaSolicitud | date : "yyyy/MM/dd HH:mm" }}</label>
+                                                </td>
+                                                <td>
+                                                    <div *ngIf="gestion.IdEstado === 5542" class="btn-group">
+                                                        <span class="label label-default">Pendiente</span>
+                                                    </div>
+                                                    <div *ngIf="gestion.IdEstado === 5543" class="btn-group">
+                                                        <span class="label label-success">Gestionada</span>
+                                                    </div>
+                                                    <div *ngIf="gestion.IdEstado === 5546" class="btn-group">
+                                                        <span class="label Gt-btn-amarillo">Rechazada</span>
+                                                    </div>
+                                                </td>
+
+                                                <td class="tdPequeno">
+                                                    <span class="text-semibold">{{gestion.NombreOperacion}}</span>
+                                                    <span class="display-block text-muted">El usuario {{gestion.NombreUsuarioSolicita}}, ha solicitado la gestión de una operación.</span>
+                                                </td>
+                                                <td>
+                                                    <label>{{gestion.NombreUsuarioRecibe}}</label>
+                                                </td>
+                                                <td>
+                                                    <span tooltip="Ver detalle" placement="top" show-delay="500">
+                                                    <button class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#Modal"  
+                                                    (click)="VerDetalle(gestion)"><i class="icon-eye2"></i></button></span>
+                                                    &nbsp;
+                                                    <span tooltip="Reasignar" placement="top" show-delay="500">
+                                                    <button class="btn Gt-btn-morado btn-icon legitRipple" data-toggle="modal" data-target="#Modal"  
+                                                    (click)="Reasignar(gestion)"><i class="icon-users2"></i></button></span>
+                                                    &nbsp;
+                                                    <span tooltip="Cancelar" placement="top" show-delay="500">
+                                                    <button class="btn Gt-btn-rojo btn-icon legitRipple" data-toggle="modal" data-target="#Modal"
+                                                    (click)="Cancelar(gestion)"><i class=" icon-blocked"></i></button></span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- / Enviadas Pendientes -->
+                        </div>
+                        <!-- / tab3 -->
+
+                        <!-- tab4 -->
+                        <div class="tab-pane panel panel-default" id="basic-tab4">
+                            <!-- Enviadas gestionadas -->
+                            <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="GestionesEnviadasGestionadas.length <= 0 || GestionesEnviadasGestionadas === null || GestionesEnviadasGestionadas === undefined">
+                                <br>
+                                <div class="alert alert-secondary" role="alert">
+                                    Aún no hay operaciones
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="GestionesEnviadasGestionadas.length > 0 && GestionesEnviadasGestionadas !== null && GestionesEnviadasGestionadas !== undefined">
+                                <div class="table-responsive scrollTabla">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-bold">Código</th>
+                                                <th class="text-bold">Fecha</th>
+                                                <th class="text-bold">Estado</th>
+                                                <th class="text-bold">Gestión</th>
+                                                <th class="text-bold">Destinatario</th>
+                                                <th class="text-bold">Detalles</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let gestion of GestionesEnviadasGestionadas">
+                                                <td>
+                                                    <label># {{gestion.IdGestionOperacion}}</label>
+                                                </td>
+                                                <td>
+                                                    <label>{{gestion.FechaSolicitud | date : "yyyy/MM/dd HH:mm" }}</label>
+                                                </td>
+                                                <td>
+                                                    <div *ngIf="gestion.IdEstado === 5542" class="btn-group">
+                                                        <span class="label label-default">Pendiente</span>
+                                                    </div>
+                                                    <div *ngIf="gestion.IdEstado === 5543" class="btn-group">
+                                                        <span class="label label-success">Gestionada</span>
+                                                    </div>
+                                                    <div *ngIf="gestion.IdEstado === 5544" class="btn-group">
+                                                        <span class="label label-danger">Cancelada</span>
+                                                    </div>
+                                                </td>
+
+                                                <td>
+                                                    <span class="text-semibold">{{gestion.NombreOperacion}}</span>
+                                                    <span *ngIf="gestion.IdEstado === 5543" class="display-block text-muted">El usuario {{gestion.NombreUsuarioSolicita}}, ha gestionado una operación.</span>
+                                                    <span *ngIf="gestion.IdEstado !== 5543" class="display-block text-muted">El usuario {{gestion.NombreUsuarioSolicita}}, ha solicitado la gestión de una operación.</span>
+
+                                                </td>
+                                                <td>
+                                                    <label>{{gestion.NombreUsuarioRecibe}}</label>
+                                                </td>
+                                                <td>
+                                                    <span tooltip="Ver detalle" placement="top" show-delay="500">
+                                                    <button class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#Modal"  
+                                                    (click)="VerDetalle(gestion)"><i class="icon-eye2"></i></button> </span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- / Enviadas gestionadas -->
+                        </div>
+                        <!-- / tab4 -->
+
+                        <!-- tab5 -->
+                        <div class="tab-pane panel panel-default" id="basic-tab5">
+                            <!-- Todas -->
+                            <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="ListaGestiones.length <= 0 || ListaGestiones === null || ListaGestiones === undefined">
+                                <br>
+                                <div class="alert alert-secondary" role="alert">
+                                    Aún no hay operaciones
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-12 col-lg-12">
+                                <input type="text" class="form-control" placeholder="Ingreso texto para filtrar.." formControlName="filtrarTabla">
+                                <br>
+                            </div>
+                            <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="ListaGestiones.length > 0 && ListaGestiones !== null && ListaGestiones !== undefined">
+                                <div class="table-responsive scrollTabla">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-bold">Código</th>
+                                                <th class="text-bold">Fecha</th>
+                                                <th class="text-bold">Estado</th>
+                                                <th class="text-bold">Gestión</th>
+                                                <th class="text-bold">Remitente</th>
+                                                <th class="text-bold">Destinatario</th>
+                                                <th class="text-bold">Detalles</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let gestion of ListaGestiones | filtro:{  NombreUsuarioRecibe: GestionesOperacionesForm.controls['filtrarTabla'].value,
+                                                NombreOperacion: GestionesOperacionesForm.controls['filtrarTabla'].value, 
+                                                NombreUsuarioSolicita:  GestionesOperacionesForm.controls['filtrarTabla'].value, 
+                                                IdGestionOperacion:  GestionesOperacionesForm.controls['filtrarTabla'].value,
+                                                FechaSolicitud: GestionesOperacionesForm.controls['filtrarTabla'].value }: false">
+                                                <td>
+                                                    <label># {{gestion.IdGestionOperacion}}</label>
+                                                </td>
+                                                <td>
+                                                    <label>{{gestion.FechaSolicitud | date : "yyyy-MM-dd HH:mm" }}</label>
+                                                </td>
+                                                <td>
+                                                    <div *ngIf="gestion.IdEstado === 5542" class="btn-group">
+                                                        <span class="label label-default">Pendiente</span>
+                                                    </div>
+                                                    <div *ngIf="gestion.IdEstado === 5543" class="btn-group">
+                                                        <span class="label label-success">Gestionada</span>
+                                                    </div>
+                                                    <div *ngIf="gestion.IdEstado === 5544" class="btn-group">
+                                                        <span class="label label-danger">Cancelada</span>
+                                                    </div>
+                                                    <div *ngIf="gestion.IdEstado === 5546" class="btn-group">
+                                                        <span class="label Gt-btn-amarillo">Rechazada</span>
+                                                    </div>
+                                                </td>
+
+                                                <td>
+                                                    <span class="text-semibold">{{gestion.NombreOperacion}}</span>
+                                                    <span *ngIf="gestion.IdEstado === 5543" class="display-block text-muted">El usuario {{gestion.NombreUsuarioSolicita}}, ha gestionado una operación.</span>
+                                                    <span *ngIf="gestion.IdEstado !== 5543" class="display-block text-muted">El usuario {{gestion.NombreUsuarioSolicita}}, ha solicitado la gestión de una operación.</span>
+
+                                                </td>
+                                                <td>
+                                                    <label>{{gestion.NombreUsuarioSolicita}}</label>
+                                                </td>
+                                                <td>
+                                                    <label>{{gestion.NombreUsuarioRecibe}}</label>
+                                                </td>
+                                                <td>
+                                                    <span tooltip="Ver detalle" placement="top" show-delay="500">
+                                                    <button class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#Modal" 
+                                                     (click)="VerDetalle(gestion)"><i class="icon-eye2"></i></button></span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- / Todas  -->
+                        </div>
+                        <!-- /tab5 -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <app-gestion-gestiones-operaciones #DetalleGestion
+                    (GestionoOpe)="recibirCambioGestiones($event)" >
+                </app-gestion-gestiones-operaciones>
+                <button type="button" style="visibility:hidden" #AbrirDetalleGestion (click)="DetalleGestion.AbrirDetalle()"></button>
+            </div>
+            <ngx-loading [show]="loading"
+                [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+            </ngx-loading>
+        </form>        
+    </div>
+</div>

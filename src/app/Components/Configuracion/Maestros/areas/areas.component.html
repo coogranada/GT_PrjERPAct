@@ -1,0 +1,115 @@
+<form>
+    <div class="panel panel-white">
+        <div class="panel-heading">
+            <h6 class="panel-title">Datos</h6>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a data-toggle="modal" data-target="#ModalAyuda"><i class="icon-question6 " title="Ayuda" data-popup="tooltip" data-trigger="hover" data-placement="top"></i></a></li>
+                    <li>
+                        <a data-action="collapse"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <form method="get" [formGroup]="areasFrom">
+            <div class="panel-body">
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <div class="row">
+                        <div class="col-xs-12 col-md-4 col-lg-4">
+                            <div class="form-group">
+                                <label>Nombre:</label><span class="text-danger ObligatorioGrande"> *</span>
+                                <input type="text" class="form-control" formControlName="nombre" />
+                                <span class="help-block validationSpan" *ngIf="areasFrom.controls['nombre'].errors?.['required'] && (areasFrom.controls['nombre'].dirty || areasFrom.controls['nombre'].touched)">
+                          El nombre es obligatorio.</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-4 col-lg-4">
+                            <div class="form-group">
+                                <label>Descripción:</label><span class="text-danger  ObligatorioGrande"> *</span>
+                                <input type="text" class="form-control" formControlName="descripcion" />
+                                <span class="help-block validationSpan" *ngIf="areasFrom.controls['descripcion'].errors?.['required'] && (areasFrom.controls['descripcion'].dirty || areasFrom.controls['descripcion'].touched)">
+                        La descripción es obligatoria.</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-4 col-lg-4">
+                            <div class="form-group">
+                                <label>Estado:</label><span class="text-danger  ObligatorioGrande"> *</span>
+                                <select class="form-control" formControlName="idEstado" name="select">
+                          <option *ngFor="let estados of estadosArea" [value]="estados.value">{{estados.descripcion}}</option>
+                      </select>
+                                <span class="help-block validationSpan" *ngIf="areasFrom.controls['idEstado'].errors?.['required'] && (areasFrom.controls['idEstado'].dirty || areasFrom.controls['idEstado'].touched)">
+                          El estado es obligatorio. </span>
+                            </div>
+                        </div>
+                        <input type="hidden" formControlName="idArea" />
+                    </div>
+                    <br /><br />
+                </div>
+                <div class="row">
+                    <br /><br />
+                    <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                        <input type="submit" class="btn Gt-btn-verde"  *ngIf="!btnGuardar" value="Guardar" (click)="GuardarArea()" [disabled]="!areasFrom.valid" /> &nbsp;
+                        <input type="submit" class="btn Gt-btn-verde"  *ngIf="!btnActualizar" value="Actualizar" (click)="ActualizarArea()" [disabled]="isdisabledUpdate" /> &nbsp;
+                        <input type="submit" class="btn Gt-btn-morado" value="Nuevo" (click)="resetForm()" />
+                    </div>
+
+                </div>
+            </div>
+            <ngx-loading [show]="loading" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+            </ngx-loading>
+        </form>
+    </div>
+</form>
+
+<div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatos" *ngIf="dataAreaResult != null">
+    <div class="panel-body ">
+        <div class="table-responsive scrollTabla">
+            <table id="TablaAreas" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th><strong>Nombre</strong></th>
+                        <th><strong>Descripción</strong></th>
+                        <th><strong>Estado</strong></th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let resultArea of dataAreaResult">
+                    <tr (click)="MapearDatos(resultArea)">
+                        <td>
+                            {{resultArea.Nombre}}
+                        </td>
+                        <td>
+                            {{resultArea.Descripcion}}
+                        </td>
+                        <td>
+                            {{resultArea.Lista.Valor}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Modal Ayuda -->
+<div id="ModalAyuda" class="modal fade">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title"><i class="icon-question6"></i> Ayuda</h6>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li>Todos los campos marcados con <span class="text-danger  ObligatorioGrande">*</span> son obligatorios.</li>
+                    <li>Presione doble clic en el registro de la tabla para habilitar los botones.</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ Fin Modal Ayuda -->
