@@ -1,0 +1,1345 @@
+<form>
+    <form method="get" [formGroup]="contractualFrom">
+        <div class="panel panel-white">
+            <div class="panel-heading">
+                <h6 class="panel-title">Datos{{operacionEscogida}}</h6>
+                <div class="heading-elements">
+                    <ul class="icons-list">
+                        <li><a data-toggle="modal" data-target="#ModalAyuda"><i class=" icon-question6 " title="Ayuda"
+                                    data-popup="tooltip" data-trigger="hover" data-placement="top"></i></a></li>
+                        <li>
+                            <a data-action="collapse"></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <!-- Inicio Operación -->
+                        <form method="get" [formGroup]="contractualOperacionFrom">
+                            <label class="col-xs-12 col-md-3 col-lg-1 textNegrilla">Operación:<span
+                                    class="grande">*</span></label>
+                            <div class="col-xs-10 col-md-8 col-lg-4">
+                                <select class="form-control" formControlName="Codigo" id="select"
+                                    (change)=" ValorSeleccionado()">
+                                    <option *ngFor="let operacionContractual of resultOperaciones"
+                                        [value]="operacionContractual.ERP_tblOperacion.IdOperacion">
+                                        {{operacionContractual.ERP_tblOperacion.Descripcion}}</option>
+                                </select>
+                                <span class="help-block validationSpan"
+                                    *ngIf="contractualOperacionFrom.controls['Codigo'].errors?.['required'] && (contractualOperacionFrom.controls['Codigo'].dirty || contractualOperacionFrom.controls['Codigo'].touched)">
+                                    La operación es obligatoria.
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- Fin Operación -->
+                </div>
+                <div class="col-md-12  col-sm-12 col-lg-12" id="PanelDatos">
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <br />
+                        <!-- Inicio Cuenta -->
+                        <div class="col-xs-12 col-md-3 col-lg-1">
+                            <label class="textNegrilla">Cuenta:</label>
+                        </div>
+                        <div class="col-xs-4 col-md-3 col-lg-1">
+                            <input type="text" class="form-control" formControlName="IdOficina"
+                                [attr.disabled]="bloquearConsultaCuenta" maxlength="3">
+                            <span class="help-block validationSpan"
+                                *ngIf="contractualFrom.controls['IdOficina'].errors?.['pattern']">
+                                La cuenta solo acepta números.
+                            </span>
+                        </div>
+                        <div class="col-xs-4 col-md-3 col-lg-1">
+                            <input type="text" class="form-control" formControlName="IdProductoCuenta"
+                                [attr.disabled]="bloquearConsultaCuenta" maxlength="3">
+                            <span class="help-block validationSpan"
+                                *ngIf="contractualFrom.controls['IdProductoCuenta'].errors?.['pattern']">
+                                La cuenta solo acepta números.
+                            </span>
+                        </div>
+                        <div class="col-xs-4 col-md-3 col-lg-1">
+                            <input type="text" class="form-control" formControlName="IdConsecutivo"
+                                [attr.disabled]="bloquearConsultaCuenta" maxlength="7">
+                            <span class="help-block validationSpan"
+                                *ngIf="contractualFrom.controls['IdConsecutivo'].errors?.['pattern']">
+                                La cuenta solo acepta números.
+                            </span>
+                        </div>
+                        <div class="col-xs-4 col-md-3 col-lg-1">
+                            <input type="text" class="form-control" formControlName="IdDigito"
+                                (blur)="BuscarPorCuenta()" [attr.disabled]="bloquearConsultaCuenta" maxlength="1">
+                            <span class="help-block validationSpan"
+                                *ngIf="contractualFrom.controls['IdDigito'].errors?.['pattern']">
+                                La cuenta solo acepta números.
+                            </span>
+                        </div>
+                        <!-- Fin Cuenta -->
+
+                        <div class="col-xs-1 col-md-1 col-lg-2">
+                        </div>
+
+                        <!-- Inicio Buscar -->
+                        <div class="col-xs-12 col-md-3 col-lg-1">
+                            <label class="textNegrilla">Buscar:</label>
+                        </div>
+                        <div class="col-xs-4 col-md-3 col-lg-1">
+                            <input type="text" class="form-control" id="SelectBuscar" tooltip="Documento"
+                                placement="top" show-delay="500" formControlName="BuscarDocumento"
+                                (keypress)="LimpiarCampos('BuscarDocumento')" [attr.disabled]="BloquearBuscar" />
+                            <span class="help-block validationSpan"
+                                *ngIf="contractualFrom.controls['BuscarDocumento'].errors?.['pattern']">
+                                El documento solo acepta números.
+                            </span>
+                        </div>
+                        <div class="col-xs-6 col-md-5 col-lg-2">
+                            <input type="text" class="form-control" id="SelectBuscarNombre" tooltip="Nombre"
+                                placement="top" show-delay="500" formControlName="BuscarNombre"
+                                (keypress)="LimpiarCampos('BuscarNombre')" [attr.disabled]="BloquearBuscar" />
+                        </div>
+                        <button type="button" class="btn Gt-btn-verde btn-icon" (click)="BotonBuscarContractual()"
+                            [attr.disabled]="BloquearBuscar">
+                            <i class="icon-search4"></i>
+                        </button>
+
+                        <!-- Fin Buscar -->
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <br />
+                        <!-- Inicio OficinaAsociado -->
+                        <div class="col-xs-12 col-md-3 col-lg-1">
+                            <label class="textNegrilla">Oficina asociado:</label>
+                            <span class="grande">*</span>
+                        </div>
+                        <div class="col-xs-4 col-md-3 col-lg-1">
+                            <input type="text" class="form-control" formControlName="NumeroOficinaAsociado"
+                                [attr.disabled]="Bloquear">
+                        </div>
+                        <div class="col-xs-6 col-md-5 col-lg-3">
+                            <input type="text" class="form-control" formControlName="NombreOficinaAsociado"
+                                [attr.disabled]="Bloquear">
+                        </div>
+                        <!-- Fin OficinaAsociado -->
+
+                        <div class="col-xs-1 col-md-1 col-lg-2">
+                        </div>
+
+                        <!-- Inicio Relacion -->
+                        <div class="col-xs-12 col-md-3 col-lg-1">
+                            <label class="textNegrilla">Relación:</label>
+                            <span class="grande">*</span>
+                        </div>
+                        <div class="col-xs-10 col-md-8 col-lg-3">
+                            <select class="form-control" name="select" formControlName="Clase"
+                                [attr.disabled]="Bloquear">
+                                <option *ngFor="let Relacion of resultRelacion" [value]="Relacion.Clase">
+                                    {{Relacion.Descripcion}}</option>
+                            </select>
+                        </div>
+                        <!-- Fin Relacion -->
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <!-- Inicio Asociado -->
+                        <div class="col-xs-12 col-md-3 col-lg-1">
+                            <label class="textNegrilla">Asociado:</label>
+                            <span class="grande">*</span>
+                        </div>
+                        <div class="col-xs-4 col-md-3 col-lg-2">
+                            <input type="text" class="form-control" id="SelectAsociado"
+                                formControlName="NumeroDocumento" (blur)="BuscarAsociado()"
+                                [attr.disabled]="BloquearAsociado" (keypress)="LimpiarCampos('NumeroDocumento')"
+                                maxlength="15" />
+                        </div>
+                        <div class="col-xs-6 col-md-5 col-lg-3">
+                            <input type="text" class="form-control pmayuscula" formControlName="Nombre"
+                                (blur)="ValidarCampoAsociado()" [attr.disabled]="Bloquear"
+                                [attr.disabled]="BloquearAsociado" (keypress)="LimpiarCampos('Nombre')">
+                            <span class="help-block validationSpan" *ngIf="MostrasAlertaAsociado">
+                                Campo obligatorio.
+                            </span>
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">
+                            <button type="button" class="btn Gt-btn-verde btn-icon legitRipple"
+                                (click)="BuscarAsociado()" [attr.disabled]="BloquearAsociado">
+                                <i class="icon-search4"></i>
+                            </button>
+                        </div>
+                        <!-- Fin Asociado -->
+                        <!-- Inicio Oficina -->
+                        <div class="col-xs-12 col-md-3 col-lg-1">
+                            <label class="textNegrilla">Oficina:</label>
+                            <span class="grande">*</span>
+                        </div>
+                        <div class="col-xs-4 col-md-3 col-lg-1">
+                            <input type="text" class="form-control" formControlName="NumeroOficina"
+                                [attr.disabled]="Bloquear">
+                        </div>
+                        <div class="col-xs-6 col-md-5 col-lg-2">
+                            <input type="text" class="form-control" formControlName="NombreOficina"
+                                [attr.disabled]="Bloquear">
+                        </div>
+                        <!-- Fin Oficina -->
+
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <br />
+                        <!-- Inicio Producto -->
+                        <div class="col-xs-12 col-md-3 col-lg-1">
+                            <label class="textNegrilla">Producto:</label>
+                            <span class="grande">*</span>
+                        </div>
+                        <div class="col-xs-4 col-md-3 col-lg-1">
+                            <input type="text" class="form-control" id="SelectProducto" formControlName="IdProducto"
+                                (blur)="Producto()" (keypress)="LimpiarCampos('IdProducto')"
+                                [attr.disabled]="BloquaerProducto" maxlength="3">
+                            <span class="help-block validationSpan"
+                                *ngIf="contractualFrom.controls['IdProducto'].errors?.['pattern']">
+                                El producto solo acepta números.
+                            </span>
+                        </div>
+                        <div class="col-xs-6 col-md-5 col-lg-4">
+                            <input type="text" class="form-control" formControlName="DescripcionProducto"
+                                (blur)="ValidarCampoProducto()" (keypress)="LimpiarCampos('DescripcionProducto')"
+                                [attr.disabled]="BloquaerProducto">
+                            <span class="help-block validationSpan" *ngIf="MostrasAlertaProducto">
+                                Campo obligatorio.
+                            </span>
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">
+                            <button type="button" class="btn Gt-btn-verde btn-icon legitRipple"
+                                (click)="BuscarProducto()" [attr.disabled]="BloquaerProducto"><i
+                                    class="icon-search4"></i></button>
+                        </div>
+                        <!-- Fin Producto -->
+
+                        <!-- Inicio OperacionPermitida -->
+                        <div class="col-xs-12 col-md-3 col-lg-2">
+                            <label class="textNegrilla">Operación permitida:</label>
+                            <span class="grande">*</span>
+                        </div>
+                        <div class="col-xs-10 col-md-8 col-lg-2">
+                            <input type="text" class="form-control" formControlName="DescripcionOperacion"
+                                [attr.disabled]="Bloquear">
+                        </div>
+                        <div class="col-xs-2 col-md-1 col-lg-1">
+                        </div>
+                        <!-- Fin OperacionPermitida -->
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <br />
+                        <!-- Inicio Asesor -->
+                        <div class="col-xs-12 col-md-3 col-lg-1">
+                            <label class="textNegrilla">Asesor:</label>
+                            <span class="grande">*</span>
+                        </div>
+                        <div class="col-xs-4 col-md-3 col-lg-1">
+                            <input type="text" class="form-control" formControlName="IdAsesor" (change)="BuscarAsesor()"
+                                (keypress)="LimpiarCampos('IdAsesor')" [attr.disabled]="Bloquear">
+                        </div>
+                        <div class="col-xs-6 col-md-5 col-lg-4">
+                            <input type="text" class="form-control" formControlName="NombreAsesor"
+                                (keypress)="LimpiarCampos('NombreAsesor')" [attr.disabled]="Bloquear">
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">
+                            <button type="button" class="btn Gt-btn-verde btn-icon legitRipple" (click)="BuscarAsesor()"
+                                [attr.disabled]="Bloquear"><i class="icon-search4"></i></button>
+                        </div>
+                        <!-- Fin Asesor -->
+
+                        <!-- Inicio EstadoCuenta -->
+                        <div class="col-xs-12 col-md-3 col-lg-2">
+                            <label class="textNegrilla">Estado cuenta:</label>
+                            <span class="grande">*</span>
+                        </div>
+                        <div class="col-xs-10 col-md-8 col-lg-2">
+                            <select class="form-control" id="SelectCambioEstado" formControlName="IdEstado"
+                                [attr.disabled]="BloquearEstado" (change)="selectEstadoActivo()" *ngIf="!selectEstado">
+                                <option selected="selected" value="0">-- Seleccione --</option>
+                                <option *ngFor="let Estado of resultEstados" [value]="Estado.IdEstado">
+                                    {{Estado.Descripcion}}</option>
+                            </select>
+                            <input type="text" class="form-control" formControlName="DescripcionEstado"
+                                [attr.disabled]="Bloquear" *ngIf="!inputEstado" />
+                        </div>
+                        <!-- Fin EstadoCuenta -->
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <br />
+                        <!-- Inicio Asesor Externo -->
+                        <form method="get" [formGroup]="AsesorFrom">
+                            <div class="col-xs-12 col-md-3 col-lg-1">
+                                <label class="textNegrilla">Asesor externo:</label>
+                            </div>
+                            <div class="col-xs-4 col-md-3 col-lg-1">
+                                <input type="text" class="form-control" id="SelectAsesorExterno" tooltip="Id asesor"
+                                    placement="top" show-delay="500" formControlName="strCodigo"
+                                    (blur)="BuscarAsesorExternoCodigo()" [attr.disabled]="BloquearAsesorExterno"
+                                    (keypress)="LimpiarCampos('strCodigo')" maxlength="4" />
+                                <span class="help-block validationSpan"
+                                    *ngIf="AsesorFrom.controls['strCodigo'].errors?.['pattern']">
+                                    El Id asesor solo acepta números.
+                                </span>
+                            </div>
+                            <div class="col-xs-6 col-md-5 col-lg-4">
+                                <input type="text" class="form-control" tooltip="Nombre asesor" placement="top"
+                                    show-delay="500" formControlName="strNombre" [attr.disabled]="BloquearAsesorExterno"
+                                    (keypress)="LimpiarCampos('strNombre')" />
+                            </div>
+                            <div class="col-xs-1 col-md-1 col-lg-1">
+                                <button type="button" class="btn Gt-btn-verde btn-icon legitRipple"
+                                    (click)="BuscarAsesorExternoTodos()" [attr.disabled]="BloquearAsesorExterno">
+                                    <i class="icon-search4"></i>
+                                </button>
+                            </div>
+                        </form>
+                        <!-- Fin Asesor Externo -->
+
+                        <!-- Inicio FormaPago -->
+                        <div class="col-xs-12 col-md-3 col-lg-2">
+                            <label class="textNegrilla">Forma pago:</label>
+                            <span class="grande">*</span>
+                        </div>
+                        <div class="col-xs-10 col-md-8 col-lg-2">
+                            <select class="form-control" name="select" id="SelectFormaPago"
+                                formControlName="IdFormaPago" [attr.disabled]="BloquearFormaPago"
+                                (change)=" FormaPagoSeleccionada()">
+                                <option *ngFor="let formapago of resultFormaPago" [value]="formapago.IdFormaPago">
+                                    {{formapago.DescripcionFormaPago}}</option>
+                            </select>
+                        </div>
+                        <!-- Fin FormaPago -->
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <!-- Inicio NroTitulo -->
+                        <div class="col-xs-12 col-md-3 col-lg-1">
+                            <label class="textNegrilla">Nro. Título:</label>
+                            <span *ngIf="!oTitulo" class="grande">*</span>
+                        </div>
+                        <div class="col-xs-4 col-md-3 col-lg-2">
+                            <input type="text" class="form-control" formControlName="NroTitulo" (blur)="ValidarTitulo()"
+                                [attr.disabled]="BloquearNroTitulo" maxlength="10" />
+                            <span class="help-block validationSpan"
+                                *ngIf="contractualFrom.controls['NroTitulo'].errors?.['pattern']">
+                                El nro. titulo solo acepta números.
+                            </span>
+                        </div>
+                        <div class="col-xs-6 col-md-5 col-lg-3">
+                            <br />
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">
+                            <br />
+                        </div>
+                        <!-- Fin NroTitulo -->
+
+                        <!-- Inicio NroSorteo -->
+                        <div class="col-xs-12 col-md-3 col-lg-2">
+                            <label class="textNegrilla">Nro. Sorteo:</label>
+                            <span *ngIf="!oSorteo" class="grande">*</span>
+                        </div>
+                        <div class="col-xs-10 col-md-8 col-lg-1">
+                            <input type="text" class="form-control" formControlName="Sorteo"
+                                [attr.disabled]="BloquearSorteo" (blur)="ValidarSorteo()" maxlength="{{DigitosSorteo}}">
+                            <span class="help-block validationSpan"
+                                *ngIf="contractualFrom.controls['Sorteo'].errors?.['pattern']">
+                                El nro. sorteo solo acepta números.
+                            </span>
+                        </div>
+                        <!-- Fin NroSorteo -->
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <br />
+                        <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+
+                            <button type="button" style="visibility:hidden" #ModalBuscarAsociados
+                                class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal"
+                                data-target="#ModalBuscarAsociados" [attr.disabled]="BloquearBuscar">
+                                <i class="icon-search4"></i>
+                            </button>
+
+                            <input type="button" class="btn Gt-btn-morado" value="Limpiar"
+                                (click)="clearFormContractual()" /> &nbsp; &nbsp;
+
+                            <input type="button" *ngIf="!btnGuardar" class="btn Gt-btn-verde" value="Guardar"
+                                (click)="GuardarContractual()" [disabled]="!contractualFrom.valid" />
+
+                            <input type="button" *ngIf="!btnActualizar" class="btn Gt-btn-verde" value="Actualizar"
+                                (click)="ActualizarContractual()" [disabled]="!bloquearbtnActalizar" />
+
+                            <input type="button" *ngIf="!btnCambiarEstado" class="btn Gt-btn-verde"
+                                value="Cambiar Estado" (click)="EstadoSeleccionado()"
+                                [disabled]="!bloquearbtnCambioEstado" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <app-solicitudes-gestiones #SolicitudGestion></app-solicitudes-gestiones>
+                <button type="button" style="visibility:hidden" #AbrirSolicitudGestion
+                    (click)="SolicitudGestion.AbrirSolicitudGestion(Modulo, CuentaSolicitud, DocumentoSolicitud)"></button>
+            </div>
+            <input type="hidden" #ModalContractual data-toggle="modal" data-target="#ModalContractual"
+                data-popup="tooltip" data-trigger="hover" data-placement="top">
+            <input type="hidden" #ModalAsesores data-toggle="modal" data-target="#ModalAsesores" data-popup="tooltip"
+                data-trigger="hover" data-placement="top">
+            <input type="hidden" #ModalAsociados data-toggle="modal" data-target="#ModalAsociados" data-popup="tooltip"
+                data-trigger="hover" data-placement="top">
+            <input type="hidden" #ModalTitulares data-toggle="modal" data-target="#ModalTitulares" data-popup="tooltip"
+                data-trigger="hover" data-placement="top">
+            <input type="hidden" #ModalBuscarAsociados data-toggle="modal" data-target="#MondalBuscarAsociados"
+                data-popup="tooltip" data-trigger="hover" data-placement="top">
+            <input type="hidden" #ModalAsesoresExterno data-toggle="modal" data-target="#ModalAsesoresExterno"
+                data-popup="tooltip" data-trigger="hover" data-placement="top">
+            <input type="hidden" #ModalCambioEstado data-toggle="modal" data-target="#ModalCambioEstado"
+                data-popup="tooltip" data-trigger="hover" data-placement="top">
+            <input type="hidden" #ModalPuntosAdcionales data-toggle="modal" data-target="#ModalPuntosAdcionales"
+                data-popup="tooltip" data-trigger="hover" data-placement="top">
+            <input type="hidden" #ModalDebitoAutomatico data-toggle="modal" data-target="#ModalDebitoAutomatico"
+                data-popup="tooltip" data-trigger="hover" data-placement="top">
+            <input type="hidden" #ModalImpresion data-toggle="modal" data-target="#ModalImpresion" data-popup="tooltip"
+                data-trigger="hover" data-placement="top">
+        </div>
+        <div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelTab">
+            <div class="panel-body">
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <div class="tabbable">
+                        <ul class="nav nav-tabs">
+                            <li id="negociacion" (click)="devolverTab(1)"
+                                [ngClass]="{'activar': activaNegociacion === true }">
+                                <a href="#tab1" data-toggle="tab">Negociación</a>
+                            </li>
+                            <li id="saldos" (click)="devolverTab(2)" [ngClass]="{'activar': activaSaldos === true }">
+                                <a href="#tab2" data-toggle="tab">Saldos</a>
+                            </li>
+                            <li id="autorizados" (click)="devolverTab(3)"
+                                [ngClass]="{'activar': activaAutorizados === true }">
+                                <a href="#tab3" data-toggle="tab">Autorizados</a>
+                            </li>
+                            <li id="historial" (click)="devolverTab(4)"
+                                [ngClass]="{'activar': activaHistorial === true }">
+                                <a href="#tab4" data-toggle="tab">Historial</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <!-- Inicio tab1 -->
+                            <div class="tab-pane active" id="tab1">
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <!-- Inicio Plazo -->
+                                    <div class="col-xs-12 col-md-4 col-lg-3">
+                                        <label class="textNegrilla">Plazo:</label>
+                                        <span class="grande"> *</span>
+                                        <input style="text-align:right" type="text" id="SelectPlazo"
+                                            class="form-control" formControlName="Plazo"
+                                            [attr.disabled]="BloquearNegociacion" maxlength="3" (blur)="ValidarPlazo()">
+                                        <span class="help-block validationSpan"
+                                            *ngIf="contractualFrom.controls['Plazo'].errors?.['pattern']">
+                                            El plazo solo acepta números.
+                                        </span>
+                                    </div>
+                                    <!-- Fin Plazo-->
+
+                                    <div class="col-xs-12 col-md-12 col-lg-1"> </div>
+
+                                    <!-- Inicio CuotaMes  -->
+                                    <div class="col-xs-12 col-md-4 col-lg-3">
+                                        <label class="textNegrilla">Cuota mes:</label>
+                                        <span *ngIf="!obligatorio" class="grande"> *</span>
+                                        <input style="text-align:right" type="text" id="SelectCuotaMes"
+                                            class="form-control" formControlName="CuotaMes" *ngIf="!inputCuotaMes"
+                                            [attr.disabled]="BloquearCuotaMes" (blur)="ValorTotalPlan()"
+                                            (blur)="ObtenerTasa()" currencyMask
+                                            [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"
+                                            maxlength="10">
+                                        <input style="text-align:right" type="text" id="SelectCuotaMes"
+                                            class="form-control" formControlName="CuotaMes" *ngIf="!inputSinDecimal"
+                                            [attr.disabled]="BloquearCuotaMes" (blur)="ValorTotalPlan()"
+                                            (blur)="ObtenerTasa()" currencyMask [options]="{prefix:'$ ',thousands:'.'}"
+                                            maxlength="10">
+                                        <span class="help-block validationSpan"
+                                            *ngIf="contractualFrom.controls['CuotaMes'].errors?.['pattern']">
+                                            La cuota mes solo acepta números y ceros como decimales.
+                                        </span>
+                                    </div>
+                                    <!-- Fin CuotaMes  -->
+
+                                    <div class="col-xs-12 col-md-12 col-lg-1"> </div>
+
+                                    <!-- Inicio ValorTotalPlan -->
+                                    <div class="col-xs-12 col-md-4 col-lg-3">
+                                        <label class="textNegrilla">Valor total plan:</label>
+                                        <span class="grande"> *</span>
+                                        <input style="text-align:right" type="text" class="form-control"
+                                            formControlName="ValorPlan" *ngIf="!inputCuotaMes"
+                                            [attr.disabled]="BloquearValorTotalPlan" (blur)="ObtenerTasa()" currencyMask
+                                            [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"
+                                            maxlength="13">
+                                        <input style="text-align:right" type="text" class="form-control"
+                                            formControlName="ValorPlan" *ngIf="!inputSinDecimal"
+                                            [attr.disabled]="BloquearValorTotalPlan" (blur)="ObtenerTasa()" currencyMask
+                                            [options]="{prefix:'$ ',thousands:'.'}" maxlength="13">
+                                    </div>
+                                    <!-- Fin ValorTotalPlan -->
+                                </div>
+
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <br />
+                                    <!-- Inicio Periodo -->
+                                    <div class="col-xs-12 col-md-4 col-lg-3">
+                                        <label class="textNegrilla">Período:</label>
+                                        <span class="grande"> *</span>
+                                        <select class="form-control" name="select" formControlName="IdPeriodo"
+                                            [attr.disabled]="Bloquear">
+                                            <option *ngFor="let periodo of resultPeriodo" [value]="periodo.IdPeriodo">
+                                                {{periodo.DescripcionPeriodo}}</option>
+                                        </select>
+                                    </div>
+                                    <!-- Fin Periodo -->
+
+                                    <div class="col-xs-12 col-md-12 col-lg-1"> </div>
+
+                                    <!-- Inicio Liquidacion -->
+                                    <div class="col-xs-12 col-md-4 col-lg-3">
+                                        <label class="textNegrilla">Tipo cuenta destino:</label>
+                                        <span class="grande"> *</span>
+                                        <select class="form-control" name="select" id="SelectCuentaDestino"
+                                            formControlName="IdLiquidacion" [attr.disabled]="Bloquearliquidacion"
+                                            (change)="SeleccionLiquidacion()">
+                                            <option *ngFor="let Liquidacion of resultLiquidacion"
+                                                [value]="Liquidacion.IdLiquidacion">
+                                                {{Liquidacion.DescripcionLiquidacion}}</option>
+                                        </select>
+                                    </div>
+                                    <!-- Fin Liquidacion -->
+
+                                    <div class="col-xs-12 col-md-12 col-lg-1"> </div>
+
+                                    <!-- Inicio CuentaAhorro -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Cuenta ahorros:</label>
+                                        <select class="form-control" formControlName="IdCuentaDestino" name="select"
+                                            [attr.disabled]="BloquearCuentaNegociacion" *ngIf="!selectCuenta">
+                                            <option *ngFor="let Cuenta of resultCuentaNegociacion"
+                                                [value]="Cuenta.IdCuenta">
+                                                {{Cuenta.CuentaD}}
+                                            </option>
+                                        </select>
+                                        <input style="text-align:right" type="text" class="form-control"
+                                            formControlName="CuentaDestino" [attr.disabled]="Bloquear"
+                                            *ngIf="!inputCuenta" />
+                                    </div>
+                                    <!-- Fin CuentaAhorro -->
+                                </div>
+
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <br />
+                                    <!-- Inicio Indicador  -->
+                                    <div class="col-xs-12 col-md-4 col-lg-3">
+                                        <label class="textNegrilla">Indicador:</label>
+                                        <select class="form-control" name="select" formControlName="IdIndicador"
+                                            [attr.disabled]="Bloquear">
+                                            <option>--Seleccione--</option>
+                                            <option *ngFor="let Indicador of resultIndicador"
+                                                [value]="Indicador.IdIndicador">
+                                                {{Indicador.DescripcionIndicador}}</option>
+                                        </select>
+                                    </div>
+                                    <!-- Fin Indicador -->
+
+                                    <div class="col-xs-12 col-md-12 col-lg-1"> </div>
+
+                                    <!-- Inicio Puntos   -->
+                                    <div class="col-xs-12 col-md-4 col-lg-3">
+                                        <label class="textNegrilla">Puntos:</label>
+                                        <input style="text-align:right" type="text" class="form-control"
+                                            [attr.disabled]="Bloquear" formControlName="Puntos">
+                                    </div>
+                                    <!-- Fin Puntos -->
+
+                                    <div class="col-xs-12 col-md-12 col-lg-1"> </div>
+
+                                    <!-- Inicio Puntos adicionales   -->
+                                    <form method="get" [formGroup]="AdicionarPuntosFrom">
+                                        <div class="col-xs-12 col-md-4 col-lg-3">
+                                            <label class="textNegrilla">Puntos adicionales:</label>
+                                            <select class="form-control" name="select" id="SelectAdicionarPuntos"
+                                                formControlName="AdicionarPunto" [attr.disabled]="BloquearPuntos"
+                                                (change)=" SeleccionPuntos()">
+                                                <option>--Seleccione--</option>
+                                                <option *ngFor="let puntos of resultPuntosAdicionales"
+                                                    [ngValue]="puntos">
+                                                    {{puntos.PuntosAdicionales}}</option>
+                                            </select>
+                                        </div>
+                                    </form>
+                                    <!-- Fin Puntos  adicionales-->
+                                </div>
+
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <br />
+                                    <!-- Inicio TasaEfectiva  -->
+                                    <div class="col-xs-12 col-md-4 col-lg-3">
+                                        <label class="textNegrilla">Tasa efectiva:</label>
+                                        <span class="grande"> *</span>
+                                        <input style="text-align:right" type="text" class="form-control"
+                                            [attr.disabled]="Bloquear" formControlName="TasaEfectiva">
+                                    </div>
+                                    <!-- Fin TasaEfectiva -->
+
+                                    <div class="col-xs-12 col-md-12 col-lg-1"> </div>
+
+                                    <!-- Inicio TasaNominal   -->
+                                    <div class="col-xs-12 col-md-4 col-lg-3">
+                                        <label class="textNegrilla">Tasa nominal:</label>
+                                        <span class="grande"> *</span>
+                                        <input style="text-align:right" type="text" class="form-control"
+                                            [attr.disabled]="Bloquear" formControlName="TasaNominal">
+                                    </div>
+                                    <!-- Fin TasaNominal -->
+                                </div>
+                                <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                                    <input type="button" *ngIf="!btnCalcularTasa" class="btn Gt-btn-morado"
+                                        value="Calcular" (click)="SumaPuntos()" [disabled]="!bloquearbtnCalcular" />
+                                    &nbsp; &nbsp;
+                                    <input type="button" *ngIf="!btnActualizarTab" class="btn Gt-btn-verde"
+                                        value="Actualizar" (click)="ActualizarContractual()"
+                                        [disabled]="!bloquearbtnActalizar" />
+
+                                </div>
+                            </div>
+                            <!-- Fin tab1 -->
+                            <!-- Inicio tab2 -->
+                            <div class="tab-pane" id="tab2">
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <!-- Inicio RteFuente  -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Retención en la fuente:</label>
+                                        <input style="text-align:right" type="text" class="form-control"
+                                            formControlName="Retencion" [attr.disabled]="Bloquear" currencyMask
+                                            [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}">
+                                    </div>
+                                    <!-- Fin RteFuente  -->
+
+                                    <div class="col-xs-12 col-md-12 col-lg-1"> </div>
+
+
+                                    <!-- Inicio InteresCausado -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Interés causado:</label>
+                                        <input style="text-align:right" type="text" class="form-control"
+                                            formControlName="InteresCausado" [attr.disabled]="Bloquear" currencyMask
+                                            [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}">
+                                    </div>
+                                    <!-- Fin InteresCausado -->
+
+                                    <div class="col-xs-12 col-md-12 col-lg-1"> </div>
+
+                                    <!-- Inicio SaldoMinimo  -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Saldo mínimo:</label>
+                                        <input style="text-align:right" type="text" class="form-control"
+                                            formControlName="SaldoMinimo" [attr.disabled]="Bloquear" currencyMask
+                                            [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}">
+                                    </div>
+                                    <!-- Fin SaldoMinimo  -->
+                                </div>
+
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <br />
+                                    <!-- Inicio InteresPunto -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Valor interés por puntos:</label>
+                                        <input style="text-align:right" type="text" class="form-control"
+                                            formControlName="InteresxPuntos" [attr.disabled]="Bloquear" currencyMask
+                                            [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}">
+                                    </div>
+                                    <!-- Fin InteresPunto -->
+
+                                    <div class="col-xs-12 col-md-12 col-lg-1"></div>
+
+                                    <!-- Inicio InteresPorPagar -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Interés por pagar:</label>
+                                        <input style="text-align:right" type="text" class="form-control"
+                                            formControlName="InteresxPagar" [attr.disabled]="Bloquear" currencyMask
+                                            [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}">
+                                    </div>
+                                    <!-- Fin InteresPorPagar -->
+
+                                    <div class="col-xs-12 col-md-12 col-lg-1"> </div>
+
+                                    <!-- Inicio SaldoCanje -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Saldo canje:</label>
+                                        <input style="text-align:right" type="text" class="form-control"
+                                            formControlName="Canje" [attr.disabled]="Bloquear" currencyMask
+                                            [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}">
+                                    </div>
+                                    <!-- Fin SaldoCanje -->
+                                </div>
+
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <br />
+                                    <!-- Inicio valorSorteo -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Valor por sorteos:</label>
+                                        <input style="text-align:right" type="text" class="form-control"
+                                            formControlName="ValorSorteo" [attr.disabled]="Bloquear" currencyMask
+                                            [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}">
+                                    </div>
+                                    <!-- Fin valorSorteo -->
+
+                                    <div class="col-xs-12 col-md-12 col-lg-1"> </div>
+
+                                    <!-- Inicio InteresLiquidado -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Interés liquidado:</label>
+                                        <input style="text-align:right" type="text" class="form-control"
+                                            formControlName="InteresLiquidado" [attr.disabled]="Bloquear" currencyMask
+                                            [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}">
+                                    </div>
+                                    <!-- Fin InteresLiquidado -->
+
+                                    <div class="col-xs-12 col-md-12 col-lg-1"> </div>
+
+                                    <!-- Inicio SaldoEfectivo -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Saldo efectivo:</label>
+                                        <input style="text-align:right" type="text" class="form-control"
+                                            formControlName="Efectivo" [attr.disabled]="Bloquear" currencyMask
+                                            [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}">
+                                    </div>
+                                    <!-- Fin SaldoEfectivo -->
+                                </div>
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <br />
+                                    <div class="col-xs-12 col-md-12 col-lg-8"> </div>
+
+                                    <!-- Inicio SaldoTotal -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Saldo total:</label>
+                                        <input style="text-align:right" type="text" class="form-control"
+                                            formControlName="SaldoTotal" [attr.disabled]="Bloquear" currencyMask
+                                            [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}">
+                                    </div>
+                                    <!-- Fin SaldoTotal -->
+                                </div>
+                            </div>
+                            <!-- Fin tab2 -->
+                            <!-- Inicio tab3 -->
+                            <div class="tab-pane" id="tab3">
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <!-- Inicio Autorizado -->
+                                    <div class="col-xs-4 col-md-3 col-lg-2">
+                                        <label class="textNegrilla">Autorizado:</label>
+                                        <input type="text" class="form-control" id="SelectTitular" tooltip="Documento"
+                                            placement="top" show-delay="500" formControlName="DocumentoTitular"
+                                            (blur)="BuscarTitularDocumento()"
+                                            (keypress)="LimpiarCamposTab('DocumentoTitular')"
+                                            [attr.disabled]="BloquearDatoTitular">
+                                        <span class="help-block validationSpan"
+                                            *ngIf="contractualFrom.controls['DocumentoTitular'].errors?.['pattern']">
+                                            El documento solo acepta números.
+                                        </span>
+                                    </div>
+                                    <div class="col-xs-6 col-md-5 col-lg-3">
+                                        <label class="textNegrilla" style="visibility:hidden">Autorizado</label>
+                                        <input type="text" class="form-control" tooltip="Nombre" placement="top"
+                                            show-delay="500" formControlName="NombreTitular"
+                                            (keypress)="LimpiarCamposTab('NombreTitular')"
+                                            [attr.disabled]="BloquearDatoTitular">
+                                    </div>
+                                    <div class="col-xs-1 col-md-1 col-lg-1">
+                                        <label class="textNegrilla" style="visibility:hidden">Autorizado</label>
+                                        <button type="button" class="btn Gt-btn-verde btn-icon legitRipple"
+                                            (click)="BuscarTitularNombre()" [attr.disabled]="BloquearDatoTitular"><i
+                                                class="icon-search4"></i></button>
+                                    </div>
+                                    <!-- Fin Autorizado -->
+
+                                    <!-- Inicio Tipo -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Tipo:</label>
+                                        <select class="form-control" name="select" [attr.disabled]="BloquearDatoTitular"
+                                            (change)="Autorizado()" formControlName="Tipo">
+                                            <option selected="selected" value="0">-- Seleccione --</option>
+                                            <option value="A">Autorizado</option>
+                                            <option [attr.disabled]="Bloquear" value="T">Titular</option>
+                                        </select>
+                                    </div>
+                                    <!-- Fin Tipo -->
+                                    <!-- Inicio Tipo firma-->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Tipo firma:</label>
+                                        <select class="form-control" name="select" formControlName="TipoFirma"
+                                            [attr.disabled]="BloquearDatoTitular" (change)="FirmaSeleccionada()">
+                                            <option *ngFor="let tipoFirma of resultTipoFirma"
+                                                [value]="tipoFirma.TipoFirma">
+                                                {{tipoFirma.TipoFirma }}</option>
+                                        </select>
+                                        <br />
+                                    </div>
+                                    <!-- Fin Tipo firma -->
+
+                                </div>
+                                <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="!DescriTipoFirma">
+                                    <div class="col-xs-12 col-md-12 col-lg-12">
+                                        <label class="textNegrilla">Descripción</label>
+                                        <span class="text-danger"> *</span>
+                                        <input class="form-control" rows="3" cols="50" formControlName="Observacion">
+                                    </div>
+                                </div>
+                                <!-- Fin Titulares  -->
+                                <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                                    <br />
+                                    <input type="button" id="btnAgregar" class="btn Gt-btn-verde" value="Agregar" (click)="AgregarTitulares()" [attr.disabled]="BloquearDatoTitular" /> &nbsp; &nbsp;
+                                    <input type="button" class="btn Gt-btn-morado" value="Limpiar" (click)="clearTitulares()" [attr.disabled]="BloquearDatoTitular" /> &nbsp;
+                                    <input type="button" *ngIf="btnActualizarTitulares" class="btn Gt-btn-verde" value="Actualizar" (click)="ActualizarContractual()" [disabled]="bloquearBtnActualizarTitular" />
+
+                                </div>
+
+                                <!-- Inicio Lista Titulares-->
+                                <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="dataObjetTitulares.length > 0">
+                                    <br />
+                                    <div class="table-responsive scrollTabla panel panel-default">
+                                        <table id="TablaTitulares " class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-bold">Documento</th>
+                                                    <th class="text-bold">Nombre</th>
+                                                    <th class="text-bold">Fecha matrícula</th>
+                                                    <th class="text-bold">Tipo</th>
+                                                    <th class="text-bold">Tipo firma</th>
+                                                    <th class="text-bold">Opciones</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody *ngFor="let Titulares of dataObjetTitulares; let i=index">
+                                                <tr class="filAut_{{i}}" (click)="CambiarColor(i,2)">
+                                                    <td>{{Titulares.Documento}}</td>
+                                                    <td>{{Titulares.Nombre}}</td>
+                                                    <td>{{Titulares.FechaMatricula | date : "yyyy/MM/dd HH:mm:ss" }}</td>
+                                                    <td>{{Titulares.TipoTitular}}</td>
+                                                    <td>{{Titulares.TipoFirma}}</td>
+                                                    <td><button class="btn Gt-btn-verde btn-icon legitRipple"
+                                                            (click)="IndiceAEditar(i, Titulares)"
+                                                            [attr.disabled]="BloquearDatoTitularOpcion">
+                                                            <i class="icon-pencil"></i></button> &nbsp;
+                                                        <button class="btn Gt-btn-morado btn-icon legitRipple"
+                                                            (click)="IndiceAEliminar(i)"
+                                                            [attr.disabled]="BloquearDatoTitularOpcion">
+                                                            <i class="icon-bin2 "></i></button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <!-- Fin Lista Titulares-->
+                            </div>
+                            <!-- Fin tab3 -->
+                            <!-- Inicio tab4 -->
+                            <div class="tab-pane " id="tab4">
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <!-- Fechas -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <!-- Inicio Apertura -->
+                                        <div class="form-group">
+                                            <label class="textNegrilla">Fecha apertura:</label>
+                                            <input style="text-align:left" type="text" class="form-control"
+                                                formControlName="FechaApertura" [attr.disabled]="Bloquear">
+                                        </div>
+                                        <!-- Fin Apertura -->
+                                        <!-- Inicio UltimaTransaccion   -->
+                                        <div class="form-group">
+                                            <label class="textNegrilla">Fecha última transacción:</label>
+                                            <input style="text-align:left" type="text" class="form-control"
+                                                formControlName="FechaUltimaTrans" [attr.disabled]="Bloquear">
+                                        </div>
+                                        <!-- Fin UltimaTransaccion  -->
+                                        <!-- Inicio Vencimiento -->
+                                        <div class="form-group">
+                                            <label class="textNegrilla">Fecha vencimiento:</label>
+                                            <input style="text-align:left" type="text" class="form-control"
+                                                formControlName="FechaVencimiento" [attr.disabled]="Bloquear">
+                                        </div>
+                                        <!-- Fin Vencimiento  -->
+                                        <!-- Inicio Cancelacion  -->
+                                        <div class="form-group">
+                                            <label class="textNegrilla">Fecha cancelación:</label>
+                                            <input style="text-align:left" type="text" class="form-control"
+                                                formControlName="FechaCancelacion" [attr.disabled]="Bloquear">
+                                        </div>
+                                        <!-- Fin Cancelacion -->
+                                    </div>
+
+                                    <!-- Historial -->
+                                    <div class="col-xs-12 col-md-9 col-lg-9" *ngIf="dataHistorial.length <= 0">
+                                        <br>
+                                        <div class="alert alert-secondary" role="alert">
+                                            Aun no hay registros
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xs-12 col-md-9 col-lg-9" *ngIf="dataHistorial.length > 0">
+                                        <div class="table-responsive scrollTabla panel panel-default">
+                                            <table id="TablaDatosHistorial" class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="column_Fecha">
+                                                            <strong>Fecha</strong>
+                                                        </th>
+                                                        <th class="column_Oficina">
+                                                            <strong>Oficina</strong>
+                                                        </th>
+                                                        <th class="column_UsuarioResponsable">
+                                                            <strong>Usuario responsable</strong>
+                                                        </th>
+                                                        <th class="column_operacion OperacionFija">
+                                                            <strong>Operación</strong>
+                                                        </th>
+                                                        <th class="column_descripcion">
+                                                            <strong>Descripción</strong>
+                                                        </th>
+                                                        <th class="column_detalles ">
+                                                            <strong>Detalles</strong>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let historial of dataHistorial; let i = index"
+                                                        class="filApo_{{i}}" (click)="CambiarColor(i,1)">
+                                                        <td class="column_Fecha columnProductoX1_disponibles : historial.NombreCompleto.length = 25">{{historial.FechaHistorial | date:'yyyy/MM/dd HH:mm:ss'}}</td>
+                                                        <td class="column_Fecha columnProductoX0_disponibles : historial.NombreCompleto.length = 15">{{historial.NombreOficina}}</td>
+                                                        <td class="column_UsuarioResponsable columnProductoX_disponibles : historial.NombreCompleto.length = 40">{{historial.NombreCompleto}}</td>
+                                                        <td class="column_operacion  OperacionFija columnProductoX2_disponibles : historial.NombreCompleto.length = 40">{{historial.Descripcion}}</td>
+                                                        <td class="column_descripcion columnProductoX3_disponibles : historial.NombreCompleto.length = 40">{{historial.TiposObservaciones}}</td>
+                                                        <td class="column_detalles columnDetalles_termino : historial.NombreCompleto.length = 40">{{historial.Detalles}}</td>
+                                                    </tr>
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- Fin tab4-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-3 col-md-12 col-lg-3 text-right">
+            <input type="button" style="visibility:hidden" data-toggle="tab" href="#tab1" #tab1 />
+            <input type="button" style="visibility:hidden" data-toggle="tab" href="#tab2" #tab2 />
+            <input type="button" style="visibility:hidden" data-toggle="tab" href="#tab3" #tab3 />
+            <input type="button" style="visibility:hidden" data-toggle="tab" href="#tab4" #tab4 />
+        </div>
+        <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+            <app-formato-cambio-cuentadestino #FormatoCambioCuentaDestino></app-formato-cambio-cuentadestino>
+            <button type="button" style="visibility:hidden" #ModalImpresionCambioCuentaDestino
+                (click)="FormatoCambioCuentaDestino.AbrirFormato(CuentaDestionoSend)"></button>
+            <button type="button" style="visibility:hidden" #Cerrar (click)="LimpiaOperacion()"></button>
+        </div>
+    </form>
+    <ngx-loading [show]="loading"
+        [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+    </ngx-loading>
+</form>
+<!-- Modal Ayuda -->
+<div id="ModalAyuda" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title"><i class="icon-question6"></i> Ayuda</h6>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li>Todos los campos marcados con <span class="text-danger">*</span> son obligatorios.</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ Fin Modal Ayuda -->
+<!--/ Inicio Modal Productos -->
+<div id="ModalContractual" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Contractual</h6>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive scrollTabla">
+                    <table id="TablaProductos" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th><strong>Producto</strong> </th>
+                                <th><strong>Descripción Producto</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let resultContractual of resultProducto">
+                            <tr (click)="MapearDatosProductos(resultContractual)" (click)="Sorteo()">
+                                <td data-dismiss="modal">
+                                    {{resultContractual.IdProducto}}
+                                </td>
+                                <td data-dismiss="modal">
+                                    {{resultContractual.DescripcionProducto}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ Fin Modal Productos -->
+<!--/ Modal Asesor -->
+<div id="ModalAsesores" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Asesor</h6>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive scrollTabla">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th><strong>Codigo</strong></th>
+                                <th><strong>Nombre Asesor</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let resultAsesor of resultAsesor">
+                            <tr (click)="MapearDatosAsesor(resultAsesor)">
+                                <td data-dismiss="modal">
+                                    {{resultAsesor.IdAsesor}}
+                                </td>
+                                <td data-dismiss="modal">
+                                    {{resultAsesor.Nombre}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ Fin Modal Asesor -->
+<!--/ Modal Asociados -->
+<div id="ModalAsociados" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Asociados</h6>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive scrollTabla">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <strong>Documento</strong>
+                                </th>
+                                <th>
+                                    <strong>Nombre Asociado</strong>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let asociado of resultAsociados">
+                            <tr (click)="BuscarAsociadoModal(asociado.NumeroDocumento)">
+                                <td data-dismiss="modal">
+                                    {{asociado.NumeroDocumento}}
+                                </td>
+                                <td data-dismiss="modal">
+                                    {{asociado.PrimerApellido + ' ' + asociado.SegundoApellido + ' ' +
+                                    asociado.PrimerNombre + ' ' + asociado.SegundoNombre}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ Fin Modal Asociado -->
+<!--/ Modal Titulares -->
+<div id="ModalTitulares" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Titulares</h6>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive scrollTabla">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <strong>Documento</strong>
+                                </th>
+                                <th>
+                                    <strong>Nombre</strong>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let titulares of resultTitulares">
+                            <tr (click)="BuscarTitularModal(titulares.NumeroDocumento)">
+                                <td data-dismiss="modal">
+                                    {{titulares.NumeroDocumento}}
+                                </td>
+                                <td data-dismiss="modal">
+                                    {{titulares.PrimerApellido + ' ' + titulares.SegundoApellido + ' ' +
+                                    titulares.PrimerNombre + ' ' + titulares.SegundoNombre}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ Fin Modal Titulares -->
+<!--/ Modal BuscarAsociados -->
+<div id="ModalBuscarAsociados" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Asociados</h6>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive scrollTabla">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th><strong>Cuenta</strong></th>
+                                <th><strong>Nombre Asociado</strong></th>
+                                <th><strong>Estado Cuenta</strong></th>
+                                <th><strong>Nro Sorteo</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let resultAsociados of dataAsociados">
+                            <tr
+                                (click)="BuscarDatosCuenta(resultAsociados.intOficina,resultAsociados.intProducto,resultAsociados.LngConsecutivo,resultAsociados.intDigito)">
+                                <td data-dismiss="modal">
+                                    {{resultAsociados.Cuenta}}
+                                </td>
+                                <td data-dismiss="modal">
+                                    {{resultAsociados.Nombre}}
+                                </td>
+                                <td data-dismiss="modal">
+                                    {{resultAsociados.strDescripcion}}
+                                </td>
+                                <td data-dismiss="modal">
+                                    {{resultAsociados.Sorteo}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ Fin Modal BuscarAsociados -->
+<!--/ Inicio Modal AsesoresExterno -->
+<div id="ModalAsesoresExterno" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Asesor Externo</h6>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive scrollTabla">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th><strong>Codigo</strong></th>
+                                <th><strong>Nombre Asesor Externo</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let resultAsesorExterno of resultAsesoresExterno">
+                            <tr (click)="MapearDatosAsesorExterno(resultAsesorExterno)">
+                                <td data-dismiss="modal">
+                                    {{resultAsesorExterno.intIdAsesor}}
+                                </td>
+                                <td data-dismiss="modal">
+                                    {{resultAsesorExterno.Nombre}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ Fin Modal AsesoresExterno -->
+<!--/ Fin Modal cambio de estado -->
+<div class="modal fade" id="ModalCambioEstado" tabindex="-1" role="dialog" aria-labelledby="ModalCambioEstadoTitle"
+    aria-hidden="true" style="top: 150px !important" data-backdrop="static">
+    <form method="get" [formGroup]="CambioEstadoFrom">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-morado">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Observación cambio de estado</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-12 col-lg-12">
+                                <div class="form-group">
+                                    <label>Observación</label>
+                                    <span class="text-danger"> *</span>
+                                    <select class="form-control" formControlName="IdTipoObservacion" name="select">
+                                        <option *ngFor="let observacion of dataObservacion"
+                                            [value]="observacion.IdTipoObservacion">
+                                            {{observacion.Descripcion}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn Gt-btn-morado" data-dismiss="modal"
+                        (click)="GuardarObservaciones()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!--/ Fin Modal cambio de estado -->
+<!--/ Inicio Modal Puntos Adicionales -->
+<div id="ModalPuntosAdcionales" class="modal right fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-sm">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Autorización de operación</h6>
+            </div>
+            <form method="get" [formGroup]="AutorizacionFrom">
+                <div class="modal-body">
+                    <div class="form-group has-feedback has-feedback-left">
+                        <input type="text" class="form-control" placeholder="*Usuario" formControlName="Usuario" />
+                        <div class="form-control-feedback">
+                            <i class="icon-user text-muted"></i>
+                        </div>
+                    </div>
+                    <div class="form-group has-feedback has-feedback-left">
+                        <input type="password" class="form-control" placeholder="*Contraseña" formControlName="Clave" />
+                        <div class="form-control-feedback">
+                            <i class="icon-lock2 text-muted"></i>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-verde" data-dismiss="modal">Aceptar</button> &nbsp;
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ Fin Modal Puntos Adicionales -->
+<!--/ Inicio Modal Debito Automatico -->
+<div id="ModalDebitoAutomatico" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <h6 class="modal-title">Registrar debito automatico</h6>
+            </div>
+            <div class="modal-body">
+                <form method="get" [formGroup]="DebitoAutomaticoFrom">
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <div class="col-xs-12 col-md-3 col-lg-3">
+                            <label>Documento:</label>
+                            <input type="text" class="form-control" formControlName="DocumentoDebito"
+                                (change)="BuscarAsociadoCuentaOrigen()">
+                        </div>
+                        <div class="col-xs-12 col-md-3 col-lg-4">
+                            <label>Nombre:</label>
+                            <input type="text" class="form-control" formControlName="NombreDebito"
+                                [attr.disabled]="BloquearNombreDebito">
+                        </div>
+
+                        <div class="col-xs-12 col-md-3 col-lg-4">
+                            <label>Cuenta Origen</label>
+                            <select class="form-control" name="select" formControlName="IdCuentaOrigen"
+                                [attr.disabled]="BloquearCuentaOrigen">
+                                <option selected="selected" value="0">-- Seleccione --</option>
+                                <option *ngFor="let Cuenta of resultCuentaDebito" [value]="Cuenta.IdCuenta">
+                                    {{Cuenta.CuentaD}}
+                                </option>
+                            </select>
+                            <br /><br />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" style="visibility:hidden" data-dismiss="modal"
+                    #CerrarDebito></button>
+                <button type="button" class="btn Gt-btn-verde" (click)="GuardarModalDebito()">Guardar</button> &nbsp;
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal"
+                    (click)="CerrarModalDebito()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ Fin Modal Debito Automatico -->
+<!--/ formato  de impresion nuevo-->
+<div id="ModalImpresion" class="modal" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Contractual</h6>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <object id="ImpresionContractual"></object>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ Fin formato de impresion nuevo -->

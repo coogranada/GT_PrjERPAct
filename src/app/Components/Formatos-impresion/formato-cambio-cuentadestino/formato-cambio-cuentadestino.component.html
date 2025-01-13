@@ -1,0 +1,183 @@
+<body id="Contenido">
+    <button type="button" class="btn Gt-btn-morado doNotPrint" data-toggle="modal" style="visibility:hidden" data-target="#ModalImprimirCambioCuentaDestino" #abrirFormatoCambioCuentaDestino>Abrir <i class="icon-play3 position-right"></i>
+    </button>
+
+
+    <div id="ModalImprimirCambioCuentaDestino" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-morado">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body" id="FormatoCambioCuentaDestino">
+                    <div class="col-sm-12 col-xs-12 col-lg-12">
+                        <div class=" col-sm-12 col-xs-12 col-lg-12  text-center ">
+                            <div class="col-sm-4 col-xs-4 col-lg-4">
+                                <img src="../../../../assets/images/GT/logo-coogranada.png" class="content-group mt-10 imagenFormato" alt="">
+                            </div>
+
+                            <div class="col-sm-8 col-xs-8 col-lg-8 text-center">
+                                <br/>
+                                <h6 class="text-uppercase text-bold" style="font-size: 13px"> FORMATO MODIFICACIÓN PRODUCTO CONTRATUAL CUENTA DESTINO </h6>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-xs-12 col-lg-12 text-right">
+                            <br />
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-xs-12 col-lg-12">
+                        <div class="col-sm-12 col-xs-6 col-lg-6 text-left">
+                            <label style="font-size: 13px"><strong>GERENCIA DE DESARROLLO.</strong></label>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-xs-12 col-lg-12">
+                        <div class="col-sm-12 col-xs-6 col-lg-6 text-left">
+                            <label style="font-size: 13px">ORGANIZACIÓN Y MÉTODOS.</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-xs-12 col-lg-12">
+                        <br />
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12">
+                        <div class="col-sm-1 col-xs-1 col-lg-1">
+                        </div>
+                        <div class="col-sm-10 col-xs-10 col-lg-10 text-right" *ngIf=" Fecha !== null && Fecha !== undefined">
+                            <label style="font-size: 13px">{{Datos.NombreOficina}}</label>
+                            <label style="font-size: 13px">&nbsp;{{Fecha | date:'dd/MM/yyyy'}}</label>
+                        </div>
+                        <div class="col-sm-1 col-xs-1 col-lg-1">
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12" *ngIf=" Datos !== null && Datos !== undefined">
+                        <table class="table table-bordered">
+                            <tr>
+                                <td class="col-sm-12 col-xs-3 col-lg-3 Gt-ColorMorado" style="font-size: 13px">Nombre del Asociado: <br/></td>
+                                <td class="col-sm-12 col-xs-9 col-lg-9 text-left" style="font-size: 13px">{{Datos.Nombre}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <br />
+                    <div class="col-sm-12 col-xs-12 col-lg-12" *ngIf=" Datos !== null && Datos !== undefined">
+                        <table class="table table-bordered">
+                            <tr>
+                                <td class="col-sm-12 col-xs-3 col-lg-3 Gt-ColorMorado" style="font-size: 13px">Tipo de identificación:</td>
+                                <td class="col-sm-12 col-xs-2 col-lg-2 text-left" style="font-size: 13px">{{Datos.TipoDocumento}}</td>
+                                <td class="col-sm-12 col-xs-4 col-lg-4 Gt-ColorMorado" style="font-size: 13px">N° de Identificación:</td>
+                                <td class="col-sm-12 col-xs-3 col-lg-3 text-left" style="font-size: 13px">{{Datos.NumeroDocumento}}</td>
+
+                            </tr>
+                        </table>
+                    </div>
+                    <br />
+                    <div class="col-sm-12 col-xs-12 col-lg-12" *ngIf=" Datos !== null && Datos !== undefined">
+                        <table class="table table-bordered">
+                            <tr>
+                                <td class="col-sm-12 col-xs-3 col-lg-3 Gt-ColorMorado" style="font-size: 13px">Tipo de ahorro:</td>
+                                <td class="col-sm-12 col-xs-4 col-lg-4 text-left" style="font-size: 13px">{{Datos.NombreProducto}}</td>
+                                <td class="col-sm-12 col-xs-2 col-lg-2 Gt-ColorMorado" style="font-size: 13px">N° de Contratual:</td>
+                                <td class="col-sm-12 col-xs-3 col-lg-3 text-left" style="font-size: 13px">{{Datos.Cuenta}}</td>
+
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12">
+                        <br />
+                    </div>
+                    <div class="col-sm-12 col-xs-12 col-lg-12 text-left">
+                        <label style="font-size: 13px">Autorizo a la cooperativa Cooganada a:</label>
+                    </div>
+                    <div class="col-sm-12 col-xs-12 col-lg-12">
+                        <br />
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12" *ngIf="!MostrarCuentaAhorros">
+                        <table class="table table-bordered" *ngIf=" Datos !== null && Datos !== undefined">
+                            <tr>
+                                <td class="col-sm-12 col-xs-7 col-lg-7 Gt-ColorMorado text-left" style="font-size: 13px">Abonar valor ahorrado más intereses, una vez finalizado el plazo pactado, al número de cuenta:</td>
+                                <td class="col-sm-12 col-xs-3 col-lg-3" style="font-size: 13px">{{Datos.CuentaDestino}}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12" *ngIf="!MostrarCuentaPorPagar">
+                        <table class="table table-bordered" *ngIf=" Datos !== null && Datos !== undefined">
+                            <tr>
+                                <td class="col-sm-12 col-xs-8 col-lg-8 Gt-ColorMorado text-left" style="font-size: 13px">Retirar matricula de ABONO A CUENTA, lo que implica que el ahorro lo retiraré finalizado el plazo pactado con titulo original</td>
+
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12">
+                        <br />
+                        <br />
+                    </div>
+
+
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12">
+                        <br />
+                        <br />
+                        <br />
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12">
+                        <div class="col-sm-1 col-xs-1 col-lg-1">
+                        </div>
+                        <div class="col-sm-5 col-xs-5 col-lg-5">
+                            <div class="content-group">
+                                <table>
+                                    <tbody>
+                                        <tr class="colum">
+                                            <th></th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <br />
+                                <table>
+                                    <tbody>
+                                        <tr class="colum">
+                                            <th></th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <br />
+                                <table class="table cke_show_border">
+                                    <tbody>
+                                        <tr class="colum">
+                                            <th class="text-left firma" style="font-size: 13px">Firma</th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-xs-2 col-lg-2">
+                            <div class="panel text-center huellaDactilar">
+                                <div class="panel-body">
+                                    <div class=" col-sm-12 col-xs-12 col-lg-12"><br /> </div>
+                                    <div class=" col-sm-12 col-xs-12 col-lg-12"><br /> </div>
+                                    <div class=" col-sm-12 col-xs-12 col-lg-12"><br /> </div>
+                                    <div class=" col-sm-12 col-xs-12 col-lg-12"><br /> </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12">
+                        <br />
+                        <br />
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn Gt-btn-verde" onclick="Imprimir('FormatoCambioCuentaDestino')">Imprimir</button>
+                    <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

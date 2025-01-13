@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NaturalesComponent } from '../Components/Clientes/naturales/naturales.component';
 import { ClienteRoutingModule } from '../Routes/cliente-routing.module';
@@ -50,16 +50,19 @@ import { FiltroPipe } from '../Pipes/Filtro/filtro.pipe';
  FiltroPipe
 ],
   imports: [
-    CommonModule,ClienteRoutingModule,
+    CommonModule,
+    ClienteRoutingModule,
     FormsModule,
-   // ReactiveFormsModule,
-   
     NgxLoadingModule.forRoot({
       backdropBackgroundColour: 'rgba(255,255,255,0.8)'
     }),
     NguiAutoCompleteModule,
     TagInputModule ,
-    ReactiveFormsModule.withConfig({callSetDisabledState: 'whenDisabledForLegacyCode'})
+    ReactiveFormsModule.withConfig({callSetDisabledState: 'whenDisabledForLegacyCode'}),
+    
+  ],
+  exports:[
+    SolicitudesGestionesComponent
   ]
 })
 export class ClienteModule { }

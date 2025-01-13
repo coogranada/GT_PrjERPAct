@@ -1,0 +1,30 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ProductosRoutingModule } from '../Routes/productos-routing.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxLoadingModule } from 'ngx-loading';
+import { ContractualComponent } from '../Components/Productos/Ahorros/Contractual/contractual/contractual.component';
+import { Replace } from '../Pipes/utilidades/replace.pipe';
+import { FormatoCambioCuentaDestinoComponent } from '../Components/Formatos-impresion/formato-cambio-cuentadestino/formato-cambio-cuentadestino.component';
+import { ClienteModule } from './cliente.module';
+import { CurrencyMaskModule } from "ng2-currency-mask";
+
+@NgModule({
+  declarations: [
+    ContractualComponent,
+    FormatoCambioCuentaDestinoComponent,
+    Replace,
+  ],
+  imports: [
+    CommonModule,
+    ProductosRoutingModule,
+    ClienteModule,
+    FormsModule,
+    CurrencyMaskModule,
+    NgxLoadingModule.forRoot({
+      backdropBackgroundColour: 'rgba(255,255,255,0.8)'
+    }),
+    ReactiveFormsModule.withConfig({callSetDisabledState: 'whenDisabledForLegacyCode'})
+  ]
+})
+export class ProductosModule { }

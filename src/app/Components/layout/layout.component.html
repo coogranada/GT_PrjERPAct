@@ -237,7 +237,7 @@
                                             <li id="juridicos">
                                                 <a [routerLink]="['/Clientes/Juridicos']" (click)="setModuloLocalStorage(JuridicosModel.IdModuloPermiso)">Jurídicos</a>
                                             </li>
-                                            <li id="terceros">
+                                            <!-- <li id="terceros">
                                                 <a [routerLink]="" (click)="setModuloLocalStorage(TercerosModel.IdModuloPermiso)">Terceros</a>
                                             </li>
                                             <li id="privilegiados">
@@ -245,31 +245,34 @@
                                             </li>
                                             <li id="vetados">
                                                 <a [routerLink]="" (click)="setModuloLocalStorage(VetadosModel.IdModuloPermiso)">Vetados</a>
-                                            </li>
+                                            </li> -->
                                         </ul>
                                     </li>
                                     <li id="productos">
-                                        <a href="#">
+                                        <a href="#" (click)="toggleProductosMenu()" >
                                             <i class="icon-list2"></i>
                                             <span>Productos</span>
+                                            <i class="icon-arrow-right13" style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="!isProductosMenuOpen" ></i>
+                                            <i class="icon-arrow-down12"  style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="isProductosMenuOpen" ></i>
                                         </a>
-                                        <ul>
+                                        <ul *ngIf="isProductosMenuOpen">
                                             <li id="aportes">
                                                 <a [routerLink]="['/Productos/Aportes']" (click)="setModuloLocalStorage(AportesModel.IdModuloPermiso)">Aportes</a>
                                             </li>
 
                                             <li id="ahorros">
-                                                <!-- (click)="setModuloLocalStorage(AhorrosModel.IdModuloPermiso)" -->
-                                                <a [routerLink]="">Ahorros</a>
-                                                <ul>
+                                                <a [routerLink]="" (click)="toggleProductosAhorrosMenu()">Ahorros</a>
+                                                <i class="icon-arrow-right13" style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="!isProductosAhorrosMenuOpen" ></i>
+                                                <i class="icon-arrow-down12"  style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="isProductosAhorrosMenuOpen" ></i>
+                                                <ul *ngIf="isProductosAhorrosMenuOpen">
                                                     <li id="simuladorAhorro">
                                                         <a [routerLink]="" (click)="setModuloLocalStorage(SimuladorAhorroModel.IdModuloPermiso)">Simulador</a>
                                                     </li>
                                                     <li id="contractuales">
-                                                        <!-- (click)="setModuloLocalStorage(ContractualesModel.IdModuloPermiso)" -->
-                                                        <a [routerLink]="">
-                                                        Contractual</a>
-                                                        <ul>
+                                                        <a (click)="toggleProductosAhorroContractualMenu()">Contractual</a>
+                                                        <i class="icon-arrow-right13" style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="!isProductosAhorrosContractualMenuOpen" ></i>
+                                                        <i class="icon-arrow-down12"  style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="isProductosAhorrosContractualMenuOpen" ></i>
+                                                        <ul *ngIf="isProductosAhorrosContractualMenuOpen">
                                                             <li id="contractualesInterno">
                                                                 <a [routerLink]="['/Productos/Ahorros/Contractual']" (click)="setModuloLocalStorage(ContractualesInternoModel.IdModuloPermiso)">Contractual</a>
                                                             </li>
@@ -279,10 +282,10 @@
                                                         </ul>
                                                     </li>
                                                     <li id="disponibles">
-                                                        <!-- (click)="setModuloLocalStorage(DisponiblesModel.IdModuloPermiso)" -->
-                                                        <a [routerLink]="">
-                                                        Disponibles</a>
-                                                        <ul>
+                                                        <a [routerLink]="" (click)="toggleProductosAhorrosDisponiblesMenu()">Disponibles</a>
+                                                        <i class="icon-arrow-right13" style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="!isProductosAhorrosDisponiblesMenuOpen" ></i>
+                                                        <i class="icon-arrow-down12"  style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="isProductosAhorrosDisponiblesMenuOpen" ></i>
+                                                        <ul *ngIf="isProductosAhorrosDisponiblesMenuOpen">
                                                             <li id="disponiblesInterno">
                                                                 <a [routerLink]="['/Productos/Ahorros/Disponibles/Disponibles']" (click)="setModuloLocalStorage(DisponiblesInternoModel.IdModuloPermiso)">Disponibles</a>
                                                             </li>
@@ -295,14 +298,12 @@
                                                             </li>
                                                         </ul>
                                                     </li>
-                                                    <!-- <li id="cuentasCorriente">
-                                                    <a [routerLink]="" (click)="setModuloLocalStorage(CuentasCorrienteModel.IdModuloPermiso)">Cuenta
-                                                        corriente</a>
-                                                </li> -->
                                                     <li id="termino">
-                                                        <a [routerLink]="">
+                                                        <a [routerLink]="" (click)="toggleProductosAhorrosTerminoMenu()">
                                                         Término</a>
-                                                        <ul>
+                                                        <i class="icon-arrow-right13" style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="!isProductosAhorrosTerminoMenuOpen" ></i>
+                                                        <i class="icon-arrow-down12"  style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="isProductosAhorrosTerminoMenuOpen" ></i>
+                                                        <ul *ngIf="isProductosAhorrosTerminoMenuOpen">
                                                             <li id="TerminoInterno">
                                                                 <a [routerLink]="['/Productos/Ahorros/Termino/Termino']" (click)="setModuloLocalStorage(TerminoInternoModel.IdModuloPermiso)">Término</a>
                                                             </li>

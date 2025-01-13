@@ -1,2 +1,2 @@
 # GT_PrjERPAct
-Proyecto Angular Actualizado1
+Proyecto Angular Actualizado

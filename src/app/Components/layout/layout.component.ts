@@ -303,6 +303,11 @@ export class LayoutComponent implements OnInit {
   isInformesMenuOpen : boolean = false;
   isInformesMaestroAhorrosMenuOpen : boolean = false;
   isClientesMenuOpen : boolean = false;
+  isProductosMenuOpen : boolean = false;
+  isProductosAhorrosMenuOpen : boolean = false;
+  isProductosAhorrosContractualMenuOpen : boolean = false;
+  isProductosAhorrosDisponiblesMenuOpen : boolean = false;
+  isProductosAhorrosTerminoMenuOpen : boolean = false;
     // Cambiar a 'false' si deseas ocultarlo por defecto
 
   // Método para alternar el estado del menú de Usuario
@@ -348,6 +353,26 @@ export class LayoutComponent implements OnInit {
     this.isClientesMenuOpen = !this.isClientesMenuOpen;
     this.toggleCloseMenu(3);
   }
+  toggleProductosMenu(){
+    this.isProductosMenuOpen = !this.isProductosMenuOpen;
+    this.toggleCloseMenu(4);
+  }
+  toggleProductosAhorrosMenu(){
+    this.isProductosAhorrosMenuOpen = !this.isProductosAhorrosMenuOpen;
+    this.toggleCloseMenu(4,1);
+  }
+  toggleProductosAhorroContractualMenu(){
+    this.isProductosAhorrosContractualMenuOpen = !this.isProductosAhorrosContractualMenuOpen;
+    this.toggleCloseMenu(4,2);
+  }
+  toggleProductosAhorrosDisponiblesMenu(){
+    this.isProductosAhorrosDisponiblesMenuOpen = !this.isProductosAhorrosDisponiblesMenuOpen;
+    this.toggleCloseMenu(4,3);
+  }
+  toggleProductosAhorrosTerminoMenu(){
+    this.isProductosAhorrosTerminoMenuOpen = !this.isProductosAhorrosTerminoMenuOpen;
+    this.toggleCloseMenu(4,4);
+  }
   toggleCloseMenu(id : number, opcion : number = 0) {
     if(id != 1)this.isUsuarioMenuOpen = false;
     if(id != 2)this.isConfiguracionMenuOpen = false;
@@ -362,7 +387,30 @@ export class LayoutComponent implements OnInit {
       this.isMaestroProductosMenuOpen = false;
     }
     if(id != 3)this.isClientesMenuOpen = false;
-   
+    if(id != 4){
+      this.isProductosMenuOpen = false;
+      this.isProductosAhorrosMenuOpen = false;
+      this.isProductosAhorrosTerminoMenuOpen = false;
+      this.isProductosAhorrosDisponiblesMenuOpen = false;
+      this.isProductosAhorrosContractualMenuOpen = false;
+    }
+    if(id == 4 && opcion == 1){
+      this.isProductosAhorrosContractualMenuOpen = false;
+      this.isProductosAhorrosDisponiblesMenuOpen = false;
+    }else if(id == 4 && opcion == 2){
+      this.isProductosAhorrosDisponiblesMenuOpen = false;
+      this.isProductosAhorrosTerminoMenuOpen = false;
+    } 
+    else if(id == 4 && opcion == 3) {
+      this.isProductosAhorrosTerminoMenuOpen = false;
+      this.isProductosAhorrosContractualMenuOpen = false;
+    }
+    else if(id == 4 && opcion == 4){
+      this.isProductosAhorrosContractualMenuOpen = false;
+      this.isProductosAhorrosDisponiblesMenuOpen = false;
+    } 
+
+  
   }
   ngOnInit() {
    

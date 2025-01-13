@@ -7,15 +7,16 @@ import { Pipe, PipeTransform, Injectable } from '@angular/core';
  * @implements {PipeTransform}
  */
 @Pipe({
-    name: 'replace'
+    name: 'replace',
+    standalone : false
 })
 
 @Injectable()
 
 export class Replace implements PipeTransform {
     constructor() { }
-    transform(item: any, char, newchar): any {
-        if (item == null || item == NaN || item == undefined) return "0.00";
+    transform(item: any , char : string, newchar : string): any {
+        if (item == null || item == undefined) return "0.00";
         item = item.replace(char, newchar);
         return item;
     }
