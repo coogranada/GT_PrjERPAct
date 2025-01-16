@@ -13,6 +13,7 @@ import { OficinasService } from '../../../Services/Maestros/oficinas.service';
 import { GeneralesService } from '../../../Services/Productos/generales.service';
 import { ModuleValidationService } from '../../../Services/Enviroment/moduleValidation.service';
 import { NgxToastService } from 'ngx-toast-notifier';
+import { HtmlToService } from '../../../Services/Utilidades/html-to.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -240,7 +241,7 @@ export class SolicitudServiciosComponent implements OnInit {
     contactoDto: {},
     activoDto: {},
     conyugueDto: {},
-    laboralDto: {},
+    laboralDto: [],
     referenciaDto: {},
     entrevistaDto: {},
     listaDePeps: {},
@@ -257,7 +258,8 @@ export class SolicitudServiciosComponent implements OnInit {
   //#endregion
   private DataRequired = new RequiredData();
   esReimpresa: any;
-  constructor(private clientesService: ClientesService, private clientesGetListService: ClientesGetListService, private notif: NgxToastService) {}
+  constructor(private clientesService: ClientesService, private clientesGetListService: ClientesGetListService, 
+    private notif: NgxToastService, private htmlTo : HtmlToService) {}
 
   ngOnInit() {
     if (this.validar === 1) {
@@ -340,6 +342,7 @@ export class SolicitudServiciosComponent implements OnInit {
     this.mostrarGiros = null;
     this.naturalesServicio = new NaturalesServicio();
     this.naturalesAllModel = new NaturalesAllModel();
+    console.log("eee",documentoConsultar)
     this.clientesService.BuscarNaturalesAll(documentoConsultar).subscribe((result : any) => {
         console.log(result);
         if (result !== null) {
@@ -1524,5 +1527,9 @@ export class SolicitudServiciosComponent implements OnInit {
 
   MaysPrimera(string : string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+  print(){
+    this.htmlTo.HtmlToPdf("FormatoDeServicios","p",[884,3576])
+    //
   }
 }

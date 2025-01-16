@@ -43,7 +43,9 @@ export class AsesoriaContractualService {
         return this._http.post<any>(this.url, Datos);
     } 
     BuscarAsesoria(Documento: string, Nombre: string, NumeroAsesoria: string): Observable<any> {
-        this.url = `${this.environment.Url}/BuscarAsesorContractualAsesoria`;
+        this.url = this.environment.Url + '/BuscarAsesoria'//?PstrNumeroDocuento=' + Documento +
+       // '&PstrNombre=' + Nombre + '&PstrNumeroAsesoria=' + NumeroAsesoria;
+        // this.url = `${this.environment.Url}/BuscarAsesorContractualAsesoria`;
         const params = new HttpParams()
             .set('PstrNumeroDocuento', Documento)
             .set('PstrNombre', Nombre)

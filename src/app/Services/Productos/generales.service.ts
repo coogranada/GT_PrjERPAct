@@ -134,7 +134,7 @@ export class GeneralesService {
         this.url = this.environment.Url + '/GuardarLog';
         return this._http.post<any>(this.url, parametersLOG);
     }
-    GuardarlogAsesoria( formValue : any, idOperacion : number, FechaApertura : Date, modulo : number,NumeroAsesoria : number = 0 ) : Observable<any> {
+    GuardarlogAsesoria( formValue : any, idOperacion : number, FechaApertura : Date | null | string, modulo : number,NumeroAsesoria : number = 0 ) : Observable<any> {
         let data : string | null = localStorage.getItem('Data');
         const dataUser = JSON.parse(window.atob(data == null ? "" : data));
         const FechaActual = FechaApertura;

@@ -1,0 +1,163 @@
+<body id="Contenido">
+    <button type="button" class="btn Gt-btn-morado doNotPrint" data-toggle="modal" style="visibility:hidden" data-target="#ModalImprimir" #abrirFormatAsesoria>Abrir <i class="icon-play3 position-right"></i>
+        </button>
+
+    <div id="ModalImprimir" class="modal fade" data-backdrop="static">
+        <div class="modal-body" style="margin: -1mm !important; size: auto !important; padding: 0 !important; margin-top: -10px !important;
+                margin-left: -14px !important;">
+
+            <div class="modal-content modal-full" style="width:1100px;">
+                <div class="modal-full" style="width:1100px;">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body"  id="FormatAsesoria">
+                        <div class="col-sm-12 col-xs-12 col-lg-12">
+                            <div class=" col-sm-12 col-xs-12 col-lg-12  text-center ">
+
+                                <div class="col-sm-8 col-xs-8 col-lg-8 text-center bordeC bg-morado">
+                                    <h6 class="text-uppercase text-bold ">FORMATO ASESORIA DE CONTRACTUAL</h6>
+                                </div>
+
+                                <div class="col-sm-3 col-xs-3 col-lg-3">
+                                    <img src="../../../../assets/images/GT/logo-coogranada.png" class="content-group mt-10 imagenFormato" alt="">
+                                </div>
+
+                            </div>
+                            <div class="col-sm-12 col-xs-12 col-lg-12 text-right">
+                                <br />
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-xs-12 col-lg-12">
+
+                            <div class="col-sm-12 col-xs-2 col-lg-2"></div>
+
+                            <div class="col-sm-12 col-xs-8 col-lg-8" *ngIf="Datos !== Undefined">
+                                <div class="content-group">
+                                    <table id="TablaUno " class="table table-bordered">
+                                        <thead *ngIf=" Datos !== null && Datos !== undefined">
+                                            <tr>
+                                                <th style="font-size: 12px" class="bg-morado"><strong>Oficina</strong></th>
+                                                <th style="font-size: 12px"><strong>{{Datos.Oficina}}</strong></th>
+                                                <th style="font-size: 12px" class="bg-morado"><strong>Fecha</strong></th>
+                                                <th style="font-size: 12px"><strong>{{Fecha | date:'yyyy/MM/dd'}}</strong></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-xs-12 col-lg-12">
+
+                            <div class="col-sm-12 col-xs-6 col-lg-6" *ngIf="Datos !== Undefined">
+                                <div class="content-group">
+                                    <table id="TablaDos " class="table table-bordered">
+                                        <thead *ngIf=" Datos !== null && Datos !== undefined">
+                                            <tr>
+                                                <th style="font-size: 12px" class="bg-morado"><strong>Nombre asociado</strong></th>
+                                                <th style="font-size: 12px"><strong>{{Datos.Nombre}}</strong></th>
+                                            </tr>
+                                            <tr>
+                                                <th style="font-size: 12px" class="bg-morado"><strong>N° de identificación</strong></th>
+                                                <th style="font-size: 12px"><strong>{{Datos.Documento}}</strong></th>
+                                            </tr>
+                                            <tr>
+                                                <th style="font-size: 12px" class="bg-morado"><strong>Producto</strong></th>
+                                                <th style="font-size: 12px"><strong>{{Datos.IdProducto || Datos.NombreProducto}}</strong></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12 col-xs-3 col-lg-3" *ngIf="Datos !== Undefined">
+                                <div class="content-group">
+                                    <table id="TablaDos " class="table table-bordered">
+                                        <thead *ngIf=" Datos !== null && Datos !== undefined">
+                                            <tr>
+                                                <th style="font-size: 12px" class="bg-morado"><strong>Plazo</strong></th>
+                                                <th style="font-size: 12px"><strong>{{Datos.Plazo}}</strong></th>
+                                            </tr>
+                                            <tr>
+                                                <th style="font-size: 12px" class="bg-morado"><strong>Modalidad</strong></th>
+                                                <th style="font-size: 12px"><strong>{{Datos.Modalidad}}</strong></th>
+                                            </tr>
+                                            <tr>
+                                                <th style="font-size: 12px" class="bg-morado"><strong>Valor interés</strong></th>
+                                                <th style="font-size: 12px"><strong>{{Datos.ValorInteres | currency:'':'' : '1.0-0'}}</strong></th>
+                                            </tr>
+                                            <tr>
+                                                <th style="font-size: 12px" class="bg-morado"><strong>Valor plan</strong></th>
+                                                <th style="font-size: 12px"><strong>{{Datos.ValorTotal | currency:'':'' : '1.0'}}</strong></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12 col-xs-3 col-lg-3" *ngIf="Datos !== Undefined">
+                                <div class="content-group">
+                                    <table id="TablaDos " class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th style="font-size: 12px" class="bg-morado"><strong>Periodo</strong></th>
+                                                <th style="font-size: 12px"><strong>{{Datos.Periodo}}</strong></th>
+                                            </tr>
+                                            <tr>
+                                                <th style="font-size: 12px" class="bg-morado"><strong>Tasa nominal</strong></th>
+                                                <th style="font-size: 12px"><strong>{{Datos.TasaNominal | currency:'':'' : '1.2-2'}}%</strong></th>
+                                            </tr>
+                                            <tr>
+                                                <th style="font-size: 12px" class="bg-morado"><strong>Tasa efectiva</strong></th>
+                                                <th style="font-size: 12px"><strong>{{Datos.TasaEfectiva | currency:'':'' : '1.2-2'}}%</strong></th>
+                                            </tr>
+                                            <tr>
+                                                <th style="font-size: 12px" class="bg-morado"><strong>Valor Cuota</strong></th>
+                                                <th style="font-size: 12px"><strong>{{Datos.Cuota | currency:'':'' : '1.0'}}</strong></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-12 col-xs-12 col-lg-12">
+                            <div class="col-sm-12 col-xs-6 col-lg-6"></div>
+
+                            <div class="col-sm-12 col-xs-6 col-lg-6" *ngIf="Datos !== Undefined">
+                                <div class="content-group">
+                                    <table id="TablaDos " class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th style="font-size: 12px" class="bg-morado"><strong>Asesor</strong></th>
+                                                <th style="font-size: 12px"><strong>{{Datos.Asesor}}</strong></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-xs-12 col-lg-12">
+                            <br/>
+                            <p class="text-left" style="font-size: 13px"><span style="color:green;">*</span>Es importante tener en cuenta que, los valores calculados en el momento de realizar la asesoría, pueden tener cambios cuando se vaya a realizar la apertura del producto.</p>
+                            <br/>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn Gt-btn-verde"  (click)="print()">Imprimir</button>
+                    <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+</body>

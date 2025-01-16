@@ -90,10 +90,3 @@ function ValidarEmail(Ptexto) {
     return exp.test(Ptexto);
 }
 // Fin ValidarEmail
-
-//Inicio Imprimir
-//Imprime el contenido HTML. Utiliza el metodo printArea() que se encuenta en el archivo jquery.printarea
-//PNombreElemento = Id del elemento HMTL que se desea imprimir
-function Imprimir(PNombreElemento) {
-    $("#" + PNombreElemento).printArea();
-}

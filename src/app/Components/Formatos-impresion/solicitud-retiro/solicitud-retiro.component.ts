@@ -3,6 +3,7 @@ import { EnvioMotivoModel } from '../../../Models/Clientes/motivoRetiro.model';
 import { ClientesService } from '../../../Services/Clientes/clientes.service';
 import { ClientesGetListService } from '../../../Services/Clientes/clientesGetList.service';
 import { JuridicosService } from '../../../Services/Clientes/Juridicos.service';
+import { HtmlToService } from '../../../Services/Utilidades/html-to.service';
 declare var $: any;
 @Component({
   selector: 'app-solicitud-retiro',
@@ -30,6 +31,7 @@ export class SolicitudRetiroComponent implements OnInit {
     private clientesService: ClientesService,
     private clientesGetListService: ClientesGetListService,
     private juridicosService: JuridicosService,
+    private htmlTo : HtmlToService
   ) { }
 
   ngOnInit() {
@@ -181,6 +183,6 @@ export class SolicitudRetiroComponent implements OnInit {
     this.abirFormatoRetiro.nativeElement.click();
   }
   print() {
-    $('#printSolicitudRetiro').printArea();
+    this.htmlTo.HtmlToPdf("printSolicitudRetiro","p",[1238, 794])
   }
 }

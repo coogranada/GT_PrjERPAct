@@ -8,12 +8,16 @@ import { Replace } from '../Pipes/utilidades/replace.pipe';
 import { FormatoCambioCuentaDestinoComponent } from '../Components/Formatos-impresion/formato-cambio-cuentadestino/formato-cambio-cuentadestino.component';
 import { ClienteModule } from './cliente.module';
 import { CurrencyMaskModule } from "ng2-currency-mask";
+import { AsesoriaContractualComponent } from '../Components/Productos/Ahorros/Contractual/asesoria/asesoria-contractual.component';
+import { FormatoAsesoriaComponent } from '../Components/Formatos-impresion/formato-asesoria/formato-asesoria.component';
 
 @NgModule({
   declarations: [
     ContractualComponent,
     FormatoCambioCuentaDestinoComponent,
     Replace,
+    AsesoriaContractualComponent,
+    FormatoAsesoriaComponent
   ],
   imports: [
     CommonModule,

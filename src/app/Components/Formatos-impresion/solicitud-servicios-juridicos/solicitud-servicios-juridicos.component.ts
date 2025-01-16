@@ -7,6 +7,7 @@ import {
 import { formatDate } from '@angular/common';
 import { ClientesGetListService } from '../../../Services/Clientes/clientesGetList.service';
 import { NgxToastService } from 'ngx-toast-notifier';
+import { HtmlToService } from '../../../Services/Utilidades/html-to.service';
 
 @Component({
   selector: 'app-solicitud-servicios-juridicos',
@@ -65,7 +66,7 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
 //#endregion
 
   constructor(private juridicosService: JuridicosService, private notif: NgxToastService,
-    private clientesGetListService: ClientesGetListService) { }
+    private clientesGetListService: ClientesGetListService,private htmlTo : HtmlToService) { }
 
   ngOnInit() {
     console.log('esto se muestra desde el formato de impresion');
@@ -642,5 +643,7 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
       });
     }
   }
-
+  print(){
+    this.htmlTo.HtmlToPdf("FormatoDeServicios","p",[884,3576])
+  }
 }

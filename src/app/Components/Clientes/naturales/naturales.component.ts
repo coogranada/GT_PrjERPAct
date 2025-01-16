@@ -988,7 +988,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     // this.clientesGetListService.GetCargos().subscribe(
     //   result => {
         let cargo : string | null = localStorage.getItem('cargos');
-        this.dataEstadosSeguro = JSON.parse(window.atob(cargo == null ? "" : cargo));
+        this.dataCargos = JSON.parse(window.atob(cargo == null ? "" : cargo));
     //   },
     //   error => {
     //     const errorMessage = <any>error;
