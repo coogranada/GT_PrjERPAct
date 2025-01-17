@@ -73,7 +73,7 @@ export class AportesService {
         return this._http.post<any>(this.url, Datos);
     } 
     getActualizaBeneficiarios(Datos: any): Observable<any> {
-        this.url = `${this.environment.Url}/ActualizarBeneficiario`;
+        this.url = `${this.environment.Url}/ActualizarBeneficiarioAportes`;
         return this._http.post<any>(this.url, Datos);
     }
     getBuscarAsesor(Codigo: string, Nombre: string): Observable<any> {

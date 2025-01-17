@@ -10,6 +10,7 @@ import { ClienteModule } from './cliente.module';
 import { CurrencyMaskModule } from "ng2-currency-mask";
 import { AsesoriaContractualComponent } from '../Components/Productos/Ahorros/Contractual/asesoria/asesoria-contractual.component';
 import { FormatoAsesoriaComponent } from '../Components/Formatos-impresion/formato-asesoria/formato-asesoria.component';
+import { AportesComponent } from '../Components/Productos/Aportes/aportes.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { FormatoAsesoriaComponent } from '../Components/Formatos-impresion/forma
     FormatoCambioCuentaDestinoComponent,
     Replace,
     AsesoriaContractualComponent,
-    FormatoAsesoriaComponent
+    FormatoAsesoriaComponent,
+    AportesComponent
   ],
   imports: [
     CommonModule,

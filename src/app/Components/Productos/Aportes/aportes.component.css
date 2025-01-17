@@ -1,0 +1,69 @@
+.textNegrilla {
+    color: #565656;
+    font-weight: bold;
+}
+
+.grande {
+    font-size: 25px !important;
+    color: #D84315;
+    margin-top: -5px !important;
+    margin-left: 6px;
+    position: absolute;
+}
+
+.pmayuscula {
+    text-transform: capitalize;
+}
+
+.activar {
+    border-bottom-color: transparent;
+    cursor: default;
+    cursor: pointer;
+    background-color: rgb(38, 144, 81);
+    border: 1px solid rgb(38, 144, 81);
+}
+
+.activar a {
+    color: white !important;
+}
+
+.scrollTablaHistorial {
+    max-height: 500px;
+    overflow-y: scroll;
+}
+
+.columnProductoX2_Aportes {
+    min-width: 300px !important;
+}
+
+.columnProductoX1_Aportes {
+    min-width: 200px !important;
+}
+
+.columnProductoX_Aportes {
+    min-width: 270px !important;
+}
+
+.columnProductoX0_disponibles {
+    min-width: 120px !important;
+}
+
+.column_Oficinax2{
+    min-width: 140px !important;
+}
+.OperacionFija {
+    position: sticky !important;
+    left: 0;
+    background: #fff;
+}
+.column_detalles{
+    min-width: 3000px !important;
+}
+
+.column_tipoDocumento {
+    min-width: 210px !important;
+}
+
+.column_NombreB {
+    min-width: 300px !important;
+}

@@ -14,11 +14,20 @@
           "builder": "@angular-devkit/build-angular:application",
           "options": {
             "allowedCommonJsDependencies": [
-      "sweetalert2",
-      "file-saver",
-      "moment",
-      "crypto-js"
-    ],
+              "sweetalert2",
+              "file-saver",
+              "moment",
+              "crypto-js",
+              "canvg",
+              "jspdf",
+              "html2canvas",
+              "dompurify",
+              "core-js",
+              "jspdf-autotable",
+              "raf",
+              "rgbcolor"
+
+            ],
             "outputPath": "dist/gt-prj-erp",
             "index": "src/index.html",
             "browser": "src/main.ts",
