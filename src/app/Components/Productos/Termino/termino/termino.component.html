@@ -1,0 +1,1844 @@
+
+<form>
+    <form method="get" [formGroup]="TerminoForm">
+        <div class="panel panel-white">
+            <div class="panel-heading">
+                <h6 class="panel-title">Datos{{operacionEscogida}}</h6>
+                <div class="heading-elements">
+                    <ul class="icons-list">
+                        <li><a data-toggle="modal" data-target="#ModalAyuda"><i class=" icon-question6" title="Ayuda" data-popup="tooltip" data-trigger="hover" data-placement="top"></i></a></li>
+                        <li>
+                            <a data-action="collapse"></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <!-- Inicio Operación -->
+                        <form method="get" [formGroup]="TerminoOperacionForm">
+                            <label class="col-xs-12 col-md-3 col-lg-1 textNegrilla">Operación:<span class="grande">*</span></label>
+                            <div class="col-xs-10 col-md-8 col-lg-4">
+                                <select class="form-control" formControlName="Codigo" id="select" (change)=" ValorSeleccionado()">
+                                    <option *ngFor="let operacionTermino of resultOperaciones"
+                                        [value]="operacionTermino.ERP_tblOperacion.IdOperacion">
+                                        {{operacionTermino.ERP_tblOperacion.Descripcion}}</option>
+                                </select>
+                                <span class="help-block validationSpan" *ngIf="TerminoOperacionForm.controls['Codigo'].errors?.['required'] && (TerminoOperacionForm.controls['Codigo'].dirty || TerminoOperacionForm.controls['Codigo'].touched)">
+                                La operación es obligatoria.
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- Fin Operación -->
+                </div>
+                <div class="col-md-12  col-sm-12 col-lg-12" id="PanelDatos">
+
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <br />
+                        <!-- Inicio Cuenta -->
+                        <div class="col-xs-12 col-md-3 col-lg-1">
+                            <label class="textNegrilla">Cuenta:</label>
+                        </div>
+                        <div class="col-xs-4 col-md-3 col-lg-1">
+                            <input type="text" class="form-control" maxlength="3" formControlName="IdOficina" [attr.disabled]="bloquearCuenta">
+                            <span class="help-block validationSpan" *ngIf="TerminoForm.controls['IdOficina'].errors?.['pattern']">
+                                  La cuenta solo acepta números.
+                                  </span>
+                        </div>
+                        <div class="col-xs-4 col-md-3 col-lg-1">
+                            <input type="text" class="form-control" maxlength="3" formControlName="IdProductoCuenta" [attr.disabled]="bloquearCuenta">
+                            <span class="help-block validationSpan" *ngIf="TerminoForm.controls['IdProductoCuenta'].errors?.['pattern']">
+                                  La cuenta solo acepta números.
+                                  </span>
+                        </div>
+                        <div class="col-xs-4 col-md-3 col-lg-1">
+                            <input type="text" class="form-control" maxlength="7" formControlName="IdConsecutivo" [attr.disabled]="bloquearCuenta">
+                            <span class="help-block validationSpan" *ngIf="TerminoForm.controls['IdConsecutivo'].errors?.['pattern']">
+                                  La cuenta solo acepta números.
+                                  </span>
+                        </div>
+                        <div class="col-xs-4 col-md-3 col-lg-1">
+                            <input type="text" class="form-control" formControlName="IdDigito" (blur)="BuscarPorCuenta()" maxlength="1" [attr.disabled]="bloquearCuenta">
+                            <span class="help-block validationSpan" *ngIf="TerminoForm.controls['IdDigito'].errors?.['pattern']">
+                                  La cuenta solo acepta números.
+                                  </span>
+                        </div>
+                        <!-- Fin Cuenta -->
+
+                        <div class="col-xs-1 col-md-1 col-lg-2">
+                        </div>
+
+                        <!-- Inicio Buscar -->
+                        <div class="col-xs-12 col-md-3 col-lg-1">
+                            <label class="textNegrilla">Buscar:</label>
+                        </div>
+                        <div class="col-xs-4 col-md-3 col-lg-1">
+                            <input type="text" class="form-control" tooltip="Documento" id="SelectBuscar" formControlName="BuscarDocumento" (keypress)="LimpiarCampos('BuscarDocumento')" placement="top" show-delay="500" [attr.disabled]="bloquearBuscar" />
+                        
+                        </div>
+                        <div class="col-xs-6 col-md-5 col-lg-2">
+                            <input type="text" class="form-control" tooltip="Nombre" formControlName="BuscarNombre" (keypress)="LimpiarCampos('BuscarNombre')" placement="top" show-delay="500" [attr.disabled]="bloquearBuscar" />
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">
+                            <button type="button" class="btn Gt-btn-verde btn-icon" (click)="BotonBuscarTermino()" [attr.disabled]="bloquearBuscar">
+                            <i class="icon-search4"></i>
+                        </button>
+                        </div>
+                        <!-- Fin Buscar -->
+                    </div>
+
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <br />
+                        <!-- Inicio OficinaAsociado -->
+                        <div class="col-xs-12 col-md-3 col-lg-1">
+                            <label class="textNegrilla">Oficina asociado:</label>
+                            <span class="grande"> *</span>
+                        </div>
+                        <div class="col-xs-4 col-md-3 col-lg-1">
+                            <input type="text" class="form-control" formControlName="NumeroOficinaAsociado" [attr.disabled]="bloquear">
+                        </div>
+                        <div class="col-xs-6 col-md-5 col-lg-3">
+                            <input type="text" class="form-control" formControlName="NombreOficinaAsociado" [attr.disabled]="bloquear">
+                        </div>
+                        <!-- Fin OficinaAsociado -->
+
+
+                        <div class="col-xs-1 col-md-1 col-lg-2">
+                        </div>
+
+                        <!-- Inicio Relacion -->
+                        <div class="col-xs-12 col-md-3 col-lg-1">
+                            <label class="textNegrilla">Relación:</label>
+                            <span class="grande"> *</span>
+                        </div>
+                        <div class="col-xs-10 col-md-8 col-lg-3">
+                            <select class="form-control" name="select" formControlName="Clase" [attr.disabled]="bloquear">
+                              <option *ngFor="let Relacion of resultRelacion" [value]="Relacion.Clase">
+                                    {{Relacion.Descripcion}}</option>
+                          </select>
+                        </div>
+                        <!-- Fin Relacion -->
+                    </div>
+
+
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <!-- Inicio Asociado -->
+                        <div class="col-xs-12 col-md-3 col-lg-1">
+                            <label class="textNegrilla">Asociado:</label>
+                            <span class="grande"> *</span>
+                        </div>
+                        <div class="col-xs-4 col-md-3 col-lg-2">
+                            <input type="text" class="form-control" id="SelectAsociado" formControlName="NumeroDocumento" (blur)="BuscarAsociado()" [attr.disabled]="bloquearAsociado" (keypress)="LimpiarCampos('NumeroDocumento')">
+                        </div>
+                        <div class="col-xs-6 col-md-5 col-lg-3">
+                            <input type="text" class="form-control pmayuscula" formControlName="Nombre" [attr.disabled]="bloquearAsociado" (keypress)="LimpiarCampos('Nombre')">
+                            <span class="help-block validationSpan" *ngIf="MostrasAlertaAsociado">
+                            Campo obligatorio.
+                            </span>
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">
+                            <button type="button" [attr.disabled]="bloquearAsociado" (click)="BuscarAsociado()"  class="btn Gt-btn-verde btn-icon legitRipple"><i
+                                          class="icon-search4"></i></button>
+                        </div>
+                        <!-- Fin Asociado -->
+
+                        <!-- Inicio Oficina -->
+                        <div class="col-xs-12 col-md-3 col-lg-1">
+                            <label class="textNegrilla">Oficina:</label>
+                            <span class="grande"> *</span>
+                        </div>
+                        <div class="col-xs-4 col-md-3 col-lg-1">
+                            <input type="text" class="form-control" formControlName="NumeroOficina" [attr.disabled]="bloquear">
+                        </div>
+                        <div class="col-xs-6 col-md-5 col-lg-2">
+                            <input type="text" class="form-control" formControlName="NombreOficina" [attr.disabled]="bloquear">
+                        </div>
+                        <!-- Fin Oficina -->
+
+                    </div>
+
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <br />
+                        <!-- Inicio Producto -->
+                        <div class="col-xs-12 col-md-3 col-lg-1">
+                            <label class="textNegrilla">Producto:</label>
+                            <span class="grande"> *</span>
+                        </div>
+                        <div class="col-xs-4 col-md-3 col-lg-1">
+                            <input type="text" class="form-control" id='SelectProducto' formControlName="IdProducto" maxlength="3" [attr.disabled]="bloquearProducto" (blur)="Producto()" (keypress)="LimpiarCampos('IdProducto')">
+                        </div>
+                        <div class="col-xs-6 col-md-5 col-lg-4">
+                            <input type="text" class="form-control" formControlName="DescripcionProducto" [attr.disabled]="bloquearProducto" (keypress)="LimpiarCampos('DescripcionProducto')">
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">
+                            <button type="button" class="btn Gt-btn-verde btn-icon legitRipple" (click)="BuscarProducto()" [attr.disabled]="bloquearProducto"><i
+                                          class="icon-search4"></i></button>
+                        </div>
+                        <!-- Fin Producto -->
+
+                        <!-- Inicio OperacionPermitida -->
+                        <div class="col-xs-12 col-md-3 col-lg-2">
+                            <label class="textNegrilla">Operación permitida:</label>
+                            <span class="grande"> *</span>
+                        </div>
+                        <div class="col-xs-10 col-md-8 col-lg-2">
+                            <select class="form-control" id="SelectOperacionPermitida" formControlName="IdOperacion" *ngIf="!selectOperacionPermitada">
+                              <option selected="selected"></option>
+                               <option *ngFor="let OperacionPermitida of resultOperacionPermitada" [value]="OperacionPermitida.IdOperacion">{{OperacionPermitida.DescripcionOperacion}}</option>
+                          </select>
+                            <input type="text" class="form-control" formControlName="DescripcionOperacion" *ngIf="!inputOperacionPermitada" [attr.disabled]="bloquear">
+                        </div>
+                        <div class="col-xs-2 col-md-1 col-lg-1">
+                        </div>
+                        <!-- Fin OperacionPermitida -->
+                    </div>
+
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <br />
+                        <!-- Inicio Asesor -->
+                        <div class="col-xs-12 col-md-3 col-lg-1">
+                            <label class="textNegrilla">Asesor:</label>
+                            <span class="grande"> *</span>
+                        </div>
+                        <div class="col-xs-4 col-md-3 col-lg-1">
+                            <input type="text" class="form-control" formControlName="IdAsesor" [attr.disabled]="bloquear">
+                        </div>
+                        <div class="col-xs-6 col-md-5 col-lg-4">
+                            <input type="text" class="form-control" formControlName="NombreAsesor" [attr.disabled]="bloquear">
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">
+                            <button type="button" class="btn Gt-btn-verde btn-icon legitRipple" [attr.disabled]="bloquear">
+                                <i class="icon-search4" ></i>
+                            </button>
+                        </div>
+                        <!-- Fin Asesor -->
+
+                        <!-- Inicio EstadoCuenta -->
+                        <div class="col-xs-12 col-md-3 col-lg-2">
+                            <label class="textNegrilla">Estado cuenta:</label>
+                            <span class="grande"> *</span>
+                        </div>
+                        <div class="col-xs-10 col-md-8 col-lg-2">
+                            <select class="form-control" id="SelectEstadoCuenta" name="SelectEstadoCuenta" formControlName="IdEstado" *ngIf="!selectEstado" (change)="selectEstadoActivo()" [attr.disabled]="bloquearEstado">
+                              <option selected="selected" value="0">-- Seleccione --</option>
+                              <option *ngFor="let Estado of resultEstados" [value]="Estado.IdEstado">
+                                          {{Estado.Descripcion}}</option>
+                              </select>
+                            <input type="text" class="form-control" formControlName="DescripcionEstado" *ngIf="!inputEstado" [attr.disabled]="bloquear" />
+                        </div>
+                        <!-- Fin EstadoCuenta -->
+                    </div>
+
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <br />
+                        <!-- Inicio Asesor Externo -->
+                        <form method="get" [formGroup]="AsesorForm">
+                            <div class="col-xs-12 col-md-3 col-lg-1">
+                                <label class="textNegrilla">Asesor externo:</label>
+                            </div>
+                            <div class="col-xs-4 col-md-3 col-lg-1">
+                                <input type="text" class="form-control" id="SelectAsesorExterno" tooltip="Id asesor" placement="top"
+                                    show-delay="500" formControlName="strCodigo" (blur)="BuscarAsesorExternoCodigo()"
+                                    [attr.disabled]="bloquearAsesorExterno" (keypress)="LimpiarCampos('strCodigo')" maxlength="4" />
+                                <span class="help-block validationSpan" *ngIf="AsesorForm.controls['strCodigo'].errors?.['pattern']">
+                                    El Id asesor solo acepta números.
+                                </span> 
+                            </div>
+                            <div class="col-xs-6 col-md-5 col-lg-4">
+                                <input type="text" class="form-control" tooltip="Nombre asesor" placement="top" show-delay="500"
+                                    formControlName="strNombre" [attr.disabled]="bloquearAsesorExterno"
+                                    (keypress)="LimpiarCampos('strNombre')" />
+                            </div>
+                            <div class="col-xs-1 col-md-1 col-lg-1">
+                                <button type="button" class="btn Gt-btn-verde btn-icon legitRipple" (click)="BuscarAsesorExternoTodos()"
+                                    [attr.disabled]="bloquearAsesorExterno">
+                                    <i class="icon-search4"></i></button>
+                            </div>
+                        </form>
+                        <!-- Fin Asesor Externo -->
+
+                        <!-- Inicio Edad -->
+                        <div class="col-xs-12 col-md-3 col-lg-2">
+                            <label class="textNegrilla">Edad:</label>
+                            <span class="grande"> *</span>
+                        </div>
+                        <div class="col-xs-10 col-md-8 col-lg-2">
+                            <input type="text" class="form-control" [attr.disabled]="bloquear" formControlName="Edad">
+                        </div>
+                        <!-- Fin Edad -->
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <div class="col-xs-12 col-md-3 col-lg-1">
+                            <label class="textNegrilla">Nro. Título:</label>
+                            <span *ngIf="!oTitulo" class="grande">*</span>
+                        </div>
+                        <div class="col-xs-4 col-md-3 col-lg-2">
+                            <input type="text" class="form-control" id="NumTitulo" maxlength="10" [attr.disabled]="bloquearNroTitulo" formControlName="NroTitulo" (blur)="ValidarTitulo()" />
+                            <span class="help-block validationSpan" *ngIf="TerminoForm.controls['NroTitulo'].errors?.['pattern']">
+                          El nro. titulo solo acepta números.
+                      </span>
+                        </div>
+                        <div class="col-xs-6 col-md-5 col-lg-3">
+                            <br/>
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">
+                            <br/>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <br />
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                        <button type="button" style="visibility:hidden" #ModalBuscarAsociados class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#ModalBuscarAsociados" [attr.disabled]="bloquearBuscar"><i class="icon-search4"></i></button>
+
+                        <input type="button" class="btn Gt-btn-morado" value="Limpiar" (click)="ClearFromTermino()" />&nbsp; &nbsp;
+
+                        <input type="button" *ngIf="!btnGuardar" class="btn Gt-btn-verde" value="Guardar" (click)="GuardarTermino()" [disabled]="!TerminoForm.valid" />
+
+                        <input type="button" *ngIf="!btnActualizar" class="btn Gt-btn-verde" value="Actualizar" (click)="ActualizarTermino()" [disabled]="!bloquearbtnActalizar" />
+
+                        <input type="button" *ngIf="!btnCambiarEstado" class="btn Gt-btn-verde" value="Cambiar Estado" (click)="EstadoSeleccionado()" [disabled]="!bloquearbtnCambioEstado" /> &nbsp; &nbsp;
+
+                        <!-- <input type="button" *ngIf="!btnRegistroFirma" class="btn Gt-btn-verde" value="Registro firma" [attr.disabled]="BloquearBtnRegistroFirma" /> --> 
+                    </div>
+
+
+                </div>
+                <input type="hidden" #ModalBuscarAsociados data-toggle="modal" data-target="#MondalBuscarAsociados" data-popup="tooltip" data-trigger="hover" data-placement="top">
+                <input type="hidden" #ModalProductoTermino data-toggle="modal" data-target="#ModalProductoTermino" data-popup="tooltip" data-trigger="hover" data-placement="top">
+                <input type="hidden" #ModalAsociados data-toggle="modal" data-target="#ModalAsociados" data-popup="tooltip" data-trigger="hover" data-placement="top">
+                <input type="hidden" #ModalCalcularAsesoria data-toggle="modal" data-target="#ModalCalcularAsesoria" data-popup="tooltip" data-trigger="hover" data-placement="top">                
+                <input type="hidden" #ModalAsesoresExterno data-toggle="modal" data-target="#ModalAsesoresExterno" data-popup="tooltip" data-trigger="hover" data-placement="top">
+                <input type="hidden" #ModalImpresion data-toggle="modal" data-target="#ModalImpresion" data-popup="tooltip" data-trigger="hover" data-placement="top">
+                <input type="hidden" #ModalCambioEstado data-toggle="modal" data-target="#ModalCambioEstado" data-popup="tooltip" data-trigger="hover" data-placement="top">
+                <input type="hidden" #ModalBuscarPersonasCesionTitulo data-toggle="modal" data-target="#ModalBuscarPersonasCesionTitulo" data-popup="tooltip" data-trigger="hover" data-placement="top">
+                <input type="hidden" #ModalTitulares data-toggle="modal" data-target="#ModalTitulares" data-popup="tooltip"
+                    data-trigger="hover" data-placement="top">
+           </div>
+        </div>
+        <div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelTab">
+            <div class="panel-body">
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <div class="tabbable">
+                        <ul class="nav nav-tabs">
+                                <li id="negociacion" (click)="devolverTab(1)" [ngClass]="{'activar': activaNegociacion === true }" >
+                                <a href="#tab1" data-toggle="tab">Negociación</a>
+                                </li>
+                                <li id="saldos" (click)="devolverTab(2)" [ngClass]="{'activar': activaSaldos === true }">
+                                    <a href="#tab2" data-toggle="tab">Saldos</a>
+                                </li>
+                                <li id="Beneficiarios" (click)="devolverTab(3)" [ngClass]="{'activar': activaBeneficiario === true }">
+                                    <a href="#tab3" data-toggle="tab">Beneficiario seguro</a>
+                                </li>
+                                <li id="autorizados" (click)="devolverTab(4)" [ngClass]="{'activar': activaAutorizados === true }">
+                                    <a href="#tab4" data-toggle="tab">Autorizados</a>
+                                </li>
+                                <li id="renovaciones" (click)="devolverTab(5)" [ngClass]="{'activar': activaRenovaciones === true }">
+                                    <a href="#tab5" data-toggle="tab">Renovacion</a>
+                                </li>
+                                <li id="cesionAhorro" (click)="devolverTab(6)" [ngClass]="{'activar': activaCesionTitulo === true }">
+                                    <a href="#tab6" data-toggle="tab">Cesion CDAT</a>
+                                </li>
+                                <li id="reciprocidad" (click)="devolverTab(7)" [ngClass]="{'activar': activaReciprocidad === true }">
+                                    <a href="#tab7" data-toggle="tab">Reciprocidad</a>
+                                </li>
+                                <li id="historial" (click)="devolverTab(8)" [ngClass]="{'activar': activaHistorial === true }">
+                                    <a href="#tab8" data-toggle="tab">Historial</a>
+                                </li>
+
+                        </ul>
+                        <div class="tab-content">
+                            <!-- Inicio tab1 -->
+                            <div class="tab-pane active" id="tab1">
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <!-- Inicio Plazo -->
+                                    <div class="col-xs-12 col-md-4 col-lg-3">
+                                        <label class="textNegrilla">Plazo dias:</label>
+                                        <span class="grande"> *</span>
+                                        <input style="text-align:right" type="text" id="SelectPlazo" class="form-control" maxlength="4" formControlName="PlazoDias" [attr.disabled]="bloquearNegociacion"  (blur)="ValidarPlazo()">
+                                        <span class="help-block validationSpan" *ngIf="TerminoForm.controls['PlazoDias'].errors?.['pattern']">
+                                          El plazo solo acepta números.
+                                      </span>
+                                    </div>
+                                    <!-- Fin Plazo-->
+
+                                    <div class="col-xs-12 col-md-12 col-lg-1"> </div>
+
+                                    <!-- Inicio CuotaMes  -->
+                                    <div class="col-xs-12 col-md-4 col-lg-3">
+                                        <label class="textNegrilla">Valor título:</label>
+                                        <span class="grande"> *</span>
+                                        <input style="text-align:right" type="text" id="SelectValorTitulo" class="form-control" formControlName="ValorTotal" *ngIf="!inputValor" [attr.disabled]="bloquearNegociacion" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"
+                                            maxlength="16">
+                                        <input style="text-align:right" type="text" id="SelectValorTitulo" class="form-control" formControlName="ValorTotal" *ngIf="!inputValorSinDecimal" [attr.disabled]="bloquearNegociacion" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}" maxlength="17" (blur)="ValidarValorTotal()">
+                                    </div>
+                                    <!-- Fin CuotaMes  -->
+
+                                    <div class="col-xs-12 col-md-12 col-lg-1"> </div>
+
+                                    <!-- Inicio ValorTotalPlan -->
+                                    <div class="col-xs-12 col-md-4 col-lg-3">
+                                        <label class="textNegrilla">Frecuencia de pago:</label>
+                                        <span class="grande"> *</span>
+                                        <input style="text-align:right" type="text" id="SelectFrecuencia" *ngIf="!inputFrecuencia" class="form-control" formControlName="DescripcionFrecuenciaPago" [attr.disabled]="bloquear">
+
+                                        <select class="form-control" formControlName="IdFrecuenciaPago" name="select" [attr.disabled]="bloquearNegociacion" *ngIf="!selectFrecuencia" (blur)="ObtenerTasa()">
+                                            <option [value]="-1">-- Seleccion --</option>
+                                            <option *ngFor="let Frecuencia of resultFrecuenciaPago"
+                                                [value]="Frecuencia.IdFrecuenciaPago">
+                                                {{Frecuencia.DescripcionFrecuenciaPago}}
+                                            </option>
+                                      </select>
+                                    </div>
+                                    <!-- Fin ValorTotalPlan -->
+                                </div>
+
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <br />
+
+
+                                    <!-- Inicio Liquidacion -->
+                                    <div class="col-xs-12 col-md-4 col-lg-3">
+                                        <label class="textNegrilla">Tipo cuenta destino:</label>
+                                        <span class="grande"> *</span>
+                                        <select class="form-control" name="SelectCuentaDestino" id="SelectCuentaDestino" [attr.disabled]="bloquearliquidacion" formControlName="IdLiquidacion" (change)="SeleccionLiquidacion()">
+                                           <option  *ngFor="let Liquidacion of resultLiquidacion"
+                                                [value]="Liquidacion.IdLiquidacion">
+                                                {{Liquidacion.DescripcionLiquidacion}}</option>
+                                      </select>
+                                    </div>
+                                    <!-- Fin Liquidacion -->
+
+                                    <div class="col-xs-12 col-md-12 col-lg-1"> </div>
+
+                                    <!-- Inicio CuentaAhorro -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Cuenta ahorros:</label>
+                                        <select class="form-control" formControlName="IdCuentaDestino" name="select" [attr.disabled]="bloquearCuentaNegociacion" *ngIf="!selectCuenta">
+                                            <option [value]="0" >-- Seleccion --</option>
+                                            <option *ngFor="let Cuenta of resultCuentaNegociacion"
+                                                [value]="Cuenta.IdCuenta">
+                                                {{Cuenta.CuentaD}}
+                                            </option>
+                                      </select>
+                                        <input style="text-align:right" type="text" class="form-control" formControlName="CuentaDestino" [attr.disabled]="bloquear" *ngIf="!inputCuenta" />
+                                    </div>
+                                    <!-- Fin CuentaAhorro -->
+
+                                    <div class="col-xs-12 col-md-12 col-lg-1"> </div>
+
+                                    <!-- Inicio Puntos adicionales   -->
+                                    <form method="get" [formGroup]="AdicionarPuntosFrom">
+                                        <div class="col-xs-12 col-md-4 col-lg-3">
+                                            <label class="textNegrilla">Puntos adicionales:</label>
+                                            <select class="form-control" name="select" id="SelectAdicionarPuntos" formControlName="AdicionarPunto" [attr.disabled]="bloquearPuntos"  (change)=" SeleccionPuntos()">
+                                            <option>--Seleccione--</option>
+                                            <option *ngFor="let puntos of resultPuntosAdicionales" [ngValue]="puntos">
+                                                {{puntos.PuntosAdicionales}}</option>
+                                        </select>
+                                        </div>
+                                    </form>
+                                    <!-- Fin Puntos  adicionales-->
+                                </div>
+
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <br />
+                                    <!-- Inicio TasaEfectiva  -->
+                                    <div class="col-xs-12 col-md-4 col-lg-3">
+                                        <label class="textNegrilla">Tasa efectiva:</label>
+                                        <span class="grande"> *</span>
+                                        <input style="text-align:right" type="text" class="form-control" [attr.disabled]="bloquear" formControlName="TasaEfectiva">
+                                    </div>
+                                    <!-- Fin TasaEfectiva -->
+
+                                    <div class="col-xs-12 col-md-12 col-lg-1"> </div>
+
+                                    <!-- Inicio TasaNominal   -->
+                                    <div class="col-xs-12 col-md-4 col-lg-3">
+                                        <label class="textNegrilla">Tasa nominal:</label>
+                                        <span class="grande"> *</span>
+                                        <input style="text-align:right" type="text" class="form-control" [attr.disabled]="bloquear" formControlName="TasaNominal">
+                                    </div>
+                                    <!-- Fin TasaNominal -->
+
+                                    <div class="col-xs-12 col-md-12 col-lg-1"> </div>
+
+                                    <!-- Inicio TasaNominal   -->
+                                    <div class="col-xs-12 col-md-4 col-lg-3">
+                                        <label class="textNegrilla">Tasa aportes:</label>
+                                        <span class="grande"> *</span>
+                                        <input style="text-align:right" type="text" class="form-control" [attr.disabled]="bloquear" formControlName="TasaAdicional">
+                                    </div>
+                                    <!-- Fin TasaNominal -->
+                                </div>
+                                <div class="col-xs-12 col-md-12 col-lg-12"><br/></div>
+
+
+                                <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                                    <input type="button" *ngIf="!btnCalcularTasa" class="btn Gt-btn-morado" value="Calcular" (click)="SumaPuntos()" [disabled]="!bloquearbtnCalcular"/> &nbsp; &nbsp;
+                                    <input type="button" *ngIf="!btnActualizarTab" class="btn Gt-btn-verde" value="Actualizar" (click)="ActualizarTermino()" [disabled]="!bloquearActualizar"/>
+                                    <input type="button" *ngIf="!btnAsesoria" class="btn Gt-btn-morado" value="Calcular intereses" (click)="CalcularAsesoria()" />
+
+                                </div>
+
+                            </div>
+                            <!-- Fin tab1 -->
+                            <div class="tab-pane" id="tab2">
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <!-- Inicio Retencion en la fuente p -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Retención en la fuente período:</label>
+                                        <input style="text-align:right" class="form-control" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}" [attr.disabled]="bloquear" formControlName="RetencionFuentePeriodo">
+                                    </div>
+                                    <!-- Fin Retencion en la fuente p -->
+
+                                    <div class="col-xs-2 col-md-1 col-lg-1">
+                                    </div>
+                                    <!-- Inicio Interes causado -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Interés causado:</label>
+                                        <input style="text-align:right" class="form-control" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}" [attr.disabled]="bloquear" formControlName="InteresCausado">
+                                    </div>
+                                    <!-- Fin Interes causado -->
+
+                                    <div class="col-xs-2 col-md-1 col-lg-1">
+                                    </div>
+
+                                    <!-- Inicio SaldoCanje  -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Saldo canje:</label>
+                                        <input style="text-align:right" class="form-control" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}" formControlName="Canje" [attr.disabled]="bloquear">
+                                    </div>
+                                    <!-- Fin SaldoCanje  -->
+
+                                </div>
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <br />
+
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                    </div>
+
+                                    <div class="col-xs-2 col-md-1 col-lg-1">
+                                    </div>
+
+                                    <!-- Inicio Interes por pagar  -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Interés por pagar:</label>
+                                        <input style="text-align:right" class="form-control" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}" formControlName="InteresxPagar" [attr.disabled]="bloquear">
+                                    </div>
+                                    <!-- Fin Interes por pagar  -->
+
+                                    <div class="col-xs-2 col-md-1 col-lg-1">
+                                    </div>
+
+                                    <!-- Inicio SaldoEfectivo -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Saldo efectivo:</label>
+                                        <input style="text-align:right" class="form-control" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}" formControlName="Efectivo" [attr.disabled]="bloquear">
+                                    </div>
+                                    <!-- Fin SaldoEfectivo -->
+                                </div>
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <br/>
+
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                    </div>
+
+                                    <div class="col-xs-2 col-md-1 col-lg-1">
+                                    </div>
+                                    <!-- Inicio Interes pagado  -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Interés pagado:</label>
+                                        <input style="text-align:right" class="form-control" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}" formControlName="InteresPagado" [attr.disabled]="bloquear">
+                                    </div>
+                                    <!-- Fin Interes pagado  -->
+
+                                    <div class="col-xs-2 col-md-1 col-lg-1">
+                                    </div>
+
+                                    <!-- Inicio SaldoTotal-->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Saldo total:</label>
+                                        <input style="text-align:right" type="text" class="form-control" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}" formControlName="SaldoTotal" [attr.disabled]="bloquear">
+                                    </div>
+                                    <!-- Fin SaldoTotal -->
+
+
+                                </div>
+                                <div class="col-xs-12 col-md-12 col-lg-12"><br/></div>
+                            </div>
+                            <!-- Fin tab2 -->
+                            <!-- Inicio tab3 -->
+                            <div class=" tab-pane " id="tab3">
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <!-- Inicio tipo documento -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Tipo documento: <span class="grande">*</span></label>
+                                        <select class="form-control" formControlName="IdTipoDocumento" id="select" [attr.disabled]="bloquearNombreBenf"> 
+                                             <option *ngFor="let TipoDocumento of resultTipoDocumento"
+                                             [value]="TipoDocumento.Clase">
+                                             {{TipoDocumento.Descripcion}}</option>
+                                        </select>
+                                    </div>
+                                    <!-- Fin tipo documento -->
+                                    <div class="col-xs-12 col-md-1 col-lg-1"> </div>
+
+                                    <!-- Inicio docuemento -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Documento: <span class="grande">*</span></label>
+                                        <input type="text" class="form-control" id="BeneficiarioSeguroDocumento" maxlength="12" minlength="5" formControlName="DocumentoBeneficiario" (blur)="BuscarBenefeciario()"  (keypress)="ValidacionPuntoComa($event)" (blur)="ValidarDocumento()">
+                                        <span class="help-block validationSpan" *ngIf="TerminoForm.controls['DocumentoBeneficiario'].errors?.['pattern']">
+                                            El documento solo acepta letras y números.
+                                        </span>
+                                    </div>
+                                    <!-- Fin documento -->
+                                    <div class="col-xs-12 col-md-1 col-lg-1"> </div>
+
+                                    <!-- Inicio primer apellido -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Primer apellido: <span *ngIf="this.TerminoForm.get('IdTipoDocumento')?.value != 3" class="grande">*</span></label>
+                                        <input type="text" formControlName="PrimerApellido" class="form-control pmayuscula" [attr.disabled]="bloquearNombreBenf" id="priApe" (blur)="validarValorCampo('priApe','PrimerApellido')" />
+                                        <span class="help-block validationSpan" *ngIf="TerminoForm.controls['PrimerApellido'].errors?.['pattern']">
+                                      El primer apellido solo acepta letras.
+                                      </span>
+                                    </div>
+                                    <!-- Fin primer apellido -->
+                                </div>
+
+
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <br/>
+                                    <!-- Inicio segundo  apellido -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Segundo apellido:</label>
+                                        <input type="text" formControlName="SegundoApellido" class="form-control pmayuscula" [attr.disabled]="bloquearNombreBenf" id="segApe" (blur)="validarValorCampo('segApe','SegundoApellido')">
+                                        <span class="help-block validationSpan" *ngIf="TerminoForm.controls['SegundoApellido'].errors?.['pattern']">
+                                      El segundo apellido solo acepta letras.
+                                      </span>
+                                    </div>
+                                    <!-- Fin segundo apellido -->
+                                    <div class="col-xs-12 col-md-1 col-lg-1"> </div>
+
+                                    <!-- Inicio primer nombre -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Primer nombre: <span class="grande">*</span></label>
+                                        <input type="text" formControlName="PrimerNombre" class="form-control pmayuscula" [attr.disabled]="bloquearNombreBenf" id="priNom" (blur)="validarValorCampo('priNom','PrimerNombre')">
+                                        <span class="help-block validationSpan" *ngIf="TerminoForm.controls['PrimerNombre'].errors?.['pattern']">
+                                      El primer nombre solo acepta letras.
+                                      </span>
+                                    </div>
+                                    <!-- Fin primer nombre -->
+                                    <div class="col-xs-12 col-md-1 col-lg-1"> </div>
+
+                                    <!-- Inicio segundo nombre  -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Segundo nombre:</label>
+                                        <input type="text" formControlName="SegundoNombre" class="form-control pmayuscula" [attr.disabled]="bloquearNombreBenf" id="segNom" (blur)="validarValorCampo('segNom','SegundoNombre')">
+                                        <span class="help-block validationSpan" *ngIf="TerminoForm.controls['SegundoNombre'].errors?.['pattern']">
+                                      El segundo nombre solo acepta letras.
+                                      </span>
+
+                                    </div>
+                                    <!-- Fin segundo nombre  -->
+
+                                </div>
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <br/>
+                                    <!-- Inicio parentesco   -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Parentesco:<span class="grande">*</span></label>
+                                        <select class="form-control" formControlName="DatosParentesco" >
+                                            <option *ngFor="let Parentesco of resultParentesco" [ngValue]="Parentesco.Clase">{{Parentesco.Descripcion}}</option>
+                                        </select>
+                                    </div>
+                                    <!-- Fin parantesco -->
+
+                                    <div class="col-xs-12 col-md-1 col-lg-1"> </div>
+
+                                    <!-- Inicio porcentaje  -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Porcentaje:<span class="grande">*</span></label>
+                                        <input type="text" class="form-control" maxlength="3" formControlName="Porcentaje"  minlength="0" (blur)="ValidarNumero()" (keypress)="ValidacionPuntoComa($event)">
+                                        <span class="help-block validationSpan" *ngIf="TerminoForm.controls['Porcentaje'].errors?.['pattern']">
+                                        El porcentaje solo acepta números.
+                                        </span>
+                                    </div>
+                                    <!-- Fin porcentaje  -->
+
+                                    <div class="col-xs-12 col-md-12 col-lg-12"> </div>
+
+                                    <div class="col-xs-12 col-md-12 col-lg-12">
+
+                                        <div class="row text-right">
+                                            <br />
+                                            <input type="button" class="btn Gt-btn-verde" value="Agregar" [disabled]="!bloquearDocumentoBenf" (click)="AgregarBeneficiario()" />&nbsp;&nbsp;
+
+                                            <input type="button"  class="btn Gt-btn-morado" value="Limpiar" [disabled]="!bloquearDocumentoBenf" (click)="LimpiarBeneficiarior()" /> &nbsp;
+
+                                            <input type="button" *ngIf="!btnActualizarBeneficiario" class="btn Gt-btn-verde" value="Actualizar" (click)="ActualizarBeneficiaroios()" [disabled]="!btnActualizarBeneficiarios" />
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <br />                                   
+                                <div class="table-responsive scrollTabla panel panel-default" *ngIf="dataObjetBeneficiarios.length > 0">
+                                    <table id="TablaBeneficiarios " class="table table-hover">
+                                        <thead>
+                                            <tr>  
+                                                <th class="Column_tipoDocumento">
+                                                    <strong>Tipo documento</strong> </th>
+                                                <th class="Column_Documento">
+                                                    <strong>Documento</strong></th>
+                                                <th class="column_NombreB">
+                                                    <strong>Nombre</strong></th>
+                                                <th class="Column_FechaMatricula">
+                                                    <strong>Fecha Matricula</strong></th>
+                                                <th class="Column_Parentesco">
+                                                    <strong>Parentesco</strong></th>
+                                                <th class="Column_Porcentaje">
+                                                    <strong>Porcentaje</strong> </th>
+                                                <th class="Column_Opciones">
+                                                    <strong>Opciones</strong></th>
+                                
+                                            </tr>
+                                        </thead>
+                                        <tbody *ngFor="let Beneficiario of dataObjetBeneficiarios ; let i=index">
+                                            <tr class="FilTitul{{i}}" (click)="CambiarColor(i,2)">
+                                                <td class="column_tipoDocumento column_tipoDocumento : Beneficiario.TipoDocumento.length = 25">
+                                                    {{Beneficiario.DescripcionTipoDocumento}}</td>
+                                                <td class="column_tipoDocumento column_tipoDocumento : Beneficiario.TipoDocumento.length = 25">
+                                                    {{Beneficiario.NumeroDocumento}}</td>
+                                                <td class="column_NombreB column_NombreB : Beneficiario.TipoDocumento.length = 25">
+                                                    {{Beneficiario.PrimerApellido}} {{Beneficiario.SegundoApellido}} {{Beneficiario.PrimerNombre}} {{Beneficiario.SegundoNombre}}</td>
+                                                <td class="column_tipoDocumento column_tipoDocumento : Beneficiario.TipoDocumento.length = 25">
+                                                    {{Beneficiario.FechaMatricula | date : "yyyy/MM/dd HH:mm:ss" }}</td>
+                                                <td class="column_tipoDocumento column_tipoDocumento : Beneficiario.TipoDocumento.length = 25" *ngIf="Beneficiario.DatosParentesco !== null && Beneficiario.DatosParentesco !== undefined">
+                                                    {{Beneficiario.DatosParentesco.Descripcion == null ? Beneficiario.DatosParentesco : Beneficiario.DatosParentesco.Descripcion }}
+                                                </td>
+                                                <td *ngIf="Beneficiario.DatosParentesco === null || Beneficiario.DatosParentesco === undefined">
+                                                    N/A
+                                                </td>
+                                                <td>{{Beneficiario.Porcentaje}}</td>
+                                                <td class="column_tipoDocumento column_tipoDocumento : Beneficiario.TipoDocumento.length = 25">
+                                                    <button class="btn Gt-btn-verde btn-icon legitRipple" (click)="IndiceAEditarBenf(i, Beneficiario)" [disabled]="btnOpcionActualizarBeneficiario">
+                                                    <i class="icon-pencil"></i></button> &nbsp;
+                                                    <button class="btn Gt-btn-morado btn-icon legitRipple" (click)="IndiceAEliminarBenf(i)" [disabled]="btnOpcionActualizarBeneficiario">
+                                                    <i class="icon-bin2"></i></button>
+                                                </td> 
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                </div>
+
+                            </div>
+                            <!-- Fin tab3 -->
+                            <!-- Inicio tab4-->
+                            <div class="tab-pane" id="tab4">
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <!-- Inicio Autorizado -->
+                                    <div class="col-xs-4 col-md-3 col-lg-2">
+                                        <label class="textNegrilla">Autorizado:</label>
+                                        <input type="text" class="form-control" id="SelectTitular" tooltip="Documento" formControlName="DocumentoTitular" placement="top" show-delay="500" (blur)="BuscarTitularDocumento()" (keypress)="LimpiarCamposTab('DocumentoTitular')">
+                                    </div>
+                                    <div class="col-xs-6 col-md-5 col-lg-3">
+                                        <label class="textNegrilla" style="visibility:hidden">Autorizado</label>
+                                        <input type="text" class="form-control" tooltip="Nombre" placement="top" show-delay="500" formControlName="NombreTitular" (keypress)="LimpiarCamposTab('NombreTitular')">
+                                    </div>
+                                    <div class="col-xs-1 col-md-1 col-lg-1">
+                                        <label class="textNegrilla" style="visibility:hidden">Autorizado</label>
+                                        <button type="button" class="btn Gt-btn-verde btn-icon legitRipple" [disabled]="btnOpcionesActualizarTitulares"  (click)="BuscarTitularNombre()"><i
+                                          class="icon-search4"></i></button>
+                                    </div>
+                                    <!-- Fin Autorizado -->
+
+                                    <!-- Inicio Tipo -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Tipo:</label>
+                                        <select class="form-control" name="select"   (change)="Autorizado()" formControlName="Tipo">
+                                            <option selected="selected" value="0">-- Seleccione --</option>
+                                            <option value="A">Autorizado</option>
+                                            <option [attr.disabled]="bloquear" value="T">Titular</option>
+                                        </select>
+                                    </div>
+                                    <!-- Fin Tipo -->
+                                    <!-- Inicio Tipo firma-->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <label class="textNegrilla">Tipo firma:</label>
+                                        <select class="form-control" name="select" formControlName="TipoFirma"   (change)="FirmaSeleccionada()">
+                                            <option *ngFor="let tipoFirma of resultTipoFirma" [value]="tipoFirma.TipoFirma">
+                                                {{tipoFirma.TipoFirma   }}</option>
+                                        </select>
+                                        <br/>
+                                    </div>
+                                    <!-- Fin Tipo firma -->
+
+                                    <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="!DescriTipoFirma">
+                                        <div class="col-xs-12 col-md-12 col-lg-12">
+                                            <label class="textNegrilla">Descripción</label>
+                                            <input class="form-control" rows="3" cols="50" formControlName="Observacion">
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <!-- Fin Titulares  -->
+                                <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                                    <br />
+                                    <input type="button" id="btnAgregar" class="btn Gt-btn-verde" value="Agregar" (click)="AgregarTitulares()" [attr.disabled]="bloquearDatosTitulares" /> &nbsp; &nbsp;
+                                    <input type="button" class="btn Gt-btn-morado" value="Limpiar" (click)="clearTitulares()" [attr.disabled]="bloquearDatosTitulares" /> &nbsp;
+                                    <input type="button" class="btn Gt-btn-verde" *ngIf="!btnActualizarTitulares" value="Actualizar" [attr.disabled]="bloquearBtnActualizarTitular"  (click)="ActualizarTermino()" />
+                                </div>
+
+                                <!-- Inicio Lista Titulares-->
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <br />
+                                     <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="dataObjetTitulares.length == 0">
+                                        <br>
+                                        <div class="alert alert-secondary" role="alert">
+                                            No hay registros
+                                        </div>
+                                    </div> 
+                                    <div class="table-responsive scrollTabla panel panel-default" *ngIf="dataObjetTitulares.length > 0">
+                                        <table id="TablaTitulares " class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-bold">Documento</th>
+                                                    <th class="text-bold">Nombre</th>
+                                                    <th class="text-bold">Fecha matrícula</th>
+                                                    <th class="text-bold">Tipo</th>
+                                                    <th class="text-bold">Tipo firma</th>
+                                                    <th class="text-bold">Opciones</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody *ngFor="let titulares of dataObjetTitulares ; let i=index">
+                                                <tr class="FilTitul{{i}}" (click)="CambiarColor(i,2)">
+                                                    <td>
+                                                        {{titulares.Documento}}
+                                                    </td>
+                                                    <td>
+                                                        {{titulares.Nombre}}
+                                                    </td>
+                                                    <td>
+                                                        {{titulares.FechaMatricula | date : "yyyy/MM/dd HH:mm:ss"}}
+                                                    </td>
+                                                    <td>
+                                                        {{titulares.TipoTitular}}
+                                                    </td>
+                                                    <td>
+                                                        {{titulares.TipoFirma}}
+                                                    </td>
+                                                    <td><button class="btn Gt-btn-verde btn-icon legitRipple" (click)="IndiceAEditar(i, titulares)" [disabled]="btnOpcionesActualizarTitulares"  >
+                                                            <i class="icon-pencil"></i></button> &nbsp; 
+                                                        <button class="btn Gt-btn-morado btn-icon legitRipple" (click)="IndiceAEliminar(i)" [disabled]="btnOpcionesActualizarTitulares" >
+                                                            <i class="icon-bin2 "></i></button></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <!-- Fin Lista Titulares-->
+
+
+                            </div>
+                            <!-- Fin tab4 -->
+                            <!-- Inicio tab5 -->
+                            <div class="tab-pane" id="tab5">
+                                <!-- Inicio Lista renovaciones-->
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <br />
+                                    <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="this.dataObjetRenovacion == null">
+                                        <br>
+                                        <div class="alert alert-secondary" role="alert">
+                                            No hay registros
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive scrollTabla panel panel-default" *ngIf="this.dataObjetRenovacion != null">
+                                        <table id="TablaRenovaciones " class="table table-hover">
+                                            <thead>
+                                                <tr class="encabezadoTablaTermino">
+                                                    <th class="text-bold">Fecha</th>
+                                                    <th class="text-bold">Tasa anterior</th>
+                                                    <th class="text-bold">Tasa actual</th>
+                                                    <th class="text-bold">Puntos adicionales</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody *ngFor="let renovaciones of dataObjetRenovacion ; let i=index">
+                                                <tr class="FilRenov{{i}}" (click)="CambiarColor(i,3)">
+                                                    <td>
+                                                        {{renovaciones.FechaRenovacion | date : "yyyy/MM/dd HH:mm:ss" }}
+                                                    </td>
+                                                    <td>
+                                                        {{renovaciones.TasaAnterior | currency:'':'' : '1.4-4'}}%
+                                                    </td>
+                                                    <td>
+                                                        {{renovaciones.TasaActual | currency:'':'' : '1.4-4'}}%
+                                                    </td>
+                                                    <td>
+                                                        {{renovaciones.PuntoAd | currency:'':'' : '1.0'}}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <!-- Fin Lista Titulares-->
+                            </div>
+                            <!-- Fin tab5-->
+                            <!-- Inicio tab6-->
+                            <div class="tab-pane" id="tab6">
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <!-- Inicio persona -->
+                                    <div class="col-xs-4 col-md-3 col-lg-2">
+                                        <label class="textNegrilla">Persona:</label>
+                                        <input type="text"  class="form-control" formControlName="CesionTituloDocumento" id="SelectCesionTitulo" tooltip="Documento" (blur)="BuscarPersonaCesionTituloBlur(1)" placement="top" show-delay="500" (keypress)="LimpiarCamposTab('CesionTituloNombre')" >
+                                        <!-- <span class="help-block validationSpan" *ngIf="TerminoForm.controls['CesionTituloDocumento'].errors?.['pattern']">
+                                            El documento solo acepta números.
+                                        </span> -->
+                                    </div>
+                                    <div class="col-xs-6 col-md-5 col-lg-3">
+                                        <label class="textNegrilla" style="visibility:hidden">persona</label>
+                                        <input type="text" class="form-control" formControlName="CesionTituloNombre" tooltip="Nombre" placement="top" show-delay="500" (blur)="BuscarPersonaCesionTituloBlur(2)" placement="top" show-delay="500" (keypress)="LimpiarCamposTab('CesionTituloDocumento')"  >
+                                    </div>
+                                    <div class="col-xs-1 col-md-1 col-lg-1">
+                                        <label class="textNegrilla" style="visibility:hidden">persona</label>
+                                        <button type="button" (click)="BuscarPersonaCesionTitulo()" class="btn Gt-btn-verde btn-icon legitRipple"  [disabled]="!bloquearCesionTitulo"><i class="icon-search4"></i></button>
+                                    </div>
+                                    <!-- Fin persona -->
+
+                                    <div class="col-xs-12 col-md-1 col-lg-1">
+                                    </div>
+
+
+                                </div>
+                                <!-- Fin Titulares  -->
+                                <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                                    <br />
+                                    <input type="button" id="btnAgregar" class="btn Gt-btn-verde" value="Agregar" (click)="AgregarCesionTitulo()" [disabled]="!personaCesionTityloBool" /> &nbsp; &nbsp;
+
+                                    <input type="button" class="btn Gt-btn-morado" value="Limpiar" [disabled]="!personaCesionTityloBool" (click)="LimpiarCesion()"/> &nbsp;
+
+                                    <input type="button" *ngIf="bloquearCesionTitulo" class="btn Gt-btn-verde" value="Actualizar" [disabled]="!btnActualizarCesionTitulo" (click)="ActualizarCesionTitulo()"/>
+
+                                </div>
+
+                                <!-- Inicio Lista Titulares-->
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <br />
+                                    <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="dataObjetCesionTitulo.length == 0 ">
+                                        <br>
+                                        <div class="alert alert-secondary" role="alert">
+                                            No hay registros
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive scrollTabla panel panel-default" *ngIf="dataObjetCesionTitulo.length > 0">
+                                        <table id="TablaSesionTitulo " class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-bold">Documento</th>
+                                                    <th class="text-bold">Nombre</th>
+                                                    <th class="text-bold">Fecha matrícula</th>
+                                                    <th class="text-bold">Opciones</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody *ngFor="let sesiontitulo of dataObjetCesionTitulo ; let i=index">
+                                                <tr class="FilSesi{{i}}" (click)="CambiarColor(i,4)">
+                                                    <td>
+                                                        {{sesiontitulo.NumeroDocumento}}
+                                                    </td>
+                                                    <td>
+                                                        {{sesiontitulo.PrimerApellido}} {{sesiontitulo.SegundoApellido}} {{sesiontitulo.PrimerNombre}} {{sesiontitulo.SegundoNombre}}
+                                                    </td>
+                                                    <td>
+                                                        {{sesiontitulo.FechaMatricula | date : "yyyy/MM/dd HH:mm:ss"}}
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn Gt-btn-morado btn-icon legitRipple"  (click)="IndiceAEliminarCesionTitulo(i)" [disabled]="!disableCesionTitulo">
+                                                        <i class="icon-bin2"></i></button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <!-- Fin Lista Titulares-->
+
+
+                            </div>
+                            <!-- Fin tab6 -->
+                            <!-- Inicio tab7-->
+                            <div class="tab-pane " id="tab7">
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+
+                                    <!-- reprocidad -->
+                                    <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="this.dataObjetReciprocidad == null">
+                                        <br>
+                                        <div class="alert alert-secondary" role="alert">
+                                            No hay registros
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="this.dataObjetReciprocidad != null">
+                                        <div class="table-responsive scrollTabla panel panel-default">
+                                            <table id="TablaDatosReprocidad" class="table table-hover">
+                                                <thead>
+                                                    <tr class="encabezadoTablaTermino">
+                                                        <th class="Column_nroCuenta">
+                                                            <strong>Cuenta</strong> 
+                                                        </th>
+                                                        <th class="Column_Radicado">
+                                                            <strong>Radicado</strong>
+                                                        </th>
+                                                        <th class="Column_NumeroDocumento">
+                                                            <strong>Documento</strong>
+                                                        </th>
+                                                        <th class="Column_Nombre">
+                                                            <strong>Nombre</strong>
+                                                        </th>                                                        
+                                                        <th class="Column_MontoCredito">
+                                                            <strong>Monto crédito</strong>
+                                                        </th>
+                                                        <th class="Column_SaldoCredito">
+                                                            <strong>Saldo crédito</strong>
+                                                        </th>
+                                                        <th class="Column_FechaMatricula">
+                                                            <strong>Fecha matricula</strong>
+                                                        </th>
+                                                        <th class="Column_Accion">
+                                                            <strong>Opciones </strong>
+                                                        </th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody *ngFor="let reciprocidad of dataObjetReciprocidad ; let i=index">
+                                                    <tr class="FilRecip{{i}}" (click)="CambiarColor(i,5)">
+                                                        <td class="Column_nroCuenta columnCuentaR_termino : reciprocidad.NroRadicado.length = 25">
+                                                            {{reciprocidad.Cuenta}}
+                                                        </td>
+                                                        <td class="Column_Radicado columnRadicadoR_termino : reciprocidad.NroRadicado.length = 25">
+                                                            {{reciprocidad.NroRadicado}}
+                                                        </td>
+                                                        <td class="Column_NumeroDocumento columnDocumentoR_termino : reciprocidad.NroRadicado.length = 25">
+                                                            {{reciprocidad.NumeroDocumento}}
+                                                        </td>
+                                                        <td class="Column_Nombre columnNombreR_termino : reciprocidad.NroRadicado.length = 25">
+                                                            {{reciprocidad.PrimerApellido}} {{reciprocidad.SegundoApellido}} {{reciprocidad.PrimerNombre}} {{reciprocidad.SegundoNombre}}
+                                                        </td>                                                       
+                                                        <td class="Column_MontoCredito columnMontoR_termino : reciprocidad.NroRadicado.length = 25">
+                                                            ${{reciprocidad.Monto | currency:'':'' : '1.0'}}
+                                                        </td>
+                                                        <td class="Column_SaldoCredito columnSaldoR_termino : reciprocidad.NroRadicado.length = 25">
+                                                            ${{reciprocidad.Saldo | currency:'':'' : '1.0'}}
+                                                        </td>
+                                                        <td class="Column_FechaMatricula columnFechaR_termino : reciprocidad.NroRadicado.length = 25">
+                                                            {{reciprocidad.FechaMatricula | date : "yyyy/MM/dd HH:mm:ss"}}
+                                                        </td>
+                                                        <td class="Column_SaldoCredito columnSaldoR_termino : reciprocidad.NroRadicado.length = 25">
+                                                            <button class="btn Gt-btn-morado btn-icon legitRipple" (click)="selectBorrarReciprocidad(reciprocidad,i)"  [disabled]="!btnDeleteReciprocidad">
+                                                                <i class="icon-bin2"></i>
+                                                            </button> &nbsp;
+                                                            <button class="btn Gt-btn-verde btn-icon legitRipple ng-star-inserted" (click)="selectBajarAHistorialReciprocidad(reciprocidad,i)" [disabled]="!btnDeleteReciprocidad" >
+                                                                <i class="icon-arrow-down5"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                        <br>
+                                        <div class="row"> 
+                                            <div class="col-xs-12 col-md-12 col-lg-12 text-right"> 
+                                                <input type="button" *ngIf="btnDeleteReciprocidad" class="btn Gt-btn-verde" value="Actualizar" [disabled]="!btnActualizarBorrarReciprocidad" (click)="btnActualizarReciprocidad()"/>
+                                            </div> 
+                                        </div>
+                                    </div>
+                                    <!-- Fin reciprocidad -->
+
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <!-- Inicio espacio -->
+                                        <div class="form-group">
+                                        </div>
+                                        <!-- Fin espacio -->
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <section class="container">
+                                        <div class="ac-sg">
+                                            <input class="ac-input-sg" id="ac-sg-1" name="ac-sg-1" type="checkbox" />
+                                            <label class="ac-label-sg" for="ac-sg-1">Historial</label>
+                                
+                                            <article class="ac-text-sg">
+
+                                                <!-- reprocidad -->
+                                                <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="this.dataObjetReciprocidadR.length == 0">
+                                                    <br>
+                                                    <div class="alert alert-secondary" role="alert">
+                                                        No hay registros
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="this.dataObjetReciprocidadR.length > 0">
+                                                    <div class="table-responsive scrollTabla panel panel-default">
+                                                        <table id="TablaDatosReprocidad" class="table table-hover">
+                                                            <thead>
+                                                                <tr class="encabezadoTablaTermino">
+                                                                    <th class="Column_nroCuenta">
+                                                                        <strong>Cuenta</strong>
+                                                                    </th>
+                                                                    <th class="Column_Radicado">
+                                                                        <strong>Radicado</strong>
+                                                                    </th>
+                                                                    <th class="Column_NumeroDocumento">
+                                                                        <strong>Documento</strong>
+                                                                    </th>
+                                                                    <th class="Column_Nombre">
+                                                                        <strong>Nombre</strong>
+                                                                    </th>
+                                                                    <th class="Column_MontoCredito">
+                                                                        <strong>Monto crédito</strong>
+                                                                    </th>
+                                                                    <th class="Column_SaldoCredito">
+                                                                        <strong>Saldo crédito</strong>
+                                                                    </th>
+                                                                    <th class="Column_FechaMatricula">
+                                                                        <strong>Fecha matricula</strong>
+                                                                    </th>
+                                                                    <th class="Column_FechaRetiro">
+                                                                        <strong>Fecha retiro</strong>
+                                                                    </th>
+                                                                    <th class="Column_FechaRetiro"  >
+                                                                        <strong>Opciones </strong>
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody *ngFor="let reciprocidad of dataObjetReciprocidadR ; let i=index">
+                                                                <tr class="FilRecipR{{i}}" (click)="CambiarColor(i,7)">
+                                                                    <td class="Column_nroCuenta columnCuentaR_termino : reciprocidad.NroRadicado.length = 25">
+                                                                        {{reciprocidad.Cuenta}}
+                                                                    </td>
+                                                                    <td class="Column_Radicado columnRadicadoR_termino : reciprocidad.NroRadicado.length = 25">
+                                                                        {{reciprocidad.NroRadicado}}
+                                                                    </td>
+                                                                    <td class="Column_NumeroDocumento columnDocumentoR_termino : reciprocidad.NroRadicado.length = 25">
+                                                                        {{reciprocidad.NumeroDocumento}}
+                                                                    </td>
+                                                                    <td class="Column_Nombre columnNombreR_termino : reciprocidad.NroRadicado.length = 25">
+                                                                        {{reciprocidad.PrimerApellido}} {{reciprocidad.SegundoApellido}} {{reciprocidad.PrimerNombre}}
+                                                                        {{reciprocidad.SegundoNombre}}
+                                                                    </td>
+                                                                    <td class="Column_MontoCredito columnMontoR_termino : reciprocidad.NroRadicado.length = 25">
+                                                                        ${{reciprocidad.Monto | currency:'':'' : '1.0'}}
+                                                                    </td>
+                                                                    <td class="Column_SaldoCredito columnSaldoR_termino : reciprocidad.NroRadicado.length = 25">
+                                                                        ${{reciprocidad.Saldo | currency:'':'' : '1.0'}}
+                                                                    </td>
+                                                                    <td class="Column_FechaMatricula columnFechaR_termino : reciprocidad.NroRadicado.length = 25">
+                                                                        {{reciprocidad.FechaMatricula | date : "yyyy/MM/dd HH:mm:ss"}}
+                                                                    </td>
+                                                                    <td class="Column_FechaRetiro columnFechaR_termino : reciprocidad.NroRadicado.length = 25">
+                                                                        {{reciprocidad.FechaRetiro  == null ? "" : reciprocidad.FechaRetiro | date : "yyyy/MM/dd HH:mm:ss"}}
+                                                                    </td>
+                                                                    <td class="Column_SaldoCredito columnSaldoR_termino : reciprocidad.NroRadicado.length = 25">
+                                                                        <button class="btn Gt-btn-verde btn-icon legitRipple ng-star-inserted" (click)="selectSubirDeHistorialReciprocidad(reciprocidad,i)" [disabled]="!btnDeleteReciprocidad"  *ngIf="reciprocidad.FechaRetiro == null" >
+                                                                            <i class="icon-arrow-up5"></i>
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <!-- Fin reciprocidad -->
+                                            </article>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                            <!-- Fin tab7 -->
+                            <!-- Inicio tab8-->
+                            <div class="tab-pane " id="tab8">
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <!-- Fechas -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <!-- Inicio Apertura -->
+                                        <div class="form-group">
+                                            <label class="textNegrilla">Fecha apertura:</label>
+                                            <input style="text-align:left" type="text" class="form-control" formControlName="FechaApertura" [attr.disabled]="bloquear">
+                                        </div>
+                                        <!-- Fin Apertura -->
+                                        <!-- Inicio Vencimiento   -->
+                                        <div class="form-group">
+                                            <label class="textNegrilla">Fecha vencimiento:</label>
+                                            <input style="text-align:left" type="text" class="form-control" formControlName="FechaVencimiento" [attr.disabled]="bloquear">
+                                        </div>
+                                        <!-- Fin Vencimiento  -->
+                                        <!-- Inicio ultima liq intereses -->
+                                        <div class="form-group">
+                                            <label class="textNegrilla">Fecha última liquidación intereses:</label>
+                                            <input style="text-align:left" type="text" class="form-control" formControlName="FechaUltliqIntereses" [attr.disabled]="bloquear">
+                                        </div>
+                                        <!-- Fin ultima liq intereses  -->
+                                        <!-- Inicio  proxima liq intereses -->
+                                        <div class="form-group">
+                                            <label class="textNegrilla">Fecha próxima liquidación intereses:</label>
+                                            <input style="text-align:left" type="text" class="form-control" formControlName="FechaProxliqIntereses" [attr.disabled]="bloquear">
+                                        </div>
+                                        <!-- Fin proxima liq intereses  -->
+                                        <!-- Inicio  ultima transaccion -->
+                                        <div class="form-group">
+                                            <label class="textNegrilla">Fecha última transacción:</label>
+                                            <input style="text-align:left" type="text" class="form-control" formControlName="FechaUltimaTrans" [attr.disabled]="bloquear">
+                                        </div>
+                                        <!-- Fin ultima transaccion  -->
+                                        <!-- Inicio  Fecha cancelación -->
+                                        <div class="form-group">
+                                            <label class="textNegrilla">Fecha cancelación:</label>
+                                            <input style="text-align:left" type="text" class="form-control" formControlName="FechaCancelacion" [attr.disabled]="bloquear">
+                                        </div>
+                                        <!-- Fin Fecha cancelación  -->
+                                    </div>
+
+                                    <!-- Historial -->
+                                    <div class="col-xs-12 col-md-9 col-lg-9" *ngIf="dataHistorial.length <= 0">
+                                        <br>
+                                        <div class="alert alert-secondary" role="alert">
+                                            No hay registros
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xs-12 col-md-9 col-lg-9" *ngIf="dataHistorial.length > 0">
+                                        <div class="table-responsive scrollTabla panel panel-default">
+                                            <table id="TablaDatosHistorial" class="table table-hover">
+                                                <thead>
+                                                    <tr class="encabezadoTablaTermino">
+                                                        <th class="column_Fecha">
+                                                            <strong>Fecha</strong>
+                                                        </th>
+                                                        <th class="column_Oficina">
+                                                            <strong>Oficina</strong>
+                                                        </th>
+                                                        <th class="column_UsuarioResponsable">
+                                                            <strong>Usuario responsable</strong>
+                                                        </th>
+                                                        <th class="column_operacion OperacionFija">
+                                                            <strong>Operación</strong>
+                                                        </th>
+                                                        <th class="column_descripcion">
+                                                            <strong>Descripción</strong>
+                                                        </th>
+                                                        <th class="column_detalles">
+                                                            <strong>Detalles</strong>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody *ngFor="let historial of dataHistorial; let i = index">
+                                                    <tr class="filApo_{{i}}" (click)="CambiarColor(i,6)">
+                                                        <td class="column_Fecha columnProductoX1_termino : historial.NombreCompleto.length = 25">{{historial.FechaHistorial | date:'yyyy/MM/dd HH:mm:ss'}}</td>
+                                                        <td class="column_Oficina columnProductoX0_termino : historial.NombreCompleto.length = 15">{{historial.NombreOficina}}</td>
+                                                        <td class="column_UsuarioResponsable columnProductoX_termino : historial.NombreCompleto.length = 40">{{historial.NombreCompleto}}</td>
+                                                        <td class="column_operacion OperacionFija columnProductoX2_termino : historial.NombreCompleto.length = 40">{{historial.Descripcion}}</td>
+                                                        <td class="column_descripcion columnProductoX3_termino : historial.NombreCompleto.length = 40">{{historial.TiposObservaciones}}</td>
+                                                        <td class="column_detalles columnDetalles_termino : historial.NombreCompleto.length = 40">{{historial.Detalles}}</td>
+                                                    </tr>
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <!-- Fin Historial -->
+
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <!-- Inicio espacio -->
+                                        <div class="form-group">
+                                        </div>
+                                        <!-- Fin espacio -->
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- Fin tab8 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-3 col-md-12 col-lg-3 text-right">
+            <input type="button" style="visibility:hidden" data-toggle="tab" href="#tab1" #tab1/>
+            <input type="button" style="visibility:hidden" data-toggle="tab" href="#tab2" #tab2/>
+            <input type="button" style="visibility:hidden" data-toggle="tab" href="#tab3" #tab3/>
+            <input type="button" style="visibility:hidden" data-toggle="tab" href="#tab4" #tab4/>
+            <input type="button" style="visibility:hidden" data-toggle="tab" href="#tab5" #tab5/>
+            <input type="button" style="visibility:hidden" data-toggle="tab" href="#tab6" #tab6/>
+            <input type="button" style="visibility:hidden" data-toggle="tab" href="#tab7" #tab7/>
+        </div>
+
+    </form>
+
+    <ngx-loading [show]="loading" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}"> </ngx-loading>
+
+</form>
+<!-- <app-root (permisosEmit)="getPermisos($event)">
+</app-root> -->
+<!--/ Modal BuscarAsociados -->
+<div id="ModalBuscarAsociados" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Asociados</h6>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive scrollTabla">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th><strong>Cuenta</strong></th>
+                                <th><strong>Nombre asociado</strong></th>
+                                <th><strong>Estado cuenta</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let resultAsociados of dataAsociados">
+                            <tr (click)="BuscarDatosCuenta(resultAsociados.intOficina,resultAsociados.intProducto,resultAsociados.LngConsecutivo, resultAsociados.intDigito)">
+                                <td data-dismiss="modal" class="columnCuenta_termino">
+                                    {{resultAsociados.Cuenta}}
+                                </td>
+                                <td data-dismiss="modal" class="columnNombre_termino">
+                                    {{resultAsociados.Nombre}}
+                                </td>
+                                <td data-dismiss="modal" class="columnEstado_termino">
+                                    {{resultAsociados.strDescripcion}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ Fin Modal BuscarAsociados -->
+<!--/ Modal Asociados -->
+<div id="ModalAsociados" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Asociados</h6>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive scrollTabla">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <strong>Documento</strong>
+                                </th>
+                                <th>
+                                    <strong>Nombre asociado</strong>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let asociado of resultAsociados">
+                            <tr (click)="BuscarAsociadoModal(asociado.NumeroDocumento)">
+                                <td data-dismiss="modal">
+                                    {{asociado.NumeroDocumento}}
+                                </td>
+                                <td data-dismiss="modal">
+                                    {{asociado.PrimerApellido + ' ' + asociado.SegundoApellido + ' ' + asociado.PrimerNombre + ' ' + asociado.SegundoNombre}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ Fin Modal Asociado -->
+<!--/ Inicio Modal Productos -->
+<div id="ModalProductoTermino" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Término</h6>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive scrollTabla">
+                    <table id="TablaProductos" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th><strong>Producto</strong> </th>
+                                <th><strong>Descripción Producto</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let resultTermino of resultProducto">
+                            <tr (click)="MapearDatosProductos(resultTermino)">
+                                <td data-dismiss="modal">
+                                    {{resultTermino.IdProducto}}
+                                </td>
+                                <td data-dismiss="modal">
+                                    {{resultTermino.DescripcionProducto}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ Fin Modal Productos -->
+<!--/ Inicio Modal Productos -->
+<div id="ModalCalcularAsesoria" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="get" [formGroup]="InteresForm">
+                <div class="modal-header bg-morado">
+                <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+                <h6 class="modal-title">Calcular intereses</h6>
+                </div>
+                <div class="col-xs-12 col-md-12 col-lg-12 panel panel-default">
+                <br>
+            
+                <div class="col-xs-12 col-md-6 col-lg-6" style=" border-bottom: 1px solid rgb(160, 0, 87);">
+                    <label for=""><strong>Intereses del periodo</strong></label>
+                </div>
+                <div class="col-xs-12 col-md-6 col-lg-6" style=" border-bottom: 1px solid rgb(160, 0, 87);">
+                    <label for=""><strong>Intereses totales</strong></label>
+                </div>
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <br />
+                </div>
+            
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <!-- Inicio interes bruto -->
+                    <div class="col-xs-12 col-md-12 col-lg-2">
+                        <label class="textNegrilla">Interés bruto:</label>
+            
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-3">
+                        <input style="text-align:right" type="text" class="form-control" currencyMask formControlName="InteresBruto"
+                            [options]="{prefix:'$ ',thousands:'.'}" maxlength="10" [attr.disabled]="bloquear">
+                    </div>
+                    <!-- Fin interes bruto -->
+                    <div class="col-xs-12 col-md-12 col-lg-1"> </div>
+            
+                    <!-- Inicio total bruto -->
+                    <div class="col-xs-12 col-md-12 col-lg-2">
+                        <label class="textNegrilla">Total interés bruto:</label>
+            
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-3">
+                        <input style="text-align:right" type="text" class="form-control" currencyMask formControlName="TotalInteresBruto"
+                            [options]="{prefix:'$ ',thousands:'.'}" maxlength="10" [attr.disabled]="bloquear">
+                    </div>
+                    <!-- Fin total bruto -->
+                </div>
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <br />
+                </div>
+            
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <!-- Inicio Retencion -->
+                    <div class="col-xs-12 col-md-12 col-lg-2">
+                        <label class="textNegrilla">Retención en la fuente:</label>
+            
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-3">
+                        <input style="text-align:right" type="text" class="form-control" currencyMask formControlName="Retencion"
+                            [options]="{prefix:'$ ',thousands:'.'}" maxlength="10" [attr.disabled]="bloquear">
+                    </div>
+                    <!-- Fin retencion -->
+                    <div class="col-xs-12 col-md-12 col-lg-1"> </div>
+            
+                    <!-- Inicio total retencion -->
+                    <div class="col-xs-12 col-md-12 col-lg-2">
+                        <label class="textNegrilla">Total retención en la fuente:</label>
+            
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-3">
+                        <input style="text-align:right" type="text" class="form-control" currencyMask  formControlName="TotalRetencion"
+                            [options]="{prefix:'$ ',thousands:'.'}" maxlength="10" [attr.disabled]="bloquear">
+                    </div>
+                    <!-- Fin total retencion -->
+            
+                </div>
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <br />
+                </div>
+            
+                <div class="col-xs-12 col-md-12 col-lg-12">
+            
+                    <!-- Inicio aportes -->
+                    <div class="col-xs-12 col-md-12 col-lg-2">
+                        <label class="textNegrilla">Aportes:</label>
+            
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-3"> 
+                        <input style="text-align:right" type="text" class="form-control" currencyMask formControlName="Aportes"
+                            [options]="{prefix:'$ ',thousands:'.'}" maxlength="10" [attr.disabled]="bloquear">
+                    </div>
+                    <!-- Fin aportes -->
+                    <div class="col-xs-12 col-md-12 col-lg-1"> </div>
+            
+                    <!-- Inicio total aportes -->
+                    <div class="col-xs-12 col-md-12 col-lg-2">
+                        <label class="textNegrilla">Total aportes:</label>
+            
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-3">
+                        <input style="text-align:right" type="text" class="form-control" currencyMask formControlName="TotalAportes"
+                            [options]="{prefix:'$ ',thousands:'.'}" maxlength="10" [attr.disabled]="bloquear">
+                    </div>
+                    <!-- Fin total aportes -->
+            
+                </div>
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <br />
+                </div>
+            
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <!-- Inicio neto -->
+                    <div class="col-xs-12 col-md-12 col-lg-2">
+                        <label class="textNegrilla">Interés neto:</label>
+            
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-3">
+                        <input style="text-align:right" type="text" class="form-control" currencyMask formControlName="InteresNeto"
+                            [options]="{prefix:'$ ',thousands:'.'}" maxlength="10" [attr.disabled]="bloquear">
+                    </div>
+                    <!-- Fin neto -->
+                    <div class="col-xs-12 col-md-12 col-lg-1"> </div>
+            
+                    <!-- Inicio total neto -->
+                    <div class="col-xs-12 col-md-12 col-lg-2">
+                        <label class="textNegrilla">Total interés neto:</label>
+            
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-3">
+                        <input style="text-align:right" type="text" class="form-control" currencyMask formControlName="TotalInteresNeto"
+                            [options]="{prefix:'$ ',thousands:'.'}" maxlength="10" [attr.disabled]="bloquear">
+                    </div>
+                    <!-- Fin total neto -->
+                </div>
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <br />
+                </div>
+                <div class="modal-footer">
+                 <button type="button" class="btn Gt-btn-verde" data-dismiss="modal">Guardar</button>
+                </div>            
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--/ Fin Modal Productos -->
+
+<!--/ Modal Titulares -->
+<div id="ModalTitulares" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-morado">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h6 class="modal-title">Titulares</h6>
+                    </div>
+                    <div class="modal-body">
+                        <div class="table-responsive scrollTabla">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <strong>Documento</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Nombre</strong>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngFor="let titulares of resultTitulares">
+                                    <tr (click)="BuscarTitularModal(titulares.NumeroDocumento)">
+                                        <td data-dismiss="modal">
+                                            {{titulares.NumeroDocumento}}
+                                        </td>
+                                        <td data-dismiss="modal">
+                                            {{titulares.PrimerApellido + ' ' + titulares.SegundoApellido + ' ' + titulares.PrimerNombre + ' ' + titulares.SegundoNombre}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+</div>
+<!--/ Fin Modal Titulares -->
+
+ <!--/ Inicio Modal AsesoresExterno -->
+ <div id="ModalAsesoresExterno" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content modal-lg">
+                    <div class="modal-header bg-morado">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h6 class="modal-title">Asesor Externo</h6>
+                    </div>
+                    <div class="modal-body">
+                        <div class="table-responsive scrollTabla">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th><strong>Codigo</strong></th>
+                                        <th><strong>Nombre asesor externo</strong></th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngFor="let resultAsesorExterno of resultAsesoresExterno">
+                                    <tr (click)="MapearDatosAsesorExterno(resultAsesorExterno)">
+                                        <td data-dismiss="modal">
+                                            {{resultAsesorExterno.intIdAsesor}}
+                                        </td>
+                                        <td data-dismiss="modal">
+                                            {{resultAsesorExterno.Nombre}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+ </div>
+  <!--/ Fin Modal AsesoresExterno -->
+
+ <!--/ formato  de impresion nuevo-->
+ <div id="ModalImpresion" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Formato</h6>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <object id="ImpresionTermino"></object>
+                </div>
+            </div>
+        </div>
+    </div>
+ </div>
+ <!--/ Fin formato de impresion nuevo -->
+
+<!-- Modal Ayuda -->
+<div id="ModalAyuda" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-morado">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h6 class="modal-title">
+                            <i class="icon-question6"></i> Ayuda
+                        </h6>
+                    </div>
+                    <div class="modal-body">
+                        <ul>
+                            <li>Todos los campos marcados con
+                                <span class="text-danger">*</span> son obligatorios.
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+</div>
+<!-- Fin Modal Ayuda -->
+<!--/ Fin Modal cambio de estado -->
+<div class="modal fade" id="ModalCambioEstado" tabindex="-1" role="dialog" aria-labelledby="ModalCambioEstadoTitle" data-backdrop="static">
+
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-morado">
+                <h5 class="modal-title" id="exampleModalLongTitle">Observación cambio de estado</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="get" [formGroup]="CambioEstadoFrom">
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <div class="row">
+                            <div class="col-xs-7 col-md-7 col-lg-7">   
+                                <div >
+                                    <label>Observación</label>
+                                        <span class="text-danger">*</span>
+                                </div>
+                                <select class="form-control" formControlName="IdTipoObservacion" name="select" (change)="CambioEstadoChange()">
+                                    <option value="0"> -- Seleccion --  </option>
+                                    <option *ngFor="let observacion of dataObservacion" [value]="observacion.IdTipoObservacion">  {{observacion.Descripcion}}  </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+              
+                <br>
+                <div *ngIf="isShowResiprocidadCredito">   
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <form [formGroup]="ReciprocidadCreditoFrom">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-12 col-lg-12"> 
+                                <div class="col-xs-3 col-md-3 col-lg-3">
+                                    <label class="textNegrilla">Documento:</label>
+                                    <span class="grande"> *</span>
+                                </div>
+                                <div class="col-xs-4 col-md-4 col-lg-4">
+                                    <input type="text" class="form-control" formControlName="documento"  tooltip="Documento" >
+                                </div>
+                                <div class="col-xs-1 col-md-1 col-lg-1">
+                                    <button type="button"  class="btn Gt-btn-verde btn-icon legitRipple" (click)="ObtenerCuentaReciprocidadTermino()">
+                                        <i class="icon-search4"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-xs-12 col-md-12 col-lg-12"> 
+                                <div class="col-xs-3 col-md-3 col-lg-3">
+                                    <label class="textNegrilla">Nombre:</label>
+                                    <span class="grande"> </span>
+                                </div>
+                                <div class="col-xs-4 col-md-4 col-lg-4">
+                                    <input type="text" class="form-control pmayuscula" formControlName="nombre" tooltip="Nombre" [disabled]="true" >
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-xs-12 col-md-12 col-lg-12"> 
+                                <div class="col-xs-3 col-md-3 col-lg-3">
+                                    <label class="textNegrilla">Cuenta:</label>
+                                    <span class="grande"> </span>
+                                </div>
+                                <div class="col-xs-4 col-md-4 col-lg-4">
+                                    <select class="form-control" formControlName="IdCuenta">
+                                        <option value="0"> -- Seleccione --</option>
+                                        <option *ngFor="let cuenta of ListCuentaReciprocidad" [value]="cuenta.IdCuenta">
+                                            {{cuenta.Cuenta}}
+                                        </option> 
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="modal-footer">
+                            <button type="button" class="btn Gt-btn-verde" (click)="AgregarResiprocidadCredito()" >Agregar</button>
+                            <button type="button" class="btn Gt-btn-morado" data-dismiss="modal" (click)="GuardarObservaciones((ListCuentaAgregadasReciprocidad.length > 0))" [disabled]="!(ListCuentaAgregadasReciprocidad.length > 0)">Guardar</button>
+                        </div>
+                    </form>
+                    <br>
+                    <!-- class="col-xs-12 col-md-12 col-lg-12"
+                    class="col-10 col-xs-10 col-md-10 col-lg-10" -->
+                    <div >
+                        <div >
+                            <div class="table-responsive scrollTabla"   >
+                                <table class="table table-hover" >
+                                    <thead>
+                                        <tr>
+                                            <th><strong>Documento</strong></th>
+                                            <th><strong>Nombre</strong></th>
+                                            <th><strong>Cuenta</strong></th>
+                                            <th><strong>Opciones</strong></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngFor="let cuentaAgregada of ListCuentaAgregadasReciprocidad"> 
+                                        <tr>
+                                            <td> {{cuentaAgregada.NumeroDocumento}}  </td>
+                                            <td> {{cuentaAgregada.PrimerApellido + " " + cuentaAgregada.SegundoApellido + " " +  cuentaAgregada.PrimerNombre + " " + cuentaAgregada.SegundoNombre }}  </td>
+                                            <td> {{cuentaAgregada.Cuenta}}  </td>
+                                            <td >
+                                                <div>
+                                                    <button class="btn Gt-btn-morado btn-icon legitRipple" (click)="BorrarCuentasAgregadasReciprocidadTermino(cuentaAgregada)">
+                                                        <i class="icon-bin2"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" *ngIf="!isShowResiprocidadCredito" >
+                    <button type="button" class="btn Gt-btn-morado" data-dismiss="modal" (click)="GuardarObservaciones(true)">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!--/ Fin Modal cambio de estado -->
+<!--/ Modal ModalBuscarPersonasCesionTitulo -->
+<div id="ModalBuscarPersonasCesionTitulo" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Asociados</h6>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive scrollTabla">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th><strong>Documento</strong></th>
+                                <th><strong>Nombre </strong></th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let PersonasCesionTitulo of ListPersonaCesionTitylo">
+                            <tr (click)="SeleccionPersonaCesionTitulo(PersonasCesionTitulo)">
+                                <td data-dismiss="modal">
+                                    {{PersonasCesionTitulo.NumeroDocumento}}
+                                </td>
+                                <td data-dismiss="modal">
+                                    {{PersonasCesionTitulo.PrimerNombre + " " + PersonasCesionTitulo.SegundoNombre + " " + PersonasCesionTitulo.PrimerApellido + " " + PersonasCesionTitulo.SegundoApellido}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ Fin Modal ModalBuscarPersonasCesionTitulo -->

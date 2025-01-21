@@ -143,7 +143,7 @@ export class TerminoAhorrosService {
         return this._http.post<any>(this.url, Datos);
     }   
     ConvertNumeroALetras(num: number): Observable<any> {
-        this.url = `${this.environment.Url}/ConvertirNumeroALetras/=${num}`; // revisar
+        this.url = `${this.environment.Url}/ConvertirNumeroALetras/${num}`;
         return this._http.get<any>(this.url);
     }
     getEditarAsesorExterno(Datos: any): Observable<any> {
@@ -191,7 +191,7 @@ export class TerminoAhorrosService {
         return this._http.get<any>(this.url, { params: params }); // revisar
     }   
     ObtenerCuentaReciprocidadTermino(cedula: number): Observable<any> {
-        this.url = `${this.environment.Url}/ObtenerCuentaReciprocidadTermino?=${cedula}`; // revisar
+        this.url = `${this.environment.Url}/ObtenerCuentaReciprocidadTermino/${cedula}`; 
         return this._http.get<any>(this.url);
     }
     GuardarCuentaReciprocidadTermino(Datos: any): Observable<any> {
@@ -207,7 +207,7 @@ export class TerminoAhorrosService {
         return this._http.post<any>(this.url, Datos);
     } 
     ReciprocidadSetDate(idCuenta: string): Observable<any> {
-        this.url = `${this.environment.Url}/ReciprocidadSetDateTermino/=${idCuenta}`; // revisar
+        this.url = `${this.environment.Url}/ReciprocidadSetDateTermino/${idCuenta}`;
         return this._http.get<any>(this.url);
     }
     ReciprocidadSetDateList(Datos: any): Observable<any> {
@@ -223,11 +223,11 @@ export class TerminoAhorrosService {
         return this._http.post<any>(this.url, Datos);
     } 
     ObtenerPersonasByDocumentoCesionTermino(doc: string): Observable<any> {
-        this.url = `${this.environment.Url}/ObtenerPersonasByDocumentoCesionTermino/=${doc}`; // revisar
+        this.url = `${this.environment.Url}/ObtenerPersonasByDocumentoCesionTermino/${doc}`;
         return this._http.get<any>(this.url);
     }
     ObtenerPersonasByNombreCesionTermino(nombre: string): Observable<any> {
-        this.url = `${this.environment.Url}/ObtenerPersonasByNombreCesionTermino/=${nombre}`; // revisar
+        this.url = `${this.environment.Url}/ObtenerPersonasByNombreCesionTermino/${nombre}`; 
         return this._http.get<any>(this.url);
     } 
     GenerarPDFCapitalizacionTermino(Datos: any): Observable<any> {
@@ -247,7 +247,7 @@ export class TerminoAhorrosService {
         return this._http.post<any>(this.url, Datos);
     } 
     BuscarVetadoTermino(doc: string): Observable<any> {
-        this.url = `${this.environment.Url}/BuscarVetadoTermino/=${doc}`;
+        this.url = `${this.environment.Url}/BuscarVetadoTermino/${doc}`;
         return this._http.get<any>(this.url);
     } 
     GuardarAsesoria(Datos: any): Observable<any> {

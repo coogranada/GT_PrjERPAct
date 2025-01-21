@@ -46,9 +46,6 @@ export class EnvironmentService {
     }
   }
 private getUrlEnvironment() {
-    // Cambiar el valor a true cuando se publique
-    // NOTA: Enviar correo cada vez que se realice una publicación final
-    // environment.production = true;
       this.Url = this.Url;
   }
 }

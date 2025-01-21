@@ -1,0 +1,419 @@
+.modal.right .modal-dialog {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    margin: 0;
+    width: 400px;
+}
+
+.grande {
+    font-size: 25px !important;
+    color: #D84315;
+    margin-top: -5px !important;
+    margin-left: 6px;
+    position: absolute;
+}
+
+.textNegrilla {
+    color: #565656;
+    font-weight: bold;
+}
+
+.pmayuscula {
+    text-transform: capitalize;
+}
+
+.ActiveTab {
+    border-bottom-color: transparent !important;
+    cursor: default !important;
+    color: white !important;
+    background-color: rgb(38, 144, 81) !important;
+    border: 1px solid rgb(38, 144, 81) !important;
+}
+
+.ActiveTab>a {
+    color: white !important;
+}
+
+body {
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+h1 {
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+h3 {
+    margin-top: 0;
+    font-weight: 300;
+}
+
+.container {
+    width: 100%;
+    margin: 10px auto;
+}
+
+
+/*Acordeon uno*/
+
+.ac-label-sg {
+    font-weight: 700;
+    position: relative;
+    padding: .5em 1em;
+    margin-bottom: .5em;
+    display: block;
+    cursor: pointer;
+    background-color: #d8d8d8;
+    ;
+    transition: background-color .15s ease-in-out;
+}
+
+.ac-input-sg:checked+label,
+.ac-label-sg:hover {
+    background: rgb(185 111 151);
+    color: rgb(63, 63, 63);
+}
+
+.ac-label-sg:after,
+.ac-input-sg:checked+.ac-label-sg:after {
+    content: "+";
+    position: absolute;
+    display: block;
+    right: 0;
+    top: 0;
+    width: 2em;
+    height: 100%;
+    line-height: 2.25em;
+    text-align: center;
+    background-color: #e5e5e5;
+    transition: background-color .15s ease-in-out;
+}
+
+.ac-label-sg:hover:after,
+.ac-input-sg:checked+.ac-label-sg:after {
+    background-color: #b5b5b5;
+}
+
+.ac-input-sg:checked+.ac-label-sg:after {
+    content: "-";
+}
+
+.ac-input-sg {
+    display: none;
+}
+
+.ac-text-sg,
+.ac-sub-text-sg {
+    opacity: 0;
+    height: 0;
+    margin-bottom: .5em;
+    transition: opacity .5s ease-in-out;
+    overflow: hidden;
+}
+
+.ac-input-sg:checked~.ac-text-sg,
+.ac-sub-sg .ac-input-sg:checked~.ac-sub-text-sg {
+    opacity: 1;
+    height: auto;
+}
+
+.ac-sub-sg .ac-label-sg {
+    background: none;
+    font-weight: 600;
+    padding: .5em 2em;
+    margin-bottom: 0;
+}
+
+.ac-sub-sg .ac-label-sg:checked {
+    background: none;
+    border-bottom: 1px solid whitesmoke;
+}
+
+.ac-sub-sg .ac-label-sg:after,
+.ac-sub-sg .ac-input-sg:checked+.ac-label-sg:after {
+    left: 0;
+    background: none;
+}
+
+.ac-sub-sg .ac-input-sg:checked+label,
+.ac-sub-sg .ac-label-sg:hover {
+    background: none;
+}
+
+.ac-sub-text-sg {
+    padding: 0 1em 0 2em;
+}
+
+
+/*Acordeon Dos*/
+
+.ac-label-cn {
+    font-weight: 700;
+    position: relative;
+    padding: .5em 1em;
+    margin-bottom: .5em;
+    display: block;
+    cursor: pointer;
+    background-color: #d8d8d8;
+    ;
+    transition: background-color .15s ease-in-out;
+}
+
+.ac-input-cn:checked+label,
+.ac-label-cn:hover {
+    background: rgb(185 111 151);
+    color: rgb(63, 63, 63);
+}
+
+.ac-label-cn:after,
+.ac-input-cn:checked+.ac-label-cn:after {
+    content: "+";
+    position: absolute;
+    display: block;
+    right: 0;
+    top: 0;
+    width: 2em;
+    height: 100%;
+    line-height: 2.25em;
+    text-align: center;
+    background-color: #e5e5e5;
+    transition: background-color .15s ease-in-out;
+}
+
+.ac-label-cn:hover:after,
+.ac-input-cn:checked+.ac-label-cn:after {
+    background-color: #b5b5b5;
+}
+
+.ac-input-cn:checked+.ac-label-cn:after {
+    content: "-";
+}
+
+.ac-input-cn {
+    display: none;
+}
+
+.ac-text-cn,
+.ac-sub-text-cn {
+    opacity: 0;
+    height: 0;
+    margin-bottom: .5em;
+    transition: opacity .5s ease-in-out;
+    overflow: hidden;
+}
+
+.ac-input-cn:checked~.ac-text-cn,
+.ac-sub-cn .ac-input-cn:checked~.ac-sub-text-cn {
+    opacity: 1;
+    height: auto;
+}
+
+.ac-sub-cn .ac-label-cn {
+    background: none;
+    font-weight: 600;
+    padding: .5em 2em;
+    margin-bottom: 0;
+}
+
+.ac-sub-cn .ac-label-cn:checked {
+    background: none;
+    border-bottom: 1px solid whitesmoke;
+}
+
+.ac-sub-cn .ac-label-cn:after,
+.ac-sub-cn .ac-input-cn:checked+.ac-label-cn:after {
+    left: 0;
+    background: none;
+}
+
+.ac-sub-cn .ac-input-cn:checked+label,
+.ac-sub-cn .ac-label-cn:hover {
+    background: none;
+}
+
+.ac-sub-text-cn {
+    padding: 0 1em 0 2em;
+}
+
+
+/*Acordeon tres*/
+
+.ac-label-tc {
+    font-weight: 700;
+    position: relative;
+    padding: .5em 1em;
+    margin-bottom: .5em;
+    display: block;
+    cursor: pointer;
+    background-color: #d8d8d8;
+    ;
+    transition: background-color .15s ease-in-out;
+}
+
+.ac-input-tc:checked+label,
+.ac-label-tc:hover {
+    background: rgb(185 111 151);
+    color: rgb(63, 63, 63);
+}
+
+.ac-label-tc:after,
+.ac-input-tc:checked+.ac-label-tc:after {
+    content: "+";
+    position: absolute;
+    display: block;
+    right: 0;
+    top: 0;
+    width: 2em;
+    height: 100%;
+    line-height: 2.25em;
+    text-align: center;
+    background-color: #e5e5e5;
+    transition: background-color .15s ease-in-out;
+}
+
+.ac-label-tc:hover:after,
+.ac-input-tc:checked+.ac-label-tc:after {
+    background-color: #b5b5b5;
+}
+
+.ac-input-tc:checked+.ac-label-tc:after {
+    content: "-";
+}
+
+.ac-input-tc {
+    display: none;
+}
+
+.ac-text-tc,
+.ac-sub-text-tc {
+    opacity: 0;
+    height: 0;
+    margin-bottom: .5em;
+    transition: opacity .5s ease-in-out;
+    overflow: hidden;
+}
+
+.ac-input-tc:checked~.ac-text-tc,
+.ac-sub-tc .ac-input-tc:checked~.ac-sub-text-tc {
+    opacity: 1;
+    height: auto;
+}
+
+.ac-sub-tc .ac-label-tc {
+    background: none;
+    font-weight: 600;
+    padding: .5em 2em;
+    margin-bottom: 0;
+}
+
+.ac-sub-tc .ac-label-tc:checked {
+    background: none;
+    border-bottom: 1px solid whitesmoke;
+}
+
+.ac-sub-tc .ac-label-tc:after,
+.ac-sub-tc .ac-input-tc:checked+.ac-label-tc:after {
+    left: 0;
+    background: none;
+}
+
+.ac-sub-tc .ac-input-tc:checked+label,
+.ac-sub-tc .ac-label-tc:hover {
+    background: none;
+}
+
+.ac-sub-text-tc {
+    padding: 0 1em 0 2em;
+}
+
+.columnProductoX3_termino {
+    min-width: 250px !important;
+}
+
+.columnDetalles_termino {
+    min-width: 3000px !important;
+}
+.columnProductoX2_termino {
+    min-width: 300px !important;
+}
+
+.columnProductoX1_termino {
+    min-width: 200px !important;
+}
+
+.columnProductoX_termino {
+    min-width: 270px !important;
+}
+
+.columnProductoX0_termino {
+    min-width: 130px !important;
+}
+
+object {
+    width: 100%;
+    height: 1000px;
+    border: none;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    overflow: hidden;
+}
+
+.encabezadoTablaTermino {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #ffffff;
+}
+
+.columnCuentaR_termino {
+    min-width: 200px !important;
+}
+
+.columnRadicadoR_termino {
+    min-width: 100px !important;
+}
+
+.columnDocumnetoR_termino {
+    min-width: 200px !important;
+}
+
+.columnNombreR_termino {
+    min-width: 270px !important;
+}
+.columnMontoR_termino {
+    min-width: 150px !important;
+}
+
+.columnSaldoR_termino {
+    min-width: 150px !important;
+}
+
+.columnFechaR_termino {
+    min-width: 200px !important;
+}
+
+.columnCuenta_termino {
+    min-width: 200px !important;
+}
+.columnNombre_termino {
+    min-width: 500px !important;
+}
+.columnEstado_termino {
+    min-width: 150px !important;
+}
+.OperacionFija {
+    position: sticky !important;
+    left: 0;
+    background: #fff;
+}
+
+.column_tipoDocumento {
+    min-width: 210px !important;
+}
+
+.column_NombreB {
+    min-width: 300px !important;
+}
