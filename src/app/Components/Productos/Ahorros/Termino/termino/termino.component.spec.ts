@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TerminoComponent } from '../termino/termino.component';
+import { TerminoComponent } from './termino.component';
 
 describe('TerminoComponent', () => {
   let component: TerminoComponent;

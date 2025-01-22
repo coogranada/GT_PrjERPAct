@@ -11,7 +11,8 @@ import { CurrencyMaskModule } from "ng2-currency-mask";
 import { AsesoriaContractualComponent } from '../Components/Productos/Ahorros/Contractual/asesoria/asesoria-contractual.component';
 import { FormatoAsesoriaComponent } from '../Components/Formatos-impresion/formato-asesoria/formato-asesoria.component';
 import { AportesComponent } from '../Components/Productos/Aportes/aportes.component';
-import { TerminoComponent } from '../Components/Productos/Termino/termino/termino.component';
+import { TerminoComponent } from '../Components/Productos/Ahorros/Termino/termino/termino.component';
+import { ScoreCreditosComponent } from '../Components/Productos/Creditos/score-creditos/score-creditos.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { TerminoComponent } from '../Components/Productos/Termino/termino/termin
     AsesoriaContractualComponent,
     FormatoAsesoriaComponent,
     AportesComponent,
-    TerminoComponent
+    TerminoComponent,
+    ScoreCreditosComponent
   ],
   imports: [
     CommonModule,

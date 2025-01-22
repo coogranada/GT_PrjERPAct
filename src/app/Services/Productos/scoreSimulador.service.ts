@@ -20,20 +20,12 @@ export class ScoreSimuladorService {
     this.url = `${this.environment.Url}/ObtenerTiposIdentificacion`;
     return this._http.get<any>(this.url);
   }
-  ConsultarScore(PobjScore: any) {
+  ConsultarScore(PobjScore: any): Observable<any> {
     this.url = `${this.environment.Url}/ConsultarScore`;
-    const dataScore = this.serializeObj(JSON.parse(PobjScore));
-    return this._http.post(this.url, dataScore, this.option).pipe(map((res: any) => res as any));
+    return this._http.post<any>(this.url, PobjScore);
   }
   MostrarReporte(data: any): Observable<any> {
     this.url = `${this.environment.Url}/MostrarReporte`;
-    const dataReporte = JSON.stringify(data);
-    return this._http.post<any>(this.url, dataReporte, this.option).pipe(map(response => response));
-  }
-  private serializeObj(obj : any) {
-    const result = [];
-    for (const property in obj)
-      result.push(encodeURIComponent(property) + '=' + encodeURIComponent(obj[property]));
-    return result.join('&');
+    return this._http.post<any>(this.url, data);
   }
 }

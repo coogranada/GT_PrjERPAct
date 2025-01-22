@@ -1,11 +1,11 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
-import { ModuleValidationService } from '../../../../Services/Enviroment/moduleValidation.service';
+import { ModuleValidationService } from '../../../../../Services/Enviroment/moduleValidation.service';
 import { fromEvent } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { OperacionesService } from '../../../../Services/Maestros/operaciones.service';
-import { TerminoAhorrosService } from '../../../../Services/Productos/terminoAhorros.service';
+import { OperacionesService } from '../../../../../Services/Maestros/operaciones.service';
+import { TerminoAhorrosService } from '../../../../../Services/Productos/terminoAhorros.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { GeneralesService } from '../../../../Services/Productos/generales.service';
+import { GeneralesService } from '../../../../../Services/Productos/generales.service';
 import { DatePipe, formatDate } from '@angular/common';
 import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import swal from 'sweetalert2';
