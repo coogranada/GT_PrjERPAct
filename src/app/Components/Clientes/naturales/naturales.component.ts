@@ -4799,6 +4799,24 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       } else {
         this.notif.onWarning('Advertencia', 'No se puede cambiar estado en la oficina administración');
       }
+    } else if (results === '116') { // Cambiar regimen tributario
+      if(!this.basicosFrom.get('numeroDocumento')?.value) {
+        this.notif.onWarning('Advertencia','Debe buscar un asociado para realizar esta operación.');
+        this.basicosFrom.get('operacion')?.reset();
+        return;
+      }
+
+      const idTercero = this.basicosFrom.get('IdTerceroPrincipal')?.value;
+      this.clientesService.CambiarRegimenTributario(idTercero)
+        .subscribe(result => {
+          if(result === true) {
+            this.notif.onSuccess('Exitoso', 'El regimen tributario se cambió correctamente.');
+            this.basicosFrom.get('operacion')?.reset();
+            this.GuardarLog(this.allItemsFormSaves, 116, 0, idTercero, 11);
+            this.BuscarNaturalesAll(this.basicosFrom.get('numeroDocumento')?.value);
+          }
+        });
+    
     } else {
       this.NombreAsesor = '';
       this.CedulaAsesor = '';
@@ -21250,6 +21268,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             //#region Mapear Basicos
             if (result.asociadosNaturalesDto !== null) {
               this.basicosFrom.get('tipoCliente')?.setValue(result.asociadosNaturalesDto.IdRelacion);
+              this.basicosFrom.get('RegimenTributario')?.setValue(result.asociadosNaturalesDto.RegimenTributario);
             } 
             this.relacionAnterior = result.asociadosNaturalesDto.IdRelacion;
             if (result.asociadosNaturalesDto.IdRelacion === 15) {
@@ -23953,7 +23972,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       departNacimiento: departNacimiento,
       paisNacimiento: paisNacimiento,
       IdTerceroPrincipal: IdTerceroPrincipal,
-
+      RegimenTributario: new FormControl(null),
 
     });
 
