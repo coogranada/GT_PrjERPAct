@@ -797,6 +797,22 @@
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                <div class="col-xs-12 col-md-4 col-lg-3" *ngIf="this.basicosFrom.get('RegimenTributario')?.value !== null">
+                                                    <div class="form-group">
+                                                        <label class="textNegrilla">Regimen Tributario:</label>
+                                                        <span class="text-danger"> </span>
+                                                        <div class="checkbox checkbox-switchery switchery-lg">
+                                                            <label>
+                                                                <input type="checkbox" class="switchery"
+                                                                    formControlName="RegimenTributario"
+                                                                    [attr.disabled]="true"
+                                                                    >
+                                                                    {{ this.basicosFrom.get('RegimenTributario')?.value ? 'No responsable' : 'Simple' }}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
