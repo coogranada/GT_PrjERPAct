@@ -308,6 +308,8 @@ export class LayoutComponent implements OnInit {
   isProductosAhorrosContractualMenuOpen : boolean = false;
   isProductosAhorrosDisponiblesMenuOpen : boolean = false;
   isProductosAhorrosTerminoMenuOpen : boolean = false;
+  isProductosCreditoMenuOpen : boolean = false;
+  isProductosSeguroMenuOpen : boolean = false;
     // Cambiar a 'false' si deseas ocultarlo por defecto
 
   // Método para alternar el estado del menú de Usuario
@@ -373,6 +375,14 @@ export class LayoutComponent implements OnInit {
     this.isProductosAhorrosTerminoMenuOpen = !this.isProductosAhorrosTerminoMenuOpen;
     this.toggleCloseMenu(4,4);
   }
+  toggleProductosCreditoMenu(){
+    this.isProductosCreditoMenuOpen = !this.isProductosCreditoMenuOpen;
+    this.toggleCloseMenu(4,5);
+  }
+  toggleProductosSeguroMenu(){
+    this.isProductosSeguroMenuOpen = !this.isProductosSeguroMenuOpen;
+    this.toggleCloseMenu(4,6);
+  }
   toggleCloseMenu(id : number, opcion : number = 0) {
     if(id != 1)this.isUsuarioMenuOpen = false;
     if(id != 2)this.isConfiguracionMenuOpen = false;
@@ -395,22 +405,26 @@ export class LayoutComponent implements OnInit {
       this.isProductosAhorrosContractualMenuOpen = false;
     }
     if(id == 4 && opcion == 1){
+      this.isProductosSeguroMenuOpen = false;
+      this.isProductosCreditoMenuOpen = false;
       this.isProductosAhorrosContractualMenuOpen = false;
       this.isProductosAhorrosDisponiblesMenuOpen = false;
     }else if(id == 4 && opcion == 2){
       this.isProductosAhorrosDisponiblesMenuOpen = false;
       this.isProductosAhorrosTerminoMenuOpen = false;
-    } 
-    else if(id == 4 && opcion == 3) {
+    } else if(id == 4 && opcion == 3) {
       this.isProductosAhorrosTerminoMenuOpen = false;
       this.isProductosAhorrosContractualMenuOpen = false;
-    }
-    else if(id == 4 && opcion == 4){
+    } else if(id == 4 && opcion == 4){
       this.isProductosAhorrosContractualMenuOpen = false;
       this.isProductosAhorrosDisponiblesMenuOpen = false;
-    } 
-
-  
+    }else if(id == 4 && opcion == 5){
+      this.isProductosAhorrosMenuOpen = false;
+      this.isProductosSeguroMenuOpen = false;
+    }else if(id == 4 && opcion == 5){
+      this.isProductosAhorrosMenuOpen = false;
+      this.isProductosCreditoMenuOpen = false;
+    }
   }
   ngOnInit() {
    

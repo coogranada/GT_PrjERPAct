@@ -1,0 +1,258 @@
+hr{
+  border-color:rgb(160, 0, 87);
+}
+
+.activar {
+  border-bottom-color: transparent;
+  cursor: default;
+  cursor: pointer;
+  background-color: rgb(38, 144, 81);
+  border: 1px solid rgb(38, 144, 81);
+}
+
+.activar a {
+  color: white !important;
+}
+
+.ocultarInfo{
+  display: none;
+}
+
+.ac-label {
+  font-weight: 700;
+  position: relative;
+  padding: .5em 1em;
+  width: 98%;
+  margin-bottom: .5em;
+  display: block;
+  cursor: pointer;
+  background-color: #d8d8d8;
+  transition: background-color .15s ease-in-out;
+}
+
+.ac-input:checked+label,
+.ac-label:hover {
+  background: rgb(185 111 151);
+  color: rgb(63, 63, 63);
+}
+
+.ac-label:after,
+.ac-input:checked+.ac-label:after {
+  content: "+";
+  position: absolute;
+  display: block;
+  right: 0;
+  top: 0;
+  width: 2em;
+  height: 100%;
+  line-height: 2.25em;
+  text-align: center;
+  background-color: #e5e5e5;
+  transition: background-color .15s ease-in-out;
+}
+
+.ac-label:hover:after,
+.ac-input:checked+.ac-label:after {
+  background-color: #b5b5b5;
+}
+
+.ac-input:checked+.ac-label:after {
+  content: "-";
+}
+
+.ac-input {
+  display: none;
+}
+
+.ac-text,
+.ac-sub-text {
+  opacity: 0;
+  height: 0;
+  margin-bottom: .5em;
+  transition: opacity .5s ease-in-out;
+  overflow: hidden;
+}
+
+.ac-input:checked~.ac-text,
+.ac-sub .ac-input:checked~.ac-sub-text {
+  opacity: 1;
+  height: auto;
+}
+
+.ac-sub .ac-label {
+  background: none;
+  font-weight: 600;
+  padding: .5em 2em;
+  margin-bottom: 0;
+}
+
+.ac-sub .ac-label:checked {
+  background: none;
+  border-bottom: 1px solid whitesmoke;
+}
+
+.ac-sub .ac-label:after,
+.ac-sub .ac-input:checked+.ac-label:after {
+  left: 0;
+  background: none;
+}
+
+.ac-sub .ac-input:checked+label,
+.ac-sub .ac-label:hover {
+  background: none;
+}
+
+.ac-input {
+  display: none;
+}
+
+.ac-text,
+.ac-sub-text {
+  opacity: 0;
+  height: 0;
+  margin-bottom: .5em;
+  transition: opacity .5s ease-in-out;
+  overflow: hidden;
+}
+
+
+/* Tooltip container */
+.mensajeInfo {
+    display: inline;
+}
+.mensajeInfo i{
+  font-size: 13px;
+  color: rgb(38, 144, 81);
+  margin-left: 5px;
+}
+
+.mensajeInfoText {
+  visibility: hidden;
+  width: 300px;
+  background-color: rgba(63, 63, 63, 0.894);
+  color: white;
+  text-align: center;
+  padding: 5px;
+  border-radius: 6px;
+
+  /* Position the tooltip text - see examples below! */
+  overflow: visible;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -150px;
+}
+.mensajeInfoTextBottom {
+  visibility: hidden;
+  width: 300px;
+  background-color: rgba(63, 63, 63, 0.9);
+  color: white;
+  text-align: center;
+  padding: 5px;
+  z-index: 20;
+  border-radius: 6px;
+
+  /* Position the tooltip text - see examples below! */
+  overflow: visible;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -150px;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.mensajeInfo:hover .mensajeInfoText {
+  visibility: visible;
+}
+.mensajeInfo:hover .mensajeInfoTextBottom {
+  visibility: visible;
+}
+
+.modal-xl {
+  width: 80% !important;
+  margin-left: 170px;
+}
+
+#ModalCodeudor{
+  display:none;
+  z-index: 10000;
+}
+
+.modal-xl {
+  width: 80% !important;
+  margin-left: 170px;
+}
+
+.modal-dialog-xl {
+  width: 100% !important;
+}
+
+input:disabled{
+  color: #727272;
+  /* 727272 */
+}
+
+.row__separar{
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 10px;
+}
+object {
+  width: 100%;
+  height: 1000px;
+  border: none;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  right: 0px;
+  overflow: hidden;
+}
+.input__border{
+  border-bottom: 3px solid rgb(38, 144, 81);
+}
+.Subtotal__negrilla{
+  font-weight: bold;
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button{
+  -webkit-appearance: none;
+  margin:0;
+}
+input[type=number]{
+  -moz-appearance: textfield;
+}
+.grande {
+  font-size: 25px !important;
+  color: #D84315;
+  margin-top: -5px !important;
+  margin-left: 6px;
+  position: absolute;
+} 
+.centrarModal{
+  position:absolute;
+  top: 100px;
+  left: 25%;
+}
+.textarea_cobertura{
+  height: 38px;
+}
+.tt_padding{
+  padding-right: 30px;
+}
+.columna_usuario{
+  min-width: 250px !important;
+}
+.columna_oficina{
+  min-width: 180px !important;
+}
+.columna_fecha{
+  min-width: 180px !important;
+}
+.columna_operacion{
+  min-width: 210px !important;
+}
+.CuentaFija {
+  position: sticky !important;
+  top: 0;
+  background-color: white;
+}

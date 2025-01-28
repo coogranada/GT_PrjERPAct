@@ -290,11 +290,10 @@
                                                                 <a [routerLink]="['/Productos/Ahorros/Disponibles/Disponibles']" (click)="setModuloLocalStorage(DisponiblesInternoModel.IdModuloPermiso)">Disponibles</a>
                                                             </li>
                                                             <li id="tarjetaHabientes">
-                                                                <a [routerLink]="['/Ahorros/Disponible/TarjetaHabientes']" (click)="setModuloLocalStorage(TarjetaHabientesModel.IdModuloPermiso)">Tarjeta
-                                                                Habientes</a>
+                                                                <a [routerLink]="['/Productos/Ahorros/Disponible/TarjetaHabientes']" (click)="setModuloLocalStorage(TarjetaHabientesModel.IdModuloPermiso)">Tarjeta Habientes</a>
                                                             </li>
                                                             <li id="gmf">
-                                                                <a [routerLink]="['/Ahorros/Disponible/GMF']" (click)="setModuloLocalStorage(GmfModel.IdModuloPermiso)">GMF</a>
+                                                                <a [routerLink]="['/Productos/Ahorros/Disponible/GMF']" (click)="setModuloLocalStorage(GmfModel.IdModuloPermiso)">GMF</a>
                                                             </li>
                                                         </ul>
                                                     </li>
@@ -317,10 +316,10 @@
                                                 </ul>
                                             </li>
                                             <li id="creditos">
-                                                <a [routerLink]="">
-                                                    <!-- (click)="setModuloLocalStorage(CreditosModel.IdModuloPermiso)" -->
-                                                    Créditos</a>
-                                                <ul>
+                                                <a [routerLink]="" (click)="toggleProductosCreditoMenu()"> Créditos</a>
+                                                <i class="icon-arrow-right13" style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="!isProductosCreditoMenuOpen" ></i>
+                                                <i class="icon-arrow-down12"  style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="isProductosCreditoMenuOpen" ></i>
+                                                <ul *ngIf="isProductosCreditoMenuOpen">
                                                     <li id="simuladorCredito">
                                                         <a [routerLink]="['/Productos/Creditos/Simulador']" (click)="setModuloLocalStorage(SimuladorCreditoModel.IdModuloPermiso)">Simulador</a>
                                                     </li>
@@ -333,8 +332,10 @@
                                                 </ul>
                                             </li>
                                             <li id="seguros">
-                                                <a [routerLink]="">Seguros</a>
-                                                <ul>
+                                                <a [routerLink]="" (click)="toggleProductosSeguroMenu()">Seguros</a>
+                                                <i class="icon-arrow-right13" style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="!isProductosSeguroMenuOpen" ></i>
+                                                <i class="icon-arrow-down12"  style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="isProductosSeguroMenuOpen" ></i>
+                                                <ul *ngIf="isProductosSeguroMenuOpen">
                                                     <li id="general">
                                                         <a [routerLink]="" (click)="setModuloLocalStorage(GeneralesModel.IdModuloPermiso)">Generales</a>
                                                     </li>

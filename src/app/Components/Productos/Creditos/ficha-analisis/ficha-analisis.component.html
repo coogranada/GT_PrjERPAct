@@ -1,0 +1,1445 @@
+<form method="get" [formGroup]="FichaAnalisisForm">
+  <div class="panel panel-white">
+    <div class="panel-heading">
+        <h6 class="panel-title">Datos{{strDatos}}</h6>
+        <div class="heading-elements">
+            <ul class="icons-list">
+                <li><a data-toggle="modal" data-target="#ModalAyuda"><i class=" icon-question6" title="Ayuda" data-popup="tooltip" data-trigger="hover" data-placement="top"></i></a></li>
+                <li>
+                    <a data-action="collapse"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="panel-body row">
+      <form [formGroup]="FichaOperacionForm" method="get">
+        <div class="col-xs-12 col-md-6 col-lg-3">
+          <label class="col-12 textNegrilla">Operación: <span class="grande">*</span></label>
+          <div class="col-12">
+            <select class="form-control" formControlName="Codigo" id="opcionOperacion" name="operacion" (change)="OperacionSeleccionada()">
+              <option *ngFor="let item of resultOperaciones" [value]="item.ERP_tblOperacion.IdOperacion">{{item.ERP_tblOperacion.Descripcion}}</option>
+            </select>
+            <span class="help-block validationSpan" *ngIf="FichaOperacionForm.controls['Codigo'].errors?.['required'] && (FichaOperacionForm.controls['Codigo'].dirty || FichaOperacionForm.controls['Codigo'].touched)">
+              La operación es obligatoria.
+            </span>
+          </div>
+        </div>
+
+        <div class="col-xs-12 col-md-6 col-lg-2">
+          <label class="col-12 textNegrilla">Radicado:</label>
+          <input type="number" id="radicado" name="radicado" class="form-control" autocomplete="off" formControlName="Radicado" [attr.disabled]="FormRadicado" (keydown)="RadicadoChange($event)"/>
+          <span class="help-block validationSpan" *ngIf="">
+            el radicado es obligatorio
+          </span>
+        </div>
+        <div class="col-xs-12 col-md-6 col-lg-3">
+          <label class="col-12 textNegrilla">Documento:</label>
+          <input type="text" id="documento" name="documento" class="form-control" autocomplete="off" formControlName="Documento" [attr.disabled]="FormRadicado" (keydown)="DocumentoChange($event)"/>
+          <span class="help-block validationSpan" *ngIf="">
+            el documento obligatorio
+          </span>
+        </div>
+        <div class="col-xs-12 col-md-1 col-lg-1">
+          <button id="btnBuscar" *ngIf="!btn" class="btn Gt-btn-verde btn-icon" [attr.disabled]="BloquearBoton" (click)="Click()">
+            <i class="icon-search4"></i>
+          </button>
+        </div>
+        <div class="col-xs-12 col-md-6 col-lg-3" *ngIf="infoRadicado">
+          <label class="col-12 textNegrilla">Oficina:</label>
+          <input type="text" id="oficina" [disabled]="true == true" name="oficina" class="form-control" autocomplete="off" [value]="strOficina"/>
+        </div>
+
+        <div class="col-xs-12 col-md-12 col-lg-12 mt-5">
+          <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+            <input type="button" class="btn Gt-btn-morado m-5" value="Trazabilidad" (click)="OperacionBuscarTrazabilidad()" *ngIf="!crear"/>
+            <input type="button" class="btn Gt-btn-morado m-5" value="Limpiar" (click)="ClearAll()" />
+            <button style="display: none;" id="BotonTrazabilidad" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModalTrazabilidad"></button>
+            <button style="display: none;" id="BotonPDF" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModalPDF"></button>
+            <button style="display: none;" id="BotonDeudores" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModalBuscarRadicados"></button>
+            <button style="display: none;" id="BotonWM" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModalPreguntaWM"></button>
+
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <div class="panel panel-white mt-5" *ngIf="infoRadicado">
+    <div class="panel-body">
+      <div class="row mt-5">
+        <div id="basicos" class="tab-pane">
+          <form method="get" [formGroup]="FichaAnalisisDataForm" autocomplete="off">
+            <div class="panel-body">
+              <div class="col-xs-12 col-md-12 col-lg-12">
+                
+                <div class="row">
+                  
+                  <div class="ac">
+                    <input class="ac-input" id="ac-0c" name="ac-0c" type="checkbox"/>
+                    <label class="ac-label" for="ac-0c">Información del radicado</label>
+                    <article class="ac-text">
+                      <div class="col-xs-12 col-md-12 col-lg-12 pt-5 pb-5">
+                        <div class="row p-4">
+                          <div class="col-xs-12 col-md-6 col-lg-3">
+                            <div class="form-group">
+                              <label class="textNegrilla">Nro. radicado:</label>
+                              <input type="number" class="form-control" formControlName="noRadicado" />
+                            </div>
+                          </div>
+                          <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                          <div class="col-xs-12 col-md-6 col-lg-3">
+                            <div class="form-group">
+                              <label class="textNegrilla">Monto crédito:</label>
+                              <input style="text-align:right" type="text" class="form-control" formControlName="monto" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"/>
+                            </div>
+                          </div>
+                          <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                          <div class="col-xs-12 col-md-6 col-lg-3">
+                            <div class="form-group">
+                              <label class="textNegrilla">Destino crédito:</label>
+                              <input type="text" class="form-control" formControlName="destino"/>
+                            </div>
+                          </div>
+                          <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                          <div class="col-xs-12 col-md-6 col-lg-3">
+                            <div class="form-group">
+                              <label class="textNegrilla">Línea:</label>
+                              <input type="text" class="form-control" formControlName="linea"/>
+                            </div>
+                          </div>
+                          <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                          <div class="col-xs-12 col-md-6 col-lg-3">
+                            <div class="form-group">
+                              <label class="textNegrilla">Forma de pago:</label>
+                              <input type="text" class="form-control" formControlName="formaPago"/>
+                            </div>
+                          </div>
+                          <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                          <div class="col-xs-12 col-md-6 col-lg-3">
+                            <div class="form-group">
+                              <label class="textNegrilla">Plazo:</label>
+                              <input type="text" class="form-control" formControlName="plazo"/>
+                            </div>
+                          </div>
+                          <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                          <div class="col-xs-12 col-md-6 col-lg-3">
+                            <div class="form-group">
+                              <label class="textNegrilla">Cuota con deducibles:</label>
+                              <input style="text-align: right;" type="text" class="form-control" formControlName="cuota" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"/>
+                            </div>
+                          </div>
+                          <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                          <div class="col-xs-12 col-md-6 col-lg-3">
+                            <div class="form-group">
+                              <label class="textNegrilla">Tasa nominal:</label>
+                              <input type="text" class="form-control" formControlName="tasa" />
+                            </div>
+                          </div>
+                          <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                          <div class="col-xs-12 col-md-6 col-lg-3">
+                            <div class="form-group">
+                              <label class="textNegrilla">Enviado al workmanager:</label>
+                              <input type="text" class="form-control" formControlName="enviado" />
+                            </div>
+                          </div>
+                          <div class="col-xs-12 col-md-12 col-lg-12 text-center">
+                            <hr/>
+                            <strong>Garantía aportada</strong>
+                            <hr/>
+                          </div>
+                        <div class="col-xs-12 col-md-6 col-lg-3">
+                          <div class="form-group">
+                            <label class="textNegrilla">Garantía:</label>
+                            <input type="text" class="form-control" formControlName="garantia"/>
+                          </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 col-lg-3">
+                          <div class="form-group">
+                            <label class="textNegrilla">Valor avalúo:</label>
+                            <input type="text" class="form-control" formControlName="vlrAvaluo" [ngClass]="bloquearBuscar?'':'input__border'" [attr.disabled]="bloquearBuscar" currencyMask [options]="currencyOptions" (keyup)="validarNegativoVlrAvaluo($event)" (keydown.enter)="enterModal($event)" (keyup)="modificarbtnBuscar()" (focus)="modificarbtnBuscar()" (blur)="modificarbtnBuscar()"/>
+                          </div>
+                        </div>
+                        <div class="col-xs-12 col-md-12 col-lg-12 tt_padding">
+                          <div class="form-group">
+                            <label class="textNegrilla">Detalle garantía:</label>
+                            <textarea class="form-control" formControlName="dscGarantia" [ngClass]="bloquearBuscar?'':'input__border'" [attr.disabled]="bloquearBuscar" (keydown.enter)="enterModal($event , 'dscGarantia')" (focus)="modificarbtnBuscar()" (keyup)="modificarbtnBuscar()" (blur)="modificarbtnBuscar()"></textarea>
+                          </div>
+                        </div>
+                          <div class="col-xs-12 col-md-6 col-lg-3">
+
+                          <div class="form-group">
+                            <label class="textNegrilla">Cobertura seguro de la garantía:</label>
+                            <select formControlName="cobSeguroGarantia" class="form-control" [ngClass]="bloquearBuscar?'':'input__border'" [attr.disabled]="bloquearBuscar" (keydown.enter)="enterModal($event)" (change)="modificarbtnBuscar()" >
+                              <option value="1">Sí</option>
+                              <option value="0">No</option>
+                            </select>
+                          </div>
+                          </div>
+                          <div class="col-xs-12 col-md-6 col-lg-9 tt_padding">
+                            <div class="form-group">
+                              <label class="textNegrilla">Descripción cobertura seguro:</label>
+                              <textarea class="form-control textarea_cobertura" formControlName="dscCoberturaSeguro" [ngClass]="bloquearBuscar?'':'input__border'" [attr.disabled]="bloquearBuscar" (keydown.enter)="enterModal($event)" (focus)="modificarbtnBuscar()" (keyup)="modificarbtnBuscar()" (blur)="modificarbtnBuscar()"></textarea>
+                            </div>
+                          </div>
+                          <div class="col-xs-12 col-md-6 col-lg-3">
+                            <div class="form-group">
+                              <label class="textNegrilla">Cobertura seguro deudor:</label>
+                              <select formControlName="cobSeguroDeudor" class="form-control" [ngClass]="bloquearBuscar?'':'input__border'" [attr.disabled]="bloquearBuscar" (keydown.enter)="enterModal($event)" (change)="modificarbtnBuscar()">
+                                <option value="1">Sí</option>
+                                <option value="0">No</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-xs-12 col-md-6 col-lg-9 tt_padding">
+                            <div class="form-group">
+                              <label class="textNegrilla">Descripción cobertura deudor:</label>
+                              <textarea class="form-control textarea_cobertura" formControlName="dscCobDeudor" [ngClass]="bloquearBuscar?'':'input__border'" [attr.disabled]="bloquearBuscar" (keydown.enter)="enterModal($event)" (focus)="modificarbtnBuscar()" (keyup)="modificarbtnBuscar()" (blur)="modificarbtnBuscar()"></textarea>
+                            </div>
+                          </div>
+                          <div class="col-xs-12 col-md-12 col-lg-12 tt_padding">
+                            <div class="form-group">
+                              <label class="textNegrilla">Descripción detallada de la inversión:</label>
+                              <textarea class="form-control" formControlName="dscInversion" [ngClass]="bloquearBuscar?'':'input__border'" [attr.disabled]="bloquearBuscar" (keydown.enter)="enterModal($event,'dscInversion')" (focus)="modificarbtnBuscar()" (keyup)="modificarbtnBuscar()" (blur)="modificarbtnBuscar()"></textarea>
+                            </div>
+                          </div>
+                      </div>
+                    </div>
+                    </article>
+                  </div>
+
+                  <div class="ac">
+                    <input class="ac-input" id="ac-1c" name="ac-1c" type="checkbox" checked="true"/>
+                    <label class="ac-label" for="ac-1c">Información general del asociado</label>
+                    <article class="ac-text">
+                      <div class="col-xs-12 col-md-12 col-lg-12 pt-5 pb-5">
+                          <div class="row p-4">
+                            <div class="col-xs-12 col-md-6 col-lg-3">
+                              <div class="form-group">
+                                <label class="textNegrilla">Nombre del asociado:</label>
+                                <input type="text" class="form-control" formControlName="nombreAso" />
+                              </div>
+                            </div>
+                            <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                            <div class="col-xs-12 col-md-6 col-lg-3">
+                              <div class="form-group">
+                                <label class="textNegrilla">Nro. identificación:</label>
+                                <input type="text" class="form-control" formControlName="identAso" />
+                              </div>
+                            </div>
+                            <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                            <div class="col-xs-12 col-md-6 col-lg-3">
+                              <div class="form-group">
+                                <label class="textNegrilla">Correo:</label>
+                                <input type="text" class="form-control" formControlName="correoAso" />
+                              </div>
+                            </div>
+                            <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                            <div class="col-xs-12 col-md-6 col-lg-3">
+                              <div class="form-group">
+                                <label class="textNegrilla">Asociado desde:</label>
+                                <input type="text" class="form-control" formControlName="asociadoDesdeAso" />
+                              </div>
+                            </div>
+                            <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                            <div class="col-xs-12 col-md-6 col-lg-3">
+                              <div class="form-group">
+                                <label class="textNegrilla">Valor aportes:</label>
+                                <input style="text-align: right;" type="text" class="form-control" formControlName="vlrAportesAso" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"/>
+                              </div>
+                            </div>
+                            <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                            <div class="col-xs-12 col-md-6 col-lg-3">
+                              <div class="form-group">
+                                <label class="textNegrilla">Empresa donde labora:</label>
+                                <div class="mensajeInfo">
+                                  <i class="icon-info22"></i>
+                                  <span class="mensajeInfoText">Nombre de la empresa o establecimiento donde labora</span>
+                                </div>
+                                <input type="text" class="form-control" formControlName="empresaAso" [ngClass]="bloquearBuscarEmpresa?'':'input__border'" [attr.disabled]="bloquearBuscarEmpresa" (focus)="modificarbtnBuscar()" (blur)="modificarbtnBuscar()"/>
+                              </div>
+                            </div>
+                            <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                            <div class="col-xs-12 col-md-6 col-lg-3">
+                              <div class="form-group">
+                                <label class="textNegrilla">Antigüedad:</label>
+                                <input type="text" class="form-control" formControlName="antiguedadAso"/>
+                              </div>
+                            </div>
+                            <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                            <div class="col-xs-12 col-md-6 col-lg-3">
+                              <div class="form-group">
+                                <label class="textNegrilla">Cargo:</label>
+                                <input type="text" class="form-control" formControlName="ocupacionAso" />
+                              </div>
+                            </div>
+                            <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                            <div class="col-xs-12 col-md-12 col-lg-3">
+                              <div class="form-group">
+                                <label class="textNegrilla">Actividad económica:</label><i class="fa-light fa-circle-question"></i>
+                                <input type="text" class="form-control" formControlName="ActividadEconomicaAso"/>
+                              </div>
+                            </div>
+                            <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                            <div class="col-xs-12 col-md-12 col-lg-3">
+                              <div class="form-group">
+                                <label class="textNegrilla">Prom cuentas Coogranada:</label><i class="fa-light fa-circle-question"></i>
+                                <div class="mensajeInfo">
+                                  <i class="icon-info22"></i>
+                                  <span class="mensajeInfoText">Promedio cuenta de ahorro Coogranada últimos 6 meses</span>
+                                </div>
+                                <button class="btn Gt-btn-morado btn-icon legitRipple" *ngIf="btnCuentas" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModalCuentas">
+                                  <i class="icon-three-bars"></i>
+                                </button>
+                                <input style="text-align: right;" type="text" class="form-control" *ngIf="!btnCuentas" formControlName="promCoogranadaAso" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"/>
+                              </div>
+                            </div>
+                            <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                            <div class="col-xs-12 col-md-12 col-lg-3">
+                              <div class="form-group">
+                                <label class="textNegrilla">Prom cuentas otras entidades:</label>
+                                <div class="mensajeInfo">
+                                  <i class="icon-info22"></i>
+                                  <span class="mensajeInfoText">Promedio cuentas de ahorro de otras entidades últimos 6 meses</span>
+                                </div>
+                                <input style="text-align: right;" type="text" class="form-control" [ngClass]="bloquearBuscar?'':'input__border'" [attr.disabled]="bloquearBuscar" (keyup)="validarNegativoPromedio($event)" (keydown.enter)="enterModal($event)" formControlName="promOtrasAso" currencyMask [options]="currencyOptions" (focus)="modificarbtnBuscar()" (blur)="modificarbtnBuscar()"/>
+                              </div>
+                            </div>
+                          </div>
+                      </div>
+                    </article>
+                  </div>
+
+                  <div class="ac">
+                    <input class="ac-input" id="ac-2c" name="ac-2c" type="checkbox" />
+                    <label class="ac-label" for="ac-2c">Historial crediticio del asociado</label>
+                    <article class="ac-text">
+                      <div class="col-xs-12 col-md-12 col-lg-12 pt-5 pb-5">
+                        <div class="row p-4">
+                          <div class="col-xs-12 col-md-6 col-lg-3">
+                            <div class="form-group">
+                              <label class="textNegrilla">Puntaje Experian:</label>
+                              <input type="number" class="form-control" formControlName="puntExpirianAso" max="1000" [ngClass]="bloquearBuscar?'':'input__border'" [attr.disabled]="bloquearBuscar" (keydown.enter)="enterModal($event)" (keyup)="menorDeMilValidate(0, $event)" (focus)="modificarbtnBuscar()" (blur)="modificarbtnBuscar()"/>
+                            </div>
+                          </div>
+                          <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                          <div class="col-xs-12 col-md-6 col-lg-3">
+                            <div class="form-group">
+                              <label class="textNegrilla">Puntaje TransUnion:</label>
+                              <input type="text" class="form-control" formControlName="puntajeTransAso"/>
+                            </div>
+                          </div>
+                          <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                          <div class="col-xs-12 col-md-6 col-lg-3">
+                            <div class="form-group">
+                              <label class="textNegrilla">Resultado scoring:</label>
+                              <select formControlName="scoringAso" class="form-control" [ngClass]="bloquearBuscar?'':'input__border'" [attr.disabled]="bloquearBuscar" (keydown.enter)="enterModal($event)" (change)="modificarbtnBuscar()">
+                                <option value="0" selected [disabled]="true == true">Seleccione una opción</option>
+                                <option value="Aprobado">Aprobado</option>
+                                <option value="Negado">Negado</option>
+                                <option value="Evaluación ente superior">Evaluación ente superior</option>
+                                <option value="No aplica">No aplica</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                          <div class="col-xs-12 col-md-6 col-lg-3">
+                            <div class="form-group">
+                              <label class="textNegrilla">Max. operación real cancelada:</label>
+                              <input type="text" class="form-control" formControlName="MaxOpCancelRealAso"  [disabled]="true == true"  currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"/>
+                            </div>
+                          </div>
+                          <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                          <div class="col-xs-12 col-md-6 col-lg-3">
+                            <div class="form-group">
+                              <label class="textNegrilla">Max. operación financiera:</label>
+                              <div class="mensajeInfo">
+                                <i class="icon-info22"></i>
+                                <span class="mensajeInfoText">Máxima operación financiera cancelada</span>
+                              </div>
+                              <input type="text" class="form-control" formControlName="MaxOpCancelFinanAso" [disabled]="true == true" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"/>
+                            </div>
+                          </div>
+                          <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                          <div class="col-xs-12 col-md-6 col-lg-3">
+                            <div class="form-group">
+                              <label class="textNegrilla">Max. operación Coogranada:</label>
+                              <div class="mensajeInfo">
+                                <i class="icon-info22"></i>
+                                <span class="mensajeInfoText">Máxima operación financiera cancelada(Coogranada)</span>
+                              </div>
+                              <input type="text" class="form-control" formControlName="MaxOpCancelFinanCoograAso" [disabled]="true == true" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"/>
+                            </div>
+                          </div>
+                          <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                          <div *ngIf="resultadoInfoRadicado[0].VigentesPrin.length != 0" class="col-xs-12 col-md-12 col-lg-12 pt-5 pb-5">
+                            <div class="text-center col-lg-12 col-md-12 col-xs-12">
+                              <hr/>
+                              <strong>Obligaciones vigentes (principal)</strong>
+                              <hr/>
+                            </div>
+                            <table class="table table-hover">
+                              <thead>
+                                <tr>
+                                  <th class="columnApertura_SegExequial text-center">
+                                      <strong>Obligaciones</strong>
+                                  </th>
+                                  <th class="columnEstado_SegExequial text-center">
+                                      <strong>Cantidad</strong>
+                                  </th>
+                                  <th class="columnApertura_SegExequial text-center">
+                                    <strong>Otorgado</strong>
+                                  </th>
+                                  <th class="columnApertura_SegExequial text-center">
+                                    <strong>Utilizado</strong>
+                                  </th>
+                                  <th class="columnApertura_SegExequial text-center">
+                                    <strong>%Util</strong>
+                                  </th>
+                                  <th class="columnApertura_SegExequial text-center">
+                                    <strong>Cuota</strong>
+                                  </th>
+                                  <th class="columnApertura_SegExequial text-center">
+                                    <strong>Mora</strong>
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                    <tr *ngFor="let item of resultadoInfoRadicado[0].VigentesPrin; index as i">
+                                      <td class="columnEfectivo_SegExequial text-center" [ngClass]="item.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{item.Titulo}}</td>
+                                      <td class="columnApertura_SegExequial text-center" [ngClass]="item.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{item.Cantidad}}</td>
+                                      <td class="columnEfectivo_SegExequial text-center" [ngClass]="item.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{item.Otorgado | currency:'':'':'1.0'}}</td>
+                                      <td class="columnEfectivo_SegExequial text-center" [ngClass]="item.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{item.Utilidad | currency:'':'':'1.0'}}</td>
+                                      <td class="columnEfectivo_SegExequial text-center" [ngClass]="item.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{item.Titulo == 'Subtotal'? '-' : (item.Utilidad * 100 / item.Otorgado).toFixed(2)}}</td>
+                                      <td class="columnEfectivo_SegExequial text-center" [ngClass]="item.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{item.Cuota | currency:'':'':'1.0'}}</td>
+                                      <td class="columnEfectivo_SegExequial text-center" [ngClass]="item.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{item.Mora | currency:'':'':'1.0'}}</td>
+                                    </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                          <div *ngIf="resultadoInfoRadicado[0].VigentesCode.length != 0" class="col-xs-12 col-md-12 col-lg-12 pt-5 pb-5">
+                            <div class="text-center col-lg-12 col-md-12 col-xs-12">
+                              <hr/>
+                              <strong>Obligaciones vigentes (codeudor y otros)</strong>
+                              <hr/>
+                            </div>
+                            <table class="table table-hover">
+                              <thead>
+                                <tr>
+                                  <th class="columnApertura_SegExequial text-center">
+                                      <strong>Obligaciones</strong>
+                                  </th>
+                                  <th class="columnEstado_SegExequial text-center">
+                                      <strong>Cantidad</strong>
+                                  </th>
+                                  <th class="columnApertura_SegExequial text-center">
+                                    <strong>Otorgado</strong>
+                                  </th>
+                                  <th class="columnApertura_SegExequial text-center">
+                                    <strong>Utilizado</strong>
+                                  </th>
+                                  <th class="columnApertura_SegExequial text-center">
+                                    <strong>%Util</strong>
+                                  </th>
+                                  <th class="columnApertura_SegExequial text-center">
+                                    <strong>Cuota</strong>
+                                  </th>
+                                  <th class="columnApertura_SegExequial text-center">
+                                    <strong>Mora</strong>
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                    <tr *ngFor="let item of resultadoInfoRadicado[0].VigentesCode; index as i">
+                                      <td class="columnEfectivo_SegExequial text-center" [ngClass]="item.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{item.Titulo}}</td>
+                                      <td class="columnApertura_SegExequial text-center" [ngClass]="item.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{item.Cantidad}}</td>
+                                      <td class="columnEfectivo_SegExequial text-center" [ngClass]="item.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{item.Otorgado | currency:'':'':'1.0-0'}}</td>
+                                      <td class="columnEfectivo_SegExequial text-center" [ngClass]="item.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{item.Utilidad | currency:'':'':'1.0-0'}}</td>
+                                      <td class="columnEfectivo_SegExequial text-center" [ngClass]="item.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{item.Titulo == 'Subtotal'? '-' : (item.Utilidad * 100 / item.Otorgado).toFixed(2)}}</td>
+                                      <td class="columnEfectivo_SegExequial text-center" [ngClass]="item.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{item.Cuota | currency:'':'':'1.0-0'}}</td>
+                                      <td class="columnEfectivo_SegExequial text-center" [ngClass]="item.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{item.Mora | currency:'':'':'1.0-0'}}</td>
+                                    </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                          <div *ngIf="resultadoInfoRadicado[0].ExtinguidasPrin.length != 0" class="col-xs-12 col-md-12 col-lg-12 pt-5 pb-5">
+                            <div class="text-center col-lg-12 col-md-12 col-xs-12">
+                              <hr/>
+                              <strong>Obligaciones extinguidas (principal)</strong>
+                              <hr/>
+                            </div>
+                            <table class="table table-hover">
+                              <thead>
+                                <tr>
+                                  <th class="columnApertura_SegExequial text-center">
+                                      <strong>Obligaciones</strong>
+                                  </th>
+                                  <th class="columnEstado_SegExequial text-center">
+                                      <strong>Cantidad</strong>
+                                  </th>
+                                  <th class="columnApertura_SegExequial text-center">
+                                    <strong>Otorgado</strong>
+                                  </th>
+                                  <th class="columnApertura_SegExequial text-center">
+                                    <strong>Mora Max</strong>
+                                  </th>
+                                  <th class="columnApertura_SegExequial text-center">
+                                    <strong>Cuota Max</strong>
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                    <tr *ngFor="let item of resultadoInfoRadicado[0].ExtinguidasPrin; index as i">
+                                      <td class="columnEfectivo_SegExequial text-center" [ngClass]="item.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{item.Titulo}}</td>
+                                      <td class="columnApertura_SegExequial text-center" [ngClass]="item.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{item.Cantidad}}</td>
+                                      <td class="columnEfectivo_SegExequial text-center" [ngClass]="item.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{item.Otorgado | currency:'':'':'1.0-0'}}</td>
+                                      <td class="columnEfectivo_SegExequial text-center" [ngClass]="item.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{item.Mora}}</td>
+                                      <td class="columnEfectivo_SegExequial text-center" [ngClass]="item.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{item.Cuota | currency:'':'':'1.0-0'}}</td>
+                                    </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                          <div *ngIf="resultadoInfoRadicado[0].ExtinguidasCode.length != 0" class="col-xs-12 col-md-12 col-lg-12 pt-5 pb-5">
+                            <div class="text-center col-lg-12 col-md-12 col-xs-12">
+                              <hr/>
+                              <strong>Obligaciones extinguidas (codeudor y otros)</strong>
+                              <hr/>
+                            </div>
+                            <table class="table table-hover">
+                              <thead>
+                                <tr>
+                                  <th class="columnApertura_SegExequial text-center">
+                                      <strong>Obligaciones</strong>
+                                  </th>
+                                  <th class="columnEstado_SegExequial text-center">
+                                      <strong>Cantidad</strong>
+                                  </th>
+                                  <th class="columnApertura_SegExequial text-center">
+                                    <strong>Otorgado</strong>
+                                  </th>
+                                  <th class="columnApertura_SegExequial text-center">
+                                    <strong>Mora Max</strong>
+                                  </th>
+                                  <!-- <th class="columnApertura_SegExequial text-center">
+                                    <strong>Cuota</strong>
+                                  </th> -->
+                                </tr>
+                              </thead>
+                              <tbody>
+                                    <tr *ngFor="let item of resultadoInfoRadicado[0].ExtinguidasCode; index as i">
+                                      <td class="columnEfectivo_SegExequial text-center" [ngClass]="item.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{item.Titulo}}</td>
+                                      <td class="columnApertura_SegExequial text-center" [ngClass]="item.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{item.Cantidad}}</td>
+                                      <td class="columnEfectivo_SegExequial text-center" [ngClass]="item.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{item.Otorgado | currency:'':'':'1.0-0'}}</td>
+                                      <td class="columnEfectivo_SegExequial text-center" [ngClass]="item.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{item.Mora}}</td>
+                                      <!-- <td class="columnEfectivo_SegExequial text-center">{{item.Cuota}}</td> -->
+                                    </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                  </div>
+
+                  <div class="ac">
+                    <input class="ac-input" id="ac-3c" name="ac-3c" type="checkbox"/>
+                    <label class="ac-label" for="ac-3c">Información financiera del asociado</label>
+                    <article class="ac-text">
+                      <div class="col-xs-12 col-md-12 col-lg-12  pt-5 pb-5">
+                        <div class="row mt-5 p-4">
+                            <div class="col-xs-12 col-md-6 col-lg-3">
+                              <div class="form-group">
+                                <label class="textNegrilla">Activos:</label>
+                                <input style="text-align:right" type="text" class="form-control" formControlName="activosAso" [disabled]="true == true" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}" />
+                              </div>
+                            </div>
+                            <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                            <div class="col-xs-12 col-md-6 col-lg-3">
+                              <div class="form-group">
+                                <label class="textNegrilla">Pasivos:</label>
+                                <input style="text-align:right" type="text" class="form-control" formControlName="pasivosAso" [disabled]="true == true" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"/>
+                              </div>
+                            </div>
+                            <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                            <div class="col-xs-12 col-md-6 col-lg-3">
+                              <div class="form-group">
+                                <label class="textNegrilla">Patrimonio:</label>
+                                <input style="text-align:right" type="text" class="form-control" formControlName="patrimonioAso" [disabled]="true == true" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"/>
+                              </div>
+                            </div>
+                            <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                            <div class="col-xs-12 col-md-6 col-lg-3">
+                              <div class="form-group">
+                                <label class="textNegrilla">Ingreso mensual:</label>
+                                <input style="text-align:right" type="text" class="form-control" formControlName="ingresoMensualAso" [disabled]="true == true" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"/>
+                              </div>
+                            </div>
+                            <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                            <div class="col-xs-12 col-md-6 col-lg-3">
+                              <div class="form-group">
+                                <label class="textNegrilla">Índice solvencia:</label>
+                                <input type="text" class="form-control" formControlName="prcSolvenciaAso" />
+                              </div>
+                            </div>
+                            <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                            <div class="col-xs-12 col-md-6 col-lg-3">
+                              <div class="form-group">
+                                <label class="textNegrilla">Utilidad neta acumulada:</label>
+                                <input style="text-align:right" type="text" class="form-control" formControlName="utilidadNetaAso" [ngClass]="bloquearBuscar?'':'input__border'" [attr.disabled]="bloquearBuscar"
+                                (focus)="modificarbtnBuscar()" (keyup)="utilidadDigitada()" (blur)="utilidadDigitada()" currencyMask [options]="currencyOptions" (keydown.enter)="enterModal($event)"/>
+                              </div>
+                            </div>
+                            <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                            <div class="col-xs-12 col-md-6 col-lg-3">
+                              <div class="form-group">
+                                <label class="textNegrilla">Capacidad de pago directa:</label>
+                                <input style="text-align:right" type="text" class="form-control" formControlName="capacidadPagoAso"  (keydown.enter)="enterModal($event)"
+                                [ngClass]="bloquearBuscar?'':'input__border'" [attr.disabled]="bloquearBuscar" currencyMask [options]="currencyCap" (focus)="modificarbtnBuscar()" (keyup)="modificarbtnBuscar()" (blur)="modificarbtnBuscar()"/>
+                              </div>
+                            </div>
+                            <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                            <div class="col-xs-12 col-md-6 col-lg-3">
+                              <div class="form-group">
+                                <label class="textNegrilla">Capacidad de pago total:</label>
+                                <input style="text-align:right" type="text" class="form-control" formControlName="capacidadPagoTotalAso" (keydown.enter)="enterModal($event)"
+                                [ngClass]="bloquearBuscar?'':'input__border'" [attr.disabled]="bloquearBuscar" (focus)="modificarbtnBuscar()" (keyup)="modificarbtnBuscar()" (blur)="modificarbtnBuscar()" currencyMask [options]="currencyCap"/>
+                              </div>
+                            </div>
+                            <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                            <div class="col-xs-12 col-md-6 col-lg-3">
+                              <div class="form-group">
+                                <label class="textNegrilla">Rentabilidad del activo total:</label>
+                                <input type="text" class="form-control" formControlName="ROAAso" [disabled]="true == true"/>
+                              </div>
+                            </div>
+                            <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                            <div class="col-xs-12 col-md-6 col-lg-3">
+                              <div class="form-group">
+                                <label class="textNegrilla">% de endeudamiento directo:</label>
+                                <input type="text" class="form-control" formControlName="endeudamientoDirAso" />
+                              </div>
+                            </div>
+                            <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                            <div class="col-xs-12 col-md-6 col-lg-3">
+                              <div class="form-group">
+                                <label class="tegrilla">% de endeudamiento total:</label>
+                                <input type="text" class="form-control" formControlName="endeudamientoTotAso" />
+                              </div>
+                            </div>
+                            <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                            <div class="col-xs-12 col-md-6 col-lg-3">
+                              <div class="form-group">
+                                <label class="textNegrilla">Rentabilidad del patrimonio:</label>
+                                <input type="text" class="form-control" formControlName="ROEAso" [disabled]="true == true"/>
+                              </div>
+                            </div>
+                            <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                            <div class="col-xs-12 col-md-12 col-lg-12 tt_padding">
+                              <div class="form-group">
+                                <label class="textNegrilla">Análisis de estructura financiera:</label>
+                                <textarea type="text" class="form-control" formControlName="descActivosAso" [ngClass]="bloquearBuscar?'':'input__border'" [attr.disabled]="bloquearBuscar" (keydown.enter)="enterModal($event , 'descActivosAso')" (focus)="modificarbtnBuscar()" (keyup)="modificarbtnBuscar()" (blur)="modificarbtnBuscar()"></textarea>
+                              </div>
+                            </div>
+                        </div>
+                      </div>
+                    </article>
+                  </div>
+
+                  <!-- codeudores -->
+                  <div class="ac" *ngIf="resultadoCodeudores.length != 0 ">
+                    <input class="ac-input" id="ac-4c" name="ac-4c" type="checkbox"/>
+                    <label class="ac-label" for="ac-4c">Codeudores</label>
+                    <article class="ac-text">
+                      <div class="col-xs-12 col-md-12 col-lg-12 pt-5 pb-5">
+                        <table class="table table-hover">
+                          <thead>
+                              <tr>
+                                <th class="columnApertura_SegExequial">
+                                    <strong>Nro. identificación</strong>
+                                </th>
+                                <th class="columnEstado_SegExequial">
+                                    <strong>Nombre completo</strong>
+                                </th>
+                                <th class="columnApertura_SegExequial text-center">
+                                  <strong>Detalles</strong>
+                                </th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr *ngFor="let item of resultadoCodeudores; index as i">
+                                <td class="columnEfectivo_SegExequial">{{item.Documento}}</td>
+                                <td class="columnApertura_SegExequial">{{item.Nombre}}</td>
+                                <td class="columnEfectivo_SegExequial text-center">
+                                  <button class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-backdrop="static" data-keyboard="false" (click)="codeudorSeleccionado(item.Documento)" data-target="#ModalCodeudor">
+                                    <i class="icon-eye2"></i>
+                                  </button>
+                                </td>
+                              </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </article>
+                  </div>
+
+                  <!-- RecomendacionAnalista -->
+                  <div class="ac">
+                    <input class="ac-input" id="ac-5c" name="ac-5c" type="checkbox"/>
+                    <label class="ac-label" for="ac-5c">Análisis</label>
+                    <article class="ac-text">
+                      <div class="col-xs-12 col-md-12 col-lg-12  pt-5 pb-5">
+                        <div class="row p-4">
+                          <div class="col-xs-12 col-md-6 col-lg-5">
+                            <div class="form-group">
+                              <label class="textNegrilla">Recomendación analista:</label>
+                              <select formControlName="RecomendacionAnalista" class="form-control" [ngClass]="bloquearBuscar?'':'input__border'" (keydown.enter)="enterModal($event)" [attr.disabled]="bloquearBuscar" (change)="modificarbtnBuscar()">
+                                <option value="Viable">Viable</option>
+                                <option value="No viable">No viable</option>
+                                <option value="Viable con novedad">Viable con novedad</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                          <div class="col-xs-12 col-md-6 col-lg-5">
+                            <div class="form-group">
+                              <label class="textNegrilla">Analista de créditos:</label>
+                              <input type="text" class="form-control" formControlName="AnalistaEncargado" [disabled]="true == true">
+                            </div>
+                          </div>
+                          <div class="col-xs-12 col-md-12 col-lg-12 tt_padding">
+                            <div class="form-group">
+                              <label class="textNegrilla">Concepto final:</label>
+                              <textarea class="form-control" formControlName="ConceptoFinal" [ngClass]="bloquearBuscar?'':'input__border'" [attr.disabled]="bloquearBuscar" (keydown.enter)="enterModal($event, 'ConceptoFinal')" (focus)="modificarbtnBuscar()" (keyup)="modificarbtnBuscar()" (blur)="modificarbtnBuscar()"></textarea>
+                          </div>
+                          </div>  
+                        </div>
+                      </div>
+                    </article>
+                  </div>
+
+                  <!-- Lista de chequeo -->
+                  <div class="ac">
+                    <input class="ac-input" id="ac-9c" name="ac-9c" type="checkbox"/>
+                    <label class="ac-label" for="ac-9c">Lista de chequeo</label>
+                    <article class="ac-text">
+                      <div class="col-xs-12 col-md-12 col-lg-12 pt-5 pb-5">
+                        <div class="row p-4">
+                          <div class="col-xs-12 col-md-6 col-lg-4">
+                            <div class="input-group">
+                              <div class="input-group-text">
+                                <input class="switchery" type="checkbox" formControlName="InfoActualizadaSGF" [ngClass]="bloquearBuscar?'':'input__border'" [attr.disabled]="bloquearBuscar" (change)="modificarbtnBuscar()">
+                                <label class="textNegrilla">Info. actualizada SGF</label>
+                                <div class="mensajeInfo">
+                                  <i class="icon-info22"></i>
+                                  <span class="mensajeInfoTextBottom">Información actualizada SGF</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-xs-12 col-md-6 col-lg-4">
+                            <div class="input-group">
+                              <div class="input-group-text">
+                                <input class="switchery" type="checkbox" formControlName="CondicionesCredito" [ngClass]="bloquearBuscar?'':'input__border'" [attr.disabled]="bloquearBuscar" (change)="modificarbtnBuscar()">
+                                <label class="textNegrilla">Condiciones crédito</label>
+                                <div class="mensajeInfo">
+                                  <i class="icon-info22"></i>
+                                  <span class="mensajeInfoTextBottom">Formato aceptación condiciones de crédito</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-xs-12 col-md-6 col-lg-4">
+                            <div class="input-group">
+                              <div class="input-group-text">
+                                <input class="switchery" type="checkbox" formControlName="FormatoAsegurabilidad" [ngClass]="bloquearBuscar?'':'input__border'" [attr.disabled]="bloquearBuscar" (change)="modificarbtnBuscar()">
+                                <label class="textNegrilla">Formato asegurabilidad</label>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-xs-12 col-md-6 col-lg-4">
+                            <div class="input-group">
+                              <div class="input-group-text">
+                                <input class="switchery" type="checkbox" formControlName="ListaRestrictiva" [ngClass]="bloquearBuscar?'':'input__border'" [attr.disabled]="bloquearBuscar" (change)="modificarbtnBuscar()">
+                                <label class="textNegrilla">Consultar lista restrictiva</label>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-xs-12 col-md-6 col-lg-4">
+                            <div class="input-group">
+                              <div class="input-group-text">
+                                <input class="switchery" type="checkbox" formControlName="Scoring" [ngClass]="bloquearBuscar?'':'input__border'" [attr.disabled]="bloquearBuscar" (change)="modificarbtnBuscar()">
+                                <label class="textNegrilla">Scoring</label>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-xs-12 col-md-6 col-lg-4">
+                              <div class="input-group">
+                                <div class="input-group-text">
+                                  <input class="switchery" type="checkbox" formControlName="Avaluo" [ngClass]="bloquearBuscar?'':'input__border'" [attr.disabled]="bloquearBuscar" (change)="modificarbtnBuscar()">
+                                  <label class="textNegrilla">Avalúo</label>
+                                </div>
+                              </div>
+                          </div>
+                          <div class="col-xs-12 col-md-6 col-lg-4">
+                            <div class="input-group">
+                              <div class="input-group-text">
+                                <input class="switchery" type="checkbox" formControlName="EstudiosTitulos" [ngClass]="bloquearBuscar?'':'input__border'" [attr.disabled]="bloquearBuscar" (change)="modificarbtnBuscar()">
+                                <label class="textNegrilla">Estudio de títulos</label>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-xs-12 col-md-6 col-lg-4">
+                            <div class="input-group">
+                              <div class="input-group-text">
+                                <input class="switchery" type="checkbox" formControlName="PolizaIncendios" [ngClass]="bloquearBuscar?'':'input__border'" [attr.disabled]="bloquearBuscar" (change)="modificarbtnBuscar()">
+                                <label class="textNegrilla">Póliza incendio</label>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-xs-12 col-md-6 col-lg-4">
+                            <div class="input-group">
+                              <div class="input-group-text">
+                                <input class="switchery" type="checkbox" formControlName="EstadoDeCuenta" [ngClass]="bloquearBuscar?'':'input__border'" [attr.disabled]="bloquearBuscar" (change)="modificarbtnBuscar()">
+                                <label class="textNegrilla">Estado de cuenta deudor y codeudor</label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                  </div>
+                  <div class="col-xs-12 col-lg-12 col-md-12 text-right" *ngIf="btnGuardar">
+                    <button type="button" class="btn Gt-btn-verde btn-icon" (click)="recolectarInfo()" [attr.disabled]="BloquearBotonGuardar" >
+                      {{contenidoBoton}}
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <ngx-loading [show]="loading"
+    [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+  </ngx-loading>
+  
+  <!-- modal para enviar al Workmanager -->
+  <div id="ModalPreguntaWM" class="modal centrarModal" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-xs">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal" id="cerrarModalEnviarWM" (click)="CapturarWorkFlowId(1)">&times;</button>
+                <h6 class="modal-title">Enviar al Workmanager</h6>
+            </div>
+            <div class="modal-body">
+            <div class="row">
+              <div class="col-xs-12 col-md-12 col-lg-12">
+                <label class="col-12 textNegrilla">Número del proceso de workflow:</label>
+                <input type="number" id="procesowf" name="procesowf" class="form-control" autocomplete="off" (keyup)="procesoWFChange()"/>
+              </div>
+            </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn Gt-btn-verde" (click)="CapturarWorkFlowId()" [attr.disabled]="btnEnviarWorkF">Enviar</button>
+              <button type="button" class="btn Gt-btn-morado" data-dismiss="modal" (click)="CapturarWorkFlowId(1)">Cerrar</button>
+            </div>
+        </div>
+    </div>
+  </div>
+</form>
+
+
+<!--Modal de codeudores-->
+<div id="ModalCodeudor" class="modal" *ngIf="codSelected.length != 0">
+  <div class="modal-dialog modal-dialog-xl">
+            <div class="modal-content modal-lg modal-xl">
+                <div class="modal-header bg-morado">
+                    <button type="button" class="close" data-dismiss="modal" (click)="cerrarModalCode()">&times;</button>
+                    <h6 class="modal-title">Codeudor <!-- numero --></h6>
+                </div>
+        <!--Seccion Datos-->
+        <div class="modal-body">
+          <form method="get" [formGroup]="CodeudorForm">
+            <div class="panel-body">
+
+              <div class="ac">
+                <input class="ac-input" id="ac-6c" name="ac-6c" type="checkbox"/>
+                <label class="ac-label" for="ac-6c">Información general del codeudor</label>
+                <article class="ac-text">
+                  <div class="col-xs-12 col-md-12 col-lg-12 pt-5 pb-5">
+                      <div class="row p-4">
+                        <div class="col-xs-12 col-md-6 col-lg-3">
+                          <div class="form-group">
+                            <label class="textNegrilla">Nombre del codeudor:</label>
+                            <input type="text" class="form-control" formControlName="nombreCod"/>
+                          </div>
+                        </div>  
+                        <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                        <div class="col-xs-12 col-md-6 col-lg-3">
+                          <div class="form-group">
+                            <label class="textNegrilla">Nro. identificación:</label>
+                            <input type="text" class="form-control" formControlName="identCod" />
+                          </div>
+                        </div>
+                        <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                        <div class="col-xs-12 col-md-6 col-lg-3">
+                          <div class="form-group">
+                            <label class="textNegrilla">Correo:</label>
+                            <input type="text" class="form-control" formControlName="correoCod" />
+                          </div>
+                        </div>
+                        <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                        <div class="col-xs-12 col-md-6 col-lg-3">
+                          <div class="form-group">
+                            <label class="textNegrilla">Asociado desde:</label>
+                            <input type="text" class="form-control" formControlName="asociadoDesdeCod" />
+                          </div>
+                        </div>
+                        <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                        <div class="col-xs-12 col-md-6 col-lg-3">
+                          <div class="form-group">
+                            <label class="textNegrilla">Valor aportes:</label>
+                            <input style="text-align: right;" type="text" class="form-control" formControlName="vlrAportesCod" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"/>
+                          </div>
+                        </div>
+                        <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                        <div class="col-xs-12 col-md-6 col-lg-3">
+                          <div class="form-group">
+                            <label class="textNegrilla">Empresa donde labora:</label>
+                            <div class="mensajeInfo">
+                              <i class="icon-info22"></i>
+                              <span class="mensajeInfoText">Nombre empresa o establecimiento donde labora</span>
+                            </div>
+                            <input type="text" class="form-control" formControlName="empresaCod" />
+                          </div>
+                        </div>
+                        <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                        <div class="col-xs-12 col-md-6 col-lg-3">
+                          <div class="form-group">
+                            <label class="textNegrilla">Antigüedad:</label>
+                            <input type="text" class="form-control" formControlName="antiguedadCod" />
+                          </div>
+                        </div>
+                        <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                        <div class="col-xs-12 col-md-6 col-lg-3">
+                          <div class="form-group">
+                            <label class="textNegrilla">Cargo:</label>
+                            <input type="text" class="form-control" formControlName="ocupacionCod" />
+                          </div>
+                        </div>
+                        <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                          <div class="col-xs-12 col-md-12 col-lg-3">
+                            <div class="form-group">
+                              <label class="textNegrilla">Actividad económica:</label><i class="fa-light fa-circle-question"></i>
+                              <input type="text" class="form-control" formControlName="ActividadEconomicaCod"/>
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+                </article>
+              </div>
+
+              <div class="ac">
+                <input class="ac-input" id="ac-7c" name="ac-7c" type="checkbox" />
+                <label class="ac-label" for="ac-7c">Historial crediticio del codeudor</label>
+                <article class="ac-text">
+                  <div class="col-xs-12 col-md-12 col-lg-12 pt-5 pb-5">
+                    <div class="row p-4">
+                      <div class="col-xs-12 col-md-6 col-lg-3">
+                        <div class="form-group">
+                          <label class="textNegrilla">Puntaje Experian:</label>
+                          <input type="number" class="form-control" formControlName="puntExpirianCode" max="1000" [ngClass]="bloquearBuscar?'':'input__border'" [attr.disabled]="bloquearBuscar" (keydown.enter)="enterModal($event)" (keyup)="menorDeMilValidate(1, $event)"/>
+                        </div>
+                      </div>
+                      <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                      <div class="col-xs-12 col-md-6 col-lg-3">
+                        <div class="form-group">
+                          <label class="textNegrilla">Puntaje TransUnion:</label>
+                          <input type="text" class="form-control" formControlName="puntajeTransCod"/>
+                        </div>
+                      </div>
+                      <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                      <div class="col-xs-12 col-md-6 col-lg-3">
+                        <div class="form-group">
+                          <label class="textNegrilla">Resultado scoring:</label>
+                          <select formControlName="scoringCode" class="form-control" [ngClass]="bloquearBuscar?'':'input__border'" [attr.disabled]="bloquearBuscar" (keydown.enter)="enterModal($event)">
+                            <option value="Aprobado">Aprobado</option>
+                            <option value="Negado">Negado</option>
+                            <option value="Evaluación ente superior">Evaluación ente superior</option>
+                            <option value="No aplica">No aplica</option>
+                            <option value="0" selected [disabled]="true == true">Seleccione una opción</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                      <div class="col-xs-12 col-md-6 col-lg-3">
+                        <div class="form-group">
+                          <label class="textNegrilla">Max. operación real cancelada:</label>
+                          <input type="text" class="form-control" formControlName="MaxOpCancelRealCode" [disabled]="true == true" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"/>
+                        </div>
+                      </div>
+                      <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                      <div class="col-xs-12 col-md-6 col-lg-3">
+                        <div class="form-group">
+                          <label class="textNegrilla">Max. operación financiera:</label>
+                          <div class="mensajeInfo">
+                            <i class="icon-info22"></i>
+                            <span class="mensajeInfoText">Máxima operación financiera cancelada</span>
+                          </div>
+                          <input type="text" class="form-control" formControlName="MaxOpCancelFinanCode" [disabled]="true == true" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"/>
+                        </div>
+                      </div>
+                      <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                      <div class="col-xs-12 col-md-6 col-lg-3">
+                        <div class="form-group">
+                          <label class="textNegrilla">Max. operación Coogranada:</label>
+                          <div class="mensajeInfo">
+                            <i class="icon-info22"></i>
+                            <span class="mensajeInfoText">Máxima operación financiera cancelada(Coogranada)</span>
+                          </div>
+                          <input type="text" class="form-control" formControlName="MaxOpCancelFinanCoograCode" [disabled]="true == true" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"/>
+                        </div>
+                      </div>
+                      <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                    </div>
+                    <div class="row p-4">
+                      <div *ngIf="codSelected[0].VigentesPrin.length != 0" class="col-xs-12 col-md-12 col-lg-12 pt-5 pb-5">
+                        <div class="text-center col-lg-12 col-md-12 col-xs-12">
+                          <hr/>
+                          <strong>Obligaciones vigentes (principal)</strong>
+                          <hr/>
+                        </div>
+                        <table class="table table-hover">
+                          <thead>
+                            <tr>
+                              <th class="columnApertura_SegExequial text-center">
+                                  <strong>Obligaciones</strong>
+                              </th>
+                              <th class="columnEstado_SegExequial text-center">
+                                  <strong>Cantidad</strong>
+                              </th>
+                              <th class="columnApertura_SegExequial text-center">
+                                <strong>Otorgado</strong>
+                              </th>
+                              <th class="columnApertura_SegExequial text-center">
+                                <strong>Utilizado</strong>
+                              </th>
+                              <th class="columnApertura_SegExequial text-center">
+                                <strong>%Util</strong>
+                              </th>
+                              <th class="columnApertura_SegExequial text-center">
+                                <strong>Cuota</strong>
+                              </th>
+                              <th class="columnApertura_SegExequial text-center">
+                                <strong>Mora</strong>
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                                <tr *ngFor="let elemento of codSelected[0].VigentesPrin; index as i">
+                                  <td class="columnEfectivo_SegExequial text-center" [ngClass]="elemento.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{elemento.Titulo}}</td>
+                                  <td class="columnApertura_SegExequial text-center" [ngClass]="elemento.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{elemento.Cantidad}}</td>
+                                  <td class="columnEfectivo_SegExequial text-center" [ngClass]="elemento.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{elemento.Otorgado | currency:'':'':'1.0-0'}}</td>
+                                  <td class="columnEfectivo_SegExequial text-center" [ngClass]="elemento.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{elemento.Utilidad | currency:'':'':'1.0-0'}}</td>
+                                  <td class="columnEfectivo_SegExequial text-center" [ngClass]="elemento.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{elemento.Titulo == 'Subtotal'? '-' : (elemento.Utilidad * 100 / elemento.Otorgado).toFixed(2)}}</td>
+                                  <td class="columnEfectivo_SegExequial text-center" [ngClass]="elemento.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{elemento.Cuota | currency:'':'':'1.0-0'}}</td>
+                                  <td class="columnEfectivo_SegExequial text-center" [ngClass]="elemento.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{elemento.Mora | currency:'':'':'1.0-0'}}</td>
+                                </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div *ngIf="codSelected[0].VigentesCode.length != 0" class="col-xs-12 col-md-12 col-lg-12 pt-5 pb-5">
+                        <div class="text-center col-lg-12 col-md-12 col-xs-12">
+                          <hr/>
+                          <strong>Obligaciones vigentes (codeudor y otros)</strong>
+                          <hr/>
+                        </div>
+                        <table class="table table-hover">
+                          <thead>
+                            <tr>
+                              <th class="columnApertura_SegExequial text-center">
+                                  <strong>Obligaciones</strong>
+                              </th>
+                              <th class="columnEstado_SegExequial text-center">
+                                  <strong>Cantidad</strong>
+                              </th>
+                              <th class="columnApertura_SegExequial text-center">
+                                <strong>Otorgado</strong>
+                              </th>
+                              <th class="columnApertura_SegExequial text-center">
+                                <strong>Utilizado</strong>
+                              </th>
+                              <th class="columnApertura_SegExequial text-center">
+                                <strong>%Util</strong>
+                              </th>
+                              <th class="columnApertura_SegExequial text-center">
+                                <strong>Cuota</strong>
+                              </th>
+                              <th class="columnApertura_SegExequial text-center">
+                                <strong>Mora</strong>
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                                <tr *ngFor="let elemento of codSelected[0].VigentesCode; index as i">
+                                  <td class="columnEfectivo_SegExequial text-center" [ngClass]="elemento.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{elemento.Titulo}}</td>
+                                  <td class="columnApertura_SegExequial text-center" [ngClass]="elemento.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{elemento.Cantidad}}</td>
+                                  <td class="columnEfectivo_SegExequial text-center" [ngClass]="elemento.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{elemento.Otorgado | currency:'':'':'1.0-0'}}</td>
+                                  <td class="columnEfectivo_SegExequial text-center" [ngClass]="elemento.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{elemento.Utilidad | currency:'':'':'1.0-0'}}</td>
+                                  <td class="columnEfectivo_SegExequial text-center" [ngClass]="elemento.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{elemento.Titulo == 'Subtotal'? '-' : (elemento.Utilidad * 100 / elemento.Otorgado).toFixed(2)}}</td>
+                                  <td class="columnEfectivo_SegExequial text-center" [ngClass]="elemento.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{elemento.Cuota | currency:'':'':'1.0-0'}}</td>
+                                  <td class="columnEfectivo_SegExequial text-center" [ngClass]="elemento.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{elemento.Mora }}</td>
+                                </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div *ngIf="codSelected[0].ExtinguidasPrin.length != 0" class="col-xs-12 col-md-12 col-lg-12 pt-5 pb-5">
+                        <div class="text-center col-lg-12 col-md-12 col-xs-12">
+                          <hr/>
+                          <strong>Obligaciones extinguidas (principal)</strong>
+                          <hr/>
+                        </div>
+                        <table class="table table-hover">
+                          <thead>
+                            <tr>
+                              <th class="columnApertura_SegExequial text-center">
+                                  <strong>Obligaciones</strong>
+                              </th>
+                              <th class="columnEstado_SegExequial text-center">
+                                  <strong>Cantidad</strong>
+                              </th>
+                              <th class="columnApertura_SegExequial text-center">
+                                <strong>Otorgado</strong>
+                              </th>
+                              <th class="columnApertura_SegExequial text-center">
+                                <strong>Mora Max</strong>
+                              </th>
+                              <th class="columnApertura_SegExequial text-center">
+                                <strong>Cuota Max</strong>
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                                <tr *ngFor="let elemento of codSelected[0].ExtinguidasPrin; index as i">
+                                  <td class="columnEfectivo_SegExequial text-center" [ngClass]="elemento.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{elemento.Titulo}}</td>
+                                  <td class="columnApertura_SegExequial text-center" [ngClass]="elemento.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{elemento.Cantidad}}</td>
+                                  <td class="columnEfectivo_SegExequial text-center" [ngClass]="elemento.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{elemento.Otorgado | currency:'':'':'1.0-0'}}</td>
+                                  <td class="columnEfectivo_SegExequial text-center" [ngClass]="elemento.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{elemento.Mora}}</td>
+                                  <td class="columnEfectivo_SegExequial text-center" [ngClass]="elemento.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{elemento.Cuota | currency:'':'':'1.0-0'}}</td>
+                                </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div *ngIf="codSelected[0].ExtinguidasCode.length != 0" class="col-xs-12 col-md-12 col-lg-12 pt-5 pb-5">
+                        <div class="text-center col-lg-12 col-md-12 col-xs-12">
+                          <hr/>
+                          <strong>Obligaciones extinguidas (codeudor y otros)</strong>
+                          <hr/>
+                        </div>
+                        <table class="table table-hover">
+                          <thead>
+                            <tr>
+                              <th class="columnApertura_SegExequial text-center">
+                                  <strong>Obligaciones</strong>
+                              </th>
+                              <th class="columnEstado_SegExequial text-center">
+                                  <strong>Cantidad</strong>
+                              </th>
+                              <th class="columnApertura_SegExequial text-center">
+                                <strong>Otorgado</strong>
+                              </th>
+                              <th class="columnApertura_SegExequial text-center">
+                                <strong>Mora Max</strong>
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                                <tr *ngFor="let elemento of codSelected[0].ExtinguidasCode; index as i">
+                                  <td class="columnEfectivo_SegExequial text-center" [ngClass]="elemento.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{elemento.Titulo}}</td>
+                                  <td class="columnApertura_SegExequial text-center" [ngClass]="elemento.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{elemento.Cantidad}}</td>
+                                  <td class="columnEfectivo_SegExequial text-center" [ngClass]="elemento.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{elemento.Otorgado | currency:'':'':'1.0-0'}}</td>
+                                  <td class="columnEfectivo_SegExequial text-center" [ngClass]="elemento.Titulo == 'Subtotal'? 'Subtotal__negrilla': ''">{{elemento.Mora}}</td>
+                                </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </div>
+
+              <div class="ac">
+                <input class="ac-input" id="ac-8c" name="ac-8c" type="checkbox" />
+                <label class="ac-label" for="ac-8c">Información financiera del codeudor</label>
+                <article class="ac-text">
+                  <div class="col-xs-12 col-md-12 col-lg-12  pt-5 pb-5">
+                    <div class="row mt-5 p-4">
+                        <div class="col-xs-12 col-md-6 col-lg-3">
+                          <div class="form-group">
+                            <label class="textNegrilla">Activos:</label>
+                            <input style="text-align:right" type="text" class="form-control" formControlName="activosCod" [disabled]="true == true" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"/>
+                          </div>
+                        </div>
+                        <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                        <div class="col-xs-12 col-md-6 col-lg-3">
+                          <div class="form-group">
+                            <label class="textNegrilla">Pasivos:</label>
+                            <input style="text-align:right" type="text" class="form-control" formControlName="pasivosCod" [disabled]="true == true" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"/>
+                          </div>
+                        </div>
+                        <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                        <div class="col-xs-12 col-md-6 col-lg-3">
+                          <div class="form-group">
+                            <label class="textNegrilla">Patrimonio:</label>
+                            <input style="text-align:right" type="text" class="form-control" [disabled]="true == true" formControlName="patrimonioCod" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"/>
+                          </div>
+                        </div>
+                        <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                        <div class="col-xs-12 col-md-6 col-lg-3">
+                          <div class="form-group">
+                            <label class="textNegrilla">Ingreso mensual:</label>
+                            <input style="text-align:right" type="text" class="form-control" formControlName="ingresoMensualCod" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}" />
+                          </div>
+                        </div>
+                        <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                        <div class="col-xs-12 col-md-6 col-lg-3">
+                          <div class="form-group">
+                            <label class="textNegrilla">Índice solvencia:</label>
+                            <input type="text" class="form-control" formControlName="prcSolvenciaCod"/>
+                          </div>
+                        </div>
+                        <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                        <div class="col-xs-12 col-md-6 col-lg-3">
+                          <div class="form-group">
+                            <label class="textNegrilla">Utilidad neta acumulada:</label>
+                            <input style="text-align:right" type="text" class="form-control" formControlName="utilidadNetaCode" [ngClass]="bloquearBuscar?'':'input__border'" [attr.disabled]="bloquearBuscar" (keydown.enter)="enterModal($event)"
+                            (blur)="utilidadCodeDigitada()" (keydown)="utilidadCodeDigitada()" currencyMask [options]="currencyOptions" />
+                          </div>
+                        </div>
+                        <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                        <div class="col-xs-12 col-md-6 col-lg-3">
+                          <div class="form-group">
+                            <label class="textNegrilla">Capacidad de pago directa:</label>
+                            <input style="text-align:right" type="text" class="form-control" formControlName="capacidadPagoCode" 
+                            [ngClass]="bloquearBuscar?'':'input__border'" currencyMask [options]="currencyCap" [attr.disabled]="bloquearBuscar" (keydown.enter)="enterModal($event)"/>
+                          </div>
+                        </div>
+                        <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                        <div class="col-xs-12 col-md-6 col-lg-3">
+                          <div class="form-group">
+                            <label class="textNegrilla">Capacidad de pago total:</label>
+                            <input style="text-align:right" type="text" class="form-control" formControlName="capacidadPagoTotalCode"
+                            [ngClass]="bloquearBuscar?'':'input__border'" currencyMask [options]="currencyCap" [attr.disabled]="bloquearBuscar"/>
+                          </div>
+                        </div>
+                        <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                        <div class="col-xs-12 col-md-6 col-lg-3">
+                          <div class="form-group">
+                            <label class="textNegrilla">Rentabilidad del activo total:</label>
+                            <input type="text" class="form-control" formControlName="ROACode" [disabled]="true == true"/>
+                          </div>
+                        </div>
+                        <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                        <div class="col-xs-12 col-md-6 col-lg-3">
+                          <div class="form-group">
+                            <label class="textNegrilla">% de endeudamiento directo:</label>
+                            <input type="text" class="form-control" formControlName="endeudamientoDirCod"/>
+                          </div>
+                        </div>
+                        <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                        <div class="col-xs-12 col-md-6 col-lg-3">
+                          <div class="form-group">
+                            <label class="textNegrilla">% de endeudamiento total:</label>
+                            <input type="text" class="form-control" formControlName="endeudamientoTotCod" />
+                          </div>
+                        </div>
+                        <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                        <div class="col-xs-12 col-md-6 col-lg-3">
+                          <div class="form-group">
+                            <label class="textNegrilla">Rentabilidad del patrimonio:</label>
+                            <input type="text" class="form-control" formControlName="ROECode" [disabled]="true == true"/>
+                          </div>
+                        </div>
+                        <div class="col-xs-0 col-md-0 col-lg-1"></div>
+                        <div class="col-xs-12 col-md-12 col-lg-12 tt_padding">
+                          <div class="form-group">
+                            <label class="textNegrilla">Análisis de estructura financiera:</label>
+                            <textarea type="text" class="form-control" formControlName="AnalisisEstFinanCode" [ngClass]="bloquearBuscar?'':'input__border'" [attr.disabled]="bloquearBuscar" (keydown.enter)="enterModal($event,'AnalisisEstFinanCode')" (focus)="modificarbtnBuscar()" (keyup)="modificarbtnBuscar()" (blur)="modificarbtnBuscar()"></textarea>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </article>
+              </div>
+
+            </div>
+          </form>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn Gt-btn-morado" data-dismiss="modal" (click)="cerrarModalCode()">Cerrar</button>
+        </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Modal PDF -->
+  <div id="ModalPDF" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal" (click)="cerrarModalPDF()">&times;</button>
+                <h6 class="modal-title">Ficha de análisis</h6>
+            </div>
+            <div class="modal-body">
+                <div class="panel-body">
+                    <div>
+                        <object *ngIf="infoPdfTrue" id="PDF"></object>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="panel-body">
+                    <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                      <!-- <button class="btn Gt-btn-verde">
+                        <i class="icon-download4"></i>&nbsp; PDF
+                    </button>&nbsp; -->
+                    </div>
+                </div>
+            </div>
+            <ngx-loading [show]="loading" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+            </ngx-loading>
+        </div>
+    </div>
+
+  </div>
+
+  <div id="ModalBuscarRadicados" class="modal" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal" (click)="ClearAll()">&times;</button>
+                <h6 class="modal-title">Deudores</h6>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive scrollTabla">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th><strong>Documento</strong></th>
+                                <th><strong>Nombre completo</strong></th>
+                                <th><strong>No. Radicado</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let resultTercero of dataDeudores">
+                            <tr (click)="ConsultarInfoPorRadicado(resultTercero.Radicado)">
+                                <td data-dismiss="modal">
+                                    {{resultTercero.Documento}}
+                                </td>
+                                <td data-dismiss="modal">
+                                    {{resultTercero.Nombre}}
+                                </td>
+                                <td data-dismiss="modal">
+                                  {{resultTercero.Radicado}}
+                              </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal" (click)="ClearAll()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <div id="ModalTrazabilidad" class="modal" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Trazabilidad</h6>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive scrollTabla">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th class="columna_fecha CuentaFija"><strong>Fecha</strong></th>
+                                <th class="CuentaFija"><strong class="columna_oficina">Oficina</strong></th>
+                                <th class="columna_usuario CuentaFija"><strong>Usuario responsable</strong></th>
+                                <th id="columna_operacion" class="CuentaFija"><strong>Operación</strong></th>
+                                <th *ngIf="detalleTrazabilidad" class="CuentaFija"><strong>Workflow</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let dato of dataTrazabilidad">
+                            <tr>
+                              <td class="columna_fecha">
+                                {{dato.Fecha | date:'yyyy/MM/dd HH:mm:ss'}}
+                              </td>
+                              <td class="columna_oficina">
+                                {{dato.Oficina}}
+                              </td>
+                              <td class="columna_usuario">
+                                {{dato.Nombre}}
+                              </td>
+                              <td id="columna_operacion">
+                                {{dato.Operacion}}
+                              </td>
+                              <td *ngIf="detalleTrazabilidad" >
+                                {{dato.JsonDto}}
+                              </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <div id="ModalCuentas" class="modal" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-md">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Cuentas</h6>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive scrollTabla">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th><strong>Cuenta</strong></th>
+                                <th><strong>Promedio</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let cuenta of dataCuentas">
+                            <tr>
+                                <td>
+                                    {{cuenta.Cuenta}}
+                                </td>
+                                <td>
+                                    $ {{cuenta.Promedio | currency:'':'' : '1.2-2'}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+  </div>
+  
