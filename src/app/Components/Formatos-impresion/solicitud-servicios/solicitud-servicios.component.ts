@@ -538,6 +538,7 @@ export class SolicitudServiciosComponent implements OnInit {
           } else {
             this.naturalesAllModel.NumeroPersonasCargo = result.asociadosNaturalesDto.NumPersCargo;
           }
+          this.naturalesAllModel.RegimenTributario = result.asociadosNaturalesDto.RegimenTributario ? 'No responsable' : 'Simple';
 
           // mapea el nivel de estudio
           this.nivelesEstudio.forEach(elementNivelEstudio => {
