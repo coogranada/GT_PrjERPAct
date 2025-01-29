@@ -310,6 +310,8 @@ export class LayoutComponent implements OnInit {
   isProductosAhorrosTerminoMenuOpen : boolean = false;
   isProductosCreditoMenuOpen : boolean = false;
   isProductosSeguroMenuOpen : boolean = false;
+  isInformeMenuOpen : boolean = false;
+  isInformeEstadisticosMenuOpen : boolean = false;
     // Cambiar a 'false' si deseas ocultarlo por defecto
 
   // Método para alternar el estado del menú de Usuario
@@ -383,6 +385,13 @@ export class LayoutComponent implements OnInit {
     this.isProductosSeguroMenuOpen = !this.isProductosSeguroMenuOpen;
     this.toggleCloseMenu(4,6);
   }
+  toggleInformeMenu(){
+    this.isInformeMenuOpen = !this.isInformeMenuOpen;
+    this.toggleCloseMenu(5);
+  }
+  toggleInformeEstadisticosMenu(){
+    this.isInformeEstadisticosMenuOpen = !this.isInformeEstadisticosMenuOpen;
+  }
   toggleCloseMenu(id : number, opcion : number = 0) {
     if(id != 1)this.isUsuarioMenuOpen = false;
     if(id != 2)this.isConfiguracionMenuOpen = false;
@@ -424,6 +433,10 @@ export class LayoutComponent implements OnInit {
     }else if(id == 4 && opcion == 5){
       this.isProductosAhorrosMenuOpen = false;
       this.isProductosCreditoMenuOpen = false;
+    }
+    if(id != 5){
+      this.isInformeMenuOpen = false;
+      this.isInformeEstadisticosMenuOpen = false;
     }
   }
   ngOnInit() {

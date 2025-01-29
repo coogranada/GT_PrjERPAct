@@ -1,0 +1,189 @@
+<body id="Contenido">
+    <button type="button" class="btn Gt-btn-morado doNotPrint" data-toggle="modal" style="visibility:hidden" data-target="#ModalImprimirDebitoAutomatico" #abrirFormatoDebitoAutomatico>Abrir <i class="icon-play3 position-right"></i>
+        </button>
+
+
+    <div id="ModalImprimirDebitoAutomatico" class="modal fade" data-backdrop="static">
+        <div class="modal-fade modal-full">
+            <div class="modal-content modal-lg">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" (click)="limpiarModal()">&times;</button>
+                </div>
+                <div class="modal-body" id="FormatoDebitoAutomatico">
+                    <div class="col-sm-12 col-xs-12 col-lg-12">
+                        <div class=" col-sm-12 col-xs-12 col-lg-12  text-center ">
+                            <div class="col-sm-3 col-xs-3 col-lg-3">
+                                <img src="../../../../assets/images/GT/logo-coogranada.png" class="content-group mt-10 imagenFormato" alt="">
+                            </div>
+
+                            <div class="col-sm-8 col-xs-8 col-lg-8 text-center">
+                                <h6 class="text-uppercase text-bold">AUTORIZACIÓN DÉBITO AUTOMÁTICO</h6>
+                                <label class="text-center" style="font-size: 10px">Autorizo a COOGRANADA a debitar el valor de la cuota descrita, la cual debe ser consignada en la cuenta autorizada, con la periodicidad señalada.</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-xs-12 col-lg-12 text-right">
+                            <br />
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12">
+
+                        <div class="col-sm-8 col-xs-8 col-lg-8" *ngIf="dataObjet !== Undefined">
+                            <div class="content-group">
+                                <table id="TablaCuentaOrigen " class="table table-bordered">
+                                    <thead>
+                                        <tr class="bg-morado">
+                                            <th style="font-size: 10px"><strong>Origen a Debitar</strong></th>
+                                            <th style="font-size: 10px"><strong>N° Cédula Titular</strong></th>
+                                            <th style="font-size: 10px"><strong>Apellidos y Nombres del Titular</strong></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngFor="let CuentaOrigen of dataObjet; let i=index">
+                                        <tr>
+                                            <td style="font-size: 10px">{{CuentaOrigen.CuentaOrigen}}</td>
+                                            <td style="font-size: 10px">{{CuentaOrigen.DocumentoOrigen}}</td>
+                                            <td style="font-size: 10px">{{CuentaOrigen.NombreOrigen}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-xs-2 col-lg-2">
+                            <div class="text-center">
+                                <label style="font-size: 12px"><strong>Fecha:</strong>&nbsp;{{Fecha | date:'yyyy/MM/dd'}}</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12">
+
+                        <div class="col-sm-12 col-xs-12 col-lg-12" *ngIf="dataObjetActual.length !== 0">
+                            <div class="content-group">
+                                <table id="TablaCuentaDestino " class="table table-bordered">
+                                    <thead>
+                                        <tr class="bg-morado">
+                                            <th style="font-size: 10px"><strong>Cuenta Destino a Acreditar</strong></th>
+                                            <th style="font-size: 10px"><strong>N° Cédula Titular</strong></th>
+                                            <th style="font-size: 10px"><strong>Apellidos y Nombres del Titular</strong></th>
+                                            <th style="font-size: 10px"><strong>Periodo pago</strong></th>
+                                            <th style="font-size: 10px"><strong>Valor cuota</strong></th>
+                                            <th style="font-size: 10px"><strong>Fecha matricula débito</strong></th>
+                                            <th style="font-size: 10px"><strong>Fecha vencimiento débito</strong></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngFor="let CuentaDestino of dataObjetActual; let i=index">
+                                        <tr>
+                                            <td style="font-size: 10px">{{CuentaDestino.CuentaDestino}}</td>
+                                            <td style="font-size: 10px">{{CuentaDestino.DocumentoDestino}}</td>
+                                            <td style="font-size: 10px">{{CuentaDestino.NombreDestino}}</td>
+                                            <td style="font-size: 10px">{{CuentaDestino.DescripcionPeriocidad}}</td>
+                                            <td style="font-size: 10px">{{CuentaDestino.CuotaMes | currency: '$' }}</td>
+                                            <td style="font-size: 10px">{{CuentaDestino.FechaMatricula}}</td>
+                                            <td style="font-size: 10px">{{CuentaDestino.FechaVencimiento}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12" *ngIf="dataObjetRetiro.length !== 0">
+                        <div class="col-sm-12 col-xs-12 col-lg-12 text-left">
+                            <label style="font-size: 12px"><strong>Retiro</strong></label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12">
+
+                        <div class="col-sm-10 col-xs-10 col-lg-10" *ngIf="dataObjetRetiro.length !== 0">
+                            <div class="content-group">
+                                <table id="TablaRetiro " class="table table-bordered">
+                                    <thead>
+                                        <tr class="bg-morado">
+                                            <th style="font-size: 10px"><strong>Destino a Acreditar</strong></th>
+                                            <th style="font-size: 10px"><strong>N° Cédula Titular</strong></th>
+                                            <th style="font-size: 10px"><strong>Apellidos y Nombres del Titular</strong></th>
+                                            <th style="font-size: 10px"><strong>Periodo pago</strong></th>
+                                            <th style="font-size: 10px"><strong>Valor cuota</strong></th>
+                                            <th style="font-size: 10px"><strong>Fecha Retiro</strong></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngFor="let CuentaRetiro of dataObjetRetiro; let i=index">
+                                        <tr>
+                                            <td style="font-size: 10px">{{CuentaRetiro.CuentaDestino}}</td>
+                                            <td style="font-size: 10px">{{CuentaRetiro.DocumentoDestino}}</td>
+                                            <td style="font-size: 10px">{{CuentaRetiro.NombreDestino}}</td>
+                                            <td style="font-size: 10px">{{CuentaRetiro.DescripcionPeriocidad}}</td>
+                                            <td style="font-size: 10px">{{CuentaRetiro.CuotaMes | currency: '$'}}</td>
+                                            <td style="font-size: 10px">{{CuentaRetiro.FechaRetiro}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12">
+                        <div class="content-group">
+                            <table id="TablaFirmas" class="table" style="border: hidden">
+                                <tbody>
+                                    <tr>
+                                        <td style="font-size: 10px" class="col-sm-4 col-xs-4 col-lg-4">
+                                            <label style="font-size: 12px" class="col-sm-12 col-xs-12 col-lg-12 text-left">Firma Autorizado _____________________</label>
+                                            <br/>
+                                            <br/>
+                                            <br/>
+                                            <label style="font-size: 12px" class="col-sm-12 col-xs-12 col-lg-12 text-left">Cédula _____________________________</label>
+                                        </td>
+                                        <td class="col-sm-2 col-xs-2 col-lg-2">
+                                            <div class="col-sm-12 col-xs-12 col-lg-12">
+                                                <div class="panel text-center huellaDactilar">
+                                                    <div class="panel-body">
+                                                        <div class=" col-sm-12 col-xs-12 col-lg-12"><br /> </div>
+                                                        <div class=" col-sm-12 col-xs-12 col-lg-12"><br /> </div>
+                                                        <div class=" col-sm-12 col-xs-12 col-lg-12"><br /> </div>
+                                                        <div class=" col-sm-12 col-xs-12 col-lg-12"><br /> </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="font-size: 10px" class="col-sm-4 col-xs-4 col-lg-4">
+                                            <label style="font-size: 12px" class="col-sm-12 col-xs-12 col-lg-12 text-left">Firma Autorizado _____________________</label>
+                                            <br/>
+                                            <br/>
+                                            <br/>
+                                            <label style="font-size: 12px" class="col-sm-12 col-xs-12 col-lg-12 text-left">Cédula _____________________________</label>
+                                            <td class="col-sm-2 col-xs-2 col-lg-2">
+                                                <div class="col-sm-12 col-xs-12 col-lg-12">
+                                                    <div class="panel text-center huellaDactilar">
+                                                        <div class="panel-body">
+                                                            <div class=" col-sm-12 col-xs-12 col-lg-12"><br /> </div>
+                                                            <div class=" col-sm-12 col-xs-12 col-lg-12"><br /> </div>
+                                                            <div class=" col-sm-12 col-xs-12 col-lg-12"><br /> </div>
+                                                            <div class=" col-sm-12 col-xs-12 col-lg-12"><br /> </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+
+
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn Gt-btn-verde" (click)="print()">Imprimir</button>
+                    <button type="button" class="btn Gt-btn-morado" data-dismiss="modal" (click)="limpiarModal()">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

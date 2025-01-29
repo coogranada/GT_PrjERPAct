@@ -372,24 +372,27 @@
                                         </ul>
                                     </li>
                                     <li id="informes">
-                                        <a href="#">
-                                            <!-- (click)="setModuloLocalStorage(InformesModel.IdModuloPermiso)" -->
+                                        <a href="#" (click)="toggleInformeMenu()">
                                             <i class=" icon-stack"></i>
                                             <span>Informes</span>
+                                            <i class="icon-arrow-right13" style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="!isInformeMenuOpen" ></i>
+                                            <i class="icon-arrow-down12"  style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="isInformeMenuOpen" ></i>
                                         </a>
-                                        <ul>
-                                            <li id="informesInterno">
+                                        <ul *ngIf="isInformeMenuOpen">
+                                            <!-- <li id="informesInterno">
                                                 <a [routerLink]="" (click)="setModuloLocalStorage(InformesInternoModel.IdModuloPermiso)">Informes</a>
-                                            </li>
+                                            </li> -->
                                             <li id="debitosautomaticos">
                                                 <a [routerLink]="['/Informes/DebitosAutomaticos']" (click)="setModuloLocalStorage(DebitosAutomaticosModel.IdModuloPermiso)">Débito automático</a>
                                             </li>
                                             <li id="gestionOperaciones">
                                                 <a [routerLink]="['/Informes/GestionOperaciones']" (click)="setModuloLocalStorage(GestionOperacionesModel.IdModuloPermiso)">Gestión operaciones</a> </li>
                                             <li id="estadisticos">
-                                                <!-- (click)="setModuloLocalStorage(AhorrosModel.IdModuloPermiso)" -->
-                                                <a [routerLink]="">Estadísticos</a>
-                                                <ul>
+                                                
+                                                <a [routerLink]="" (click)="toggleInformeEstadisticosMenu()">Estadísticos</a>
+                                                <i class="icon-arrow-right13" style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="!isInformeEstadisticosMenuOpen" ></i>
+                                            <i class="icon-arrow-down12"  style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="isInformeEstadisticosMenuOpen" ></i>
+                                                <ul *ngIf="isInformeEstadisticosMenuOpen">
                                                     <li id="transacciones">
                                                         <a [routerLink]="['/Informes/Estadisticos/Transacciones']" (click)="setModuloLocalStorage(TransaccionesModel.IdModuloPermiso)"> Histórico de Transacciones</a>
                                                     </li>
