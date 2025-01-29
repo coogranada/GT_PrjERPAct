@@ -361,68 +361,6 @@
                                                 (click)="setModuloLocalStorage(AportesModel.IdModuloPermiso)">Aportes</a>
                                         </li>
 
-<<<<<<< HEAD
-                                        <li id="ahorros">
-                                            <a [routerLink]="" (click)="toggleProductosAhorrosMenu()">Ahorros</a>
-                                            <i class="icon-arrow-right13"
-                                                style="left: 225px; margin-top: 15px; position: absolute;"
-                                                *ngIf="!isProductosAhorrosMenuOpen"></i>
-                                            <i class="icon-arrow-down12"
-                                                style="left: 225px; margin-top: 15px; position: absolute;"
-                                                *ngIf="isProductosAhorrosMenuOpen"></i>
-                                            <ul *ngIf="isProductosAhorrosMenuOpen">
-                                                <li id="simuladorAhorro">
-                                                    <a [routerLink]=""
-                                                        (click)="setModuloLocalStorage(SimuladorAhorroModel.IdModuloPermiso)">Simulador</a>
-                                                </li>
-                                                <li id="contractuales">
-                                                    <a (click)="toggleProductosAhorroContractualMenu()">Contractual</a>
-                                                    <i class="icon-arrow-right13"
-                                                        style="left: 225px; margin-top: 15px; position: absolute;"
-                                                        *ngIf="!isProductosAhorrosContractualMenuOpen"></i>
-                                                    <i class="icon-arrow-down12"
-                                                        style="left: 225px; margin-top: 15px; position: absolute;"
-                                                        *ngIf="isProductosAhorrosContractualMenuOpen"></i>
-                                                    <ul *ngIf="isProductosAhorrosContractualMenuOpen">
-                                                        <li id="contractualesInterno">
-                                                            <a [routerLink]="['/Productos/Ahorros/Contractual']"
-                                                                (click)="setModuloLocalStorage(ContractualesInternoModel.IdModuloPermiso)">Contractual</a>
-                                                        </li>
-                                                        <li id="asesoriacontractual">
-                                                            <a [routerLink]="['/Productos/Ahorros/AsesoriaContractual']"
-                                                                (click)="setModuloLocalStorage(AsesoriaContractualModel.IdModuloPermiso)">Asesoria
-                                                                contractual</a>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                                <li id="disponibles">
-                                                    <a [routerLink]=""
-                                                        (click)="toggleProductosAhorrosDisponiblesMenu()">Disponibles</a>
-                                                    <i class="icon-arrow-right13"
-                                                        style="left: 225px; margin-top: 15px; position: absolute;"
-                                                        *ngIf="!isProductosAhorrosDisponiblesMenuOpen"></i>
-                                                    <i class="icon-arrow-down12"
-                                                        style="left: 225px; margin-top: 15px; position: absolute;"
-                                                        *ngIf="isProductosAhorrosDisponiblesMenuOpen"></i>
-                                                    <ul *ngIf="isProductosAhorrosDisponiblesMenuOpen">
-                                                        <li id="disponiblesInterno">
-                                                            <a [routerLink]="['/Productos/Ahorros/Disponibles/Disponibles']"
-                                                                (click)="setModuloLocalStorage(DisponiblesInternoModel.IdModuloPermiso)">Disponibles</a>
-                                                        </li>
-                                                        <li id="tarjetaHabientes">
-                                                            <a [routerLink]="['/Ahorros/Disponible/TarjetaHabientes']"
-                                                                (click)="setModuloLocalStorage(TarjetaHabientesModel.IdModuloPermiso)">Tarjeta
-                                                                Habientes</a>
-                                                        </li>
-                                                        <li id="gmf">
-                                                            <a [routerLink]="['/Ahorros/Disponible/GMF']"
-                                                                (click)="setModuloLocalStorage(GmfModel.IdModuloPermiso)">GMF</a>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                                <li id="termino">
-                                                    <a [routerLink]="" (click)="toggleProductosAhorrosTerminoMenu()">
-=======
                                             <li id="ahorros">
                                                 <a [routerLink]="" (click)="toggleProductosAhorrosMenu()">Ahorros</a>
                                                 <i class="icon-arrow-right13" style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="!isProductosAhorrosMenuOpen" ></i>
@@ -462,7 +400,6 @@
                                                     </li>
                                                     <li id="termino">
                                                         <a [routerLink]="" (click)="toggleProductosAhorrosTerminoMenu()">
->>>>>>> 0b5ffc3386d75ee6a1ade9ecb7bc2471ae329f14
                                                         Término</a>
                                                     <i class="icon-arrow-right13"
                                                         style="left: 225px; margin-top: 15px; position: absolute;"
@@ -484,150 +421,6 @@
                                                     </ul>
                                                 </li>
 
-<<<<<<< HEAD
-                                            </ul>
-                                        </li>
-                                        <li id="creditos">
-                                            <a [routerLink]="">
-                                                <!-- (click)="setModuloLocalStorage(CreditosModel.IdModuloPermiso)" -->
-                                                Créditos</a>
-                                            <ul>
-                                                <li id="simuladorCredito">
-                                                    <a [routerLink]="['/Productos/Creditos/Simulador']"
-                                                        (click)="setModuloLocalStorage(SimuladorCreditoModel.IdModuloPermiso)">Simulador</a>
-                                                </li>
-                                                <li id="fichaAnalisis">
-                                                    <a [routerLink]="['/Productos/Creditos/FichaAnalisis']"
-                                                        (click)="setModuloLocalStorage(FichaAnalisisModel.IdModuloPermiso)">Ficha
-                                                        de análisis</a>
-                                                </li>
-                                                <li id="score">
-                                                    <a [routerLink]="['/Productos/Creditos/Score']"
-                                                        (click)="setModuloLocalStorage(ScoreModel.IdModuloPermiso)">Score</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li id="seguros">
-                                            <a [routerLink]="">Seguros</a>
-                                            <ul>
-                                                <li id="general">
-                                                    <a [routerLink]=""
-                                                        (click)="setModuloLocalStorage(GeneralesModel.IdModuloPermiso)">Generales</a>
-                                                </li>
-                                                <li id="cancelacion">
-                                                    <a [routerLink]=""
-                                                        (click)="setModuloLocalStorage(CancelacionModel.IdModuloPermiso)">Cancelación</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li id="transaccionesFinancieras">
-                                    <a href="#">
-                                        <!-- (click)="setModuloLocalStorage(TransaccionesFinancierasModel.IdModuloPermiso)" -->
-                                        <i class="icon-file-text2"></i>
-                                        <span>Transacciones financieras</span>
-                                    </a>
-                                    <ul>
-                                        <li id="transaccionesFinancierasInterno">
-                                            <a [routerLink]=""
-                                                (click)="setModuloLocalStorage(TransaccionesFinancierasInternoModel.IdModuloPermiso)">Transacciones
-                                                financieras</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li id="cartera">
-                                    <a href="#">
-                                        <!-- (click)="setModuloLocalStorage(CarteraModel.IdModuloPermiso)" -->
-                                        <i class=" icon-coins"></i>
-                                        <span>Cartera</span>
-                                    </a>
-                                    <ul>
-                                        <li id="carteraInterno">
-                                            <a [routerLink]=""
-                                                (click)="setModuloLocalStorage(CarteraInternoModel.IdModuloPermiso)">Cartera</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li id="informes">
-                                    <a href="#">
-                                        <!-- (click)="setModuloLocalStorage(InformesModel.IdModuloPermiso)" -->
-                                        <i class=" icon-stack"></i>
-                                        <span>Informes</span>
-                                    </a>
-                                    <ul>
-                                        <li id="informesInterno">
-                                            <a [routerLink]=""
-                                                (click)="setModuloLocalStorage(InformesInternoModel.IdModuloPermiso)">Informes</a>
-                                        </li>
-                                        <li id="debitosautomaticos">
-                                            <a [routerLink]="['/Informes/DebitosAutomaticos']"
-                                                (click)="setModuloLocalStorage(DebitosAutomaticosModel.IdModuloPermiso)">Débito
-                                                automático</a>
-                                        </li>
-                                        <li id="gestionOperaciones">
-                                            <a [routerLink]="['/Informes/GestionOperaciones']"
-                                                (click)="setModuloLocalStorage(GestionOperacionesModel.IdModuloPermiso)">Gestión
-                                                operaciones</a>
-                                        </li>
-                                        <li id="estadisticos">
-                                            <!-- (click)="setModuloLocalStorage(AhorrosModel.IdModuloPermiso)" -->
-                                            <a [routerLink]="">Estadísticos</a>
-                                            <ul>
-                                                <li id="transacciones">
-                                                    <a [routerLink]="['/Informes/Estadisticos/Transacciones']"
-                                                        (click)="setModuloLocalStorage(TransaccionesModel.IdModuloPermiso)">
-                                                        Histórico de Transacciones</a>
-                                                </li>
-                                                <li id="canalesExternos">
-                                                    <a [routerLink]="['/Informes/Estadisticos/Canales-Externos']"
-                                                        (click)="setModuloLocalStorage(CanalesExternosModel.IdModuloPermiso)">Canales
-                                                        Externos</a>
-                                                </li>
-                                                <li id="composicionPortafolio">
-                                                    <a [routerLink]="['/Informes/Estadisticos/Composicion-Portafolio']"
-                                                        (click)="setModuloLocalStorage(ComposisionPortafolioModel.IdModuloPermiso)">Composición
-                                                        Portafolio</a>
-                                                </li>
-                                                <li id="evolucionOficina">
-                                                    <a [routerLink]="['/Informes/Estadisticos/Evolucion-Oficina']"
-                                                        (click)="setModuloLocalStorage(EvolucionOficinaModel.IdModuloPermiso)">Evolución
-                                                        de Oficinas</a>
-                                                </li>
-                                                <li id="IndicadoresGerenciales">
-                                                    <a [routerLink]="['/Informes/Estadisticos/Indicadores-gerenciales']"
-                                                        (click)="setModuloLocalStorage(IndicadoresGerencialesModel.IdModuloPermiso)">Indicadores</a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li id="ListaProductos">
-                                            <a [routerLink]="['/Informes/ListaProductos']"
-                                                (click)="setModuloLocalStorage(GestionOperacionesModel.IdModuloPermiso)">Mis
-                                                productos</a>
-                                        </li>
-                                        <li id="informeclientes">
-                                            <a [routerLink]="['/Informes/InformeClientes']"
-                                                (click)="setModuloLocalStorage(GestionOperacionesModel.IdModuloPermiso)">Informe
-                                                clientes</a>
-                                        </li>
-                                        <li id="logauditoria">
-                                            <a [routerLink]="['/Informes/LogAuditoria']"
-                                                (click)="setModuloLocalStorage(GestionOperacionesModel.IdModuloPermiso)">Log
-                                                auditoria</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li id="utilidades">
-                                    <a href="#">
-                                        <!-- (click)="setModuloLocalStorage(UtilidadesModel.IdModuloPermiso)" -->
-                                        <i class=" icon-cog2"></i>
-                                        <span>Utilidades</span>
-                                    </a>
-                                    <ul>
-                                        <li id="crearNotificaciones">
-                                            <a [routerLink]="['/Utilidades/CrearNotificaciones']"
-                                                (click)="setModuloLocalStorage(CrearNotificacionesModel.IdModuloPermiso)">Crear
-=======
                                                 </ul>
                                             </li>
                                             <li id="creditos">
@@ -745,7 +538,6 @@
                                         <ul>
                                             <li id="crearNotificaciones">
                                                 <a [routerLink]="['/Utilidades/CrearNotificaciones']" (click)="setModuloLocalStorage(CrearNotificacionesModel.IdModuloPermiso)">Crear
->>>>>>> 0b5ffc3386d75ee6a1ade9ecb7bc2471ae329f14
                                                 notificación</a>
                                         </li>
                                         <li id="diferenciasSaldos">

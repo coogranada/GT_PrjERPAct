@@ -299,7 +299,6 @@ export class LayoutComponent implements OnInit {
   restart() {
     this.userIdle.resetTimer();
   }
-<<<<<<< HEAD
   boolBannner: boolean = false;
   isUsuarioMenuOpen: boolean = false;
   isConfiguracionMenuOpen: boolean = false;
@@ -315,28 +314,11 @@ export class LayoutComponent implements OnInit {
   isProductosAhorrosContractualMenuOpen: boolean = false;
   isProductosAhorrosDisponiblesMenuOpen: boolean = false;
   isProductosAhorrosTerminoMenuOpen: boolean = false;
-  // Cambiar a 'false' si deseas ocultarlo por defecto
-=======
-  boolBannner : boolean = false;
-  isUsuarioMenuOpen : boolean = false;
-  isConfiguracionMenuOpen : boolean = false;
-  isMaestroMenuOpen : boolean = false;
-  isMaestroProductosMenuOpen : boolean = false;
-  isMaestroAhorrosMenuOpen : boolean = false;
-  isInformesMenuOpen : boolean = false;
-  isInformesMaestroAhorrosMenuOpen : boolean = false;
-  isClientesMenuOpen : boolean = false;
-  isProductosMenuOpen : boolean = false;
-  isProductosAhorrosMenuOpen : boolean = false;
-  isProductosAhorrosContractualMenuOpen : boolean = false;
-  isProductosAhorrosDisponiblesMenuOpen : boolean = false;
-  isProductosAhorrosTerminoMenuOpen : boolean = false;
   isProductosCreditoMenuOpen : boolean = false;
   isProductosSeguroMenuOpen : boolean = false;
   isInformeMenuOpen : boolean = false;
   isInformeEstadisticosMenuOpen : boolean = false;
     // Cambiar a 'false' si deseas ocultarlo por defecto
->>>>>>> 0b5ffc3386d75ee6a1ade9ecb7bc2471ae329f14
 
   // Método para alternar el estado del menú de Usuario
   toggleUsuarioMenu() {
@@ -404,12 +386,6 @@ export class LayoutComponent implements OnInit {
     this.isProductosAhorrosTerminoMenuOpen = !this.isProductosAhorrosTerminoMenuOpen;
     this.toggleCloseMenu(4, 4);
   }
-<<<<<<< HEAD
-  toggleCloseMenu(id: number, opcion: number = 0) {
-    if (id != 1) this.isUsuarioMenuOpen = false;
-    if (id != 2) this.isConfiguracionMenuOpen = false;
-    if (id == 2 && opcion == 1) {
-=======
   toggleProductosCreditoMenu(){
     this.isProductosCreditoMenuOpen = !this.isProductosCreditoMenuOpen;
     this.toggleCloseMenu(4,5);
@@ -429,7 +405,6 @@ export class LayoutComponent implements OnInit {
     if(id != 1)this.isUsuarioMenuOpen = false;
     if(id != 2)this.isConfiguracionMenuOpen = false;
     if(id == 2 && opcion == 1){
->>>>>>> 0b5ffc3386d75ee6a1ade9ecb7bc2471ae329f14
       this.isMaestroProductosMenuOpen = false;
       this.isInformesMenuOpen = false;
     } else if (id == 2 && opcion == 2) {
@@ -447,31 +422,14 @@ export class LayoutComponent implements OnInit {
       this.isProductosAhorrosDisponiblesMenuOpen = false;
       this.isProductosAhorrosContractualMenuOpen = false;
     }
-<<<<<<< HEAD
-    if (id == 4 && opcion == 1) {
-=======
     if(id == 4 && opcion == 1){
       this.isProductosSeguroMenuOpen = false;
       this.isProductosCreditoMenuOpen = false;
->>>>>>> 0b5ffc3386d75ee6a1ade9ecb7bc2471ae329f14
       this.isProductosAhorrosContractualMenuOpen = false;
       this.isProductosAhorrosDisponiblesMenuOpen = false;
     } else if (id == 4 && opcion == 2) {
       this.isProductosAhorrosDisponiblesMenuOpen = false;
       this.isProductosAhorrosTerminoMenuOpen = false;
-<<<<<<< HEAD
-    }
-    else if (id == 4 && opcion == 3) {
-      this.isProductosAhorrosTerminoMenuOpen = false;
-      this.isProductosAhorrosContractualMenuOpen = false;
-    }
-    else if (id == 4 && opcion == 4) {
-      this.isProductosAhorrosContractualMenuOpen = false;
-      this.isProductosAhorrosDisponiblesMenuOpen = false;
-    }
-
-
-=======
     } else if(id == 4 && opcion == 3) {
       this.isProductosAhorrosTerminoMenuOpen = false;
       this.isProductosAhorrosContractualMenuOpen = false;
@@ -489,7 +447,6 @@ export class LayoutComponent implements OnInit {
       this.isInformeMenuOpen = false;
       this.isInformeEstadisticosMenuOpen = false;
     }
->>>>>>> 0b5ffc3386d75ee6a1ade9ecb7bc2471ae329f14
   }
   ngOnInit() {
 
