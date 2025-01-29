@@ -28,6 +28,7 @@ export class NaturalesAllModel {
     ConocioCoogranada: string = "";
     Cual: string = "";
     NumeroPersonasCargo: string = "";
+    RegimenTributario: string = "";
     tituloProfesional: string = "";
     Nacionalidad: string = "";
     NumeroCelular: string = "";
