@@ -299,6 +299,7 @@ export class LayoutComponent implements OnInit {
   restart() {
     this.userIdle.resetTimer();
   }
+<<<<<<< HEAD
   boolBannner: boolean = false;
   isUsuarioMenuOpen: boolean = false;
   isConfiguracionMenuOpen: boolean = false;
@@ -315,6 +316,27 @@ export class LayoutComponent implements OnInit {
   isProductosAhorrosDisponiblesMenuOpen: boolean = false;
   isProductosAhorrosTerminoMenuOpen: boolean = false;
   // Cambiar a 'false' si deseas ocultarlo por defecto
+=======
+  boolBannner : boolean = false;
+  isUsuarioMenuOpen : boolean = false;
+  isConfiguracionMenuOpen : boolean = false;
+  isMaestroMenuOpen : boolean = false;
+  isMaestroProductosMenuOpen : boolean = false;
+  isMaestroAhorrosMenuOpen : boolean = false;
+  isInformesMenuOpen : boolean = false;
+  isInformesMaestroAhorrosMenuOpen : boolean = false;
+  isClientesMenuOpen : boolean = false;
+  isProductosMenuOpen : boolean = false;
+  isProductosAhorrosMenuOpen : boolean = false;
+  isProductosAhorrosContractualMenuOpen : boolean = false;
+  isProductosAhorrosDisponiblesMenuOpen : boolean = false;
+  isProductosAhorrosTerminoMenuOpen : boolean = false;
+  isProductosCreditoMenuOpen : boolean = false;
+  isProductosSeguroMenuOpen : boolean = false;
+  isInformeMenuOpen : boolean = false;
+  isInformeEstadisticosMenuOpen : boolean = false;
+    // Cambiar a 'false' si deseas ocultarlo por defecto
+>>>>>>> 0b5ffc3386d75ee6a1ade9ecb7bc2471ae329f14
 
   // Método para alternar el estado del menú de Usuario
   toggleUsuarioMenu() {
@@ -382,10 +404,32 @@ export class LayoutComponent implements OnInit {
     this.isProductosAhorrosTerminoMenuOpen = !this.isProductosAhorrosTerminoMenuOpen;
     this.toggleCloseMenu(4, 4);
   }
+<<<<<<< HEAD
   toggleCloseMenu(id: number, opcion: number = 0) {
     if (id != 1) this.isUsuarioMenuOpen = false;
     if (id != 2) this.isConfiguracionMenuOpen = false;
     if (id == 2 && opcion == 1) {
+=======
+  toggleProductosCreditoMenu(){
+    this.isProductosCreditoMenuOpen = !this.isProductosCreditoMenuOpen;
+    this.toggleCloseMenu(4,5);
+  }
+  toggleProductosSeguroMenu(){
+    this.isProductosSeguroMenuOpen = !this.isProductosSeguroMenuOpen;
+    this.toggleCloseMenu(4,6);
+  }
+  toggleInformeMenu(){
+    this.isInformeMenuOpen = !this.isInformeMenuOpen;
+    this.toggleCloseMenu(5);
+  }
+  toggleInformeEstadisticosMenu(){
+    this.isInformeEstadisticosMenuOpen = !this.isInformeEstadisticosMenuOpen;
+  }
+  toggleCloseMenu(id : number, opcion : number = 0) {
+    if(id != 1)this.isUsuarioMenuOpen = false;
+    if(id != 2)this.isConfiguracionMenuOpen = false;
+    if(id == 2 && opcion == 1){
+>>>>>>> 0b5ffc3386d75ee6a1ade9ecb7bc2471ae329f14
       this.isMaestroProductosMenuOpen = false;
       this.isInformesMenuOpen = false;
     } else if (id == 2 && opcion == 2) {
@@ -403,12 +447,19 @@ export class LayoutComponent implements OnInit {
       this.isProductosAhorrosDisponiblesMenuOpen = false;
       this.isProductosAhorrosContractualMenuOpen = false;
     }
+<<<<<<< HEAD
     if (id == 4 && opcion == 1) {
+=======
+    if(id == 4 && opcion == 1){
+      this.isProductosSeguroMenuOpen = false;
+      this.isProductosCreditoMenuOpen = false;
+>>>>>>> 0b5ffc3386d75ee6a1ade9ecb7bc2471ae329f14
       this.isProductosAhorrosContractualMenuOpen = false;
       this.isProductosAhorrosDisponiblesMenuOpen = false;
     } else if (id == 4 && opcion == 2) {
       this.isProductosAhorrosDisponiblesMenuOpen = false;
       this.isProductosAhorrosTerminoMenuOpen = false;
+<<<<<<< HEAD
     }
     else if (id == 4 && opcion == 3) {
       this.isProductosAhorrosTerminoMenuOpen = false;
@@ -420,6 +471,25 @@ export class LayoutComponent implements OnInit {
     }
 
 
+=======
+    } else if(id == 4 && opcion == 3) {
+      this.isProductosAhorrosTerminoMenuOpen = false;
+      this.isProductosAhorrosContractualMenuOpen = false;
+    } else if(id == 4 && opcion == 4){
+      this.isProductosAhorrosContractualMenuOpen = false;
+      this.isProductosAhorrosDisponiblesMenuOpen = false;
+    }else if(id == 4 && opcion == 5){
+      this.isProductosAhorrosMenuOpen = false;
+      this.isProductosSeguroMenuOpen = false;
+    }else if(id == 4 && opcion == 5){
+      this.isProductosAhorrosMenuOpen = false;
+      this.isProductosCreditoMenuOpen = false;
+    }
+    if(id != 5){
+      this.isInformeMenuOpen = false;
+      this.isInformeEstadisticosMenuOpen = false;
+    }
+>>>>>>> 0b5ffc3386d75ee6a1ade9ecb7bc2471ae329f14
   }
   ngOnInit() {
 

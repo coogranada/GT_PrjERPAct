@@ -18,7 +18,8 @@ export const routes: Routes = [
              { path: "AplicacionesColaborativas", component: AplicacionesColaborativasComponent },
              { path: "Configuracion", data : { breadcrub : "Configuracion"}, loadChildren : () => import("../app/Modules/configuracion.module").then( x => x.ConfiguracionModule) },    
              { path: "Clientes", data : { breadcrub : "Clientes"}, loadChildren : () => import("../app/Modules/cliente.module").then( x => x.ClienteModule) },   
-             { path: "Productos", data : { breadcrub : "Productos"}, loadChildren : () => import("../app/Modules/productos.module").then( x => x.ProductosModule) },                     
+             { path: "Productos", data : { breadcrub : "Productos"}, loadChildren : () => import("../app/Modules/productos.module").then( x => x.ProductosModule) },    
+             { path: "Informes", data : { breadcrub : "Informes"}, loadChildren : () => import("../app/Modules/informes.module").then( x => x.InformesModule) },                                      
         ]
     }  
 ];

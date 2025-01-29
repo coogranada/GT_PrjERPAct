@@ -1114,7 +1114,7 @@ export class ConsecutivoTituloComponent implements OnInit {
   }
   isNumber(value: any) {
     return typeof value === 'number' && !isNaN(value);
-}
+  }
   cambioLibretas(event : any) {
     let codigo = parseInt(this.consecutivoOperacionFrom.get('Codigo')?.value);
 

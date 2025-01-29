@@ -301,4 +301,10 @@ export class ClientesService {
             .set('IdTercero', IdTercero);
         return this._http.get<any>(this.url,{params: params });
     }   
+    CambiarRegimenTributario(terceroId: string) {
+        this.url = this.environment.Url + '/CambiarRegimenTributario';
+        const params = new HttpParams()
+            .set('terceroId', terceroId);
+        return this._http.get<any>(this.url, { params });
+    }
 }

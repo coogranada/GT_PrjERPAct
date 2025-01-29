@@ -25,7 +25,8 @@
               "core-js",
               "jspdf-autotable",
               "raf",
-              "rgbcolor"
+              "rgbcolor",
+              "jquery"
 
             ],
             "outputPath": "dist/gt-prj-erp",

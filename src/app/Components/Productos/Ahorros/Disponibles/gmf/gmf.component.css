@@ -1,0 +1,7 @@
+.checkBig {
+    padding: 20px 20px 20px 20px !important;
+}
+
+@media print{
+    .doNotPrint{display:none !important;}
+}
