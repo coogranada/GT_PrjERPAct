@@ -21,6 +21,7 @@ const UrlDeclaradas = [
   { Descripcion: "/Configuracion/Maestros/ObservacionesModulos" },
   { Descripcion: "/Configuracion/Maestros/ ControlSesion" },
   { Descripcion: "/Configuracion/Maestros/ImagenesBanner" },
+  { Descripcion: "/Configuracion/TransmisionArchivos" },
   { Descripcion: "/AplicacionesColaborativas" },
   { Descripcion: "/LibretaDirecciones" },
   { Descripcion: "/Ahorros/Disponible/TarjetaHabientes" },

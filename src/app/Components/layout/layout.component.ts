@@ -17,32 +17,32 @@ declare var $: any;
   selector: 'app-layout',
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.css'],
-  providers: [DatePipe, LoginService,OperacionesService,UsuariosService,WebSocketService,GeneralesService],
-  standalone : false
+  providers: [DatePipe, LoginService, OperacionesService, UsuariosService, WebSocketService, GeneralesService],
+  standalone: false
 })
 export class LayoutComponent implements OnInit {
 
   //#region Declaracion variables
   private PassJs = new PassEncriptJs();
-  public resulStore : any = null;
+  public resulStore: any = null;
   public isLoginError = false;
-  public DataUser : any;
-  public nameUser : string = "";
-  public NombreOficinaActual : string = "";
-  public rutaActual : string = "";
-  public NombrePaginaActual : string = "";
-  public rutaPaginaActual : string = "";
+  public DataUser: any;
+  public nameUser: string = "";
+  public NombreOficinaActual: string = "";
+  public rutaActual: string = "";
+  public NombrePaginaActual: string = "";
+  public rutaPaginaActual: string = "";
   public FechaActual: any;
 
   /* Usuarios */
   public GestionesOperaciones = false;
   /* Fin Usuarios */
 
-/* Configuracion */
+  /* Configuracion */
   public Configuracion = false;
 
-//#region Variables Layout
-/* Maestros */
+  //#region Variables Layout
+  /* Maestros */
   public Maestros = false;
   public Areas = false;
   public Cargos = false;
@@ -61,13 +61,13 @@ export class LayoutComponent implements OnInit {
   public ObservacionesModulos = false;
   public GestionBanner = false;
   public Llaves = false;
-/* Fin Maestros */
+  /* Fin Maestros */
 
-/* Maestros productos */
+  /* Maestros productos */
   public MaestrosProdutos = false;
   public MaestrosAhorros = false;
   public ConsecutivoTitulo = false;
-/* Fin Maestros productos */
+  /* Fin Maestros productos */
 
   /* Informes */
   public InformesConsecutivoTitulo = false;
@@ -75,6 +75,11 @@ export class LayoutComponent implements OnInit {
   public InformesMaestrosAhorros = false;
 
   /* Fin Informes */
+
+
+  /* Transmision de archivos */
+  public Transmisionarchivos = false;
+  /* Fin Maestros productos */
 
   /* Fin Configuracion */
 
@@ -149,12 +154,12 @@ export class LayoutComponent implements OnInit {
 
   /* Usuarios */
   public GestionesOperacionesModel: any;
-/* Fin Usuarios */
+  /* Fin Usuarios */
 
   /* Configuracion */
   public ConfiguracionModel: any;
 
-/* Maestros */
+  /* Maestros */
   public MaestrosModel: any;
   public AreasModel: any;
   public CargosModel: any;
@@ -173,21 +178,21 @@ export class LayoutComponent implements OnInit {
   public GestionBannerModel: any;
   public LlavesModel: any;
   public UsuariosProveedoresModel: any;
-/* Fin Maestros */
+  /* Fin Maestros */
 
-/* Maestros productos */
+  /* Maestros productos */
   public MaestrosProductosModel: any;
   public MaestrosAhorrosModel: any;
   public ConsecutivoTituloModel: any;
-/* Fin Maestros productos */
+  /* Fin Maestros productos */
 
-/* Informes */
+  /* Informes */
   public InformeConsecutivoTituloModel: any;
   public InformesMaestrosModel: any;
   public InformesMaestrosAhorrosModel: any;
-/* Fin Informes */
+  /* Fin Informes */
 
-/* Fin Configuracion */
+  /* Fin Configuracion */
 
   /* Clientes */
   public ClientesModel: any;
@@ -261,13 +266,13 @@ export class LayoutComponent implements OnInit {
   public AuditoriasGmfModel: any;
   public ocultarListaDirecciones: boolean = false;
   /* Fin auditorias */
-//#endregion
+  //#endregion
 
   public mouseStop = null;
   public Time = 1800000; // 1 minuto = 60.000 // dos minutos
   public volverBanner = true;
   public solounaVes = 0;
-  public  IDLE_TIMEOUT = 60; // seconds
+  public IDLE_TIMEOUT = 60; // seconds
   public _idleSecondsCounter = 0;
   conutStatus: number = 0;
   oficinaSeleccionada: any = { Descripcion: "", IdLista: 0 };
@@ -284,7 +289,7 @@ export class LayoutComponent implements OnInit {
 
   constructor(private loginService: LoginService, private router: Router, private notif: NgxToastService,
     public datepipe: DatePipe, private userIdle: UserIdleService,
-    private operacionesService: OperacionesService,private usuariosServices: UsuariosService,  private webSocket : WebSocketService,private serviceGenerales : GeneralesService) {
+    private operacionesService: OperacionesService, private usuariosServices: UsuariosService, private webSocket: WebSocketService, private serviceGenerales: GeneralesService) {
   }
   // @HostListener('document:keyup', ['$event'])
   // @HostListener('document:click', ['$event'])
@@ -294,126 +299,130 @@ export class LayoutComponent implements OnInit {
   restart() {
     this.userIdle.resetTimer();
   }
-  boolBannner : boolean = false;
-  isUsuarioMenuOpen : boolean = false;
-  isConfiguracionMenuOpen : boolean = false;
-  isMaestroMenuOpen : boolean = false;
-  isMaestroProductosMenuOpen : boolean = false;
-  isMaestroAhorrosMenuOpen : boolean = false;
-  isInformesMenuOpen : boolean = false;
-  isInformesMaestroAhorrosMenuOpen : boolean = false;
-  isClientesMenuOpen : boolean = false;
-  isProductosMenuOpen : boolean = false;
-  isProductosAhorrosMenuOpen : boolean = false;
-  isProductosAhorrosContractualMenuOpen : boolean = false;
-  isProductosAhorrosDisponiblesMenuOpen : boolean = false;
-  isProductosAhorrosTerminoMenuOpen : boolean = false;
-    // Cambiar a 'false' si deseas ocultarlo por defecto
+  boolBannner: boolean = false;
+  isUsuarioMenuOpen: boolean = false;
+  isConfiguracionMenuOpen: boolean = false;
+  isMaestroMenuOpen: boolean = false;
+  isMaestroProductosMenuOpen: boolean = false;
+  isMaestroAhorrosMenuOpen: boolean = false;
+  isInformesMenuOpen: boolean = false;
+  isInformesMaestroAhorrosMenuOpen: boolean = false;
+  istransmisionarchivosMenuOpen: boolean = false;
+  isClientesMenuOpen: boolean = false;
+  isProductosMenuOpen: boolean = false;
+  isProductosAhorrosMenuOpen: boolean = false;
+  isProductosAhorrosContractualMenuOpen: boolean = false;
+  isProductosAhorrosDisponiblesMenuOpen: boolean = false;
+  isProductosAhorrosTerminoMenuOpen: boolean = false;
+  // Cambiar a 'false' si deseas ocultarlo por defecto
 
   // Método para alternar el estado del menú de Usuario
   toggleUsuarioMenu() {
     this.isUsuarioMenuOpen = !this.isUsuarioMenuOpen;
     this.toggleCloseMenu(1);
   }
-  toggleConfiguracionMenu(){
-    if(!this.isConfiguracionMenuOpen){
+  toggleConfiguracionMenu() {
+    if (!this.isConfiguracionMenuOpen) {
       this.isMaestroMenuOpen = false;
       this.isMaestroProductosMenuOpen = false;
-    }   
+    }
     this.isConfiguracionMenuOpen = !this.isConfiguracionMenuOpen;
     this.toggleCloseMenu(2);
   }
   toggleMaestroMenu() {
-    if(!this.isMaestroMenuOpen){
+    if (!this.isMaestroMenuOpen) {
       this.isMaestroAhorrosMenuOpen = false;
       this.isMaestroProductosMenuOpen = false;
     }
     this.isMaestroMenuOpen = !this.isMaestroMenuOpen;
-    this.toggleCloseMenu(2,1);
+    this.toggleCloseMenu(2, 1);
   }
-  toggleMaestroProductosMenu(){
-    if(!this.isMaestroProductosMenuOpen)
+  toggleMaestroProductosMenu() {
+    if (!this.isMaestroProductosMenuOpen)
       this.isMaestroAhorrosMenuOpen = false;
     this.isMaestroProductosMenuOpen = !this.isMaestroProductosMenuOpen;
-    this.toggleCloseMenu(2,2);
+    this.toggleCloseMenu(2, 2);
   }
-  toggleMaestroAhorrosMenu(){
+  toggleMaestroAhorrosMenu() {
     this.isMaestroAhorrosMenuOpen = !this.isMaestroAhorrosMenuOpen;
   }
-  toggleInformesMenu(){
-    if(!this.isInformesMenuOpen)
+  toggleInformesMenu() {
+    if (!this.isInformesMenuOpen)
       this.isInformesMaestroAhorrosMenuOpen = false;
     this.isInformesMenuOpen = !this.isInformesMenuOpen;
-    this.toggleCloseMenu(2,3);
+    this.toggleCloseMenu(2, 3);
   }
-  toggleInformesMaestroAhorrosMenu(){
+  toggleInformesMaestroAhorrosMenu() {
     this.isInformesMaestroAhorrosMenuOpen = !this.isInformesMaestroAhorrosMenuOpen;
   }
-  toggleClientesMenu(){
+  toggletransmisionarchivosMenu() {
+    this.istransmisionarchivosMenuOpen = !this.istransmisionarchivosMenuOpen;
+  }
+  toggleClientesMenu() {
     this.isClientesMenuOpen = !this.isClientesMenuOpen;
     this.toggleCloseMenu(3);
   }
-  toggleProductosMenu(){
+  toggleProductosMenu() {
     this.isProductosMenuOpen = !this.isProductosMenuOpen;
     this.toggleCloseMenu(4);
   }
-  toggleProductosAhorrosMenu(){
+  toggleProductosAhorrosMenu() {
     this.isProductosAhorrosMenuOpen = !this.isProductosAhorrosMenuOpen;
-    this.toggleCloseMenu(4,1);
+    this.toggleCloseMenu(4, 1);
   }
-  toggleProductosAhorroContractualMenu(){
+  toggleProductosAhorroContractualMenu() {
     this.isProductosAhorrosContractualMenuOpen = !this.isProductosAhorrosContractualMenuOpen;
-    this.toggleCloseMenu(4,2);
+    this.toggleCloseMenu(4, 2);
   }
-  toggleProductosAhorrosDisponiblesMenu(){
+  toggleProductosAhorrosDisponiblesMenu() {
     this.isProductosAhorrosDisponiblesMenuOpen = !this.isProductosAhorrosDisponiblesMenuOpen;
-    this.toggleCloseMenu(4,3);
+    this.toggleCloseMenu(4, 3);
   }
-  toggleProductosAhorrosTerminoMenu(){
+  toggleProductosAhorrosTerminoMenu() {
     this.isProductosAhorrosTerminoMenuOpen = !this.isProductosAhorrosTerminoMenuOpen;
-    this.toggleCloseMenu(4,4);
+    this.toggleCloseMenu(4, 4);
   }
-  toggleCloseMenu(id : number, opcion : number = 0) {
-    if(id != 1)this.isUsuarioMenuOpen = false;
-    if(id != 2)this.isConfiguracionMenuOpen = false;
-    if(id == 2 && opcion == 1){
+  toggleCloseMenu(id: number, opcion: number = 0) {
+    if (id != 1) this.isUsuarioMenuOpen = false;
+    if (id != 2) this.isConfiguracionMenuOpen = false;
+    if (id == 2 && opcion == 1) {
       this.isMaestroProductosMenuOpen = false;
       this.isInformesMenuOpen = false;
-    }else if(id == 2 && opcion == 2){
+    } else if (id == 2 && opcion == 2) {
       this.isMaestroMenuOpen = false;
       this.isInformesMenuOpen = false;
-    }else if(id == 2 && opcion == 3){
+    } else if (id == 2 && opcion == 3) {
       this.isMaestroMenuOpen = false;
       this.isMaestroProductosMenuOpen = false;
     }
-    if(id != 3)this.isClientesMenuOpen = false;
-    if(id != 4){
+    if (id != 3) this.isClientesMenuOpen = false;
+    if (id != 4) {
       this.isProductosMenuOpen = false;
       this.isProductosAhorrosMenuOpen = false;
       this.isProductosAhorrosTerminoMenuOpen = false;
       this.isProductosAhorrosDisponiblesMenuOpen = false;
       this.isProductosAhorrosContractualMenuOpen = false;
     }
-    if(id == 4 && opcion == 1){
+    if (id == 4 && opcion == 1) {
       this.isProductosAhorrosContractualMenuOpen = false;
       this.isProductosAhorrosDisponiblesMenuOpen = false;
-    }else if(id == 4 && opcion == 2){
+    } else if (id == 4 && opcion == 2) {
       this.isProductosAhorrosDisponiblesMenuOpen = false;
       this.isProductosAhorrosTerminoMenuOpen = false;
-    } 
-    else if(id == 4 && opcion == 3) {
+    }
+    else if (id == 4 && opcion == 3) {
       this.isProductosAhorrosTerminoMenuOpen = false;
       this.isProductosAhorrosContractualMenuOpen = false;
     }
-    else if(id == 4 && opcion == 4){
+    else if (id == 4 && opcion == 4) {
       this.isProductosAhorrosContractualMenuOpen = false;
       this.isProductosAhorrosDisponiblesMenuOpen = false;
-    } 
+    }
 
-  
+
   }
   ngOnInit() {
-   
+
     this.consultarImg = true;
 
 
@@ -421,38 +430,38 @@ export class LayoutComponent implements OnInit {
     this.userIdle.startWatching();
 
     // // Start watching when user idle is starting.
-    this.userIdle.onTimerStart().subscribe(() =>{
-        this.boolBannner = true;
+    this.userIdle.onTimerStart().subscribe(() => {
+      this.boolBannner = true;
     });
 
     // // Start watch when time is up.
-    this.userIdle.onTimeout().subscribe(() =>{
+    this.userIdle.onTimeout().subscribe(() => {
       console.log("Show");
-    
+
       this.AbrirModalBanner?.nativeElement.click();
       this.restart();
       this.boolBannner = false;
     }
-     );
-     
+    );
+
     // this.bnIdle.startWatching(60).subscribe((isTimedOut: boolean) => {
     //   this.AbrirModalBanner.nativeElement.click();
     //   this.bnIdle.stopTimer();
     // });
 
     this.ocultarListaDirecciones = true;
-    let data : string | null = localStorage.getItem('Data')
-    if(data != null)
+    let data: string | null = localStorage.getItem('Data')
+    if (data != null)
       this.resulStore = JSON.parse(window.atob(data));
     //#region  variablesJquery
     /* Usuarios */
     $('#gestionesOperaciones').hide();
     /* Fin Usuarios */
 
-  /* Configuracion */
+    /* Configuracion */
     $('#configuracion').hide();
 
-  /* Maestros */
+    /* Maestros */
     $('#maestros').hide();
     $('#areas').hide();
     $('#cargos').hide();
@@ -475,21 +484,25 @@ export class LayoutComponent implements OnInit {
     $('#controlSession').hide();
     $('#imagenesBanner').hide();
     $('#llaves').hide();
-  /* Fin Maestros */
+    /* Fin Maestros */
 
-  /* Maestros productos */
-  $('#maestrosproductos').hide();
-  $('#maestrosahorros').hide();
-  $('#consecutivotitulo').hide();
-   /* Fin Maestros productos */
+    /* Maestros productos */
+    $('#maestrosproductos').hide();
+    $('#maestrosahorros').hide();
+    $('#consecutivotitulo').hide();
+    /* Fin Maestros productos */
 
-  /* Informes*/
-  $('#informeconsecutivotitulo').hide();
-  $('#informesmaestros').hide();
-  $('#informesmaestrosahorros').hide();
-  /* Fin informes */
+    /* Informes*/
+    $('#informeconsecutivotitulo').hide();
+    $('#informesmaestros').hide();
+    $('#informesmaestrosahorros').hide();
+    /* Fin informes */
 
-  /* Fin Configuracion */
+    /* Transmisión archivos*/
+    $('#transmisionarchivos').hide();
+    /* Fin  Transmisión archivos *
+  
+    /* Fin Configuracion */
 
     /* Clientes */
     $('#clientes').hide();
@@ -581,7 +594,7 @@ export class LayoutComponent implements OnInit {
             const r1 = JSON.parse(CryptoJS.AES.decrypt(permi == null ? "" : permi, this.PassJs.pass).toString(CryptoJS.enc.Utf8));
           }
 
-          result.forEach((element : any) => {
+          result.forEach((element: any) => {
             /* Usuarios */
             // if (element.IdModulo === 1) {
             //   $('#gestionesOperaciones').show();
@@ -590,11 +603,11 @@ export class LayoutComponent implements OnInit {
             // }
             /* Fin Usuarios */
 
-          /* Configuracion */
+            /* Configuracion */
             if (element.IdModulo === 63) {
-            $('#configuracion').show();
-            this.Configuracion = true;
-            this.ConfiguracionModel = element;
+              $('#configuracion').show();
+              this.Configuracion = true;
+              this.ConfiguracionModel = element;
             }
             /* Maestros */
             if (element.IdModulo === 1) {
@@ -707,7 +720,7 @@ export class LayoutComponent implements OnInit {
               this.GestionBanner = true;
               this.GestionBannerModel = element;
             }
-           /* Fin  Maestros productos*/
+            /* Fin  Maestros productos*/
 
             /* Informes */
 
@@ -716,10 +729,10 @@ export class LayoutComponent implements OnInit {
               this.InformesConsecutivoTitulo = true;
               this.InformeConsecutivoTituloModel = element;
             }
-             if (element.IdModulo === 73) {
-               $('#informesmaestros').show();
-               this.InformesMaestros = true;
-               this.InformesMaestrosModel = element;
+            if (element.IdModulo === 73) {
+              $('#informesmaestros').show();
+              this.InformesMaestros = true;
+              this.InformesMaestrosModel = element;
             }
             if (element.IdModulo === 74) {
               $('#informesmaestrosahorros').show();
@@ -728,6 +741,15 @@ export class LayoutComponent implements OnInit {
             }
 
             /* Fin  Informes */
+
+            /* Transmisión archivos */
+
+            if (element.IdModulo === 72) {
+              $('#transmisionarchivos').show();
+              this.Transmisionarchivos = true;
+              //this.InformeConsecutivoTituloModel = element;
+            }
+            /* Fin Transmisión archivos */
 
             /* Fin  Configuracion */
 
@@ -939,15 +961,15 @@ export class LayoutComponent implements OnInit {
               this.GestionOperaciones = true;
               this.TransaccionesModel = element;
             }
-             if (element.IdModulo === 56) {
-               $('#canalesExternos').show();
+            if (element.IdModulo === 56) {
+              $('#canalesExternos').show();
               this.GestionOperaciones = true;
-               this.CanalesExternosModel = element;
+              this.CanalesExternosModel = element;
             }
-             if (element.IdModulo === 57) {
-               $('#composisionPortafolio').show();
+            if (element.IdModulo === 57) {
+              $('#composisionPortafolio').show();
               this.GestionOperaciones = true;
-               this.ComposisionPortafolioModel = element;
+              this.ComposisionPortafolioModel = element;
             }
             if (element.IdModulo === 58) {
               $('#evolucionOficina').show();
@@ -1043,10 +1065,10 @@ export class LayoutComponent implements OnInit {
     });
   }
   GetModuloOfice() {
-    let pefi : string | null = localStorage.getItem('profiles');
+    let pefi: string | null = localStorage.getItem('profiles');
     const resultProfiles = JSON.parse(window.atob(pefi == null ? "" : pefi));
     if (resultProfiles.length > 0) {
-      resultProfiles.forEach((element : any) => {
+      resultProfiles.forEach((element: any) => {
         if (element.IdPerfil == 78) {
           this.ObtenerOficinas();
           this.isChangeOfice = true;
@@ -1056,8 +1078,8 @@ export class LayoutComponent implements OnInit {
   }
   ObtenerOficinas() {
     this.usuariosServices.getOficinas().subscribe(result => {
-        this.resultOficina = result; 
-      },
+      this.resultOficina = result;
+    },
       error => {
         console.log(error);
         this.notif.onDanger('Error', error);
@@ -1068,13 +1090,13 @@ export class LayoutComponent implements OnInit {
     let payload: any = {
       IdOficina: this.oficinaSeleccionada.IdLista,
       IdUsuario: this.resulStore.IdUsuario,
-      Usuario : this.resulStore.Usuario
+      Usuario: this.resulStore.Usuario
     };
-    let data : string | null = localStorage.getItem('Data');
+    let data: string | null = localStorage.getItem('Data');
     this.resulStore = JSON.parse(window.atob(data == null ? "" : data));
-    let numOficeAnterior : string = this.resulStore.NumeroOficina;
-    let Oficina: string = this.resulStore.Oficina; 
-    
+    let numOficeAnterior: string = this.resulStore.NumeroOficina;
+    let Oficina: string = this.resulStore.Oficina;
+
     this.usuariosServices.ActualizarOficinaUsuario(payload).subscribe(x => {
       this.oficinaSeleccionada = { Descripcion: "", IdLista: 0 };
       localStorage.setItem('Data', window.btoa(JSON.stringify(x)));
@@ -1084,10 +1106,10 @@ export class LayoutComponent implements OnInit {
           OficinaIdAnterior: numOficeAnterior,
           OficinaAnterior: Oficina,
           OficinaIdActualiza: x.NumeroOficina,
-          OficinaActualiza : x.Oficina
+          OficinaActualiza: x.Oficina
         };
         this.serviceGenerales.Guardarlog(logJson, 1, null, null, 81).subscribe(result => {
-         // this.webSocket.TriggerLocal("ChangeOffice");
+          // this.webSocket.TriggerLocal("ChangeOffice");
           setTimeout(() => {
             data = localStorage.getItem('Data');
             this.resulStore = JSON.parse(window.atob(data == null ? "" : data));
@@ -1111,7 +1133,7 @@ export class LayoutComponent implements OnInit {
   CambioOficina() {
     if (this.oficinaSeleccionada != null && this.oficinaSeleccionada.Descripcion != "" && this.NombreOficinaActual == this.oficinaSeleccionada.Descripcion) {
       this.notif.onWarning('Advertencia', "Oficina no valida.");
-      this.oficinaSeleccionada =  { Descripcion: "", IdLista: 0 };
+      this.oficinaSeleccionada = { Descripcion: "", IdLista: 0 };
       this.conutStatus = 0;
       setTimeout(() => {
         $('#hiddenButton').focus().select();
@@ -1122,7 +1144,7 @@ export class LayoutComponent implements OnInit {
       return;
     }
 
-    if(this.oficinaSeleccionada == null || this.oficinaSeleccionada.Descripcion.trim() == "" || this.oficinaSeleccionada.IdLista == 0)
+    if (this.oficinaSeleccionada == null || this.oficinaSeleccionada.Descripcion.trim() == "" || this.oficinaSeleccionada.IdLista == 0)
       return;
 
     if (this.conutStatus == 0)
@@ -1130,7 +1152,7 @@ export class LayoutComponent implements OnInit {
     else
       return;
 
-      Swal.fire({
+    Swal.fire({
       title: '¿Desea cambiar de Oficina?',
       text: '',
       icon: 'question',
@@ -1141,13 +1163,13 @@ export class LayoutComponent implements OnInit {
       cancelButtonColor: 'rgb(160,0,87)',
       allowOutsideClick: false,
       allowEscapeKey: false
-    }).then((results : any) => {
+    }).then((results: any) => {
       if (results.value)
         this.ActualizarOficinaUsuario();
       else
         this.oficinaSeleccionada = { Descripcion: "", IdLista: 0 };
       this.conutStatus = 0;
-     });
+    });
   }
   stop() {
     this.userIdle.stopTimer();
@@ -1160,7 +1182,7 @@ export class LayoutComponent implements OnInit {
   }
   validacionUsuarios() {
     if (localStorage.getItem('Data') !== null && localStorage.getItem('Data') !== undefined) {
-      let data : string | null = localStorage.getItem('Data');
+      let data: string | null = localStorage.getItem('Data');
       this.resulStore = JSON.parse(window.atob(data == null ? "" : data));
       if (this.resulStore === null) {
         localStorage.removeItem('userName');
@@ -1192,37 +1214,37 @@ export class LayoutComponent implements OnInit {
   }
   LogginOut() {
     this.loginService.CerrarSesionUser(this.DataUser.IdUsuario).subscribe(result => {
-        this.isLoginError = false;
-        this.router.navigateByUrl('/Login');
-        this.nameUser = '';
-        this.NombreOficinaActual = '';
-        localStorage.removeItem('userName');
-        localStorage.removeItem('dataUserConect');
-        localStorage.removeItem('TerceroNatura');
-        localStorage.removeItem('IdModuloActivo');
-        localStorage.removeItem('Data')
-        localStorage.clear();
-      },error => {
-        console.log(error);
-        this.notif.onDanger('Error', error);
-        this.isLoginError = true;
-      });
+      this.isLoginError = false;
+      this.router.navigateByUrl('/Login');
+      this.nameUser = '';
+      this.NombreOficinaActual = '';
+      localStorage.removeItem('userName');
+      localStorage.removeItem('dataUserConect');
+      localStorage.removeItem('TerceroNatura');
+      localStorage.removeItem('IdModuloActivo');
+      localStorage.removeItem('Data')
+      localStorage.clear();
+    }, error => {
+      console.log(error);
+      this.notif.onDanger('Error', error);
+      this.isLoginError = true;
+    });
   }
-  setModuloLocalStorage(IdModulo : number) {
-    let permi : string | null = localStorage.getItem('Permisos');
+  setModuloLocalStorage(IdModulo: number) {
+    let permi: string | null = localStorage.getItem('Permisos');
     const permisosUsuario = JSON.parse(CryptoJS.AES.decrypt(permi == null ? "" : permi, this.PassJs.pass).toString(CryptoJS.enc.Utf8));
 
-    let pr : any = permisosUsuario.find((x : any) => x.IdModulo == IdModulo);
+    let pr: any = permisosUsuario.find((x: any) => x.IdModulo == IdModulo);
     if (pr == null || pr.IdModulo != IdModulo)
       this.router.navigateByUrl('/');
     else
       localStorage.setItem('IdModuloActivo', window.btoa(JSON.stringify(IdModulo)));
   }
-  created( e : any){
-    console.log("create",e)
+  created(e: any) {
+    console.log("create", e)
   }
-  destroyed( e : any){
-    console.log("destroyd",e)
+  destroyed(e: any) {
+    console.log("destroyd", e)
   }
 }
 
