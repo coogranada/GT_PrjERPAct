@@ -1,9 +1,9 @@
-
 <body class="navbar-bottom navbar-top pace-done" id="Contenido">
     <!-- Main navbar -->
     <div class="navbar navbar-inverse Gt-ColorMorado navbar-fixed-top">
         <div class="navbar-header">
-            <a class="navbar-brand" [routerLink]="['/']"><img src="../../../assets/images/GT/logo-coogranada-blanco.png" alt="" align="right"></a>
+            <a class="navbar-brand" [routerLink]="['/']"><img src="../../../assets/images/GT/logo-coogranada-blanco.png"
+                    alt="" align="right"></a>
             <ul class="nav navbar-nav visible-xs-block">
                 <li><a data-toggle="collapse" data-target="#navbar-mobile"><i class="icon-collaboration"></i></a></li>
                 <li><a class="sidebar-mobile-main-toggle"><i class="icon-paragraph-justify3"></i></a></li>
@@ -16,12 +16,24 @@
             </ul>
             <div class="navbar-center">
                 <ul class="nav navbar-nav">
-                    <li class="dropdown text-center"><a href="https://www.facebook.com/coogranada" title="Facebook" target="_blank" data-popup="tooltip" data-trigger="hover" data-placement="bottom"><i  class="icon-facebook2"></i></a></li>
-                    <li class="dropdown text-center"><a href="https://www.instagram.com/coogranada" title="Instagram" target="_blank" data-popup="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon-instagram"></i></a></li>
-                    <li class="dropdown text-center"><a href="https://www.youtube.com/user/Coogranada1963" target="_blank" title="Youtube" data-popup="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon-youtube"></i></a></li>
-                    <li class="dropdown text-center"><a href="https://twitter.com/coogranada" title="Twitter" target="_blank" data-popup="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon-twitter2"></i></a></li>
-                    <li class="dropdown text-center"><a href="http://www.coogranada.coop/radio/" target="_blank" title="Radio" data-popup="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon-radio"></i></a></li>
-                    <li class="dropdown text-center"><a href="https://www.linkedin.com/company/coogranada" target="_blank" title="LinkedIn" data-popup="tooltip" data-trigger="hover" data-placement="bottom"><i class="icon-linkedin"></i></a></li>
+                    <li class="dropdown text-center"><a href="https://www.facebook.com/coogranada" title="Facebook"
+                            target="_blank" data-popup="tooltip" data-trigger="hover" data-placement="bottom"><i
+                                class="icon-facebook2"></i></a></li>
+                    <li class="dropdown text-center"><a href="https://www.instagram.com/coogranada" title="Instagram"
+                            target="_blank" data-popup="tooltip" data-trigger="hover" data-placement="bottom"><i
+                                class="icon-instagram"></i></a></li>
+                    <li class="dropdown text-center"><a href="https://www.youtube.com/user/Coogranada1963"
+                            target="_blank" title="Youtube" data-popup="tooltip" data-trigger="hover"
+                            data-placement="bottom"><i class="icon-youtube"></i></a></li>
+                    <li class="dropdown text-center"><a href="https://twitter.com/coogranada" title="Twitter"
+                            target="_blank" data-popup="tooltip" data-trigger="hover" data-placement="bottom"><i
+                                class="icon-twitter2"></i></a></li>
+                    <li class="dropdown text-center"><a href="http://www.coogranada.coop/radio/" target="_blank"
+                            title="Radio" data-popup="tooltip" data-trigger="hover" data-placement="bottom"><i
+                                class="icon-radio"></i></a></li>
+                    <li class="dropdown text-center"><a href="https://www.linkedin.com/company/coogranada"
+                            target="_blank" title="LinkedIn" data-popup="tooltip" data-trigger="hover"
+                            data-placement="bottom"><i class="icon-linkedin"></i></a></li>
                 </ul>
             </div>
 
@@ -30,7 +42,7 @@
                     <p class="navbar-text">
                         <span class="">
                             <i class="icon-pin text-size-small"></i>
-                                {{NombreOficinaActual}}
+                            {{NombreOficinaActual}}
                         </span>
                     </p>
                 </li>
@@ -39,8 +51,11 @@
                         <span><i class="icon-pin text-size-small"></i> {{NombreOficinaActual}}</span>
                         <i class="caret"></i>
                     </a>
-                    <ul  class="dropdown-menu dropdown-menu-right">
-                        <input (change)="CambioOficina()" (blur)="CambioOficina()" id="selectOficina" [(ngModel)]="oficinaSeleccionada" ngui-auto-complete  [source]="resultOficina" value-property-name="IdLista" display-property-name="Descripcion" list-formatter="Descripcion" class="form-control">
+                    <ul class="dropdown-menu dropdown-menu-right">
+                        <input (change)="CambioOficina()" (blur)="CambioOficina()" id="selectOficina"
+                            [(ngModel)]="oficinaSeleccionada" ngui-auto-complete [source]="resultOficina"
+                            value-property-name="IdLista" display-property-name="Descripcion"
+                            list-formatter="Descripcion" class="form-control">
                     </ul>
                     <button id="hiddenButton" style="opacity: 0;position: absolute; left: -999999;"></button>
                 </li>
@@ -81,12 +96,16 @@
                                     <a href="#" (click)="toggleUsuarioMenu()">
                                         <i class="icon-user"></i>
                                         <span>Usuario</span>
-                                        <i class="icon-arrow-right13" style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="!isUsuarioMenuOpen" ></i>
-                                        <i class="icon-arrow-down12"  style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="isUsuarioMenuOpen" ></i>
+                                        <i class="icon-arrow-right13"
+                                            style="left: 225px; margin-top: 15px; position: absolute;"
+                                            *ngIf="!isUsuarioMenuOpen"></i>
+                                        <i class="icon-arrow-down12"
+                                            style="left: 225px; margin-top: 15px; position: absolute;"
+                                            *ngIf="isUsuarioMenuOpen"></i>
                                     </a>
                                     <ul *ngIf="isUsuarioMenuOpen">
                                         <li>
-                                            <a [routerLink]="['/Perfil/Detalle']" >Perfil</a>
+                                            <a [routerLink]="['/Perfil/Detalle']">Perfil</a>
                                         </li>
                                         <li>
                                             <a [routerLink]="['/Login']" (click)="LogginOut()">Salir </a>
@@ -94,85 +113,130 @@
                                     </ul>
                                 </li>
                                 <li>
-                                    <a [routerLink]="['/AplicacionesColaborativas']"> <i class="icon-windows2"></i> <span>Aplicaciones colaborativas</span></a>
+                                    <a [routerLink]="['/AplicacionesColaborativas']"> <i class="icon-windows2"></i>
+                                        <span>Aplicaciones colaborativas</span></a>
                                 </li>
                                 <li *ngIf="ocultarListaDirecciones">
-                                    <a [routerLink]="['/LibretaDirecciones']"> <i class="icon-collaboration"></i> <span>Libreta direcciones </span></a>
+                                    <a [routerLink]="['/LibretaDirecciones']"> <i class="icon-collaboration"></i>
+                                        <span>Libreta direcciones </span></a>
                                 </li>
                                 <li class="navigation-header">
                                     <span>Menú</span>
                                     <i class="icon-menu"></i>
                                 </li>
                                 <li id="configuracion">
-                                    <a href="#/" (click)="toggleConfiguracionMenu()"  >
-                                        <i  class="icon-cog3"></i>
-                                         <span >Configuración</span> 
-                                        <i class="icon-arrow-right13" style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="!isConfiguracionMenuOpen" ></i>
-                                        <i class="icon-arrow-down12"  style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="isConfiguracionMenuOpen" ></i>
+                                    <a href="#/" (click)="toggleConfiguracionMenu()">
+                                        <i class="icon-cog3"></i>
+                                        <span>Configuración</span>
+                                        <i class="icon-arrow-right13"
+                                            style="left: 225px; margin-top: 15px; position: absolute;"
+                                            *ngIf="!isConfiguracionMenuOpen"></i>
+                                        <i class="icon-arrow-down12"
+                                            style="left: 225px; margin-top: 15px; position: absolute;"
+                                            *ngIf="isConfiguracionMenuOpen"></i>
                                     </a>
                                     <ul *ngIf="isConfiguracionMenuOpen">
                                         <li id="maestros">
                                             <a href="#/" (click)="toggleMaestroMenu()" style="padding: 0px, 40px;">
                                                 <i></i>
                                                 <span>Maestros</span>
-                                                <i class="icon-arrow-right13" style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="!isMaestroMenuOpen" ></i>
-                                                <i class="icon-arrow-down12"  style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="isMaestroMenuOpen" ></i>
+                                                <i class="icon-arrow-right13"
+                                                    style="left: 225px; margin-top: 15px; position: absolute;"
+                                                    *ngIf="!isMaestroMenuOpen"></i>
+                                                <i class="icon-arrow-down12"
+                                                    style="left: 225px; margin-top: 15px; position: absolute;"
+                                                    *ngIf="isMaestroMenuOpen"></i>
                                             </a>
                                             <ul *ngIf="isMaestroMenuOpen">
                                                 <li id="areas">
-                                                    <a [routerLink]="['/Configuracion/Maestros/Areas']" (click)="setModuloLocalStorage(AreasModel.IdModuloPermiso)">Áreas</a>
+                                                    <a [routerLink]="['/Configuracion/Maestros/Areas']"
+                                                        (click)="setModuloLocalStorage(AreasModel.IdModuloPermiso)">Áreas</a>
                                                 </li>
                                                 <li id="cargos">
-                                                    <a [routerLink]="['/Configuracion/Maestros/Cargos']" (click)="setModuloLocalStorage(CargosModel.IdModuloPermiso)"> Cargos</a>
+                                                    <a [routerLink]="['/Configuracion/Maestros/Cargos']"
+                                                        (click)="setModuloLocalStorage(CargosModel.IdModuloPermiso)">
+                                                        Cargos</a>
                                                 </li>
                                                 <li id="oficinas">
-                                                    <a [routerLink]="['/Configuracion/Maestros/Oficinas']" (click)="setModuloLocalStorage(OficinasModel.IdModuloPermiso)">  Oficinas</a>
+                                                    <a [routerLink]="['/Configuracion/Maestros/Oficinas']"
+                                                        (click)="setModuloLocalStorage(OficinasModel.IdModuloPermiso)">
+                                                        Oficinas</a>
                                                 </li>
                                                 <li id="perfiles">
-                                                    <a [routerLink]="['/Configuracion/Maestros/Perfiles']" (click)="setModuloLocalStorage(PerfilesModel.IdModuloPermiso)">  Perfiles</a>
+                                                    <a [routerLink]="['/Configuracion/Maestros/Perfiles']"
+                                                        (click)="setModuloLocalStorage(PerfilesModel.IdModuloPermiso)">
+                                                        Perfiles</a>
                                                 </li>
                                                 <li id="usuariosTipos">
-                                                    <a [routerLink]="['/Configuracion/Maestros/TiposUsuarios']" (click)="setModuloLocalStorage(UsuariosTiposModel.IdModuloPermiso)">  Tipos usuarios</a>
+                                                    <a [routerLink]="['/Configuracion/Maestros/TiposUsuarios']"
+                                                        (click)="setModuloLocalStorage(UsuariosTiposModel.IdModuloPermiso)">
+                                                        Tipos usuarios</a>
                                                 </li>
                                                 <li id="modulos">
-                                                    <a [routerLink]="['/Configuracion/Maestros/Modulos']" (click)="setModuloLocalStorage(MaestrosModel.IdModuloPermiso)"> Módulos</a>
+                                                    <a [routerLink]="['/Configuracion/Maestros/Modulos']"
+                                                        (click)="setModuloLocalStorage(MaestrosModel.IdModuloPermiso)">
+                                                        Módulos</a>
                                                 </li>
                                                 <li id="permisos">
-                                                    <a [routerLink]="['/Configuracion/Maestros/Permisos']" (click)="setModuloLocalStorage(PermisosModel.IdModuloPermiso)">  Permisos</a>
+                                                    <a [routerLink]="['/Configuracion/Maestros/Permisos']"
+                                                        (click)="setModuloLocalStorage(PermisosModel.IdModuloPermiso)">
+                                                        Permisos</a>
                                                 </li>
                                                 <li id="operacionesModulos">
-                                                    <a [routerLink]="['/Configuracion/Maestros/OperacionesModulos']" (click)="setModuloLocalStorage(OperacionesModulosModel.IdModuloPermiso)">  Operaciones módulos</a>
+                                                    <a [routerLink]="['/Configuracion/Maestros/OperacionesModulos']"
+                                                        (click)="setModuloLocalStorage(OperacionesModulosModel.IdModuloPermiso)">
+                                                        Operaciones módulos</a>
                                                 </li>
                                                 <li id="operacionesPerfiles">
-                                                    <a [routerLink]="['/Configuracion/Maestros/OperacionesPerfiles']" (click)="setModuloLocalStorage(OperacionesPerfilesModel.IdModuloPermiso)"> Operaciones perfiles</a>
+                                                    <a [routerLink]="['/Configuracion/Maestros/OperacionesPerfiles']"
+                                                        (click)="setModuloLocalStorage(OperacionesPerfilesModel.IdModuloPermiso)">
+                                                        Operaciones perfiles</a>
                                                 </li>
                                                 <li id="operacionesEstado">
-                                                    <a [routerLink]="['/Configuracion/Maestros/OperacionesEstados']" (click)="setModuloLocalStorage(OperacionesEstadoModel.IdModuloPermiso)"> Operaciones estados</a>
+                                                    <a [routerLink]="['/Configuracion/Maestros/OperacionesEstados']"
+                                                        (click)="setModuloLocalStorage(OperacionesEstadoModel.IdModuloPermiso)">
+                                                        Operaciones estados</a>
                                                 </li>
                                                 <li id="observacionesModulos">
-                                                    <a [routerLink]="['/Configuracion/Maestros/ObservacionesModulos']" (click)="setModuloLocalStorage(ObservacionesModulosModel.IdModuloPermiso)"> Observaciones módulos</a>
+                                                    <a [routerLink]="['/Configuracion/Maestros/ObservacionesModulos']"
+                                                        (click)="setModuloLocalStorage(ObservacionesModulosModel.IdModuloPermiso)">
+                                                        Observaciones módulos</a>
                                                 </li>
                                                 <li id="usuarios">
-                                                    <a [routerLink]="['/Configuracion/Maestros/Usuarios']" (click)="setModuloLocalStorage(UsuariosModel.IdModuloPermiso)"> Usuarios</a>
+                                                    <a [routerLink]="['/Configuracion/Maestros/Usuarios']"
+                                                        (click)="setModuloLocalStorage(UsuariosModel.IdModuloPermiso)">
+                                                        Usuarios</a>
                                                 </li>
                                                 <li id="usuariosproveedores">
-                                                    <a [routerLink]="['/Configuracion/Maestros/UsuariosProveederes']" (click)="setModuloLocalStorage(UsuariosProveedoresModel.IdModuloPermiso)">  Usuarios proveedores</a>
+                                                    <a [routerLink]="['/Configuracion/Maestros/UsuariosProveederes']"
+                                                        (click)="setModuloLocalStorage(UsuariosProveedoresModel.IdModuloPermiso)">
+                                                        Usuarios proveedores</a>
                                                 </li>
                                                 <li id="controlSession">
-                                                    <a [routerLink]="['/Configuracion/Maestros/ControlSesion']" (click)="setModuloLocalStorage(UsuariosModel.IdModuloPermiso)">  Control sesión</a>
+                                                    <a [routerLink]="['/Configuracion/Maestros/ControlSesion']"
+                                                        (click)="setModuloLocalStorage(UsuariosModel.IdModuloPermiso)">
+                                                        Control sesión</a>
                                                 </li>
                                                 <li id="permisosEspeciales">
-                                                    <a [routerLink]="['/Configuracion/Maestros/PermisosEspeciales']" (click)="setModuloLocalStorage(PermisosEspecialesModel.IdModuloPermiso)"> Permisos especiales</a>
+                                                    <a [routerLink]="['/Configuracion/Maestros/PermisosEspeciales']"
+                                                        (click)="setModuloLocalStorage(PermisosEspecialesModel.IdModuloPermiso)">
+                                                        Permisos especiales</a>
                                                 </li>
                                                 <li id="GestionBanner">
-                                                    <a [routerLink]="['/Configuracion/Maestros/ImagenesBanner']" (click)="setModuloLocalStorage(GestionBannerModel.IdModuloPermiso)"> Gestión banner</a>
+                                                    <a [routerLink]="['/Configuracion/Maestros/ImagenesBanner']"
+                                                        (click)="setModuloLocalStorage(GestionBannerModel.IdModuloPermiso)">
+                                                        Gestión banner</a>
                                                 </li>
                                                 <li id="GestionEmail">
-                                                    <a [routerLink]="['/Configuracion/Maestros/GestionEmail']" (click)="setModuloLocalStorage(GestionEmailModel.IdModuloPermiso)">  Gestión email
+                                                    <a [routerLink]="['/Configuracion/Maestros/GestionEmail']"
+                                                        (click)="setModuloLocalStorage(GestionEmailModel.IdModuloPermiso)">
+                                                        Gestión email
                                                     </a>
                                                 </li>
                                                 <li id="llaves">
-                                                    <a [routerLink]="['/Configuracion/Maestros/llaves']" (click)="setModuloLocalStorage(LlavesModel.IdModuloPermiso)"> Llaves</a>
+                                                    <a [routerLink]="['/Configuracion/Maestros/llaves']"
+                                                        (click)="setModuloLocalStorage(LlavesModel.IdModuloPermiso)">
+                                                        Llaves</a>
                                                 </li>
                                             </ul>
                                         </li>
@@ -180,20 +244,30 @@
                                             <a href="#/" (click)="toggleMaestroProductosMenu()">
                                                 <i></i>
                                                 <span>Maestros productos</span>
-                                                <i class="icon-arrow-right13" style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="!isMaestroProductosMenuOpen" ></i>
-                                                <i class="icon-arrow-down12"  style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="isMaestroProductosMenuOpen" ></i>
+                                                <i class="icon-arrow-right13"
+                                                    style="left: 225px; margin-top: 15px; position: absolute;"
+                                                    *ngIf="!isMaestroProductosMenuOpen"></i>
+                                                <i class="icon-arrow-down12"
+                                                    style="left: 225px; margin-top: 15px; position: absolute;"
+                                                    *ngIf="isMaestroProductosMenuOpen"></i>
                                             </a>
                                             <ul *ngIf="isMaestroProductosMenuOpen">
-                                                <li id="maestrosahorros" >
+                                                <li id="maestrosahorros">
                                                     <a href="#/" (click)="toggleMaestroAhorrosMenu()">
                                                         <i></i>
                                                         <span>Maestros ahorros</span>
-                                                        <i class="icon-arrow-right13" style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="!isMaestroAhorrosMenuOpen" ></i>
-                                                        <i class="icon-arrow-down12"  style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="isMaestroAhorrosMenuOpen" ></i>
+                                                        <i class="icon-arrow-right13"
+                                                            style="left: 225px; margin-top: 15px; position: absolute;"
+                                                            *ngIf="!isMaestroAhorrosMenuOpen"></i>
+                                                        <i class="icon-arrow-down12"
+                                                            style="left: 225px; margin-top: 15px; position: absolute;"
+                                                            *ngIf="isMaestroAhorrosMenuOpen"></i>
                                                     </a>
                                                     <ul *ngIf="isMaestroAhorrosMenuOpen">
                                                         <li id="consecutivotitulo">
-                                                            <a [routerLink]="['/Configuracion/Maestros-productos/Maestros-ahorros/Consecutivo-titulo/']" (click)="setModuloLocalStorage(ConsecutivoTituloModel.IdModuloPermiso)">Consecutivo titulos</a>
+                                                            <a [routerLink]="['/Configuracion/Maestros-productos/Maestros-ahorros/Consecutivo-titulo/']"
+                                                                (click)="setModuloLocalStorage(ConsecutivoTituloModel.IdModuloPermiso)">Consecutivo
+                                                                titulos</a>
                                                         </li>
                                                     </ul>
                                                 </li>
@@ -203,41 +277,63 @@
                                             <a href="#" (click)="toggleInformesMenu()">
                                                 <i></i>
                                                 <span>Informes</span>
-                                                <i class="icon-arrow-right13" style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="!isInformesMenuOpen" ></i>
-                                                <i class="icon-arrow-down12"  style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="isInformesMenuOpen" ></i>
+                                                <i class="icon-arrow-right13"
+                                                    style="left: 225px; margin-top: 15px; position: absolute;"
+                                                    *ngIf="!isInformesMenuOpen"></i>
+                                                <i class="icon-arrow-down12"
+                                                    style="left: 225px; margin-top: 15px; position: absolute;"
+                                                    *ngIf="isInformesMenuOpen"></i>
                                             </a>
                                             <ul *ngIf="isInformesMenuOpen">
                                                 <li id="informesmaestrosahorros">
                                                     <a href="#" (click)="toggleInformesMaestroAhorrosMenu()">
                                                         <i></i>
                                                         <span>Maestros ahorros</span>
-                                                        <i class="icon-arrow-right13" style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="!isInformesMaestroAhorrosMenuOpen" ></i>
-                                                        <i class="icon-arrow-down12"  style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="isInformesMaestroAhorrosMenuOpen" ></i>
+                                                        <i class="icon-arrow-right13"
+                                                            style="left: 225px; margin-top: 15px; position: absolute;"
+                                                            *ngIf="!isInformesMaestroAhorrosMenuOpen"></i>
+                                                        <i class="icon-arrow-down12"
+                                                            style="left: 225px; margin-top: 15px; position: absolute;"
+                                                            *ngIf="isInformesMaestroAhorrosMenuOpen"></i>
                                                     </a>
                                                     <ul *ngIf="isInformesMaestroAhorrosMenuOpen">
                                                         <li id="informeconsecutivotitulo">
-                                                            <a [routerLink]="['/Configuracion/Informes/Maestros-ahorros/Consecutivo-titulo/informe-consecutivo-titulo']" (click)="setModuloLocalStorage(InformeConsecutivoTituloModel.IdModuloPermiso)">Consecutivo titulos</a>
+                                                            <a [routerLink]="['/Configuracion/Informes/Maestros-ahorros/Consecutivo-titulo/informe-consecutivo-titulo']"
+                                                                (click)="setModuloLocalStorage(InformeConsecutivoTituloModel.IdModuloPermiso)">Consecutivo
+                                                                titulos</a>
                                                         </li>
                                                     </ul>
                                                 </li>
                                             </ul>
                                         </li>
+                                        <li id="transmisionarchivos">
+                                            <a href="#" (click)="toggletransmisionarchivosMenu()" [routerLink]="['Configuracion/TransmisionArchivos']">
+                                                <i></i>
+                                                <span>Transmisión de archivos</span>
+                                            </a >
+                                        </li>
                                     </ul>
-                                    <li id="clientes">
-                                        <a href="#" (click)="toggleClientesMenu()">
-                                            <i class="icon-users4"></i>
-                                            <span>Clientes</span>
-                                            <i class="icon-arrow-right13" style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="!isClientesMenuOpen" ></i>
-                                            <i class="icon-arrow-down12"  style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="isClientesMenuOpen" ></i>
-                                        </a>
-                                        <ul *ngIf="isClientesMenuOpen">
-                                            <li id="naturales">
-                                                <a [routerLink]="['/Clientes/Naturales']" (click)="setModuloLocalStorage(NaturalesModel.IdModuloPermiso)">Naturales</a>
-                                            </li>
-                                            <li id="juridicos">
-                                                <a [routerLink]="['/Clientes/Juridicos']" (click)="setModuloLocalStorage(JuridicosModel.IdModuloPermiso)">Jurídicos</a>
-                                            </li>
-                                            <!-- <li id="terceros">
+                                <li id="clientes">
+                                    <a href="#" (click)="toggleClientesMenu()">
+                                        <i class="icon-users4"></i>
+                                        <span>Clientes</span>
+                                        <i class="icon-arrow-right13"
+                                            style="left: 225px; margin-top: 15px; position: absolute;"
+                                            *ngIf="!isClientesMenuOpen"></i>
+                                        <i class="icon-arrow-down12"
+                                            style="left: 225px; margin-top: 15px; position: absolute;"
+                                            *ngIf="isClientesMenuOpen"></i>
+                                    </a>
+                                    <ul *ngIf="isClientesMenuOpen">
+                                        <li id="naturales">
+                                            <a [routerLink]="['/Clientes/Naturales']"
+                                                (click)="setModuloLocalStorage(NaturalesModel.IdModuloPermiso)">Naturales</a>
+                                        </li>
+                                        <li id="juridicos">
+                                            <a [routerLink]="['/Clientes/Juridicos']"
+                                                (click)="setModuloLocalStorage(JuridicosModel.IdModuloPermiso)">Jurídicos</a>
+                                        </li>
+                                        <!-- <li id="terceros">
                                                 <a [routerLink]="" (click)="setModuloLocalStorage(TercerosModel.IdModuloPermiso)">Terceros</a>
                                             </li>
                                             <li id="privilegiados">
@@ -246,19 +342,24 @@
                                             <li id="vetados">
                                                 <a [routerLink]="" (click)="setModuloLocalStorage(VetadosModel.IdModuloPermiso)">Vetados</a>
                                             </li> -->
-                                        </ul>
-                                    </li>
-                                    <li id="productos">
-                                        <a href="#" (click)="toggleProductosMenu()" >
-                                            <i class="icon-list2"></i>
-                                            <span>Productos</span>
-                                            <i class="icon-arrow-right13" style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="!isProductosMenuOpen" ></i>
-                                            <i class="icon-arrow-down12"  style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="isProductosMenuOpen" ></i>
-                                        </a>
-                                        <ul *ngIf="isProductosMenuOpen">
-                                            <li id="aportes">
-                                                <a [routerLink]="['/Productos/Aportes']" (click)="setModuloLocalStorage(AportesModel.IdModuloPermiso)">Aportes</a>
-                                            </li>
+                                    </ul>
+                                </li>
+                                <li id="productos">
+                                    <a href="#" (click)="toggleProductosMenu()">
+                                        <i class="icon-list2"></i>
+                                        <span>Productos</span>
+                                        <i class="icon-arrow-right13"
+                                            style="left: 225px; margin-top: 15px; position: absolute;"
+                                            *ngIf="!isProductosMenuOpen"></i>
+                                        <i class="icon-arrow-down12"
+                                            style="left: 225px; margin-top: 15px; position: absolute;"
+                                            *ngIf="isProductosMenuOpen"></i>
+                                    </a>
+                                    <ul *ngIf="isProductosMenuOpen">
+                                        <li id="aportes">
+                                            <a [routerLink]="['/Productos/Aportes']"
+                                                (click)="setModuloLocalStorage(AportesModel.IdModuloPermiso)">Aportes</a>
+                                        </li>
 
                                             <li id="ahorros">
                                                 <a [routerLink]="" (click)="toggleProductosAhorrosMenu()">Ahorros</a>
@@ -300,18 +401,25 @@
                                                     <li id="termino">
                                                         <a [routerLink]="" (click)="toggleProductosAhorrosTerminoMenu()">
                                                         Término</a>
-                                                        <i class="icon-arrow-right13" style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="!isProductosAhorrosTerminoMenuOpen" ></i>
-                                                        <i class="icon-arrow-down12"  style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="isProductosAhorrosTerminoMenuOpen" ></i>
-                                                        <ul *ngIf="isProductosAhorrosTerminoMenuOpen">
-                                                            <li id="TerminoInterno">
-                                                                <a [routerLink]="['/Productos/Ahorros/Termino/Termino']" (click)="setModuloLocalStorage(TerminoInternoModel.IdModuloPermiso)">Término</a>
-                                                            </li>
-                                                            <li id="asesoriatermino">
-                                                                <a [routerLink]="['/Productos/Ahorros/Termino/AsesoriaTermino']" (click)="setModuloLocalStorage(AsesoriaTerminoModel.IdModuloPermiso)">Asesoria término</a>
+                                                    <i class="icon-arrow-right13"
+                                                        style="left: 225px; margin-top: 15px; position: absolute;"
+                                                        *ngIf="!isProductosAhorrosTerminoMenuOpen"></i>
+                                                    <i class="icon-arrow-down12"
+                                                        style="left: 225px; margin-top: 15px; position: absolute;"
+                                                        *ngIf="isProductosAhorrosTerminoMenuOpen"></i>
+                                                    <ul *ngIf="isProductosAhorrosTerminoMenuOpen">
+                                                        <li id="TerminoInterno">
+                                                            <a [routerLink]="['/Productos/Ahorros/Termino/Termino']"
+                                                                (click)="setModuloLocalStorage(TerminoInternoModel.IdModuloPermiso)">Término</a>
+                                                        </li>
+                                                        <li id="asesoriatermino">
+                                                            <a [routerLink]="['/Productos/Ahorros/Termino/AsesoriaTermino']"
+                                                                (click)="setModuloLocalStorage(AsesoriaTerminoModel.IdModuloPermiso)">Asesoria
+                                                                término</a>
 
-                                                            </li>
-                                                        </ul>
-                                                    </li>
+                                                        </li>
+                                                    </ul>
+                                                </li>
 
                                                 </ul>
                                             </li>
@@ -431,34 +539,39 @@
                                             <li id="crearNotificaciones">
                                                 <a [routerLink]="['/Utilidades/CrearNotificaciones']" (click)="setModuloLocalStorage(CrearNotificacionesModel.IdModuloPermiso)">Crear
                                                 notificación</a>
-                                            </li>
-                                            <li id="diferenciasSaldos">
-                                                <a [routerLink]="['/Utilidades/DiferenciasSaldos']" (click)="setModuloLocalStorage(DiferenciasSaldosModel.IdModuloPermiso)">Diferencias
+                                        </li>
+                                        <li id="diferenciasSaldos">
+                                            <a [routerLink]="['/Utilidades/DiferenciasSaldos']"
+                                                (click)="setModuloLocalStorage(DiferenciasSaldosModel.IdModuloPermiso)">Diferencias
                                                 saldos</a>
-                                            </li>
-                                            <li id="conciliacionComisiones">
-                                                <a [routerLink]="['/Utilidades/Conciliacion/ConciliacionCompensacion']" (click)="setModuloLocalStorage(ConciliacionComisionesModel.IdModuloPermiso)">Conciliación compensación</a>
-                                            </li>
-                                            <!--<li id="conciliacionComisiones">
+                                        </li>
+                                        <li id="conciliacionComisiones">
+                                            <a [routerLink]="['/Utilidades/Conciliacion/ConciliacionCompensacion']"
+                                                (click)="setModuloLocalStorage(ConciliacionComisionesModel.IdModuloPermiso)">Conciliación
+                                                compensación</a>
+                                        </li>
+                                        <!--<li id="conciliacionComisiones">
                                                 <a [routerLink]="['/Informes/ConciliacionCompensacion']" (click)="setModuloLocalStorage(ConciliacionComisionesModel.IdModuloPermiso)">Conciliación compensación</a>
                                             </li>-->
-                                        </ul>
-                                    </li>
-                                    <li id="auditorias">
-                                        <a href="#">
-                                            <!-- (click)="setModuloLocalStorage(AuditoriasModel.IdModuloPermiso)" -->
-                                            <i class=" icon-menu6"></i>
-                                            <span> Auditorias</span>
-                                        </a>
-                                        <ul>
-                                            <li id="auditoriaScore">
-                                                <a [routerLink]="['/Auditorias/Score']" (click)="setModuloLocalStorage(AuditoriaScoreModel.IdModuloPermiso)">Score</a>
-                                            </li>
-                                            <li id="auditoriasGmf">
-                                                <a [routerLink]="['/Auditorias/GMF']" (click)="setModuloLocalStorage(AuditoriasGmfModel.IdModuloPermiso)">GMF</a>
-                                            </li>
-                                        </ul>
-                                    </li>
+                                    </ul>
+                                </li>
+                                <li id="auditorias">
+                                    <a href="#">
+                                        <!-- (click)="setModuloLocalStorage(AuditoriasModel.IdModuloPermiso)" -->
+                                        <i class=" icon-menu6"></i>
+                                        <span> Auditorias</span>
+                                    </a>
+                                    <ul>
+                                        <li id="auditoriaScore">
+                                            <a [routerLink]="['/Auditorias/Score']"
+                                                (click)="setModuloLocalStorage(AuditoriaScoreModel.IdModuloPermiso)">Score</a>
+                                        </li>
+                                        <li id="auditoriasGmf">
+                                            <a [routerLink]="['/Auditorias/GMF']"
+                                                (click)="setModuloLocalStorage(AuditoriasGmfModel.IdModuloPermiso)">GMF</a>
+                                        </li>
+                                    </ul>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -466,12 +579,15 @@
                 </div>
             </div>
             <!-- /main sidebar -->
-            <button type="button" style="visibility:hidden" #btnModalBanner class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#ModalImaganesBanner">
+            <button type="button" style="visibility:hidden" #btnModalBanner
+                class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#ModalImaganesBanner">
             </button>
             <button type="button" style="visibility:hidden" class="close" #btnModelaBannerCloset>&times;</button>
 
             <!--Modal de imagenes-->
-            <div class="modal fade bd-example-modal-lg" id="ModalImaganesBanner" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="width: 65%; position: fixed; margin: 0px auto;">
+            <div class="modal fade bd-example-modal-lg" id="ModalImaganesBanner" tabindex="-1" role="dialog"
+                aria-labelledby="myLargeModalLabel" aria-hidden="true"
+                style="width: 65%; position: fixed; margin: 0px auto;">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -543,7 +659,8 @@
         </ul>
         <div class="navbar-collapse collapse" id="footer">
             <div class="navbar-text">
-                Copyright &copy; {{FechaActual | date:'yyyy'}} - <a target="_blank" href="http://www.coogranada.coop/" class="navbar-link">Coogranada</a>
+                Copyright &copy; {{FechaActual | date:'yyyy'}} - <a target="_blank" href="http://www.coogranada.coop/"
+                    class="navbar-link">Coogranada</a>
             </div>
         </div>
     </div>

@@ -1,0 +1,87 @@
+.div-espacio {
+    margin-top: 20px
+}
+
+.div-espacio1 {
+    margin-top: 15px
+}
+
+
+.contorno-rutas {
+    border: 1px solid #852662;
+    padding: 10px;
+    border-radius: 10px;
+    padding-top: 20px; /* Espacio para que el texto no se superponga al borde */
+    position: relative;
+}
+
+.titulo {
+    position: absolute;
+    top: -10px;
+    left: 18px;
+    font-weight: bold;
+    font-size: 14px; 
+    background-color: white;
+    padding: 0 5px; 
+}
+
+
+.check-dis {
+    transform: scale(1.5);
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 1;
+}
+
+.input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-container .form-control {
+    width: 100%;
+}
+
+.input-container .glyphicon {
+    position: absolute;
+    right: 10px;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+#imgContrasena {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+
+  .text-truncate {
+    max-width: 600px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.table th {
+    font-weight: bold;
+}
+
+.table tbody tr {
+    height: 40px !important;
+}
+
+.table td {
+    vertical-align: middle;
+    /* Alinea el contenido verticalmente en el centro */
+    padding: 1px 5px 0;
+    white-space: nowrap;
+}
+
+
+.selected-row {
+    background-color: rgb(229, 229, 229);
+    /* Color de fondo gris para la fila seleccionada */
+}
