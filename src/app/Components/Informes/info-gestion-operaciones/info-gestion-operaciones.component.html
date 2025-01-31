@@ -1,0 +1,245 @@
+<div class="panel panel-white">
+    <div class="panel-heading">
+        <div class="heading-elements">
+            <ul class="icons-list">
+                <li>
+                    <a data-toggle="modal" data-target="#ModalAyuda">
+                        <i class="icon-question6 " title="Ayuda" data-popup="tooltip" data-trigger="hover" data-placement="top"></i>
+                    </a>
+                </li>
+                <li>
+                    <a data-action="collapse"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="panel-body">
+        <form method="get" [formGroup]="InfoGestionesOperacionesForm">
+            <div class="tabbable">
+                <div class="col-xs-12 col-md-12 col-lg-12" id="2">
+                    <div class="col-md-2">
+                        <div class="form-group" id="2">
+                            <label class="textBlod">Fecha inicial: </label>
+                            <span class="textBigRed"></span>
+                            <input type="date" class="form-control" formControlName="FechaInicial">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group" id="2">
+                            <label class="textBlod">Fecha final: </label>
+                            <span class="textBigRed"></span>
+                            <input type="date" class="form-control" formControlName="FechaFinal">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group" id="2">
+                            <label class="textBlod">Estado: </label>
+                            <span class="textBigRed"></span>
+                            <select class="form-control" formControlName="Estado" name="select">
+                      <option value="">-- Seleccione --</option>
+                      <option *ngFor="let tipoEstado of EstadosGestion" [value]="tipoEstado">
+                          <span *ngIf="tipoEstado === 5544">
+                              <label for="">Cancelada</label>
+                          </span>
+                          <span *ngIf="tipoEstado === 5543">
+                            <label for="">Gestionada</label>
+                          </span>
+                          <span *ngIf="tipoEstado === 5542">
+                            <label for="">Pendiente</label>
+                          </span>
+                          <span *ngIf="tipoEstado === 5546">
+                            <label for="">Rechazda</label>
+                          </span>
+                      </option>
+                    </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group" id="2">
+                            <label class="textBlod">Remitente: </label>
+                            <span class="textBigRed"></span>
+                            <input ngui-auto-complete formControlName="UsuarioRemite" [source]="UsuariosRemitentes" value-property-name="IdUsuarioRemite" display-property-name="Nombre" list-formatter="Nombre" class="form-control">
+                            <!-- <input type="text" class="form-control" formControlName="Usuario"> -->
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group" id="2">
+                            <label class="textBlod">Destinatario: </label>
+                            <span class="textBigRed"></span>
+                            <input ngui-auto-complete formControlName="UsuarioDestino" [source]="UsuariosDestinatarios" value-property-name="IdUsuarioDestino" display-property-name="Nombre" list-formatter="Nombre" class="form-control">
+                            <!-- <input type="text" class="form-control" formControlName="Usuario"> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                    <input type="submit" class="btn Gt-btn-verde" value="filtrar" (click)="FiltrarResultados()" /> &nbsp;
+                    <input type="submit" class="btn Gt-btn-morado" value="Limpiar" (click)="limpiarFiltros()" /> &nbsp;
+                    <span tooltip="Exportar a excel" placement="top" show-delay="500">
+                <button class="btn Gt-btn-verde btn-icon legitRipple" (click)="exportAsXLSX()">
+                  <i class=" icon-download4"></i>
+                </button>
+              </span>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <div class="tabbable">
+                    <div class="panel panel-white" id="basic-tab5">
+                        <!-- Todas -->
+                        <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="ListaGestiones.length <= 0 || ListaGestiones === null || ListaGestiones === undefined">
+                            <br>
+                            <div class="alert alert-secondary" role="alert">
+                                Aún no hay operaciones
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="ListaGestiones.length > 0 && ListaGestiones !== null && ListaGestiones !== undefined">
+                            <div class="table-responsive scrollTabla">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-bold">Código</th>
+                                            <th class="text-bold">Fecha</th>
+                                            <th class="text-bold">Estado</th>
+                                            <th class="text-bold">Gestión</th>
+                                            <th class="text-bold">Remitente</th>
+                                            <th class="text-bold">Destinatario</th>
+                                            <th class="text-bold">Trazabilidad</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let gestion of ListaGestiones">
+                                            <td>
+                                                <label># {{gestion.IdGestionOperacion}}</label>
+                                            </td>
+                                            <td>
+                                                <label>{{gestion.FechaSolicitud | date : "yyyy-MM-dd HH:mm" }}</label>
+                                            </td>
+                                            <td>
+                                                <div *ngIf="gestion.IdEstado === 5542" class="btn-group">
+                                                    <span class="label label-default">Pendiente</span>
+                                                </div>
+                                                <div *ngIf="gestion.IdEstado === 5543" class="btn-group">
+                                                    <span class="label label-success">Gestionada</span>
+                                                </div>
+                                                <div *ngIf="gestion.IdEstado === 5544" class="btn-group">
+                                                    <span class="label label-danger">Cancelada</span>
+                                                </div>
+                                                <div *ngIf="gestion.IdEstado === 5546" class="btn-group">
+                                                    <span class="label Gt-btn-amarillo">Rechazada</span>
+                                                </div>
+                                            </td>
+
+                                            <td>
+                                                <span class="text-semibold">{{gestion.NombreOperacion}}</span>
+                                                <span *ngIf="gestion.IdEstado === 5543" class="display-block text-muted">El usuario
+                            {{gestion.NombreUsuarioSolicita}}, ha gestionado una operación.</span>
+                                                <span *ngIf="gestion.IdEstado !== 5543" class="display-block text-muted">El usuario
+                            {{gestion.NombreUsuarioSolicita}}, ha solicitado la gestión de una operación.</span>
+
+                                            </td>
+                                            <td>
+                                                <label>{{gestion.NombreUsuarioSolicita}}</label>
+                                            </td>
+                                            <td>
+                                                <label>{{gestion.NombreUsuarioRecibe}}</label>
+                                            </td>
+                                            <td class="text-center">
+                                                <span tooltip="Ver trazabilidad" placement="top" show-delay="500">
+                            <button class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#ModalTrasabilidadAsociadoInfo"
+                             (click)="AbrirTrazabilidad(gestion)">
+                              <i class="icon-eye2"></i>
+                            </button></span>&nbsp;
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- / Todas  -->
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+
+<div id="ModalTrasabilidadAsociadoInfo" class="modal">
+    <div class="modal-dialog" id="mdialTamanio">
+        <div class="modal-content">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Trasabilidad</h6>
+            </div>
+            <div class="modal-body">
+                <div class="col-xs-12 col-md-12 col-lg-12" style="margin-top: 10px;" *ngIf="dataTrasabilidad.length <= 0">
+                    <br>
+                    <div class="alert alert-secondary" role="alert">
+                        No hay registros
+                    </div>
+                </div>
+                <br>
+                <div class="col-xs-12 col-md-12 col-lg-12 panel panel-default margin-top: 10px" *ngIf="dataTrasabilidad.length > 0">
+                    <div class="table-responsive scrollTabla">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th><strong>Usuario solcita</strong></th>
+                                    <th><strong>Fecha solicitud</strong></th>
+                                    <th><strong>Usuario recibe</strong></th>
+                                    <th><strong>Modulo</strong></th>
+                                    <th><strong>Operacion</strong></th>
+                                    <th><strong>Estado</strong></th>
+                                    <th><strong>Cuenta</strong></th>
+                                    <th><strong>Persona</strong></th>
+                                    <th><strong>Observacion</strong></th>
+                                    <th><strong>Fecha actualización</strong></th>
+                                    <th><strong>Observación gestión</strong></th>
+                                    <th><strong>Fecha creación</strong></th>
+                                    <th><strong>Fecha gestión</strong></th>
+                                    <th><strong>Fecha cancelación</strong></th>
+                                    <th><strong>Fecha Reasignación</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody *ngFor="let resultTrasa of dataTrasabilidad">
+                                <tr>
+                                    <td> {{resultTrasa.UsuarioSolicita}} </td>
+                                    <td> {{resultTrasa.FechaSolicitud | date: "MM/dd/yyyy HH:mm:ss"}} </td>
+                                    <td> {{resultTrasa.UsuarioRecibe}} </td>
+                                    <td> {{resultTrasa.Modulo}} </td>
+                                    <td> {{resultTrasa.Operacion}}</td>
+                                    <div *ngIf="resultTrasa.idEstado === 5542" class="btn-group">
+                                        <span class="label label-default">Pendiente</span>
+                                    </div>
+                                    <div *ngIf="resultTrasa.idEstado === 5543" class="btn-group">
+                                        <span class="label label-success">Gestionada</span>
+                                    </div>
+                                    <div *ngIf="resultTrasa.idEstado === 5544" class="btn-group">
+                                        <span class="label label-danger">Cancelada</span>
+                                    </div>
+                                    <div *ngIf="resultTrasa.idEstado === 5546" class="btn-group">
+                                        <span class="label Gt-btn-amarillo">Rechazada</span>
+                                    </div>
+                                    <td> {{resultTrasa.Cuenta}}</td>
+                                    <td> {{resultTrasa.Persona}}</td>
+                                    <td> {{resultTrasa.Observacion}}</td>
+                                    <td> {{resultTrasa.FechaActualizacion | date: "MM/dd/yyyy HH:mm:ss"}}</td>
+                                    <td> {{resultTrasa.ObservacionGestion}}</td>
+                                    <td> {{resultTrasa.FechaCreacion | date: "MM/dd/yyyy HH:mm:ss"}}</td>
+                                    <td> {{resultTrasa.FechaGestion | date: "MM/dd/yyyy HH:mm:ss"}}</td>
+                                    <td> {{resultTrasa.FechaRechazo | date: "MM/dd/yyyy HH:mm:ss"}}</td>
+                                    <td> {{resultTrasa.FechaCancelacion | date: "MM/dd/yyyy HH:mm:ss"}}</td>
+                                    <td> {{resultTrasa.FechaReasignacion | date: "MM/dd/yyyy HH:mm:ss"}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal" (click)="ResetTrasabilidad()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
