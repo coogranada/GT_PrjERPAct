@@ -1472,7 +1472,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.operacionesModel.idModulo = +JSON.parse(window.atob(IdModuloActivo == null ? "" : IdModuloActivo));
     this.mostrarPorQueCobertura = false;
     this.solicitudRetiroForm.reset();
-    if (results === '5') { // Creacion
+    if (results === '5') { // Creacion 
       this.LimpiaVariablesAlerta();
       this.EjecutarMetodosMaestros();
       this.NombresCapitaliceBasico();
@@ -1486,6 +1486,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       this.dataMotivoIngreso.splice(11, 1);
       this.operacionesService.ObtenerEstadosXOperacionesData(this.operacionesModel).subscribe(
         result => {
+          this.basicosFrom.get('RegimenTributario')?.setValue(true);
           this.dataEstado = result;
           this.dataEstado.forEach((elementEstado : any) => {
             if (elementEstado.IdEstado === +this.operacionesModel.idOperacion) {
@@ -4807,12 +4808,17 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       }
 
       const idTercero = this.basicosFrom.get('IdTerceroPrincipal')?.value;
+      const currentRegimenTributario = this.basicosFrom.get('RegimenTributario')?.value;
+      const logData = {
+        RegimenTributarioAnterior: currentRegimenTributario === false ? 'Simple' : 'No responsable',
+        RegimenTributarioActualiza: currentRegimenTributario === false ? 'No responsable' : 'Simple'
+      };
       this.clientesService.CambiarRegimenTributario(idTercero)
         .subscribe(result => {
           if(result === true) {
             this.notif.onSuccess('Exitoso', 'El regimen tributario se cambió correctamente.');
-            this.basicosFrom.get('operacion')?.reset();
-            this.GuardarLog(this.allItemsFormSaves, 116, 0, idTercero, 11);
+            this.basicosFrom.get('operacion')?.reset();            
+            this.GuardarLog(logData, 116, 0, idTercero, 11);
             this.BuscarNaturalesAll(this.basicosFrom.get('numeroDocumento')?.value);
           }
         });
@@ -20478,12 +20484,16 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         this.allItemsFormSaves.userWork = resultPerfil.Usuario;
         // Guardar el asociado natural
         this.itemWorkManagerInsert = this.allItemsFormSaves;
+        this.allItemsFormSaves.asociadosNaturalesDto = {
+          ...this.allItemsFormSaves.asociadosNaturalesDto,
+          RegimenTributario: true
+        };
         this.clientesService.GuardarNaturalesBasico(this.allItemsFormSaves).subscribe(
           result => {
             const opera = this.basicosFrom.get('operacion')?.value;
             this.operacion =  this.basicosFrom.get('operacion')?.value;
             this.basicosFrom.get('operacion')?.reset();
-            const resulNatural = JSON.parse(result['_body']);
+            const resulNatural = result;
             console.log(resulNatural);
             if (resulNatural.Result !== null) {
               if (resulNatural.Result.dataWorkManager !== null && resulNatural.Result.dataWorkManager !== undefined) {
@@ -20508,7 +20518,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                     if (results.value) {
                       this.clientesService.ReplicarWorkManager(this.itemWorkManagerInsert).subscribe(
                       resultWork => {
-                      const resulNaturalWork = JSON.parse(result['_body']);
+                      const resulNaturalWork = result;
                       console.log(resulNaturalWork);
                       const valorWorkNat = resulNaturalWork.Result.dataWorkManager.indexOf('OK ----- True');
                       console.log(valorWorkNat);
