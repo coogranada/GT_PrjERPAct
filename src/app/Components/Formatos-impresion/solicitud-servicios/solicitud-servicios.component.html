@@ -153,13 +153,13 @@
                             </div>
                         </div>
                         <div class="col-xs-4 col-md-4 col-lg-4 FormatoNaturalesLeft FormatoNaturalesRight ">
-                            <div class="col-xs-4 col-md-4 col-lg-4 text-center ">
+                            <div class="col-xs-4 col-md-4 col-lg-4 text-center">
                                 <label class="letraGrande">{{naturalesAllModel.DiaFechaSoli}}</label>
                             </div>
-                            <div class="col-xs-4 col-md-4 col-lg-4 text-center">
+                            <div class="col-xs-4 col-md-4 col-lg-4 text-center FormatoNaturalesLeft">
                                 <label class="letraGrande">{{naturalesAllModel.MesFechaSoli}}</label>
                             </div>
-                            <div class="col-xs-4 col-md-4 col-lg-4 text-center">
+                            <div class="col-xs-4 col-md-4 col-lg-4 text-center FormatoNaturalesLeft">
                                 <label class="letraGrande">{{naturalesAllModel.AnoFechaSoli}}</label>
                             </div>
                         </div>
@@ -176,8 +176,11 @@
                     </div>
 
                     <div class="col-sm-12 col-xs-12 col-lg-12 text-center FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-2 col-md-2 col-lg-2 text-center FormatoNaturalesRight">
+                            <label class="text-bold">Regimen Tributario</label>
+                        </div>
                         <!--Titulos tipo iden numero lugarexpedi-->
-                        <div class="col-xs-4 col-md-4 col-lg-4">
+                        <div class="col-xs-3 col-md-3 col-lg-3">
                             <!--titulo identificacion-->
                             <label class="text-bold">*Tipo de identificación</label>
                         </div>
@@ -185,7 +188,7 @@
                             <!--titulo Numero-->
                             <label class="text-bold">*Número</label>
                         </div>
-                        <div class="col-xs-4 col-md-4 col-lg-4 text-center Gt-ColorMorado  FormatoNaturalesLeft">
+                        <div class="col-xs-3 col-md-3 col-lg-3 text-center Gt-ColorMorado  FormatoNaturalesLeft">
                             <!--titulo Fecha expedicion-->
                             <label class="text-bold">Fecha de expedición</label>&nbsp;&nbsp;
                             <label class="textGray">(DD/MM/AAAA)</label>
@@ -197,8 +200,11 @@
                     </div>
 
                     <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
+                            <label class="letraGrande">{{ naturalesAllModel.RegimenTributario}}</label>
+                        </div>
                         <!--tipo iden numero lugarexpedi-->
-                        <div class="col-xs-4 col-md-4 col-lg-4 FormatoNaturalesRight">
+                        <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesRight">
                             <!--Tipo de documento-->
                             <label class="letraGrande">{{naturalesAllModel.TipoDocumento}}</label>
                         </div>
@@ -206,17 +212,15 @@
                             <!--Numero de documento-->
                             <label class="letraGrande">{{naturalesAllModel.NumeroDocumento}}</label>
                         </div>
-                        <div class="col-xs-4 col-md-4 col-lg-4 FormatoNaturalesLeft">
-                            <!--Fecha expedicion-->
-                            <div class="col-xs-4 col-md-4 col-lg-4 text-center ">
-                                <label class="letraGrande">{{naturalesAllModel.DiaFechaExpe}}</label>
-                            </div>
-                            <div class="col-xs-4 col-md-4 col-lg-4 text-center">
-                                <label class="letraGrande">{{naturalesAllModel.MesFechaExpe}}</label>
-                            </div>
-                            <div class="col-xs-4 col-md-4 col-lg-4 text-center">
-                                <label class="letraGrande">{{naturalesAllModel.AnofechaExpe}}</label>
-                            </div>
+                        <!--Fecha expedicion-->
+                        <div class="col-xs-1 col-md-1 col-lg-1 text-center FormatoNaturalesLeft">
+                            <label class="letraGrande">{{naturalesAllModel.DiaFechaExpe}}</label>
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1 text-center FormatoNaturalesLeft">
+                            <label class="letraGrande">{{naturalesAllModel.MesFechaExpe}}</label>
+                        </div>
+                        <div class="col-xs-1 col-md-1 col-lg-1 text-center FormatoNaturalesLeft">
+                            <label class="letraGrande">{{naturalesAllModel.AnofechaExpe}}</label>
                         </div>
                         <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesLeft">
                             <!--Ciudad de expedicion-->
@@ -300,18 +304,18 @@
                         <div class="col-xs-3 col-md-3 col-lg-3 text-center">
                             <label class="text-bold">País</label>
                         </div>
-                        <div class="col-xs-2 col-md-2 col-lg-2 text-center Gt-ColorMorado FormatoNaturalesLeft">
+                        <div class="col-xs-3 col-md-3 col-lg-3 text-center Gt-ColorMorado FormatoNaturalesLeft">
                             <label class="text-bold">Estado civil</label>
                         </div>
-                        <div class="col-xs-2 col-md-2 col-lg-2 text-center FormatoNaturalesLeft">
+                        <div class="col-xs-3 col-md-3 col-lg-3 text-center FormatoNaturalesLeft">
                             <label class="text-bold">*Número de personas a cargo</label>
                         </div>
                         <div class="col-xs-3 col-md-3 col-lg-3 text-center Gt-ColorMorado FormatoNaturalesLeft">
                             <label class="text-bold">Nivel de estudios</label>
                         </div>
-                        <div class="col-xs-2 col-md-2 col-lg-2 text-center FormatoNaturalesLeft">
+                        <!-- <div class="col-xs-2 col-md-2 col-lg-2 text-center FormatoNaturalesLeft">
                             <label class="text-bold">Regimen Tributario</label>
-                        </div>
+                        </div> -->
                     </div>
 
                     <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
@@ -319,18 +323,18 @@
                         <div class="col-xs-3 col-md-3 col-lg-3">
                             <label class="letraGrande">{{naturalesAllModel.Pais}}</label>
                         </div>
-                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesLeft">
+                        <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesLeft">
                             <label class="letraGrande">{{naturalesAllModel.EstadoCivil}}</label>
                         </div>
-                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesLeft">
+                        <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesLeft">
                             <label class="letraGrande">{{naturalesAllModel.NumeroPersonasCargo}}</label>
                         </div>
                         <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesLeft">
                             <label class="letraGrande">{{naturalesAllModel.NivelEstudio}}</label>
                         </div>
-                        <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesLeft">
+                        <!-- <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesLeft">
                             <label class="letraGrande">{{ naturalesAllModel.RegimenTributario}}</label>
-                        </div>
+                        </div> -->
                     </div>
 
                     <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
