@@ -2,10 +2,12 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators, ValidatorFn, AbstractControl, FormBuilder } from '@angular/forms';
 import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { GeneralesService } from '../../../../Services/Productos/generales.service';
-import { NgxToastService } from 'ngx-toast-notifier';
 import { TransmisionArchivosService } from '../../../../Services/Configuracion/Transmision-archivos.service';
 import { ParametrosTransmisionData } from '../../../../Models/Configuracion/Transmision-archivos.model';
-import { error } from 'jquery';
+import { ToastrService } from 'ngx-toastr';
+import { ConfiguracionNotificacion } from '../../../../../environments/config.noticaciones'
+
+
 
 
 
@@ -18,6 +20,7 @@ import { error } from 'jquery';
 })
 export class TransmisionArchivosComponent implements OnInit {
   selectedRow: any = null;
+  initialValues: any = {};
   parametrosTransm: ParametrosTransmisionData[] = [];
   public parametrosTransmisionForm!: FormGroup;
   public showPassword: boolean = false;
@@ -35,8 +38,8 @@ export class TransmisionArchivosComponent implements OnInit {
   constructor(
     private TransmisionArchivosServices: TransmisionArchivosService,
     private fb: FormBuilder,
-    private notificacion: NgxToastService,
-    private generalesService: GeneralesService
+    private generalesService: GeneralesService,
+    private toastr: ToastrService
   ) { }
 
   togglePasswordVisibility() {
@@ -100,8 +103,20 @@ export class TransmisionArchivosComponent implements OnInit {
       estado: parametro.Estado,
     });
     this.cambiarEstado();
+    this.initialValues = JSON.parse(JSON.stringify(this.parametrosTransmisionForm.value));
     this.selectedTarea = parametro.NombreSitio;
   }
+
+  ValidarCambios(): boolean {
+    const formValues = this.parametrosTransmisionForm.value;
+    if(JSON.stringify(this.initialValues) !== JSON.stringify(formValues)){
+      return true;
+    }else{
+      return false;
+    }
+    
+  }
+  
 
   ValidarCampo(nameRe: RegExp): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
@@ -117,7 +132,7 @@ export class TransmisionArchivosComponent implements OnInit {
       },
       error => {
         const errorMessage = <any>error;
-        this.notificacion.onDanger('Error', errorMessage);
+        this.toastr.error('Error', errorMessage, ConfiguracionNotificacion.configRightTop);
         console.log(errorMessage);
       }
     );
@@ -154,23 +169,24 @@ export class TransmisionArchivosComponent implements OnInit {
 
       this.TransmisionArchivosServices.GuardarParametrosTransmision(this.parametrosTransmisionForm.value).subscribe(
         (response) => {
-          this.notificacion.onSuccess('Exitoso', 'Configuración guardada correctamente.');
+          this.toastr.success('Exitoso', 'Configuración guardada correctamente.', ConfiguracionNotificacion.configRightTop);
           this.obtenerConfiguracion();
           this.limpiarFormulario();
           this.IrAbajo();
         },
         (error) => {
-          this.notificacion.onDanger('Error', 'Error al guardar los datos ' + error);
+          this.toastr.error('Error', 'Error al guardar los datos ' + error, ConfiguracionNotificacion.configRightTop);
         }
       );
     } else {
-      this.notificacion.onWarning('Advertencia', 'Error en el formulario, valide los campos');
+      this.toastr.warning('Advertencia', 'Error en el formulario, valide los campos', ConfiguracionNotificacion.configRightTop);
     }
   }
 
 
   actualizarParametroTransmision() {
     if (this.parametrosTransmisionForm.valid) {
+      const result=this.ValidarCambios()
       const estadoActual = this.parametrosTransmisionForm.get('estado')?.value;
       if (estadoActual == 1) {
         this.parametrosTransmisionForm.get('estado')?.patchValue(5);
@@ -178,32 +194,40 @@ export class TransmisionArchivosComponent implements OnInit {
         this.parametrosTransmisionForm.get('estado')?.patchValue(20);
       }
 
-      this.TransmisionArchivosServices.ActualizarParametrosTransmision(this.parametrosTransmisionForm.value).subscribe(
-        (response) => {
-          this.notificacion.onSuccess('Exitoso', 'Configuración actualizada correctamente.');
-          this.obtenerConfiguracion();
-          this.limpiarFormulario();
-          this.IrAbajo();
-        },
-        (error) => {
-          this.notificacion.onDanger('Error', 'Error al actualizar los datos ' + error);
-        }
-      );
+      if (result) {
+        this.TransmisionArchivosServices.ActualizarParametrosTransmision(this.parametrosTransmisionForm.value).subscribe(
+          (response) => {
+            this.toastr.success('Exitoso', 'Configuración actualizada correctamente.', ConfiguracionNotificacion.configRightTop);
+            this.obtenerConfiguracion();
+            this.limpiarFormulario();
+            this.IrAbajo();
+          },
+          (error) => {
+            this.toastr.error('Error', 'Error al actualizar los datos ' + error, ConfiguracionNotificacion.configRightTop);
+          }
+        );
+        //Actualizar hora ejecución
 
-      this.TransmisionArchivosServices.ActualizarHoraEjecucion().subscribe(
-        (response) => {
-          this.notificacion.onSuccess('Exitoso', 'Hora ejecución actualizada correctamente.');
-          this.obtenerConfiguracion();
-          this.limpiarFormulario();
-          this.IrAbajo();
-        },
-        (error) => {
-          this.notificacion.onDanger('Error', 'Error al actualizar hora ejecución ' + error);
-        }
-      );
+      } else {
+        this.toastr.warning('Advertencia', 'No se han detectado cambios para actualizar.', ConfiguracionNotificacion.configRightTop);
+      }
     } else {
-      this.notificacion.onWarning('Advertencia', 'Error en el formulario, valide los campos');
+      this.toastr.warning('Advertencia', 'Error en el formulario, valide los campos.', ConfiguracionNotificacion.configRightTop);
     }
+  }
+
+  actualizarHoraEjecucion() {
+    this.TransmisionArchivosServices.ActualizarHoraEjecucion().subscribe(
+      (response) => {
+        this.toastr.success('Exitoso', 'Hora ejecución actualizada correctamente.', ConfiguracionNotificacion.configRightTop);
+        this.obtenerConfiguracion();
+        this.limpiarFormulario();
+        this.IrAbajo();
+      },
+      (error) => {
+        this.toastr.error('Error', 'Error al actualizar hora ejecución ' + error, ConfiguracionNotificacion.configRightTop);
+      }
+    );
   }
 
   onSubmit(): void {
@@ -219,7 +243,7 @@ export class TransmisionArchivosComponent implements OnInit {
       },
       error => {
         const errorMessage = <any>error;
-        this.notificacion.onDanger('Error', errorMessage);
+        this.toastr.error('Error', errorMessage, ConfiguracionNotificacion.configRightTop);
         console.log(errorMessage);
       }
     );
@@ -256,14 +280,14 @@ export class TransmisionArchivosComponent implements OnInit {
   ejecutarSFTP(parametro: ParametrosTransmisionData) {
     this.TransmisionArchivosServices.EjecutarSFTP(parametro).subscribe(
       (response) => {
-        this.notificacion.onSuccess('Exitoso', 'Ejecución correcta,' + response);
+        this.toastr.success('Exitoso', response, ConfiguracionNotificacion.configRightTop);
       },
       (error) => {
         if (error.status === 400) {
-          const errorMessage = error._body ? JSON.parse(error._body) : '.';
-          this.notificacion.onWarning('Advertencia', errorMessage);
+          const errorMessage = error.error;
+          this.toastr.warning('Advertencia', errorMessage, ConfiguracionNotificacion.configRightTop);
         } else {
-          this.notificacion.onDanger('Error', error);
+          this.toastr.warning('Advertencia', error.message, ConfiguracionNotificacion.configRightTop);
         }
       }
     );
@@ -273,19 +297,19 @@ export class TransmisionArchivosComponent implements OnInit {
     try {
       this.TransmisionArchivosServices.EjecutarSFTPGPG(parametro).subscribe(
         (response) => {
-          this.notificacion.onSuccess('Exitoso', 'Ejecución correcta,' + response);
+          this.toastr.success('Exitoso', response, ConfiguracionNotificacion.configRightTop);
         },
         (error) => {
           if (error.status === 400) {
             const errorMessage = error.error;
-            this.notificacion.onWarning('Advertencia', errorMessage);
+            this.toastr.warning('Advertencia', errorMessage, ConfiguracionNotificacion.configRightTop);
           } else {
-            this.notificacion.onDanger('Error', error.message);
+            this.toastr.warning('Advertencia', error.message, ConfiguracionNotificacion.configRightTop);
           }
         }
       );
     } catch (error) {
-      this.notificacion.onDanger('Error', ''+ error);
+      this.toastr.error('Error', '' + error, ConfiguracionNotificacion.configRightTop);
     }
 
   }
@@ -293,14 +317,14 @@ export class TransmisionArchivosComponent implements OnInit {
   ejecutarGRAPH(parametro: ParametrosTransmisionData) {
     this.TransmisionArchivosServices.EjecutarGRAPH(parametro).subscribe(
       (response) => {
-        this.notificacion.onSuccess('Exitoso', 'Ejecución correcta,' + response);
+        this.toastr.success('Exitoso', response, ConfiguracionNotificacion.configRightTop);
       },
       (error) => {
         if (error.status === 400) {
           const errorMessage = error._body ? JSON.parse(error._body) : '.';
-          this.notificacion.onWarning('Advertencia', errorMessage);
+          this.toastr.warning('Advertencia', errorMessage, ConfiguracionNotificacion.configRightTop);
         } else {
-          this.notificacion.onDanger('Error', error);
+          this.toastr.warning('Error', error, ConfiguracionNotificacion.configRightTop);
         }
       }
     );
@@ -310,12 +334,12 @@ export class TransmisionArchivosComponent implements OnInit {
     try {
       this.TransmisionArchivosServices.GetTareas().subscribe(
         (response) => {
-          console.log("Tareas programadas: "+response)
+          console.log("Tareas programadas: " + response)
         });
-      }catch (error){
-        console.log("Error obteniendo tareas programadas: "+error)
-      }
+    } catch (error) {
+      console.log("Error obteniendo tareas programadas: " + error)
     }
+  }
 
   IrArriba() {
     $('html, body').animate({ scrollTop: 0 }, 'slow');

@@ -34,3 +34,62 @@
     right: 20px;
     z-index: 9999;
   }
+
+  
+/* Estilos generales para las notificaciones */
+.toast-success, .toast-error, .toast-warning {
+  border-radius: 0px !important;  
+  display: flex;
+  flex-direction: column-reverse; 
+}
+
+/* Estilo para el mensaje */
+.toast-success .toast-title,
+.toast-error .toast-title,
+.toast-warning .toast-title {
+  font-size: 16px !important; 
+  font-weight: normal !important; 
+  margin: 0 !important;  
+  padding: 0 !important; 
+  line-height: 1.2 !important; 
+}
+
+/* Estilo para el titulo */
+.toast-success .toast-message,
+.toast-error .toast-message,
+.toast-warning .toast-message {
+  font-size: 20px !important;  
+}
+
+
+/* Estilo para el ícono */
+.toast-success .toast-icon,
+.toast-error .toast-icon,
+.toast-warning .toast-icon {
+  order: 2!important; 
+  margin-left: 10px!important;  
+}
+
+
+
+.toast-success,
+.toast-error,
+.toast-warning {
+  background-color: rgba(0, 0, 0, 0) !important;
+}
+
+/* Estilos específicos para cada tipo de notificación */
+.toast-success {
+  background-color: #8bc34a !important;  
+  color: white;
+}
+
+.toast-error {
+  background-color: #ca2a3d !important; 
+  color: white;
+}
+
+.toast-warning {
+  background-color: #ffdb5b !important; 
+  color: #4f4f46 !important;
+}

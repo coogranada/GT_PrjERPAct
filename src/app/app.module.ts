@@ -25,7 +25,7 @@ import { AcercaDeComponent } from './Components/acerca-de/acerca-de.component';
 import { AplicacionesColaborativasComponent } from './Components/Aplicaciones-colaborativas/aplicaciones-colaborativas.component';
 import { LibretaDireccionesComponent } from './Components/libreta-direcciones/libreta-direcciones.component';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
-
+import { ToastrModule } from 'ngx-toastr';
 import { NgxToastNotifierModule } from 'ngx-toast-notifier';
 @NgModule({
   declarations: [
@@ -56,6 +56,7 @@ import { NgxToastNotifierModule } from 'ngx-toast-notifier';
     }),
     UserIdleModule.forRoot({ idle: 300, timeout: 10, ping: 120 }),
     NgIdleModule.forRoot(),
+    ToastrModule.forRoot()
     
   ],providers: [
     LoginService,
