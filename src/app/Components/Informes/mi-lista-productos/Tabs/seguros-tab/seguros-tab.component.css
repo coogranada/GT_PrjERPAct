@@ -1,0 +1,724 @@
+/*
+* {
+	box-sizing: border-box;
+}
+
+.acordeon_sg input {
+	display: none;
+}
+
+.acordeon__titulo_sg {
+	display: block;
+	padding: 9px;
+	background: #999;
+	color: #fff;
+	font-size: 15px;
+	cursor: pointer;
+	border-bottom: 1px solid #fff;
+}
+.acordeon__titulo_sg:hover {
+	background: rgb(185 111 151);
+}
+
+.acordeon__contenido_sg {
+	height: 0;
+	overflow: hidden;
+	margin: 0;
+	transition: all 0.5s;
+}
+
+.acordeon_sg input:checked ~ .acordeon__contenido_sg{
+	height: auto;
+	margin: 15px 0;
+}
+
+
+
+/* estilos tablas  */
+
+.abligatorioY {
+    font-size: 25px !important;
+    color: #D84315;
+    margin-top: -5px !important;
+    margin-left: 6px;
+    position: absolute;
+}
+
+tbody td::before {
+    content: attr(data-th);
+    display: block;
+}
+
+.scrollTablaSeguros {
+    max-height: 500px;
+    overflow-y: scroll;
+}
+
+.columnProductoX2_Seguros {
+    min-width: 333px !important;
+}
+
+.columnProductoX3_Seguros {
+    min-width: 350px !important;
+}
+
+.encabezadoTablas {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #ffffff;
+}
+
+.ac-label:after,
+.ac-input:checked+.ac-label:after {
+    content: "+";
+    position: absolute;
+    display: block;
+    right: 0;
+    top: 0;
+    width: 2em;
+    height: 100%;
+    line-height: 2.25em;
+    text-align: center;
+    background-color: #e5e5e5;
+    transition: background-color .15s ease-in-out;
+}
+
+
+/* Seguro de vida */
+
+.ac-input:checked+label,
+.ac-label:hover {
+    background: rgb(185 111 151);
+    color: rgb(63, 63, 63);
+}
+
+.tablaSegVida tr,
+.tablaSegVida td,
+.columnCuenta_SegVida {
+    min-width: 163px;
+}
+
+.tablaSegVida tr,
+.tablaSegVida td,
+.columnProducto_SegVida {
+    min-width: 200px;
+}
+
+.tablaSegVida tr,
+.tablaSegVida td,
+.columnEfectivo_SegVida {
+    min-width: 168px;
+}
+
+.tablaSegVida tr,
+.tablaSegVida td,
+.columnCuota_SegVida {
+    min-width: 168px;
+}
+
+.tablaSegVida tr,
+.tablaSegVida td,
+.columnEstado_SegVida {
+    min-width: 105px;
+}
+
+.tablaSegVida tr,
+.tablaSegVida td,
+.columnApertura_SegVida {
+    min-width: 148px;
+}
+
+.tablaSegVida tr,
+.tablaSegVida td,
+.columntransaccion_SegVida {
+    min-width: 167px;
+}
+
+.tablaSegVida tr,
+.tablaSegVida td,
+.columnOpciones_SegVida {
+    min-width: 200px;
+}
+
+
+/* fin seg vida */
+
+
+/* seguro vehículo */
+
+.tablaVehiculo tr,
+.tablaVehiculo td,
+.columnCuenta_SegVehiculo {
+    min-width: 163px;
+}
+
+.tablaVehiculo tr,
+.tablaVehiculo td,
+.columnProducto_SegVehiculo {
+    min-width: 220px;
+}
+
+.tablaVehiculo tr,
+.tablaVehiculo td,
+.columnEfectivo_SegVehiculo {
+    min-width: 168px;
+}
+
+.tablaVehiculo tr,
+.tablaVehiculo td,
+.columnCuota_SegVehiculo {
+    min-width: 168px;
+}
+
+.tablaVehiculo tr,
+.tablaVehiculo td,
+.columnEstado_SegVehiculo {
+    min-width: 105px;
+}
+
+.tablaVehiculo tr,
+.tablaVehiculo td,
+.columnApertura_SegVehiculo {
+    min-width: 148px;
+}
+
+.tablaVehiculo tr,
+.tablaVehiculo td,
+.columntransaccion_SegVehiculo {
+    min-width: 167px;
+}
+
+.tablaVehiculo tr,
+.tablaVehiculo td,
+.columnOpciones_SegVehiculo {
+    min-width: 118px;
+}
+
+
+/* fin seg vehículo */
+
+
+/* fin seg vehículo */
+
+
+/* tablas de inscritos */
+
+.tableInscitosExequiales tr,
+.tableInscitosExequiales td,
+.columnTipoDoc_InscritosExe {
+    min-width: 150px;
+}
+
+.tableInscitosExequiales tr,
+.tableInscitosExequiales td,
+.columnDtmNacimiento_InscritosExe {
+    min-width: 159px;
+}
+
+.columnNombre_InscritosExex2 {
+    min-width: 308px;
+}
+
+.columnNombre_InscritosExex3 {
+    min-width: 400px;
+}
+
+.columnNombre_InscritosExeMin {
+    min-width: 150px;
+}
+
+.tableInscitosExequiales tr,
+.tableInscitosExequiales td,
+.columnDtmMatricula_InscritosExe {
+    min-width: 159px;
+}
+
+.tableInscitosExequiales tr,
+.tableInscitosExequiales td,
+.columnParentesco_InscritosExe {
+    min-width: 185px;
+}
+
+.columnNombre_InscritosExe {
+    min-width: 242px;
+}
+
+
+/* fin tabla de inscritos */
+
+
+/* fin estilos de las tablas  */
+
+body {
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+h1 {
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+h3 {
+    margin-top: 0;
+    font-weight: 300;
+}
+
+.container {
+    width: 100%;
+    margin: 10px auto;
+}
+
+.ac-label-sg {
+    font-weight: 700;
+    position: relative;
+    padding: .5em 1em;
+    margin-bottom: .5em;
+    display: block;
+    cursor: pointer;
+    background-color: #d8d8d8;
+    ;
+    transition: background-color .15s ease-in-out;
+}
+
+.ac-input-sg:checked+label,
+.ac-label-sg:hover {
+    background: rgb(185 111 151);
+    color: rgb(63, 63, 63);
+}
+
+.ac-label-sg:after,
+.ac-input-sg:checked+.ac-label-sg:after {
+    content: "+";
+    position: absolute;
+    display: block;
+    right: 0;
+    top: 0;
+    width: 2em;
+    height: 100%;
+    line-height: 2.25em;
+    text-align: center;
+    background-color: #e5e5e5;
+    transition: background-color .15s ease-in-out;
+}
+
+.ac-label-sg:hover:after,
+.ac-input-sg:checked+.ac-label-sg:after {
+    background-color: #b5b5b5;
+}
+
+.ac-input-sg:checked+.ac-label-sg:after {
+    content: "-";
+}
+
+.ac-input-sg {
+    display: none;
+}
+
+.ac-text-sg,
+.ac-sub-text-sg {
+    opacity: 0;
+    height: 0;
+    margin-bottom: .5em;
+    transition: opacity .5s ease-in-out;
+    overflow: hidden;
+}
+
+.ac-input-sg:checked~.ac-text-sg,
+.ac-sub-sg .ac-input-sg:checked~.ac-sub-text-sg {
+    opacity: 1;
+    height: auto;
+}
+
+.ac-sub-sg .ac-label-sg {
+    background: none;
+    font-weight: 600;
+    padding: .5em 2em;
+    margin-bottom: 0;
+}
+
+.ac-sub-sg .ac-label-sg:checked {
+    background: none;
+    border-bottom: 1px solid whitesmoke;
+}
+
+.ac-sub-sg .ac-label-sg:after,
+.ac-sub-sg .ac-input-sg:checked+.ac-label-sg:after {
+    left: 0;
+    background: none;
+}
+
+.ac-sub-sg .ac-input-sg:checked+label,
+.ac-sub-sg .ac-label-sg:hover {
+    background: none;
+}
+
+.ac-sub-text-sg {
+    padding: 0 1em 0 2em;
+}
+
+.modal-xl {
+    width: 80% !important;
+    margin-left: 170px;
+}
+
+.modal-dialog-xl {
+    width: 100% !important;
+}
+
+.ac-label-ap {
+    font-weight: 700;
+    position: relative;
+    padding: .5em 1em;
+    margin-bottom: .5em;
+    display: block;
+    cursor: pointer;
+    background-color: whiteSmoke;
+    transition: background-color .15s ease-in-out;
+}
+
+.ac-input-ap:checked+label,
+.ac-label-ap:hover {
+    background: rgb(185 111 151);
+    color: rgb(63, 63, 63);
+}
+
+.ac-label-ap:after,
+.ac-input-ap:checked+.ac-label-ap:after {
+    content: "+";
+    position: absolute;
+    display: block;
+    right: 0;
+    top: 0;
+    width: 2em;
+    height: 100%;
+    line-height: 2.25em;
+    text-align: center;
+    background-color: #e5e5e5;
+    transition: background-color .15s ease-in-out;
+}
+
+.ac-label-ap:hover:after,
+.ac-input-ap:checked+.ac-label-ap:after {
+    background-color: #b5b5b5;
+}
+
+.ac-input-ap {
+    display: none;
+}
+
+.ac-text-ap,
+.ac-sub-text-ap {
+    opacity: 0;
+    height: 0;
+    margin-bottom: .5em;
+    transition: opacity .5s ease-in-out;
+    overflow: hidden;
+}
+
+.ac-input-ap:checked~.ac-text-ap,
+.ac-sub-ap .ac-input-ap:checked~.ac-sub-text-ap {
+    opacity: 1;
+    height: auto;
+}
+
+#bordeSaldosSegVida {
+    border: 3px rgb(227, 227, 227);
+    border-style: dashed;
+    border-radius: 22px;
+    /* padding: 15px; */
+    width: 12%;
+    height: 22%;
+    margin-top: 1%;
+    margin-left: 59%;
+    bottom: 24%;
+    position: fixed;
+}
+
+object {
+    width: 100%;
+    height: 1000px;
+    border: none;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    overflow: hidden;
+}
+
+.CuentaFija {
+    position: sticky !important;
+    left: 0;
+    background: #fff;
+}
+
+#bordeSaldosSegVehiculo {
+    border: 3px rgb(227, 227, 227);
+    border-style: dashed;
+    border-radius: 22px;
+    /* padding: 15px; */
+    width: 12%;
+    height: 22%;
+    margin-top: 1%;
+    margin-left: 59%;
+    bottom: 21%;
+    position: fixed;
+}
+
+.ac-input-ap:checked+.ac-label-ap:after {
+    content: "-";
+}
+
+.ac-sub-ap .ac-label-ap {
+    background: none;
+    font-weight: 600;
+    padding: .5em 2em;
+    margin-bottom: 0;
+}
+
+.ac-sub-ap .ac-label-ap:checked {
+    background: none;
+    border-bottom: 1px solid whitesmoke;
+}
+
+.ac-sub-ap .ac-label-ap:after,
+.ac-sub-ap .ac-input-ap:checked+.ac-label-ap:after {
+    left: 0;
+    background: none;
+}
+
+.ac-sub-ap .ac-input-ap:checked+label,
+.ac-sub-ap .ac-label-ap:hover {
+    background: none;
+}
+
+.ac-sub-text-ap {
+    padding: 0 1em 0 2em;
+}
+
+@media (max-width: 767px) {
+    .modal-xl {
+        width: 95% !important;
+        margin-left: 1%;
+    }
+    .modal-dialog-xl {
+        width: 99% !important;
+    }
+}
+
+
+/* csss de ahorros  */
+
+
+/* thead tr th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+} */
+
+.scrollTablaAhorros {
+    max-height: 500px;
+    overflow-y: scroll;
+}
+
+.encabezadoTablas {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #ffffff;
+}
+
+body {
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+h1 {
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+h3 {
+    margin-top: 0;
+    font-weight: 300;
+}
+
+.container {
+    width: 100%;
+    margin: 10px auto;
+}
+
+.ac-label {
+    font-weight: 700;
+    position: relative;
+    padding: .5em 1em;
+    margin-bottom: .5em;
+    display: block;
+    cursor: pointer;
+    background-color: #d8d8d8;
+    transition: background-color .15s ease-in-out;
+}
+
+.ac-input:checked+label,
+.ac-label:hover {
+    background: rgb(185 111 151);
+    color: rgb(63, 63, 63);
+}
+
+.ac-label:after,
+.ac-input:checked+.ac-label:after {
+    content: "+";
+    position: absolute;
+    display: block;
+    right: 0;
+    top: 0;
+    width: 2em;
+    height: 100%;
+    line-height: 2.25em;
+    text-align: center;
+    background-color: #e5e5e5;
+    transition: background-color .15s ease-in-out;
+}
+
+.ac-label:hover:after,
+.ac-input:checked+.ac-label:after {
+    background-color: #b5b5b5;
+}
+
+.ac-input:checked+.ac-label:after {
+    content: "-";
+}
+
+.ac-input {
+    display: none;
+}
+
+.ac-text,
+.ac-sub-text {
+    opacity: 0;
+    height: 0;
+    margin-bottom: .5em;
+    transition: opacity .5s ease-in-out;
+    overflow: hidden;
+}
+
+.ac-input:checked~.ac-text,
+.ac-sub .ac-input:checked~.ac-sub-text {
+    opacity: 1;
+    height: auto;
+}
+
+.ac-sub .ac-label {
+    background: none;
+    font-weight: 600;
+    padding: .5em 2em;
+    margin-bottom: 0;
+}
+
+.ac-sub .ac-label:checked {
+    background: none;
+    border-bottom: 1px solid whitesmoke;
+}
+
+.ac-sub .ac-label:after,
+.ac-sub .ac-input:checked+.ac-label:after {
+    left: 0;
+    background: none;
+}
+
+.ac-sub .ac-input:checked+label,
+.ac-sub .ac-label:hover {
+    background: none;
+}
+
+.ac-sub-text {
+    padding: 0 1em 0 2em;
+}
+
+.ac-text-ap,
+.ac-sub-text-ap {
+    opacity: 0;
+    height: 0;
+    margin-bottom: .5em;
+    transition: opacity .5s ease-in-out;
+    overflow: hidden;
+}
+
+.ac-input-ap:checked~.ac-text-ap,
+.ac-sub-ap .ac-input-ap:checked~.ac-sub-text-ap {
+    opacity: 1;
+    height: auto;
+}
+
+.my-pagination::ng-deep .ngx-pagination .current {
+    color: #fff;
+    background-color: rgb(38, 144, 81);
+}
+
+.reducirTamanoResumen_ {
+    border-top: 0px;
+    padding: 0px 17px;
+}
+
+.ReduceTamanoEncabeza_ {
+    border-top: 0px;
+    padding: 7.5px 20px;
+}
+
+.reducirTamano_ {
+    border-top: 0px;
+    padding: 7px 15px;
+}
+
+.colorEncabezado_ {
+    background-color: rgb(133, 38, 98) !important;
+    color: rgb(255, 255, 255) !important;
+}
+
+.ac-sub-ap .ac-label-ap {
+    background: none;
+    font-weight: 600;
+    padding: .5em 2em;
+    margin-bottom: 0;
+}
+
+.ac-sub-ap .ac-label-ap:checked {
+    background: none;
+    border-bottom: 1px solid whitesmoke;
+}
+
+.ac-sub-ap .ac-label-ap:after,
+.ac-sub-ap .ac-input-ap:checked+.ac-label-ap:after {
+    left: 0;
+    background: none;
+}
+
+.ac-sub-ap .ac-input-ap:checked+label,
+.ac-sub-ap .ac-label-ap:hover {
+    background: none;
+}
+
+.ac-sub-text-ap {
+    padding: 0 1em 0 2em;
+}
+
+.modal-xl {
+    width: 80% !important;
+    margin-left: 170px;
+}
+
+.modal-dialog-xl {
+    width: 100% !important;
+}
+
+@media (max-width: 767px) {
+    .modal-xl {
+        width: 95% !important;
+        margin-left: 1%;
+    }
+    .modal-dialog-xl {
+        width: 99% !important;
+    }
+}
+
+
+/* fin css de ahorros */
