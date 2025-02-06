@@ -8,30 +8,32 @@ import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthHttpClientInterceptorService implements HttpInterceptor{
+export class AuthHttpClientInterceptorService implements HttpInterceptor {
 
-  constructor(private Security : SecurityService, private router: Router) { }
+  constructor(private Security: SecurityService, private router: Router) { }
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     let jwt: string | null = this.Security.GetToken();
-    let authRequest : any = null; 
-    if (jwt != "" && jwt != null )
-        authRequest = req.clone({
-          setHeaders : { Authorization : "Bearer " + jwt}
-        });
-    else 
-        authRequest = req.clone({});
-    console.log("httpClient",req)
+    let authRequest: any = null;
+    if (jwt != "" && jwt != null)
+      authRequest = req.clone({
+        setHeaders: { Authorization: "Bearer " + jwt }
+      });
+    else
+    authRequest = req.clone({});
+    console.log("httpClient", req)
     return next.handle(authRequest).pipe(
-      
+
       catchError((err: any) => {
         console.log("eerrr", err)
         if (err.status == 401) {
           localStorage.clear();
-          //window.location.reload();
+          window.location.reload();
           return EMPTY;
-        } 
+        }else if(err.status == 400){
+          return throwError(() => new Error(err.error));
+        }
         return throwError(() => new Error('Error en la solicitud HTTP'));
-      } )   
+      })
     )
   }
 }

@@ -1,41 +1,58 @@
-
 export const ConfiguracionNotificacion = {
-   configRightTop : {
-    timeOut: 10000,
+  
+  configRightTop: {
+    timeOut: 15000,
     showProgressBar: true,
     pauseOnHover: true,
-    clickToClose: true
+    clickToClose: true,
+    positionClass: 'toast-bottom-right',  
+    lastOnBottom: true, 
+    animate: 'fromBottom'
   },
-  configRightTopNoClose : {
-    timeOut: 10000,
+  configRightTopNoClose: {
+    timeOut: 15000,
     showProgressBar: true,
     pauseOnHover: true,
-    clickToClose: true
+    clickToClose: false, 
+    positionClass: 'toast-bottom-right',  
+    lastOnBottom: true,  
+    animate: 'fromBottom',  
   },
   options: {
-    position: ['top', 'left'],
-    lastOnBottom: true,
-    animate: 'fromRight',
-    timeOut: 10000,
+    positionClass: 'toast-bottom-left',  
+    lastOnBottom: true,  
+    animate: 'fromBottom', 
+    timeOut: 15000,
     showProgressBar: true,
     pauseOnHover: true,
     clickToClose: true
   },
   Cerrar: {
     theClass: 'custom',
-    position: ['top', 'right'],
-    timeOut: 10000,
+    positionClass: 'toast-bottom-right', 
+    lastOnBottom: true,  
+    timeOut: 15000,
     showProgressBar: true,
     pauseOnHover: true,
-    clickToClose: true
+    clickToClose: true,
+    animate: 'fromBottom',  
   },
-    NotificacionesGMF: {
+  NotificacionesGMF: {
     timeOut: 15000,
     showProgressBar: true,
     pauseOnHover: false,
-    clickToClose: true
+    clickToClose: true,
+    positionClass: 'toast-bottom-right', 
+    lastOnBottom: true,  
+    animate: 'fromBottom',  
+  },
+  success: {  
+    theClass: 'toast-success'
+  },
+  error: {
+    theClass: 'toast-error'   
+  },
+  warning: {
+    theClass: 'toast-warning' 
   },
 };
-
-
-

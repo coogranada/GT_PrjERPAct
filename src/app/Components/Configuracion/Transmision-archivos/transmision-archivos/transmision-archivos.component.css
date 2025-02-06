@@ -1,9 +1,9 @@
 .div-espacio {
-    margin-top: 20px
+    margin-top: 10px
 }
 
 .div-espacio1 {
-    margin-top: 15px
+    margin-top: 13px
 }
 
 
@@ -30,6 +30,11 @@
     transform: scale(1.5);
     cursor: not-allowed;
     pointer-events: none;
+    opacity: 1;
+}
+
+.check-ena {
+    transform: scale(1.5);
     opacity: 1;
 }
 
@@ -84,4 +89,14 @@
 .selected-row {
     background-color: rgb(229, 229, 229);
     /* Color de fondo gris para la fila seleccionada */
+}
+
+.labelSucces {
+    color: #269051;
+    border-color: #269051;
+}
+
+.labelDanger {
+    color: #F44336;
+    border-color: #F44336;
 }
