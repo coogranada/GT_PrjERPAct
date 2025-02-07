@@ -135,7 +135,7 @@ export class MiListaProductosService {
     this.url = `${this.environment.Url}/ListaCuentasHijasCartera?lngCuenta=${lngcuenta}`;
     return this._http.get<any>(this.url);
   }
-  GenerarXlsxCartera(lngcuenta: number, FechaIni: string, yearFinal: string, MesFinal: string, Oficina: string): Observable<any> {
+  GenerarXlsxCartera(lngcuenta: number, FechaIni: string, yearFinal: any, MesFinal: any, Oficina: string): Observable<any> {
     this.url = `${this.environment.Url}/GenerarXlxsExtCartera`;
     const params = new HttpParams()
       .set('lngCuenta', lngcuenta)
@@ -145,7 +145,7 @@ export class MiListaProductosService {
       .set('Oficina', Oficina);
     return this._http.get<any>(this.url, { params: params });
   }
-  GenerarXlxsMovimientoCartera(lngcuenta: number, FechaIni: string, FechaFin: string): Observable<any> {
+  GenerarXlxsMovimientoCartera(lngcuenta: number, FechaIni: any, FechaFin: any): Observable<any> {
     this.url = `${this.environment.Url}/GenerarXlxsMovimientoCartera`;
     const params = new HttpParams()
       .set('lngCuenta', lngcuenta)
@@ -153,7 +153,7 @@ export class MiListaProductosService {
       .set('FechaFin', FechaFin);
     return this._http.get<any>(this.url, { params: params });
   }
-  GenerarXlxsExtractoCarteraCuentaPadre(lngcuenta: number, FechaIni: string, yearFinal: string, MesFinal: string): Observable<any> {
+  GenerarXlxsExtractoCarteraCuentaPadre(lngcuenta: number, FechaIni: any, yearFinal: any, MesFinal: any): Observable<any> {
     this.url = `${this.environment.Url}/GenerarXlxsExtCarteraTD`;
     const params = new HttpParams()
       .set('lngCuenta', lngcuenta)
@@ -162,7 +162,7 @@ export class MiListaProductosService {
       .set('MesFinal', MesFinal);
     return this._http.get<any>(this.url, { params: params });
   }
-  GenerarXlxsMovimientoCarteraCuentaPadre(lngcuenta: number, FechaIni: string, FechaFin: string): Observable<any> {
+  GenerarXlxsMovimientoCarteraCuentaPadre(lngcuenta: number, FechaIni: any, FechaFin: any): Observable<any> {
     this.url = `${this.environment.Url}/GenerarXlxsMovimientosCarteraTD`;
     const params = new HttpParams()
       .set('lngCuenta', lngcuenta)
@@ -170,7 +170,7 @@ export class MiListaProductosService {
       .set('FechaFin', FechaFin);
     return this._http.get<any>(this.url, { params: params });
   }
-  GenerarPdfCartera(lngcuenta: number, FechaIni: string, yearFinal: string, MesFinal: string, Oficina: string): Observable<any> {
+  GenerarPdfCartera(lngcuenta: number, FechaIni: string, yearFinal: any, MesFinal: any, Oficina: string): Observable<any> {
     this.url = `${this.environment.Url}/GenerarPDFExtCartera`;
     const params = new HttpParams()
       .set('lngCuenta', lngcuenta)
@@ -180,7 +180,7 @@ export class MiListaProductosService {
       .set('Oficina', Oficina);
     return this._http.get<any>(this.url, { params: params });
   }
-  listItemExtCarteraTD(lngcuenta: number, FechaIni: string, yearFinal: string, MesFinal: string, Oficina: string): Observable<any> {
+  listItemExtCarteraTD(lngcuenta: number, FechaIni: any, yearFinal: any, MesFinal: any, Oficina: string): Observable<any> {
     this.url = `${this.environment.Url}/ListaItemExtCarteraTd`;
     const params = new HttpParams()
       .set('lngCuenta', lngcuenta)
@@ -190,7 +190,7 @@ export class MiListaProductosService {
       .set('Oficina', Oficina);
     return this._http.get<any>(this.url, { params: params });
   }
-  ListaItemMovimimientoCarteraTd(lngcuenta: number, FechaIni: string, FechaFin: string): Observable<any> {
+  ListaItemMovimimientoCarteraTd(lngcuenta: number, FechaIni: any, FechaFin: any): Observable<any> {
     this.url = `${this.environment.Url}/ListaItemMovimimientoCarteraTd`;
     const params = new HttpParams()
       .set('lngCuenta', lngcuenta)
@@ -205,7 +205,7 @@ export class MiListaProductosService {
       .set('front', true);
     return this._http.get<any>(this.url, { params: params });
   }
-  GenerarPdfCarteraTD(lngcuenta: number, FechaIni: string, yearFinal: string, MesFinal: string, Oficina: string): Observable<any> {
+  GenerarPdfCarteraTD(lngcuenta: number, FechaIni: string, yearFinal: any, MesFinal: any, Oficina: string): Observable<any> {
     this.url = `${this.environment.Url}/GeneraPdfExtCarteraCuentaPadre`;
     const params = new HttpParams()
       .set('lngCuenta', lngcuenta)
@@ -215,7 +215,7 @@ export class MiListaProductosService {
       .set('Oficina', Oficina);
     return this._http.get<any>(this.url, { params: params });
   }
-  GeneraPdfMovimientoCarteraCuentaPadre(lngcuenta: number, FechaIni: string, FechaFin: string): Observable<any> {
+  GeneraPdfMovimientoCarteraCuentaPadre(lngcuenta: number, FechaIni: any, FechaFin: any): Observable<any> {
     this.url = `${this.environment.Url}/GeneraPdfMovimientoCarteraCuentaPadre`;
     const params = new HttpParams()
       .set('lngCuenta', lngcuenta)
@@ -231,7 +231,7 @@ export class MiListaProductosService {
       .set('FechaFin', FechaFin);
     return this._http.get<any>(this.url, { params: params });
   }
-  sendMailCartera(lngCuenta: number, usuario: string, oficina: string, NombreProducto: string, TipoProducto: string, FechaInicio: string, yearFinal: string, MesFinal: string, EstadoProducto: boolean): Observable<any> {
+  sendMailCartera(lngCuenta: number, usuario: string, oficina: string, NombreProducto: string, TipoProducto: any, FechaInicio: any, yearFinal: any, MesFinal: any, EstadoProducto: boolean | null | any): Observable<any> {
     this.url = `${this.environment.Url}/sendMailCartera`;
     const params = new HttpParams()
       .set('lngCuenta', lngCuenta)
@@ -364,7 +364,7 @@ export class MiListaProductosService {
     this.url = `${this.environment.Url}/ObtenerProvisionesProductoCartera?lngCuenta=${lngcuenta}`;
     return this._http.get<any>(this.url);
   }
-  getExtractosCartera(lngcuenta: number, FechaIni: string, yearFinal: string, MesFinal: string, Oficina: string): Observable<any> {
+  getExtractosCartera(lngcuenta: number, FechaIni: string, yearFinal: any, MesFinal: any, Oficina: string): Observable<any> {
     this.url = `${this.environment.Url}/ObtieneExtractoCartera`;
     const params = new HttpParams()
       .set('lngCuenta', lngcuenta)
@@ -374,7 +374,7 @@ export class MiListaProductosService {
       .set('Oficina', Oficina);
     return this._http.get<any>(this.url, { params: params });
   }
-  getMovimientosCartera(lngcuenta: number, FechaIni: string, FechaFin: string): Observable<any> {
+  getMovimientosCartera(lngcuenta: number, FechaIni: any, FechaFin: any): Observable<any> {
     this.url = `${this.environment.Url}/GenerarMovimientosCartera`;
     const params = new HttpParams()
       .set('lngCuenta', lngcuenta)
@@ -382,7 +382,7 @@ export class MiListaProductosService {
       .set('FechaFin', FechaFin);
     return this._http.get<any>(this.url, { params: params });
   }
-  GenerarPdfMovimientoCartera(lngcuenta: number, FechaIni: string, FechaFin: string): Observable<any> {
+  GenerarPdfMovimientoCartera(lngcuenta: number, FechaIni: any, FechaFin: any): Observable<any> {
     this.url = `${this.environment.Url}/GenerarPDFMovimientosCartera`;
     const params = new HttpParams()
       .set('lngCuenta', lngcuenta)
@@ -589,14 +589,14 @@ export class MiListaProductosService {
     this.url = `${this.environment.Url}/getMovimientoSeguro`;
     return this._http.post<any>(this.url, Datos);
   }
-  getCertificadoSaldos(year: number, idTercero: string): Observable<any> {
+  getCertificadoSaldos(year: any, idTercero: string): Observable<any> {
     this.url = `${this.environment.Url}/CenerarXLSXAnalisisCuentas`;
     const params = new HttpParams()
         .set('year', year)
         .set('tercero', idTercero);
     return this._http.get<any>(this.url, { params: params });
   }
-  getCertificadoRetenciones(year: number, idTercero: string,  mesSlect: string): Observable<any> {
+  getCertificadoRetenciones(year: number, idTercero: string,  mesSlect: any): Observable<any> {
     this.url = `${this.environment.Url}/getCertificadoRetenciones`;
     const params = new HttpParams()
       .set('year', year)
@@ -604,7 +604,7 @@ export class MiListaProductosService {
       .set('mes', mesSlect);
     return this._http.get<any>(this.url, { params: params });
   }
-  getCertificadoSaldosPdf(year: number, idTercero: string,  idTerceroUsuario: string,  Oficina: string): Observable<any> {
+  getCertificadoSaldosPdf(year: any, idTercero: string,  idTerceroUsuario: string,  Oficina: string): Observable<any> {
     this.url = `${this.environment.Url}/getCertificadoSaldosPdf`;
     const params = new HttpParams()
       .set('year', year)
@@ -613,7 +613,7 @@ export class MiListaProductosService {
       .set('Oficina', Oficina);
     return this._http.get<any>(this.url, { params: params });
   }
-  getCertificadoRetencionPdf(year: number, idTercero: string, mesSlect: string, idTerceroUsuario: string,  Oficina: string): Observable<any> {
+  getCertificadoRetencionPdf(year: number, idTercero: string, mesSlect: any, idTerceroUsuario: string,  Oficina: string): Observable<any> {
     this.url = `${this.environment.Url}/getCertificadoRetencionPdf`;
     const params = new HttpParams()
       .set('year', year)

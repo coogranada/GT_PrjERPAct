@@ -1,0 +1,117 @@
+.CuentaCodeudores {
+    min-width: 163px;
+}
+
+
+/* 18 */
+
+.NombreProdCodeudores {
+    min-width: 170px;
+}
+
+
+/* 26 */
+
+.NombreProdCodeudoresX2 {
+    min-width: 229px;
+}
+
+.NombreProdCodeudoresX3 {
+    min-width: 319px;
+}
+
+.NumDocCodeudores {
+    min-width: 160px;
+}
+
+
+/* 32 */
+
+.NumTitularCodeudores {
+    min-width: 300px;
+}
+
+.NumTitularCodeudoresX4 {
+    min-width: 700px;
+}
+
+
+/* 43 */
+
+.NumTitularCodeudoresX2 {
+    min-width: 390px;
+}
+
+.NumTitularCodeudoresX3 {
+    min-width: 400px !important;
+}
+
+.SaldoCodeudores {
+    min-width: 90px;
+}
+
+.SaldoCodeudoresX2 {
+    min-width: 180px;
+}
+
+.curCuotaCodeudores {
+    min-width: 90px;
+}
+
+.curCuotaCodeudoresx2 {
+    min-width: 170px;
+}
+
+.cuotasPagasCodeudores {
+    min-width: 130px;
+}
+
+.dtmMatriculaCodeudores {
+    min-width: 147px;
+}
+
+.dtmultimTrasCodeudores {
+    min-width: 150px;
+}
+
+.encabezadoTablasCoodeudores {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #ffffff;
+}
+
+.modal-xl {
+    width: 80% !important;
+    margin-left: 170px;
+}
+
+.modal-dialog-xl {
+    width: 100% !important;
+}
+
+#ModalAnalisis {
+    display: none;
+    z-index: 10000;
+}
+
+#ModalFormatosMovimientosCr {
+    display: none;
+    z-index: 10000;
+}
+
+@media (max-width: 767px) {
+    .modal-xl {
+        width: 95% !important;
+        margin-left: 1%;
+    }
+    .modal-dialog-xl {
+        width: 99% !important;
+    }
+}
+
+.CuentaFija {
+    position: sticky !important;
+    left: 0;
+    background: #fff;
+}

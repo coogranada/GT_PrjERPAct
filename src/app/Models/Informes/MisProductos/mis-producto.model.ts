@@ -286,14 +286,14 @@ export class LogMisProductos{
   IdModulo: number = 0;
   IdOperacion: number = 0;
   IdOpcion: number = 0;
-  IdTercero: number = 0;
-  IdCuenta: number = 0;
+  IdTercero: number | string = 0;
+  IdCuenta: number | null = 0;
   DatosProductos: DatosProductos | null = null;
 }
 export class DatosProductos{
-  NumeroCuenta: string = "";
+  NumeroCuenta: string | null = "";
   FechaInicial: string = "";
-  FechaFinal: string = "";
+  FechaFinal: string | null= "";
   idOpcion: number = 0;
   CuentaHija: Boolean = false;
         //Opciones
