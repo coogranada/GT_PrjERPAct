@@ -6,8 +6,9 @@ import { TransmisionArchivosService } from '../../../../Services/Configuracion/T
 import { ParametrosTransmisionData } from '../../../../Models/Configuracion/Transmision-archivos.model';
 import { ToastrService } from 'ngx-toastr';
 import { ConfiguracionNotificacion } from '../../../../../environments/config.noticaciones'
-
-
+import swal from 'sweetalert2';
+const ColorPrimario = 'rgb(13,165,80)';
+const ColorSecundario = 'rgb(13,165,80,0.7)';
 
 
 
@@ -19,11 +20,17 @@ import { ConfiguracionNotificacion } from '../../../../../environments/config.no
   standalone: false
 })
 export class TransmisionArchivosComponent implements OnInit {
+  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
   selectedRow: any = null;
   initialValues: any = {};
   parametrosTransm: ParametrosTransmisionData[] = [];
+  public loading = false;
+  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
+  public primaryColour = ColorPrimario;
+  public secondaryColour = ColorSecundario;
   public parametrosTransmisionForm!: FormGroup;
   public showPassword: boolean = false;
+  public vbleBtnactualizar: boolean = false;
   public selectedProtocolo: string = '';
   public selectedTarea: string = '';
   public historialTransm: any[] = [];
@@ -49,13 +56,20 @@ export class TransmisionArchivosComponent implements OnInit {
   ngOnInit(): void {
     this.IrArriba()
     this.selectedProtocolo = '-';
+    this.initForm();
+
+    this.obtenerConfiguracion();
+
+  }
+
+  initForm() {
     this.parametrosTransmisionForm = this.fb.group({
       IdParametro: [''],
       nombreSitio: ['', Validators.required],
       servidor: ['', Validators.required],
       rutaLocalEntrada: [''],
-      rutaLocalSalida: ['', Validators.required],
-      rutaRemotaEntrada: ['', Validators.required],
+      rutaLocalSalida: [''],
+      rutaRemotaEntrada: [''],
       rutaRemotaSalida: [''],
       protocolo: ['', Validators.required],
       puerto: [''],
@@ -64,20 +78,18 @@ export class TransmisionArchivosComponent implements OnInit {
       contrasena: [''],
       cifrado: [''],
       correoResponsable: ['', Validators.email],
-      frecuencia: [''],
+      frecuencia: [1],
       horaEntrada: ['', Validators.required],
       horaSalida: ['', Validators.required],
       gpgRecipient: [''],
       rutaLlave: [''],
       fechaCreacion: [''],
-      estado: [0]
+      estado: [1]
     });
-
-    this.obtenerConfiguracion();
-
   }
 
   selectRow(parametro: any) {
+    this.vbleBtnactualizar = true;
     this.selectedRow = parametro;
     this.parametrosTransmisionForm.patchValue({
       IdParametro: parametro.IdParametro,
@@ -109,14 +121,14 @@ export class TransmisionArchivosComponent implements OnInit {
 
   ValidarCambios(): boolean {
     const formValues = this.parametrosTransmisionForm.value;
-    if(JSON.stringify(this.initialValues) !== JSON.stringify(formValues)){
+    if (JSON.stringify(this.initialValues) !== JSON.stringify(formValues)) {
       return true;
-    }else{
+    } else {
       return false;
     }
-    
+
   }
-  
+
 
   ValidarCampo(nameRe: RegExp): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
@@ -149,8 +161,11 @@ export class TransmisionArchivosComponent implements OnInit {
   }
 
   limpiarFormulario(): void {
-    this.parametrosTransmisionForm.reset();
+
+    this.initForm();
     this.selectedRow = null;
+    this.vbleBtnactualizar = false;
+
   }
 
   onProtocoloChange(): void {
@@ -158,8 +173,24 @@ export class TransmisionArchivosComponent implements OnInit {
     this.parametrosTransmisionForm.controls['protocolo'].setValue(this.selectedProtocolo);
   }
 
+  borrarSiEspacios(controlName: string): void {
+    const control = this.parametrosTransmisionForm.controls[controlName];
+
+    if (control.value.trim() === '') {
+      control.setValue('');
+    }
+  }
+
   guardarParametroTransmision() {
-    if (this.parametrosTransmisionForm.valid) {
+    if (!this.parametrosTransmisionForm.valid) {
+      this.toastr.warning('Advertencia', 'Error en el formulario, valide los campos', ConfiguracionNotificacion.configRightTop);
+    } else if (this.parametrosTransmisionForm.get('horaEntrada')?.value.startsWith('00:00') && this.parametrosTransmisionForm.get('horaSalida')?.value.startsWith('00:00')) {
+      this.toastr.warning('Advertencia', 'La hora de entrada y salida no puede ser ambas 12:00 a.m.', ConfiguracionNotificacion.configRightTop);
+    } else if (!this.parametrosTransmisionForm.get('horaEntrada')?.value.startsWith('00:00') && (this.parametrosTransmisionForm.get('rutaLocalEntrada')?.value.trim() == '' || this.parametrosTransmisionForm.get('rutaRemotaSalida')?.value.trim() == '')) {
+      this.toastr.warning('Advertencia', 'La ruta local entrada y ruta remota salida son obligatorias.', ConfiguracionNotificacion.configRightTop);
+    } else if (!this.parametrosTransmisionForm.get('horaSalida')?.value.startsWith('00:00') && (this.parametrosTransmisionForm.get('rutaLocalSalida')?.value.trim() == '' || this.parametrosTransmisionForm.get('rutaRemotaEntrada')?.value.trim() == '')) {
+      this.toastr.warning('Advertencia', 'La ruta local salida y ruta remota entrada son obligatorias.', ConfiguracionNotificacion.configRightTop);
+    } else {
       const estadoActual = this.parametrosTransmisionForm.get('estado')?.value;
       if (estadoActual == 1) {
         this.parametrosTransmisionForm.get('estado')?.patchValue(5);
@@ -175,18 +206,24 @@ export class TransmisionArchivosComponent implements OnInit {
           this.IrAbajo();
         },
         (error) => {
-          this.toastr.error('Error', 'Error al guardar los datos ' + error, ConfiguracionNotificacion.configRightTop);
+          this.toastr.warning('Advertencia', error.message, ConfiguracionNotificacion.configRightTop);
         }
       );
-    } else {
-      this.toastr.warning('Advertencia', 'Error en el formulario, valide los campos', ConfiguracionNotificacion.configRightTop);
     }
   }
 
 
   actualizarParametroTransmision() {
-    if (this.parametrosTransmisionForm.valid) {
-      const result=this.ValidarCambios()
+    if (!this.parametrosTransmisionForm.valid) {
+      this.toastr.warning('Advertencia', 'Error en el formulario, valide los campos', ConfiguracionNotificacion.configRightTop);
+    } else if (this.parametrosTransmisionForm.get('horaEntrada')?.value.startsWith('00:00') && this.parametrosTransmisionForm.get('horaSalida')?.value.startsWith('00:00')) {
+      this.toastr.warning('Advertencia', 'La hora de entrada y salida no puede ser ambas 12:00 a.m.', ConfiguracionNotificacion.configRightTop);
+    } else if (!this.parametrosTransmisionForm.get('horaEntrada')?.value.startsWith('00:00') && (this.parametrosTransmisionForm.get('rutaLocalEntrada')?.value.trim() == '' || this.parametrosTransmisionForm.get('rutaRemotaSalida')?.value.trim() == '')) {
+      this.toastr.warning('Advertencia', 'La ruta local entrada y ruta remota salida son obligatorias.', ConfiguracionNotificacion.configRightTop);
+    } else if (!this.parametrosTransmisionForm.get('horaSalida')?.value.startsWith('00:00') && (this.parametrosTransmisionForm.get('rutaLocalSalida')?.value.trim() == '' || this.parametrosTransmisionForm.get('rutaRemotaEntrada')?.value.trim() == '')) {
+      this.toastr.warning('Advertencia', 'La ruta local salida y ruta remota entrada son obligatorias.', ConfiguracionNotificacion.configRightTop);
+    } else {
+      const result = this.ValidarCambios()
       const estadoActual = this.parametrosTransmisionForm.get('estado')?.value;
       if (estadoActual == 1) {
         this.parametrosTransmisionForm.get('estado')?.patchValue(5);
@@ -207,25 +244,48 @@ export class TransmisionArchivosComponent implements OnInit {
           }
         );
         //Actualizar hora ejecución
-
+        swal.fire({
+          title: '<strong> ¿Desea que se programen nuevamente las tareas? </strong>',
+          text: '',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Si',
+          cancelButtonText: 'No',
+          confirmButtonColor: 'rgb(13,165,80)',
+          cancelButtonColor: 'rgb(160,0,87)',
+          allowOutsideClick: false,
+          allowEscapeKey: false
+        }).then((results) => {
+          if (results.value) {
+            this.actualizarHoraEjecucion();
+          }
+        });
       } else {
+        this.limpiarFormulario();
+        this.IrAbajo();
         this.toastr.warning('Advertencia', 'No se han detectado cambios para actualizar.', ConfiguracionNotificacion.configRightTop);
       }
-    } else {
-      this.toastr.warning('Advertencia', 'Error en el formulario, valide los campos.', ConfiguracionNotificacion.configRightTop);
     }
   }
 
   actualizarHoraEjecucion() {
     this.TransmisionArchivosServices.ActualizarHoraEjecucion().subscribe(
       (response) => {
-        this.toastr.success('Exitoso', 'Hora ejecución actualizada correctamente.', ConfiguracionNotificacion.configRightTop);
-        this.obtenerConfiguracion();
-        this.limpiarFormulario();
-        this.IrAbajo();
+        swal.fire({
+          icon: "success",
+          title: "Tareas reprogramadas correctamente.",
+          showConfirmButton: false,
+          timer: 3000
+        });
       },
       (error) => {
-        this.toastr.error('Error', 'Error al actualizar hora ejecución ' + error, ConfiguracionNotificacion.configRightTop);
+        swal.fire({
+          icon: "warning",
+          title: "No se pudo reprogramar tareas.",
+          showConfirmButton: false,
+          timer: 3000
+        });
+        console.log(error);
       }
     );
   }
@@ -278,56 +338,79 @@ export class TransmisionArchivosComponent implements OnInit {
   }
 
   ejecutarSFTP(parametro: ParametrosTransmisionData) {
-    this.TransmisionArchivosServices.EjecutarSFTP(parametro).subscribe(
-      (response) => {
-        this.toastr.success('Exitoso', response, ConfiguracionNotificacion.configRightTop);
-      },
-      (error) => {
-        if (error.status === 400) {
-          const errorMessage = error.error;
-          this.toastr.warning('Advertencia', errorMessage, ConfiguracionNotificacion.configRightTop);
-        } else {
-          this.toastr.warning('Advertencia', error.message, ConfiguracionNotificacion.configRightTop);
-        }
-      }
-    );
-  }
-
-  ejecutarSFTPGPG(parametro: ParametrosTransmisionData) {
     try {
-      this.TransmisionArchivosServices.EjecutarSFTPGPG(parametro).subscribe(
+      this.loading = true;
+      this.TransmisionArchivosServices.EjecutarSFTP(parametro).subscribe(
         (response) => {
+          this.loading = false;
           this.toastr.success('Exitoso', response, ConfiguracionNotificacion.configRightTop);
         },
         (error) => {
           if (error.status === 400) {
+            this.loading = false;
             const errorMessage = error.error;
             this.toastr.warning('Advertencia', errorMessage, ConfiguracionNotificacion.configRightTop);
           } else {
+            this.loading = false;
             this.toastr.warning('Advertencia', error.message, ConfiguracionNotificacion.configRightTop);
           }
         }
       );
     } catch (error) {
+      this.loading = false;
+      this.toastr.error('Error', '' + error, ConfiguracionNotificacion.configRightTop);
+    }
+  }
+
+  ejecutarSFTPGPG(parametro: ParametrosTransmisionData) {
+    try {
+      this.loading = true;
+      this.TransmisionArchivosServices.EjecutarSFTPGPG(parametro).subscribe(
+        (response) => {
+          this.loading = false;
+          this.toastr.success('Exitoso', response, ConfiguracionNotificacion.configRightTop);
+        },
+        (error) => {
+          if (error.status === 400) {
+            this.loading = false;
+            const errorMessage = error.error;
+            this.toastr.warning('Advertencia', errorMessage, ConfiguracionNotificacion.configRightTop);
+          } else {
+            this.loading = false;
+            this.toastr.warning('Advertencia', error.message, ConfiguracionNotificacion.configRightTop);
+          }
+        }
+      );
+    } catch (error) {
+      this.loading = false;
       this.toastr.error('Error', '' + error, ConfiguracionNotificacion.configRightTop);
     }
 
   }
 
   ejecutarGRAPH(parametro: ParametrosTransmisionData) {
-    this.TransmisionArchivosServices.EjecutarGRAPH(parametro).subscribe(
-      (response) => {
-        this.toastr.success('Exitoso', response, ConfiguracionNotificacion.configRightTop);
-      },
-      (error) => {
-        if (error.status === 400) {
-          const errorMessage = error._body ? JSON.parse(error._body) : '.';
-          this.toastr.warning('Advertencia', errorMessage, ConfiguracionNotificacion.configRightTop);
-        } else {
-          this.toastr.warning('Error', error, ConfiguracionNotificacion.configRightTop);
+    try {
+      this.loading = true;
+      this.TransmisionArchivosServices.EjecutarGRAPH(parametro).subscribe(
+        (response) => {
+          this.loading = false;
+          this.toastr.success('Exitoso', response, ConfiguracionNotificacion.configRightTop);
+        },
+        (error) => {
+          if (error.status === 400) {
+            this.loading = false;
+            const errorMessage = error._body ? JSON.parse(error._body) : '.';
+            this.toastr.warning('Advertencia', errorMessage, ConfiguracionNotificacion.configRightTop);
+          } else {
+            this.loading = false;
+            this.toastr.warning('Error', error, ConfiguracionNotificacion.configRightTop);
+          }
         }
-      }
-    );
+      );
+    } catch (error) {
+      this.loading = false;
+      this.toastr.error('Error', '' + error, ConfiguracionNotificacion.configRightTop);
+    }
   }
 
   obtenerTareas() {
@@ -339,6 +422,13 @@ export class TransmisionArchivosComponent implements OnInit {
     } catch (error) {
       console.log("Error obteniendo tareas programadas: " + error)
     }
+  }
+
+  estaEnUltimos5Dias(fechaEjecucion: string): boolean {
+    const fecha = new Date(fechaEjecucion);
+    const fechaActual = new Date();
+    const diferenciaDias = (fechaActual.getTime() - fecha.getTime()) / (1000 * 3600 * 24);
+    return diferenciaDias <= 5;
   }
 
   IrArriba() {
