@@ -25,6 +25,9 @@ import { RadicadosComponent } from '../Components/Informes/mi-lista-productos/Ta
 import { SegurosTabComponent } from '../Components/Informes/mi-lista-productos/Tabs/seguros-tab/seguros-tab.component';
 import { UtilidadesTabComponent } from '../Components/Informes/mi-lista-productos/Tabs/utilidades-tab/utilidades-tab.component';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
+import { InformeClientesComponent } from '../Components/Informes/informe-clientes/informe-clientes.component';
+import { InformeClientesNaturalesComponent } from '../Components/Informes/informe-clientes/informe-clientes-naturales/informe-clientes-naturales.component';
+import { InformeJuridicosComponent } from '../Components/Informes/informe-clientes/informe-juridicos/informe-juridicos.component';
 
 
 @NgModule({
@@ -48,7 +51,10 @@ import { CurrencyMaskModule } from 'ng2-currency-mask';
     OtrosConpTabComponent,
     RadicadosComponent,
     SegurosTabComponent,
-    UtilidadesTabComponent
+    UtilidadesTabComponent,
+    InformeClientesComponent,
+    InformeClientesNaturalesComponent,
+    InformeJuridicosComponent
 
   ],
   imports: [
