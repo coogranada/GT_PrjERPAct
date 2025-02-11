@@ -1,0 +1,218 @@
+
+<div class="panel panel-white">
+    <div class="panel-body" id="contenidoJuridicos" >
+        <div class="row">
+            <div class="col-xs-12 col-md-3 col-lg-3">
+                <div class="container">
+                    <ul class="nav nav-tabs">
+                        <li >
+                            <a>Filtros Clientes Naturales  </a>
+                        </li>
+                    </ul>
+                    <div> 
+                       
+                        <div >
+                            <div class="row">
+                                <div class="col-md-8 col-lg-8 col-sm-8  panel-default" id="PanelDatos">
+                                    <div class="panel-body ">
+                                        <div class="row" id="SelectFilter" [ngClass]="{'BordeLine': filtrosAgregado.length > 0}">
+                                            <div class="col-md-4 col-lg-4 col-sm-4">
+                                                <div class="form-group">
+                                                    <label class="textNegrilla">Filtro:</label>
+                                                    <span class="grande"> *</span>
+                                                    <select class="form-control form-control-lg" id="select" name="select" [(ngModel)]="filtroSelect" (change)="opcionSelectedFilter(filtroSelect)">
+                                                    <option value="0" selected="true">
+                                                    --Seleccione--
+                                                    </option>
+                                                    <option *ngFor="let item of Filtros"  [value]="item.idFiltro">
+                                                    {{item.NombreFiltro}}
+                                                    </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                    
+                    
+                                        
+                                            <div class="col-md-3 col-lg-3 col-sm-3" *ngIf="filtroSelect == 1 || filtroSelect == 17 || filtroSelect == 26">
+                                                <div class="form-group">
+                                                    <label class="textNegrilla">Fecha Inicial:</label>
+                                                    <span class="grande"> *</span>
+                                                    <input type="date" class="form-control" min="{{fechaMinima}}" max="{{fechaMax}}"  [(ngModel)]="valueFechaInicial" (blur)="BlurDate(1)" (change)="opcionSelectedFechas(1)" />
+                                                    <span class="help-block validationSpan" *ngIf="valida1">
+                                                        La fecha inicial es obligatoria.
+                                                    </span>
+                                                    <span class="help-block validationSpan" *ngIf="valueFechaInicial > valueFechaFinal">
+                                                    La fecha inicial debe ser menor a la fecha final.
+                                                </span>
+                                                </div>
+                                            </div>
+                    
+                                            <div class="col-md-3 col-lg-3 col-sm-3" *ngIf="filtroSelect == 1  || filtroSelect == 17 || filtroSelect == 26">
+                                                <div class="form-group">
+                                                    <label class="textNegrilla">Fecha Final:</label>
+                                                    <span class="grande"> *</span>
+                                                    <span class="text-danger"></span>
+                                                    <input type="date" class="form-control" min="{{valueFechaInicial}}"  max="{{fechaMax}}"   [(ngModel)]="valueFechaFinal" (change)="opcionSelectedFechas(2)" (blur)="BlurDate(2)" (change)="opcionSelectedFechas(1)"  [disabled]="(valueFechaInicial === undefined ) && valueFechaFinal == undefined"  />
+
+                                                    <span class="help-block validationSpan" *ngIf="valida2">
+                                                        La fecha final es obligatoria.
+                                                    </span>
+                                                    <span class="help-block validationSpan" *ngIf="valueFechaFinal < valueFechaInicial ">
+                                                    La fecha final debe ser mayor a la fecha inicial.
+                                                    </span>
+                                                </div>
+                                            </div>
+                    
+                                            <div class="col-xs-12 col-md-4 col-lg-4" *ngIf="filtroSelect == 2 || filtroSelect == 3 || filtroSelect == 4 || filtroSelect == 5 || filtroSelect == 6 || filtroSelect == 7 ||  filtroSelect == 8 ||  filtroSelect == 9 ||  filtroSelect == 10 ||  filtroSelect == 11 ||  filtroSelect == 13 ||  filtroSelect == 18 ||  filtroSelect == 19 ||  filtroSelect == 20 ||  filtroSelect == 21 ||  filtroSelect == 22 ||  filtroSelect == 24 ||  filtroSelect == 25">
+                                                <div class="form-group">
+                                                    <label class="textNegrilla">{{TituloGenerico}}</label>
+                                                    <span class="grande"> *</span>
+                                                    <select class="form-control" [(ngModel)]="SelectedCombo" (change)="opcionSelectedCombo(SelectedCombo)" (blur)="BlurSelect()" >
+                                                    <option value="0">--Seleccione--</option>
+                                                    <option *ngFor="let item of ListGenerico"  [value]="item.id">
+                                                        {{item.descri}}
+                                                    </option>
+                                                    </select>
+                                                    <span class="help-block validationSpan" *ngIf="valida1">
+                                                    {{alertGenerico}}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3 col-lg-3 col-sm-3" *ngIf="filtroSelect == 14">
+                                                <div class="form-group">
+                                                    <label class="textNegrilla">Edad Inicial:</label>
+                                                    <span class="grande"> *</span>
+                                                    <input type="number" class="form-control"  name="EdadInicio" id="EdadInitI" [(ngModel)]="EdadInicial" (blur)="validaEdad(EdadInicial,1)" />
+                                                    <span class="help-block validationSpan" *ngIf="valida1" >
+                                                      La edad inicial es obligatoria.
+                                                    </span>
+                                                </div>
+                                            </div>
+    
+                                            <div class="col-md-3 col-lg-3 col-sm-3" *ngIf="filtroSelect == 14">
+                                                <div class="form-group">
+                                                    <label class="textNegrilla">Edad Final:</label>
+                                                    <span class="grande"> *</span>
+                                                    <input type="number" class="form-control"  name="EdadFin" id="EdadEndI" [(ngModel)]="EdadFinal"  (blur)="validaEdad(EdadFinal,2)" />
+                                                    <span class="help-block validationSpan" *ngIf="valida2" >
+                                                      La edad final es obligatoria.
+                                                    </span>
+                                                    <span class="help-block validationSpan" *ngIf="EdadInicialMayorEdadFinal" >
+                                                        La edad inicial debe ser menor a la edad final.
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <button class="btn Gt-btn-verde btn-icon legitRipple" style="top: 20px" *ngIf="filtroSelect != 0 && btnMore" (click)="MostrarPanel()">
+                                                <i class="icon-plus3" aria-hidden="true"></i>
+                                            </button>
+                                            <div class="row">
+                                                <div class="col-md-12 col-lg-12 col-sm-12" *ngIf="filtrosAgregado.length > 0">
+                                                    <div class="table-responsive scrollTablaFiltros">
+                                                        <table id="TablaAreas" class="table table-hover tablaBorder table-fixed">
+                                                            <tbody>
+                                                                <tr *ngFor="let item of filtrosAgregado">
+                                                                    <td style="color: #333333;">
+                                                                        {{item.NombreFiltro}}
+                                                                    </td>
+                                                                    <td style="color: #333333;">
+                                                                        <strong>{{item.Validacion}}</strong>
+                                                                    </td>
+                                                                    <td style="color: #333333;" *ngIf="item.ValorFinal == null || item.ValorFinal == '' || item.ValorFinal == undefined">
+                                                                        {{item.ValorInicial}}
+                                                                    </td>
+                                                                    <td style="color: #333333;" *ngIf="item.ValorFinal != null && item.ValorFinal != '' && item.ValorFinal != undefined">
+                                                                        {{item.ValorInicial}} y {{item.ValorFinal}}
+                                                                    </td>
+                                                                    <td style="color: #333333;" style="cursor: pointer;">
+                                                                        <i class="icon-cross3" (click)="eliminarAgregadas(item)" aria-hidden="true" style="background-color: #852662;color:white; font-size: 25px;"></i>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 col-lg-12 col-sm-12 text-right" *ngIf="filtrosAgregado.length > 0">
+                                                <button type="submit" class="btn Gt-btn-verde" value="Confirmar" (click)="GenerarInformeNaturales()">
+                                                Generar informe
+                                                </button>
+                                                <br><br><br>
+                                            </div>
+                                        
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 col-lg-4 col-sm-4 panel-default">
+
+                                    <div class="row">   
+                                        <div class="col-12" >
+                                            <div class="form-group">
+                                                <label class="textNegrilla">Buscar Campo:</label>
+                                                <input type="text" class="form-control" placeholder="Buscar Campo" [(ngModel)]="search"  (input)="SearchChange()" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="table-responsive scrollTablaCampos">
+                                        <table class="table table-hover tablaBorder table-fixed">
+                                            <thead>
+                                                <tr class="encabezadoTablas">
+                                                    <th class="textNegrilla"><strong>Campo</strong></th>
+                                                    <th class="textNegrilla"><strong>Permitir</strong></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td style="color: #333333;">
+                                                        Seleccionar todos
+                                                    </td>
+                                                    <td>
+                                                        <input type="checkbox" class="switchery selectedAll"  [(ngModel)]="checkAll" (click)="SeleccionaCampos(-1,checkAll)">
+                                                    </td>
+                                                </tr>
+                                                <tr *ngFor="let permitir of ShowCampos; let i = index">
+                                                    <td style="color: #333333;">
+                                                        {{permitir.NombreCampo}}
+                                                    </td>
+                                                    <td>
+                                                        <input type="checkbox"  [(ngModel)]="permitir.check" class="switchery check_{{permitir.idCampo}}" (click)="SeleccionaCampos(i,permitir.check)">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>    
+                </div>
+            </div> 
+        </div> 
+    </div>
+</div>
+
+<ngx-loading [show]="loading" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+</ngx-loading>
+
+<input type="hidden" #ModalProgressBar data-toggle="modal" data-target="#ModalProgressBar" data-popup="tooltip" data-trigger="hover" data-placement="top">
+
+<div class="modal fade" id="ModalProgressBar" tabindex="-1" role="dialog" aria-labelledby="ModalProgressBarTitle" data-backdrop="static" >
+    <div class="modal-dialog modal-lg" style="margin-top: 10%;">
+        <br>
+        <div class="panel panel-body" >
+            <div class="text-center">
+                <h5 class="no-margin text-semibold">Generando Informe . . . </h5>
+                <br>
+            </div>
+        
+            <div class="progress progress-rounded" style="height: 25px;">
+                <div class="progress-bar " style="background-color: #852662;" [style.width.%]="ProcentajeProgressBar">
+                    <span style="font-size: 18px; margin-top: 5px;">{{ProcentajeProgressBar}}% Completado  </span>
+                </div>
+            </div>
+        </div>
+        <br>
+    </div>
+</div>

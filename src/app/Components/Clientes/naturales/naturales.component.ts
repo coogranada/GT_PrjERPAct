@@ -20581,8 +20581,12 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
               this.DesbloquearRespuesta14 = true;
               this.DesbloquearRespuesta17 = true;
               localStorage.setItem('TerceroNatura', resulNatural.Result.tercerosDto.IdTercero);
-             
-              this.GuardarLog(resulNatural.Result, opera, 0, Number(localStorage.getItem('TerceroNatura')),11);
+              const logData = resulNatural.Result;
+              logData.asociadosNaturalesDto = {
+                ...logData.asociadosNaturalesDto,
+                RegimenTributario: 'No responsable'
+              };
+              this.GuardarLog(logData, opera, 0, Number(localStorage.getItem('TerceroNatura')),11);
               if (resulNatural.Result.asociadosNaturalesDto.IdRelacion !== 15) {
                 // si es diferente de tercero guarda el debito automatico si no no
                 this.GuardarDebitoAuto(1, resulNatural.Result.tercerosDto.IdTercero);
