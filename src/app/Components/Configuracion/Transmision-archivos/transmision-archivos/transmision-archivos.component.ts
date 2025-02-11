@@ -21,6 +21,8 @@ const ColorSecundario = 'rgb(13,165,80,0.7)';
 })
 export class TransmisionArchivosComponent implements OnInit {
   @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
+  @ViewChild('gpgRecipientInput') gpgRecipientInput: ElementRef | undefined;
+
   selectedRow: any = null;
   initialValues: any = {};
   parametrosTransm: ParametrosTransmisionData[] = [];
@@ -31,6 +33,7 @@ export class TransmisionArchivosComponent implements OnInit {
   public parametrosTransmisionForm!: FormGroup;
   public showPassword: boolean = false;
   public vbleBtnactualizar: boolean = false;
+  public vbleCifrado: boolean = false;
   public selectedProtocolo: string = '';
   public selectedTarea: string = '';
   public historialTransm: any[] = [];
@@ -115,6 +118,7 @@ export class TransmisionArchivosComponent implements OnInit {
       estado: parametro.Estado,
     });
     this.cambiarEstado();
+    this.onChangeProtocol(2);
     this.initialValues = JSON.parse(JSON.stringify(this.parametrosTransmisionForm.value));
     this.selectedTarea = parametro.NombreSitio;
   }
@@ -173,6 +177,31 @@ export class TransmisionArchivosComponent implements OnInit {
     this.parametrosTransmisionForm.controls['protocolo'].setValue(this.selectedProtocolo);
   }
 
+  onChangeProtocol(op: number): void {
+    if (this.parametrosTransmisionForm.get('protocolo')?.value == 'SFTP') {
+      this.vbleCifrado = true;
+    } else {
+      this.vbleCifrado = false;
+    }
+
+    if (op == 1) {
+      if (this.parametrosTransmisionForm.get('protocolo')?.value == 'SFTP') {
+        this.parametrosTransmisionForm.controls['cifrado'].setValue('');
+        this.parametrosTransmisionForm.controls['gpgRecipient'].setValue('');
+      } else {
+        this.parametrosTransmisionForm.controls['cifrado'].setValue('');
+        this.parametrosTransmisionForm.controls['gpgRecipient'].setValue('');
+      }
+    }
+
+  }
+
+  onChangeCifrado(): void {
+    if (this.parametrosTransmisionForm.get('cifrado')?.value !== 'GPG') {
+      this.parametrosTransmisionForm.controls['gpgRecipient'].setValue('');
+    }
+  }
+
   borrarSiEspacios(controlName: string): void {
     const control = this.parametrosTransmisionForm.controls[controlName];
 
@@ -190,6 +219,9 @@ export class TransmisionArchivosComponent implements OnInit {
       this.toastr.warning('Advertencia', 'La ruta local entrada y ruta remota salida son obligatorias.', ConfiguracionNotificacion.configRightTop);
     } else if (!this.parametrosTransmisionForm.get('horaSalida')?.value.startsWith('00:00') && (this.parametrosTransmisionForm.get('rutaLocalSalida')?.value.trim() == '' || this.parametrosTransmisionForm.get('rutaRemotaEntrada')?.value.trim() == '')) {
       this.toastr.warning('Advertencia', 'La ruta local salida y ruta remota entrada son obligatorias.', ConfiguracionNotificacion.configRightTop);
+    }else if (this.vbleCifrado && this.parametrosTransmisionForm.get('cifrado')?.value == 'GPG' && this.parametrosTransmisionForm.get('gpgRecipient')?.value.trim() == '') {
+      this.toastr.warning('Advertencia', 'GPG recipient es obligatorio cuando el cifrado elegido es GPG.', ConfiguracionNotificacion.configRightTop);
+      this.gpgRecipientInput?.nativeElement.focus();
     } else {
       const estadoActual = this.parametrosTransmisionForm.get('estado')?.value;
       if (estadoActual == 1) {
@@ -222,7 +254,11 @@ export class TransmisionArchivosComponent implements OnInit {
       this.toastr.warning('Advertencia', 'La ruta local entrada y ruta remota salida son obligatorias.', ConfiguracionNotificacion.configRightTop);
     } else if (!this.parametrosTransmisionForm.get('horaSalida')?.value.startsWith('00:00') && (this.parametrosTransmisionForm.get('rutaLocalSalida')?.value.trim() == '' || this.parametrosTransmisionForm.get('rutaRemotaEntrada')?.value.trim() == '')) {
       this.toastr.warning('Advertencia', 'La ruta local salida y ruta remota entrada son obligatorias.', ConfiguracionNotificacion.configRightTop);
-    } else {
+    } else if (this.vbleCifrado && this.parametrosTransmisionForm.get('cifrado')?.value == 'GPG' && this.parametrosTransmisionForm.get('gpgRecipient')?.value.trim() == '') {
+      this.toastr.warning('Advertencia', 'GPG recipient es obligatorio cuando el cifrado elegido es GPG.', ConfiguracionNotificacion.configRightTop);
+      this.gpgRecipientInput?.nativeElement.focus();
+    }
+    else {
       const result = this.ValidarCambios()
       const estadoActual = this.parametrosTransmisionForm.get('estado')?.value;
       if (estadoActual == 1) {
