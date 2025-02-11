@@ -1,0 +1,209 @@
+<div class="panel panel-white">
+    <div class="panel-body" id="contenidoJuridicos" >
+        <div class="row">
+            <div class="col-xs-12 col-md-3 col-lg-3">
+                <div class="container">
+                    <ul class="nav nav-tabs">
+                        <li >
+                            <a>Filtros Banner</a>
+                        </li>
+                    </ul>
+                    <div> 
+                        <div>
+                            <div class="row">
+                                <div class="col-md-8 col-lg-8 col-sm-8  panel-default" id="PanelDatos">
+                                    <div class="panel-body ">
+                                        <div class="row" id="SelectFilter" [ngClass]="{'BordeLine': filtrosAgregado.length > 0}">
+                                           
+                                            <div class="col-md-4 col-lg-4 col-sm-4">
+                                                <div class="form-group">
+                                                    <label class="textNegrilla">Filtro:</label>
+                                                    <span class="grande"> *</span>
+                                                    <select class="form-control form-control-lg" id="select" name="select" [(ngModel)]="filtroSelect" (change)="opcionSelectedFilter(filtroSelect)">
+                                                    <option value="0" selected="true">
+                                                    --Seleccione--
+                                                    </option>
+                                                    <option *ngFor="let item of Filtros"  [value]="item.idFiltro">
+                                                    {{item.NombreFiltro}}
+                                                    </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                    
+                                           
+                                            <div class="col-xs-12 col-md-4 col-lg-4" *ngIf="filtroSelect == 22 ">
+                                                <div class="form-group">
+                                                    <label class="textNegrilla">{{TituloGenerico}}</label>
+                                                    <span class="grande"> *</span>
+                                                    <input type="text" class="form-control" [(ngModel)]="strInput"  (blur)="SelectBlur()"/>
+                                                    <span class="help-block validationSpan" *ngIf="!(strInput.length >= 4) && validBlur" >
+                                                    {{alertGenerico}}
+                                                    </span>
+    
+                                                </div>
+                                            </div>
+                                           
+                                            <button class="btn Gt-btn-verde btn-icon legitRipple" style="top: 20px" *ngIf="filtroSelect != 0 && (btnMore || strInput.length >= 4)" (click)="MostrarPanel()">
+                                                <i class="icon-plus3" aria-hidden="true"></i>
+                                            </button>
+                                           
+
+                                            <div class="row">
+                                                <div class="col-md-12 col-lg-12 col-sm-12" >
+                                                    <div class="col-md-3 col-lg-3 col-sm-3">
+                                                        <div class="form-group">
+                                                            <label class="textNegrilla">Fecha Inicial:</label>
+                                                            <span class="grande"> *</span>
+                                                            <input type="date" class="form-control" min="{{fechaMinima}}" max="{{fechaMax}}"  [(ngModel)]="valueFechaInicial" (change)="opcionSelectedFechas(1)" />
+                                                            <span class="help-block validationSpan" *ngIf="valueFechaInicial === undefined && clearFechaInicial == false">
+                                                            La fecha inicial es obligatoria.
+                                                            </span>
+                                                            <span class="help-block validationSpan" *ngIf="!valida1F && clearFechaInicial == false">
+                                                            La fecha inicial no valida.
+                                                            </span>
+                                                            <span class="help-block validationSpan" *ngIf="valueFechaInicial > valueFechaFinal && clearFechaInicial == false">
+                                                            La fecha inicial debe ser menor o igual a la fecha final.
+                                                        </span>
+                                                        </div>
+                                                    </div>
+                            
+                                                    <div class="col-md-3 col-lg-3 col-sm-3">
+                                                        <div class="form-group">
+                                                            <label class="textNegrilla">Fecha Final:</label>
+                                                            <span class="grande"> *</span>
+                                                            <span class="text-danger"></span>
+                                                            <input type="date" class="form-control" min="{{valueFechaInicial}}"  max="{{fechaMax}}"   [(ngModel)]="valueFechaFinal" (change)="opcionSelectedFechas(2)" [disabled]="(valueFechaInicial === undefined ) && valueFechaFinal == undefined"
+                                                            />
+                                                            <span class="help-block validationSpan" *ngIf="valueFechaFinal === undefined && (valueFechaInicial != undefined ) && clearFechaFinal == false">
+                                                            La fecha final es obligatoria.
+                                                            </span>
+                                                            <span class="help-block validationSpan" *ngIf="!valida2F && clearFechaFinal == false">
+                                                            La fecha final no valida.
+                                                            </span>
+                                                            <span class="help-block validationSpan" *ngIf="valueFechaFinal < valueFechaInicial ">
+                                                            La fecha final debe ser mayor o igual a la fecha inicial.
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                           
+                                            <div class="row">
+                                                <div class="col-md-12 col-lg-12 col-sm-12" *ngIf="filtrosAgregado.length > 0">
+                                                    <div class="table-responsive scrollTablaFiltros">
+                                                        <table id="TablaAreas" class="table table-hover tablaBorder table-fixed">
+                                                            <tbody>
+                                                                <tr *ngFor="let item of filtrosAgregado">
+                                                                    <td style="color: #333333;">
+                                                                        {{item.NombreFiltro}}
+                                                                    </td>
+                                                                    <td style="color: #333333;">
+                                                                        <strong>{{item.Validacion}}</strong>
+                                                                    </td>
+                                                                    <td style="color: #333333;" *ngIf="item.ValorFinal == null || item.ValorFinal == '' || item.ValorFinal == undefined">
+                                                                        {{item.ValorInicial}}
+                                                                    </td>
+                                                                    <td style="color: #333333;" *ngIf="item.ValorFinal != null && item.ValorFinal != '' && item.ValorFinal != undefined">
+                                                                        {{item.ValorInicial}} y {{item.ValorFinal}}
+                                                                    </td>
+                                                                    <td style="color: #333333;" style="cursor: pointer;">
+                                                                        <i class="icon-cross3" (click)="eliminarAgregadas(item)" aria-hidden="true" style="background-color: #852662;color:white; font-size: 25px;"></i>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                           
+                                            <div class="col-md-12 col-lg-12 col-sm-12 text-right" *ngIf="filtrosAgregado.length > 0 || btnGenerate">
+                                                <button type="button"  (click)="GetCantInforme(false)" class="btn Gt-btn-verde btn-icon legitRipple">
+                                                    Ver informe
+                                                </button>
+                                                    &nbsp;
+                                                    &nbsp;
+                                                    &nbsp;
+                                                <button type="submit" class="btn Gt-btn-verde" value="Confirmar" (click)="GenerarInformeLogs()">
+                                                Generar informe
+                                                </button>
+                                                <br><br><br>
+                                            </div>
+                
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 col-lg-4 col-sm-4 panel-default">
+                                    <div class="table-responsive scrollTablaCampos">
+                                        <table class="table table-hover tablaBorder table-fixed">
+                                            <thead>
+                                                <tr class="encabezadoTablas">
+                                                    <th class="textNegrilla"><strong>Campo</strong></th>
+                                                    <th class="textNegrilla"><strong>Permitir</strong></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td style="color: #333333;">
+                                                        Seleccionar todos
+                                                    </td>
+                                                    <td>
+                                                        <input type="checkbox" class="switchery selectedAll" (click)="SeleccionaTodoCampos(-1)">
+                                                    </td>
+                                                </tr>
+                                                <tr *ngFor="let permitir of Campos; let i = index">
+                                                    <td style="color: #333333;">
+                                                        {{permitir.NombreCampo}}
+                                                    </td>
+                                                    <td>
+                                                        <input type="checkbox" [(checked)]="permitir.check" class="switchery check_{{permitir.idCampo}}" (click)="SeleccionaTodoCampos(i)">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>    
+                </div>
+            </div>
+        </div>
+        <ngx-loading [show]="loading" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+        </ngx-loading>
+    </div>
+</div>
+
+<input type="hidden" #ShowModalListLogs data-toggle="modal" data-target="#ShowModalLog" data-popup="tooltip" data-trigger="hover" data-placement="top">
+<div id="ShowModalLog"  class="modal fade" data-backdrop="static">
+    <div  style="width: 88%; margin: 30px auto; height: 90%;">
+        <div class="modal-content modal-xl">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Informe logs Banner</h6>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive scrollTabla">
+                   <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th style="min-width: 300px;"><strong>Nombre</strong></th>
+                                <th style="min-width: 200px;"><strong>Fecha</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let log of InformesLog  ; let i=index">
+                            <tr class="FilRecip{{i}}" (click)="CambiarColor(i)">
+                                <td >{{log.Nombre}} </td>
+                                <td >{{log.Fecha  == "1900-01-01T00:00:00" ? "" : log.Fecha |  date: "yyyy/MM/dd HH:mm:ss"}} </td>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado"  data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
