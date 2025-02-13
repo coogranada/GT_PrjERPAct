@@ -1,0 +1,144 @@
+.grande {
+    font-size: 25px !important;
+    color: #D84315;
+    margin-top: -5px !important;
+    margin-left: 6px;
+    position: absolute;
+}
+
+
+/* .scrollTablaFiltros{
+    max-height: 368px;
+    overflow-y: scroll;
+} */
+
+.scrollTablaFiltros {
+    max-height: 265px;
+    overflow-y: scroll;
+}
+
+.scrollTablaCampos {
+    max-height: 479px;
+    overflow-y: scroll;
+}
+
+.encabezadoTablas {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #ffffff;
+}
+
+.active {
+    background-color: rgba(160, 0, 87, 0.60) !important;
+    /* color: white; */
+}
+
+.textNegrilla {
+    color: #565656;
+    font-weight: bold;
+}
+
+.activar {
+    border-bottom-color: transparent;
+    cursor: default;
+    cursor: pointer;
+    background-color: rgb(38, 144, 81);
+    border: 1px solid rgb(38, 144, 81);
+}
+
+
+/*
+.activar a {
+color: white !important;
+}
+
+@media print {
+.doNotPrint {
+    display: none !important;
+}
+} */
+
+
+/* estilos de range  */
+
+.range-slider {
+    width: 300px;
+    text-align: center;
+    position: relative;
+}
+
+.rangeValues {
+    display: block;
+}
+
+.BordeLine {
+    border-bottom: 1px solid rgb(160, 0, 87);
+}
+
+mat-slider {
+    width: 300px;
+}
+
+input[type="range"] {
+    -webkit-appearance: none;
+    border: 1px solid white;
+    width: 300px;
+    position: absolute;
+    left: 0;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+    width: 300px;
+    height: 5px;
+    background: #ddd;
+    border: none;
+    border-radius: 3px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #852662;
+    margin-top: -4px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+}
+
+input[type="range"]:focus {
+    outline: none;
+}
+
+input[type="range"]:focus::-webkit-slider-runnable-track {
+    background: #ccc;
+}
+
+input[type="range"]::-moz-range-track {
+    width: 300px;
+    height: 5px;
+    background: #ddd;
+    border: none;
+    border-radius: 3px;
+}
+
+input[type="range"]::-moz-range-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #852662;
+}
+thead tr th{ 
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #ffffff;
+  }
+.table-responsive { 
+    
+    overflow:scroll;
+  }

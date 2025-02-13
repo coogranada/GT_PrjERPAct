@@ -28,6 +28,15 @@ import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { InformeClientesComponent } from '../Components/Informes/informe-clientes/informe-clientes.component';
 import { InformeClientesNaturalesComponent } from '../Components/Informes/informe-clientes/informe-clientes-naturales/informe-clientes-naturales.component';
 import { InformeJuridicosComponent } from '../Components/Informes/informe-clientes/informe-juridicos/informe-juridicos.component';
+import { LogAuditoriaComponent } from '../Components/Informes/log-auditoria/log-auditoria.component';
+import { LogAsesoriaComponent } from '../Components/Informes/log-auditoria/log-asesoria/log-asesoria.component';
+import { LogAutenticacionErpComponent } from '../Components/Informes/log-auditoria/log-autenticacion-erp/log-autenticacion-erp.component';
+import { LogBannerComponent } from '../Components/Informes/log-auditoria/log-banner/log-banner.component';
+import { LogFichaAnalisisComponent } from '../Components/Informes/log-auditoria/log-ficha-analisis/log-ficha-analisis.component';
+import { LogLogGeneralesComponent } from '../Components/Informes/log-auditoria/log-generales/log-generales.component';
+import { LogGestionClientesComponent } from '../Components/Informes/log-auditoria/log-gestion-clientes/log-gestion-clientes.component';
+import { LogMisProductosComponent } from '../Components/Informes/log-auditoria/log-mis-productos/log-mis-productos.component';
+import { LogProductosVirtualesComponent } from '../Components/Informes/log-auditoria/log-productos-virtuales/log-productos-virtuales.component';
 
 
 @NgModule({
@@ -54,7 +63,16 @@ import { InformeJuridicosComponent } from '../Components/Informes/informe-client
     UtilidadesTabComponent,
     InformeClientesComponent,
     InformeClientesNaturalesComponent,
-    InformeJuridicosComponent
+    InformeJuridicosComponent,
+    LogAuditoriaComponent,
+    LogAsesoriaComponent,
+    LogAutenticacionErpComponent,
+    LogBannerComponent,
+    LogFichaAnalisisComponent,
+    LogLogGeneralesComponent,
+    LogGestionClientesComponent,
+    LogMisProductosComponent,
+    LogProductosVirtualesComponent
 
   ],
   imports: [

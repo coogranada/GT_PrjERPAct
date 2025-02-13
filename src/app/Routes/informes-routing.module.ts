@@ -9,6 +9,7 @@ import { EvolucionOficinaComponent } from '../Components/Informes/estadisticos/e
 import { IndicadoresGerencialesComponent } from '../Components/Informes/estadisticos/indicadores-gerenciales/indicadores-gerenciales.component';
 import { MiListaProductosComponent } from '../Components/Informes/mi-lista-productos/mi-lista-productos.component';
 import { InformeClientesComponent } from '../Components/Informes/informe-clientes/informe-clientes.component';
+import { LogAuditoriaComponent } from '../Components/Informes/log-auditoria/log-auditoria.component';
 
 const routes: Routes = [
   { path: "DebitosAutomaticos", component: DebitosAutomaticosComponent },
@@ -20,6 +21,7 @@ const routes: Routes = [
   { path: "Estadisticos/Indicadores-gerenciales", component: IndicadoresGerencialesComponent },
   { path: "ListaProductos", component: MiListaProductosComponent },
   { path: "InformeClientes", component: InformeClientesComponent },
+  { path: "LogAuditoria", component: LogAuditoriaComponent },
 ];
 
 @NgModule({
