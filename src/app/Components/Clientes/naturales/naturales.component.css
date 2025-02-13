@@ -343,3 +343,8 @@ p::first-letter {
     bottom: 0;
     margin: auto;
 }
+
+.row-flex {
+    display: flex;
+    flex-wrap: wrap;
+}

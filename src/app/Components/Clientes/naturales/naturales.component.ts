@@ -4807,6 +4807,13 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         return;
       }
 
+      this.disableForm = true;
+      this.bloqDepartaExp = true;
+      this.bloqDeparta = true;
+      this.bloqCiudad = true;
+      this.bloqCiudadExp = true;
+      this.disableFormNumHijos = true;
+      this.btnGuardarOculto = false;
       const idTercero = this.basicosFrom.get('IdTerceroPrincipal')?.value;
       const currentRegimenTributario = this.basicosFrom.get('RegimenTributario')?.value;
       const logData = {
@@ -21411,6 +21418,9 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             this.basicosFrom.get('tipoEmpleo')?.setValue(result.asociadosNaturalesDto.IdTipoEmpleo);
             this.empleoAnterior = result.asociadosNaturalesDto.IdTipoEmpleo;
             this.GetTipoOcupacion();
+            setTimeout(() => {
+              this.basicosFrom.get('tipoOcupacion')?.setValue(this.basicosFrom.get('tipoOcupacion')?.value);
+            }, 1000);
             localStorage.setItem('TerceroNatura', result.asociadosNaturalesDto.IdTercero);
             this.idTerceroConsulta = result.asociadosNaturalesDto.IdTercero;
             this.basicosFrom.get('metodo')?.setValue(result.asociadosNaturalesDto.MetodoConocio);
