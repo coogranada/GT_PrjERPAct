@@ -236,7 +236,24 @@ export class TransmisionArchivosComponent implements OnInit {
           this.obtenerConfiguracion();
           this.limpiarFormulario();
           this.IrAbajo();
-        },
+                  //Actualizar hora ejecución
+        swal.fire({
+          title: '<strong> ¿Desea que se programen nuevamente las tareas? </strong>',
+          text: '',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Si',
+          cancelButtonText: 'No',
+          confirmButtonColor: 'rgb(13,165,80)',
+          cancelButtonColor: 'rgb(160,0,87)',
+          allowOutsideClick: false,
+          allowEscapeKey: false
+        }).then((results) => {
+          if (results.value) {
+            this.actualizarHoraEjecucion();
+          }
+        });
+        },        
         (error) => {
           this.toastr.warning('Advertencia', error.message, ConfiguracionNotificacion.configRightTop);
         }
