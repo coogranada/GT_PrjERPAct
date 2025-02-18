@@ -5,14 +5,14 @@ import { ImagenesBannerServices } from '../../../app/Services/Maestros/imagenes-
 import { OficinasService } from '../../../app/Services/Maestros/oficinas.service';
 import { UsuariosService } from '../../../app/Services/Maestros/usuarios.service';
 import { ConfiguracionNotificacion } from '../../../environments/config.noticaciones';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../Services/Alert/alert.service';
 
 declare var $: any;
 @Component({
   selector: 'app-libreta-direcciones',
   templateUrl: './libreta-direcciones.component.html',
   styleUrls: ['./libreta-direcciones.component.css'],
-  providers: [OficinasService, NgxToastService, UsuariosService, ImagenesBannerServices],
+  providers: [OficinasService, AlertService, UsuariosService, ImagenesBannerServices],
   standalone : false
 })
 export class LibretaDireccionesComponent implements OnInit {
@@ -32,7 +32,7 @@ export class LibretaDireccionesComponent implements OnInit {
   public MostrarCard = false;
   public dataCardUser : CardUserModel = new CardUserModel();
 
-  constructor(private oficinasService: OficinasService, private notif: NgxToastService, private usuariosServices: UsuariosService,
+  constructor(private oficinasService: OficinasService, private notif: AlertService, private usuariosServices: UsuariosService,
     private ImagenesBannerServices: ImagenesBannerServices) { }
   ngOnInit() {
     this.validarLibretaDirecciones();

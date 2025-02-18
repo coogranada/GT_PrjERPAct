@@ -21,11 +21,12 @@ import { RepresentanteLegalComponent } from '../Components/Clientes/juridicos/Ta
 import { TrazabilidadComponent } from '../Components/Clientes/juridicos/Tabs/trazabilidad/trazabilidad.component';
 import { JuridicosComponent } from '../Components/Clientes/juridicos/juridicos.component';
 import { SolicitudServiciosJuridicosComponent } from '../Components/Formatos-impresion/solicitud-servicios-juridicos/solicitud-servicios-juridicos.component';
-import { SolicitudesGestionesComponent } from '../Components/GestionesOperaciones/solicitudes-gestiones/solicitudes-gestiones.component';
+//import { SolicitudesGestionesComponent } from '../Components/GestionesOperaciones/solicitudes-gestiones/solicitudes-gestiones.component';
 import { GestionGestionesOperacionesComponent } from '../Components/GestionesOperaciones/gestion-gestiones-operaciones/gestion-gestiones-operaciones.component';
 import { GestionesOperacionesComponent } from '../Components/GestionesOperaciones/gestiones-operaciones/gestiones-operaciones.component';
-import { FiltroPipe } from '../Pipes/Filtro/filtro.pipe';
-
+import {PipeModule} from './pipe.module'
+import { ShareComponentModule } from './share-component.module';
+import { NgxCurrencyDirective } from 'ngx-currency';
 @NgModule({
   declarations: [
     NaturalesComponent,
@@ -44,10 +45,9 @@ import { FiltroPipe } from '../Pipes/Filtro/filtro.pipe';
  TrazabilidadComponent,
  JuridicosComponent,
  SolicitudServiciosJuridicosComponent,
- SolicitudesGestionesComponent,
+ //SolicitudesGestionesComponent,
  GestionGestionesOperacionesComponent,
  GestionesOperacionesComponent,
- FiltroPipe
 ],
   imports: [
     CommonModule,
@@ -56,13 +56,15 @@ import { FiltroPipe } from '../Pipes/Filtro/filtro.pipe';
     NgxLoadingModule.forRoot({
       backdropBackgroundColour: 'rgba(255,255,255,0.8)'
     }),
+    NgxCurrencyDirective,
     NguiAutoCompleteModule,
     TagInputModule ,
-    ReactiveFormsModule.withConfig({callSetDisabledState: 'whenDisabledForLegacyCode'}),
-    
+    PipeModule,
+    ShareComponentModule,
+    ReactiveFormsModule.withConfig({callSetDisabledState: 'whenDisabledForLegacyCode'})
   ],
-  exports:[
-    SolicitudesGestionesComponent
-  ]
+   exports:[
+  //   //SolicitudesGestionesComponent
+   ]
 })
 export class ClienteModule { }

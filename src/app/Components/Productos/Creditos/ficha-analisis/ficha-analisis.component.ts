@@ -15,7 +15,7 @@ import { GeneralesService } from '../../../../Services/Productos/generales.servi
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {  parseXML } from 'jquery';
 import { CheckList, FADeudor, LogFichaAnalisis, ObligacionesExtinguidas, ObligacionesVigentes, DtosAttachFiles}from '../../../../Models/Productos/ficha-analisis.model';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../../Services/Alert/alert.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 @Component({
@@ -105,7 +105,7 @@ export class FichaAnalisisComponent implements OnInit {
   public detalleTrazabilidad = false;
   public esJuridico : any;
   
-  constructor(private winRef: WindowRef, private notif: NgxToastService,
+  constructor(private winRef: WindowRef, private notif: AlertService,
     private envirment: EnvironmentService, private moduleValidationService: ModuleValidationService, private el: ElementRef,
     private loginService: LoginService, private router: Router, private operacionesService: OperacionesService,
     private generalesService: GeneralesService,

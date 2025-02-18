@@ -10,7 +10,7 @@ import Swal from 'sweetalert2'
 import { SecurityService } from './Services/Auth/security.service';
 import { GestionesService  } from './Services/Gestiones/gestiones.service';
 import { DEFAULT_INTERRUPTSOURCES, Idle } from '@ng-idle/core'; 
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from './Services/Alert/alert.service';
 declare var $: any;
   
 @Component({
@@ -50,7 +50,7 @@ export class AppComponent implements OnInit,OnDestroy {
   constructor(
     private loginService: LoginService,
     private router: Router,
-    private notif: NgxToastService,
+    private notif: AlertService,
     private location: PlatformLocation,
     private clientesGetListService: ClientesGetListService,
     private Security: SecurityService ,

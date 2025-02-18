@@ -22,7 +22,7 @@ import moment from 'moment';
 import swal from "sweetalert2";
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { NgxLoadingComponent } from 'ngx-loading';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../../../Services/Alert/alert.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 @Component({
@@ -228,7 +228,7 @@ export class AhorrosTabComponent implements OnInit {
   //#endregion
   constructor(
     private operacionesService: OperacionesService,
-    private notif: NgxToastService,
+    private notif: AlertService,
     private MiListaProductosService: MiListaProductosService
   ) {}
 

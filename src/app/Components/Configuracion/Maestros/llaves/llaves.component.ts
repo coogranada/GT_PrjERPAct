@@ -5,7 +5,7 @@ import { fromEvent } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ModuleValidationService } from '../../../../Services/Enviroment/moduleValidation.service';
 import { LlavesService } from '../../../../Services/Maestros/llaves.service';
-import { NgxToastService } from "ngx-toast-notifier";
+import { AlertService } from '../../../../Services/Alert/alert.service';
 declare var $: any;
 @Component({
   selector: 'app-llaves',
@@ -29,7 +29,7 @@ export class LlavesComponent implements OnInit {
 
   @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
   public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
-  constructor(private llavesService: LlavesService, private notif: NgxToastService,
+  constructor(private llavesService: LlavesService, private notif: AlertService,
     private el: ElementRef, private moduleValidationService: ModuleValidationService,
   ) { 
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(

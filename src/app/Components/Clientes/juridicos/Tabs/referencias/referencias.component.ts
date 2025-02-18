@@ -6,7 +6,7 @@ import { RecursosGeneralesService } from '../../../../../Services/Utilidades/rec
 import { ReferenciaModel } from '../../../../../Models/Clientes/Juridicos/ReferenciaModel';
 import { JuridicosService } from '../../../../../Services/Clientes/Juridicos.service';
 import { GeneralesService } from '../../../../../Services/Productos/generales.service';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../../../Services/Alert/alert.service';
 declare var $: any;
 @Component({
   selector: 'app-referencias',
@@ -60,7 +60,7 @@ export class ReferenciasComponent implements OnInit {
   //#endregion
   public referenciaModel = new ReferenciaModel();
   public referenciaModelLst: ReferenciaModel[] = [];
-  constructor(private notif: NgxToastService,
+  constructor(private notif: AlertService,
     private recursosGeneralesService: RecursosGeneralesService, private juridicoService: JuridicosService,
     private generalesService: GeneralesService) { }
 

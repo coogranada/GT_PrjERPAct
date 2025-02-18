@@ -6,7 +6,7 @@ import { GestionModel, GestionModelLog } from '../../../Models/Gestiones/gestion
 import { FormGroup, FormControl, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 import { GeneralesService } from '../../../Services/Productos/generales.service';
 import { moduloAGestionar } from '../../../../environments/config.modulos';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../Services/Alert/alert.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 
@@ -42,7 +42,7 @@ export class SolicitudesGestionesComponent implements OnInit {
   public UsuarioSolicita = true;
   public Estado = true;
 
-  constructor(private gestionesService: GestionesService, private notificacion: NgxToastService,
+  constructor(private gestionesService: GestionesService, private notificacion: AlertService,
     private generalesService: GeneralesService) { }
 
   ngOnInit() {

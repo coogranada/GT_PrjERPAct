@@ -13,7 +13,7 @@ import { ClientesService } from '../../../../../Services/Clientes/clientes.servi
 import { OperacionesModel } from '../../../../../Models/Maestros/operaciones.model';
 import { OperacionesService } from '../../../../../Services/Maestros/operaciones.service';
 import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../../../Services/Alert/alert.service';
 declare var $: any;
 @Component({
   selector: 'app-info-juridicos',
@@ -150,7 +150,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
   
   private CodModulo = 12;
   //#endregion
-  constructor(private clientesGetListService: ClientesGetListService, private notif: NgxToastService,
+  constructor(private clientesGetListService: ClientesGetListService, private notif: AlertService,
     private recursosGeneralesService: RecursosGeneralesService, private juridicoService: JuridicosService,
     private generalesService: GeneralesService, private formBuilder: FormBuilder, private clientesService: ClientesService,
     private operacionesService: OperacionesService) { }

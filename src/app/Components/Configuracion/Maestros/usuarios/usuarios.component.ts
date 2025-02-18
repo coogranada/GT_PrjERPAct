@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 import { LoginService } from '../../../../Services/Login/login.service';
 import { ImagenesBannerServices } from '../../../../Services/Maestros/imagenes-banner.service';
 import { UsuariosImagenModel } from '../../../../Models/Maestros/banner.model';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../../Services/Alert/alert.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -62,7 +62,7 @@ export class UsuariosComponent implements OnInit {
   public IdUserSearchs : any;
   //#endregion
   
-  constructor(private usuariosServices: UsuariosService, private notificacion: NgxToastService,
+  constructor(private usuariosServices: UsuariosService, private notificacion: AlertService,
     private generalesService: GeneralesService, private moduleValidationService: ModuleValidationService,
     private el: ElementRef, private loginService: LoginService, private router: Router, private ImagenesBannerServices: ImagenesBannerServices) {
     this.usuariosModel = new UsuariosModel();

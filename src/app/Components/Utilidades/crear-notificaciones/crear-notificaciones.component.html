@@ -1,0 +1,214 @@
+<form [formGroup]="notificacionesFrom">
+    <div class="panel panel-white">
+        <div class="panel-heading">
+            <h6 class="panel-title">Búsqueda</h6>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a data-toggle="modal" data-target="#ModalAyuda"><i class=" icon-question6 " title="Ayuda" data-popup="tooltip"  data-trigger="hover" data-placement="top"></i></a></li>
+                    <li>
+                        <a data-action="collapse"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <form method="get" [formGroup]="NotificacionesOperacionFrom">
+                        <div class="col-xs-12 col-md-4 col-lg-1">
+                            <label>Operación:</label><span class="text-danger ObligatorioGrande"> *</span>
+                        </div>
+                        <div class="col-xs-12 col-md-4 col-lg-3">
+                            <select class="form-control" formControlName="Codigo" id="select" (change)=" ValorSeleccionado()">
+                                <option *ngFor="let operacionNotificador of resultOperaciones"
+                                    [value]="operacionNotificador.ERP_tblOperacion.IdOperacion">
+                                    {{operacionNotificador.ERP_tblOperacion.Descripcion}}</option>
+                            </select>
+
+                        </div>
+                    </form>
+
+                    <div class="col-xs-12 col-md-4 col-lg-2">
+                        <label>Número de identificación:</label><span class="text-danger ObligatorioGrande"> *</span>
+                    </div>
+                    <div class="col-xs-12 col-md-4 col-lg-3">
+                        <input type="text" class="form-control" formControlName="Documento" id="txtIdentificacion" [attr.disabled]="bDocumento" (change)="ObtenerCuentas()" />
+                        <span class="help-block validationSpan" *ngIf="notificacionesFrom.controls['Documento'].errors?.['required'] && (notificacionesFrom.controls['Documento'].dirty || notificacionesFrom.controls['Documento'].touched)">
+                        El número de identificación es obligatorio.</span>
+                    </div>
+                </div>
+            </div>
+            <br />
+        </div>
+    </div>
+    <div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatos" *ngIf="bPanelDatos">
+        <div class="panel-body">
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <div class="row">
+
+                    <div class="col-xs-12 col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label>Cuenta:</label><span class="text-danger ObligatorioGrande"> *</span>
+                            <select formControlName="NumeroCuenta" name="select" class="form-control" (change)=ObtenerTarjeta()>
+                                <option [selected]="true" value='-'>-- Seleccione --</option>
+                                <option *ngFor="let cuenta of ListadoCuentas" [value]="cuenta.NumeroCuenta">{{cuenta.NumeroCuenta}}</option>
+                            </select>
+                            <span class="help-block validationSpan" *ngIf="notificacionesFrom.controls['NumeroCuenta'].errors?.['required'] && (notificacionesFrom.controls['NumeroCuenta'].dirty || notificacionesFrom.controls['NumeroCuenta'].touched)|| (notificacionesFrom.controls['NumeroCuenta'].value === '0')">
+                                El número de cuenta es obligatorio. </span>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label>Tarjeta:</label>
+                            <input type="text" class="form-control" formControlName="NumeroTarjeta" id="txtTarjeta" [attr.disabled]="bNumeroTarjeta" />
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label>Tipo de notificación:</label><span class="text-danger ObligatorioGrande"> *</span>
+                            <select formControlName="TipoNotificacion" name="select" class="form-control" (change)=ObtenerEstados() [attr.disabled]="bTipoNotificacion">
+                            <option [selected]="true" value="-">-- Seleccione --</option> 
+                            <option *ngFor="let tipoNotificacion of ListadoTipoNotificaciones" [value]="tipoNotificacion.Valor">{{tipoNotificacion.Valor}} - {{tipoNotificacion.Descripcion}}</option>
+                            </select>
+                            <span class="help-block validationSpan" *ngIf="notificacionesFrom.controls['TipoNotificacion'].errors?.['required'] && (notificacionesFrom.controls['TipoNotificacion'].dirty || notificacionesFrom.controls['TipoNotificacion'].touched)|| notificacionesFrom.controls['TipoNotificacion'].value === '0'">
+                                El tipo de notificación es obligatorio.</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label>Estado:</label><span class="text-danger ObligatorioGrande"> *</span>
+                            <select formControlName="Estado" (change)=ActualizarSaldo() name="select" class="form-control" [attr.disabled]="bEstado">
+                            <option [selected]="true"  value="-">-- Seleccione --</option>
+                                <option *ngFor="let estado of ListadoEstado" [value]="estado.Valor">{{estado.Valor}} - {{estado.Descripcion}}</option>
+                            </select>
+                            <span class="help-block validationSpan" *ngIf="notificacionesFrom.controls['Estado'].errors?.['required'] && (notificacionesFrom.controls['Estado'].dirty || notificacionesFrom.controls['Estado'].touched) || notificacionesFrom.controls['Estado'].value === '0'">
+                                El estado es obligatorio. </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label>Actualiza saldo:</label><span class="text-danger ObligatorioGrande"> *</span>
+                            <select name="select" class="form-control" formControlName="ActualizaSaldo" [attr.disabled]="bActualizaSaldo" id="slActualizaSaldo">                            
+                            <option [selected]="true" value="-">-- Seleccione --</option>
+                                <option value="Si">Si</option>
+                                <option value="No">No</option>
+                            </select>
+                            <span class="help-block validationSpan" *ngIf="notificacionesFrom.controls['ActualizaSaldo'].errors?.['required'] && (notificacionesFrom.controls['ActualizaSaldo'].dirty || notificacionesFrom.controls['ActualizaSaldo'].touched) || notificacionesFrom.controls['ActualizaSaldo'].value === '0'">
+                                Actualiza saldo es obligatorio. </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                    <input type="submit" id="btnCrearNotificacion" class="btn Gt-btn-verde" value="Crear" (click)=CrearNotificacion() [disabled]="!notificacionesFrom.valid" />&nbsp; &nbsp;
+                    <input type="submit" id="btnLimpiar" class=" btn Gt-btn-morado" value="Limpiar" (click)="Limpiar()">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="DatosActivacion" *ngIf="bPanelDatosActivacion">
+        <div class="panel-body">
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <div class="row">
+
+                    <div class="col-xs-12 col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label>Cuenta:</label><span class="text-danger ObligatorioGrande"> *</span>
+                            <select formControlName="NumeroCuenta" name="select" class="form-control" (change)=ObtenerTarjeta()>
+                                <option [selected]="true" value='-'>-- Seleccione --</option>
+                                <option *ngFor="let cuenta of ListadoCuentas" [value]="cuenta.NumeroCuenta">{{cuenta.NumeroCuenta}}</option>
+                            </select>
+                            <span class="help-block validationSpan" *ngIf="notificacionesFrom.controls['NumeroCuenta'].errors?.['required'] && (notificacionesFrom.controls['NumeroCuenta'].dirty || notificacionesFrom.controls['NumeroCuenta'].touched)|| (notificacionesFrom.controls['NumeroCuenta'].value === '0')">
+                                El número de cuenta es obligatorio. </span>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label>Tarjeta:</label>
+                            <input type="text" class="form-control" formControlName="NumeroTarjeta" id="txtTarjeta" [attr.disabled]="bNumeroTarjeta" />
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label>Tipo de notificación:</label><span class="text-danger ObligatorioGrande"> *</span>
+                            <select formControlName="TipoNotificacion" name="select" class="form-control" (change)=ObtenerEstados() [attr.disabled]="bActivacion">
+                            <option [selected]="true" value="-">-- Seleccione --</option> 
+                            <option *ngFor="let tipoNotificacion of ListadoTipoNotificaciones" [value]="tipoNotificacion.Valor">{{tipoNotificacion.Valor}} - {{tipoNotificacion.Descripcion}}</option>
+                            </select>
+                            <span class="help-block validationSpan" *ngIf="notificacionesFrom.controls['TipoNotificacion'].errors?.['required'] && (notificacionesFrom.controls['TipoNotificacion'].dirty || notificacionesFrom.controls['TipoNotificacion'].touched)|| notificacionesFrom.controls['TipoNotificacion'].value === '0'">
+                                El tipo de notificación es obligatorio.</span>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label>Estado:</label><span class="text-danger ObligatorioGrande"> *</span>
+                            <select formControlName="Estado" (change)=ActualizarSaldo() name="select" class="form-control" [attr.disabled]="bActivacion">
+                            <option [selected]="true"  value="-">-- Seleccione --</option>
+                                <option *ngFor="let estado of ListadoEstado" [value]="estado.Valor">{{estado.Valor}} - {{estado.Descripcion}}</option>
+                            </select>
+                            <span class="help-block validationSpan" *ngIf="notificacionesFrom.controls['Estado'].errors?.['required'] && (notificacionesFrom.controls['Estado'].dirty || notificacionesFrom.controls['Estado'].touched) || notificacionesFrom.controls['Estado'].value === '0'">
+                                El estado es obligatorio. </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label>Actualiza saldo:</label><span class="text-danger ObligatorioGrande"> *</span>
+                            <select name="select" class="form-control" formControlName="ActualizaSaldo" [attr.disabled]="bActivacion" id="slActualizaSaldo">                            
+                            <option [selected]="true" value="-">-- Seleccione --</option>
+                                <option value="Si">Si</option>
+                                <option value="No">No</option>
+                            </select>
+                            <span class="help-block validationSpan" *ngIf="notificacionesFrom.controls['ActualizaSaldo'].errors?.['required'] && (notificacionesFrom.controls['ActualizaSaldo'].dirty || notificacionesFrom.controls['ActualizaSaldo'].touched) || notificacionesFrom.controls['ActualizaSaldo'].value === '0'">
+                                Actualiza saldo es obligatorio. </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                    <input type="submit" id="btnCrearNotificacion" class="btn Gt-btn-verde" value="Activar " (click)=CrearNotificacion() [disabled]="!notificacionesFrom.valid" /> &nbsp; &nbsp;
+                    <input type="submit" id="btnLimpiar" class=" btn Gt-btn-morado" value="Limpiar" (click)="Limpiar()">
+                </div>
+            </div>
+        </div>
+    </div>
+    <ngx-loading [show]="loading" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+    </ngx-loading>
+</form>
+<!-- <app-root (permisosEmit)="getPermisos($event)">
+</app-root> -->
+<!-- Modal Ayuda -->
+<div id="ModalAyuda" class="modal fade">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title"><i class="icon-question6"></i> Ayuda</h6>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li>Todos los campos marcados con <span class="text-danger ObligatorioGrande">*</span> son obligatorios.</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ Fin Modal Ayuda -->

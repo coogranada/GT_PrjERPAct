@@ -8,7 +8,7 @@ import { fromEvent } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LoginService } from '../../../../Services/Login/login.service';
 import { Router } from '@angular/router';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../../Services/Alert/alert.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -45,7 +45,7 @@ export class PermisosEspecialesComponent implements OnInit {
   public secondaryColour = ColorSecundario;
   private CodModulo = 48;
   public DatosUsuario : any = {};
-  constructor(private permisosEspecialesService: PermisosEspecialesService, private notificacion: NgxToastService,
+  constructor(private permisosEspecialesService: PermisosEspecialesService, private notificacion: AlertService,
     private moduleValidationService: ModuleValidationService, private el: ElementRef, private loginService: LoginService,
     private router: Router) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(

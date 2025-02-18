@@ -15,4 +15,6 @@ registerLocaleData(localeEsCo);
 // }
 platformBrowserDynamic().bootstrapModule(AppModule, {
    ngZoneEventCoalescing : false
-  }).catch(err => console.log(err));;
+  }).catch(err => console.log(err));
+
+  

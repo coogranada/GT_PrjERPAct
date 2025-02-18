@@ -9,7 +9,7 @@ import { fromEvent } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LoginService } from '../../../../../app/Services/Login/login.service';
 import { Router } from '@angular/router';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../../Services/Alert/alert.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -42,7 +42,7 @@ export class PerfilesComponent implements OnInit {
   btnGuardar = false;
   btnActualizar = true;
 
-  constructor(private prfilesService: PerfilesService, private notif: NgxToastService, private generalesService: GeneralesService,
+  constructor(private prfilesService: PerfilesService, private notif: AlertService, private generalesService: GeneralesService,
     private moduleValidationService: ModuleValidationService, private el: ElementRef, private loginService: LoginService,
     private router: Router) {
     this.perfilesModel = new PerfilesModel();

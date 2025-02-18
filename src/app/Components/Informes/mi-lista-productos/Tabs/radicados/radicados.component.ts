@@ -9,7 +9,7 @@ import {
   LogMisProductos,
   DatosProductos
 } from "../../../../../Models/Informes/MisProductos/mis-producto.model";
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../../../Services/Alert/alert.service';
 
 @Component({
   selector: "app-radicados",
@@ -66,7 +66,7 @@ export class RadicadosComponent implements OnInit {
 
   constructor(
     private MiListaProductosService: MiListaProductosService,
-    private notif: NgxToastService,
+    private notif: AlertService,
   ) {}
   ngOnInit() {
     this.LstResumenCalificaciones.length = 0;

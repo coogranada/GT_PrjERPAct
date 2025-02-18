@@ -26,7 +26,23 @@ import { AplicacionesColaborativasComponent } from './Components/Aplicaciones-co
 import { LibretaDireccionesComponent } from './Components/libreta-direcciones/libreta-direcciones.component';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
-import { NgxToastNotifierModule } from 'ngx-toast-notifier';
+
+import { NgxCurrencyDirective , NgxCurrencyInputMode , provideEnvironmentNgxCurrency } from 'ngx-currency';
+
+const customCurrencyMaskConfig = { 
+  align : "right" , 
+  allowNegative : false , 
+  allowZero : false , 
+  decimal : "." , 
+  precision : 2 , 
+  prefix : "$" , 
+  suffix : "" , 
+  miles : "," , 
+  nullable : false , 
+  min : null , 
+  max : null , 
+  inputMode : NgxCurrencyInputMode.Natural
+ }; 
 @NgModule({
   declarations: [
     LoginComponent,AppComponent,LayoutComponent,BannerImagenModalComponent,BannerImagenesComponent,
@@ -42,15 +58,7 @@ import { NgxToastNotifierModule } from 'ngx-toast-notifier';
     NguiAutoCompleteModule,
     BrowserAnimationsModule,
     NoopAnimationsModule ,
-    NgxToastNotifierModule.forRoot({
-        timeOut: 5000,
-        bgColors: {
-         success: '#54a254',
-         info: '#1976d2',
-         warning: '#e09f26',
-         danger: '#da2d2d',
-        }
-      }),
+    NgxCurrencyDirective,
     NgxLoadingModule.forRoot({
       backdropBackgroundColour: 'rgba(255,255,255,0.8)'
     }),
@@ -63,6 +71,7 @@ import { NgxToastNotifierModule } from 'ngx-toast-notifier';
     EnvironmentService,
     AuthService,
     WindowRef,
+    provideEnvironmentNgxCurrency (customCurrencyMaskConfig) ,
     //NotificationsService,
     // { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig },
     // { provide: LOCALE_ID, useValue: 'es-CO' },

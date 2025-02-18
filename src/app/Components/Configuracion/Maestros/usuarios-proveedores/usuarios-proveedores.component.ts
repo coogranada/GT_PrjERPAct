@@ -1,12 +1,8 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, SimpleChange } from '@angular/core';
-import { FormGroup, FormControl, Validators, ValidatorFn, AbstractControl, AbstractControlDirective } from '@angular/forms';
-import { ModuleValidationService } from '../../../../Services/Enviroment/moduleValidation.service';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 import { UsuariosProveedoresService } from '../../../../Services/Maestros/usuarios-proveedores';
 import { GeneralesService } from '../../../../Services/Productos/generales.service';
-import { fromEvent } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../../Services/Alert/alert.service';
 declare var $: any;
 
 @Component({
@@ -36,7 +32,7 @@ export class UsuariosProveedoresComponent implements OnInit {
   ];
 
   constructor(private UsuariosProveedoresServices: UsuariosProveedoresService,
-    private notificacion: NgxToastService,
+    private notificacion: AlertService,
     private generalesService: GeneralesService) { }
 
   ngOnInit() {

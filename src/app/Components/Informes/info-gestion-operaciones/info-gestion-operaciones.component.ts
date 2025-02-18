@@ -8,7 +8,7 @@ import moment from 'moment';
 import { Router } from '@angular/router';
 import { LoginService } from '../../../Services/Login/login.service';
 import { ModulosService } from '../../../Services/Maestros/modulos.service';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../Services/Alert/alert.service';
 // import moment = require('moment');
 
 @Component({
@@ -44,7 +44,7 @@ export class InfoGestionOperacionesComponent implements OnInit {
   public DatosUsuario : any;
   public dataTrasabilidad : any[] = [];
   //#endregion fin
-  constructor(private gestionesService: GestionesService, private notificacion: NgxToastService,
+  constructor(private gestionesService: GestionesService, private notificacion: AlertService,
     private excelService: ExcelService, private loginService: LoginService, private router: Router, private modulosService: ModulosService) {
       let data = localStorage.getItem('Data');
       this.DatosUsuario = JSON.parse(window.atob(data == null ? "" : data));

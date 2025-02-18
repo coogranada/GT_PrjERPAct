@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { ImagenesBannerServices } from '../../../../Services/Maestros/imagenes-banner.service';
 import { BannerArrayModel, BannerModel, LogBannerModel } from '../../../../Models/Maestros/banner.model';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../../Services/Alert/alert.service';
 declare var $: any;
 
 @Component({
@@ -24,7 +24,7 @@ export class GestionBannerComponent implements OnInit {
   public habilitarBtn : boolean | null = true;
   public bloqueoBtnAgregar :boolean | null = true;
   public base64textString: String = "";
-  constructor(private ImagenesBannerServices: ImagenesBannerServices, private notif: NgxToastService) { }
+  constructor(private ImagenesBannerServices: ImagenesBannerServices, private notif: AlertService) { }
 
   ngOnInit() {
     this.ValidateForm();

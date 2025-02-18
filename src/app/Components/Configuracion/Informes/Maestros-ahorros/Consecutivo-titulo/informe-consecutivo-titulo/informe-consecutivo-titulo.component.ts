@@ -5,7 +5,7 @@ import { InformeConsecutivoTituloService } from '../../../../../../Services/Conf
 import { GeneralesService } from '../../../../../../Services/Productos/generales.service';
 import { DatePipe } from '@angular/common';
 import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../../../../Services/Alert/alert.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -58,7 +58,7 @@ export class InformeConsecutivoTituloComponent implements OnInit {
 
   private emitEventTitulo: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  constructor(private operacionesService: OperacionesService, private ConsecutivotituloService: InformeConsecutivoTituloService,private generalesService: GeneralesService, private notif: NgxToastService) {
+  constructor(private operacionesService: OperacionesService, private ConsecutivotituloService: InformeConsecutivoTituloService,private generalesService: GeneralesService, private notif: AlertService) {
     // const obs = fromEvent(this.el.nativeElement, 'click').pipe(
     //   map((e: any) => {
     //     this.moduleValidationService.validarLocalPermisos(this.CodModulo);

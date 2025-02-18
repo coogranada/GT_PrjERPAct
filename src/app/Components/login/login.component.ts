@@ -11,7 +11,7 @@ import { ClientesGetListService } from '../..//Services/Clientes/clientesGetList
 import { OficinasService } from '../../Services/Maestros/oficinas.service';
 import { UsuariosService } from '../../Services/Maestros/usuarios.service';
 import { WebSocketService } from '../../Services/WebSocket/web-socket.service';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../Services/Alert/alert.service';
 const PrimaryWhite = 'rgb(13,165,80)';
 const SecondaryGrey = 'rgb(13,165,80,0.7)';
 //import { detectIncognito } from "src/assets/js/detectionIncognito/detectIncognito";
@@ -20,7 +20,7 @@ const SecondaryGrey = 'rgb(13,165,80,0.7)';
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  providers: [OficinasService, ClientesGetListService,UsuariosService,WebSocketService,NgxToastService],
+  providers: [OficinasService, ClientesGetListService,UsuariosService,WebSocketService,AlertService],
   standalone : false
 })
   
@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
   public primaryColour = PrimaryWhite;
   public secondaryColour = SecondaryGrey;
   public  SessionUser = new SessionUser();
-  constructor(private loginService: LoginService, private notif: NgxToastService,
+  constructor(private loginService: LoginService, private notif: AlertService,
     private environment: EnvironmentService,private usuariosServices: UsuariosService,
     private clientesGetListService: ClientesGetListService,
     private oficinasService: OficinasService, private webSocket : WebSocketService) {}

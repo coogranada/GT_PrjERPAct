@@ -7,7 +7,8 @@ import { formatDate } from '@angular/common';
 import { GeneralesService } from '../../../../../Services/Productos/generales.service';
 import moment from 'moment';
 import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../../../Services/Alert/alert.service';
+
 declare var $: any;
 const PrimaryWhite = 'rgb(13,165,80)';
 const SecondaryGrey = 'rgb(13,165,80,0.7)';
@@ -80,7 +81,7 @@ export class EntrevistaComponent implements OnInit {
   public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = PrimaryWhite;
   public secondaryColour = SecondaryGrey;
-  constructor(private notif: NgxToastService, private juridicoService: JuridicosService,
+  constructor(private notif: AlertService, private juridicoService: JuridicosService,
     private generalesService: GeneralesService) { }
 
   ngOnInit() {

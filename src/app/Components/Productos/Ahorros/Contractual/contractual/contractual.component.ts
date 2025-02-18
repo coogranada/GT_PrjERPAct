@@ -11,7 +11,7 @@ import { map } from 'rxjs/operators';
 import { fromEvent } from 'rxjs';
 import { CuentaModel } from '../../../../../Models/Productos/cuenta.model';
 import { Replace } from '../../../../../Pipes/utilidades/replace.pipe';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../../../Services/Alert/alert.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -216,7 +216,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
   private CodModulo = 20;
   public Modulo = this.CodModulo;
   constructor(private ContractualServices: ContractualService,
-    private notif: NgxToastService,
+    private notif: AlertService,
     private operacionesService: OperacionesService,
     private generalesService: GeneralesService,
     private moduleValidationService: ModuleValidationService, private el: ElementRef) {

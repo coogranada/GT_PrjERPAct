@@ -24,7 +24,7 @@ export class ClientesService {
         return this._http.post<any>(this.url, Datos);
     }     
     GuardarPasivo(tercero: string, pasivo: string): Observable<any> {
-        this.url = `${this.environment.Url}/BuscarNaturalesALL`;
+        this.url = `${this.environment.Url}/GuardarPasivo`;
         const params = new HttpParams()
         .set('tercero', tercero)
         .set('pasivo', pasivo);
@@ -116,11 +116,11 @@ export class ClientesService {
         return this._http.post<any>(this.url, Datos);
     }
     EditarActivos(data: string, tercero: string): Observable<any> { //DUDA
-        this.url = `${this.environment.Url}/EditarActivos`;
+        this.url = `${this.environment.Url}/EditarActivos?tercero=` + tercero;
         const params = new HttpParams()
-        .set('tercero', tercero)
-        .set('data', data);
-        return this._http.get<any>(this.url,{params: params });
+        //.set('tercero', tercero)
+        .set('activoDtos', data);
+        return this._http.post<any>(this.url,data)//{params: params });
     }  
     EditarPasivos(data: string, tercero: string): Observable<any> { //DUDA
         this.url = `${this.environment.Url}/EditarPasivos`;

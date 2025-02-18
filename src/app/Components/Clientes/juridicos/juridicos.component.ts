@@ -36,8 +36,8 @@ import { SolicitudServiciosJuridicosComponent } from '../../Formatos-impresion/s
 import { ClientesService } from '../../../Services/Clientes/clientes.service';
 import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { Cardinales, Divisas, Inmueble, Vias }  from '../../../../environments/Maestros.Naturales';
-import { NgxToastService } from 'ngx-toast-notifier';
-//import { ProviderAst } from '@angular/compiler';
+import { AlertService } from '../../../Services/Alert/alert.service';
+
 declare var $: any;
 const PrimaryWhite = 'rgb(13,165,80)';
 const SecondaryGrey = 'rgb(13,165,80,0.7)';
@@ -244,7 +244,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
 
   esReimpresion = false;
   constructor(private moduleValidationService: ModuleValidationService, private el: ElementRef,
-    private operacionesService: OperacionesService, private notif: NgxToastService, private oficinasService: OficinasService,
+    private operacionesService: OperacionesService, private notif: AlertService, private oficinasService: OficinasService,
     private clientesGetListService: ClientesGetListService, private recursosGeneralesService: RecursosGeneralesService,
     private juridicosService: JuridicosService, private generalesService: GeneralesService,
     private gestionServiceOperacion: GestioOperacionesService, private loginService: LoginService, private router: Router,
