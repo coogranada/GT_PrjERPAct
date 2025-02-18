@@ -229,15 +229,16 @@ export class TransmisionArchivosComponent implements OnInit {
       } else {
         this.parametrosTransmisionForm.get('estado')?.patchValue(20);
       }
-
+      this.loading = true;
       this.TransmisionArchivosServices.GuardarParametrosTransmision(this.parametrosTransmisionForm.value).subscribe(
         (response) => {
           this.toastr.success('Exitoso', 'Configuración guardada correctamente.', ConfiguracionNotificacion.configRightTop);
           this.obtenerConfiguracion();
           this.limpiarFormulario();
           this.IrAbajo();
-                  //Actualizar hora ejecución
-        swal.fire({
+          this.loading = false;
+          //Actualizar hora ejecución
+          swal.fire({
           title: '<strong> ¿Desea que se programen nuevamente las tareas? </strong>',
           text: '',
           icon: 'question',
@@ -256,6 +257,7 @@ export class TransmisionArchivosComponent implements OnInit {
         },        
         (error) => {
           this.toastr.warning('Advertencia', error.message, ConfiguracionNotificacion.configRightTop);
+          this.loading = false;
         }
       );
     }
@@ -283,7 +285,7 @@ export class TransmisionArchivosComponent implements OnInit {
       } else {
         this.parametrosTransmisionForm.get('estado')?.patchValue(20);
       }
-
+      this.loading = true;
       if (result) {
         this.TransmisionArchivosServices.ActualizarParametrosTransmision(this.parametrosTransmisionForm.value).subscribe(
           (response) => {
@@ -291,9 +293,11 @@ export class TransmisionArchivosComponent implements OnInit {
             this.obtenerConfiguracion();
             this.limpiarFormulario();
             this.IrAbajo();
+            this.loading = false;
           },
           (error) => {
             this.toastr.error('Error', 'Error al actualizar los datos ' + error, ConfiguracionNotificacion.configRightTop);
+            this.loading = false;
           }
         );
         //Actualizar hora ejecución
@@ -311,12 +315,14 @@ export class TransmisionArchivosComponent implements OnInit {
         }).then((results) => {
           if (results.value) {
             this.actualizarHoraEjecucion();
+            this.loading = false;
           }
         });
       } else {
         this.limpiarFormulario();
         this.IrAbajo();
         this.toastr.warning('Advertencia', 'No se han detectado cambios para actualizar.', ConfiguracionNotificacion.configRightTop);
+        this.loading = false;
       }
     }
   }
