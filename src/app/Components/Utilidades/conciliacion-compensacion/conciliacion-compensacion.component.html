@@ -1,0 +1,972 @@
+<div class="panel panel-white">
+    <div class="panel-heading doNotPrint">
+        <h6 class="panel-title">Compensación</h6>
+        <div class="heading-elements">
+            <ul class="icons-list">
+                <li>
+                    <a data-toggle="modal" data-target="#ModalAyuda">
+                        <i class="icon-question6 " title="Ayuda" data-popup="tooltip" data-trigger="hover"
+                            data-placement="top"></i>
+                    </a>
+                </li>
+                <li>
+                    <a data-action="collapse"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="panel-body doNotPrint">
+
+        <div class="col-xs-12 col-md-6 col-lg-6" id="Operacion">
+            <div class="row">
+                <div class="col-xs-12 col-md-3 col-lg-3 align-items-center">
+                    <br>
+                    <label class="textNegrilla mb-0">Operación:</label>
+                    <span class="grande"> *</span>
+                </div>
+                <div class="col-xs-12 col-md-6 col-lg-6">
+                    <div class="form-group d-flex align-items-center">
+                        <select class="form-control ml-2" id="select" (change)="opcionSelected($event)">
+                            <!-- Opciones aquí -->
+                            <option value="">--Seleccione--</option>
+                            <option *ngFor="let operacionCompensacion of resultOperaciones"
+                                [value]="operacionCompensacion.ERP_tblOperacion.IdOperacion">
+                                {{operacionCompensacion.ERP_tblOperacion.Descripcion}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div *ngIf="valueSelected == '90'" [ngClass]="{'disabled': isDisabled}">
+    <div class="panel panel-white">
+        <div class="panel-body">
+            <div class="row">
+                <form class="steps-starting-step wizard clearfix" role="application" id="steps-uid-3">
+                    <div class="steps clearfix">
+                        <ul role="tablist">
+                            <li role="tab" [ngClass]="{'done': step > 0, 'current': step === 0}"
+                                aria-selected="step === 0">
+                                <a style="color: #333;" (click)="goToStep(0)" href="javascript:void(0);"
+                                    aria-controls="steps-uid-3-p-0">
+                                    <span class="number">1</span> Cargue archivo COMCONT
+                                </a>
+                            </li>
+                            <li role="tab" [ngClass]="{'done': step > 1, 'current': step === 1}"
+                                aria-selected="step === 1">
+                                <a style="color: #333;" (click)="goToStep(1)" href="javascript:void(0);"
+                                    aria-controls="steps-uid-3-p-1">
+                                    <span class="number">2</span> Cargue archivo AUTCON
+                                </a>
+                            </li>
+                            <li role="tab" [ngClass]="{'current': step === 2}" aria-selected="step === 2">
+                                <a style="color: #333;" (click)="goToStep(2)" href="javascript:void(0);"
+                                    aria-controls="steps-uid-3-p-2">
+                                    <span class="current-info audible">current step: </span>
+                                    <span class="number">3</span> Información adicional
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="content clearfix">
+                        <h6 id="steps-uid-3-h-0" tabindex="-1" class="title">Cargue archivo COMCONT</h6>
+                        <fieldset id="steps-uid-3-p-0" role="tabpanel" aria-labelledby="steps-uid-3-h-0" class="body"
+                            [hidden]="step !== 0">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <form autocomplete="off" accept-charset="IS0-8859-1"
+                                            accept-charset="character_set">
+                                            <div class="col-xs-12 col-md-12 col-lg-12">
+                                                <label>Adjunte archivo:</label><span
+                                                    class="text-danger ObligatorioGrande"> *</span>
+                                            </div>
+                                            <div class="uploader"><input #InputComcont id="InputComcont" type="file"
+                                                    class="form-control" accept=".comcont"
+                                                    (change)="fileChanged($event)"><span class="filename"
+                                                    style="user-select: none;">{{ fileName }}</span><span
+                                                    class="action btn Gt-btn-verde legitRipple"
+                                                    style="user-select: none;">ELEGIR ARCHIVO</span></div>
+                                            <span class="help-block">Tamaño máximo 2Mb</span>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </fieldset>
+
+                        <h6 id="steps-uid-3-h-1" tabindex="-1" class="title">Cargue archivo AUTCON</h6>
+                        <fieldset id="steps-uid-3-p-1" role="tabpanel" aria-labelledby="steps-uid-3-h-1" class="body"
+                            [hidden]="step !== 1">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <form autocomplete="off" accept-charset="IS0-8859-1"
+                                            accept-charset="character_set">
+                                            <div class="col-xs-12 col-md-12 col-lg-12">
+                                                <label>Adjunte archivo:</label><span
+                                                    class="text-danger ObligatorioGrande"> *</span>
+                                            </div>
+                                            <div class="uploader"><input #InputAutcon id="InputAutcon" type="file"
+                                                    class="form-control" accept=".autconv2"
+                                                    (change)="fileChanged1($event)"><span class="filename"
+                                                    style="user-select: none;">{{ fileName1 }}</span><span
+                                                    class="action btn Gt-btn-verde legitRipple"
+                                                    style="user-select: none;">ELEGIR ARCHIVO</span></div>
+                                            <span class="help-block">Tamaño máximo 2Mb</span>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </fieldset>
+
+                        <h6 id="steps-uid-3-h-2" tabindex="-1" class="title">Información adicional</h6>
+                        <fieldset id="steps-uid-3-p-2" role="tabpanel" aria-labelledby="steps-uid-3-h-2" class="body"
+                            [hidden]="step !== 2">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div _ngcontent-oxu-c10="" class="col-xs-12 col-md-12 col-lg-12"><label
+                                            _ngcontent-oxu-c10="">Confirme fecha:</label><span _ngcontent-oxu-c10=""
+                                            class="text-danger ObligatorioGrande"> *</span>
+                                        <div _ngcontent-oxu-c10="" class="input-group"><span _ngcontent-oxu-c10=""
+                                                class="input-group-addon"><i _ngcontent-oxu-c10=""
+                                                    class="icon-calendar22"></i></span><input _ngcontent-oxu-c10=""
+                                                class="form-control ng-pristine ng-valid ng-touched" type="date"
+                                                name="FechaInicial" [(ngModel)]="fechaIdentificadaComCont" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div _ngcontent-oxu-c10="" class="col-xs-12 col-md-12 col-lg-12"><label
+                                            _ngcontent-oxu-c10="">Cuenta:</label><span _ngcontent-oxu-c10=""
+                                            class="text-danger ObligatorioGrande"> *</span>
+                                        <div class="form-group d-flex align-items-center">
+                                            <select class="form-control ml-2" id="select2"
+                                                (change)="cuentaSelect($event)">
+                                                <!-- Opciones aquí -->
+                                                <option value="11100548">11100548</option>
+                                                <option value="24603040">24603040</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <br /><br />
+                        </fieldset>
+
+                    </div>
+                    <div class="actions clearfix">
+                        <ul role="menu" aria-label="Pagination">
+
+                            <li aria-disabled="step === 0">
+                                <a (click)="goToStep(step - 1)" role="menuitem"
+                                    class="action btn Gt-btn-verde carousel-control-prev-icon" *ngIf="step > 0"></a>
+                            </li>
+                            <li aria-disabled="step === 2">
+                                <a (click)="goToStep(step + 1)" role="menuitem"
+                                    class="action btn Gt-btn-verde carousel-control-next-icon" *ngIf="step < 2"></a>
+                            </li>
+                            <li aria-disabled="step === 2">
+                                <a (click)="limpiarForm(1)" role="menuitem" class="btn boton-morado"
+                                    *ngIf="step === 2">LIMPIAR</a>
+                            </li>
+                            <li aria-disabled="step === 2">
+                                <a (click)="obtenerDatosIni(1)" role="menuitem" class="action btn Gt-btn-morado"
+                                    *ngIf="step === 2">FINALIZAR</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+
+
+
+            </div>
+
+        </div>
+
+        <ngx-loading [show]="loadingCons"
+            [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+        </ngx-loading>
+
+    </div>
+</div>
+
+<div *ngIf="valueSelected == '81'">
+    <div class="panel panel-white">
+        <div class="panel-body">
+            <div class="row">
+
+                <div class="col-md-3 col-xs-3 col-lg-3">
+                    <div _ngcontent-oxu-c10="" class="col-xs-12 col-md-12 col-lg-12"><label _ngcontent-oxu-c10="">Buscar
+                            por fecha:</label><span _ngcontent-oxu-c10="" class="text-danger ObligatorioGrande">
+                            *</span>
+                        <div _ngcontent-oxu-c10="" class="input-group"><span _ngcontent-oxu-c10=""
+                                class="input-group-addon"><i _ngcontent-oxu-c10=""
+                                    class="icon-calendar22"></i></span><input _ngcontent-oxu-c10=""
+                                class="form-control ng-pristine ng-valid ng-touched" type="date" name="FechaBusqueda"
+                                (change)="onFechaChange($event)">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-1 col-xs-1 col-lg-1">
+                    <br>
+                    <button type="button" class="btn Gt-btn-verde btn-icon" (click)="BuscarCompensacion()">
+                        <i class="icon-search4"></i>
+                    </button>
+                </div>
+
+                <div class="col-xs-8 col-md-8 col-lg-8" style="justify-items: end; padding: 1em;">
+                    <div class="actions clearfix">
+                        <button class="btn Gt-btn-verde" (click)="exportarExcel2(5)" id="xlsx">
+                            <i class="icon-download4"></i>&nbsp; EXCEL
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div *ngIf="vblePanelDatos">
+    <div class="panel panel-white">
+        <div class="panel-body">
+
+
+
+            <div class="panel-body">
+
+                <div class="tabbable">
+                    <ul class="nav nav-tabs nav-tabs-solid nav-tabs-component">
+                        <li [ngClass]="{'active': selectedTab === 'tab1'}" (click)="selectTab('tab1')">
+                            <a>Cuadre</a>
+                        </li>
+                        <li [ngClass]="{'active': selectedTab === 'tab2'}" (click)="selectTab('tab2')"
+                            *ngIf="valueSelected == '90'">
+                            <a>Resumen</a>
+                        </li>
+                        <li [ngClass]="{'active': selectedTab === 'tab3'}" (click)="selectTab('tab3')"
+                            *ngIf="valueSelected == '90'">
+                            <a>Detallado</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane" [ngClass]="{'active': selectedTab === 'tab1'}" id="tab1">
+                            <form [formGroup]="compensacionForm" (ngSubmit)="GuardarCompensacion()">
+
+                                <div class="row text-center">
+                                    <h5><strong>Cuadre del día {{fechaIdentificadaComCont | date:'yyyy/MM/dd'}}</strong>
+                                    </h5>
+                                </div>
+
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+
+                                    <div class="col-xs-12 col-md-6 col-lg-6">
+
+                                        <div class="row">
+                                            <div class="col-xs-12 col-md-5 col-lg-5 align-items-center">
+                                                <br>
+                                                <label>Capitales Coogranada:</label>
+                                            </div>
+                                            <div class="col-xs-12 col-md-6 col-lg-6">
+                                                <div class="form-group d-flex align-items-center">
+                                                    <input style="text-align:right" class="form-control" currencyMask
+                                                        [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"
+                                                        [(ngModel)]="CapitalCoogranada" name="CapitalCoogranada"
+                                                        formControlName="CapitalCoogranada" [disabled]="true" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-xs-12 col-md-5 col-lg-5 align-items-center">
+                                                <br>
+                                                <label>Capitales Visionamos:</label>
+                                            </div>
+                                            <div class="col-xs-12 col-md-6 col-lg-6">
+                                                <div class="form-group d-flex align-items-center">
+                                                    <input style="text-align:right" class="form-control" currencyMask
+                                                        [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"
+                                                        [(ngModel)]="CapitalVisionamos" name="CapitalVisionamos"
+                                                        formControlName="CapitalVisionamos" [disabled]="true" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-xs-12 col-md-5 col-lg-5 align-items-center">
+                                                <br>
+                                                <label>Dispensado:</label>
+                                            </div>
+                                            <div class="col-xs-12 col-md-6 col-lg-6">
+                                                <div class="form-group d-flex align-items-center">
+                                                    <input style="text-align:right" class="form-control" currencyMask
+                                                        [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"
+                                                        [(ngModel)]="Dispensado" name="Dispensado"
+                                                        formControlName="Dispensado" [disabled]="true" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-xs-12 col-md-5 col-lg-5 align-items-center">
+                                                <br>
+                                                <label>N. Credibanco:</label>
+                                            </div>
+                                            <div class="col-xs-12 col-md-6 col-lg-6">
+                                                <div class="form-group d-flex align-items-center">
+                                                    <input style="text-align:right" class="form-control" currencyMask
+                                                        [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"
+                                                        [(ngModel)]="NovedadCredibanco" name="NovedadCredibanco"
+                                                        formControlName="NovedadCredibanco" [disabled]="true" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-xs-12 col-md-5 col-lg-5 align-items-center">
+                                                <br>
+                                                <label>M. Internacional:</label>
+                                            </div>
+                                            <div class="col-xs-12 col-md-6 col-lg-6">
+                                                <div class="form-group d-flex align-items-center">
+                                                    <input style="text-align:right" class="form-control" currencyMask
+                                                        [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"
+                                                        [(ngModel)]="MovimientoInternacional"
+                                                        name="MovimientoInternacional"
+                                                        formControlName="MovimientoInternacional" [disabled]="true" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row">
+                                            <div class="col-xs-12 col-md-5 col-lg-5 align-items-center">
+                                                <br>
+                                                <label class="textNegrilla mb-0">Diferencia:</label>
+                                            </div>
+                                            <div class="col-xs-12 col-md-6 col-lg-6">
+                                                <div class="form-group d-flex align-items-center">
+                                                    <input style="text-align:right" class="form-control textNegrilla"
+                                                        currencyMask
+                                                        [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"
+                                                        [(ngModel)]="Diferencia" name="Diferencia"
+                                                        formControlName="Diferencia" [disabled]="true" readonly>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-md-6 col-lg-6">
+
+                                        <div class="row">
+                                            <div class="col-xs-12 col-md-6 col-lg-6 align-items-center">
+                                                <br>
+                                                <label>Comisiones Coogranada:</label>
+                                            </div>
+                                            <div class="col-xs-12 col-md-6 col-lg-6">
+                                                <div class="form-group d-flex align-items-center">
+                                                    <input style="text-align:right" class="form-control" currencyMask
+                                                        [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"
+                                                        [(ngModel)]="ComisionCoogranada" name="ComisionCoogranada"
+                                                        formControlName="ComisionCoogranada" [disabled]="true" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-xs-12 col-md-6 col-lg-6 align-items-center">
+                                                <br>
+                                                <label>Comisiones Visionamos:</label>
+                                            </div>
+                                            <div class="col-xs-12 col-md-6 col-lg-6">
+                                                <div class="form-group d-flex align-items-center">
+                                                    <input style="text-align:right" class="form-control" currencyMask
+                                                        [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"
+                                                        [(ngModel)]="ComisionVisionamos" name="ComisionVisionamos"
+                                                        formControlName="ComisionVisionamos" [disabled]="true" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-xs-12 col-md-6 col-lg-6 align-items-center">
+                                                <br>
+                                                <label class="textNegrilla mb-0">Gasto comisiones:</label>
+                                            </div>
+                                            <div class="col-xs-12 col-md-6 col-lg-6">
+                                                <div class="form-group d-flex align-items-center">
+                                                    <input style="text-align:right" class="form-control textNegrilla"
+                                                        currencyMask
+                                                        [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"
+                                                        [(ngModel)]="GastoComision" name="GastoComision"
+                                                        formControlName="GastoComision" [disabled]="true" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="alert alert-success d-flex align-items-center" role="alert"
+                                            style="text-align: justify;">
+                                            <div>
+                                                <p>
+                                                    <strong>¡Importante!</strong>&nbsp;Recuerde revisar el valor de la
+                                                    orden
+                                                    de transferencia o recaudo, el valor calculado es
+                                                    de&nbsp;<strong>{{sdoOrdenTransferencia|
+                                                        currency:'':'symbol':'1.2-2'}}</strong>, si este no coincide,
+                                                    valide si Visionamos ha creado nuevos conceptos, estos se deben
+                                                    matricular para que esta cifra sea correcta.
+                                                </p>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <div class="col-xs-12 col-md-4 col-lg-4 align-items-center">
+                                        <br>
+                                        <label>Explicación diferencia:</label>
+                                    </div>
+                                    <div class="col-xs-12 col-md-12 col-lg-12">
+                                        <div class="form-group d-flex align-items-center">
+                                            <textarea class="form-control" [(ngModel)]="ExplicacionDiferencia"
+                                                name="ExplicacionDiferencia" id="ExplicacionDiferencia"
+                                                formControlName="ExplicacionDiferencia" (blur)="borrarSiEspacios('ExplicacionDiferencia')"></textarea>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="col-xs-12 col-md-12 col-lg-12" style="justify-items: end; padding: 1em;">
+                                        <div class="actions clearfix">
+                                            <button (click)="limpiarForm(2)" class="btn boton-morado" type="button">
+                                                LIMPIAR
+                                            </button>&nbsp;
+                                    
+                                            <button class="btn Gt-btn-verde" type="submit">
+                                                <i class=""></i>&nbsp; GUARDAR
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="tab-pane" [ngClass]="{'active': selectedTab === 'tab2'}" id="tab2">
+
+
+                            <div class="row text-center">
+                                <h5><strong>Resumen por conceptos {{fechaIdentificadaComCont |
+                                        date:'yyyy/MM/dd'}}</strong></h5>
+                            </div>
+                            <p><strong>Capital:</strong></p>
+                            <div class="table-responsive scrollTabla">
+                                <table class="table table-sm">
+                                    <thead class="text-center">
+                                        <tr>
+                                            <th style="width: 110%;">Concepto</th>
+                                            <th>Coogranada</th>
+                                            <th>Visionamos</th>
+                                            <th>Diferencia</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let dato of resCompCap"
+                                            [ngClass]="{'selected-row': selectedRow === dato}" class="table-row"
+                                            (click)="selectRow(dato)">
+                                            <td class="text-truncate">{{dato.CodigoConcepto}}-{{dato.Descripcion}}</td>
+                                            <td style="text-align: right;">{{dato.ValorCoogranada|
+                                                currency:'':'symbol':'1.2-2'}}
+                                            </td>
+                                            <td style="text-align: right;">{{dato.ValorVisionamos|
+                                                currency:'':'symbol':'1.2-2'}}
+                                            </td>
+                                            <td style="text-align: right;">{{dato.Diferencia|
+                                                currency:'':'symbol':'1.2-2'}}</td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <hr>
+
+
+                            <p><strong>Comisión:</strong></p>
+                            <div class="table-responsive scrollTabla">
+                                <table class="table table-sm">
+                                    <thead class="text-center">
+                                        <tr>
+                                            <th style="width: 110%;">Concepto</th>
+                                            <th>Coogranada</th>
+                                            <th>Visionamos</th>
+                                            <th>Diferencia</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let dato of resCompCom"
+                                            [ngClass]="{'selected-row': selectedRow === dato}" class="table-row"
+                                            (click)="selectRow(dato)">
+                                            <td class="text-truncate">{{dato.CodigoConcepto}}-{{dato.Descripcion}}</td>
+                                            <td style="text-align: right;">{{dato.ValorCoogranada|
+                                                currency:'':'symbol':'1.2-2'}}
+                                            </td>
+                                            <td style="text-align: right;">{{dato.ValorVisionamos|
+                                                currency:'':'symbol':'1.2-2'}}
+                                            </td>
+                                            <td style="text-align: right;">{{dato.Diferencia|
+                                                currency:'':'symbol':'1.2-2'}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total comisiones</td>
+                                            <td style="text-align: right;">{{ComisionCoogranada|
+                                                currency:'':'symbol':'1.2-2'}}</td>
+                                            <td style="text-align: right;">{{ComisionVisionamos|
+                                                currency:'':'symbol':'1.2-2'}}</td>
+                                            <td style="text-align: right;">{{GastoComision|
+                                                currency:'':'symbol':'1.2-2'}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="col-xs-12 col-md-12 col-lg-12" style="justify-items: end; padding: 1em;">
+                                <div class="actions clearfix">
+                                    <button class="btn Gt-btn-verde " (click)="exportarExcel2(3)" id="xlsx">
+                                        <i class="icon-download4"></i>&nbsp; EXCEL
+                                    </button>
+                                </div>
+                                <hr>
+                            </div>
+
+
+                        </div>
+
+                        <div class="tab-pane" [ngClass]="{'active': selectedTab === 'tab3'}" id="tab3">
+
+                            <div class="row text-center">
+                                <h5><strong>Detalle conciliación compensación {{fechaIdentificadaComCont |
+                                        date:'yyyy/MM/dd'}}</strong></h5>
+                            </div>
+
+
+
+                            <div class="col-xs-12 col-md-12 col-lg-12">
+                                <div class="accordion">
+                                    <div class="accordion-item">
+                                        <div class="accordion-header" (click)="toggleAccordion(1)"
+                                            [ngClass]="{'expanded': isOpen(1)}">
+                                            Movimiento día <span class="icon">{{ isOpen(1) ? '-' : '+' }}</span>
+                                        </div>
+                                        <div class="accordion-body" *ngIf="isOpen(1)">
+
+                                            <div class="col-xs-12 col-md-12 col-lg-12">
+                                                <div class="row">
+                                                    <div class="col-xs-6 col-md-3 col-lg-3">
+                                                        <input type="text" class="form-control" placeholder="Buscar..."
+                                                            [(ngModel)]="searchTerm">
+                                                    </div>
+                                                    <div class="col-1">
+                                                        <button type="button" class="btn Gt-btn-verde btn-icon"
+                                                            (click)="filtrarData(searchTerm)">
+                                                            <i class="icon-search4"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                                    <div class="table-responsive scrollTabla">
+                                                        <table class="table table-sm">
+                                                            <thead class="text-center">
+                                                                <tr>
+                                                                    <th>Cuenta</th>
+                                                                    <th>Documento</th>
+                                                                    <th>Tarjeta Débito</th>
+                                                                    <th>Nombre</th>
+                                                                    <th>Débito</th>
+                                                                    <th>Crédito</th>
+                                                                    <th>Transacción</th>
+                                                                    <th>Nombre Trans.</th>
+                                                                    <th>Usuario</th>
+                                                                    <th>Fecha</th>
+                                                                    <th>F.Contable</th>
+                                                                    <th>Secuencia</th>
+                                                                    <th>Trans.</th>
+                                                                    <th>CuentaC.</th>
+                                                                    <th>Tipo</th>
+                                                                    <th>Concepto Visionamos</th>
+                                                                    <th>Valor</th>
+                                                                    <th>OfOri</th>
+                                                                    <th>OfDes</th>
+                                                                    <th>S050</th>
+                                                                    <th>SA01</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr *ngFor="let dato of filtrarItems"
+                                                                    [ngClass]="{'selected-row': selectedRow === dato}"
+                                                                    class="table-row" (click)="selectRow(dato)">
+                                                                    <td>{{dato.Cuenta}}</td>
+                                                                    <td style="text-align: center;">{{dato.DocumentoA}}
+                                                                    </td>
+                                                                    <td>{{dato.TarjetaDebito}}</td>
+                                                                    <td>{{dato.Nombre}}</td>
+                                                                    <td style="text-align: right;">{{dato.ValorDebito|
+                                                                        currency:'':'symbol':'1.2-2'}}</td>
+                                                                    <td style="text-align: right;">{{dato.ValorCredito|
+                                                                        currency:'':'symbol':'1.2-2'}}</td>
+                                                                    <td style="text-align: center;">{{dato.Trans}}</td>
+                                                                    <td>{{dato.NombreTransaccion}}</td>
+                                                                    <td>{{dato.Usuario}}</td>
+                                                                    <td>{{dato.Fecha | date:'yyyy/MM/dd HH:mm' }}</td>
+                                                                    <td style="text-align: center;">{{dato.FContable}}
+                                                                    </td>
+                                                                    <td>{{dato.Secuencia}}</td>
+                                                                    <td style="text-align: center;">{{dato.Transa}}</td>
+                                                                    <td style="text-align: center;">{{dato.CuentaC}}
+                                                                    </td>
+                                                                    <td>{{dato.Tipo}}</td>
+                                                                    <td>{{dato.Concepto_Visionamos}}</td>
+                                                                    <td style="text-align: right;">{{dato.Valor|
+                                                                        currency:'':'symbol':'1.2-2'}}</td>
+                                                                    <td style="text-align: center;">{{dato.OfOri}}</td>
+                                                                    <td style="text-align: center;">{{dato.OfDes}}</td>
+                                                                    <td style="text-align: center;"
+                                                                        [ngClass]="{'red-text': dato?.S050 !== '0000'}">
+                                                                        {{dato.S050}}</td>
+                                                                    <td style="text-align: center;">{{dato.SA01}}</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-md-12 col-lg-12"
+                                                    style="justify-items: end; padding: 1em;">
+                                                    <div class="actions clearfix">
+                                                        <button class="btn Gt-btn-verde " (click)="exportarExcel2(4)"
+                                                            id="xlsx">
+                                                            <i class="icon-download4"></i>&nbsp; EXCEL
+                                                        </button>
+                                                    </div>
+                                                    <hr>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+
+                                    <div class="accordion-item">
+                                        <div class="accordion-header" (click)="toggleAccordion(2)"
+                                            [ngClass]="{'expanded': isOpen(2)}">
+                                            Novedades credibanco <span class="icon">{{ isOpen(2) ? '-' : '+' }}</span>
+                                        </div>
+                                        <div class="accordion-body" *ngIf="isOpen(2)">
+
+
+                                            <div class="col-xs-12 col-md-12 col-lg-12">
+                                                <div class="table-responsive scrollTabla">
+                                                    <table class="table table-sm">
+                                                        <thead class="text-center">
+                                                            <tr>
+                                                                <th>S001</th>
+                                                                <th>S002</th>
+                                                                <th>S003</th>
+                                                                <th>S007</th>
+                                                                <th>S008</th>
+                                                                <th>S009</th>
+                                                                <th>S010</th>
+                                                                <th>S032</th>
+                                                                <th>S01F</th>
+                                                                <th>S01S</th>
+                                                                <th>S01T</th>
+                                                                <th>S025</th>
+                                                                <th>S026</th>
+                                                                <th>S027</th>
+                                                                <th>S02G</th>
+                                                                <th>S030</th>
+                                                                <th>S031</th>
+                                                                <th>S050</th>
+                                                                <th>SW01</th>
+                                                                <th>SW02</th>
+                                                                <th>SA01</th>
+                                                                <th>S011</th>
+                                                                <th>S020</th>
+                                                                <th>S03A</th>
+                                                                <th>S03X</th>
+                                                                <th>S00Z</th>
+                                                                <th>S018</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr *ngFor="let dato of resNovCredibanco"
+                                                                [ngClass]="{'selected-row': selectedRow === dato}"
+                                                                class="table-row" (click)="selectRow(dato)">
+                                                                <td>{{dato.S001}}</td>
+                                                                <td>{{dato.S002}}</td>
+                                                                <td>{{dato.S003}}</td>
+                                                                <td>{{dato.S007}}</td>
+                                                                <td>{{dato.S008}}</td>
+                                                                <td>{{dato.S009}}</td>
+                                                                <td>{{dato.S010}}</td>
+                                                                <td style="text-align: right;">{{dato.S032|
+                                                                    currency:'':'symbol':'1.2-2'}}</td>
+                                                                <td>{{dato.S01F}}</td>
+                                                                <td class="text-truncate">{{dato.S01S}}</td>
+                                                                <td>{{dato.S01T}}</td>
+                                                                <td>{{dato.S025}}</td>
+                                                                <td>{{dato.S026}}</td>
+                                                                <td>{{dato.S027}}</td>
+                                                                <td>{{dato.S02G}}</td>
+                                                                <td>{{dato.S030}}</td>
+                                                                <td>{{dato.S031}}</td>
+                                                                <td>{{dato.S050}}</td>
+                                                                <td>{{dato.SW01}}</td>
+                                                                <td>{{dato.SW02}}</td>
+                                                                <td>{{dato.SA01}}</td>
+                                                                <td>{{dato.S011}}</td>
+                                                                <td>{{dato.S020}}</td>
+                                                                <td>{{dato.S03A}}</td>
+                                                                <td>{{dato.S03X}}</td>
+                                                                <td>{{dato.S00Z}}</td>
+                                                                <td>{{dato.S018}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="col-xs-12 col-md-12 col-lg-12"
+                                                    style="justify-items: end; padding: 1em;">
+                                                    <div class="actions clearfix">
+                                                        <button class="btn Gt-btn-verde " (click)="exportarExcel2(1)"
+                                                            id="xlsx">
+                                                            <i class="icon-download4"></i>&nbsp; EXCEL
+                                                        </button>
+                                                    </div>
+                                                    <hr>
+                                                </div>
+
+                                                <hr>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="accordion-item">
+                                        <div class="accordion-header" (click)="toggleAccordion(3)"
+                                            [ngClass]="{'expanded': isOpen(3)}">
+                                            Movimiento internacional <span class="icon">{{ isOpen(3) ? '-' : '+'
+                                                }}</span>
+                                        </div>
+                                        <div class="accordion-body" *ngIf="isOpen(3)">
+
+                                            <div class="col-xs-12 col-md-12 col-lg-12">
+                                                <div class="table-responsive scrollTabla">
+                                                    <table class="table table-sm">
+                                                        <thead class="text-center">
+                                                            <tr>
+                                                                <th>S001</th>
+                                                                <th>S002</th>
+                                                                <th>S003</th>
+                                                                <th>S007</th>
+                                                                <th>S008</th>
+                                                                <th>S009</th>
+                                                                <th>S010</th>
+                                                                <th>S032</th>
+                                                                <th>S01F</th>
+                                                                <th>S01S</th>
+                                                                <th>S01T</th>
+                                                                <th>S025</th>
+                                                                <th>S026</th>
+                                                                <th>S027</th>
+                                                                <th>S02G</th>
+                                                                <th>S030</th>
+                                                                <th>S031</th>
+                                                                <th>S050</th>
+                                                                <th>SW01</th>
+                                                                <th>SW02</th>
+                                                                <th>SA01</th>
+                                                                <th>S011</th>
+                                                                <th>S020</th>
+                                                                <th>S03A</th>
+                                                                <th>S03X</th>
+                                                                <th>S00Z</th>
+                                                                <th>S018</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr *ngFor="let dato of resMvtoInternacional"
+                                                                [ngClass]="{'selected-row': selectedRow === dato}"
+                                                                class="table-row" (click)="selectRow(dato)">
+                                                                <td>{{dato.S001}}</td>
+                                                                <td>{{dato.S002}}</td>
+                                                                <td>{{dato.S003}}</td>
+                                                                <td>{{dato.S007}}</td>
+                                                                <td>{{dato.S008}}</td>
+                                                                <td>{{dato.S009}}</td>
+                                                                <td>{{dato.S010}}</td>
+                                                                <td style="text-align: right;">{{dato.S032|
+                                                                    currency:'':'symbol':'1.2-2'}}</td>
+                                                                <td>{{dato.S01F}}</td>
+                                                                <td class="text-truncate">{{dato.S01S}}</td>
+                                                                <td>{{dato.S01T}}</td>
+                                                                <td>{{dato.S025}}</td>
+                                                                <td>{{dato.S026}}</td>
+                                                                <td>{{dato.S027}}</td>
+                                                                <td>{{dato.S02G}}</td>
+                                                                <td>{{dato.S030}}</td>
+                                                                <td>{{dato.S031}}</td>
+                                                                <td>{{dato.S050}}</td>
+                                                                <td>{{dato.SW01}}</td>
+                                                                <td>{{dato.SW02}}</td>
+                                                                <td>{{dato.SA01}}</td>
+                                                                <td>{{dato.S011}}</td>
+                                                                <td>{{dato.S020}}</td>
+                                                                <td>{{dato.S03A}}</td>
+                                                                <td>{{dato.S03X}}</td>
+                                                                <td>{{dato.S00Z}}</td>
+                                                                <td>{{dato.S018}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="col-xs-12 col-md-12 col-lg-12"
+                                                    style="justify-items: end; padding: 1em;">
+                                                    <div class="actions clearfix">
+                                                        <button class="btn Gt-btn-verde " (click)="exportarExcel2(2)"
+                                                            id="xlsx">
+                                                            <i class="icon-download4"></i>&nbsp; EXCEL
+                                                        </button>
+                                                    </div>
+                                                    <hr>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+
+
+
+
+        </div>
+    </div>
+</div>
+
+
+<input style="display: none;" type="hidden" #ModalImpresion data-toggle="modal" data-target="#ModalImpresion"
+    data-popup="tooltip" data-trigger="hover" data-placement="top">
+
+<input style="display: none;"  #ModalDispensado data-toggle="modal" data-target="#ModalDispensado"
+    data-popup="tooltip" data-trigger="hover" data-placement="top">
+
+
+<ngx-loading [show]="loadingCons"
+    [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+</ngx-loading>
+
+<!-- Modal Impresion -->
+<div id="ModalImpresion" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Formato</h6>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <object id="ImpresionCompensacion"></object>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fin modal impresion -->
+
+<!-- Modal Dispensado -->
+<div id="ModalDispensado" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="ModalDispensadoLabel"
+    aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <!-- Botón para cerrar la modal -->
+                <button type="button"  style="display: none;"  class="close" data-dismiss="modal" #ModalDispensadoC aria-label="Close">&times;</button>
+                <h6 class="modal-title">Dispensado</h6>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Se ha indentificado movimiento por el concepto <strong>53 - dispensado</strong> para
+                                este día, por lo tanto, debe adjuntar el archivo con extesión <strong>.DIS</strong> para
+                                finalizar. </label>
+                                <br>
+                            <form autocomplete="off" accept-charset="ISO-8859-1" accept-charset="character_set">
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <label>Adjunte archivo:</label><span class="text-danger ObligatorioGrande"> *</span>
+                                </div>
+                                <div class="uploader"><input #InputDis id="InputDis" type="file"
+                                        class="form-control" accept=".dis" (change)="fileChanged2($event)"><span
+                                        class="filename" style="user-select: none;">{{ fileName2 }}</span><span
+                                        class="action btn Gt-btn-verde legitRipple" style="user-select: none;">ELEGIR
+                                        ARCHIVO</span></div>
+                                <span class="help-block">Tamaño máximo 2Mb</span>
+                            </form>
+                        </div>
+                        <div class="row" style="visibility: hidden; justify-items: end; padding: 1em;">
+                            <button type="button" class="btn Gt-btn-verde btn-icon" (click)="obtenerDatosIni(2)">FINALIZAR</button>
+                         </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Fin modal Dispensado -->
+
+
+<!-- Modal Ayuda -->
+<div id="ModalAyuda" class="modal fade">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title"><i class="icon-question6"></i> Ayuda</h6>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li>Todos los campos marcados con <span class="text-danger">*</span> son obligatorios.</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ Fin Modal Ayuda -->

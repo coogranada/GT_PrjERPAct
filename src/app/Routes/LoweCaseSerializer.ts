@@ -57,7 +57,7 @@ const UrlDeclaradas = [
   { Descripcion: "/Informes/ListaProductos" },
   { Descripcion: "/Informes/InformeClientes" },
   { Descripcion: "/Configuracion/Informes/Maestros-ahorros/Consecutivo-titulo/informe-consecutivo-titulo" },
-  
+  { Descripcion: "/Utilidades/ConciliacionCompensacion" },
   {
     Descripcion:
       "/Configuracion/Maestros-productos/Maestros-ahorros/Consecutivo-titulo",
