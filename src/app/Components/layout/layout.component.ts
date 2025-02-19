@@ -10,7 +10,7 @@ import { OperacionesService } from '../../../app/Services/Maestros/operaciones.s
 import { UsuariosService } from '../../../app/Services/Maestros/usuarios.service';
 import { WebSocketService } from '../../../app/Services/WebSocket/web-socket.service';
 import { GeneralesService } from '../../../app/Services/Productos/generales.service';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../Services/Alert/alert.service';
 import { filter } from 'rxjs/operators';
 declare var $: any;
 @Component({
@@ -287,7 +287,7 @@ export class LayoutComponent implements OnInit {
   permismosUsuario: any;
   consultarImg: boolean = false;
 
-  constructor(private loginService: LoginService, private router: Router, private notif: NgxToastService,
+  constructor(private loginService: LoginService, private router: Router, private notif: AlertService,
     public datepipe: DatePipe, private userIdle: UserIdleService,
     private operacionesService: OperacionesService, private usuariosServices: UsuariosService, private webSocket: WebSocketService, private serviceGenerales: GeneralesService) {
   }

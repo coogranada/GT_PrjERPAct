@@ -11,7 +11,7 @@ import {
   MesxYear
 } from "../../../../../Models/Informes/MisProductos/mis-producto.model";
 import swal from "sweetalert2";
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../../../Services/Alert/alert.service';
 
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -327,7 +327,7 @@ export class CarteraTabComponent implements OnInit {
   ];
   titulo = 'Generar PDF con Angular JS 5';
   constructor(private excelService: ExcelService,
-    private notif: NgxToastService,
+    private notif: AlertService,
     private MiListaProductosService: MiListaProductosService, changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {

@@ -32,7 +32,7 @@ import { RecursosGeneralesService } from '../../../Services/Utilidades/recursosG
 import { ContactoModelNatu } from '../../../Models/Clientes/Juridicos/ContactoModel';
 import {ocupacionConygue, metodosComoConocio, ActivosAll, TipoContratos, TipoActivos, Cardinales, Divisas, Inmueble, Vias} from '../../../../environments/Maestros.Naturales';
 import { OficinasService } from '../../../Services/Maestros/oficinas.service';;
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../Services/Alert/alert.service';
 
 declare var $: any;
 const PrimaryWhite = 'rgb(13,165,80)';
@@ -41,7 +41,7 @@ const SecondaryGrey = 'rgb(13,165,80,0.7)';
   selector: 'app-naturales',
   templateUrl: './naturales.component.html',
   styleUrls: ['./naturales.component.css'],
-  providers: [ClientesGetListService, ClientesService, OperacionesService,ObservacionesService, GeneralesService, ModuleValidationService, LoginService,OficinasService],
+  providers: [AlertService,ClientesGetListService, ClientesService, OperacionesService,ObservacionesService, GeneralesService, ModuleValidationService, LoginService,OficinasService],
   standalone : false
 })
 
@@ -782,7 +782,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   //#region Constructor
   constructor(private clientesGetListService: ClientesGetListService,
     private _sanitizer: DomSanitizer,
-    private notif: NgxToastService,
+    private notif: AlertService,
     private clientesService: ClientesService,
     private operacionesService: OperacionesService,
     private observacionesService: ObservacionesService,

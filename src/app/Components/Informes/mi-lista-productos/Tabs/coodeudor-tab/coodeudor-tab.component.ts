@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MiListaProductosService } from '../../../../../Services/Informes/mi-lista-productos.service';
 import { LogMisProductos,DatosProductos } from '../../../../../Models/Informes/MisProductos/mis-producto.model';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../../../Services/Alert/alert.service';
 
 
 @Component({
@@ -14,7 +14,7 @@ export class CoodeudorTabComponent implements OnInit {
   @ViewChild('ModalCalificacionCodeudor', { static: true }) private ModalCalificacionCodeudor!: ElementRef;
 
   constructor(private miListaProductosService: MiListaProductosService,
-    private notif: NgxToastService) { }
+    private notif: AlertService) { }
   public ActivosCodeudores: any[] = [];
   public CanceladosCodeudores: any[] = [];
   public LstResumenCalificaciones: any[] = [];

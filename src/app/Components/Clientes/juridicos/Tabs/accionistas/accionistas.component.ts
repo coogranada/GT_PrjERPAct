@@ -4,7 +4,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AccionistaModel } from '../../../../../Models/Clientes/Juridicos/AccionistaModel';
 import { JuridicosService } from '../../../../../Services/Clientes/Juridicos.service';
 import { GeneralesService } from '../../../../../Services/Productos/generales.service';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../../../Services/Alert/alert.service';
 declare var $: any;
 @Component({
   selector: 'app-accionistas',
@@ -54,7 +54,7 @@ export class AccionistasComponent implements OnInit {
   //#endregion
   public accionistaModel = new AccionistaModel();
   public accionistaModelLst: AccionistaModel[] = [];
-  constructor(private clientesGetListService: ClientesGetListService, private notif: NgxToastService,
+  constructor(private clientesGetListService: ClientesGetListService, private notif: AlertService,
     private juridicoService: JuridicosService, private generalesService: GeneralesService) { }
 
   ngOnInit() {

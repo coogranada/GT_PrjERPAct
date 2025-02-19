@@ -6,7 +6,7 @@ import { NgxLoadingModule } from 'ngx-loading';
 import { ContractualComponent } from '../Components/Productos/Ahorros/Contractual/contractual/contractual.component';
 import { Replace } from '../Pipes/utilidades/replace.pipe';
 import { FormatoCambioCuentaDestinoComponent } from '../Components/Formatos-impresion/formato-cambio-cuentadestino/formato-cambio-cuentadestino.component';
-import { ClienteModule } from './cliente.module';
+//import { ClienteModule } from './cliente.module';
 import { CurrencyMaskModule } from "ng2-currency-mask";
 import { AsesoriaContractualComponent } from '../Components/Productos/Ahorros/Contractual/asesoria/asesoria-contractual.component';
 import { FormatoAsesoriaComponent } from '../Components/Formatos-impresion/formato-asesoria/formato-asesoria.component';
@@ -16,12 +16,12 @@ import { ScoreCreditosComponent } from '../Components/Productos/Creditos/score-c
 import { TarjetaHabientesComponent } from '../Components/Productos/Ahorros/Disponibles/tarjeta-habientes/tarjeta-habientes.component';
 import { GMFDisponibleComponent } from '../Components/Productos/Ahorros/Disponibles/gmf/gmf.component';
 import { FichaAnalisisComponent } from '../Components/Productos/Creditos/ficha-analisis/ficha-analisis.component';
+import { ShareComponentModule } from './share-component.module';
 
 @NgModule({
   declarations: [
     ContractualComponent,
-    FormatoCambioCuentaDestinoComponent,
-    Replace,
+    FormatoCambioCuentaDestinoComponent, 
     AsesoriaContractualComponent,
     FormatoAsesoriaComponent,
     AportesComponent,
@@ -30,12 +30,11 @@ import { FichaAnalisisComponent } from '../Components/Productos/Creditos/ficha-a
     TarjetaHabientesComponent,
     GMFDisponibleComponent,
     FichaAnalisisComponent
-
   ],
   imports: [
     CommonModule,
     ProductosRoutingModule,
-    ClienteModule,
+    ShareComponentModule,
     FormsModule,
     CurrencyMaskModule,
     NgxLoadingModule.forRoot({

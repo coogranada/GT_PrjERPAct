@@ -5,7 +5,8 @@ import { ClientesGetListService } from '../../../../../Services/Clientes/cliente
 import { FinancieroModel } from '../../../../../Models/Clientes/Juridicos/FinancieroModel';
 import { JuridicosService } from '../../../../../Services/Clientes/Juridicos.service';
 import { GeneralesService } from '../../../../../Services/Productos/generales.service';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../../../Services/Alert/alert.service';
+
 declare var $: any;
 @Component({
   selector: 'app-financiera',
@@ -59,7 +60,7 @@ export class FinancieraComponent implements OnInit {
 
  
   //#endregion
-  constructor(private clientesGetListService: ClientesGetListService, private notif: NgxToastService,
+  constructor(private clientesGetListService: ClientesGetListService, private notif: AlertService,
     private juridicoService: JuridicosService, private generalesService: GeneralesService) { }
 
   ngOnInit() {

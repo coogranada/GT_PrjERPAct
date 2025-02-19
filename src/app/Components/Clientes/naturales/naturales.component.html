@@ -936,7 +936,7 @@
                                                     <div class="form-group">
                                                         <label class="textNegrilla">Valor:</label>
                                                         <span class="grande"> *</span>
-                                                        <input type="text" currencyMask class="form-control" formControlName="valor" [attr.disabled]="formBuscarLocked" class="form-control" />
+                                                        <input type="text" currencyMask [options]="{precision : 0 }" class="form-control" formControlName="valor" [attr.disabled]="formBuscarLocked" class="form-control" />
                                                         <span class="help-block validationSpan" *ngIf="financieroFrom.controls['valor'].errors?.['required'] && (financieroFrom.controls['valor'].dirty || financieroFrom.controls['valor'].touched)">
                                                             El valor es obligatorio.
                                                         </span>
@@ -1007,7 +1007,7 @@
                                                                         {{variable.concepto.Descripcion}}
                                                                     </td>
                                                                     <td>
-                                                                        $ <span *ngIf="variable.concepto.Id === 12">-</span>{{variable.valor | currency:'':'' : '1.0'}}
+                                                                        <span *ngIf="variable.concepto.Id === 12">-</span>{{variable.valor | currency:'$':'symbol':'1.0-0'}}
                                                                     </td>
                                                                     <td class="Capitalice" *ngIf="variable.observacion !== '' && variable.observacion !== null ">
                                                                         <p>{{variable.observacion}}</p>
@@ -1059,7 +1059,7 @@
                                                                         {{variable.concepto.Descripcion}}
                                                                     </td>
                                                                     <td>
-                                                                        ${{variable.valor | currency:'':'' : '1.0'}}
+                                                                        {{variable.valor | currency:'$':'symbol':'1.0-0'}}
                                                                     </td>
                                                                     <td class="Capitalice" *ngIf="variable.observacion !== '' && variable.observacion !== null">
                                                                         <p>{{variable.observacion}}</p>
@@ -1091,20 +1091,21 @@
                                                     <div class="col-xs-12 col-md-12 col-lg-4">
                                                         <label tooltip="El total ingresos es el resultado de la suma de todos los ingresos." placement="top" show-delay="500">
                                                             <strong>Total ingresos y/o ventas brutas:
-                                                                ${{acomuladorIngresos | currency:'':'' : '1.0'}}
+                                                                {{acomuladorIngresos | currency:'$':'symbol':'1.0-0'}}
                                                             </strong>
                                                         </label>
                                                     </div>
-                                                    <div class="col-xs-12 col-md-12 col-lg-4">
+                                                    <div class="col-xs-12 col-md-12 col-lg-4" >
                                                         <label tooltip="El total ingresos operacionales es el resultado de la suma de todos los ingresos menos los costos y gastos." placement="top" show-delay="500">
                                                             <strong>Total ingresos operacionales:
-                                                                ${{acomuladorOperacional | currency:'':'' : '1.0'}}</strong>
+                                                                {{acomuladorOperacional | currency:'$':'symbol':'1.0-0'}}
+                                                            </strong>
                                                         </label>
                                                     </div>
                                                     <div class="col-xs-12 col-md-12 col-lg-4">
                                                         <label tooltip="El total egresos es el resultado de la suma de todos los egresos." placement="top" show-delay="500">
                                                             <strong>Total egresos:
-                                                                ${{acomuladorEgresos | currency:'':'' : '1.0'}}
+                                                                {{acomuladorEgresos | currency:'$':'symbol':'1.0-0'}}
                                                             </strong>
                                                         </label>
                                                     </div>
@@ -1705,7 +1706,7 @@
                                                     <div class="form-group">
                                                         <label class="textNegrilla">Valor comercial:</label>
                                                         <span class="grande"> *</span>
-                                                        <input type="text" currencyMask class="form-control" formControlName="VrlComercial" [attr.disabled]="formBuscarLocked" />
+                                                        <input type="text" currencyMask [options]="{precision : 0 }" class="form-control" formControlName="VrlComercial" [attr.disabled]="formBuscarLocked" />
                                                         <span class="help-block validationSpan" *ngIf="activoForm.controls['VrlComercial'].errors?.['required'] && (activoForm.controls['VrlComercial'].dirty || activoForm.controls['VrlComercial'].touched)">
                                                             El valor comercial es obligatorio.
                                                         </span>
@@ -1718,7 +1719,7 @@
                                                     <div class="form-group">
                                                         <label class="textNegrilla">Valor Comercial:</label>
                                                         <span class="grande"> *</span>
-                                                        <input type="text" currencyMask class="form-control" formControlName="VrlComercial" [attr.disabled]="formBuscarLocked" />
+                                                        <input type="text" currencyMask [options]="{precision : 0 }"class="form-control" formControlName="VrlComercial" [attr.disabled]="formBuscarLocked" />
                                                         <span class="help-block validationSpan" *ngIf="activoForm.controls['VrlComercial'].errors?.['required'] && (activoForm.controls['VrlComercial'].dirty || activoForm.controls['VrlComercial'].touched)">
                                                             El valor comercial es obligatorio.
                                                         </span>
@@ -1732,7 +1733,7 @@
                                                         <div class="form-group">
                                                             <label class="textNegrilla">Valor comercial:</label>
                                                             <span class="grande"> *</span>
-                                                            <input type="text" currencyMask class="form-control" formControlName="VrlComercial" [attr.disabled]="formBuscarLocked" />
+                                                            <input type="text" currencyMask [options]="{precision : 0 }" class="form-control" formControlName="VrlComercial" [attr.disabled]="formBuscarLocked" />
                                                             <span class="help-block validationSpan" *ngIf="activoForm.controls['VrlComercial'].errors?.['required'] && (activoForm.controls['VrlComercial'].dirty || activoForm.controls['VrlComercial'].touched)">
                                                                 El valor comercial es obligatorio.
                                                             </span>
@@ -1848,7 +1849,7 @@
                                                 <div class="form-group">
                                                     <label class="textNegrilla">Valor hipotecado:</label>
                                                     <span class="grande" *ngIf="mostrarObligacion">*</span>
-                                                    <input type="text" currencyMask class="form-control" formControlName="VrlAdeudado" [attr.disabled]="formLockedHipoPigno" (blur)="validarValorAdeudado('hipotecado')" />
+                                                    <input type="text" currencyMask [options]="{precision : 0 }" class="form-control" formControlName="VrlAdeudado" [attr.disabled]="formLockedHipoPigno" (blur)="validarValorAdeudado('hipotecado')" />
                                                     <span class="help-block validationSpan" *ngIf="activoForm.controls['VrlAdeudado'].errors?.['required'] && (activoForm.controls['VrlAdeudado'].dirty || activoForm.controls['VrlAdeudado'].touched)">
                                                         El valor hipotecado es obligatorio.
                                                     </span>
@@ -1861,7 +1862,7 @@
                                                 <div class="form-group">
                                                     <label class="textNegrilla">Valor pignorado:</label>
                                                     <span class="grande" *ngIf="mostrarObligacion">*</span>
-                                                    <input type="text" currencyMask class="form-control" formControlName="VrlAdeudadoVehi" [attr.disabled]="formLockedHipoPigno" (blur)="validarValorAdeudado('pignorado')" />
+                                                    <input type="text" currencyMask [options]="{precision : 0 }" class="form-control" formControlName="VrlAdeudadoVehi" [attr.disabled]="formLockedHipoPigno" (blur)="validarValorAdeudado('pignorado')" />
                                                     <span class="help-block validationSpan" *ngIf="activoForm.controls['VrlAdeudadoVehi'].errors?.['required'] && (activoForm.controls['VrlAdeudadoVehi'].dirty || activoForm.controls['VrlAdeudadoVehi'].touched)">
                                                         El valor pignorado es obligatorio.
                                                     </span>
@@ -2114,10 +2115,10 @@
                                                                         {{variable.Pais.Descripcion}}
                                                                     </td>
                                                                     <td>
-                                                                        ${{variable.VrlComercial | currency:'':'' : '1.0'}}
+                                                                        {{variable.VrlComercial | currency:'$':'symbol':'1.0-0'}}
                                                                     </td>
                                                                     <td *ngIf="variable.VrlAdeudado !== '' && variable.VrlAdeudado !== null">
-                                                                        ${{variable.VrlAdeudado | currency:'':'' : '1.0'}}
+                                                                        {{variable.VrlAdeudado | currency:'$':'symbol':'1.0-0'}}
                                                                     </td>
                                                                     <td *ngIf="variable.VrlAdeudado === '' || variable.VrlAdeudado === null">
                                                                         N/A
@@ -2231,10 +2232,10 @@
                                                                         <p>{{variableVeh.Placa}}</p>
                                                                     </td>
                                                                     <td>
-                                                                        ${{variableVeh.VrlComercial | currency:'':'' : '1.0'}}
+                                                                        {{variableVeh.VrlComercial | currency:'$':'symbol':'1.0-0'}}
                                                                     </td>
                                                                     <td *ngIf="variableVeh.VrlAdeudadoVehi !== '' && variableVeh.VrlAdeudadoVehi !== null">
-                                                                        ${{variableVeh.VrlAdeudadoVehi | currency:'':'' : '1.0'}}
+                                                                        {{variableVeh.VrlAdeudadoVehi | currency:'$':'symbol':'1.0-0'}}
                                                                     </td>
                                                                     <td *ngIf="variableVeh.VrlAdeudadoVehi === '' || variableVeh.VrlAdeudadoVehi === null">
                                                                         N/A
@@ -2313,7 +2314,7 @@
                                                                         {{variableOtro.descripcionOtro}}
                                                                     </td>
                                                                     <td>
-                                                                        ${{variableOtro.VrlComercial | currency:'':'' : '1.0'}}
+                                                                        {{variableOtro.VrlComercial | currency:'$':'symbol':'1.0-0'}}
                                                                     </td>
                                                                     <td>
                                                                         <button class="btn Gt-btn-verde btn-icon legitRipple" (click)="MappearActivos(i, variableOtro)" *ngIf="!formBuscarLocked">
@@ -2338,7 +2339,7 @@
                                                         <div class="col-xs-12 col-md-4 col-lg-2">
                                                             <div class="form-group">
                                                                 <label class="textNegrilla">Total activos:</label>
-                                                                <input type="text" currencyMask class="form-control text-right textNegrilla" formControlName="tlActivo" [attr.disabled]="BlockInputs" />
+                                                                <input type="text" currencyMask class="form-control text-right textNegrilla" formControlName="tlActivo" value="{{patrimonioForm.controls['tlActivo'].value | currency:'$':'symbol':'1.0-0'}}" [attr.disabled]="BlockInputs" />
 
                                                             </div>
                                                         </div>
@@ -2346,7 +2347,7 @@
                                                         <div class="col-xs-12 col-md-4 col-lg-2">
                                                             <div class="form-group">
                                                                 <label class="textNegrilla">Total pasivos:</label>
-                                                                <input type="text" currencyMask class="form-control text-right textNegrilla" formControlName="tlPasivo" [attr.disabled]="formPasivoLocked" (blur)="calcularPatrimonio()" (keypress)="habilitarBtnUpdate()" />
+                                                                <input type="text" currencyMask class="form-control text-right textNegrilla" formControlName="tlPasivo" value="{{patrimonioForm.controls['tlPasivo'].value | currency:'$':'symbol':'1.0-0'}}" [attr.disabled]="formPasivoLocked" (blur)="calcularPatrimonio()" (keypress)="habilitarBtnUpdate()" />
                                                                 <span class="help-block validationSpan" *ngIf="activoForm.controls['VrlAdeudado'].errors?.['pattern'] && (activoForm.controls['VrlAdeudado'].dirty || activoForm.controls['VrlAdeudado'].touched)">
                                                                     El total pasivos solo acepta números.
                                                                 </span>
@@ -2356,7 +2357,7 @@
                                                         <div class="col-xs-12 col-md-4 col-lg-2">
                                                             <div class="form-group">
                                                                 <label class="textNegrilla">Total patrimonio:</label>
-                                                                <input type="text" currencyMask class="form-control text-right textNegrilla" formControlName="tlPatrimonio" [attr.disabled]="BlockInputs" />
+                                                                <input type="text" currencyMask class="form-control text-right textNegrilla" formControlName="tlPatrimonio" value="{{patrimonioForm.controls['tlPatrimonio'].value | currency:'$':'symbol':'1.0-0'}}" [attr.disabled]="BlockInputs" />
                                                             </div>
                                                         </div>
                                                         <input type="hidden" />
@@ -2555,7 +2556,7 @@
                                                     <div class="form-group">
                                                         <label class="textNegrilla">Ingresos:</label>
                                                         <span class="text-danger"> </span>
-                                                        <input type="text" currencyMask class="form-control" formControlName="IngresosC" [attr.disabled]="formBuscarLockedConyugue" />
+                                                        <input type="text" currencyMask [options]="{precision : 0 }" class="form-control" formControlName="IngresosC" [attr.disabled]="formBuscarLockedConyugue" />
                                                         <span class="help-block validationSpan" *ngIf="conyugueForm.controls['IngresosC'].errors?.['pattern']">
                                                         Los ingresos solo acepta números.
                                                     </span>
@@ -2565,7 +2566,7 @@
                                                     <div class="form-group">
                                                         <label class="textNegrilla">Egresos:</label>
                                                         <span class="text-danger"> </span>
-                                                        <input type="text" currencyMask class="form-control" formControlName="EgresosC" [attr.disabled]="formBuscarLockedConyugue" />
+                                                        <input type="text" currencyMask [options]="{precision : 0 }" class="form-control" formControlName="EgresosC" [attr.disabled]="formBuscarLockedConyugue" />
                                                         <span class="help-block validationSpan" *ngIf="conyugueForm.controls['EgresosC'].errors?.['pattern']">
                                                         Los egresos solo acepta números.
                                                     </span>
@@ -2748,13 +2749,13 @@
                                                                         {{itemConyugue.TipoOcupacionC.Descripcion}}
                                                                     </td>
                                                                     <td *ngIf="itemConyugue.IngresosC !== '' && itemConyugue.IngresosC !== null">
-                                                                        ${{itemConyugue.IngresosC | currency:'':'' : '1.0'}}
+                                                                        {{itemConyugue.IngresosC | currency}}
                                                                     </td>
                                                                     <td *ngIf="itemConyugue.IngresosC === '' || itemConyugue.IngresosC === null">
                                                                         N/A
                                                                     </td>
                                                                     <td *ngIf="itemConyugue.EgresosC !== '' && itemConyugue.EgresosC !== null">
-                                                                        ${{itemConyugue.EgresosC | currency:'':'' : '1.0'}}
+                                                                        {{itemConyugue.EgresosC | currency}}
                                                                     </td>
                                                                     <td *ngIf="itemConyugue.EgresosC === '' || itemConyugue.EgresosC === null">
                                                                         N/A
@@ -3914,7 +3915,7 @@
                                                                 El campo cuál solo acepta letras. </span>
                                                         </td>
                                                         <td>
-                                                            <input type="text" [attr.disabled]="DesbloquearRespuesta2" currencyMask class="form-control SoloMinuscula" id="RPre24" formControlName="RPregunta4Si" placeholder="Por qué valor?" (keydown)="habilitarActualizar()">
+                                                            <input type="text" [attr.disabled]="DesbloquearRespuesta2" currencyMask [options]="{ precision:0 }" class="form-control SoloMinuscula" id="RPre24" formControlName="RPregunta4Si" placeholder="Por qué valor?" (keydown)="habilitarActualizar()">
                                                             <span class="help-block validationSpan" *ngIf="entrevistaForm.controls['RPregunta4Si'].errors?.['required'] && (entrevistaForm.controls['RPregunta4Si'].dirty || entrevistaForm.controls['RPregunta4Si'].touched)">
                                                                 El por qué valor es obligatorio.
                                                             </span>
@@ -4409,7 +4410,7 @@
                                                         <div class="form-group">
                                                             <label class="textNegrilla">Monto asegurado:</label>
                                                             <span class="grande"> *</span>
-                                                            <input type="text" currencyMask class="form-control" formControlName="montoAsegurado" [attr.disabled]="BlockMonto" />
+                                                            <input type="text" currencyMask [options]="{ precision:0 }"  class="form-control" formControlName="montoAsegurado" [attr.disabled]="BlockMonto" />
                                                             <span class="help-block validationSpan" *ngIf="segurosForm.controls['montoAsegurado'].errors?.['pattern'] && (segurosForm.controls['montoAsegurado'].dirty || segurosForm.controls['montoAsegurado'].touched)">
                                                                 El monto asegurado solo acepta números.</span>
                                                         </div>
@@ -4528,7 +4529,7 @@
                                                                     N/A
                                                                 </td>
                                                                 <td>
-                                                                    ${{variable.montoAsegurado | currency:'':'' : '1.0'}}
+                                                                    {{variable.montoAsegurado |  currency:'':'' : '1.0' }}
                                                                 </td>
                                                                 <td *ngIf="variable.fechaAsegurado !== null">
                                                                     {{variable.fechaAsegurado | date: 'yyy/MM/dd'}}
@@ -4620,7 +4621,7 @@
                                                                     N/A
                                                                 </td>
                                                                 <td>
-                                                                    ${{logSeguro.MontoAsegurado | currency:'':'' : '1.0'}}
+                                                                    {{logSeguro.MontoAsegurado | currency}}
                                                                 </td>
                                                             </tr>
                                                         </tbody>

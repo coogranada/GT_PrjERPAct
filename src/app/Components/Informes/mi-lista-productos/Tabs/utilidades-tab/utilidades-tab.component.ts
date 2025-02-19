@@ -12,7 +12,7 @@ import {
 } from "../../../../../Models/Informes/MisProductos/mis-producto.model";
 import { NgxLoadingComponent } from 'ngx-loading';
 import swal from "sweetalert2";
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../../../Services/Alert/alert.service';
 
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -68,7 +68,7 @@ export class UtilidadesTabComponent implements OnInit, DoCheck {
   public validaCertificadoRetenciones: any;
   constructor(
     private MiListaProductosService: MiListaProductosService,
-    private notif: NgxToastService
+    private notif: AlertService
   ) {}
 
   ngOnInit() {

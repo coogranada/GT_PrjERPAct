@@ -6,7 +6,7 @@ import {
 } from '../../../Models/Clientes/Juridicos/SolicitudImpresionModel';
 import { formatDate } from '@angular/common';
 import { ClientesGetListService } from '../../../Services/Clientes/clientesGetList.service';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../Services/Alert/alert.service';
 import { HtmlToService } from '../../../Services/Utilidades/html-to.service';
 
 @Component({
@@ -65,7 +65,7 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
 
 //#endregion
 
-  constructor(private juridicosService: JuridicosService, private notif: NgxToastService,
+  constructor(private juridicosService: JuridicosService, private notif: AlertService,
     private clientesGetListService: ClientesGetListService,private htmlTo : HtmlToService) { }
 
   ngOnInit() {

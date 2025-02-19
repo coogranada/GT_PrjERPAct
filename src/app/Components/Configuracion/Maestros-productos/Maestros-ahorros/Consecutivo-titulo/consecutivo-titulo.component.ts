@@ -10,7 +10,7 @@ import { fromEvent } from 'rxjs';
 import { ConsecutivosLog } from '../../../../../Models/Configuracion/Maestro_productos/ConsecutivosLog.model';
 import { DatePipe } from '@angular/common';
 import Swal from 'sweetalert2';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../../../Services/Alert/alert.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -101,7 +101,7 @@ export class ConsecutivoTituloComponent implements OnInit {
   private CodModulo = 66;
   public Modulo = this.CodModulo;
   constructor(private ConsecutivotituloService: ConsecutivoTituloService,
-    private notif: NgxToastService,
+    private notif: AlertService,
     private operacionesService: OperacionesService,
     private generalesService: GeneralesService,
     private moduleValidationService: ModuleValidationService, private el: ElementRef) {
@@ -166,7 +166,7 @@ export class ConsecutivoTituloComponent implements OnInit {
   RegistrarLog() {
     this.ConsecutivotituloService.RegistrarLog(this.log).pipe(retry(2),delay(1000)).subscribe(result => { },
       error => {
-        console.log(error)
+        console.log("registrar log",error)
       });
   }
   ObtenerModulos() {
@@ -496,6 +496,7 @@ export class ConsecutivoTituloComponent implements OnInit {
     this.mensajeMostradoLibretas = false;
   }
   ValorSeleccionadoModulo(Idmodulo : string) {
+    console.log("modulo",Idmodulo)
     this.ClearSelects(true);
     this.formBuscar = true;
     this.BloquearMotivo = true;

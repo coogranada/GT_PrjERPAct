@@ -7,7 +7,7 @@ import { GestionGestionesOperacionesComponent } from '../gestion-gestiones-opera
 import { moduloGestionOperacion } from '../../../../environments/config.modulos';
 import { Router } from '@angular/router';
 import { GestioOperacionesService } from '../../..//Services/Gestiones/gestioOperaciones.service';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../Services/Alert/alert.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 
@@ -40,7 +40,7 @@ export class GestionesOperacionesComponent implements OnInit {
   public DatosUsuario : any;
 
   @ViewChild('AbrirDetalleGestion', { static: true }) private AbrirDetalleGestion!: ElementRef;
-  constructor(private gestionesService: GestionesService, private notificacion: NgxToastService,
+  constructor(private gestionesService: GestionesService, private notificacion: AlertService,
     private router: Router, private gestionServiceOperacion: GestioOperacionesService) { }
 
   ngOnInit() {

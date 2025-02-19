@@ -28,7 +28,7 @@ import {
   LogMisProductos,
   DatosProductos,
 } from "../../../Models/Informes/MisProductos/mis-producto.model";
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../Services/Alert/alert.service';
 
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -133,7 +133,7 @@ export class MiListaProductosComponent implements OnInit {
   constructor(
     private excelService: ExcelService,
     private clientesGetListService: ClientesGetListService,
-    private notif: NgxToastService,
+    private notif: AlertService,
     private oficinasService: OficinasService,
     private MiListaProductosService: MiListaProductosService,
     private operacionesService: OperacionesService,

@@ -2,7 +2,7 @@ import { Component, OnInit, EventEmitter, Output, Input, ViewChild } from '@angu
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { JuridicosService } from '../../../../../Services/Clientes/Juridicos.service';
 import { DatePipe } from '@angular/common';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../../../Services/Alert/alert.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -34,7 +34,7 @@ export class HistorialComponent implements OnInit {
   //#endregion
   public historialFrom!: FormGroup;
 
-  constructor(private JuridicoServices: JuridicosService, private notif: NgxToastService) { }
+  constructor(private JuridicoServices: JuridicosService, private notif: AlertService) { }
 
   ngOnInit() {
     this.validateHistorial();

@@ -14,7 +14,7 @@ import { LoginService } from '../../../Services/Login/login.service';
 import { AperturaCuentaDto, CambiarAsesorDto, CambiarFormaPagoDto } from '../../../Models/Productos/aportesJsonDto';
 import { ClientesService } from '../../../Services/Clientes/clientes.service';
 import { JuridicosService } from '../../../Services/Clientes/Juridicos.service';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../Services/Alert/alert.service';
 declare var $: any;
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -151,7 +151,7 @@ export class AportesComponent implements OnInit {
   private CodModulo = 16;
   public DatosUsuario: any;
   constructor(private aportesServices: AportesService,
-    private notif: NgxToastService,
+    private notif: AlertService,
     private generalesService: GeneralesService,
     private operacionesService: OperacionesService,
     private moduleValidationService: ModuleValidationService, private el: ElementRef,

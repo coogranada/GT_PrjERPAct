@@ -9,7 +9,7 @@ import { fromEvent } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { LoginService } from '../../../../Services/Login/login.service';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../../Services/Alert/alert.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -42,7 +42,7 @@ export class ScoreCreditosComponent implements OnInit {
     { Id: 'Coogranada', Descripcion: 'Coogranada' },
   ];
 
-  constructor(private soreSimuladorService: ScoreSimuladorService, private winRef: WindowRef, private notif: NgxToastService,
+  constructor(private soreSimuladorService: ScoreSimuladorService, private winRef: WindowRef, private notif: AlertService,
     private envirment: EnvironmentService, private moduleValidationService: ModuleValidationService, private el: ElementRef,
     private loginService: LoginService, private router: Router) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(

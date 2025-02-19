@@ -7,7 +7,7 @@ import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { ModuleValidationService } from '../../../../../Services/Enviroment/moduleValidation.service';
 import { fromEvent } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../../../Services/Alert/alert.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -51,7 +51,7 @@ export class GMFDisponibleComponent implements OnInit {
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
   private CodModulo = 23;
-  constructor(private gmfDisponibleService: GmfDisponibleService, private notificacion: NgxToastService,
+  constructor(private gmfDisponibleService: GmfDisponibleService, private notificacion: AlertService,
     private moduleValidationService: ModuleValidationService, private el: ElementRef) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {

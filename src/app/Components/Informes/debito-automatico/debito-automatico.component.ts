@@ -7,7 +7,7 @@ import { fromEvent } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { LoginService } from '../../../Services/Login/login.service';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../Services/Alert/alert.service';
 
 
 @Component({
@@ -42,7 +42,7 @@ export class DebitosAutomaticosComponent implements OnInit {
   public Modulo = this.CodModulo;
   public DatosUsuario : any;
   constructor(private debitosautomaticosService: DebitosAutomaticosService,
-    private notif: NgxToastService,
+    private notif: AlertService,
     private moduleValidationService: ModuleValidationService, private el: ElementRef, private loginService: LoginService,
     private router: Router) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(

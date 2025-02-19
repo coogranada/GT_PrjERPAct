@@ -12,7 +12,7 @@ import { RecursosGeneralesService } from '../../../Services/Utilidades/recursosG
 import { OficinasService } from '../../../Services/Maestros/oficinas.service';
 import { GeneralesService } from '../../../Services/Productos/generales.service';
 import { ModuleValidationService } from '../../../Services/Enviroment/moduleValidation.service';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../Services/Alert/alert.service';
 import { HtmlToService } from '../../../Services/Utilidades/html-to.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -259,7 +259,7 @@ export class SolicitudServiciosComponent implements OnInit {
   private DataRequired = new RequiredData();
   esReimpresa: any;
   constructor(private clientesService: ClientesService, private clientesGetListService: ClientesGetListService, 
-    private notif: NgxToastService, private htmlTo : HtmlToService) {}
+    private notif: AlertService, private htmlTo : HtmlToService) {}
 
   ngOnInit() {
     if (this.validar === 1) {
@@ -1530,7 +1530,7 @@ export class SolicitudServiciosComponent implements OnInit {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
   print(){
-    this.htmlTo.HtmlToPdf("FormatoDeServicios","p",[884,3576])
+    this.htmlTo.HtmlToPdf("FormatoDeServicios","p",[1383,4436 ])
     //
   }
 }

@@ -7,7 +7,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { NgxLoadingComponent } from 'ngx-loading';
 import { DatosProducto,LogMisProductos,DatosProductos,MesxYear }  from "../../../../../Models/Informes/MisProductos/mis-producto.model";
 import swal from "sweetalert2";
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../../../Services/Alert/alert.service';
 
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -125,7 +125,7 @@ export class AportesTabComponent implements OnInit {
   constructor(
     private MiListaProductosService: MiListaProductosService,
     private miDatePipe: DatePipe,
-    private notificacion: NgxToastService
+    private notificacion: AlertService
   ) {}
 
   ngOnInit() {

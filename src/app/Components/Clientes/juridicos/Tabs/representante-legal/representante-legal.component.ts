@@ -7,7 +7,7 @@ import { JuridicosService } from '../../../../../Services/Clientes/Juridicos.ser
 import moment from 'moment';
 import { GeneralesService } from '../../../../../Services/Productos/generales.service';
 import swal from 'sweetalert2';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../../../Services/Alert/alert.service';
 import { EnvironmentService } from '../../../../../Services/Enviroment/enviroment.service';
 declare var $: any;
 @Component({
@@ -76,7 +76,7 @@ export class RepresentanteLegalComponent implements OnInit {
   public representanteFrom: any;
   //#endregion
   public representanteModel = new RepresentanteModel();
-  constructor(private clientesGetListService: ClientesGetListService, private notif: NgxToastService,
+  constructor(private clientesGetListService: ClientesGetListService, private notif: AlertService,
     private juridicoService: JuridicosService, private generalesService: GeneralesService,private urlEnvironmentService : EnvironmentService) { }
 
   ngOnInit() {

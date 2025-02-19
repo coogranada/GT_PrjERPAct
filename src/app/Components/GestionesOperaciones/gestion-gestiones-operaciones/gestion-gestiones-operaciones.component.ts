@@ -10,7 +10,7 @@ import { EventEmitter } from '@angular/core';
 import { GestionesService } from '../../../Services/Gestiones/gestiones.service';
 import { GeneralesService } from '../../../Services/Productos/generales.service';
 import { moduloAGestionar } from '../../../../environments/config.modulos';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../Services/Alert/alert.service';
 
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -71,7 +71,7 @@ export class GestionGestionesOperacionesComponent implements OnInit {
   public mostrarSpanAlertaGestion = false;
   public mostrarSpanAlertaReasignar = false;
 //#endregion
-  constructor(private gestionesService: GestionesService, private notificacion: NgxToastService,
+  constructor(private gestionesService: GestionesService, private notificacion: AlertService,
     private generalesService: GeneralesService) { }
 
   ngOnInit() {

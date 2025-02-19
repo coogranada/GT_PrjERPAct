@@ -9,7 +9,7 @@ import { AsesoriaContractualService } from '../../../../../Services/Productos/as
 import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { DatePipe, formatDate } from '@angular/common';
 import swal from 'sweetalert2';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../../../Services/Alert/alert.service';
 declare var $: any;
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -106,7 +106,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
   private CodModulo = 60;
   public Modulo = this.CodModulo;
   constructor(private AsesoriaContractualServices: AsesoriaContractualService,
-    private notif: NgxToastService,
+    private notif: AlertService,
     private operacionesService: OperacionesService,
     private generalesService: GeneralesService,
     private moduleValidationService: ModuleValidationService, private el: ElementRef) {

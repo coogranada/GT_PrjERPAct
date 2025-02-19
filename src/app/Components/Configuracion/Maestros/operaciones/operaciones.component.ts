@@ -13,7 +13,7 @@ import { reduce, map } from 'rxjs/operators';
 import { fromEvent } from 'rxjs';
 import { Router } from '@angular/router';
 import { LoginService } from '../../../../Services/Login/login.service';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../../Services/Alert/alert.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -51,7 +51,7 @@ export class OperacionesComponent implements OnInit {
   public DatosUsuario : any = {};
   constructor(private permisosService: PermisosService,
     private operacionesService: OperacionesService,
-    private notif: NgxToastService,
+    private notif: AlertService,
     private generalesService: GeneralesService,
     private moduleValidationService: ModuleValidationService, private el: ElementRef,
     private loginService: LoginService, private router: Router) {

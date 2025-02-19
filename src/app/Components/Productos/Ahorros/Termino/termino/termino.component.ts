@@ -9,7 +9,7 @@ import { GeneralesService } from '../../../../../Services/Productos/generales.se
 import { DatePipe, formatDate } from '@angular/common';
 import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import swal from 'sweetalert2';
-import { NgxToastService } from 'ngx-toast-notifier';
+import { AlertService } from '../../../../../Services/Alert/alert.service';
 declare var $: any;
 
 @Component({
@@ -24,7 +24,7 @@ export class TerminoComponent implements OnInit {
   linkPdf: string = "";
   constructor(private moduleValidationService: ModuleValidationService,
     private el: ElementRef,
-    private notif: NgxToastService,
+    private notif: AlertService,
     private operacionesService: OperacionesService,
     private TerminoService: TerminoAhorrosService,
     private generalesService: GeneralesService) {

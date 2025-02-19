@@ -5,7 +5,7 @@ import {
   GestionEmailModel, BannerModel, GestionEmailArrayModel, EmailxBloques, GestionEmailModelCertificado, ModelCertificate,
   ModelTD,  GestionEmailModelTD } from "../../../../Models/Maestros/email.model";
 import { GestionEmailService } from "../../../../Services/Maestros/email-gestion.service";
-import { NgxToastService } from "ngx-toast-notifier";
+import { AlertService } from '../../../../Services/Alert/alert.service';
 declare var $: any;
 @Component({
   selector: "app-gestion-email",
@@ -76,7 +76,7 @@ export class GestionEmail implements OnInit {
   public OmititBloqueSD3: Boolean = false;
   public YearNow: any;
 
-  constructor(private notif: NgxToastService, private GestionEmailService: GestionEmailService) {}
+  constructor(private notif: AlertService, private GestionEmailService: GestionEmailService) {}
 
   ngOnInit() {
     this.ValidateForm();

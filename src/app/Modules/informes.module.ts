@@ -73,7 +73,6 @@ import { LogProductosVirtualesComponent } from '../Components/Informes/log-audit
     LogGestionClientesComponent,
     LogMisProductosComponent,
     LogProductosVirtualesComponent
-
   ],
   imports: [
     CommonModule,

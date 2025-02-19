@@ -1,15 +1,13 @@
-import { RouterModule, Routes } from "@angular/router";
-import { ConciliacionCompensacionComponent } from "../Components/Utilidades/conciliacion-compensacion/conciliacion-compensacion.component";
-import { NgModule } from "@angular/core";
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { CrearNotificacionesComponent } from '../Components/Utilidades/crear-notificaciones/crear-notificaciones.component';
 
+const routes: Routes = [
+  { path: "CrearNotificaciones", component: CrearNotificacionesComponent },
+];
 
-const routesUtilidades: Routes = [
-    { path: "ConciliacionCompensacion", component: ConciliacionCompensacionComponent }
-  ];
-
-  
 @NgModule({
-    imports: [RouterModule.forChild(routesUtilidades)],
-    exports: [RouterModule]
-  })
-  export class UtilidadesRoutingModule { }
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class UtilidadesRoutingModule { }
