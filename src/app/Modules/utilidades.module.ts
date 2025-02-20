@@ -6,12 +6,14 @@ import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxLoadingModule } from 'ngx-loading';
 import { CrearNotificacionesComponent } from '../Components/Utilidades/crear-notificaciones/crear-notificaciones.component';
+import { ConciliacionCompensacionComponent } from '../Components/Utilidades/conciliacion-compensacion/conciliacion-compensacion.component';
 
 
 
 @NgModule({
   declarations: [
-    CrearNotificacionesComponent
+    CrearNotificacionesComponent,
+    ConciliacionCompensacionComponent
   ],
   imports: [
     CommonModule,
