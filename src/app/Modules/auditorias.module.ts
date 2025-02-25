@@ -1,25 +1,21 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UtilidadesRoutingModule } from '../Routes/utilidades-routing.module';
+import { AuditoriasRoutingModule } from '../Routes/auditorias-routing.module';
 import { NguiAutoCompleteModule } from '@ngui/auto-complete';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxLoadingModule } from 'ngx-loading';
-import { CrearNotificacionesComponent } from '../Components/Utilidades/crear-notificaciones/crear-notificaciones.component';
-import { ConciliacionCompensacionComponent } from '../Components/Utilidades/conciliacion-compensacion/conciliacion-compensacion.component';
-import { DiferenciasSaldosComponent } from '../Components/Utilidades/diferencias-saldos/diferencias-saldos.component';
-
-
+import { GMFComponent } from '../Components/Auditorias/gmf/gmf.component';
+import { ScoreComponent } from '../Components/Auditorias/score/score.component';
 
 @NgModule({
   declarations: [
-    CrearNotificacionesComponent,
-    ConciliacionCompensacionComponent,
-    DiferenciasSaldosComponent
+    GMFComponent,
+    ScoreComponent
   ],
   imports: [
     CommonModule,
-    UtilidadesRoutingModule,
+    AuditoriasRoutingModule,
     NguiAutoCompleteModule,
     CurrencyMaskModule,
     FormsModule,
@@ -29,4 +25,4 @@ import { DiferenciasSaldosComponent } from '../Components/Utilidades/diferencias
     ReactiveFormsModule.withConfig({callSetDisabledState: 'whenDisabledForLegacyCode'})
   ]
 })
-export class UtilidadesModule { }
+export class AuditoriasModule { }

@@ -499,7 +499,7 @@
                                                 
                                                 <a [routerLink]="" (click)="toggleInformeEstadisticosMenu()">Estadísticos</a>
                                                 <i class="icon-arrow-right13" style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="!isInformeEstadisticosMenuOpen" ></i>
-                                            <i class="icon-arrow-down12"  style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="isInformeEstadisticosMenuOpen" ></i>
+                                                <i class="icon-arrow-down12"  style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="isInformeEstadisticosMenuOpen" ></i>
                                                 <ul *ngIf="isInformeEstadisticosMenuOpen">
                                                     <li id="transacciones">
                                                         <a [routerLink]="['/Informes/Estadisticos/Transacciones']" (click)="setModuloLocalStorage(TransaccionesModel.IdModuloPermiso)"> Histórico de Transacciones</a>
@@ -530,12 +530,14 @@
                                         </ul>
                                     </li>
                                     <li id="utilidades">
-                                        <a href="#">
+                                        <a href="#" (click)="toggleUtilidadesMenu()">
                                             <!-- (click)="setModuloLocalStorage(UtilidadesModel.IdModuloPermiso)" -->
                                             <i class=" icon-cog2"></i>
+                                            <i class="icon-arrow-right13" style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="!isUtilidadesOpen" ></i>
+                                                <i class="icon-arrow-down12"  style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="isUtilidadesOpen" ></i>
                                             <span>Utilidades</span>
                                         </a>
-                                        <ul>
+                                        <ul *ngIf="isUtilidadesOpen">
                                             <li id="crearNotificaciones">
                                                 <a [routerLink]="['/Utilidades/CrearNotificaciones']" (click)="setModuloLocalStorage(CrearNotificacionesModel.IdModuloPermiso)">Crear
                                                 notificación</a>
@@ -556,12 +558,15 @@
                                     </ul>
                                 </li>
                                 <li id="auditorias">
-                                    <a href="#">
+                                    <a href="#" (click)="toggleAuditoriaMenu()">
                                         <!-- (click)="setModuloLocalStorage(AuditoriasModel.IdModuloPermiso)" -->
                                         <i class=" icon-menu6"></i>
+                                        <i class="icon-arrow-right13" style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="!isAuditoriaOpen" ></i>
+                                        <i class="icon-arrow-down12"  style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="isAuditoriaOpen" ></i>
                                         <span> Auditorias</span>
+                                        
                                     </a>
-                                    <ul>
+                                    <ul *ngIf="isAuditoriaOpen">
                                         <li id="auditoriaScore">
                                             <a [routerLink]="['/Auditorias/Score']"
                                                 (click)="setModuloLocalStorage(AuditoriaScoreModel.IdModuloPermiso)">Score</a>
