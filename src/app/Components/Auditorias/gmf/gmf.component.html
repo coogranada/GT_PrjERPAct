@@ -1,0 +1,323 @@
+<form method="get" [formGroup]="GFMFrom" class="doNotPrint">
+    <div class="panel panel-white doNotPrint">
+        <div class="panel-heading">
+            <h6 class="panel-title">Búsqueda</h6>
+            <div class="heading-elements">
+                <ul class="icons-list ">
+                    <li>
+                        <a data-toggle="modal" data-target="#ModalAyuda">
+                            <i class="icon-question6 " title="Ayuda" data-popup="tooltip" data-trigger="hover" data-placement="top"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a data-action="collapse"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-xs-12 col-md-3 col-lg-3">
+                    <label>Fecha inicial:</label>
+                    <span class="text-danger ObligatorioGrande"> *</span>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="icon-calendar22"></i>
+                        </span>
+                        <input type="date" class="form-control" formControlName="FechaInicial">
+                        <span class="help-block validationSpan" *ngIf="GFMFrom.controls['FechaInicial'].errors?.['required'] && (GFMFrom.controls['FechaInicial'].dirty || GFMFrom.controls['FechaInicial'].touched)">
+                            La fecha inicial es obligatoria.</span>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-3 col-lg-3">
+                    <label>Fecha final:</label>
+                    <span class="text-danger ObligatorioGrande"> *</span>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="icon-calendar22"></i>
+                        </span>
+                        <input type="date" class="form-control" formControlName="FechaFinal">
+                        <span class="help-block validationSpan" *ngIf="GFMFrom.controls['FechaFinal'].errors?.['required'] && (GFMFrom.controls['FechaFinal'].dirty || GFMFrom.controls['FechaFinal'].touched)">
+                            La fecha final es obligatoria.</span>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-3 col-lg-3">
+                    <div class="form-group">
+                        <label>Usuario:</label>
+                        <input type="text" class="form-control" id="txtUsuario" formControlName="Usuario" />
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-3 col-lg-3">
+                    <div class="form-group">
+                        <label>Asociado:</label>
+                        <input type="text" class="form-control" id="txtAsociado" formControlName="Asociado" />
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row ">
+                <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                    <input type="submit" class="btn Gt-btn-verde" value="Consultar" (click)="ConsultarGMFAuditoria()" [disabled]="!GFMFrom.valid" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatos" *ngIf="dataGFMAuditoria != null">
+        <div class="panel-body ">
+            <div class="table-responsive scrollTabla">
+                <table id="TablaAuditoria" class="table table-hover doNotPrint">
+                    <thead>
+                        <tr>
+                            <th>
+                                <strong>Fecha consulta</strong>
+                            </th>
+                            <th>
+                                <strong>Asociado</strong>
+                            </th>
+                            <th>
+                                <strong>Cuenta</strong>
+                            </th>
+                            <th>
+                                <strong>Tipo transacción</strong>
+                            </th>
+                            <th>
+                                <strong>Número transacción</strong>
+                            </th>
+                            <th>
+                                <strong>Resultado proceso</strong>
+                            </th>
+                            <th>
+                                <strong>Oficina</strong>
+                            </th>
+                            <th>
+                                <strong>Usuario</strong>
+                            </th>
+                            <th>
+                                <strong>Nombre usuario</strong>
+                            </th>
+                            <th>
+                                <strong>Ver reporte</strong>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody *ngFor="let resultGMFAuditoria of dataGFMAuditoria">
+                        <tr>
+                            <td>
+                                {{resultGMFAuditoria.FechaConsulta | date : "yyyy/MM/dd" }}
+                            </td>
+                            <td>
+                                {{resultGMFAuditoria.IdAsociado}}
+                            </td>
+                            <td>
+                                {{resultGMFAuditoria.Cuenta}}
+                            </td>
+                            <td>
+                                {{resultGMFAuditoria.TipoTransaccion}}
+                            </td>
+                            <td>
+                                {{resultGMFAuditoria.NumeroTransaccion}}
+                            </td>
+                            <td>
+                                {{resultGMFAuditoria.ResultadoProceso}}
+                            </td>
+                            <td>
+                                {{resultGMFAuditoria.Oficina}}
+                            </td>
+                            <td>
+                                {{resultGMFAuditoria.Usuario}}
+                            </td>
+                            <td>
+                                {{resultGMFAuditoria.NombreUsuario}}
+                            </td>
+                            <td>
+                                <button title="Reporte" data-popup="tooltip" data-trigger="hover" data-placement="top" *ngIf="resultGMFAuditoria.TipoTransaccion !== 'Consulta'" class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#ModalExoneracion" (click)="ConsultarReporte(resultGMFAuditoria)">
+                                <i class="icon-file-text3" ></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</form>
+<!-- <app-root (permisosEmit)="getPermisos($event)">
+</app-root> -->
+<!-- Modal Ayuda -->
+<div id="ModalAyuda" class="modal fade">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">
+                    <i class="icon-question6"></i> Ayuda</h6>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li>Todos los campos marcados con
+                        <span class="text-danger ObligatorioGrande">*</span> son obligatorios.</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ Fin Modal Ayuda -->
+<!-- Modal ReporteExoneracion -->
+<div id="ModalExoneracion" class="modal fade" *ngIf="dataGMFReport != null">
+    <div class="modal-dialog modalGmf">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close doNotPrint" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" id="ReporteExoneracion">
+                <div class="col-sm-12 col-xs-12 col-lg-12" id="ReporteExoneracion">
+                    <div class=" col-sm-12 col-xs-12 col-lg-12  text-center ">
+                        <div class="col-sm-4 col-xs-4 col-lg-4">
+                            <img src="../../../../assets/images/GT/logo-coogranada.png" class="content-group mt-10 imagenFormato" alt="">
+                        </div>
+
+                        <div class="col-sm-8 col-xs-8 col-lg-8 text-right">
+                            <h6 class="text-uppercase text-bold">Formato de exoneración y retiro de GMF</h6>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-xs-12 col-lg-12 text-right">
+                        <p class="text-bold" id="rptFecha"></p>
+                        <div class=" bg-morado col-sm-12 col-xs-12 col-lg-12 content-group text-center tablaGMF">
+                            <h6 *ngIf="dataGMFReport.IdTipoTransaccion === 1" class="text-uppercase text-bold">Exoneración</h6>
+                            <h6 *ngIf="dataGMFReport.IdTipoTransaccion === 2" class="text-uppercase text-bold">Retiro exoneración</h6>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-xs-12 col-lg-12 content-group text-justify ">
+                        <p *ngIf="dataGMFReport.IdTipoTransaccion === 1">Conozco y acepto que la exención prevista en el numeral primero del artículo 879 del estatuto tributario, solo se puede aplicar a una cuenta de ahorros. Manifiesto, bajo la gravedad de juramento, que realizo la presente solicitud
+                            de exención en razón a que a la fecha no gozo del beneficio en ninguna otra cuenta de ahorros.</p>
+                        <p *ngIf="dataGMFReport.IdTipoTransaccion === 1">
+                            Me comprometo a no solicitar dicha exención ante otro establecimiento de crédito mientras exista la exención, en la cuenta  de ahorros, identificada al final del presente documento, respecto de la cual se eleva la presente solicitud.
+                        </p>
+                        <p *ngIf="dataGMFReport.IdTipoTransaccion === 2">En mi calidad de titular de la cuenta de ahorros que se cita la final de la presente, renuncio a la exención prevista en el numeral primero del artículo 879 del estatuto tributario que fuera soliciada para esta cuenta en dias anteriores
+                            y acepto expresamente las medidas tomadas por Coogranada, tendientes a  controlar en la  presente mensualidad el valor máximo de la exención legal.
+                        </p>
+                        <p *ngIf="dataGMFReport.IdTipoTransaccion === 2">
+                            Lo anterior de conformidad con los mecanismos de verificación contemplados en el decreto 518 del 27 de marzo de 2001, para establecimientos de crédito. </p>
+                    </div>
+
+                    <!--Datos asociado-->
+                    <div class="col-sm-6 col-xs-6 col-lg-6">
+                        <ul class="list list-unstyled text-left">
+                            <li class="text-bold">Nombre:
+                                <span id="rptNombre" class="text-semibold">{{ dataGMFReport.NombreAsociado }}</span>
+                            </li>
+                            <li class="text-bold">Número de identificación:
+                                <span id="rptNumeroIdentificacion" class="text-semibold">{{ dataGMFReport.IdAsociado }}</span>
+                            </li>
+                            <li class="text-bold">Dirección:
+                                <span id="rptDireccion" class="text-semibold">{{ dataGMFReport.DireccionReside }}</span>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div class="col-sm-6 col-xs-6 col-lg-6">
+                        <ul class="list list-unstyled text-left">
+                            <li class="text-bold">Cuenta de ahorros:
+                                <span id="rptCuenta" class=" text-semibold">{{ dataGMFReport.Cuenta }}</span>
+                            </li>
+                            <li class="text-bold">Teléfono:
+                                <span id="rptTelefono" class=" text-semibold">{{ dataGMFReport.TelReside }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--Fin Datos asociado-->
+                    <!--Huella y firma-->
+                    <div class=" col-sm-12 col-xs-12 col-lg-12">
+                        <div class="col-sm-3 col-xs-3 col-lg-3"></div>
+                        <div class="col-sm-4 col-xs-4 col-lg-4"></div>
+                        <div class="col-sm-2 col-xs-2 col-lg-2">
+                            <div class="panel text-center huellaDactilar">
+                                <div class="panel-body">
+                                    <div class=" col-sm-12 col-xs-12 col-lg-12">
+                                        <br /> </div>
+                                    <div class=" col-sm-12 col-xs-12 col-lg-12">
+                                        <br /> </div>
+                                    <div class=" col-sm-12 col-xs-12 col-lg-12">
+                                        <br /> </div>
+                                    <div class=" col-sm-12 col-xs-12 col-lg-12">
+                                        <br /> </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" col-sm-12 col-xs-12 col-lg-12">
+                        <div class=" col-sm-2 col-xs-2 col-lg-2">
+                            <br /> </div>
+                        <div class="col-sm-4 col-xs-4 col-lg-4 text-center">
+                            <div class="content-group">
+                                <div class="table-responsive no-border">
+                                    <table class="table cke_show_border">
+                                        <tbody>
+                                            <tr class="colum">
+                                                <th class="text-center firma">Firma del titular</th>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 col-xs-4 col-lg-4">
+                            <div class="table-responsive no-border">
+                                <table class="table cke_show_border">
+                                    <tbody>
+                                        <tr class="colum">
+                                            <th class="text-center firma">Huella dactilar</th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Huella y firma-->
+                    <!--Datos Coogranada-->
+                    <div class=" col-sm-12 col-xs-12 col-lg-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead class="bg-morado tablaGMF">
+                                    <tr>
+                                        <th class="col-lg-3 text-bold">Asesor</th>
+                                        <th class="col-lg-2 text-bold">Oficina</th>
+                                        <th class="col-lg-3 text-bold">N° de transacción</th>
+                                        <th class="col-lg-3 text-bold">Resultado proceso</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td id="rptAsesor">{{ dataGMFReport.NombreUsuario }}</td>
+                                        <td id="rptOficina">{{ dataGMFReport.Oficina }}</td>
+                                        <td id="rptNumTransaccion">{{ dataGMFReport.NumeroTransaccion }}</td>
+                                        <td id="rptResultadoProceso">{{ dataGMFReport.ResultadoProceso }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!--Datos Coogranada-->
+
+                    <div class="col-sm-12 col-xs-12 col-lg-12 text-right">
+                        <div class="col-sm-12 col-xs-12 col-lg-12">
+                            <br />
+                        </div>
+                        <p>F-8 AHO V2</p>
+                        <div class="col-sm-12 col-xs-12 col-lg-12">
+                            <br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-verde doNotPrint" onclick="print()">Imprimir</button>
+                <button type="button" class="btn Gt-btn-morado doNotPrint" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ Fin ReporteExoneracion -->
