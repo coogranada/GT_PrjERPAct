@@ -20,11 +20,11 @@ export class AuthHttpClientInterceptorService implements HttpInterceptor {
       });
     else
     authRequest = req.clone({});
-    console.log("httpClient", req)
+    //console.log("httpClient", req)
     return next.handle(authRequest).pipe(
 
       catchError((err: any) => {
-        console.log("eerrr", err)
+        //console.log("eerrr", err)
         if (err.status == 401) {
           localStorage.clear();
           window.location.reload();
