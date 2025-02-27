@@ -1,3 +1,14 @@
+.divNoAlto {
+  display: inline-block; 
+  min-height: 0;         
+  margin: 0;
+  padding: 0;
+  line-height: 1;        
+  visibility: hidden;  
+  height: 0.5px;             
+  overflow: hidden;     
+}
+
 /* .toast-top-right {
     top: 90%;
     right: 12px;

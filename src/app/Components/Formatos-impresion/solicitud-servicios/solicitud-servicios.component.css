@@ -1,8 +1,8 @@
 .letraGrande {
-   font-size: 15px;
+    font-size: 11px;
 }
 
-.Capitalice{
+.Capitalice {
     text-transform: capitalize;
 }
 
@@ -18,6 +18,17 @@
     padding: 1px;
 }
 
-@media print{
-   
+@media print {
+
+    .no-print,
+    .no-print * {
+        display: none !important;
+    }
+}
+
+.imgLogo {
+    visibility: visible !important;
+    display: inline-block !important;
+    width: 200px !important;
+    z-index: 9999;
 }

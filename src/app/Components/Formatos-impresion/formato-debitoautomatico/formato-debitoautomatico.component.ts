@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { HtmlToService } from '../../../Services/Utilidades/html-to.service';
+import { PrintService } from '../../../Services/General/print.service';
+
 
 @Component({
   selector: 'app-formato-debitoautomatico',
@@ -22,7 +23,7 @@ export class FormatoDebitoAutomaticoComponent implements OnInit {
   public Undefined = undefined;
 
 
-  constructor( private htmlTo : HtmlToService) { }
+  constructor( private printService : PrintService) { }
 
   ngOnInit() {
   }
@@ -64,7 +65,7 @@ export class FormatoDebitoAutomaticoComponent implements OnInit {
     this.dataObjetActual = [];
     this.dataObjetRetiro = []
   }
-  print(){
-    this.htmlTo.HtmlToPdf('FormatoDebitoAutomatico',"l",[898, 578])
+  print() {
+    this.printService.printArea('FormatoDebitoAutomatico','');
   }
 }

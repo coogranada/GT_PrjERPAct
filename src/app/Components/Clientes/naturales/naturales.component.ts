@@ -105,6 +105,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   @ViewChild('AlertaModal', { static: true }) private AlertaModal!: ElementRef;
   @ViewChild('ModalActualizaFecha', { static: true }) private ModalActualizaFecha!: ElementRef;
   @ViewChild('ModalCancelarSolicitud', { static: true }) private ModalCancelarSolicitud!: ElementRef;
+  @ViewChild('ciudadSelect') ciudadSelect: ElementRef | undefined;
   public condicion = false;
   CargarServicios = 0;
   CargarServiciosOn = false;

@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { HtmlToService } from '../../../Services/Utilidades/html-to.service';
+import { PrintService } from '../../../Services/General/print.service';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -18,7 +19,7 @@ export class FormatoCambioCuentaDestinoComponent implements OnInit {
   MostrarCuentaAhorros = true;
   MostrarCuentaPorPagar = true;
 
-  constructor(private HtmlTo : HtmlToService) { }
+  constructor(private printService : PrintService) { }
 
   ngOnInit() {
     }
@@ -34,7 +35,8 @@ export class FormatoCambioCuentaDestinoComponent implements OnInit {
         this.MostrarCuentaPorPagar = false;
       }
     }
+    
     print() {
-      this.HtmlTo.HtmlToPdf('FormatoCambioCuentaDestino','p',[1238, 794]);
+      this.printService.printArea('FormatoCambioCuentaDestino','');
     }
 }
