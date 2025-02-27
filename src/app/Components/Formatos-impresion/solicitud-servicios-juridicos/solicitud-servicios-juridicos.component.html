@@ -18,7 +18,7 @@
           <!-- Encabezado -->
           <div class="col-sm-12 col-xs-12 col-lg-12  text-center ">
             <div class="col-sm-4 col-xs-4 col-lg-4">
-              <img src="../../../../assets/images/GT/logo-coogranada.png" class="content-group mt-10 imagenFormatoNaturales"
+              <img src="../../../../assets/images/GT/logo-coogranada.png" class="imgLogo"
                 alt="">
             </div>
           
@@ -45,14 +45,14 @@
           
           <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
             <div class="col-xs-6 col-md-6 col-lg-6 FormatoNaturalesRight">
-               <div class="col-xs-4 col-md-4 col-lg-4" *ngIf="servVinculacion">
-                <label class="letraGrande">Vinculación</label>
+               <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="servVinculacion">
+                <label class="letraGrande no-wrap">Vinculación</label>
               </div>
-              <div class="col-xs-4 col-md-4 col-lg-4" *ngIf="Servcredito">
-                <label class="letraGrande">Credito</label>
+              <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="Servcredito">
+                <label class="letraGrande no-wrap">Credito</label>
               </div>
-              <div class="col-xs-4 col-md-4 col-lg-4" *ngIf="ServActualiza">
-                <label class="letraGrande">Actualizacion de datos</label>
+              <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="ServActualiza">
+                <label class="letraGrande no-wrap">Actualizacion de datos</label>
               </div>
           
               <!-- FALTA -->
@@ -235,8 +235,8 @@
               <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesLeft">
                   <label class="letraGrande">{{infoPersonal.DireccionPpal}}</label>
               </div>
-              <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesLeft">
-                <label class="letraGrande">{{ubicacionEmpresa.Email}}</label>
+              <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesLeft wrap">
+                <label class="letraGrande wrap">{{ubicacionEmpresa.Email}}</label>
               </div>
             </div>
             <!---->
@@ -295,8 +295,8 @@
                 <div class="col-xs-3 col-md-3 col-lg-3 text-center FormatoNaturalesLeft">
                   <label>En que direccion desea recibir su correspondencia</label>
                 </div>
-                <div class="col-xs-3 col-md-3 col-lg-3 text-center FormatoNaturalesLeft">
-                  <label>{{infoPersonal.DireccionCorrespondencia}}</label>
+                <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesLeft wrap">
+                  <label class="letraGrande wrap">{{infoPersonal.DireccionCorrespondencia}}</label>
                 </div>
             </div>
             <!---->

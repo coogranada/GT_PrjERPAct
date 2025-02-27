@@ -101,3 +101,27 @@ p::first-letter {
 .Mayusculas {
     text-transform: uppercase;
 }
+
+.modal-min {
+    height: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.div-espacio {
+    margin-top: 0px;
+    margin-bottom: 1px;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 5;
+    padding-right: 5;
+}
+
+.div-espacio1 {
+    margin-top: 0px;
+    margin-bottom: 1px;
+    padding-top: 5px;
+    padding-bottom: 0;
+    padding-left: 5;
+    padding-right: 5;
+}

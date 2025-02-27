@@ -1,0 +1,14 @@
+@media print {
+
+    .no-print,
+    .no-print * {
+        display: none !important;
+    }
+}
+
+.imgLogo {
+    visibility: visible !important;
+    display: inline-block !important;
+    width: 200px !important;
+    z-index: 9999;
+}

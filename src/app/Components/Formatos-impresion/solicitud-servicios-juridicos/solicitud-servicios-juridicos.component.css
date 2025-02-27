@@ -1,3 +1,27 @@
 .letraGrande {
-    font-size: 15px;
+    font-size: 12px;
+}
+
+.no-wrap{
+    flex-wrap: nowrap;
+}
+
+.wrap{
+    flex-wrap: wrap;
+}
+
+
+@media print {
+
+    .no-print,
+    .no-print * {
+        display: none !important;
+    }
+}
+
+.imgLogo {
+    visibility: visible !important;
+    display: inline-block !important;
+    width: 200px !important;
+    z-index: 9999;
 }

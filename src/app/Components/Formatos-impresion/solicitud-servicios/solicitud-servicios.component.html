@@ -3,13 +3,13 @@
         h1.SaltoDePagina {
             page-break-after: always !important;
         }
-        
+
         @media all {
             div.saltopagina {
                 display: none;
             }
         }
-        
+
         @media print {
             div.saltopagina {
                 display: block;
@@ -20,7 +20,8 @@
 </head>
 
 <body class="navbar-bottom login-container" id="Contenido">
-    <button type="button" class="btn Gt-btn-morado" style="visibility:hidden" data-toggle="modal" data-target="#ModalFormatoNaturales" #openSolicitud>
+    <button type="button" class="btn Gt-btn-morado" style="visibility:hidden" data-toggle="modal"
+        data-target="#ModalFormatoNaturales" #openSolicitud>
         Abrir <i class="icon-play3 position-right"></i>
     </button>
     <!-- Modal ReporteExoneracion -->
@@ -28,19 +29,21 @@
         <div class="modal-dialog modal-full-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <button type="button" class="close no-print" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body" id='FormatoDeServicios' style="font-size: 11px;">
                     <!-- Encabezado -->
                     <div class="col-sm-12 col-xs-12 col-lg-12  text-center ">
                         <div class="col-sm-4 col-xs-4 col-lg-4">
-                            <img src="../../../../assets/images/GT/logo-coogranada.png" class="content-group mt-10 imagenFormatoNaturales" alt="">
+                            <img src="../../../../assets/images/GT/logo-coogranada.png"
+                                class="imgLogo" alt="">
                         </div>
 
                         <div class="col-sm-8 col-xs-8 col-lg-8 text-right">
                             <h5 class="text-uppercase text-center text-bold">Solicitud de servicios</h5>
                             <h6 class="text-center text-bold">Persona Natural</h6>
-                            <p class="text-center letraGrande text-bold">{{esReimpresa}} {{fechaImpresion | date:'dd-MMM-yyyy HH:mm a'}}</p>
+                            <p class="text-center letraGrande text-bold">{{esReimpresa}} {{fechaImpresion |
+                                date:'dd-MMM-yyyy HH:mm a'}}</p>
                         </div>
                         <br />
                     </div>
@@ -48,7 +51,8 @@
 
 
                     <!--Servicio solicitado y como conocio a coogranada -->
-                    <div class="col-sm-12 col-xs-12 col-lg-12 bg-morado FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop bagGrey">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 bg-morado FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop bagGrey">
                         <div class="col-xs-6 col-md-6 col-lg-6 bg-morado text-center FormatoNaturalesRight bagGrey">
                             <label class="text-bold ">Servicio solicitado </label>
                         </div>
@@ -57,15 +61,16 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-6 col-md-6 col-lg-6 FormatoNaturalesRight">
-                            <div class="col-xs-4 col-md-4 col-lg-4" *ngIf="servVinculacion">
+                            <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="servVinculacion">
                                 <label class="letraGrande">Vinculación</label>
                             </div>
-                            <div class="col-xs-4 col-md-4 col-lg-4" *ngIf="Servcredito">
+                            <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="Servcredito">
                                 <label class="letraGrande">Credito</label>
                             </div>
-                            <div class="col-xs-4 col-md-4 col-lg-4" *ngIf="ServActualiza">
+                            <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="ServActualiza">
                                 <label class="letraGrande">Actualizacion de datos</label>
                             </div>
 
@@ -84,7 +89,8 @@
 
 
                     <!-- informacion si es para credito y tipo  de usuario -->
-                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-6 col-md-6 col-lg-6 FormatoNaturalesRight">
                             <div class="col-xs-4 col-md-4 col-lg-4 text-center">
                                 <label class="text-bold">Monto solicitado</label>
@@ -101,11 +107,13 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-6 col-md-6 col-lg-6 FormatoNaturalesRight">
                             <div class="col-xs-4 col-md-4 col-lg-4">
-                                <label class="letraGrande"> 
-                                    <span *ngIf="naturalesServicio.MontoSolicitado !== null && naturalesServicio.MontoSolicitado !== undefined" >$</span>
+                                <label class="letraGrande">
+                                    <span
+                                        *ngIf="naturalesServicio.MontoSolicitado !== null && naturalesServicio.MontoSolicitado !== undefined">$</span>
                                     {{naturalesServicio.MontoSolicitado | currency:'':'' : '1.0'}}
                                 </label>
                             </div>
@@ -125,7 +133,8 @@
 
 
                     <!-- Oficina, Asesor, Fecha de solicitud y numero de radicado-->
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-6 col-md-6 col-lg-6 text-center FormatoNaturalesRight">
                             <div class="col-xs-6 col-md-6 col-lg-6">
                                 <label class="text-bold">Oficina</label>
@@ -143,7 +152,8 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-6 col-md-6 col-lg-6">
                             <div class="col-xs-6 col-md-6 col-lg-6">
                                 <label class="letraGrande">{{naturalesServicio.Oficina}}</label>
@@ -175,7 +185,8 @@
                         <!-- <img src="../../../../assets/images/InfoPersonal.PNG">  -->
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12 text-center FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 text-center FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-2 col-md-2 col-lg-2 text-center FormatoNaturalesRight">
                             <label class="text-bold">Regimen Tributario</label>
                         </div>
@@ -199,7 +210,8 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
                             <label class="letraGrande">{{ naturalesAllModel.RegimenTributario}}</label>
                         </div>
@@ -228,7 +240,8 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <!--Nombres y genero-->
                         <div class="col-xs-2 col-md-2 col-lg-2 text-center FormatoNaturalesRight">
                             <label class="text-bold">*Primer apellido</label>
@@ -246,7 +259,8 @@
                             <label class="text-bold">*Genero</label>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <!--Nombres y genero-->
                         <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
                             <label class="letraGrande Capitalice">{{naturalesAllModel.PrimerApellido}}</label>
@@ -266,7 +280,8 @@
                     </div>
 
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight  FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight  FormatoNaturalesTop">
                         <!--Titulos Ciudad fecha y departa-->
                         <div class="col-xs-4 col-md-4 col-lg-4 text-center">
                             <label class="text-bold">*Ciudad de nacimiento</label>
@@ -280,7 +295,8 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <!--Fecha nacimiento ciudad y departame-->
                         <div class="col-xs-4 col-md-4 col-lg-4">
                             <label class="letraGrande">{{naturalesAllModel.CiudadNto}}</label>
@@ -299,7 +315,8 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
                         <!--titulos Pais estado civil-->
                         <div class="col-xs-3 col-md-3 col-lg-3 text-center">
                             <label class="text-bold">País</label>
@@ -318,7 +335,8 @@
                         </div> -->
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <!--Estados civiles-->
                         <div class="col-xs-3 col-md-3 col-lg-3">
                             <label class="letraGrande">{{naturalesAllModel.Pais}}</label>
@@ -337,7 +355,8 @@
                         </div> -->
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
                         <!--titulo profe,nacionalidad,numerocelular,correo electronico-->
                         <div class="col-xs-3 col-md-4 col-lg-4 text-center FormatoNaturalesRight">
                             <label class="text-bold">Título profesional</label>
@@ -354,7 +373,8 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
                         <!--profesi,nacionalidad,numerocelular,correo electronico-->
                         <div class="col-xs-3 col-md-4 col-lg-4 FormatoNaturalesRight">
                             <label class="letraGrande">{{naturalesAllModel.tituloProfesional}}</label>
@@ -380,7 +400,8 @@
                         <label class="text-bold text-uppercase">* Ubicación de la residencia</label>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight  FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight  FormatoNaturalesTop">
                         <!--titulo direcc,barrio,municipio,departamento,pais-->
                         <div class="col-xs-3 col-md-3 col-lg-6 FormatoNaturalesRight">
                             <label class="text-bold">*Dirección</label>
@@ -389,7 +410,8 @@
                             <label class="letraGrande">{{naturalesAllModel.Direccion}}</label>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-3 col-md-3 col-lg-3 text-center FormatoNaturalesRight">
                             <label class="Capitalice text-bold">Barrio</label>
                         </div>
@@ -403,7 +425,8 @@
                             <label class="text-bold">Pais</label>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-3 col-md-3 col-lg-3 text-center FormatoNaturalesRight">
                             <label class="Capitalice letraGrande">{{naturalesAllModel.BarrioReside}}</label>
                         </div>
@@ -418,7 +441,8 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
                         <!--Titulo telefono, vivienda, antiguedad, nombre arrendador,nombre arrendador-->
                         <div class="col-xs-2 col-md-2 col-lg-2  FormatoNaturalesRight">
                             <label class="text-bold">*Teléfono</label>
@@ -437,7 +461,8 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
                         <!--Titulo telefono, vivienda, antiguedad, nombre arrendador,nombre arrendador-->
                         <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
                             <label class="letraGrande">{{naturalesAllModel.Telefono}}</label>
@@ -470,7 +495,8 @@
                         <label class="text-bold text-uppercase">* Información laboral</label>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
                         <!-- titulos activdad economica, ciiu ocupacion-->
                         <div class="col-xs-4 col-md-4 col-lg-4 text-center FormatoNaturalesRight">
                             <label class="text-bold">*Actividad económica</label>
@@ -483,7 +509,8 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft  FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft  FormatoNaturalesRight FormatoNaturalesTop">
                         <!-- Activdad economica, ciiu ocupacion-->
                         <div class="col-xs-4 col-md-4 col-lg-4 FormatoNaturalesRight">
                             <label class="letraGrande">{{naturalesAllModel.ActividadEconomica}}</label>
@@ -499,7 +526,8 @@
 
 
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <!--Direccion laboral-->
                         <div class="col-xs-3 col-md-3 col-lg-3 text-center FormatoNaturalesRight">
                             <label class="text-bold">* Dirección de la empresa</label>
@@ -514,7 +542,8 @@
                             <label class="letraGrande">{{naturalesAllModel.TelefonoLaboral}}</label>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-3 col-md-3 col-lg-3 text-center FormatoNaturalesRight">
                             <label class="Capitalice text-bold">Barrio</label>
                         </div>
@@ -528,7 +557,8 @@
                             <label class="text-bold">Pais</label>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
 
                         <div class="col-xs-3 col-md-3 col-lg-3  FormatoNaturalesRight">
                             <label class="letraGrande Capitalice">{{naturalesAllModel.BarrioLaboral}}</label>
@@ -544,7 +574,8 @@
                         </div>
                     </div>
                     <!-- Empresa cargo y eps-->
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-3 col-md-3 col-lg-3 text-center FormatoNaturalesRight">
                             <label class="Capitalice text-bold">* Empresa donde labora</label>
                         </div>
@@ -559,7 +590,8 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-3 col-md-3 col-lg-3  FormatoNaturalesRight">
                             <label class="letraGrande Capitalice">{{naturalesAllModel.EmpresaLabora}}</label>
                         </div>
@@ -576,7 +608,8 @@
 
 
                     <!-- Administra recursos publicos, antiguedad empresa, nro empleados y tipo local-->
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight  FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight  FormatoNaturalesTop">
                         <div class="col-xs-3 col-md-3 col-lg-3 text-center FormatoNaturalesRight">
                             <label class="text-bold">Administra recursos públicos</label>
                         </div>
@@ -591,7 +624,8 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-3 col-md-3 col-lg-3">
                             <label class="letraGrande">{{naturalesAllModel.AdministraRecursosPublicos}}
 
@@ -617,7 +651,8 @@
 
 
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesRight">
                             <label class="text-bold">Nombre arrendador</label>
                         </div>
@@ -638,7 +673,8 @@
                         <label class="text-bold text-uppercase">ENVÍO DE INFORMACIÓN POR CORRESPONDENCIA</label>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-6 col-md-6 col-lg-4 FormatoNaturalesRight">
                             <label>En qué dirección desea recibir su correspondencia:</label>
                         </div>
@@ -654,7 +690,8 @@
                         <label class="text-bold text-uppercase">Entrevista</label>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-6 col-md-6 col-lg-4">
                             <label>¿Administra dineros de terceros a su nombre?</label>
                         </div>
@@ -666,7 +703,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-4 col-md-6 col-lg-4">
                             <label>¿Posee otra actividad económica secundaria que le reporte ingresos?</label>
                         </div>
@@ -685,11 +723,13 @@
                             </div>
                             <div class="col-xs-3 col-md-2 col-lg-3">
                                 <label class="letraGrande" currencyMask>$
-                                    {{naturalesAllModel.GanaActividad == "false" ? 0 : naturalesAllModel.GanaActividad | currency:'':'' : '1.0'}} </label>
+                                    {{naturalesAllModel.GanaActividad == "false" ? 0 : naturalesAllModel.GanaActividad |
+                                    currency:'':'' : '1.0'}} </label>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesBottom FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesBottom FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-6 col-md-6 col-lg-5">
                             <label>¿Cuál es el valor promedio mensual de consignaciones que realiza en sus
                                 productos?</label>
@@ -710,7 +750,8 @@
                         <label class="text-bold text-uppercase">INFORMACIÓN FINANCIERA</label>
                     </div>
 
-                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom bg-morado">
+                    <div
+                        class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom bg-morado">
                         <div class="col-xs-6 col-md-6 col-lg-6 text-center FormatoNaturalesRight">
                             <label class="text-bold">INGRESOS</label>
                         </div>
@@ -719,7 +760,8 @@
                         </div>
                     </div>
 
-                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
+                    <div
+                        class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
                         <div class="col-xs-4 col-md-4 col-lg-4">
                             <label> <label class="text-bold">1.</label> Salario/ventas </label>
                         </div>
@@ -730,27 +772,32 @@
                             <label> <label class="text-bold">1.</label> Valor arriendo</label>
                         </div>
                         <div class="col-xs-2 col-md-2 col-lg-2">
-                            <label class="letraGrande">${{naturalesAllModel.ValorArriendo | currency:'':'' : '1.0'}}</label>
+                            <label class="letraGrande">${{naturalesAllModel.ValorArriendo | currency:'':'' :
+                                '1.0'}}</label>
                         </div>
                     </div>
 
-                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
+                    <div
+                        class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
                         <div class="col-xs-4 col-md-4 col-lg-4">
                             <label> <label class="text-bold">2.</label> Comisiones</label>
                         </div>
                         <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
-                            <label class="letraGrande">${{naturalesAllModel.Comisiones | currency:'':'' : '1.0'}}</label>
+                            <label class="letraGrande">${{naturalesAllModel.Comisiones | currency:'':'' :
+                                '1.0'}}</label>
                         </div>
                         <div class="col-xs-4 col-md-4 col-lg-4">
                             <label><label class="text-bold">2.</label>Obligaciones financieras</label>
                         </div>
                         <div class="col-xs-2 col-md-2 col-lg-2">
-                            <label class="letraGrande">${{naturalesAllModel.ObligacionesFinancieras | currency:'':'' : '1.0'}}</label>
+                            <label class="letraGrande">${{naturalesAllModel.ObligacionesFinancieras | currency:'':'' :
+                                '1.0'}}</label>
                         </div>
                     </div>
 
 
-                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
+                    <div
+                        class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
                         <div class="col-xs-4 col-md-4 col-lg-4">
                             <label> <label class="text-bold">3.</label> Arriendos</label>
                         </div>
@@ -761,68 +808,82 @@
                             <label> <label class="text-bold">3.</label> Otras obligaciones</label>
                         </div>
                         <div class="col-xs-2 col-md-2 col-lg-2">
-                            <label class="letraGrande">${{naturalesAllModel.OtrasObligaciones | currency:'':'' : '1.0'}}</label>
+                            <label class="letraGrande">${{naturalesAllModel.OtrasObligaciones | currency:'':'' :
+                                '1.0'}}</label>
                         </div>
                     </div>
 
-                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
+                    <div
+                        class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
                         <div class="col-xs-4 col-md-4 col-lg-4">
                             <label> <label class="text-bold">4.</label> Otros ingresos</label>
                         </div>
                         <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
-                            <label class="letraGrande">${{naturalesAllModel.OtrosIngresos | currency:'':'' : '1.0'}}</label>
+                            <label class="letraGrande">${{naturalesAllModel.OtrosIngresos | currency:'':'' :
+                                '1.0'}}</label>
                         </div>
                         <div class="col-xs-4 col-md-4 col-lg-4">
                             <label><label class="text-bold">4.</label> Gastos familiares</label>
                         </div>
                         <div class="col-xs-2 col-md-2 col-lg-2">
-                            <label class="letraGrande">${{naturalesAllModel.GastosFamiliares | currency:'':'' : '1.0'}}</label>
+                            <label class="letraGrande">${{naturalesAllModel.GastosFamiliares | currency:'':'' :
+                                '1.0'}}</label>
                         </div>
                     </div>
 
 
-                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
+                    <div
+                        class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
                         <div class="col-xs-4 col-md-4 col-lg-4">
-                            <label> <label class="text-bold">5.</label>Total ingresos <label class="text-bold">(1+2+3+4)</label></label>
+                            <label> <label class="text-bold">5.</label>Total ingresos <label
+                                    class="text-bold">(1+2+3+4)</label></label>
                         </div>
                         <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
-                            <label class="letraGrande">${{naturalesAllModel.TotalIngresos | currency:'':'' : '1.0'}}</label>
+                            <label class="letraGrande">${{naturalesAllModel.TotalIngresos | currency:'':'' :
+                                '1.0'}}</label>
                         </div>
                         <div class="col-xs-4 col-md-4 col-lg-4">
                             <label> <label class="text-bold">5.</label>Otros egresos</label>
                         </div>
                         <div class="col-xs-2 col-md-2 col-lg-2">
-                            <label class="letraGrande">${{naturalesAllModel.OtrosEgresos | currency:'':'' : '1.0'}}</label>
+                            <label class="letraGrande">${{naturalesAllModel.OtrosEgresos | currency:'':'' :
+                                '1.0'}}</label>
                         </div>
                     </div>
 
-                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
+                    <div
+                        class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
                         <div class="col-xs-4 col-md-4 col-lg-4">
                             <label> <label class="text-bold">6.</label>Costos y gastos</label>
                         </div>
                         <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
-                            <label class="letraGrande">${{naturalesAllModel.CostosGastos | currency:'':'' : '1.0'}}</label>
+                            <label class="letraGrande">${{naturalesAllModel.CostosGastos | currency:'':'' :
+                                '1.0'}}</label>
                         </div>
                         <div class="col-xs-4 col-md-4 col-lg-4">
                             <label>Total egresos <label class="text-bold">(1+2+3+4+5)</label></label>
                         </div>
                         <div class="col-xs-2 col-md-2 col-lg-2">
-                            <label class="letraGrande">${{naturalesAllModel.TotalEgresos | currency:'':'' : '1.0'}}</label>
+                            <label class="letraGrande">${{naturalesAllModel.TotalEgresos | currency:'':'' :
+                                '1.0'}}</label>
                         </div>
                     </div>
 
 
 
-                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
+                    <div
+                        class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
                         <div class="col-xs-4 col-md-4 col-lg-4">
                             <label>Total ingresos operacionales <label class="text-bold">(5-6)</label></label>
                         </div>
                         <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
-                            <label class="letraGrande">${{naturalesAllModel.TotalIngresosOperacionales | currency:'':'' : '1.0'}}</label>
-                        </div>                        
+                            <label class="letraGrande">${{naturalesAllModel.TotalIngresosOperacionales | currency:'':''
+                                : '1.0'}}</label>
+                        </div>
                     </div>
 
-                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
+                    <div
+                        class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
                         <div class="col-xs-4 col-md-4 col-lg-4">
                             <label> Descripción de otros ingresos </label>
                         </div>
@@ -830,24 +891,28 @@
                         </div>
                     </div>
 
-                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
+                    <div
+                        class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
                         <div class="col-xs-2 col-md-2 col-lg-2">
                             <label class="text-bold">Total activos</label>
                         </div>
                         <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesBorder">
-                            <label class="letraGrande">${{naturalesAllModel.TotalActivos | currency:'':'' : '1.0'}}</label>
+                            <label class="letraGrande">${{naturalesAllModel.TotalActivos | currency:'':'' :
+                                '1.0'}}</label>
                         </div>
                         <div class="col-xs-2 col-md-2 col-lg-2">
                             <label class="text-bold">Total pasivos</label>
                         </div>
                         <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesBorder">
-                            <label class="letraGrande">${{naturalesAllModel.TotalPasivos | currency:'':'' : '1.0'}}</label>
+                            <label class="letraGrande">${{naturalesAllModel.TotalPasivos | currency:'':'' :
+                                '1.0'}}</label>
                         </div>
                         <div class="col-xs-2 col-md-2 col-lg-2">
                             <label class="text-bold">Total patrimonio</label>
                         </div>
                         <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesBorder">
-                            <label class="letraGrande">${{naturalesAllModel.TotalPatrimonio| currency:'':'' : '1.0'}}</label>
+                            <label class="letraGrande">${{naturalesAllModel.TotalPatrimonio| currency:'':'' :
+                                '1.0'}}</label>
                         </div>
 
                     </div>
@@ -863,7 +928,8 @@
                     <div class="col-xs-12 col-md-12 col-lg-12 text-center Gt-ColorMorado FormatoNaturalesBorder ">
                         <label class="text-bold ">Bien inmueble</label>
                     </div>
-                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
+                    <div
+                        class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
                         <div class="col-xs-2 col-md-2 col-lg-2">
                             <label class="text-bold">Propiedad</label>
                         </div>
@@ -884,7 +950,8 @@
                         </div>
                     </div>
 
-                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom" *ngFor="let Propiedad of ArrayPropiedad">
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom"
+                        *ngFor="let Propiedad of ArrayPropiedad">
                         <div class="col-xs-2 col-md-2 col-lg-2">
                             <label class="letraGrande">{{Propiedad.TipoActivo}} &nbsp;</label>
                         </div>
@@ -911,7 +978,8 @@
                         <label class="text-bold ">Vehiculo</label>
                     </div>
 
-                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
+                    <div
+                        class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
                         <div class="col-xs-2 col-md-2 col-lg-2">
                             <label class="text-bold">Vehiculo</label>
                         </div>
@@ -935,7 +1003,8 @@
                         </div>
                     </div>
 
-                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom" *ngFor="let Propiedad of ArrayVehiculo">
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom"
+                        *ngFor="let Propiedad of ArrayVehiculo">
                         <div class="col-xs-2 col-md-2 col-lg-2">
                             <label class="letraGrande">{{Propiedad.TipoActivo}}</label>
                         </div>
@@ -965,7 +1034,8 @@
                     <div class="col-xs-12 col-md-12 col-lg-12 text-center Gt-ColorMorado FormatoNaturalesBorder ">
                         <label class="text-bold ">Otros</label>
                     </div>
-                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
+                    <div
+                        class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom">
                         <div class="col-xs-2 col-md-2 col-lg-2">
                             <label class="text-bold">Activo</label>
                         </div>
@@ -980,7 +1050,8 @@
                         </div>
                     </div>
 
-                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom" *ngFor="let otros of ArrayOtros">
+                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom"
+                        *ngFor="let otros of ArrayOtros">
                         <div class="col-xs-2 col-md-2 col-lg-2">
                             <label class="letraGrande">{{otros.TipoActivo}} &nbsp;</label>
                         </div>
@@ -1004,7 +1075,8 @@
                         <label class="text-bold text-uppercase"> INFORMACIÓN DEL CONYUGUE</label>
                     </div>
 
-                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
                             <label class="text-bold">Tipo de documento</label>
                         </div>
@@ -1025,7 +1097,8 @@
                         </div>
                     </div>
 
-                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
                             <label class="letraGrande">{{naturalesAllModel.TipoDocConyugue}}</label>
                         </div>
@@ -1047,7 +1120,8 @@
                     </div>
 
 
-                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-2 col-md-2 col-lg-2 text-center FormatoNaturalesRight">
                             <label class="text-bold">Teléfono residencia</label>
                         </div>
@@ -1066,7 +1140,8 @@
                     </div>
 
 
-                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
                             <label class="letraGrande">{{naturalesAllModel.TelefonoRConyugue}}</label>
                         </div>
@@ -1080,11 +1155,13 @@
                             <label class="letraGrande">{{naturalesAllModel.OcupacionConyugue}}</label>
                         </div>
                         <div class="col-xs-4 col-md-4 col-lg-4 FormatoNaturalesRight ">
-                            <label class="letraGrande Capitalice">{{naturalesAllModel.DetallesOcupacionConyugue}}</label>
+                            <label
+                                class="letraGrande Capitalice">{{naturalesAllModel.DetallesOcupacionConyugue}}</label>
                         </div>
                     </div>
 
-                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-2 col-md-2 col-lg-2 text-center FormatoNaturalesRight">
                             <label class="text-bold">Ingresos</label>
                         </div>
@@ -1103,12 +1180,15 @@
                     </div>
 
 
-                    <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
-                            <label class="letraGrande">{{naturalesAllModel.IngresosConyugue | currency:'':'' : '1.0'}}</label>
+                            <label class="letraGrande">{{naturalesAllModel.IngresosConyugue | currency:'':'' :
+                                '1.0'}}</label>
                         </div>
                         <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
-                            <label class="letraGrande">{{naturalesAllModel.EgresosConyugue | currency:'':'' : '1.0'}}</label>
+                            <label class="letraGrande">{{naturalesAllModel.EgresosConyugue | currency:'':'' :
+                                '1.0'}}</label>
                         </div>
                         <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
                             <label class="letraGrande">{{naturalesAllModel.NitEmpresaConyugue}}</label>
@@ -1139,7 +1219,8 @@
                             <label class="letraGrande">{{naturalesAllModel.OperacionMonedaExtrangera}}</label>
                         </div>
                         <div class="col-xs-3 col-md-3 col-lg-3">
-                            <label>Entidad</label> &nbsp;&nbsp; <label class="letraGrande">{{naturalesAllModel.Entidad}}</label>
+                            <label>Entidad</label> &nbsp;&nbsp; <label
+                                class="letraGrande">{{naturalesAllModel.Entidad}}</label>
                         </div>
                         <div class="col-xs-3 col-md-2 col-lg-3">
                             <div class="col-xs-12 col-md-2 col-lg-12">
@@ -1155,27 +1236,35 @@
                             </div>
                         </div>
                         <div class="col-xs-3 col-md-2 col-lg-3">
-                            <label>Tipo producto</label> &nbsp;&nbsp; <label class="letraGrande">{{naturalesAllModel.TipoProducto}}</label>
+                            <label>Tipo producto</label> &nbsp;&nbsp; <label
+                                class="letraGrande">{{naturalesAllModel.TipoProducto}}</label>
                         </div>
                     </div>
 
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-3 col-md-3 col-lg-3">
-                            <label>País: </label> &nbsp; <label class="letraGrande">{{naturalesAllModel.PaiseEntrevista}}</label>
+                            <label>País: </label> &nbsp; <label
+                                class="letraGrande">{{naturalesAllModel.PaiseEntrevista}}</label>
                         </div>
                         <div class="col-xs-3 col-md-3 col-lg-3">
-                            <label>Moneda: </label> &nbsp; <label class="letraGrande">{{naturalesAllModel.Moneda}}</label>
+                            <label>Moneda: </label> &nbsp; <label
+                                class="letraGrande">{{naturalesAllModel.Moneda}}</label>
                         </div>
                         <div class="col-xs-3 col-md-3 col-lg-3">
-                            <label>Monto promedio mes: </label> &nbsp; <label class="letraGrande">${{naturalesAllModel.MontoPromedio | currency:'':'' : '1.0'}}</label>
+                            <label>Monto promedio mes: </label> &nbsp; <label
+                                class="letraGrande">${{naturalesAllModel.MontoPromedio | currency:'':'' :
+                                '1.0'}}</label>
                         </div>
                         <div class="col-xs-3 col-md-3 col-lg-3">
-                            <label>Ciudad: </label> &nbsp; <label class="letraGrande">{{naturalesAllModel.Ciudadoperacion}}</label>
+                            <label>Ciudad: </label> &nbsp; <label
+                                class="letraGrande">{{naturalesAllModel.Ciudadoperacion}}</label>
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-3 col-md-3 col-lg-3">
                             <label>¿Tiene inversiones en moneda extranjera? </label>
                         </div>
@@ -1187,7 +1276,7 @@
                         </div>
                         <div class="col-xs-3 col-md-1 col-lg-3">
                             <label class="letraGrande">
-                            {{naturalesAllModel.PaisTiene}}
+                                {{naturalesAllModel.PaisTiene}}
                             </label>
                         </div>
                         <div class="col-xs-1 col-md-1 col-lg-1">
@@ -1195,18 +1284,19 @@
                         </div>
                         <div class="col-xs-1 col-md-1 col-lg-1">
                             <label class="letraGrande">
-                            {{naturalesAllModel.MonedaTiene}}
+                                {{naturalesAllModel.MonedaTiene}}
                             </label>
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-3 col-md-4 col-lg-3">
                             <label>¿Posee cuentas en moneda extranjera?</label>
                         </div>
                         <div class="col-xs-1 col-md-1 col-lg-1">
                             <label class="letraGrande">
-                            {{naturalesAllModel.PoseeCuentaMonedaExtrangera}}
+                                {{naturalesAllModel.PoseeCuentaMonedaExtrangera}}
                             </label>
                         </div>
                         <div class="col-xs-1 col-md-1 col-lg-1">
@@ -1214,15 +1304,15 @@
                         </div>
                         <div class="col-xs-3 col-md-1 col-lg-2">
                             <label class="letraGrande">
-                            {{naturalesAllModel.CuentaMonedaExtrangera}}
-                        </label>
+                                {{naturalesAllModel.CuentaMonedaExtrangera}}
+                            </label>
                         </div>
                         <div class="col-xs-1 col-md-1 col-lg-1">
                             <label>Pais</label>
                         </div>
                         <div class="col-xs-3 col-md-1 col-lg-2">
                             <label class="letraGrande">
-                            {{naturalesAllModel.PaisPosee}}
+                                {{naturalesAllModel.PaisPosee}}
                             </label>
                         </div>
                         <div class="col-xs-1 col-md-1 col-lg-1">
@@ -1230,11 +1320,12 @@
                         </div>
                         <div class="col-xs-1 col-md-1 col-lg-1">
                             <label class="letraGrande">
-                            {{naturalesAllModel.MonedaPosee}}
+                                {{naturalesAllModel.MonedaPosee}}
                             </label>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-3 col-md-4 col-lg-4">
                             <label>Declaro que no realizo transacciones en moneda extranjera</label>
                         </div>
@@ -1255,16 +1346,32 @@
                     </div>
                     <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesBorder text-justify">
                         <p class="paddingNaturales">
-                            Yo ___________________________ identificado con documento de identidad N° ___________________Expedido en ___________________obrando en nombre propio y/o de la persona que represento, de manera voluntaria y dando certeza de que todo lo aquí consignado
-                            es cierto, realizo la siguiente declaración de origen de fondos de Coogranada con el propósito de que se pueda dar cumplimiento a lo señalado en la circular externa 007 de 2008, expedida por la Súper Intendencia de la Economía
-                            Solidaria, el estatuto orgánico del sistema financiero (Decreto 663 de 1993), ley 190 de 1995, estatuto anticorrupción y demás normas legales concordantes para la apertura y manejo de cuentas corrientes de ahorros y certificados
+                            Yo ___________________________ identificado con documento de identidad N°
+                            ___________________Expedido en ___________________obrando en nombre propio y/o de la persona
+                            que represento, de manera voluntaria y dando certeza de que todo lo aquí consignado
+                            es cierto, realizo la siguiente declaración de origen de fondos de Coogranada con el
+                            propósito de que se pueda dar cumplimiento a lo señalado en la circular externa 007 de 2008,
+                            expedida por la Súper Intendencia de la Economía
+                            Solidaria, el estatuto orgánico del sistema financiero (Decreto 663 de 1993), ley 190 de
+                            1995, estatuto anticorrupción y demás normas legales concordantes para la apertura y manejo
+                            de cuentas corrientes de ahorros y certificados
                             de depósitos a término, declaro que:
-                            <br /> 1.Los recursos y bienes que entrego y entregaré a Coogranada, provienen de mi actividad principal y de las siguientes fuentes (detalle de la ocupación oficio, profesión, actividad, negocio, etc.) _____________________________________________________________________________________________________
-                            <br /> 2.Los recursos y demás activos que entrego y entregaré a Coogranada, no provienen de ninguna actividad ilícita de las contempladas en el código penal colombiano o en cualquier norma que lo modifique o adicione.
-                            <br /> 3.No admitiré que terceros efectúen depósitos a mis cuentas con fondos provenientes de las actividades ilícitas contempladas en el código penal colombiano o cualquier norma que lo modifique o adicione, ni efectuare transacciones
+                            <br /> 1.Los recursos y bienes que entrego y entregaré a Coogranada, provienen de mi
+                            actividad principal y de las siguientes fuentes (detalle de la ocupación oficio, profesión,
+                            actividad, negocio, etc.)
+                            _____________________________________________________________________________________________________
+                            <br /> 2.Los recursos y demás activos que entrego y entregaré a Coogranada, no provienen de
+                            ninguna actividad ilícita de las contempladas en el código penal colombiano o en cualquier
+                            norma que lo modifique o adicione.
+                            <br /> 3.No admitiré que terceros efectúen depósitos a mis cuentas con fondos provenientes
+                            de las actividades ilícitas contempladas en el código penal colombiano o cualquier norma que
+                            lo modifique o adicione, ni efectuare transacciones
                             destinadas a tales actividades a favor de las personas relacionadas con las mismas.
-                            <br /> 4.Autorizo a saldar cuentas y depósitos de cualquier tipo que mantenga con Coogranada, en caso de infracción o falsedad de cualquiera de los numerales anteriores, eximiendo a Coogranada de toda la responsabilidad que
-                            se derive de información errónea o falsa que yo hubiere proporcionado en este documento o de la violación de los compromisos aquí adquiridos.
+                            <br /> 4.Autorizo a saldar cuentas y depósitos de cualquier tipo que mantenga con
+                            Coogranada, en caso de infracción o falsedad de cualquiera de los numerales anteriores,
+                            eximiendo a Coogranada de toda la responsabilidad que
+                            se derive de información errónea o falsa que yo hubiere proporcionado en este documento o de
+                            la violación de los compromisos aquí adquiridos.
                         </p>
                     </div>
 
@@ -1299,7 +1406,8 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop" *ngFor="let Familiar of ArrayFamiliar">
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop"
+                        *ngFor="let Familiar of ArrayFamiliar">
                         <div class="col-xs-4 col-md-4 col-lg-4 FormatoNaturalesRight">
                             <label class="letraGrande Capitalice">{{Familiar.Nombre}}</label>
                         </div>
@@ -1341,7 +1449,8 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop" *ngFor="let Personal of ArrayPersonal">
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop"
+                        *ngFor="let Personal of ArrayPersonal">
                         <div class="col-xs-4 col-md-4 col-lg-4 FormatoNaturalesRight">
                             <label class="letraGrande Capitalice">{{Personal.Nombre}}</label>
                         </div>
@@ -1381,7 +1490,8 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom" *ngFor="let Comercial of ArrayComercial">
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom"
+                        *ngFor="let Comercial of ArrayComercial">
                         <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesRight">
                             <label class="letraGrande">{{Comercial.Nombre}}</label>
                         </div>
@@ -1421,7 +1531,8 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom" *ngFor="let Financiera of ArrayFinanciaria">
+                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesBottom"
+                        *ngFor="let Financiera of ArrayFinanciaria">
                         <div class="col-xs-3 col-md-3 col-lg-3 FormatoNaturalesRight">
                             <label class="letraGrande">{{Financiera.Nombre}}</label>
                         </div>
@@ -1451,7 +1562,8 @@
                         </label>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-8 col-md-8 col-lg-6">
                             <label>¿Es usted una persona expuesta políticamente o públicamente?</label>
                         </div>
@@ -1460,7 +1572,8 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-8 col-md-8 col-lg-6">
                             <label>¿Maneja recursos públicos?</label>
                         </div>
@@ -1469,7 +1582,8 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
                         <div class="col-xs-8 col-md-8 col-lg-6">
                             <label>¿Por su cargo o actividad ejerce algún grado de poder público?</label>
                         </div>
@@ -1478,7 +1592,8 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
                         <div class="col-xs-8 col-md-8 col-lg-6">
                             <label>¿Por su actividad u oficio, goza usted de reconocimiento público?</label>
                         </div>
@@ -1487,7 +1602,8 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-8 col-md-8 col-lg-6">
                             <label>¿Existe algún vínculo entre usted y una persona considerada públicamente
                                 expuesta?</label>
@@ -1501,7 +1617,8 @@
 
                     <!-- Relaciones peps -->
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
                         <div class="col-sm-3 col-xs-3 col-lg-3 FormatoNaturalesRight text-center">
                             <label class="text-center  text-bold">Apellidos y nombre</label>
                         </div>
@@ -1519,7 +1636,8 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop " *ngFor="let pepsArry of ArrayPeps">
+                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop "
+                        *ngFor="let pepsArry of ArrayPeps">
                         <div class="col-sm-3 col-xs-3 col-lg-3 FormatoNaturalesRight">
                             <label class="letraGrande Capitalice">{{pepsArry.NombrePeps}}</label>
                         </div>
@@ -1563,7 +1681,8 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12  FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop ">
                         <div class="col-xs-4 col-md-4 col-lg-4 FormatoNaturalesRight">
                             <label class="letraGrande">{{naturalesServicio.NombreDeudor}}</label>
                         </div>
@@ -1584,13 +1703,25 @@
 
                     <div class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesBorder paddingNaturales text-justify">
                         <p>
-                            En el cumplimiento de la ley 1581 del 2012 y sus decretos complementarios, se le comunica que la información personal suministrada por usted en el presente documento se encuentra bajo la custodia de la Cooperativa San Pio X COOGRANADA o por cualquier
-                            entidad del grupo, la cual cuenta con unas políticas de tratamiento de los mismos, que pueden ser consultadas en http://www.coogranada.coop/, del mismo modo puede ejercer los derechos de conocer, corregir, aclarar o suprimir
-                            los datos recolectados o revocar esta autorización, de forma gratuita y en cualquier momento comunicándose al correo electrónico protecciondedatos&#64;coogranada.com.co, al teléfono 034 204 11 55 o directamente en las oficinas
-                            ubicadas en la ciudad de Medellín, Calle 46 #52 A-14, Piso 3; los datos suministrados que se encuentran descritos como sensibles son de carácter facultativos en su respuesta; La información contenida en esta base de datos será
-                            utilizada y tiene como única la identificación plena de la persona, con que se tiene una relación de carácter cooperativa(Asociado) y personas que gozan de los servicios de la Cooperativa sin ser Asociados, lo anterior con
-                            el fin de establecer comunicación, gestionar la cartera, obtener una adecuada segmentación sociodemográfica, consultas en centrales de riesgo y gestión interna; al regresar el presente documento con su firma usted está otorgando
-                            la autorización para realizar el mencionado tratamiento
+                            En el cumplimiento de la ley 1581 del 2012 y sus decretos complementarios, se le comunica
+                            que la información personal suministrada por usted en el presente documento se encuentra
+                            bajo la custodia de la Cooperativa San Pio X COOGRANADA o por cualquier
+                            entidad del grupo, la cual cuenta con unas políticas de tratamiento de los mismos, que
+                            pueden ser consultadas en http://www.coogranada.coop/, del mismo modo puede ejercer los
+                            derechos de conocer, corregir, aclarar o suprimir
+                            los datos recolectados o revocar esta autorización, de forma gratuita y en cualquier momento
+                            comunicándose al correo electrónico protecciondedatos&#64;coogranada.com.co, al teléfono 034
+                            204 11 55 o directamente en las oficinas
+                            ubicadas en la ciudad de Medellín, Calle 46 #52 A-14, Piso 3; los datos suministrados que se
+                            encuentran descritos como sensibles son de carácter facultativos en su respuesta; La
+                            información contenida en esta base de datos será
+                            utilizada y tiene como única la identificación plena de la persona, con que se tiene una
+                            relación de carácter cooperativa(Asociado) y personas que gozan de los servicios de la
+                            Cooperativa sin ser Asociados, lo anterior con
+                            el fin de establecer comunicación, gestionar la cartera, obtener una adecuada segmentación
+                            sociodemográfica, consultas en centrales de riesgo y gestión interna; al regresar el
+                            presente documento con su firma usted está otorgando
+                            la autorización para realizar el mencionado tratamiento.
                         </p>
                     </div>
                     <!-- Fin AUTORIZACIONES PARA LA PROTECCIÓN DE DATOS PERSONALES-->
@@ -1603,43 +1734,67 @@
                             DECLARACIONES Y AUTORIZACIONES
                         </label>
                     </div>
+                    <div>
+                        <p class="col-xs-12 col-md-12 col-lg-12 FormatoNaturalesBorder paddingNaturales text-justify">
+                            <span><span class="text-bold">AUTORIZACIÓN CONSULTA EN CENTRALES DE RIESGOS: </span>Autorizo
+                                de manera irrevocable a la COOPERATIVA COOGRANADA, para que con fines estadísticos de
+                                información comercial y de evaluación de riesgos,
+                                consultar en centrales de riesgos el comportamiento comercial, hábitos de pago, manejo
+                                de crédito y obligaciones contraídas con anterioridad o posterioridad a la firma de este
+                                documento. Autorizo además cuando se requiera, reportar
+                                información a centrales de riesgos y entidades de crédito de toda conformidad con las
+                                normas legales.
+                            </span>
+                            <br>
+                            <span><span class="text-bold">COMUNICACIONES:</span> Autorizo de manera expresa a LA
+                                COOPERATIVA COOGRANADA, para que esta me envíe comunicaciones que considere pertinentes,
+                                de tipo comercial o de información sobre el estado de
+                                los productos con LA COOPERATIVA COOGRANADA, utilizando para tal fin cualquier medio
+                                idóneo escrito, electrónico, etc.), asumiendo (el costo que eventualmente genere la
+                                recepción de éstas o los productos o servicios tramitados
+                                o transados por cualquiera de estos medios. Así mismo, autorizo (amos) a LA COOPERATIVA
+                                COOGRANADA para que mis conversaciones relacionadas con mis negocios y/o cobranzas
+                                puedan ser grabadas o escuchadas en cualquier momento.
+                            </span>
+                            <br>
+                            <span><span class="text-bold">VERACIDAD DE LA INFORMACIÓN:</span> Hago constar que la
+                                información suministrada para efectos de la aprobación y acceder a productos y servicios
+                                es veraz y verificable, y que conozco la obligación
+                                legal de actualizar esta información debidamente como mínimo una vez al año o cuando LA
+                                COOPERATIVA COOGRANADA lo requiera y de manera voluntaria y oportuna cuando surja algún
+                                cambio y de no hacerlo, acepto el bloqueo y la cancelación
+                                de mis productos y servicios.
+                            </span>
 
-                    <p class="paddingNaturales text-justify">
-                        <span><span class="text-bold">AUTORIZACIÓN CONSULTA EN CENTRALES DE RIESGOS: </span>Autorizo de manera irrevocable a la COOPERATIVA COOGRANADA, para que con fines estadísticos de información comercial y de evaluación de riesgos,
-                        consultar en centrales de riesgos el comportamiento comercial, hábitos de pago, manejo de crédito y obligaciones contraídas con anterioridad o posterioridad a la firma de este documento. Autorizo además cuando se requiera, reportar
-                        información a centrales de riesgos y entidades de crédito de toda conformidad con las normas legales.
-                        </span>
-                        <br>
-                        <span><span class="text-bold">COMUNICACIONES:</span> Autorizo de manera expresa a LA COOPERATIVA COOGRANADA, para que esta me envíe comunicaciones que considere pertinentes, de tipo comercial o de información sobre el estado de
-                        los productos con LA COOPERATIVA COOGRANADA, utilizando para tal fin cualquier medio idóneo escrito, electrónico, etc.), asumiendo (el costo que eventualmente genere la recepción de éstas o los productos o servicios tramitados
-                        o transados por cualquiera de estos medios. Así mismo, autorizo (amos) a LA COOPERATIVA COOGRANADA para que mis conversaciones relacionadas con mis negocios y/o cobranzas puedan ser grabadas o escuchadas en cualquier momento.
-                        </span>
-                        <br>
-                        <span><span class="text-bold">VERACIDAD DE LA INFORMACIÓN:</span> Hago constar que la información suministrada para efectos de la aprobación y acceder a productos y servicios es veraz y verificable, y que conozco la obligación
-                        legal de actualizar esta información debidamente como mínimo una vez al año o cuando LA COOPERATIVA COOGRANADA lo requiera y de manera voluntaria y oportuna cuando surja algún cambio y de no hacerlo, acepto el bloqueo y la cancelación
-                        de mis productos y servicios.
-                        </span>
-
-                        <span><span class="text-bold">AVISO OPORTUNO DEL DEUDOR:</span> Los potenciales deudores de Coogranada deberán informar oportunamente de cualquier problema que pueda poner en riesgo el pago adecuado de la deuda.
-                        </span>
-                        <br>
-                        <span><span class="text-bold">CONOCIMIENTO DE DERECHOS Y DEBERES</span> (Solo para la Vinculación): Declaro que conozco los derechos y deberes en calidad de asociado de la Cooperativa, y acataré las normas y leyes, estatutos y
-                        reglamentos aplicables.
-                        </span>
-                        <br>
-                        <span><span class="text-bold">AUTORIZACIÓN DÉBITO AUTOMÁTICO:</span> Autorizo a la COOPERATIVA COOGRANDA a realizar débito automático, para el pago de mis aportes sociales anuales para permanecer activos.
-                        </span>
-                        <br>
-                        <span> <span class="text-bold">BENEFICIOS ASOCIADOS:</span> Los beneficios sociales que entrega la COOPERATIVA COOGRANADA a sus asociados aplican condiciones y restricciones, además pueden variar de acuerdo a las políticas de la
-                        Cooperativa. </span>
-                    </p>
+                            <span><span class="text-bold">AVISO OPORTUNO DEL DEUDOR:</span> Los potenciales deudores de
+                                Coogranada deberán informar oportunamente de cualquier problema que pueda poner en
+                                riesgo el pago adecuado de la deuda.
+                            </span>
+                            <br>
+                            <span><span class="text-bold">CONOCIMIENTO DE DERECHOS Y DEBERES</span> (Solo para la
+                                Vinculación): Declaro que conozco los derechos y deberes en calidad de asociado de la
+                                Cooperativa, y acataré las normas y leyes, estatutos y
+                                reglamentos aplicables.
+                            </span>
+                            <br>
+                            <span><span class="text-bold">AUTORIZACIÓN DÉBITO AUTOMÁTICO:</span> Autorizo a la
+                                COOPERATIVA COOGRANDA a realizar débito automático, para el pago de mis aportes sociales
+                                anuales para permanecer activos.
+                            </span>
+                            <br>
+                            <span> <span class="text-bold">BENEFICIOS ASOCIADOS:</span> Los beneficios sociales que
+                                entrega la COOPERATIVA COOGRANADA a sus asociados aplican condiciones y restricciones,
+                                además pueden variar de acuerdo a las políticas de la
+                                Cooperativa. </span>
+                        </p>
+                    </div>
 
                     <table>
                         <tr>
                             <td>
                                 <!--Huella y firma-->
-                                <h1 class=SaltoDePagina> </h1>
-                                <div class=" col-sm-12 col-xs-12 col-lg-12 saltopagina">
+
+                                <div class=" col-sm-12 col-xs-12 col-lg-12">
                                     <div class="col-sm-2 col-xs-2 col-lg-2">
                                         <br />
                                         <br />
@@ -1692,7 +1847,8 @@
                         </label>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-7 col-md-7 col-lg-7 FormatoNaturalesLeft FormatoNaturalesTop">
                             <label>Nombre del funcionario que realizó la entrevista</label>
                         </div>
@@ -1713,7 +1869,8 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-7 col-md-7 col-lg-7 FormatoNaturalesLeft FormatoNaturalesTop">
                             <label> Nombre del funcionario que realizó la verificación</label>
                         </div>
@@ -1734,7 +1891,8 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-10 col-md-10 col-lg-10 text-center ">
                             <label>Observaciones </label>
                         </div>
@@ -1743,7 +1901,8 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
+                    <div
+                        class="col-sm-12 col-xs-12 col-lg-12 FormatoNaturalesLeft FormatoNaturalesRight FormatoNaturalesTop">
                         <div class="col-xs-10 col-md-10 col-lg-10 text-center">
                             <label><br /></label>
                         </div>
@@ -1762,8 +1921,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn Gt-btn-verde" (click)="print()">Imprimir</button>
-                    <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn Gt-btn-verde no-print" (click)="print()">Imprimir</button>
+                    <button type="button" class="btn Gt-btn-morado no-print" data-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>
@@ -1790,7 +1949,8 @@
     </div>
     <!--/ Fin ModalAyudaPanelDatos -->
 </body>
-<ngx-loading [show]="loading" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+<ngx-loading [show]="loading"
+    [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
 </ngx-loading>
 <!-- *ngIf="CargarAppComponet" -->
 <!-- (viasEmit)="recibirInfoAppVias($event)"

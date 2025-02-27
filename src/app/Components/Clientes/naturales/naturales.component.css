@@ -146,6 +146,7 @@ p::first-letter {
         display: block;
         float: none;
     }
+
     .btn-radio:not(:first-child) {
         margin-left: 0;
         margin-top: 15px;
@@ -348,3 +349,28 @@ p::first-letter {
     display: flex;
     flex-wrap: wrap;
 }
+
+.modal-min {
+    height: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.div-espacio {
+    margin-top: 0px;
+    margin-bottom: 1px;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 5;
+    padding-right: 5;
+}
+
+.div-espacio1 {
+    margin-top: 0px;
+    margin-bottom: 1px;
+    padding-top: 5px;
+    padding-bottom: 0;
+    padding-left: 5;
+    padding-right: 5;
+}
+

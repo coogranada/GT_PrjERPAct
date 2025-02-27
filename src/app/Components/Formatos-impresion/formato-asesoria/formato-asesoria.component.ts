@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { HtmlToService } from '../../../Services/Utilidades/html-to.service';
+import { PrintService } from '../../../Services/General/print.service';
 
 declare var $: any;
 @Component({
@@ -18,7 +19,7 @@ export class FormatoAsesoriaComponent implements OnInit {
   public Undefined = undefined;
 
 
-  constructor(private HtmlTo : HtmlToService) { }
+  constructor(private printService : PrintService) { }
 
   ngOnInit() {
     }
@@ -32,7 +33,8 @@ export class FormatoAsesoriaComponent implements OnInit {
   limpiarModal() {
     this.Datos = undefined;
   }
+
   print() {
-    this.HtmlTo.HtmlToPdf('FormatAsesoria','l',[1100, 625]);
+    this.printService.printArea('FormatAsesoria','');
   }
 }

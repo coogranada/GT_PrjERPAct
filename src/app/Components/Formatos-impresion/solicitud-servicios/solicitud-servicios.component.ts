@@ -13,7 +13,7 @@ import { OficinasService } from '../../../Services/Maestros/oficinas.service';
 import { GeneralesService } from '../../../Services/Productos/generales.service';
 import { ModuleValidationService } from '../../../Services/Enviroment/moduleValidation.service';
 import { AlertService } from '../../../Services/Alert/alert.service';
-import { HtmlToService } from '../../../Services/Utilidades/html-to.service';
+import { PrintService } from '../../../Services/General/print.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -259,7 +259,7 @@ export class SolicitudServiciosComponent implements OnInit {
   private DataRequired = new RequiredData();
   esReimpresa: any;
   constructor(private clientesService: ClientesService, private clientesGetListService: ClientesGetListService, 
-    private notif: AlertService, private htmlTo : HtmlToService) {}
+    private notif: AlertService, private printService: PrintService) {}
 
   ngOnInit() {
     if (this.validar === 1) {
@@ -1529,8 +1529,8 @@ export class SolicitudServiciosComponent implements OnInit {
   MaysPrimera(string : string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
-  print(){
-    this.htmlTo.HtmlToPdf("FormatoDeServicios","p",[1383,4436 ])
-    //
+
+  print() {
+    this.printService.printArea('ModalFormatoNaturales','height=1383,width=4436');
   }
 }

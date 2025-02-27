@@ -136,7 +136,7 @@
                                     </a>
                                     <ul *ngIf="isConfiguracionMenuOpen">
                                         <li id="maestros">
-                                            <a href="#/" (click)="toggleMaestroMenu()" style="padding: 0px, 40px;">
+                                            <a  (click)="toggleMaestroMenu()" style="padding: 0px, 40px;">
                                                 <i></i>
                                                 <span>Maestros</span>
                                                 <i class="icon-arrow-right13"
@@ -240,7 +240,7 @@
                                             </ul>
                                         </li>
                                         <li id="maestrosproductos">
-                                            <a href="#/" (click)="toggleMaestroProductosMenu()">
+                                            <a  (click)="toggleMaestroProductosMenu()">
                                                 <i></i>
                                                 <span>Maestros productos</span>
                                                 <i class="icon-arrow-right13"
@@ -252,7 +252,7 @@
                                             </a>
                                             <ul *ngIf="isMaestroProductosMenuOpen">
                                                 <li id="maestrosahorros">
-                                                    <a href="#/" (click)="toggleMaestroAhorrosMenu()">
+                                                    <a (click)="toggleMaestroAhorrosMenu()">
                                                         <i></i>
                                                         <span>Maestros ahorros</span>
                                                         <i class="icon-arrow-right13"
@@ -571,7 +571,7 @@
                                         </ul>
                                     </li>
                                     <li id="utilidades">
-                                        <a href="#" (click)="toggleUtilidadesMenu()">
+                                        <a  (click)="toggleUtilidadesMenu()">
                                             <!-- (click)="setModuloLocalStorage(UtilidadesModel.IdModuloPermiso)" -->
                                             <i class=" icon-cog2"></i>
                                             <i class="icon-arrow-right13" style="left: 225px; margin-top: 15px; position: absolute;" *ngIf="!isUtilidadesOpen" ></i>
