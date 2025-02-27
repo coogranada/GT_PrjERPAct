@@ -17,6 +17,7 @@ import { TarjetaHabientesComponent } from '../Components/Productos/Ahorros/Dispo
 import { GMFDisponibleComponent } from '../Components/Productos/Ahorros/Disponibles/gmf/gmf.component';
 import { FichaAnalisisComponent } from '../Components/Productos/Creditos/ficha-analisis/ficha-analisis.component';
 import { ShareComponentModule } from './share-component.module';
+import { DisponiblesComponent } from '../Components/Productos/Ahorros/Disponibles/disponibles/disponibles.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { ShareComponentModule } from './share-component.module';
     ScoreCreditosComponent,
     TarjetaHabientesComponent,
     GMFDisponibleComponent,
-    FichaAnalisisComponent
+    FichaAnalisisComponent,
+    DisponiblesComponent
   ],
   imports: [
     CommonModule,

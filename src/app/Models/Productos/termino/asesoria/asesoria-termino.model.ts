@@ -1,5 +1,5 @@
 export class LogDataOnEditAsesoria {
-    ProductoAnterior?: number = 0;
+    ProductoAnterior?: number | null = 0;
     ProductoActualiza?: number = 0;
     PlazoAnterior?: number = 0;
     PlazoActualiza?: number = 0;
@@ -23,4 +23,9 @@ export class LogDataOnEditAsesoria {
     TotalAportesActualiza?: number = 0;
     TotalInteresNetoAnterior?: number = 0;
     TotalInteresNetoActualiza?: number = 0;
+    PuntosAdicionalesActualiza : any;
+    TasaEfectivaActualiza : any;
+    TasaNominalActualiza : any;
+    TasaAportesActualiza : any;
+    FechaVencimientoActualiza : any;
   }

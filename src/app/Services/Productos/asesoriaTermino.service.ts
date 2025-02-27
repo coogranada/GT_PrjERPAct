@@ -5,11 +5,20 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class AsesoriaTerminoService {
+  
  
     private url: string = "";
     constructor(private _http: HttpClient,private environment: EnvironmentService) { }
     BuscarAsesoria(documento: string, nombre: string, numeroAsesoria: string) : Observable<any> {
         this.url = this.environment.Url + "/BuscarAsesoriaTermino/" + documento + "/" + nombre + "/" + numeroAsesoria;
+        return this._http.get<any>(this.url);
+    }
+    ObtenerTasaInicial(data : any)  : Observable<any>{
+        this.url = this.environment.Url + '/ObtenerTasaInicial';
+        return this._http.post<any>(this.url, data)
+    }
+    BuscarAsociado(Documento : string, Nombre : string)  : Observable<any> {
+        this.url = this.environment.Url + '/BuscarAsociadoTerminoAsesoria?strDocumento=' + Documento + '&strNombre=' + Nombre;
         return this._http.get<any>(this.url);
     }
     GetHistorial(numeroAsesoria : number) : Observable<any> {

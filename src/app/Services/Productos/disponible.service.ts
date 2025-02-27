@@ -298,4 +298,12 @@ export class DisponiblesService {
         this.url = `${this.environment.Url}/ValidaFechaActualiza?strIdTercero=${IdTercero}`;
         return this._http.get<any>(this.url);
     }
-}
+    ObtenerLibretas(idCuenta: number, libretasActive: boolean) : Observable<any> {
+        this.url = this.environment.Url + `/ObtenerLibretas?idCuenta=${idCuenta}&libretasActive=${libretasActive}`;
+        return this._http.get<any>(this.url);
+    }
+
+    ActivarLibretas(IdsToUpdate: number[]): Observable<any> {
+        this.url = this.environment.Url + '/ActivarLibretas';
+        return this._http.post<any>(this.url, IdsToUpdate );
+    }}
