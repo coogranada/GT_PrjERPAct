@@ -8878,7 +8878,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     }
   }
   GetEPS() {
-    this.dataEmpresas = null;
+    this.dataEmpresas= null;
     const objClients = new ClientesModel();
     objClients.Nombre = this.basicosFrom.get('Nombre')?.value;
     if (objClients.Nombre !== null) {
@@ -8903,19 +8903,17 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       }
     }
   }
-  GetEPSAll() {
+  async GetEPSAll() {
     this.dataEmpresas = null;
     const objClients = new ClientesModel();
-    this.clientesGetListService.GetEps(objClients).subscribe(
-      result => {
-        this.dataEmpresas = result;
-      },
-      error => {
+    try {
+    const result = await this.clientesGetListService.GetEps(objClients).toPromise();
+    this.dataEmpresas = result;
+    }catch(error) {
         const errorMessage = <any>error;
         this.notif.onDanger('Error', errorMessage);
         console.error(errorMessage);
       }
-    );
   }
   GetEmpresas() {
     this.dataEmpresas = null;
@@ -21241,7 +21239,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     $('#seguroTab').removeClass('disableTab');
   }
 
-  BuscarNaturalesAll(documento : string) {
+  async BuscarNaturalesAll(documento : string) {
     if (documento !== null && documento !== undefined && documento !== '') {
       this.loading = true;
       this.allItemsForm = [];
@@ -21251,7 +21249,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       this.ResetItemForm();
       this.GetEstado();
       this.GetConveniosAll();
-      this.GetEPSAll();
+      await this.GetEPSAll();
       this.GetAsesorExternoAllMapear();
       this.totalActivos = 0;
       this.totalPatrimonio = 0;
@@ -21269,8 +21267,8 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
 
 
       this.clientesService.BuscarNaturalesAll(documento).subscribe(
-        (result : any) => {
-          console.log("qqqq",result)
+        async (result : any) => {
+          //console.log("qqqq",result)
           if (result !== null) {
             this.basicosFrom.get('IdTerceroPrincipal')?.setValue(result.asociadosNaturalesDto.IdTercero);
             this.btnBuscar = true;
@@ -21442,7 +21440,8 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                   this.CiudadMapperExp = elementCiu;
                   this.CiuCargaInicial = elementCiu.Descripcion;
                   this.BasicosEdit.get('EditCiudadExp')?.setValue(elementCiu);
-                  this.objMotivoEnvio.CiudadExpedicion = elementCiu.Nombre;
+                 //DFRAMIREZ 20250227 -- elementCiu.Nombre
+                  this.objMotivoEnvio.CiudadExpedicion = elementCiu.Descripcion;
                   this.dataDepartamentosAll.forEach((elementDep : any ) => {
                     if (elementDep.IdDepartamento === elementCiu.IdDepartamento) {
                       this.basicosFrom.get('departExpedicion')?.setValue(elementCiu.IdDepartamento);
