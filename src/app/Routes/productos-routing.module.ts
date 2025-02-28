@@ -8,6 +8,7 @@ import { ScoreCreditosComponent } from '../Components/Productos/Creditos/score-c
 import { TarjetaHabientesComponent } from '../Components/Productos/Ahorros/Disponibles/tarjeta-habientes/tarjeta-habientes.component';
 import { GMFDisponibleComponent } from '../Components/Productos/Ahorros/Disponibles/gmf/gmf.component';
 import { FichaAnalisisComponent } from '../Components/Productos/Creditos/ficha-analisis/ficha-analisis.component';
+import { DisponiblesComponent } from '../Components/Productos/Ahorros/Disponibles/disponibles/disponibles.component';
 
 const routesProductos: Routes = [
   { path: "Aportes", component: AportesComponent },
@@ -17,7 +18,8 @@ const routesProductos: Routes = [
   { path: "Creditos/Score", component: ScoreCreditosComponent },
   { path: "Ahorros/Disponible/TarjetaHabientes", component: TarjetaHabientesComponent },
   { path: "Ahorros/Disponible/GMF", component: GMFDisponibleComponent },
-  { path: "Creditos/FichaAnalisis", component: FichaAnalisisComponent }
+  { path: "Creditos/FichaAnalisis", component: FichaAnalisisComponent },
+  { path: "Ahorros/Disponibles/Disponibles", component: DisponiblesComponent },
 ];
 
 @NgModule({
