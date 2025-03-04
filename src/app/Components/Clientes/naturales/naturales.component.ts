@@ -4808,29 +4808,87 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         return;
       }
 
-      this.disableForm = true;
-      this.bloqDepartaExp = true;
-      this.bloqDeparta = true;
-      this.bloqCiudad = true;
-      this.bloqCiudadExp = true;
-      this.disableFormNumHijos = true;
-      this.btnGuardarOculto = false;
-      const idTercero = this.basicosFrom.get('IdTerceroPrincipal')?.value;
-      const currentRegimenTributario = this.basicosFrom.get('RegimenTributario')?.value;
-      const logData = {
-        RegimenTributarioAnterior: currentRegimenTributario === false ? 'Simple' : 'No responsable',
-        RegimenTributarioActualiza: currentRegimenTributario === false ? 'No responsable' : 'Simple'
-      };
-      this.clientesService.CambiarRegimenTributario(idTercero)
-        .subscribe(result => {
-          if(result === true) {
-            this.notif.onSuccess('Exitoso', 'El regimen tributario se cambió correctamente.');
-            this.basicosFrom.get('operacion')?.reset();            
-            this.GuardarLog(logData, 116, 0, idTercero, 11);
-            this.BuscarNaturalesAll(this.basicosFrom.get('numeroDocumento')?.value);
-          }
-        });
-    
+      if (this.OperacionMarcada !== undefined) {
+        // Valida que la operacion seleccionada si tenga un cambio
+        this.ValidaCambioCampo();        
+      } 
+      
+      if(this.OperacionMarcada === undefined) {
+        this.bloquearFormularios();
+        this.btnGuardarOculto = false;
+        this.btnOcultoBuscar = false;
+        this.siguienteOculto = true;
+        this.blockRefeBtn = false;
+        this.btnMarcarEntrevista = false;
+        this.btnTratamiento = false;
+        this.disableFormPA = true;
+        this.disableFormSA = true;
+        this.formLockedHipoPigno = true;
+        this.disableFormPN = true;
+        this.disableFormSN = true;
+        this.AsessorNecesario = true;
+        this.disableFromPEPS = true;
+        this.disbaleBusqueda = true;
+        this.disableClean = true;
+        this.MostrarFechaTratamiento = true;
+        this.operacionEscogida = '/Cambiar regimen tributario';
+        this.blockTratamiento = true;
+        this.blockTratamientoFecha = null;
+        this.blockDebitoAtomatico = true;
+        this.formBuscarLockedPpal = true;
+        this.formBuscarLockedConyugue = true;
+        this.formBuscarLocked = true;
+        this.bloquearCampoDir = true;
+        this.bloquearCampoDirActivo = true;
+        this.formLockedPersonNatura = true;
+        this.BlockFecha = true;
+        this.disableTabSeguro = true;
+        this.disableFormNumHijos = true;
+        this.disablePEPS = true;
+        this.formLockedReconocimiento = true;
+        this.formLockedRecursos = true;
+        this.disableAsesor = true;
+        this.disableAsesorPpal = true;
+        $('#basicoTab').removeClass('disableTab');
+        $('#financieroTab').removeClass('disableTab');
+        $('#contactoTab').removeClass('disableTab');
+        $('#activoTab').removeClass('disableTab');
+        $('#conyugueTab').removeClass('disableTab');
+        $('#laboralTab').removeClass('disableTab');
+        $('#referenciaTab').removeClass('disableTab');
+        $('#entrevistaTab').removeClass('disableTab');
+        $('#seguroTab').removeClass('disableTab');
+        $('#fechasTab').addClass('disableTab');
+        this.oculatObligatorioTercero = true;
+        this.oculatObligatorioTerceroProveedor = true;
+        this.DesbloquearRespuesta2 = true;
+        this.DesbloquearRespuesta6 = true;
+        this.DesbloquearRespuesta14 = true;
+        this.DesbloquearRespuesta17 = true;
+        this.mostrarFemiliaresPeps = false;
+        this.disableForm = true;
+        this.bloqDepartaExp = true;
+        this.bloqDeparta = true;
+        this.bloqCiudad = true;
+        this.bloqCiudadExp = true;
+        const idTercero = this.basicosFrom.get('IdTerceroPrincipal')?.value;
+        const currentRegimenTributario = this.basicosFrom.get('RegimenTributario')?.value;
+        const logData = {
+          RegimenTributarioAnterior: currentRegimenTributario === false ? 'Simple' : 'No responsable',
+          RegimenTributarioActualiza: currentRegimenTributario === false ? 'No responsable' : 'Simple'
+        };
+        this.clientesService.CambiarRegimenTributario(idTercero)
+          .subscribe(result => {
+            if(result === true) {
+              this.notif.onSuccess('Exitoso', 'El regimen tributario se cambió correctamente.');
+              this.basicosFrom.get('operacion')?.reset();            
+              this.GuardarLog(logData, 116, 0, idTercero, 11);
+              this.BuscarNaturalesAll(this.basicosFrom.get('numeroDocumento')?.value);
+            }
+          });
+      
+      }
+
     } else {
       this.NombreAsesor = '';
       this.CedulaAsesor = '';
