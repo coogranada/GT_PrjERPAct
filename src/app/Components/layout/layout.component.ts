@@ -480,8 +480,7 @@ export class LayoutComponent implements OnInit {
       this.AbrirModalBanner?.nativeElement.click();
       this.restart();
       this.boolBannner = false;
-    }
-    );
+    });
 
     // this.bnIdle.startWatching(60).subscribe((isTimedOut: boolean) => {
     //   this.AbrirModalBanner.nativeElement.click();
@@ -632,107 +631,101 @@ export class LayoutComponent implements OnInit {
             let permi: string | null = localStorage.getItem('Permisos')
             const r1 = JSON.parse(CryptoJS.AES.decrypt(permi == null ? "" : permi, this.PassJs.pass).toString(CryptoJS.enc.Utf8));
           }
-
+          console.log("permi",result)
           result.forEach((element: any) => {
-            /* Usuarios */
-            // if (element.IdModulo === 1) {
-            //   $('#gestionesOperaciones').show();
-            //   this.GestionesOperaciones = true;
-            //   this.GestionesOperacionesModel = element;
-            // }
-            /* Fin Usuarios */
+            console.log("permi",element.IdModulo)
 
             /* Configuracion */
             if (element.IdModulo === 63) {
-              $('#configuracion').show();
+              //$('#configuracion').show();
               this.Configuracion = true;
               this.ConfiguracionModel = element;
             }
             /* Maestros */
             if (element.IdModulo === 1) {
-              $('#maestros').show();
+              //$('#maestros').show();
               this.Maestros = true;
               this.MaestrosModel = element;
             }
             if (element.IdModulo === 2) {
-              $('#areas').show();
+              //$('#areas').show();
               this.Areas = true;
               this.AreasModel = element;
             }
             if (element.IdModulo === 3) {
-              $('#cargos').show();
+              //$('#cargos').show();
               this.Cargos = true;
               this.CargosModel = element;
             }
             if (element.IdModulo === 4) {
-              $('#oficinas').show();
+              //$('#oficinas').show();
               this.Oficinas = true;
               this.OficinasModel = element;
             }
             if (element.IdModulo === 5) {
-              $('#perfiles').show();
+              //$('#perfiles').show();
               this.Perfiles = true;
               this.PerfilesModel = element;
             }
             if (element.IdModulo === 6) {
-              $('#usuariosTipos').show();
+              //$('#usuariosTipos').show();
               this.UsuariosTipos = true;
               this.UsuariosTiposModel = element;
             }
             if (element.IdModulo === 7) {
-              $('#modulos').show();
+              //$('#modulos').show();
               this.Modulos = true;
               this.ModulosModel = element;
             }
             if (element.IdModulo === 8) {
-              $('#permisos').show();
+              //$('#permisos').show();
               this.Permisos = true;
               this.PermisosModel = element;
             }
             if (element.IdModulo === 48) {
-              $('#permisosEspeciales').show();
+              //$('#permisosEspeciales').show();
               this.PermisosEspeciales = true;
               this.PermisosEspecialesModel = element;
             }
             if (element.IdModulo === 9) {
-              $('#usuarios').show();
+              //$('#usuarios').show();
               this.Usuarios = true;
               this.UsuariosModel = element;
             }
 
             if (element.IdModulo === 78) {
-              $('#GestionEmail').show();
+              //$('#GestionEmail').show();
               this.GestionEmail = true;
               this.GestionEmailModel = element;
             }
 
             if (element.IdModulo === 71) {
-              $('#usuariosproveedores').show();
+              //$('#usuariosproveedores').show();
               this.UsuarioProveedores = true;
               this.UsuariosProveedoresModel = element;
             }
             if (element.IdModulo === 50) {
-              $('#operacionesModulos').show();
+              //$('#operacionesModulos').show();
               this.OperacionesModulos = true;
               this.OperacionesModulosModel = element;
             }
             if (element.IdModulo === 42) {
-              $('#operacionesPerfiles').show();
+              //$('#operacionesPerfiles').show();
               this.OperacionesPerfiles = true;
               this.OperacionesPerfilesModel = element;
             }
             if (element.IdModulo === 43) {
-              $('#operacionesEstado').show();
+              //$('#operacionesEstado').show();
               this.OperacionesEstado = true;
               this.OperacionesEstadoModel = element;
             }
             if (element.IdModulo === 53) {
-              $('#controlSession').show();
+              //$('#controlSession').show();
               this.ObservacionesModulos = true;
               this.ObservacionesModulosModel = element;
             }
             if (element.IdModulo === 68) {
-              $('#llaves').show();
+              //$('#llaves').show();
               this.Llaves = true;
               this.LlavesModel = element;
             }
@@ -740,22 +733,22 @@ export class LayoutComponent implements OnInit {
 
             /* Maestros productos */
             if (element.IdModulo === 64) {
-              $('#maestrosproductos').show();
+              //$('#maestrosproductos').show();
               this.MaestrosProdutos = true;
               this.MaestrosProductosModel = element;
             }
             if (element.IdModulo === 65) {
-              $('#maestrosahorros').show();
+              //$('#maestrosahorros').show();
               this.MaestrosAhorros = true;
               this.MaestrosAhorrosModel = element;
             }
             if (element.IdModulo === 66) {
-              $('#consecutivotitulo').show();
+              //$('#consecutivotitulo').show();
               this.ConsecutivoTitulo = true;
               this.ConsecutivoTituloModel = element;
             }
             if (element.IdModulo === 67) {
-              $('#GestionBanner').show();
+              //$('#GestionBanner').show();
               this.GestionBanner = true;
               this.GestionBannerModel = element;
             }
@@ -764,17 +757,17 @@ export class LayoutComponent implements OnInit {
             /* Informes */
 
             if (element.IdModulo === 72) {
-              $('#informeconsecutivotitulo').show();
+              //$('#informeconsecutivotitulo').show();
               this.InformesConsecutivoTitulo = true;
               this.InformeConsecutivoTituloModel = element;
             }
             if (element.IdModulo === 73) {
-              $('#informesmaestros').show();
+              //$('#informesmaestros').show();
               this.InformesMaestros = true;
               this.InformesMaestrosModel = element;
             }
             if (element.IdModulo === 74) {
-              $('#informesmaestrosahorros').show();
+              //$('#informesmaestrosahorros').show();
               this.InformesMaestrosAhorros = true;
               this.InformesMaestrosAhorrosModel = element;
             }
@@ -784,7 +777,7 @@ export class LayoutComponent implements OnInit {
             /* Transmisión archivos */
 
             if (element.IdModulo === 72) {
-              $('#transmisionarchivos').show();
+              //$('#transmisionarchivos').show();
               this.Transmisionarchivos = true;
               //this.InformeConsecutivoTituloModel = element;
             }
@@ -794,145 +787,136 @@ export class LayoutComponent implements OnInit {
 
             /* Clientes */
             if (element.IdModulo === 10) {
-              $('#clientes').show();
+              //$('#clientes').show();
               this.Clientes = true;
               this.ClientesModel = element;
             }
             if (element.IdModulo === 11) {
-              $('#naturales').show();
+              //$('#naturales').show();
               this.Naturales = true;
               this.NaturalesModel = element;
             }
             if (element.IdModulo === 12) {
-              $('#juridicos').show();
+              //$('#juridicos').show();
               this.Juridicos = true;
               this.JuridicosModel = element;
             }
-            if (element.IdModulo === 13) {
-              $('#terceros').show();
-              this.Terceros = true;
-              this.TercerosModel = element;
-            }
-            if (element.IdModulo === 14) {
-              $('#privilegiados').show();
-              this.Privilegiados = true;
-              this.PrivilegiadosModel = element;
-            }
-            if (element.IdModulo === 15) {
-              $('#vetados').show();
-              this.Vetados = true;
-              this.VetadosModel = element;
-            }
+            // if (element.IdModulo === 13) {
+            //   $('#terceros').show();
+            //   this.Terceros = true;
+            //   this.TercerosModel = element;
+            // }
+            
             /* Fin Clientes */
 
             /* Productos */
             if (element.IdModulo === 37) {
-              $('#productos').show();
+              //$('#productos').show();
               this.Productos = true;
               this.ProductosModel = element;
             }
             if (element.IdModulo === 16) {
-              $('#aportes').show();
+              //$('#aportes').show();
               this.Aportes = true;
               this.AportesModel = element;
             }
             if (element.IdModulo === 17) {
-              $('#ahorros').show();
+              //$('#ahorros').show();
               this.Ahorros = true;
               this.AhorrosModel = element;
             }
             if (element.IdModulo === 18) {
-              $('#simuladorAhorro').show();
+              //$('#simuladorAhorro').show();
               this.SimuladorAhorro = true;
               this.SimuladorAhorroModel = element;
             }
             if (element.IdModulo === 61) {
-              $('#termino').show();
+              //$('#termino').show();
               this.Termino = true;
               this.TerminoModel = element;
             }
             if (element.IdModulo === 19) {
-              $('#TerminoInterno').show();
+              //$('#TerminoInterno').show();
               this.TerminoInterno = true;
               this.TerminoInternoModel = element;
             }
             if (element.IdModulo === 59) {
-              $('#contractuales').show();
+              //$('#contractuales').show();
               this.Contractuales = true;
               this.ContractualesModel = element;
             }
             if (element.IdModulo === 20) {
-              $('#contractualesInterno').show();
+              //$('#contractualesInterno').show();
               this.ContractualesInterno = true;
               this.ContractualesInternoModel = element;
             }
             if (element.IdModulo === 21) {
-              $('#disponibles').show();
+              //$('#disponibles').show();
               this.Disponibles = true;
               this.DisponiblesModel = element;
             }
             if (element.IdModulo === 38) {
-              $('#disponiblesInterno').show();
+              //$('#disponiblesInterno').show();
               this.DisponiblesInterno = true;
               this.DisponiblesInternoModel = element;
             }
             if (element.IdModulo === 22) {
-              $('#tarjetaHabientes').show();
+              //$('#tarjetaHabientes').show();
               this.TarjetaHabientes = true;
               this.TarjetaHabientesModel = element;
             }
             if (element.IdModulo === 23) {
-              $('#gmf').show();
+              //$('#gmf').show();
               this.Gmf = true;
               this.GmfModel = element;
             }
-            if (element.IdModulo === 24) {
-              $('#cuentasCorriente').show();
-              this.CuentasCorriente = true;
-              this.CuentasCorrienteModel = element;
-            }
+            // if (element.IdModulo === 24) {
+            //   $('#cuentasCorriente').show();
+            //   this.CuentasCorriente = true;
+            //   this.CuentasCorrienteModel = element;
+            // }
             if (element.IdModulo === 25) {
-              $('#creditos').show();
+              //$('#creditos').show();
               this.Creditos = true;
               this.CreditosModel = element;
             }
             if (element.IdModulo === 26) {
-              $('#simuladorCredito').show();
+              //$('#simuladorCredito').show();
               this.SimuladorCredito = true;
               this.SimuladorCreditoModel = element;
             }
             if (element.IdModulo === 27) {
-              $('#score').show();
+              //$('#score').show();
               this.Score = true;
               this.ScoreModel = element;
             }
             if (element.IdModulo === 75) {
-              $('#fichaAnalisis').show();
+              //$('#fichaAnalisis').show();
               this.FichaAnalisis = true;
               this.FichaAnalisisModel = element;
             }
             if (element.IdModulo === 28) {
-              $('#seguros').show();
+              //$('#seguros').show();
               this.Seguros = true;
               this.SegurosModel = element;
             }
             if (element.IdModulo === 29) {
-              $('#general').show();
+              //$('#general').show();
               this.Generales = true;
               this.GeneralesModel = element;
             }
             if (element.IdModulo === 30) {
-              $('#cancelacion').show();
+              //$('#cancelacion').show();
               this.Cancelacion = true;
               this.CancelacionModel = element;
             }
             if (element.IdModulo === 60) {
-              $('#asesoriacontractual').show();
+              //$('#asesoriacontractual').show();
               this.AsesoriaContractual = true;
               this.AsesoriaContractualModel = element;
             }
             if (element.IdModulo === 77) {
-              $('#asesoriatermino').show();
+              //$('#asesoriatermino').show();
               this.AsesoriaTermino = true;
               this.AsesoriaTerminoModel = element;
             }
@@ -966,27 +950,27 @@ export class LayoutComponent implements OnInit {
 
             /* Informes */
             if (element.IdModulo === 33) {
-              $('#informes').show();
+             // $('#informes').show();
               this.Informes = true;
               this.InformesModel = element;
             }
-            if (element.IdModulo === 46) {
-              $('#informesInterno').show();
-              this.InformesInterno = true;
-              this.InformesInternoModel = element;
-            }
+            // if (element.IdModulo === 46) {
+            //   $('#informesInterno').show();
+            //   this.InformesInterno = true;
+            //   this.InformesInternoModel = element;
+            // }
             if (element.IdModulo === 47) {
-              $('#conciliacionComisiones').show();
+             // $('#conciliacionComisiones').show();
               this.ConciliacionComisiones = true;
               this.ConciliacionComisionesModel = element;
             }
             if (element.IdModulo === 51) {
-              $('#debitosautomaticos').show();
+              //$('#debitosautomaticos').show();
               this.DebitosAutomaticos = true;
               this.DebitosAutomaticosModel = element;
             }
             if (element.IdModulo === 52) {
-              $('#gestionOperaciones').show();
+              //$('#gestionOperaciones').show();
               this.GestionOperaciones = true;
               this.GestionOperacionesModel = element;
             }
@@ -1026,12 +1010,12 @@ export class LayoutComponent implements OnInit {
               this.ListaMisProductosModel = element;
             }
             if (element.IdModulo === 76) {
-              $('#informeclientes').show();
+              //$('#informeclientes').show();
               this.InformeClientes = true;
               this.InformeClientesModel = element;
             }
             if (element.IdModulo === 79) {
-              $('#logauditoria').show();
+              //$('#logauditoria').show();
               this.LogAuditoria = true;
               this.LogAuditoriaModel = element;
             }
@@ -1039,17 +1023,17 @@ export class LayoutComponent implements OnInit {
 
             /* utilidades */
             if (element.IdModulo === 39) {
-              $('#utilidades').show();
+              //$('#utilidades').show();
               this.Utilidades = true;
               this.UtilidadesModel = element;
             }
             if (element.IdModulo === 40) {
-              $('#crearNotificaciones').show();
+              //$('#crearNotificaciones').show();
               this.CrearNotificaciones = true;
               this.CrearNotificacionesModel = element;
             }
             if (element.IdModulo === 41) {
-              $('#diferenciasSaldos').show();
+              //$('#diferenciasSaldos').show();
               this.DiferenciasSaldos = true;
               this.DiferenciasSaldosModel = element;
             }
@@ -1057,17 +1041,17 @@ export class LayoutComponent implements OnInit {
 
             /* auditorias */
             if (element.IdModulo === 34) {
-              $('#auditorias').show();
+              //$('#auditorias').show();
               this.Auditorias = true;
               this.AuditoriasModel = element;
             }
             if (element.IdModulo === 35) {
-              $('#auditoriaScore').show();
+              //$('#auditoriaScore').show();
               this.AuditoriaScore = true;
               this.AuditoriaScoreModel = element;
             }
             if (element.IdModulo === 36) {
-              $('#auditoriasGmf').show();
+              //$('#auditoriasGmf').show();
               this.AuditoriasGmf = true;
               this.AuditoriasGmfModel = element;
             }
