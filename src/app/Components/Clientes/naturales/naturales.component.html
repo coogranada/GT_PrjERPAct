@@ -546,7 +546,7 @@
                                                                 <div class="form-group">
                                                                     <label class="ocultarLabel">EPS</label>
                                                                     <span class="text-danger"> </span>
-                                                                    <input formControlName="NombreDrop" class="form-control" [attr.disabled]="disableFormEps">
+                                                                    <input formControlName="NombreDrop" class="form-control" [attr.disabled]="disableFormEps" style="margin-Left: 10px;">
                                                                     <span class="help-block validationSpan" *ngIf="basicosFrom.controls['NombreDrop'].errors?.['required'] && (basicosFrom.controls['NombreDrop'].dirty || basicosFrom.controls['NombreDrop'].touched)">
                                                                         La EPS es obligatoria.
                                                                     </span>

@@ -43,7 +43,7 @@
                   </ul>
                 </div>
 
-                <div class="col-sm-4 col-xs-4 col-lg-4 ">
+                <div class="col-sm-12 col-xs-12 col-lg-12 ">
                   <ul class="list list-unstyled text-left">
                     <p>
                       Identificado con documento No.<span id="rptNumeroIdentificacion" class="text-semibold"><strong>{{objInfoRetiro.Documento}}</strong></span>
@@ -68,7 +68,7 @@
                 </div>
                 <div class="col-sm-12 col-xs-12 col-lg-12 content-group text-justify"
                   style="text-align: center; font-size: 14px;"
-                  *ngIf="objInfoRetiro.Otro !== ''">
+                  *ngIf="objInfoRetiro.Otro !== '' && objInfoRetiro.Otro !== 'null'">
                   <span><strong>Cual: </strong></span>
                   <span>{{objInfoRetiro.Otro}}</span>
                 </div>
