@@ -150,7 +150,7 @@ export class ConsecutivoTituloService {
         return this._http.post<any>(this.url, Datos);
     }
     ObtenerNroLibretaDisponible(intNroTitulo: number, Producto: number): Observable<any> {
-        this.url = `${this.environment.Url}/ObtenerInfoTarjetasDisponibles`;
+        this.url = `${this.environment.Url}/ObtenerNroLibretaDisponible`;
         const params = new HttpParams()
         .set('intNroTitulo', intNroTitulo)
         .set('IdProducto', Producto);

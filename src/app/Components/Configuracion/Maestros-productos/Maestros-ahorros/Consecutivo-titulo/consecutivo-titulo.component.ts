@@ -111,6 +111,7 @@ export class ConsecutivoTituloComponent implements OnInit {
       })
     );
     obs.subscribe((resulr) => console.log(resulr));
+    this.log = {};
   }
   ngOnInit() {
     this.moduleValidationService.ValidatePermissionsModule(this.CodModulo);
@@ -496,7 +497,6 @@ export class ConsecutivoTituloComponent implements OnInit {
     this.mensajeMostradoLibretas = false;
   }
   ValorSeleccionadoModulo(Idmodulo : string) {
-    console.log("modulo",Idmodulo)
     this.ClearSelects(true);
     this.formBuscar = true;
     this.BloquearMotivo = true;
@@ -912,6 +912,7 @@ export class ConsecutivoTituloComponent implements OnInit {
     this.resultColillasDisponibles = [] //cantColillas
   }
   ClearFormConsecutivo(operacion=false) {
+    console.log("limpiar")
     this.ClearSelects();
     if (!operacion) {
       this.operacionEscogida = '';
@@ -987,7 +988,6 @@ export class ConsecutivoTituloComponent implements OnInit {
             }
           );
         }
-
         if (this.IdModulo === 20) {
           this.loading = true;
           this.ConsecutivotituloService.GuardarConsecutivoTitulo(this.consecutivoFrom.value).subscribe(
@@ -1015,7 +1015,6 @@ export class ConsecutivoTituloComponent implements OnInit {
             }
           );
         }
-
         if (this.IdModulo === 38) {
           if (this.Iddocumento === '1' || this.Iddocumento === '6') {
             this.loading = true;
@@ -1024,10 +1023,9 @@ export class ConsecutivoTituloComponent implements OnInit {
                 this.loading = false;
                 let libretas = parseInt(this.consecutivoFrom.get("NroLibretas")?.value)
                 let colillas = parseInt(this.consecutivoFrom.get("NroColillas")?.value)
-
-                this.log.Colillas = colillas;
-                this.log.Libretas = libretas;
-                this.RegistrarLog();
+                 this.log.Colillas = colillas;
+                 this.log.Libretas = libretas;
+                 this.RegistrarLog();
                 this.BloquearAsignar = false;
                 this.BloquearTitulo = false;
                 this.BloquearTituloF = false;
@@ -1076,7 +1074,6 @@ export class ConsecutivoTituloComponent implements OnInit {
               });
           }
         }
-
         if (this.IdModulo === 25) {
           this.loading = true;
           this.ConsecutivotituloService.GuardarPagare(this.consecutivoFrom.value).subscribe(
@@ -2349,8 +2346,8 @@ export class ConsecutivoTituloComponent implements OnInit {
   }
 
   OrganizarDatosLog() {
-    let data : string | null = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    let datas : string | null = localStorage.getItem('Data');
+    this.dataUser = JSON.parse(window.atob(datas == null ? "" : datas));
     let datosForm = this.consecutivoFrom.value;
     let datalog = new ConsecutivosLog();
     datalog.IdOficinaDestino = parseInt(datosForm.IdOficinaDestino);
@@ -2379,7 +2376,7 @@ export class ConsecutivoTituloComponent implements OnInit {
       datalog.Documento = 0;
     }
     datalog.IdModulo = datosForm.IdModulo;
-    this.log = data;
+    this.log = datalog;
   }
 
   click() {

@@ -35,7 +35,7 @@ import { TransmisionArchivosComponent } from '../Components/Configuracion/Transm
   imports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule.withConfig({callSetDisabledState: 'whenDisabledForLegacyCode'}),
     ConfiguracionRoutingModule,
     NgxLoadingModule.forRoot({
       backdropBackgroundColour: 'rgba(255,255,255,0.8)'

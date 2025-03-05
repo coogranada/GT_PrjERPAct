@@ -34,7 +34,7 @@
                         <label>Módulo:</label><span class="text-danger ObligatorioGrande"> *</span>
                         <select class="form-control" formControlName="IdModulo" id="modulo" name="select" [attr.disabled]="BloquearAsignar" [(ngModel)]="Idmodulo" (change)="ValorSeleccionadoModulo(Idmodulo)">
                             <option selected disabled value='-'>-- Seleccione --</option>
-                            <option *ngFor="let consecutivo of resultConsecutivos"  [value]="consecutivo.IdModulo">{{consecutivo.NombreModulo}}</option>
+                            <option *ngFor="let consecutivo of resultConsecutivos"  [value]="consecutivo.IdModulo"> {{consecutivo.IdModulo}} - {{consecutivo.NombreModulo}}</option>
                         </select>
                         <span class="help-block validationSpan " *ngIf="consecutivoFrom.controls['IdModulo'].errors?.['required'] && (consecutivoFrom.controls['IdModulo'].dirty || consecutivoFrom.controls['IdModulo'].touched)|| consecutivoFrom.controls['IdModulo'].value === '-'">
                             El módulo es obligatorio.
@@ -73,7 +73,7 @@
                         <div class="my-5 py-5" *ngIf="!formRango || !anularLibretas">
                             <div class="col-xs-12 col-md-3 col-lg-3">
                                 <label>{{!disponibles ? "Número Inicial" : "Rango inicial"}}:</label><span class="text-danger ObligatorioGrande"> *</span>
-                                <input type="number" min="0" class="form-control" name="NroTituloInicial" id="tituloinicial" formControlName="NroTituloInicial" maxlength="15" pattern="^[0-9]*" [attr.disabled]="BloquearTitulo" (blur)="BuscarLibreta()" (keydown) ="CambiarRango()"/>
+                                <input type="number" min="0" class="form-control" name="NroTituloInicial" id="tituloinicial" formControlName="NroTituloInicial" maxlength="15" pattern="^[0-9]*" [attr.disabled]="BloquearTitulo" (blur)="BuscarLibreta()" (keydown)="CambiarRango()"/>
                                 <span class="help-block validationSpan" *ngIf="consecutivoFrom.controls['NroTituloInicial'].errors?.['required'] && (consecutivoFrom.controls['NroTituloInicial'].dirty || consecutivoFrom.controls['NroTituloInicial'].touched)">
                                     El rango es obligatorio.
                                 </span>
