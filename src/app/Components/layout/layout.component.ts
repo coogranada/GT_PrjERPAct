@@ -631,10 +631,7 @@ export class LayoutComponent implements OnInit {
             let permi: string | null = localStorage.getItem('Permisos')
             const r1 = JSON.parse(CryptoJS.AES.decrypt(permi == null ? "" : permi, this.PassJs.pass).toString(CryptoJS.enc.Utf8));
           }
-          console.log("permi",result)
           result.forEach((element: any) => {
-            console.log("permi",element.IdModulo)
-
             /* Configuracion */
             if (element.IdModulo === 63) {
               //$('#configuracion').show();

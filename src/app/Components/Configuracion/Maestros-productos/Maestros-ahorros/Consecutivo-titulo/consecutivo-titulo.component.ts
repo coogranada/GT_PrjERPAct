@@ -333,6 +333,7 @@ export class ConsecutivoTituloComponent implements OnInit {
         const colillas = parseInt(this.consecutivoFrom.get('NroColillas')?.value);
         isNaN(libretas) ? libretas = 0 : libretas = libretas;
         for (let index = 0; index < libretas; index++) {
+          console.log("rango",IntNroTitulo)
           this.ConsecutivotituloService.ObtenerNroLibretaDisponible(Number(IntNroTitulo), Producto).subscribe(result => {
               this.resultTitulo = result;
               if (result.length === 0) {
@@ -353,7 +354,7 @@ export class ConsecutivoTituloComponent implements OnInit {
               const errorMessage = <any>error;
               console.log(errorMessage);
             });
-          IntNroTitulo += colillas + 1;
+          IntNroTitulo = (Number(IntNroTitulo) + colillas + 1).toString();
         }
       }
       else if (this.Iddocumento === '2') {
@@ -912,7 +913,6 @@ export class ConsecutivoTituloComponent implements OnInit {
     this.resultColillasDisponibles = [] //cantColillas
   }
   ClearFormConsecutivo(operacion=false) {
-    console.log("limpiar")
     this.ClearSelects();
     if (!operacion) {
       this.operacionEscogida = '';
@@ -1164,6 +1164,7 @@ export class ConsecutivoTituloComponent implements OnInit {
     this.mensajeMostradoLibretas = false;
 
     if (this.consecutivoOperacionFrom.get('Codigo')?.value !== '45') {
+      console.log("R!",Inicial)
       this.ObtenerInfoTitulo(Inicial.toString(),Producto);
     }
 
@@ -1225,6 +1226,7 @@ export class ConsecutivoTituloComponent implements OnInit {
     const Inicial = parseInt(this.consecutivoFrom.get('NroTituloInicial')?.value);
     const Producto = parseInt(this.consecutivoFrom.get('IdProducto')?.value);
     const Libretas = parseInt(this.consecutivoFrom.get("NroLibretas")?.value);
+    
     if (this.consecutivoOperacionFrom.get('Codigo')?.value === '76') {
       if (this.IdModulo === 38) {
         if (this.Iddocumento === "1" || this.Iddocumento === "6") {
