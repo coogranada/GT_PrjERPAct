@@ -9,6 +9,6 @@ export class ConsecutivosLog{
   IdProducto: number = 0;
   IdEstado: number = 0;
   Documento: number = 0;
-  Libretas: number = 0;
-  Colillas: number = 0;
+  Libretas: number | string = 0;
+  Colillas: number | string = 0;
 }

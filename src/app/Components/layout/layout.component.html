@@ -123,7 +123,7 @@
                                     <span>Menú</span>
                                     <i class="icon-menu"></i>
                                 </li>
-                                <li id="configuracion">
+                                <li *ngIf="Configuracion">
                                     <a (click)="toggleConfiguracionMenu()">
                                         <i class="icon-cog3"></i>
                                         <span>Configuración</span>
@@ -135,7 +135,7 @@
                                             *ngIf="isConfiguracionMenuOpen"></i>
                                     </a>
                                     <ul *ngIf="isConfiguracionMenuOpen">
-                                        <li id="maestros">
+                                        <li *ngIf="Maestros">
                                             <a  (click)="toggleMaestroMenu()" style="padding: 0px, 40px;">
                                                 <i></i>
                                                 <span>Maestros</span>
@@ -147,51 +147,51 @@
                                                     *ngIf="isMaestroMenuOpen"></i>
                                             </a>
                                             <ul *ngIf="isMaestroMenuOpen">
-                                                <li id="areas">
+                                                <li id="areas" *ngIf="Areas">
                                                     <a [routerLink]="['/Configuracion/Maestros/Areas']"
                                                         (click)="setModuloLocalStorage(AreasModel.IdModuloPermiso)">Áreas</a>
                                                 </li>
-                                                <li id="cargos">
+                                                <li id="cargos" *ngIf="Cargos">
                                                     <a [routerLink]="['/Configuracion/Maestros/Cargos']"
                                                         (click)="setModuloLocalStorage(CargosModel.IdModuloPermiso)">
                                                         Cargos</a>
                                                 </li>
-                                                <li id="oficinas">
+                                                <li id="oficinas" *ngIf="Oficinas">
                                                     <a [routerLink]="['/Configuracion/Maestros/Oficinas']"
                                                         (click)="setModuloLocalStorage(OficinasModel.IdModuloPermiso)">
                                                         Oficinas</a>
                                                 </li>
-                                                <li id="perfiles">
+                                                <li id="perfiles" *ngIf="Perfiles">
                                                     <a [routerLink]="['/Configuracion/Maestros/Perfiles']"
                                                         (click)="setModuloLocalStorage(PerfilesModel.IdModuloPermiso)">
                                                         Perfiles</a>
                                                 </li>
-                                                <li id="usuariosTipos">
+                                                <li id="usuariosTipos" *ngIf="UsuariosTipos">
                                                     <a [routerLink]="['/Configuracion/Maestros/TiposUsuarios']"
                                                         (click)="setModuloLocalStorage(UsuariosTiposModel.IdModuloPermiso)">
                                                         Tipos usuarios</a>
                                                 </li>
-                                                <li id="modulos">
+                                                <li id="modulos" *ngIf="Modulos">
                                                     <a [routerLink]="['/Configuracion/Maestros/Modulos']"
                                                         (click)="setModuloLocalStorage(MaestrosModel.IdModuloPermiso)">
                                                         Módulos</a>
                                                 </li>
-                                                <li id="permisos">
+                                                <li id="permisos" *ngIf="Permisos">
                                                     <a [routerLink]="['/Configuracion/Maestros/Permisos']"
                                                         (click)="setModuloLocalStorage(PermisosModel.IdModuloPermiso)">
                                                         Permisos</a>
                                                 </li>
-                                                <li id="operacionesModulos">
+                                                <li id="operacionesModulos" *ngIf="OperacionesModulos">
                                                     <a [routerLink]="['/Configuracion/Maestros/OperacionesModulos']"
                                                         (click)="setModuloLocalStorage(OperacionesModulosModel.IdModuloPermiso)">
                                                         Operaciones módulos</a>
                                                 </li>
-                                                <li id="operacionesPerfiles">
+                                                <li id="operacionesPerfiles" *ngIf="OperacionesPerfiles">
                                                     <a [routerLink]="['/Configuracion/Maestros/OperacionesPerfiles']"
                                                         (click)="setModuloLocalStorage(OperacionesPerfilesModel.IdModuloPermiso)">
                                                         Operaciones perfiles</a>
                                                 </li>
-                                                <li id="operacionesEstado">
+                                                <li id="operacionesEstado" *ngIf="OperacionesEstado">
                                                     <a [routerLink]="['/Configuracion/Maestros/OperacionesEstados']"
                                                         (click)="setModuloLocalStorage(OperacionesEstadoModel.IdModuloPermiso)">
                                                         Operaciones estados</a>
@@ -201,45 +201,45 @@
                                                         (click)="setModuloLocalStorage(ObservacionesModulosModel.IdModuloPermiso)">
                                                         Observaciones módulos</a>
                                                 </li>
-                                                <li id="usuarios">
+                                                <li id="usuarios" *ngIf="Usuarios">
                                                     <a [routerLink]="['/Configuracion/Maestros/Usuarios']"
                                                         (click)="setModuloLocalStorage(UsuariosModel.IdModuloPermiso)">
                                                         Usuarios</a>
                                                 </li>
-                                                <li id="usuariosproveedores">
+                                                <li id="usuariosproveedores" *ngIf="UsuarioProveedores">
                                                     <a [routerLink]="['/Configuracion/Maestros/UsuariosProveederes']"
                                                         (click)="setModuloLocalStorage(UsuariosProveedoresModel.IdModuloPermiso)">
                                                         Usuarios proveedores</a>
                                                 </li>
-                                                <li id="controlSession">
+                                                <li id="controlSession" *ngIf="ObservacionesModulos">
                                                     <a [routerLink]="['/Configuracion/Maestros/ControlSesion']"
                                                         (click)="setModuloLocalStorage(UsuariosModel.IdModuloPermiso)">
                                                         Control sesión</a>
                                                 </li>
-                                                <li id="permisosEspeciales">
+                                                <li id="permisosEspeciales" *ngIf="PermisosEspeciales">
                                                     <a [routerLink]="['/Configuracion/Maestros/PermisosEspeciales']"
                                                         (click)="setModuloLocalStorage(PermisosEspecialesModel.IdModuloPermiso)">
                                                         Permisos especiales</a>
                                                 </li>
-                                                <li id="GestionBanner">
+                                                <li id="GestionBanner" *ngIf="GestionBanner">
                                                     <a [routerLink]="['/Configuracion/Maestros/ImagenesBanner']"
                                                         (click)="setModuloLocalStorage(GestionBannerModel.IdModuloPermiso)">
                                                         Gestión banner</a>
                                                 </li>
-                                                <li id="GestionEmail">
+                                                <li id="GestionEmail" *ngIf="GestionEmail">
                                                     <a [routerLink]="['/Configuracion/Maestros/GestionEmail']"
                                                         (click)="setModuloLocalStorage(GestionEmailModel.IdModuloPermiso)">
                                                         Gestión email
                                                     </a>
                                                 </li>
-                                                <li id="llaves">
+                                                <li id="llaves" *ngIf="Llaves">
                                                     <a [routerLink]="['/Configuracion/Maestros/llaves']"
                                                         (click)="setModuloLocalStorage(LlavesModel.IdModuloPermiso)">
                                                         Llaves</a>
                                                 </li>
                                             </ul>
                                         </li>
-                                        <li id="maestrosproductos">
+                                        <li id="maestrosproductos" *ngIf="MaestrosProdutos">
                                             <a  (click)="toggleMaestroProductosMenu()">
                                                 <i></i>
                                                 <span>Maestros productos</span>
@@ -251,7 +251,7 @@
                                                     *ngIf="isMaestroProductosMenuOpen"></i>
                                             </a>
                                             <ul *ngIf="isMaestroProductosMenuOpen">
-                                                <li id="maestrosahorros">
+                                                <li id="maestrosahorros" *ngIf="MaestrosAhorros">
                                                     <a (click)="toggleMaestroAhorrosMenu()">
                                                         <i></i>
                                                         <span>Maestros ahorros</span>
@@ -263,7 +263,7 @@
                                                             *ngIf="isMaestroAhorrosMenuOpen"></i>
                                                     </a>
                                                     <ul *ngIf="isMaestroAhorrosMenuOpen">
-                                                        <li id="consecutivotitulo">
+                                                        <li id="consecutivotitulo" *ngIf="ConsecutivoTitulo">
                                                             <a [routerLink]="['/Configuracion/Maestros-productos/Maestros-ahorros/Consecutivo-titulo/']"
                                                                 (click)="setModuloLocalStorage(ConsecutivoTituloModel.IdModuloPermiso)">Consecutivo
                                                                 titulos</a>
@@ -272,7 +272,7 @@
                                                 </li>
                                             </ul>
                                         </li>
-                                        <li id="informesmaestros">
+                                        <li id="informesmaestros" *ngIf="InformesMaestros">
                                             <a  (click)="toggleInformesMenu()">
                                                 <i></i>
                                                 <span>Informes</span>
@@ -284,7 +284,7 @@
                                                     *ngIf="isInformesMenuOpen"></i>
                                             </a>
                                             <ul *ngIf="isInformesMenuOpen">
-                                                <li id="informesmaestrosahorros">
+                                                <li id="informesmaestrosahorros" *ngIf="InformesMaestrosAhorros">
                                                     <a (click)="toggleInformesMaestroAhorrosMenu()">
                                                         <i></i>
                                                         <span>Maestros ahorros</span>
@@ -296,7 +296,7 @@
                                                             *ngIf="isInformesMaestroAhorrosMenuOpen"></i>
                                                     </a>
                                                     <ul *ngIf="isInformesMaestroAhorrosMenuOpen">
-                                                        <li id="informeconsecutivotitulo">
+                                                        <li id="informeconsecutivotitulo" *ngIf="InformesConsecutivoTitulo">
                                                             <a [routerLink]="['/Configuracion/Informes/Maestros-ahorros/Consecutivo-titulo/informe-consecutivo-titulo']"
                                                                 (click)="setModuloLocalStorage(InformeConsecutivoTituloModel.IdModuloPermiso)">Consecutivo
                                                                 titulos</a>
@@ -305,7 +305,7 @@
                                                 </li>
                                             </ul>
                                         </li>
-                                        <li id="transmisionarchivos">
+                                        <li id="transmisionarchivos" *ngIf="Transmisionarchivos">
                                             <a  (click)="toggletransmisionarchivosMenu()"
                                                 [routerLink]="['Configuracion/TransmisionArchivos']">
                                                 <i></i>
@@ -313,7 +313,7 @@
                                             </a>
                                         </li>
                                     </ul>
-                                <li id="clientes">
+                                <li id="clientes" *ngIf="Clientes">
                                     <a (click)="toggleClientesMenu()">
                                         <i class="icon-users4"></i>
                                         <span>Clientes</span>
@@ -325,11 +325,11 @@
                                             *ngIf="isClientesMenuOpen"></i>
                                     </a>
                                     <ul *ngIf="isClientesMenuOpen">
-                                        <li id="naturales">
+                                        <li id="naturales" *ngIf="Naturales">
                                             <a [routerLink]="['/Clientes/Naturales']"
                                                 (click)="setModuloLocalStorage(NaturalesModel.IdModuloPermiso)">Naturales</a>
                                         </li>
-                                        <li id="juridicos">
+                                        <li id="juridicos" *ngIf="Juridicos">
                                             <a [routerLink]="['/Clientes/Juridicos']"
                                                 (click)="setModuloLocalStorage(JuridicosModel.IdModuloPermiso)">Jurídicos</a>
                                         </li>
@@ -344,7 +344,7 @@
                                             </li> -->
                                     </ul>
                                 </li>
-                                <li id="productos">
+                                <li id="productos" *ngIf="Productos">
                                     <a  (click)="toggleProductosMenu()">
                                         <i class="icon-list2"></i>
                                         <span>Productos</span>
@@ -356,12 +356,12 @@
                                             *ngIf="isProductosMenuOpen"></i>
                                     </a>
                                     <ul *ngIf="isProductosMenuOpen">
-                                        <li id="aportes">
+                                        <li id="aportes" *ngIf="Aportes">
                                             <a [routerLink]="['/Productos/Aportes']"
                                                 (click)="setModuloLocalStorage(AportesModel.IdModuloPermiso)">Aportes</a>
                                         </li>
 
-                                        <li id="ahorros">
+                                        <li id="ahorros" *ngIf="Ahorros">
                                             <a [routerLink]="" (click)="toggleProductosAhorrosMenu()">Ahorros</a>
                                             <i class="icon-arrow-right13"
                                                 style="left: 225px; margin-top: 15px; position: absolute;"
@@ -370,11 +370,11 @@
                                                 style="left: 225px; margin-top: 15px; position: absolute;"
                                                 *ngIf="isProductosAhorrosMenuOpen"></i>
                                             <ul *ngIf="isProductosAhorrosMenuOpen">
-                                                <li id="simuladorAhorro">
+                                                <li id="simuladorAhorro" *ngIf="SimuladorAhorro">
                                                     <a [routerLink]=""
                                                         (click)="setModuloLocalStorage(SimuladorAhorroModel.IdModuloPermiso)">Simulador</a>
                                                 </li>
-                                                <li id="contractuales">
+                                                <li id="contractuales" *ngIf="Contractuales">
                                                     <a (click)="toggleProductosAhorroContractualMenu()">Contractual</a>
                                                     <i class="icon-arrow-right13"
                                                         style="left: 225px; margin-top: 15px; position: absolute;"
@@ -383,18 +383,18 @@
                                                         style="left: 225px; margin-top: 15px; position: absolute;"
                                                         *ngIf="isProductosAhorrosContractualMenuOpen"></i>
                                                     <ul *ngIf="isProductosAhorrosContractualMenuOpen">
-                                                        <li id="contractualesInterno">
+                                                        <li id="contractualesInterno" *ngIf="ContractualesInterno">
                                                             <a [routerLink]="['/Productos/Ahorros/Contractual']"
                                                                 (click)="setModuloLocalStorage(ContractualesInternoModel.IdModuloPermiso)">Contractual</a>
                                                         </li>
-                                                        <li id="asesoriacontractual">
+                                                        <li id="asesoriacontractual" *ngIf="AsesoriaContractual">
                                                             <a [routerLink]="['/Productos/Ahorros/AsesoriaContractual']"
                                                                 (click)="setModuloLocalStorage(AsesoriaContractualModel.IdModuloPermiso)">Asesoria
                                                                 contractual</a>
                                                         </li>
                                                     </ul>
                                                 </li>
-                                                <li id="disponibles">
+                                                <li id="disponibles" *ngIf="Disponibles">
                                                     <a [routerLink]=""
                                                         (click)="toggleProductosAhorrosDisponiblesMenu()">Disponibles</a>
                                                     <i class="icon-arrow-right13"
@@ -404,22 +404,22 @@
                                                         style="left: 225px; margin-top: 15px; position: absolute;"
                                                         *ngIf="isProductosAhorrosDisponiblesMenuOpen"></i>
                                                     <ul *ngIf="isProductosAhorrosDisponiblesMenuOpen">
-                                                        <li id="disponiblesInterno">
+                                                        <li id="disponiblesInterno" *ngIf="DisponiblesInterno">
                                                             <a [routerLink]="['/Productos/Ahorros/Disponibles/Disponibles']"
                                                                 (click)="setModuloLocalStorage(DisponiblesInternoModel.IdModuloPermiso)">Disponibles</a>
                                                         </li>
-                                                        <li id="tarjetaHabientes">
+                                                        <li id="tarjetaHabientes" *ngIf="TarjetaHabientes">
                                                             <a [routerLink]="['/Productos/Ahorros/Disponible/TarjetaHabientes']"
                                                                 (click)="setModuloLocalStorage(TarjetaHabientesModel.IdModuloPermiso)">Tarjeta
                                                                 Habientes</a>
                                                         </li>
-                                                        <li id="gmf">
+                                                        <li id="gmf" *ngIf="Gmf">
                                                             <a [routerLink]="['/Productos/Ahorros/Disponible/GMF']"
                                                                 (click)="setModuloLocalStorage(GmfModel.IdModuloPermiso)">GMF</a>
                                                         </li>
                                                     </ul>
                                                 </li>
-                                                <li id="termino">
+                                                <li id="termino" *ngIf="Termino">
                                                     <a [routerLink]="" (click)="toggleProductosAhorrosTerminoMenu()">
                                                         Término</a>
                                                     <i class="icon-arrow-right13"
@@ -429,11 +429,11 @@
                                                         style="left: 225px; margin-top: 15px; position: absolute;"
                                                         *ngIf="isProductosAhorrosTerminoMenuOpen"></i>
                                                     <ul *ngIf="isProductosAhorrosTerminoMenuOpen">
-                                                        <li id="TerminoInterno">
+                                                        <li id="TerminoInterno" *ngIf="TerminoInterno">
                                                             <a [routerLink]="['/Productos/Ahorros/Termino/Termino']"
                                                                 (click)="setModuloLocalStorage(TerminoInternoModel.IdModuloPermiso)">Término</a>
                                                         </li>
-                                                        <li id="asesoriatermino">
+                                                        <li id="asesoriatermino" *ngIf="AsesoriaTermino">
                                                             <a [routerLink]="['/Productos/Ahorros/Termino/AsesoriaTermino']"
                                                                 (click)="setModuloLocalStorage(AsesoriaTerminoModel.IdModuloPermiso)">Asesoria
                                                                 término</a>
@@ -444,7 +444,7 @@
 
                                             </ul>
                                         </li>
-                                        <li id="creditos">
+                                        <li id="creditos" *ngIf="Creditos">
                                             <a [routerLink]="" (click)="toggleProductosCreditoMenu()"> Créditos</a>
                                             <i class="icon-arrow-right13"
                                                 style="left: 225px; margin-top: 15px; position: absolute;"
@@ -453,22 +453,22 @@
                                                 style="left: 225px; margin-top: 15px; position: absolute;"
                                                 *ngIf="isProductosCreditoMenuOpen"></i>
                                             <ul *ngIf="isProductosCreditoMenuOpen">
-                                                <li id="simuladorCredito">
+                                                <li id="simuladorCredito" *ngIf="SimuladorCredito">
                                                     <a [routerLink]="['/Productos/Creditos/Simulador']"
                                                         (click)="setModuloLocalStorage(SimuladorCreditoModel.IdModuloPermiso)">Simulador</a>
                                                 </li>
-                                                <li id="fichaAnalisis">
+                                                <li id="fichaAnalisis" *ngIf="FichaAnalisis">
                                                     <a [routerLink]="['/Productos/Creditos/FichaAnalisis']"
                                                         (click)="setModuloLocalStorage(FichaAnalisisModel.IdModuloPermiso)">Ficha
                                                         de análisis</a>
                                                 </li>
-                                                <li id="score">
+                                                <li id="score" *ngIf="Score">
                                                     <a [routerLink]="['/Productos/Creditos/Score']"
                                                         (click)="setModuloLocalStorage(ScoreModel.IdModuloPermiso)">Score</a>
                                                 </li>
                                             </ul>
                                         </li>
-                                        <li id="seguros">
+                                        <li id="seguros" *ngIf="Seguros">
                                             <a [routerLink]="" (click)="toggleProductosSeguroMenu()">Seguros</a>
                                             <i class="icon-arrow-right13"
                                                 style="left: 225px; margin-top: 15px; position: absolute;"
@@ -477,11 +477,11 @@
                                                 style="left: 225px; margin-top: 15px; position: absolute;"
                                                 *ngIf="isProductosSeguroMenuOpen"></i>
                                             <ul *ngIf="isProductosSeguroMenuOpen">
-                                                <li id="general">
+                                                <li id="general" *ngIf="Generales">
                                                     <a [routerLink]=""
                                                         (click)="setModuloLocalStorage(GeneralesModel.IdModuloPermiso)">Generales</a>
                                                 </li>
-                                                <li id="cancelacion">
+                                                <li id="cancelacion" *ngIf="Cancelacion">
                                                     <a [routerLink]=""
                                                         (click)="setModuloLocalStorage(CancelacionModel.IdModuloPermiso)">Cancelación</a>
                                                 </li>
@@ -516,7 +516,7 @@
                                         </li>
                                     </ul>
                                 </li>
-                                <li id="informes">
+                                <li id="informes" *ngIf="Informes">
                                     <a (click)="toggleInformeMenu()">
                                         <i class=" icon-stack"></i>
                                         <span>Informes</span>
@@ -531,10 +531,10 @@
                                         <!-- <li id="informesInterno">
                                                 <a [routerLink]="" (click)="setModuloLocalStorage(InformesInternoModel.IdModuloPermiso)">Informes</a>
                                             </li> -->
-                                            <li id="debitosautomaticos">
+                                            <li id="debitosautomaticos" *ngIf="DebitosAutomaticos">
                                                 <a [routerLink]="['/Informes/DebitosAutomaticos']" (click)="setModuloLocalStorage(DebitosAutomaticosModel.IdModuloPermiso)">Débito automático</a>
                                             </li>
-                                            <li id="gestionOperaciones">
+                                            <li id="gestionOperaciones" *ngIf="GestionOperaciones">
                                                 <a [routerLink]="['/Informes/GestionOperaciones']" (click)="setModuloLocalStorage(GestionOperacionesModel.IdModuloPermiso)">Gestión operaciones</a> </li>
                                             <li id="estadisticos">
                                                 
@@ -562,15 +562,15 @@
                                             <li id="ListaProductos">
                                                 <a [routerLink]="['/Informes/ListaProductos']" (click)="setModuloLocalStorage(GestionOperacionesModel.IdModuloPermiso)">Mis productos</a>
                                             </li>
-                                            <li id="informeclientes">
+                                            <li id="informeclientes" *ngIf="InformeClientes">
                                                 <a [routerLink]="['/Informes/InformeClientes']" (click)="setModuloLocalStorage(GestionOperacionesModel.IdModuloPermiso)">Informe clientes</a>
                                             </li>
-                                            <li id="logauditoria">
+                                            <li id="logauditoria" *ngIf="LogAuditoria">
                                                 <a [routerLink]="['/Informes/LogAuditoria']" (click)="setModuloLocalStorage(GestionOperacionesModel.IdModuloPermiso)">Log auditoria</a>
                                             </li>
                                         </ul>
                                     </li>
-                                    <li id="utilidades">
+                                    <li id="utilidades" *ngIf="Utilidades">
                                         <a  (click)="toggleUtilidadesMenu()">
                                             <!-- (click)="setModuloLocalStorage(UtilidadesModel.IdModuloPermiso)" -->
                                             <i class=" icon-cog2"></i>
@@ -579,16 +579,16 @@
                                             <span>Utilidades</span>
                                         </a>
                                         <ul *ngIf="isUtilidadesOpen">
-                                            <li id="crearNotificaciones">
+                                            <li id="crearNotificaciones" *ngIf="CrearNotificaciones">
                                                 <a [routerLink]="['/Utilidades/CrearNotificaciones']" (click)="setModuloLocalStorage(CrearNotificacionesModel.IdModuloPermiso)">Crear
                                                 notificación</a>
                                         </li>
-                                        <li id="diferenciasSaldos">
+                                        <li id="diferenciasSaldos" *ngIf="DiferenciasSaldos">
                                             <a [routerLink]="['/Utilidades/DiferenciasSaldos']"
                                                 (click)="setModuloLocalStorage(DiferenciasSaldosModel.IdModuloPermiso)">Diferencias
                                                 saldos</a>
                                         </li>
-                                        <li id="conciliacionComisiones">
+                                        <li id="conciliacionComisiones" *ngIf="ConciliacionComisiones">
                                             <a [routerLink]="['/Utilidades/ConciliacionCompensacion']"
                                                 (click)="setModuloLocalStorage(ConciliacionComisionesModel.IdModuloPermiso)">Conciliación
                                                 compensación</a>
@@ -598,7 +598,7 @@
                                             </li>-->
                                     </ul>
                                 </li>
-                                <li id="auditorias">
+                                <li id="auditorias" *ngIf="Auditorias">
                                     <a  (click)="toggleAuditoriaMenu()">
                                         <!-- (click)="setModuloLocalStorage(AuditoriasModel.IdModuloPermiso)" -->
                                         <i class=" icon-menu6"></i>
@@ -608,11 +608,11 @@
                                         
                                     </a>
                                     <ul *ngIf="isAuditoriaOpen">
-                                        <li id="auditoriaScore">
+                                        <li id="auditoriaScore" *ngIf="AuditoriaScore">
                                             <a [routerLink]="['/Auditorias/Score']"
                                                 (click)="setModuloLocalStorage(AuditoriaScoreModel.IdModuloPermiso)">Score</a>
                                         </li>
-                                        <li id="auditoriasGmf">
+                                        <li id="auditoriasGmf" *ngIf="AuditoriasGmf">
                                             <a [routerLink]="['/Auditorias/GMF']"
                                                 (click)="setModuloLocalStorage(AuditoriasGmfModel.IdModuloPermiso)">GMF</a>
                                         </li>

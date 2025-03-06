@@ -20,8 +20,8 @@ export class InformeConsecutivoTituloService {
         this.url = `${this.environment.Url}/ObtenerProductosConsecutivos?IdModulo=${IdModulo}`;
         return this._http.get<any>(this.url);
     }   
-    ObtenerDocumentosDisponibles(IdModulo: string): Observable<any> {
-        this.url = `${this.environment.Url}/ObtenerDocumentosDisponibles?IdModulo=${IdModulo}`;
+    ObtenerDocumentosDisponibles(IdProducto: string): Observable<any> {
+        this.url = `${this.environment.Url}/ObtenerDocumentosDisponibles?IdProducto=${IdProducto}`;
         return this._http.get<any>(this.url);
     }     
     Oficinas(): Observable<any> {

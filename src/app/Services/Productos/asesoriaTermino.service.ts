@@ -72,7 +72,7 @@ export class AsesoriaTerminoService {
         const params = new HttpParams().set('intPlazo', plazo);
         return this._http.get<any>(this.url,{params: params });
     }
-    ObtenerPuntosAdicionales(IdProducto: string): Observable<any> {
+    ObtenerPuntosAdicionales(IdProducto: any): Observable<any> {
         this.url = `${this.environment.Url}/ObtenerPuntosAdicionalesTermino?PintIdProducto=${IdProducto}`;
         return this._http.get<any>(this.url);
     }

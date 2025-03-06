@@ -111,6 +111,7 @@ export class ConsecutivoTituloComponent implements OnInit {
       })
     );
     obs.subscribe((resulr) => console.log(resulr));
+    this.log = {};
   }
   ngOnInit() {
     this.moduleValidationService.ValidatePermissionsModule(this.CodModulo);
@@ -332,6 +333,7 @@ export class ConsecutivoTituloComponent implements OnInit {
         const colillas = parseInt(this.consecutivoFrom.get('NroColillas')?.value);
         isNaN(libretas) ? libretas = 0 : libretas = libretas;
         for (let index = 0; index < libretas; index++) {
+          console.log("rango",IntNroTitulo)
           this.ConsecutivotituloService.ObtenerNroLibretaDisponible(Number(IntNroTitulo), Producto).subscribe(result => {
               this.resultTitulo = result;
               if (result.length === 0) {
@@ -352,7 +354,7 @@ export class ConsecutivoTituloComponent implements OnInit {
               const errorMessage = <any>error;
               console.log(errorMessage);
             });
-          IntNroTitulo += colillas + 1;
+          IntNroTitulo = (Number(IntNroTitulo) + colillas + 1).toString();
         }
       }
       else if (this.Iddocumento === '2') {
@@ -496,7 +498,6 @@ export class ConsecutivoTituloComponent implements OnInit {
     this.mensajeMostradoLibretas = false;
   }
   ValorSeleccionadoModulo(Idmodulo : string) {
-    console.log("modulo",Idmodulo)
     this.ClearSelects(true);
     this.formBuscar = true;
     this.BloquearMotivo = true;
@@ -987,7 +988,6 @@ export class ConsecutivoTituloComponent implements OnInit {
             }
           );
         }
-
         if (this.IdModulo === 20) {
           this.loading = true;
           this.ConsecutivotituloService.GuardarConsecutivoTitulo(this.consecutivoFrom.value).subscribe(
@@ -1015,7 +1015,6 @@ export class ConsecutivoTituloComponent implements OnInit {
             }
           );
         }
-
         if (this.IdModulo === 38) {
           if (this.Iddocumento === '1' || this.Iddocumento === '6') {
             this.loading = true;
@@ -1024,10 +1023,9 @@ export class ConsecutivoTituloComponent implements OnInit {
                 this.loading = false;
                 let libretas = parseInt(this.consecutivoFrom.get("NroLibretas")?.value)
                 let colillas = parseInt(this.consecutivoFrom.get("NroColillas")?.value)
-
-                this.log.Colillas = colillas;
-                this.log.Libretas = libretas;
-                this.RegistrarLog();
+                 this.log.Colillas = colillas;
+                 this.log.Libretas = libretas;
+                 this.RegistrarLog();
                 this.BloquearAsignar = false;
                 this.BloquearTitulo = false;
                 this.BloquearTituloF = false;
@@ -1076,7 +1074,6 @@ export class ConsecutivoTituloComponent implements OnInit {
               });
           }
         }
-
         if (this.IdModulo === 25) {
           this.loading = true;
           this.ConsecutivotituloService.GuardarPagare(this.consecutivoFrom.value).subscribe(
@@ -1167,6 +1164,7 @@ export class ConsecutivoTituloComponent implements OnInit {
     this.mensajeMostradoLibretas = false;
 
     if (this.consecutivoOperacionFrom.get('Codigo')?.value !== '45') {
+      console.log("R!",Inicial)
       this.ObtenerInfoTitulo(Inicial.toString(),Producto);
     }
 
@@ -1228,6 +1226,7 @@ export class ConsecutivoTituloComponent implements OnInit {
     const Inicial = parseInt(this.consecutivoFrom.get('NroTituloInicial')?.value);
     const Producto = parseInt(this.consecutivoFrom.get('IdProducto')?.value);
     const Libretas = parseInt(this.consecutivoFrom.get("NroLibretas")?.value);
+    
     if (this.consecutivoOperacionFrom.get('Codigo')?.value === '76') {
       if (this.IdModulo === 38) {
         if (this.Iddocumento === "1" || this.Iddocumento === "6") {
@@ -2349,8 +2348,8 @@ export class ConsecutivoTituloComponent implements OnInit {
   }
 
   OrganizarDatosLog() {
-    let data : string | null = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    let datas : string | null = localStorage.getItem('Data');
+    this.dataUser = JSON.parse(window.atob(datas == null ? "" : datas));
     let datosForm = this.consecutivoFrom.value;
     let datalog = new ConsecutivosLog();
     datalog.IdOficinaDestino = parseInt(datosForm.IdOficinaDestino);
@@ -2379,7 +2378,7 @@ export class ConsecutivoTituloComponent implements OnInit {
       datalog.Documento = 0;
     }
     datalog.IdModulo = datosForm.IdModulo;
-    this.log = data;
+    this.log = datalog;
   }
 
   click() {

@@ -18,6 +18,7 @@ import { GMFDisponibleComponent } from '../Components/Productos/Ahorros/Disponib
 import { FichaAnalisisComponent } from '../Components/Productos/Creditos/ficha-analisis/ficha-analisis.component';
 import { ShareComponentModule } from './share-component.module';
 import { DisponiblesComponent } from '../Components/Productos/Ahorros/Disponibles/disponibles/disponibles.component';
+import { AsesoriaTerminoComponent } from '../Components/Productos/Ahorros/Termino/asesoria-termino/asesoria-termino.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { DisponiblesComponent } from '../Components/Productos/Ahorros/Disponible
     TarjetaHabientesComponent,
     GMFDisponibleComponent,
     FichaAnalisisComponent,
-    DisponiblesComponent
+    DisponiblesComponent,
+    AsesoriaTerminoComponent
   ],
   imports: [
     CommonModule,

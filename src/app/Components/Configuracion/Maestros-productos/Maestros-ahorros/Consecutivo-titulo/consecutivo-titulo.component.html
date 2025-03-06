@@ -73,7 +73,7 @@
                         <div class="my-5 py-5" *ngIf="!formRango || !anularLibretas">
                             <div class="col-xs-12 col-md-3 col-lg-3">
                                 <label>{{!disponibles ? "Número Inicial" : "Rango inicial"}}:</label><span class="text-danger ObligatorioGrande"> *</span>
-                                <input type="number" min="0" class="form-control" name="NroTituloInicial" id="tituloinicial" formControlName="NroTituloInicial" maxlength="15" pattern="^[0-9]*" [attr.disabled]="BloquearTitulo" (blur)="BuscarLibreta()" (keydown) ="CambiarRango()"/>
+                                <input type="number" min="0" class="form-control" name="NroTituloInicial" id="tituloinicial" formControlName="NroTituloInicial" maxlength="15" pattern="^[0-9]*" [attr.disabled]="BloquearTitulo" (blur)="BuscarLibreta()" (keydown)="CambiarRango()"/>
                                 <span class="help-block validationSpan" *ngIf="consecutivoFrom.controls['NroTituloInicial'].errors?.['required'] && (consecutivoFrom.controls['NroTituloInicial'].dirty || consecutivoFrom.controls['NroTituloInicial'].touched)">
                                     El rango es obligatorio.
                                 </span>

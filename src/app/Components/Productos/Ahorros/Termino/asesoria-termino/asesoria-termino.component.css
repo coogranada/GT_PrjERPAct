@@ -1,0 +1,64 @@
+.modal.right .modal-dialog {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    margin: 0;
+    width: 400px;
+}
+
+.grande {
+    font-size: 25px !important;
+    color: #D84315;
+    margin-top: -5px !important;
+    margin-left: 6px;
+    position: absolute;
+}
+
+.textNegrilla {
+    color: #565656;
+    font-weight: bold;
+}
+
+.pmayuscula {
+    text-transform: capitalize;
+}
+.columnProductoX1_disponibles {
+    min-width: 200px !important;
+}
+.columnProductoX0_disponibles {
+    min-width: 120px !important;
+}
+.columnProductoX_disponibles {
+    min-width: 270px !important;
+}
+.OperacionFija {
+    position: sticky !important;
+    left: 0;
+    background: #fff;
+}
+.columnProductoX2_disponibles {
+    min-width: 300px !important;
+}
+.columnProductoX3_disponibles {
+    min-width: 300px !important;
+}
+.columnDetalles_termino {
+    white-space: nowrap;
+}
+.columnCuenta_Atermino {
+    min-width: 150px !important;
+}
+.columnCuenta_Dtermino {
+    min-width: 100px !important;
+}
+.columnCuenta_Ntermino {
+    min-width: 300px !important;
+}
+.column_Oficina{
+    white-space: nowrap;
+}
+
+.creacion-form {
+    display: flex;
+    flex-wrap: wrap;
+}
