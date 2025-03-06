@@ -115,3 +115,22 @@
     left: 0;
     background: #fff;
 }
+
+.table th {
+    font-weight: bold;
+}
+
+.table tbody tr {
+    height: 45px !important;
+}
+
+.table td {
+    vertical-align: middle;
+    padding: 1px 5px 0;
+    white-space: nowrap;
+}
+
+.centerColumn{
+    text-align: center !important;
+    align-items: center;
+}

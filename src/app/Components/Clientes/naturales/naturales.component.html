@@ -399,7 +399,7 @@
                                                     <div class="form-group">
                                                         <label class="textNegrilla">Primer apellido:</label>
                                                         <span class="grande"> *</span>
-                                                        <input type="text" class="form-control " formControlName="primerApellido" id="priApe" [attr.disabled]="disableFormPA" (blur)="validarValorCampo('priApe','primerApellido')" maxlength="20" (blur)="ActivaBotonCambiar()" />
+                                                        <input type="text" class="form-control text-capitalize" formControlName="primerApellido" id="priApe" [attr.disabled]="disableFormPA" (blur)="validarValorCampo('priApe','primerApellido')" maxlength="20" (blur)="ActivaBotonCambiar()" />
                                                         <span class="help-block validationSpan" *ngIf="basicosFrom.controls['primerApellido'].errors?.['required'] && (basicosFrom.controls['primerApellido'].dirty || basicosFrom.controls['primerApellido'].touched)">
                                                             El primer apellido es obligatorio.
                                                         </span>
@@ -412,7 +412,7 @@
                                                     <div class="form-group">
                                                         <label class="textNegrilla">Segundo apellido:</label>
                                                         <span class="text-danger"> </span>
-                                                        <input type="text" class="form-control " formControlName="segundoApellido" id="segApe" [attr.disabled]="disableFormSA" (change)="validarValorCampo('segApe','segundoApellido')" maxlength="20"  (blur)="ActivaBotonCambiar()"/>
+                                                        <input type="text" class="form-control text-capitalize " formControlName="segundoApellido" id="segApe" [attr.disabled]="disableFormSA" (change)="validarValorCampo('segApe','segundoApellido')" maxlength="20"  (blur)="ActivaBotonCambiar()"/>
                                                         <span class="help-block validationSpan" *ngIf="basicosFrom.controls['segundoApellido'].errors?.['pattern'] && (basicosFrom.controls['segundoApellido'].dirty || basicosFrom.controls['segundoApellido'].touched)">
                                                             El segundo apellido solo acepta letras.
                                                         </span>
@@ -422,7 +422,7 @@
                                                     <div class="form-group">
                                                         <label class="textNegrilla">Primer nombre:</label>
                                                         <span class="grande"> *</span>
-                                                        <input type="text" class="form-control " formControlName="primerNombre" Id="priNom" [attr.disabled]="disableFormPN" (blur)="ValidarVetadosNombre()" (change)="validarValorCampo('priNom','primerNombre')" maxlength="20" (blur)="ActivaBotonCambiar()" />
+                                                        <input type="text" class="form-control text-capitalize " formControlName="primerNombre" Id="priNom" [attr.disabled]="disableFormPN" (blur)="ValidarVetadosNombre()" (change)="validarValorCampo('priNom','primerNombre')" maxlength="20" (blur)="ActivaBotonCambiar()" />
                                                         <span class="help-block validationSpan" *ngIf="basicosFrom.controls['primerNombre'].errors?.['required'] && (basicosFrom.controls['primerNombre'].dirty || basicosFrom.controls['primerNombre'].touched)">
                                                             El primer nombre es obligatorio.
                                                         </span>
@@ -435,7 +435,7 @@
                                                     <div class="form-group">
                                                         <label class="textNegrilla">Segundo nombre:</label>
                                                         <span class="text-danger"> </span>
-                                                        <input type="text" class="form-control" formControlName="segundoNombre" id="segNom" [attr.disabled]="disableFormSN" (blur)="ValidarVetadosNombre()" (change)="validarValorCampo('segNom','segundoNombre')" maxlength="20" (blur)="ActivaBotonCambiar()" />
+                                                        <input type="text" class="form-control text-capitalize" formControlName="segundoNombre" id="segNom" [attr.disabled]="disableFormSN" (blur)="ValidarVetadosNombre()" (change)="validarValorCampo('segNom','segundoNombre')" maxlength="20" (blur)="ActivaBotonCambiar()" />
                                                         <span class="help-block validationSpan" *ngIf="basicosFrom.controls['segundoNombre'].errors?.['pattern'] && (basicosFrom.controls['segundoNombre'].dirty || basicosFrom.controls['segundoNombre'].touched)">
                                                             El segundo nombre solo acepta letras.
                                                         </span>
@@ -1826,7 +1826,7 @@
                                                     <div class="form-group">
                                                         <label class="textNegrilla">Placa:</label>
                                                         <span class="text-danger"> </span>
-                                                        <input type="text" class="form-control SoloMinuscula" id="placaVehiculo" maxlength="8" formControlName="Placa" [attr.disabled]="formBuscarLocked" />
+                                                        <input type="text" class="form-control text-uppercase" id="placaVehiculo" maxlength="8" formControlName="Placa" [attr.disabled]="formBuscarLocked" />
                                                     </div>
                                                 </div>
                                             </div>

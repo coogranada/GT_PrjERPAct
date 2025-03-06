@@ -92,6 +92,11 @@
     /* Color de fondo gris para la fila seleccionada */
 }
 
+.selected-row1 {
+    background-color: rgb(229, 229, 229);
+    /* Color de fondo gris para la fila seleccionada */
+}
+
 .labelSucces {
     color: #269051;
     border-color: #269051;
@@ -102,17 +107,20 @@
     border-color: #F44336;
 }
 
-td:last-child {
+.sticky-last-column td:last-child {
     position: sticky;
     right: 0;
-    background-color: #fff;
     z-index: 1;
-    
+    text-align: center;
 }
 
-table thead {
-    position: sticky;
+
+
+.operacionFija {
+    position: sticky !important;
     right: 0;
-    background-color: #fff;
-    z-index: 2;
+    background: #fff ;
+    z-index: 1; 
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    min-width: 30px;
 }

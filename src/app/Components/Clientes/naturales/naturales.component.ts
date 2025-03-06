@@ -1476,7 +1476,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     if (results === '5') { // Creacion 
       this.LimpiaVariablesAlerta();
       this.EjecutarMetodosMaestros();
-      this.NombresCapitaliceBasico();
       this.btnBuscar = true;
       this.totalActivos = 0;
       this.totalPatrimonio = 0;
@@ -6174,6 +6173,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   }
 
   validarMayorMenorEdad() {
+    if (this.basicosFrom.get('fechaNacimiento')?.value) {
     if (this.basicosFrom.get('fechaNacimiento')?.value !== null
       && this.basicosFrom.get('fechaNacimiento')?.value !== undefined
       && this.basicosFrom.get('fechaNacimiento')?.value !== ' ') {
@@ -6216,9 +6216,10 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         }
       }
     } else {
-      this.notif.onWarning('Advertencia','La fecha de nacimieto se debe ingresar primero.');
+      this.notif.onWarning('Advertencia','La fecha de nacimiento se debe ingresar primero.');
       this.basicosFrom.get('fechaExpedicion')?.reset();
     } 
+    }
   }
   validarMenorEdad() {
     const fechaNacimiento = this.basicosFrom.get('fechaNacimiento')?.value;
@@ -7611,7 +7612,15 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         this.basicosFrom.get('' + campoAngular + '')?.reset();
       }
     }
+    let valorCampo = $('#' + campoJquery + '').val().toString().trim();
+    let valorCorregido = valorCampo
+    .toLowerCase()
+    .replace(/\b[á-úa-zA-Z]+/g, (letra: any) =>letra.charAt(0).toUpperCase() + letra.slice(1));;
+
+    $('#' + campoJquery + '').val(valorCorregido);
+    this.basicosFrom.get('' + campoAngular + '')?.setValue(valorCorregido);
   }
+
   validarValorCampoForm(campoJquery : string, campoAngular : string) {
     const lentghCampo = $('#' + campoJquery + '').val();
     if (lentghCampo.length > 0) {
@@ -9271,33 +9280,10 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   GetAsesorExternoCodigoFirst(codigo : string) {
     this.asesorForm.get('strNombre')?.setValue('');
     this.asesorForm.get('strCodigo')?.setValue(codigo);
-    this.clientesGetListService.GetAsesorExterno(this.asesorForm.value).subscribe(
-      result => {
-        if (result.length > 1) {
-          this.dataAsesor = result;
-          this.BuscarAsesores.nativeElement.click();
-        } else {
-          if (result.length !== 0) {
-            result.forEach((elements : any) => {
-              this.asesorForm.get('strNombre')?.setValue(elements.Nombre);
-              this.asesorForm.get('strCodigo')?.setValue(elements.intIdAsesor);
-              this.terceroSave.get('IdAsesorExterno')?.setValue(elements.intIdAsesor);
-            });
-          } else {
-            this.asesorForm.get('strNombre')?.setValue('');
-            this.asesorForm.get('strCodigo')?.setValue('');
-            this.terceroSave.get('IdAsesorExterno')?.reset();
-            this.notif.onWarning('Advertencia', 'No se encontró el asesor externo.');
-          }
-        }
-      },
-      error => {
-        this.notif.onDanger('Error', error);
-        const errorMessage = <any>error;
-        console.log(errorMessage);
-      }
-    );
+    this.GetAsesorExternoCodigo();
   }
+
+
   GetAsesorExternoNombre() {
     this.asesorForm.get('strCodigo')?.setValue('');
     this.clientesGetListService.GetAsesorExterno(this.asesorForm.value).subscribe(
@@ -9408,37 +9394,13 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     }
   }
 
+
   GetAsesorCodigoFirst(codigo : string) {
     this.asesorForm.get('strNombreAse')?.setValue('');
     this.asesorForm.get('strCodigoAse')?.setValue(codigo);
-    this.clientesGetListService.GetAsesor(this.asesorForm.value).subscribe(
-      result => {
-        if (result.length > 1) {
-          this.dataAsesorPapl = result;
-          this.BuscarAsesoresPpal.nativeElement.click();
-        } else {
-          if (result.length !== 0) {
-            result.forEach((elements : any) => {
-              this.asesorForm.get('strNombreAse')?.setValue(elements.Nombre);
-              this.asesorForm.get('strCodigoAse')?.setValue(elements.IdAsesor);
-            });
-          } else {
-            if (this.basicosFrom.value.operacion === '26') {
-              if (this.asesorForm.get('strCodigoAse')?.value === 2)
-                this.asesorForm.get('strNombreAse')?.setValue('Coogranada');
-            } else {
-              this.notif.onWarning('Advertencia', 'No se encontró el asesor.');
-            }
-          }
-        }
-      },
-      error => {
-        this.notif.onDanger('Error', error);
-        const errorMessage = <any>error;
-        console.log(errorMessage);
-      }
-    );
+    this.GetAsesorCodigo();
   }
+
 
   GetAsesorAll() {
     if (this.asesorForm.value.strNombreAse !== '' && this.asesorForm.value.strNombreAse !== null) {
@@ -25171,24 +25133,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     }
   }
 
-  NombresCapitaliceBasico() {
-    const self = this;
-     $('#IdComplemento').keyup(function () {
-      $(self).val($(self).val().substr(0,1).toUpperCase() + $(self).val().substr(1).toLowerCase());
-    });
-    $('#priApe').keyup(function () {
-      $(self).val($(self).val().substr(0,1).toUpperCase() + $(self).val().substr(1).toLowerCase());
-    });
-    $('#segApe').keyup(function () {
-      $(self).val($(self).val().substr(0,1).toUpperCase() + $(self).val().substr(1).toLowerCase());
-    });
-    $('#priNom').keyup(function () {
-      $(self).val($(self).val().substr(0,1).toUpperCase() + $(self).val().substr(1).toLowerCase());
-    });
-    $('#segNom').keyup(function () {
-      $(self).val($(self).val().substr(0,1).toUpperCase() + $(self).val().substr(1).toLowerCase());
-    });
-  }
 
   capitalize() { 
     const self = this;

@@ -256,7 +256,7 @@ h3 {
 .tablaDisponible tr,
 .tablaDisponible td,
 .columnOpciones_disponible {
-    min-width: 200px;
+    min-width: 30px;
 }
 
 
@@ -316,7 +316,7 @@ h3 {
 .tablaContractual tr,
 .tablaContractual td,
 .columnOpciones_Contractuales {
-    min-width: 200px;
+    min-width: 30px;
 }
 
 .columnProductoX2_Ahorros {
@@ -386,7 +386,7 @@ h3 {
 .tablaAtermino tr,
 .tablaAtermino td,
 .columnOpciones_Atermino {
-    min-width: 200px;
+    min-width: 30px;
 }
 
 
@@ -535,4 +535,44 @@ object {
     .modal-dialog-xl {
         width: 99% !important;
     }
+}
+
+
+
+.table th {
+    font-weight: bold;
+}
+
+.table tbody tr {
+    height: 45px !important;
+}
+
+.table td {
+    vertical-align: middle;
+    padding: 1px 5px 0;
+    white-space: nowrap;
+}
+
+
+
+.sticky-last-column td:last-child {
+    position: sticky;
+    right: 0;
+    z-index: 1;
+    text-align: center;
+}
+
+
+.operacionFija {
+    position: sticky !important;
+    right: 0;
+    background: #fff;
+    z-index: 1; 
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    min-width: 30px;
+}
+
+.centerColumn{
+    text-align: center !important;
+    align-items: center;
 }

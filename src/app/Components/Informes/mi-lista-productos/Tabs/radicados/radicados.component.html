@@ -18,7 +18,7 @@
 </div>
 <div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="Radicado.length >0">
     <div class="table-responsive scrollTabla">
-        <table id="tablaIngresos" class="table table-hover tablaRadicados">
+        <table id="tablaIngresos" class="table table-hover tablaRadicados sticky-last-column">
             <thead class="encabezadoTablasRadicados">
                 <tr>
                     <th class="radicadoFijo">
@@ -30,13 +30,13 @@
                     <th>
                         <strong>Línea</strong>
                     </th>
-                    <th>
+                    <th style="text-align: left;">
                         <strong>Estado</strong>
                     </th>
                     <th>
                         <strong>Oficina</strong>
                     </th>
-                    <th>
+                    <th class="operacionFija">
                         <strong>Opciones</strong>
                     </th>
                 </tr>
@@ -50,10 +50,10 @@
                     <th [ngClass]="{'NombreLineaRadicado': item.NombreLinea.length < 22,
                     'NombreLineaRadicadoX2': item.NombreLinea.length > 21 && item.NombreLinea.length < 33,
                     'NombreLineaRadicadoX3': item.NombreLinea.length >= 33}">{{item.NombreLinea}}</th>
-                    <th class="EstadoRadicado">{{item.Estado}}</th>
+                    <th class="EstadoRadicado ">{{item.Estado}}</th>
                     <th [ngClass]="{'OficinaRadicado': item.Oficina.length < 15,
                     'OficinaRadicadoX2': item.Oficina.length >= 15}">{{item.Oficina}}</th>
-                    <td>
+                    <td class="operacionFija">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="MostarDetalleRadicado" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModelDetalleRadicado" (click)="DetalleRadicados(item)">
                             <i class="icon-eye2"></i>
                         </button>

@@ -24,6 +24,7 @@ export class TransmisionArchivosComponent implements OnInit {
   @ViewChild('gpgRecipientInput') gpgRecipientInput: ElementRef | undefined;
 
   selectedRow: any = null;
+  selectedRow1: any = null;
   initialValues: any = {};
   parametrosTransm: ParametrosTransmisionData[] = [];
   public loading = false;
@@ -123,6 +124,10 @@ export class TransmisionArchivosComponent implements OnInit {
     this.selectedTarea = parametro.NombreSitio;
   }
 
+  selectRow1(parametro: any) {
+    this.selectedRow1 = parametro;
+  }
+
   ValidarCambios(): boolean {
     const formValues = this.parametrosTransmisionForm.value;
     if (JSON.stringify(this.initialValues) !== JSON.stringify(formValues)) {
@@ -168,6 +173,7 @@ export class TransmisionArchivosComponent implements OnInit {
 
     this.initForm();
     this.selectedRow = null;
+    this.selectedRow1 = null;
     this.vbleBtnactualizar = false;
 
   }

@@ -31,7 +31,7 @@
             <div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="DataDisponible.length > 0 && DataDisponible != null && ValidadaActivo">
                 <div class="table-responsive scrollTablaAhorros">
                     <div class="col-xs-12 col-md-12 col-lg-12">
-                        <table id="tablaIngresos" class="table table-hover tablaDisponible">
+                        <table id="tablaIngresos" class="table table-hover tablaDisponible sticky-last-column">
                             <thead>
                                 <tr class="encabezadoTablas">
                                     <th class="columnCuenta_disponible CuentaFija">
@@ -43,7 +43,7 @@
                                     <th class="columnEfectivo_disponible">
                                         <strong>Saldo efectivo</strong>
                                     </th>
-                                    <th class="columnEstado_disponible">
+                                    <th class="columnEstado_disponible centerColumn">
                                         <strong>Estado</strong>
                                     </th>
                                     <th class="columnApertura_disponible">
@@ -52,7 +52,7 @@
                                     <th class="columnUltTrans_disponible">
                                         <strong>Última transacción</strong>
                                     </th>
-                                    <th class="columnOpciones_disponible">
+                                    <th class="operacionFija">
                                         <strong>Opciones</strong>
                                     </th>
                                 </tr>
@@ -67,10 +67,10 @@
                                         {{itemDispo.NameProducto}}
                                     </td>
                                     <td class="columnEfectivo_disponible"> {{itemDispo.curEfectivo |  currency}}</td>
-                                    <td class="columnEstado_disponible">{{itemDispo.NameEstado}}</td>
-                                    <td class="columnApertura_disponible">{{itemDispo.dtmMatricula | date: 'yyyy/MM/dd'}}</td>
-                                    <td class="columnUltTrans_disponible">{{itemDispo.dtmUltimaTrans | date: 'yyyy/MM/dd'}}</td>
-                                    <td class="columnOpciones_disponible">
+                                    <td class="columnEstado_disponible centerColumn">{{itemDispo.NameEstado}}</td>
+                                    <td class="columnApertura_disponible centerColumn">{{itemDispo.dtmMatricula | date: 'yyyy/MM/dd'}}</td>
+                                    <td class="columnUltTrans_disponible centerColumn">{{itemDispo.dtmUltimaTrans | date: 'yyyy/MM/dd'}}</td>
+                                    <td class="operacionFija">
                                         <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="mostrarDetalleAhorros" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModelDetalleDisponible" (click)="DetalleDisponible(itemDispo)">
                                                     <i class="icon-eye2"></i>
                                                 </button>&nbsp;
@@ -90,7 +90,7 @@
             <div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="DataDisponibleCancelado.length > 0 && DataDisponibleCancelado != null && !ValidadaActivo">
                 <div class="table-responsive scrollTablaAhorros">
                     <div class="col-xs-12 col-md-12 col-lg-12">
-                        <table id="tablaIngresos" class="table table-hover tablaDisponible">
+                        <table id="tablaIngresos" class="table table-hover tablaDisponible sticky-last-column">
 
                             <thead>
                                 <tr class="encabezadoTablas">
@@ -103,7 +103,7 @@
                                     <th class="columnEfectivo_disponible">
                                         <strong>Saldo efectivo</strong>
                                     </th>
-                                    <th class="columnEstado_disponible">
+                                    <th class="columnEstado_disponible centerColumn">
                                         <strong>Estado</strong>
                                     </th>
                                     <th class="columnApertura_disponible">
@@ -112,7 +112,7 @@
                                     <th class="columnUltTrans_disponible">
                                         <strong>Última transacción</strong>
                                     </th>
-                                    <th class="columnOpciones_disponible">
+                                    <th class="operacionFija">
                                         <strong>Opciones</strong>
                                     </th>
                                 </tr>
@@ -126,11 +126,11 @@
                                             'columnProductoX3_Ahorros': itemDispo.NameProducto.length >= 35}">
                                         {{itemDispo.NameProducto}}
                                     </td>
-                                    <td class="columnEfectivo_disponible"> aaaaa{{itemDispo.curEfectivo |  currency}}</td>
-                                    <td class="columnEstado_disponible">{{itemDispo.NameEstado}}</td>
-                                    <td class="columnApertura_disponible">{{itemDispo.dtmMatricula | date: 'yyyy/MM/dd'}}</td>
-                                    <td class="columnUltTrans_disponible">{{itemDispo.dtmUltimaTrans | date: 'yyyy/MM/dd'}}</td>
-                                    <td class="columnOpciones_disponible">
+                                    <td class="columnEfectivo_disponible"> {{itemDispo.curEfectivo |  currency}}</td>
+                                    <td class="columnEstado_disponible centerColumn">{{itemDispo.NameEstado}}</td>
+                                    <td class="columnApertura_disponible centerColumn">{{itemDispo.dtmMatricula | date: 'yyyy/MM/dd'}}</td>
+                                    <td class="columnUltTrans_disponible centerColumn">{{itemDispo.dtmUltimaTrans | date: 'yyyy/MM/dd'}}</td>
+                                    <td class="operacionFija">
                                         <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="mostrarDetalleAhorros" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModelDetalleDisponible" (click)="DetalleDisponible(itemDispo)">
                                         <i class="icon-eye2"></i>
                                     </button>&nbsp;
@@ -175,7 +175,7 @@
             <div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="DataContractual.length > 0 && DataContractual != null && ValidadaActivo">
                 <div class="table-responsive scrollTablaAhorros">
                     <div class="col-xs-12 col-md-12 col-lg-12">
-                        <table id="tablaIngresos" class="table table-hover tablaContractual">
+                        <table id="tablaIngresos" class="table table-hover tablaContractual sticky-last-column">
                             <thead>
                                 <tr class="encabezadoTablas">
                                     <th class="columnCuenta_Contractuales CuentaFija">
@@ -193,10 +193,10 @@
                                     <th class="columnCuota_Contractuales">
                                         <strong>Cuota</strong>
                                     </th>
-                                    <th class="columnSorteo_Contractuales">
+                                    <th class="columnSorteo_Contractuales centerColumn">
                                         <strong>Nro. Sorteo</strong>
                                     </th>
-                                    <th class="columnEstado_Contractuales">
+                                    <th class="columnEstado_Contractuales centerColumn">
                                         <strong>Estado</strong>
                                     </th>
                                     <th class="columnApertura_Contractuales">
@@ -205,7 +205,7 @@
                                     <th class="columntransaccion_Contractuales">
                                         <strong>Última transacción</strong>
                                     </th>
-                                    <th class="columnOpciones_Contractuales">
+                                    <th class="operacionFija">
                                         <strong>Opciones</strong>
                                     </th>
                                 </tr>
@@ -219,11 +219,11 @@
                                     <td class="columnEfectivo_Contractuales">{{itemContrac.curEfectivo |  currency}}</td>
                                     <td class="columnInteres_Contractuales">{{itemContrac.curIntxPagarC |  currency}}</td>
                                     <td class="columnCuota_Contractuales">{{itemContrac.curCuota |  currency}}</td>
-                                    <td class="columnSorteo_Contractuales">{{itemContrac.lngSorteo}}</td>
-                                    <td class="columnEstado_Contractuales">{{itemContrac.NameEstado}}</td>
-                                    <td class="columnApertura_Contractuales">{{itemContrac.dtmMatricula | date: 'yyyy/MM/dd'}}</td>
-                                    <td class="columntransaccion_Contractuales">{{itemContrac.dtmUltimaTrans | date: 'yyyy/MM/dd'}}</td>
-                                    <td class="columnOpciones_Contractuales">
+                                    <td class="columnSorteo_Contractuales centerColumn">{{itemContrac.lngSorteo}}</td>
+                                    <td class="columnEstado_Contractuales centerColumn">{{itemContrac.NameEstado}}</td>
+                                    <td class="columnApertura_Contractuales centerColumn">{{itemContrac.dtmMatricula | date: 'yyyy/MM/dd'}}</td>
+                                    <td class="columntransaccion_Contractuales centerColumn">{{itemContrac.dtmUltimaTrans | date: 'yyyy/MM/dd'}}</td>
+                                    <td class="operacionFija">
                                         <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="mostrarDetalleAhorros" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModelDetalleContractual" (click)="DetalleContractual(itemContrac)">
                                         <i class="icon-eye2"></i>
                                     </button>&nbsp;
@@ -243,7 +243,7 @@
             <div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="DataContractualCancelado.length > 0 && DataContractualCancelado != null && !ValidadaActivo">
                 <div class="table-responsive scrollTablaAhorros">
                     <div class="col-xs-12 col-md-12 col-lg-12">
-                        <table id="tablaIngresos" class="table table-hover tablaContractual">
+                        <table id="tablaIngresos" class="table table-hover tablaContractual sticky-last-column">
                             <thead>
                                 <tr class="encabezadoTablas">
                                     <th class="columnCuenta_Contractuales CuentaFija">
@@ -261,10 +261,10 @@
                                     <th class="columnCuota_Contractuales">
                                         <strong>Cuota</strong>
                                     </th>
-                                    <th class="columnSorteo_Contractuales">
+                                    <th class="columnSorteo_Contractuales centerColumn">
                                         <strong>Número sorteo</strong>
                                     </th>
-                                    <th class="columnEstado_Contractuales">
+                                    <th class="columnEstado_Contractuales centerColumn">
                                         <strong>Estado</strong>
                                     </th>
                                     <th class="columnApertura_Contractuales">
@@ -273,7 +273,7 @@
                                     <th class="columntransaccion_Contractuales">
                                         <strong>Última transacción</strong>
                                     </th>
-                                    <th class="columnOpciones_Contractuales">
+                                    <th class="operacionFija">
                                         <strong>Opciones</strong>
                                     </th>
                                 </tr>
@@ -287,11 +287,11 @@
                                     <td class="columnEfectivo_Contractuales">{{itemContrac.curEfectivo |  currency}}</td>
                                     <td class="columnCuota_Contractuales">{{itemContrac.curIntxPagarC |  currency}}</td>
                                     <td class="columnCuota_Contractuales">{{itemContrac.curCuota |  currency}}</td>
-                                    <td class="columnSorteo_Contractuales">{{itemContrac.lngSorteo}}</td>
-                                    <td class="columnEstado_Contractuales">{{itemContrac.NameEstado}}</td>
-                                    <td class="columnApertura_Contractuales">{{itemContrac.dtmMatricula | date: 'yyyy/MM/dd'}}</td>
-                                    <td class="columntransaccion_Contractuales">{{itemContrac.dtmUltimaTrans | date: 'yyyy/MM/dd'}}</td>
-                                    <td class="columnOpciones_Contractuales">
+                                    <td class="columnSorteo_Contractuales centerColumn">{{itemContrac.lngSorteo}}</td>
+                                    <td class="columnEstado_Contractuales centerColumn">{{itemContrac.NameEstado}}</td>
+                                    <td class="columnApertura_Contractuales centerColumn">{{itemContrac.dtmMatricula | date: 'yyyy/MM/dd'}}</td>
+                                    <td class="columntransaccion_Contractuales centerColumn">{{itemContrac.dtmUltimaTrans | date: 'yyyy/MM/dd'}}</td>
+                                    <td class="operacionFija">
                                         <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="mostrarDetalleAhorros" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModelDetalleContractual" (click)="DetalleContractual(itemContrac)">
                                         <i class="icon-eye2"></i>
                                     </button>&nbsp;
@@ -338,7 +338,7 @@
             <div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="DataATermino.length > 0 && DataATermino != null && ValidadaActivo">
                 <div class="table-responsive scrollTablaAhorros">
                     <div class="col-xs-12 col-md-12 col-lg-12">
-                        <table id="tablaIngresos" class="table table-hover tablaAtermino">
+                        <table id="tablaIngresos" class="table table-hover tablaAtermino sticky-last-column">
                             <thead>
                                 <tr class="encabezadoTablas">
                                     <th class="columnCuenta_Atermino CuentaFija">
@@ -353,7 +353,7 @@
                                     <th class="columnInteres_Atermino">
                                         <strong>Interés por pagar</strong>
                                     </th>
-                                    <th class="columnEstado_Atermino">
+                                    <th class="columnEstado_Atermino centerColumn">
                                         <strong>Estado</strong>
                                     </th>
                                     <th class="columnApertura_Atermino">
@@ -362,7 +362,7 @@
                                     <th class="columntransaccion_Atermino">
                                         <strong>Última transacción</strong>
                                     </th>
-                                    <th class="columnOpciones_Atermino">
+                                    <th class="operacionFija">
                                         <strong>Opciones</strong>
                                     </th>
                                 </tr>
@@ -377,10 +377,10 @@
                                     <td class="columnInteres_Atermino">
                                          {{itemTermino.curIntxPagar |  currency}}
                                     </td>
-                                    <td class="columnEstado_Atermino">{{itemTermino.NameEstado}}</td>
-                                    <td class="columnApertura_Atermino">{{itemTermino.dtmMatricula | date: 'yyyy/MM/dd'}}</td>
-                                    <td class="columntransaccion_Atermino">{{itemTermino.dtmUltimaTrans | date: 'yyyy/MM/dd'}}</td>
-                                    <td class="columnOpciones_Atermino">
+                                    <td class="columnEstado_Atermino centerColumn">{{itemTermino.NameEstado}}</td>
+                                    <td class="columnApertura_Atermino centerColumn">{{itemTermino.dtmMatricula | date: 'yyyy/MM/dd'}}</td>
+                                    <td class="columntransaccion_Atermino centerColumn">{{itemTermino.dtmUltimaTrans | date: 'yyyy/MM/dd'}}</td>
+                                    <td class="operacionFija">
                                         <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="mostrarDetalleAhorros" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModelDetalleATermino" (click)="MostrarAhoTermino(itemTermino)">
                                         <i class="icon-eye2"></i>
                                     </button>&nbsp;
@@ -400,7 +400,7 @@
             <div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="DataATerminoCancelado.length > 0 && DataATerminoCancelado != null && !ValidadaActivo">
                 <div class="table-responsive scrollTablaAhorros">
                     <div class="col-xs-12 col-md-12 col-lg-12">
-                        <table id="tablaIngresos" class="table table-hover tablaAtermino">
+                        <table id="tablaIngresos" class="table table-hover tablaAtermino sticky-last-column">
                             <thead>
                                 <tr class="encabezadoTablas">
                                     <th class="columnCuenta_Atermino CuentaFija">
@@ -415,7 +415,7 @@
                                     <th class="columnInteres_Atermino">
                                         <strong>Interés por pagar</strong>
                                     </th>
-                                    <th class="columnEstado_Atermino">
+                                    <th class="columnEstado_Atermino centerColumn">
                                         <strong>Estado</strong>
                                     </th>
                                     <th class="columnApertura_Atermino">
@@ -424,7 +424,7 @@
                                     <th class="columntransaccion_Atermino">
                                         <strong>Última transacción</strong>
                                     </th>
-                                    <th class="columnOpciones_Atermino">
+                                    <th class="operacionFija">
                                         <strong>Opciones</strong>
                                     </th>
                                 </tr>
@@ -439,10 +439,10 @@
                                     <td class="columnInteres_Atermino">
                                          {{itemTermino.curIntxPagar |  currency}}
                                     </td>
-                                    <td class="columnEstado_Atermino">{{itemTermino.NameEstado}}</td>
-                                    <td class="columnApertura_Atermino">{{itemTermino.dtmMatricula | date: 'yyyy/MM/dd'}}</td>
-                                    <td class="columntransaccion_Atermino">{{itemTermino.dtmUltimaTrans | date: 'yyyy/MM/dd'}}</td>
-                                    <td class="columnOpciones_Atermino">
+                                    <td class="columnEstado_Atermino centerColumn">{{itemTermino.NameEstado}}</td>
+                                    <td class="columnApertura_Atermino centerColumn">{{itemTermino.dtmMatricula | date: 'yyyy/MM/dd'}}</td>
+                                    <td class="columntransaccion_Atermino centerColumn">{{itemTermino.dtmUltimaTrans | date: 'yyyy/MM/dd'}}</td>
+                                    <td class="operacionFija">
                                         <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="mostrarDetalleAhorros" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModelDetalleATermino" (click)="MostrarAhoTermino(itemTermino)">
                                         <i class="icon-eye2"></i>
                                     </button>&nbsp;
@@ -533,10 +533,10 @@
                                     'SaldoAutorizadosX2': itemAutoriza.curSaldo > 0}">
                                          {{itemAutoriza.curSaldo |  currency}}
                                     </td>
-                                    <td class="dtmMatriculaAutorizados">
+                                    <td class="dtmMatriculaAutorizados centerColumn">
                                         {{itemAutoriza.FechaMatricula}}
                                     </td>
-                                    <td class="dtmultimTrasAutorizados">
+                                    <td class="dtmultimTrasAutorizados centerColumn">
                                         {{itemAutoriza.dtmUltimaTrans}}
                                     </td>
                             </tbody>
@@ -709,22 +709,22 @@
 
                     <div class="col-xs-12 col-md-12 col-lg-12">
                         <div class="row">
-                            <div class="col-xs-12 col-md-4 col-lg-2">
+                            <div class="col-xs-12 col-md-4 col-lg-3">
                                 <div class="form-group" style="margin-top: 39px;">
                                     <input type="checkbox" class="switchery" id="activa" [attr.disabled]="true" />Activa por Mvto
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-4 col-lg-2">
+                            <div class="col-xs-12 col-md-4 col-lg-3">
                                 <div class="form-group" style="margin-top: 39px;">
                                     <input type="checkbox" class="switchery" id="exento" [attr.disabled]="true" />Exento G.M.F
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-4 col-lg-2">
+                            <div class="col-xs-12 col-md-4 col-lg-3">
                                 <div class="form-group" style="margin-top: 39px;">
                                     <input type="checkbox" class="switchery" id="exonera" [attr.disabled]="true" />Exonerada G.M.F
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-4 col-lg-2">
+                            <div class="col-xs-12 col-md-4 col-lg-3">
                                 <div class="form-group" style="margin-top: 39px;">
                                     <input type="checkbox" class="switchery" id="timbra" [attr.disabled]="true" />Timbrar mensaje
                                 </div>
@@ -2345,7 +2345,7 @@
 <div id="ModalFormatosMovimientos_" class="modal">
     <form [formGroup]="ExtactoAportes">
         <div class="modal-dialog">
-            <div class="modal-content modal-lg" style="width: 1400px; left: -390px;">
+            <div class="modal-content modal-lg" style="width: 1380px; left: -390px;">
                 <div class="modal-header bg-morado">
                     <button type="button" class="close" data-dismiss="modal" (click)="ResetModal()">&times;</button>
                     <h6 class="modal-title">Extracto o Movimiento</h6>
@@ -2567,7 +2567,7 @@
 <div id="ModalExtractoDisponibles" class="modal">
     <form [formGroup]="ExtractoDisponible">
         <div class="modal-dialog">
-            <div class="modal-content modal-lg" style="width: 1400px; left: -390px;">
+            <div class="modal-content modal-lg" style="width: 1380px; left: -390px;">
                 <div class="modal-header bg-morado">
                     <button type="button" class="close" data-dismiss="modal" (click)="ResetModal()">&times;</button>
                     <h6 class="modal-title">Extracto o Movimiento</h6>
@@ -2789,7 +2789,7 @@
 <div id="ModalExtractoAtermino" class="modal">
     <form [formGroup]="ExtractoAtermino">
         <div class="modal-dialog">
-            <div class="modal-content modal-lg" style="width: 1400px; left: -390px;">
+            <div class="modal-content modal-lg" style="width: 1380px; left: -390px;">
                 <div class="modal-header bg-morado">
                     <button type="button" class="close" data-dismiss="modal" (click)="ResetModal()">&times;</button>
                     <h6 class="modal-title">Extracto o Movimiento</h6>

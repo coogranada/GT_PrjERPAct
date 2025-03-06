@@ -259,7 +259,7 @@
     <div class="panel-body ">
 
         <div class="table-responsive scrollTabla">
-            <table id="TablaParametros" class="table table-sm">
+            <table id="TablaParametros" class="table table-sm sticky-last-column ">
                 <thead class="text-center">
                     <tr>
                         <th><strong>Nombre sitio</strong></th>
@@ -279,7 +279,7 @@
                         <th><strong>GPG recipient</strong></th>
                         <th><strong>Ruta llave</strong></th>
                         <th><strong>Creado</strong></th>
-                        <th><strong>Opciones</strong></th>
+                        <th class="operacionFija"><strong>Opciones</strong></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -304,7 +304,7 @@
                         <td>{{parametro.GPGRecipient}}</td>
                         <td>{{parametro.RutaLlave}}</td>
                         <td>{{parametro.FechaCreacion | date:'yyyy/MM/dd'}}</td>
-                        <td>
+                        <td class="operacionFija">
                             <button class="btn Gt-btn-verde btn-icon legitRipple" (click)="selectRow(parametro)">
                                 <i class="icon-pencil"></i></button> &nbsp;
                             <button class="btn Gt-btn-morado btn-icon legitRipple"
@@ -344,6 +344,7 @@
                     <li>En caso no haber rutas específicas puede usar el comodín <span class="text-danger">/</span> para indicar que se utilizará el directorio raíz.</li>
                     <li>Desde el historial de ejecuciones, solo se habilita la opción de reintentar ejecución manual, si la tarea presentó error y si está dentro de los últimos 5 días.</li>
                     <li>Si se crea una nueva configuración o se modifica alguna hora de ejecución, se debe confirmar la <strong>programación de tareas</strong>.</li>
+                    <li>Si requiere crear un sitio que tenga especificado algún puerto, el puerto se indicará después de <span class="text-danger">:</span> dos puntos y seguido, ejemplo sftp.sitio.net:2244</li>
                 </ul>
             </div>
             <div class="modal-footer">
@@ -366,7 +367,7 @@
             <div class="modal-body">
 
                 <div class="table-responsive scrollTabla">
-                    <table id="TablaHistorial" class="table table-sm table-hover">
+                    <table id="TablaHistorial" class="table table-sm sticky-last-column ">
                         <thead class="text-center">
                             <tr>
                                 <th><strong>Fecha ejecución</strong></th>
@@ -375,11 +376,12 @@
                                 <th><strong>Tarea</strong></th>
                                 <th><strong>Equipo</strong></th>
                                 <th><strong>Detalle resultado</strong></th>
-                                <th><strong>Opciones</strong></th>
+                                <th class="operacionFija"><strong>Opciones</strong></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let historialT of historialTransm" class="table-row">
+                            <tr *ngFor="let historialT of historialTransm" class="table-row1" [ngClass]="{'selected-row1': selectedRow1 === historialT}" class="table-row"
+                            (click)="selectRow1(historialT)">
 
                                 <td>{{historialT.FechaEjecucion | date:'yyyy/MM/dd hh:mm:ss a'}}</td>
                                 <td class="text-center">
@@ -397,12 +399,23 @@
                                 <td>{{historialT.EquipoEjecucion}}</td>
                                 <td>{{historialT.DetalleResultado}}</td>
 
-                                <td class="text-center">
+                                <td class="operacionFija">
                                     <button
-                                        *ngIf="historialT.ResultadoEjecucion=='Error' && estaEnUltimos5Dias(historialT.FechaEjecucion)"
-                                        class="btn Gt-btn-verde btn-icon legitRipple"
-                                        (click)="reintentarEjecucion(historialT.JsonParametro)">
-                                        <i class="glyphicon glyphicon-repeat"></i></button>
+                                    *ngIf="historialT.ResultadoEjecucion === 'Error'"
+                                    [disabled]="!estaEnUltimos5Dias(historialT.FechaEjecucion)"
+                                    class="btn Gt-btn-verde btn-icon legitRipple"
+                                    (click)="reintentarEjecucion(historialT.JsonParametro)">
+                                    <i class="glyphicon" [ngClass]="estaEnUltimos5Dias(historialT.FechaEjecucion) ? 'glyphicon-repeat' : 'glyphicon-repeat'"></i>
+                                </button>
+                                
+                                <button
+                                    *ngIf="historialT.ResultadoEjecucion !== 'Error'"
+                                    disabled
+                                    class="btn Gt-btn-verde btn-icon legitRipple"
+                                    (click)="reintentarEjecucion(historialT.JsonParametro)">
+                                    <i class="glyphicon glyphicon-ok"></i>
+                                </button>
+                                
                                 </td>
                             </tr>
 

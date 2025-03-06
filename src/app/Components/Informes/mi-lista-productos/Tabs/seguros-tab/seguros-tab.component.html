@@ -27,7 +27,7 @@
             <div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="DataSeguros.length > 0 && DataSeguros != null && ValidadaActivo">
                 <div class="table-responsive scrollTablaSeguros">
                     <div class="col-xs-12 col-md-12 col-lg-12">
-                        <table id="tablaIngresos" class="table table-hover tablaSegVida">
+                        <table id="tablaIngresos" class="table table-hover tablaSegVida sticky-last-column">
                             <thead>
                                 <tr>
                                     <th class="columnCuenta_SegVida CuentaFija">
@@ -42,16 +42,16 @@
                                     <th class="columnCuota_SegVida">
                                         <strong>Cuota</strong>
                                     </th>
-                                    <th class="columnEstado_SegVida">
+                                    <th class="columnEstado_SegVida centerColumn">
                                         <strong>Estado</strong>
                                     </th>
-                                    <th class="columnApertura_SegVida">
+                                    <th class="columnApertura_SegVida centerColumn">
                                         <strong>Fecha apertura</strong>
                                     </th>
                                     <th class="columntransaccion_SegVida">
                                         <strong>Última transacción</strong>
                                     </th>
-                                    <th class="columnOpciones_SegVida">
+                                    <th class="operacionFija">
                                         <strong>Opciones</strong>
                                     </th>
                                 </tr>
@@ -64,10 +64,10 @@
                                             'columnProductoX3_Seguros': item.NameProducto.length >= 35}">{{item.NameProducto}}</td>
                                     <td class="columnEfectivo_SegVida"> {{(item.curEfectivo + item.curSaldoAnterior) |  currency}}</td>
                                     <td class="columnCuota_SegVida"> {{item.curCuota |  currency}}</td>
-                                    <td class="columnEstado_SegVida">{{item.NameEstado}}</td>
-                                    <td class="columnApertura_SegVida">{{item.dtmMatricula | date: 'yyyy/MM/dd'}}</td>
-                                    <td class="columntransaccion_SegVida">{{item.dtmUltimaTrans | date: 'yyyy/MM/dd'}}</td>
-                                    <td class="columnOpciones_SegVida">
+                                    <td class="columnEstado_SegVida centerColumn">{{item.NameEstado}}</td>
+                                    <td class="columnApertura_SegVida centerColumn">{{item.dtmMatricula | date: 'yyyy/MM/dd'}}</td>
+                                    <td class="columntransaccion_SegVida centerColumn">{{item.dtmUltimaTrans | date: 'yyyy/MM/dd'}}</td>
+                                    <td class="operacionFija">
                                         <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="MostrarDetalleSeguro" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModelDetalleSeguroVida" (click)="DetalleSeguroVida(item)">
                                     <i class="icon-eye2"></i>
                                 </button>&nbsp;
@@ -85,7 +85,7 @@
             <div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="DataSegurosCancelados.length > 0 && DataSegurosCancelados != null && !ValidadaActivo">
                 <div class="table-responsive scrollTablaSeguros">
                     <div class="col-xs-12 col-md-12 col-lg-12">
-                        <table id="tablaIngresos" class="table table-hover CALCEL tablaSegVida">
+                        <table id="tablaIngresos" class="table table-hover CALCEL tablaSegVida sticky-last-column">
                             <thead>
                                 <tr>
                                     <th class="columnCuenta_SegVida CuentaFija">
@@ -100,16 +100,16 @@
                                     <th class="columnCuota_SegVida">
                                         <strong>Cuota</strong>
                                     </th>
-                                    <th class="columnEstado_SegVida">
+                                    <th class="columnEstado_SegVida centerColumn">
                                         <strong>Estado</strong>
                                     </th>
-                                    <th class="columnApertura_SegVida">
+                                    <th class="columnApertura_SegVida centerColumn">
                                         <strong>Fecha apertura</strong>
                                     </th>
                                     <th class="columntransaccion_SegVida">
                                         <strong>Última transacción</strong>
                                     </th>
-                                    <th class="columnOpciones_SegVida">
+                                    <th class="operacionFija">
                                         <strong>Opciones</strong>
                                     </th>
                                 </tr>
@@ -122,10 +122,10 @@
                                                     'columnProductoX3_Seguros': item.NameProducto.length >= 35}">{{item.NameProducto}}</td>
                                     <td class="columnEfectivo_SegVida"> {{(item.curEfectivo + item.curSaldoAnterior) |  currency}}</td>
                                     <td class="columnCuota_SegVida"> {{item.curCuota |  currency}}</td>
-                                    <td class="columnEstado_SegVida">{{item.NameEstado}}</td>
-                                    <td class="columnApertura_SegVida">{{item.dtmMatricula | date: 'yyyy/MM/dd'}}</td>
-                                    <td class="columntransaccion_SegVida">{{item.dtmUltimaTrans | date: 'yyyy/MM/dd'}}</td>
-                                    <td class="columnOpciones_SegVida">
+                                    <td class="columnEstado_SegVida centerColumn">{{item.NameEstado}}</td>
+                                    <td class="columnApertura_SegVida centerColumn">{{item.dtmMatricula | date: 'yyyy/MM/dd'}}</td>
+                                    <td class="columntransaccion_SegVida centerColumn">{{item.dtmUltimaTrans | date: 'yyyy/MM/dd'}}</td>
+                                    <td class="operacionFija">
                                         <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="MostrarDetalleSeguro" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModelDetalleSeguroVida" (click)="DetalleSeguroVida(item)">
                                             <i class="icon-eye2"></i>
                                         </button>&nbsp;
@@ -170,7 +170,7 @@
             <div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="SeguroVehiculo.length > 0 && SeguroVehiculo != null && ValidadaActivo">
                 <div class="table-responsive scrollTablaSeguros">
                     <div class="col-xs-12 col-md-12 col-lg-12">
-                        <table id="tablaIngresos" class="table table-hover tablaVehiculo">
+                        <table id="tablaIngresos" class="table table-hover tablaVehiculo sticky-last-column">
                             <thead>
                                 <tr>
                                     <th class="columnCuenta_SegVehiculo CuentaFija">
@@ -185,16 +185,16 @@
                                     <th class="columnCuota_SegVehiculo">
                                         <strong>Cuota</strong>
                                     </th>
-                                    <th class="columnEstado_SegVehiculo">
+                                    <th class="columnEstado_SegVehiculo centerColumn">
                                         <strong>Estado</strong>
                                     </th>
-                                    <th class="columnApertura_SegVehiculo">
+                                    <th class="columnApertura_SegVehiculo centerColumn">
                                         <strong>Fecha apertura</strong>
                                     </th>
                                     <th class="columntransaccion_SegVehiculo">
                                         <strong>Última transacción</strong>
                                     </th>
-                                    <th class="columnOpciones_SegVehiculo">
+                                    <th class="operacionFija">
                                         <strong>Opciones</strong>
                                     </th>
                                 </tr>
@@ -207,10 +207,10 @@
                                             'columnProductoX3_Seguros': item.NameProducto.length >= 35}">{{item.NameProducto}}</td>
                                     <td class="columnEfectivo_SegVehiculo"> {{(item.curEfectivo + item.curSaldoAnterior) |  currency}}</td>
                                     <td class="columnCuota_SegVehiculo"> {{item.curCuota |  currency}}</td>
-                                    <td class="columnEstado_SegVehiculo">{{item.NameEstado}}</td>
-                                    <td class="columnApertura_SegVehiculo">{{item.dtmMatricula | date: 'yyyy/MM/dd'}}</td>
-                                    <td class="columntransaccion_SegVehiculo">{{item.dtmUltimaTrans | date: 'yyyy/MM/dd'}}</td>
-                                    <td class="columnOpciones_SegVehiculo">
+                                    <td class="columnEstado_SegVehiculo centerColumn">{{item.NameEstado}}</td>
+                                    <td class="columnApertura_SegVehiculo centerColumn">{{item.dtmMatricula | date: 'yyyy/MM/dd'}}</td>
+                                    <td class="columntransaccion_SegVehiculo centerColumn">{{item.dtmUltimaTrans | date: 'yyyy/MM/dd'}}</td>
+                                    <td class="operacionFija">
                                         <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="MostrarDetalleSeguro" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModelDetalleSeguroVehiculo" (click)="DetalleSeguroVehiculo(item)">
                                         <i class="icon-eye2"></i>
                                     </button>&nbsp;
@@ -227,7 +227,7 @@
             <div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="SeguroVehiculoCancelado.length > 0 && SeguroVehiculoCancelado != null && !ValidadaActivo">
                 <div class="table-responsive scrollTablaSeguros">
                     <div class="col-xs-12 col-md-12 col-lg-12">
-                        <table id="tablaIngresos" class="table table-hover tablaVehiculo">
+                        <table id="tablaIngresos" class="table table-hover tablaVehiculo sticky-last-column">
                             <thead>
                                 <tr>
                                     <th class="columnCuenta_SegVehiculo CuentaFija">
@@ -242,16 +242,16 @@
                                     <th class="columnCuota_SegVehiculo">
                                         <strong>Cuota</strong>
                                     </th>
-                                    <th class="columnEstado_SegVehiculo">
+                                    <th class="columnEstado_SegVehiculo centerColumn">
                                         <strong>Estado</strong>
                                     </th>
-                                    <th class="columnApertura_SegVehiculo">
+                                    <th class="columnApertura_SegVehiculo centerColumn">
                                         <strong>Fecha apertura</strong>
                                     </th>
                                     <th class="columntransaccion_SegVehiculo">
                                         <strong>Última transacción</strong>
                                     </th>
-                                    <th class="columnOpciones_SegVehiculo">
+                                    <th class="operacionFija">
                                         <strong>Opciones</strong>
                                     </th>
                                 </tr>
@@ -264,10 +264,10 @@
                                             'columnProductoX3_Seguros': item.NameProducto.length >= 35}">{{item.NameProducto}}</td>
                                     <td class="columnEfectivo_SegVehiculo"> {{(item.curEfectivo + item.curSaldoAnterior) |  currency}}</td>
                                     <td class="columnCuota_SegVehiculo"> {{item.curCuota |  currency}}</td>
-                                    <td class="columnEstado_SegVehiculo">{{item.NameEstado}}</td>
-                                    <td class="columnApertura_SegVehiculo">{{item.dtmMatricula | date: 'yyyy/MM/dd'}}</td>
-                                    <td class="columntransaccion_SegVehiculo">{{item.dtmUltimaTrans | date: 'yyyy/MM/dd'}}</td>
-                                    <td class="columnOpciones_SegVehiculo">
+                                    <td class="columnEstado_SegVehiculo centerColumn">{{item.NameEstado}}</td>
+                                    <td class="columnApertura_SegVehiculo centerColumn">{{item.dtmMatricula | date: 'yyyy/MM/dd'}}</td>
+                                    <td class="columntransaccion_SegVehiculo centerColumn">{{item.dtmUltimaTrans | date: 'yyyy/MM/dd'}}</td>
+                                    <td class="operacionFija">
                                         <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="MostrarDetalleSeguro" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModelDetalleSeguroVehiculo" (click)="DetalleSeguroVehiculo(item)">
                                         <i class="icon-eye2"></i>
                                     </button>&nbsp;
@@ -1485,7 +1485,7 @@
 <div id="ModalSegurosVehiculoExt" class="modal">
     <form [formGroup]="ExtactoSeguroVhi">
         <div class="modal-dialog">
-            <div class="modal-content modal-lg" style="width: 1400px; left: -390px;">
+            <div class="modal-content modal-lg" style="width: 1380px; left: -390px;">
                 <div class="modal-header bg-morado">
                     <button type="button" class="close" data-dismiss="modal" (click)="ResetModal()">&times;</button>
                     <h6 class="modal-title">Extracto o Movimiento</h6>
@@ -1695,7 +1695,7 @@
 <div id="ModalSegurosExtVida" class="modal">
     <form [formGroup]="ExtactoSeguro">
         <div class="modal-dialog">
-            <div class="modal-content modal-lg" style="width: 1400px; left: -390px;">
+            <div class="modal-content modal-lg" style="width: 1380px; left: -390px;">
                 <div class="modal-header bg-morado">
                     <button type="button" class="close" data-dismiss="modal" (click)="ResetModal()">&times;</button>
                     <h6 class="modal-title">Extracto o Movimiento</h6>

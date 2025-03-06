@@ -27,7 +27,7 @@
             <div class="col-xs-12 col-md-12 col-lg-12 panel-flat" *ngIf="CreditoComercialActivos.length > 0 && ValidadorCheck">
                 <div class="table-responsive scrollTablaCartera">
                     <div class="col-xs-12 col-md-12 col-lg-12">
-                        <table id="tablaIngresos" class="table table-hover tablacrecomercial">
+                        <table id="tablaIngresos" class="table table-hover tablacrecomercial sticky-last-column">
                             <thead>
                                 <tr class="encabezadoTablas">
                                     <th class="columnCuenta_tblcrecomercial CuentaFija">
@@ -51,16 +51,16 @@
                                     <th class="columnCuota_tblcrecomercial" style="text-align: center;">
                                         <strong>Mora</strong>
                                     </th>
-                                    <th class="columnEstado_tblcrecomercial">
+                                    <th class="columnEstado_tblcrecomercial centerColumn">
                                         <strong>Estado</strong>
                                     </th>
-                                    <th class="columnFechas_tblcrecomercial">
+                                    <th class="columnFechas_tblcrecomercial centerColumn">
                                         <strong>Fecha apertura</strong>
                                     </th>
                                     <th class="columnFechas_tblcrecomercial">
                                         <strong>Última transacción</strong>
                                     </th>
-                                    <th class="columnopciones_tblcrecomercial">
+                                    <th class="operacionFija">
                                         <strong>Opciones</strong>
                                     </th>
                                 </tr>
@@ -77,10 +77,10 @@
                                     <td class="columnCuota_tblcrecomercial" style="text-align: center;">{{itemAportes.Couta}}</td>
                                     <td class="columnCuota_tblcrecomercial" style="text-align: center;">{{itemAportes.Paga}}</td>
                                     <td class="columnCuota_tblcrecomercial" style="text-align: center;">{{itemAportes.Mora}}</td>
-                                    <td class="columnEstado_tblcrecomercial">{{itemAportes.Estado}}</td>
-                                    <td class="columnFechas_tblcrecomercial">{{itemAportes.FechaMatricula}}</td>
-                                    <td class="columnFechas_tblcrecomercial">{{itemAportes.FechaUltimaTransaccion}}</td>
-                                    <td class="columnopciones_tblcrecomercial">
+                                    <td class="columnEstado_tblcrecomercial centerColumn">{{itemAportes.Estado}}</td>
+                                    <td class="columnFechas_tblcrecomercial centerColumn">{{itemAportes.FechaMatricula}}</td>
+                                    <td class="columnFechas_tblcrecomercial centerColumn">{{itemAportes.FechaUltimaTransaccion}}</td>
+                                    <td class="operacionFija">
                                         <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="MostrarDetalleCartera" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModalAnalisis" (click)="DetallesCartera(itemAportes)">
                                   <i class="icon-eye2"></i>
                               </button>&nbsp;
@@ -107,7 +107,7 @@
             <div class="col-xs-12 col-md-12 col-lg-12 panel-flat" *ngIf="CreditoComercialCancelados.length > 0 && !ValidadorCheck">
                 <div class="table-responsive scrollTablaCartera">
                     <div class="col-xs-12 col-md-12 col-lg-12">
-                        <table id="tablaIngresos" class="table table-hover tablacrecomercial">
+                        <table id="tablaIngresos" class="table table-hover tablacrecomercial sticky-last-column">
                             <thead>
                                 <tr class="encabezadoTablas">
                                     <th class="columnCuenta_tblcrecomercial CuentaFija">
@@ -131,16 +131,16 @@
                                     <th class="columnCuota_tblcrecomercial" style="text-align: center;">
                                         <strong>Mora</strong>
                                     </th>
-                                    <th class="columnEstado_tblcrecomercial">
+                                    <th class="columnEstado_tblcrecomercial centerColumn">
                                         <strong>Estado</strong>
                                     </th>
-                                    <th class="columnFechas_tblcrecomercial">
+                                    <th class="columnFechas_tblcrecomercial centerColumn">
                                         <strong>Fecha apertura</strong>
                                     </th>
                                     <th class="columnFechas_tblcrecomercial">
                                         <strong>Última transacción</strong>
                                     </th>
-                                    <th class="columnFechas_tblcrecomercial">
+                                    <th class="operacionFija">
                                         <strong>Opciones</strong>
                                     </th>
                                 </tr>
@@ -157,10 +157,10 @@
                                     <td class="columnCuota_tblcrecomercial" style="text-align: center;">{{itemAportes.Couta}}</td>
                                     <td class="columnCuota_tblcrecomercial" style="text-align: center;">{{itemAportes.Paga}}</td>
                                     <td class="columnCuota_tblcrecomercial" style="text-align: center;">{{itemAportes.Mora}}</td>
-                                    <td class="columnEstado_tblcrecomercial">{{itemAportes.Estado}}</td>
-                                    <td class="columnFechas_tblcrecomercial">{{itemAportes.FechaMatricula}}</td>
-                                    <td class="columnFechas_tblcrecomercial">{{itemAportes.FechaUltimaTransaccion}}</td>
-                                    <td class="columnopciones_tblcrecomercial">
+                                    <td class="columnEstado_tblcrecomercial centerColumn">{{itemAportes.Estado}}</td>
+                                    <td class="columnFechas_tblcrecomercial centerColumn">{{itemAportes.FechaMatricula}}</td>
+                                    <td class="columnFechas_tblcrecomercial centerColumn">{{itemAportes.FechaUltimaTransaccion}}</td>
+                                    <td class="operacionFija">
                                         <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="MostrarDetalleCartera" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModalAnalisis" (click)="DetallesCartera(itemAportes)">
                               <i class="icon-eye2"></i>
                           </button>&nbsp;
@@ -193,7 +193,7 @@
             <div class="col-xs-12 col-md-12 col-lg-12 panel-flat" *ngIf="CreditoConsumoActivos.length > 0 && ValidadorCheck">
                 <div class="table-responsive scrollTablaCartera">
                     <div class="col-xs-12 col-md-12 col-lg-12">
-                        <table id="tablaIngresos" class="table table-hover tablacreConsumo">
+                        <table id="tablaIngresos" class="table table-hover tablacreConsumo sticky-last-column-consumo">
                             <thead>
                                 <tr class="encabezadoTablas">
                                     <th class="columnCuenta_tblcreConsumo CuentaFija">
@@ -217,16 +217,16 @@
                                     <th class="columnCuota_tblConsumo" style="text-align: center;">
                                         <strong>Mora</strong>
                                     </th>
-                                    <th class="columnEstado_tblConsumo">
+                                    <th class="columnEstado_tblConsumo centerColumn">
                                         <strong>Estado</strong>
                                     </th>
-                                    <th class="columnFechas_tblConsumo">
+                                    <th class="columnFechas_tblConsumo centerColumn">
                                         <strong>Fecha apertura</strong>
                                     </th>
                                     <th class="columnFechas_tblConsumo">
                                         <strong>Última transacción</strong>
                                     </th>
-                                    <th class="columnopciones_tblConsumo">
+                                    <th class="operacionFija">
                                         <strong>Opciones</strong>
                                     </th>
                                 </tr>
@@ -243,10 +243,10 @@
                                     <td class="columnCuota_tblConsumo" style="text-align: center;">{{itemAportes.Couta}}</td>
                                     <td class="columnCuota_tblConsumo" style="text-align: center;">{{itemAportes.Paga}}</td>
                                     <td class="columnCuota_tblConsumo" style="text-align: center;">{{itemAportes.Mora}}</td>
-                                    <td class="columnEstado_tblConsumo">{{itemAportes.Estado}}</td>
-                                    <td class="columnFechas_tblConsumo">{{itemAportes.FechaMatricula}}</td>
-                                    <td class="columnFechas_tblConsumo">{{itemAportes.FechaUltimaTransaccion}}</td>
-                                    <td class="columnopciones_tblConsumo">
+                                    <td class="columnEstado_tblConsumo centerColumn">{{itemAportes.Estado}}</td>
+                                    <td class="columnFechas_tblConsumo centerColumn">{{itemAportes.FechaMatricula}}</td>
+                                    <td class="columnFechas_tblConsumo centerColumn">{{itemAportes.FechaUltimaTransaccion}}</td>
+                                    <td class="operacionFija">
                                         <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="MostrarDetalleCartera && (itemAportes.Tcuenta===1 || itemAportes.Tcuenta===3)" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModalAnalisis" (click)="DetallesCartera(itemAportes)">
                                       <i class="icon-eye2"></i>
                                       </button>
@@ -282,7 +282,7 @@
             <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="CreditoConsumoCancelados.length > 0 && !ValidadorCheck">
                 <div class="table-responsive scrollTablaCartera">
                     <div class="col-xs-12 col-md-12 col-lg-12">
-                        <table id="tablaIngresos" class="table table-hover tablacreConsumo">
+                        <table id="tablaIngresos" class="table table-hover tablacreConsumo sticky-last-column-consumo">
                             <thead>
                                 <tr class="encabezadoTablas">
                                     <th class="columnCuenta_tblcreConsumo CuentaFija">
@@ -306,16 +306,16 @@
                                     <th class="columnCuota_tblConsumo" style="text-align: center;">
                                         <strong>Mora</strong>
                                     </th>
-                                    <th class="columnEstado_tblConsumo">
+                                    <th class="columnEstado_tblConsumo centerColumn">
                                         <strong>Estado</strong>
                                     </th>
-                                    <th class="columnFechas_tblConsumo">
+                                    <th class="columnFechas_tblConsumo centerColumn">
                                         <strong>Fecha apertura</strong>
                                     </th>
                                     <th class="columnFechas_tblConsumo">
                                         <strong>Última transacción</strong>
                                     </th>
-                                    <th class="columnopciones_tblConsumo">
+                                    <th class="operacionFija">
                                         <strong>Opciones</strong>
                                     </th>
                                 </tr>
@@ -332,10 +332,10 @@
                                     <td class="columnCuota_tblConsumo" style="text-align: center;">{{itemAportes.Couta}}</td>
                                     <td class="columnCuota_tblConsumo" style="text-align: center;">{{itemAportes.Paga}}</td>
                                     <td class="columnCuota_tblConsumo" style="text-align: center;">{{itemAportes.Mora}}</td>
-                                    <td class="columnEstado_tblConsumo">{{itemAportes.Estado}}</td>
-                                    <td class="columnFechas_tblConsumo">{{itemAportes.FechaMatricula}}</td>
-                                    <td class="columnFechas_tblConsumo">{{itemAportes.FechaUltimaTransaccion}}</td>
-                                    <td class="columnopciones_tblConsumo">
+                                    <td class="columnEstado_tblConsumo centerColumn">{{itemAportes.Estado}}</td>
+                                    <td class="columnFechas_tblConsumo centerColumn">{{itemAportes.FechaMatricula}}</td>
+                                    <td class="columnFechas_tblConsumo centerColumn">{{itemAportes.FechaUltimaTransaccion}}</td>
+                                    <td class="operacionFija">
                                         <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="MostrarDetalleCartera && (itemAportes.Tcuenta===1 || itemAportes.Tcuenta===3)" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModalAnalisis" (click)="DetallesCartera(itemAportes)">
                                           <i class="icon-eye2"></i>
                                           </button>
@@ -375,7 +375,7 @@
             <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="MicrocreditoEmpActivos.length > 0 && ValidadorCheck">
                 <div class="table-responsive scrollTablaCartera">
                     <div class="col-xs-12 col-md-12 col-lg-12">
-                        <table id="tablaIngresos" class="table table-hover tablacreMicroEmp">
+                        <table id="tablaIngresos" class="table table-hover tablacreMicroEmp sticky-last-column">
                             <thead>
                                 <tr class="encabezadoTablas">
                                     <th class="columnCuenta_tblcreMicroEmp CuentaFija">
@@ -399,16 +399,16 @@
                                     <th class="columnCuota_tblcreMicroEmp" style="text-align: center;">
                                         <strong>Mora</strong>
                                     </th>
-                                    <th class="columnEstado_tblcreMicroEmp">
+                                    <th class="columnEstado_tblcreMicroEmp centerColumn">
                                         <strong>Estado</strong>
                                     </th>
-                                    <th class="columnFechas_tblcreMicroEmp">
+                                    <th class="columnFechas_tblcreMicroEmp centerColumn">
                                         <strong>Fecha apertura</strong>
                                     </th>
                                     <th class="columnFechas_tblcreMicroEmp">
                                         <strong>Última transacción</strong>
                                     </th>
-                                    <th class="columnopciones_tblcreMicroEmp">
+                                    <th class="operacionFija">
                                         <strong>Opciones</strong>
                                     </th>
                                 </tr>
@@ -425,10 +425,10 @@
                                     <td class="columnCuota_tblcreMicroEmp" style="text-align: center;">{{itemAportes.Couta}}</td>
                                     <td class="columnCuota_tblcreMicroEmp" style="text-align: center;">{{itemAportes.Paga}}</td>
                                     <td class="columnCuota_tblcreMicroEmp" style="text-align: center;">{{itemAportes.Mora}}</td>
-                                    <td class="columnEstado_tblcreMicroEmp">{{itemAportes.Estado}}</td>
-                                    <td class="columnFechas_tblcreMicroEmp">{{itemAportes.FechaMatricula}}</td>
-                                    <td class="columnFechas_tblcreMicroEmp">{{itemAportes.FechaUltimaTransaccion}}</td>
-                                    <td class="columnopciones_tblcreMicroEmp">
+                                    <td class="columnEstado_tblcreMicroEmp centerColumn">{{itemAportes.Estado}}</td>
+                                    <td class="columnFechas_tblcreMicroEmp centerColumn">{{itemAportes.FechaMatricula}}</td>
+                                    <td class="columnFechas_tblcreMicroEmp centerColumn">{{itemAportes.FechaUltimaTransaccion}}</td>
+                                    <td class="operacionFija">
                                         <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="MostrarDetalleCartera" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModalAnalisis" (click)="DetallesCartera(itemAportes)">
                               <i class="icon-eye2"></i>
                           </button>&nbsp;
@@ -455,7 +455,7 @@
             <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="MicrocreditoEmpCancelados.length > 0 && !ValidadorCheck">
                 <div class="table-responsive scrollTablaCartera">
                     <div class="col-xs-12 col-md-12 col-lg-12">
-                        <table id="tablaIngresos" class="table table-hover tablacreMicroEmp">
+                        <table id="tablaIngresos" class="table table-hover tablacreMicroEmp sticky-last-column">
                             <thead>
                                 <tr class="encabezadoTablas">
                                     <th class="columnCuenta_tblcreMicroEmp CuentaFija">
@@ -479,16 +479,16 @@
                                     <th class="columnCuota_tblcreMicroEmp" style="text-align: center;">
                                         <strong>Mora</strong>
                                     </th>
-                                    <th class="columnEstado_tblcreMicroEmp">
+                                    <th class="columnEstado_tblcreMicroEmp centerColumn">
                                         <strong>Estado</strong>
                                     </th>
-                                    <th class="columnFechas_tblcreMicroEmp">
+                                    <th class="columnFechas_tblcreMicroEmp centerColumn">
                                         <strong>Fecha apertura</strong>
                                     </th>
                                     <th class="columnFechas_tblcreMicroEmp">
                                         <strong>Última transacción</strong>
                                     </th>
-                                    <th class="columnFechas_tblcreMicroEmp">
+                                    <th class="operacionFija">
                                         <strong>Opciones</strong>
                                     </th>
                                 </tr>
@@ -505,9 +505,9 @@
                                     <td class="columnCuota_tblcreMicroEmp" style="text-align: center;">{{itemAportes.Couta}}</td>
                                     <td class="columnCuota_tblcreMicroEmp" style="text-align: center;">{{itemAportes.Paga}}</td>
                                     <td class="columnCuota_tblcreMicroEmp" style="text-align: center;">{{itemAportes.Mora}}</td>
-                                    <td class="columnFechas_tblcreMicroEmp">{{itemAportes.FechaMatricula}}</td>
-                                    <td class="columnFechas_tblcreMicroEmp">{{itemAportes.FechaUltimaTransaccion}}</td>
-                                    <td class="columnopciones_tblcreMicroEmp">
+                                    <td class="columnFechas_tblcreMicroEmp centerColumn">{{itemAportes.FechaMatricula}}</td>
+                                    <td class="columnFechas_tblcreMicroEmp centerColumn">{{itemAportes.FechaUltimaTransaccion}}</td>
+                                    <td class="operacionFija">
                                         <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="MostrarDetalleCartera" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModalAnalisis" (click)="DetallesCartera(itemAportes)">
                               <i class="icon-eye2"></i>
                           </button>&nbsp;
@@ -538,7 +538,7 @@
             <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="CreditoViviendaActivos.length > 0 && ValidadorCheck">
                 <div class="table-responsive scrollTablaCartera">
                     <div class="col-xs-12 col-md-12 col-lg-12">
-                        <table id="tablaIngresos" class="table table-hover tablacreVivienda">
+                        <table id="tablaIngresos" class="table table-hover tablacreVivienda sticky-last-column">
                             <thead>
                                 <tr class="encabezadoTablas">
                                     <th class="columnCuenta_tblcreVivienda CuentaFija">
@@ -562,16 +562,16 @@
                                     <th style="text-align: center;">
                                         <strong>Mora</strong>
                                     </th>
-                                    <th class="columnEstado_tblcreVivienda">
+                                    <th class="columnEstado_tblcreVivienda centerColumn">
                                         <strong>Estado</strong>
                                     </th>
-                                    <th class="columnFechas_tblcreVivienda">
+                                    <th class="columnFechas_tblcreVivienda centerColumn">
                                         <strong>Fecha apertura</strong>
                                     </th>
                                     <th class="columnFechas_tblcreVivienda">
                                         <strong>Última transacción</strong>
                                     </th>
-                                    <th class="columnopciones_tblcreVivienda">
+                                    <th class="operacionFija">
                                         <strong>Opciones</strong>
                                     </th>
                                 </tr>
@@ -588,10 +588,10 @@
                                     <td class="columnCuota_tblcreVivienda" style="text-align: center;">{{itemAportes.Couta}}</td>
                                     <td class="columnCuota_tblcreVivienda" style="text-align: center;">{{itemAportes.Paga}}</td>
                                     <td class="columnCuota_tblcreVivienda" style="text-align: center;">{{itemAportes.Mora}}</td>
-                                    <td class="columnEstado_tblcreVivienda">{{itemAportes.Estado}}</td>
-                                    <td class="columnFechas_tblcreVivienda">{{itemAportes.FechaMatricula}}</td>
-                                    <td class="columnFechas_tblcreVivienda">{{itemAportes.FechaUltimaTransaccion}}</td>
-                                    <td class="columnopciones_tblcreVivienda">
+                                    <td class="columnEstado_tblcreVivienda centerColumn">{{itemAportes.Estado}}</td>
+                                    <td class="columnFechas_tblcreVivienda centerColumn">{{itemAportes.FechaMatricula}}</td>
+                                    <td class="columnFechas_tblcreVivienda centerColumn">{{itemAportes.FechaUltimaTransaccion}}</td>
+                                    <td class="operacionFija">
                                         <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="MostrarDetalleCartera" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModalAnalisis" (click)="DetallesCartera(itemAportes)">
                                       <i class="icon-eye2"></i>
                                   </button>&nbsp;
@@ -618,7 +618,7 @@
             <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="CreditoViviendaCancelados.length > 0 && !ValidadorCheck">
                 <div class="table-responsive scrollTablaCartera">
                     <div class="col-xs-12 col-md-12 col-lg-12">
-                        <table id="tablaIngresos" class="table table-hover tablacreVivienda">
+                        <table id="tablaIngresos" class="table table-hover tablacreVivienda sticky-last-column">
                             <thead>
                                 <tr class="encabezadoTablas">
                                     <th class="columnCuenta_tblcreVivienda CuentaFija">
@@ -642,7 +642,7 @@
                                     <th style="text-align: center;">
                                         <strong>Mora</strong>
                                     </th>
-                                    <th class="columnEstado_tblcreVivienda">
+                                    <th class="columnEstado_tblcreVivienda centerColumn">
                                         <strong>Estado</strong>
                                     </th>
                                     <th class="columnFechas_tblcreVivienda">
@@ -651,7 +651,7 @@
                                     <th class="columnFechas_tblcreVivienda">
                                         <strong>Última transacción</strong>
                                     </th>
-                                    <th class="columnopciones_tblcreVivienda">
+                                    <th class="operacionFija">
                                         <strong>Opciones</strong>
                                     </th>
                                 </tr>
@@ -668,10 +668,10 @@
                                     <td class="columnCuota_tblcreVivienda" style="text-align: center;">{{itemAportes.Couta}}</td>
                                     <td class="columnCuota_tblcreVivienda" style="text-align: center;">{{itemAportes.Paga}}</td>
                                     <td class="columnCuota_tblcreVivienda" style="text-align: center;">{{itemAportes.Mora}}</td>
-                                    <td class="columnEstado_tblcreVivienda">{{itemAportes.Estado}}</td>
-                                    <td class="columnFechas_tblcreVivienda">{{itemAportes.FechaMatricula}}</td>
-                                    <td class="columnFechas_tblcreVivienda">{{itemAportes.FechaUltimaTransaccion}}</td>
-                                    <td class="columnopciones_tblcreVivienda">
+                                    <td class="columnEstado_tblcreVivienda centerColumn">{{itemAportes.Estado}}</td>
+                                    <td class="columnFechas_tblcreVivienda centerColumn">{{itemAportes.FechaMatricula}}</td>
+                                    <td class="columnFechas_tblcreVivienda centerColumn">{{itemAportes.FechaUltimaTransaccion}}</td>
+                                    <td class="operacionFija">
                                         <button class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModalAnalisis" (click)="DetallesCartera(itemAportes)">
                                           <i class="icon-eye2"></i>
                                       </button>&nbsp;
@@ -3425,7 +3425,7 @@
                         <br>
                         <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="lstCuentasHijasActivas.length > 0 && ValidadorCheckHijas">
                             <div class="table-responsive scrollTabla">
-                                <table id="tablaIngresos" class="table table-hover tablacrecomercial">
+                                <table id="tablaIngresos" class="table table-hover tablacrecomercial sticky-last-column">
                                     <thead>
                                         <tr class="encabezadoTablas">
                                             <th class="columnCuenta_tblcrecomercial CuentaFija">
@@ -3461,7 +3461,7 @@
                                             <th class="columnFechas_tblcrecomercial">
                                                 <strong>Última transacción</strong>
                                             </th>
-                                            <th class="columnopciones_tblcrecomercial">
+                                            <th class="operacionFija">
                                                 <strong>Opciones</strong>
                                             </th>
                                         </tr>
@@ -3482,7 +3482,7 @@
                                             <td class="columnEstado_tblcrecomercial">{{itemAportes.Estado}}</td>
                                             <td class="columnFechas_tblcrecomercial">{{itemAportes.FechaMatricula}}</td>
                                             <td class="columnFechas_tblcrecomercial">{{itemAportes.FechaUltimaTransaccion}}</td>
-                                            <td class="columnopciones_tblcrecomercial">
+                                            <td class="operacionFija">
                                                 <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="MostrarDetalleCartera" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModalAnalisis" (click)="DetallesCartera(itemAportes,1)">
                                              <i class="icon-eye2"></i>
                           </button>&nbsp;
@@ -3497,7 +3497,7 @@
                         </div>
                         <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="lstCuentasHijasCanceladas.length > 0 && !ValidadorCheckHijas">
                             <div class="table-responsive scrollTabla">
-                                <table id="tablaIngresos" class="table table-hover tablacrecomercial">
+                                <table id="tablaIngresos" class="table table-hover tablacrecomercial sticky-last-column">
                                     <thead>
                                         <tr class="encabezadoTablas">
                                             <th class="columnCuenta_tblcrecomercial CuentaFija">
@@ -3533,7 +3533,7 @@
                                             <th class="columnFechas_tblcrecomercial">
                                                 <strong>Última transacción</strong>
                                             </th>
-                                            <th class="columnopciones_tblcrecomercial">
+                                            <th class="operacionFija">
                                                 <strong>Opciones</strong>
                                             </th>
                                         </tr>
@@ -3554,7 +3554,7 @@
                                             <td class="columnEstado_tblcrecomercial">{{itemAportes.Estado}}</td>
                                             <td class="columnFechas_tblcrecomercial">{{itemAportes.FechaMatricula}}</td>
                                             <td class="columnFechas_tblcrecomercial">{{itemAportes.FechaUltimaTransaccion}}</td>
-                                            <td class="columnopciones_tblcrecomercial">
+                                            <td class="operacionFija">
                                                 <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="MostrarDetalleCartera" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModalAnalisis" (click)="DetallesCartera(itemAportes,1)">
                                               <i class="icon-eye2"></i>
                                           </button>&nbsp;
@@ -3584,7 +3584,7 @@
 <div id="ModalFormatosMovimientosTD" class="modal">
     <form [formGroup]="ExtactoCarteraTD">
         <div class="modal-dialog">
-            <div class="modal-content modal-lg" style="width: 1400px; left: -390px;">
+            <div class="modal-content modal-lg" style="width: 1380px; left: -390px;">
                 <div class="modal-header bg-morado">
                     <button type="button" class="close" data-dismiss="modal" (click)="ResetModalExtractos()">&times;</button>
                     <h6 class="modal-title">Extracto o Movimiento</h6>
@@ -3802,7 +3802,7 @@
 <div id="ModalFormatosMovimientosCr" class="modal">
     <form [formGroup]="ExtactoCartera">
         <div class="modal-dialog">
-            <div class="modal-content modal-lg" style="width: 1400px; left: -390px;">
+            <div class="modal-content modal-lg" style="width: 1380px; left: -390px;">
                 <div class="modal-header bg-morado">
                     <button type="button" class="close" data-dismiss="modal" (click)="ResetModalExtractos()">&times;</button>
                     <h6 class="modal-title">Extracto o Movimiento</h6>

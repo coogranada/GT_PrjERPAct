@@ -29,7 +29,7 @@
                         <th class="columnUltTrans_aportes">
                             <strong>Última transacción</strong>
                         </th>
-                        <th class="columnOpciones_aportes">
+                        <th class="columnOpciones_aportes operacionFija">
                             <strong>Opciones</strong>
                         </th>
                     </tr>
@@ -41,9 +41,9 @@
                         'columnProductoX2_aportes': itemAportes.NameProducto.length > 29 && itemAportes.NameProducto.length < 35,
                         'columnProductoX3_aportes': itemAportes.NameProducto.length >= 35}">{{itemAportes.NameProducto}}</td>
                         <td class="columnEfectivo_aportes">{{itemAportes.curEfectivo |  currency}}</td>
-                        <td class="columnEstado_aportes">{{itemAportes.NameEstado}}</td>
-                        <td class="columnApertura_aportes">{{itemAportes.dtmMatricula}}</td>
-                        <td class="columnUltTrans_aportes">{{itemAportes.dtmUltimaTrans}}</td>
+                        <td class="columnEstado_aportes centerColumn">{{itemAportes.NameEstado}}</td>
+                        <td class="columnApertura_aportes centerColumn">{{itemAportes.dtmMatricula}}</td>
+                        <td class="columnUltTrans_aportes centerColumn">{{itemAportes.dtmUltimaTrans}}</td>
                         <td class="columnOpciones_aportes">
                             <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="MostrarDetalleAportes" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModelDetalleCuenta" (click)="DetalleAporte(itemAportes)">
                                 <i class="icon-eye2"></i>
@@ -100,9 +100,9 @@
                         'columnProductoX2_aportes': itemAportes.NameProducto.length > 29 && itemAportes.NameProducto.length < 35,
                         'columnProductoX3_aportes': itemAportes.NameProducto.length >= 35}">{{itemAportes.NameProducto}}</td>
                         <td class="columnEfectivo_aportes">{{itemAportes.curEfectivo |  currency}}</td>
-                        <td class="columnEstado_aportes">{{itemAportes.NameEstado}}</td>
-                        <td class="columnApertura_aportes">{{itemAportes.dtmMatricula}}</td>
-                        <td>{{itemAportes.dtmUltimaTrans}}</td>
+                        <td class="columnEstado_aportes centerColumn">{{itemAportes.NameEstado}}</td>
+                        <td class="columnApertura_aportes centerColumn">{{itemAportes.dtmMatricula}}</td>
+                        <td class="centerColumn">{{itemAportes.dtmUltimaTrans}}</td>
                         <td class="columnOpciones_aportes">
                             <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="MostrarDetalleAportes" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModelDetalleCuenta" (click)="DetalleAporte(itemAportes)">
                                 <i class="icon-eye2"></i>
@@ -343,7 +343,7 @@
 <div id="ModalFormatosMovimientos" class="modal">
     <form [formGroup]="ExtactoAportes">
         <div class="modal-dialog">
-            <div class="modal-content modal-lg" style="width: 1400px; left: -390px;">
+            <div class="modal-content modal-lg" style="width: 1380px; left: -390px;">
                 <div class="modal-header bg-morado">
                     <button type="button" class="close" data-dismiss="modal" (click)="ResetModal()">&times;</button>
                     <h6 class="modal-title">Extracto o Movimiento</h6>
