@@ -24,7 +24,7 @@
                         <div class="form-group" id="1">
                             <label class="textBlod">Nit : </label>
                             <span class="textBigRed">*</span>
-                            <input type="text" class="form-control" formControlName="Nit" id="nit" [attr.disabled]="bloquearNit" maxlength="10" (keypress)="SoloNumerosInput('nit')" (blur)="ValidarJuridicosRegistrados()">
+                            <input type="text" class="form-control" formControlName="Nit" id="nit" [attr.disabled]="bloquearNit" maxlength="10" (input)="SoloNumerosInput('Nit',$event)" (blur)="ValidarJuridicosRegistrados()">
                             <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['Nit'].errors?.['required'] && (infoJuridicoFrom.controls['Nit'].dirty || infoJuridicoFrom.controls['Nit'].touched)">
                       El nit es obligatorio.
                     </span>
@@ -111,7 +111,7 @@
                         <div class="form-group" id="2">
                             <label class="textBlod">CIIU: </label>
                             <span class="textBigRed">*</span>
-                            <input formControlName="Ciiu" class="form-control" id="ciiu" [attr.disabled]="bloquearForm" (blur)="validarCiiuList(infoJuridicoFrom.value)" (keypress)="limpiarActividad(); SoloNumerosInput('ciiu')">
+                            <input formControlName="Ciiu" class="form-control" id="ciiu" [attr.disabled]="bloquearForm" (blur)="validarCiiuList(infoJuridicoFrom.value)" (keypress)="limpiarActividad(); SoloNumerosInput('ciiu',$event)">
                             <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['Ciiu'].errors?.['required'] && (infoJuridicoFrom.controls['Ciiu'].dirty || infoJuridicoFrom.controls['Ciiu'].touched)">
                   El ciiu es obligatorio.
                 </span>

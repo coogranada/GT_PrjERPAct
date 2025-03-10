@@ -159,11 +159,12 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
     let data = localStorage.getItem('Data');
     this.userConect = JSON.parse(window.atob(data == null ? "" : data));
     this.IrArriba();
+    this.validarInfoJuridico();
     this.bloquearRelacion = true;
     this.RazonSocialCapitalice();
     this.NegacionCapitalice();
     this.OtroPorCapitalice();
-    this.validarInfoJuridico();
+   
     this.GetRelacion();
     this.GetTipoSociedad();
     this.GetObjetoSocial();
@@ -2045,10 +2046,15 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
   }
 
   RazonSocialCapitalice() {
-    let self = this;
-    $('#razonSocial').keyup(function () {
-      $(self).val($(self).val().substr(0, 1).toUpperCase() + $(self).val().substr(1).toLowerCase());
-    });
+
+     let str = this.infoJuridicoFrom.controls["RazonSocial"].value.substr(0,1).toUpperCase + this.infoJuridicoFrom.controls["RazonSocial"].value.substr(1).toLowerCase()
+     this.infoJuridicoFrom.controls["RazonSocial"].setValue(str, { emitEvent: false }); 
+
+
+    // let self = this;
+    // $('#razonSocial').keyup(function () {
+    //   $(self).val($(self).val().substr(0, 1).toUpperCase() + $(self).val().substr(1).toLowerCase());
+    // });
   }
 
   OtroPorCapitalice() {
@@ -2230,11 +2236,10 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
     );
   }
 value : any ;
-  SoloNumerosInput(campoName : string) {
-    let self = this;
-    $('#' + campoName +'').on('input', function () {
-      self.value = self.value.replace(/[^0-9]/g, '');
-    });
+  SoloNumerosInput(campoName : string,event : any) {
+    let inputValue = event.target.value;
+    inputValue = inputValue.replace(/[^0-9]/g, '');
+    this.infoJuridicoFrom.controls[campoName].setValue(inputValue, { emitEvent: false }); 
   }
   
   //#endregion
