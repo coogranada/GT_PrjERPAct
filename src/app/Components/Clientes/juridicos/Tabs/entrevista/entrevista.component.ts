@@ -603,14 +603,14 @@ export class EntrevistaComponent implements OnInit {
     infoTotal.BasicosDto.DebitoAutomatico = false;
     }
     console.log('infoTotal - Guardar juridico: ' + JSON.stringify(infoTotal));
-   // debugger
+   //debugger
     this.juridicoService.GuardarJuridicosAll(infoTotal).subscribe(result => {
-     // debugger
-      if (result.ok) {
+    /// debugger
+      if (result != null) {
         this.loading = false;
         localStorage.setItem('IdModuloActivo', window.btoa(JSON.stringify(12)));
-        const dataJuridico = JSON.parse(result['_body']);
-        this.GuardarLog(JSON.parse(result['_body']), this.OperacionSeleccionada, 0, dataJuridico.BasicosDto.IdTercero,12);
+        const dataJuridico = result;
+        this.GuardarLog(result, this.OperacionSeleccionada, 0, dataJuridico.BasicosDto.IdTercero,12);
         // this.notif.onSuccess('Exitoso', 'El registro se realizó correctamente.');
         this.emitEventGuardado.emit({
           cargar: '1', consultar: infoTotal.JuridicoDto.Nit, consultarTercero: dataJuridico.BasicosDto.IdTercero,
