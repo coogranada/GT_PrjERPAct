@@ -2047,7 +2047,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
 
   RazonSocialCapitalice() {
 
-     let str = this.infoJuridicoFrom.controls["RazonSocial"].value.substr(0,1).toUpperCase + this.infoJuridicoFrom.controls["RazonSocial"].value.substr(1).toLowerCase()
+     let str = this.infoJuridicoFrom.controls["RazonSocial"].value.substr(0,1).toUpperCase() + this.infoJuridicoFrom.controls["RazonSocial"].value.substr(1).toLowerCase();
      this.infoJuridicoFrom.controls["RazonSocial"].setValue(str, { emitEvent: false }); 
 
 

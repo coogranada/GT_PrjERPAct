@@ -109,10 +109,11 @@ export class ContactoComponent implements OnInit {
     private generalesService: GeneralesService) { }
 
   ngOnInit() {
+    this.validarContacto();
     this.IrArriba();
     this.OservacionCapitalice();
     this.dataTable = [];
-    this.validarContacto();
+    
     this.GetTipoContacto();
     
 
@@ -1415,43 +1416,47 @@ value : any;
   validarNumeros() {
     const patt = new RegExp('/^[ 0-9áéíóúüñ]*$/');
     const pattReplace = new RegExp('[^ 0-9áéíóúüñ]+');
-    let self = this;
-    $('#NumeroUno').on('input', function (e : any) {
-      if (!patt.test(self.value)) {
-        self.value = self.value.replace(pattReplace, '');
-        self.Numero = self.value;
-      }
-    });
+    this.contactoFrom.controls['NumeroUno'].setValue(this.contactoFrom.controls['NumeroUno'].value.replace(pattReplace, ''));
+    // let self = this;
+    // $('#NumeroUno').on('input', function (e : any) {
+    //   if (!patt.test(self.value)) {
+    //     self.value = self.value.replace(pattReplace, '');
+    //     self.Numero = self.value;
+    //   }
+    // });
   }
   validarNumeroDos() {
     const patt = new RegExp('/^[ 0-9áéíóúüñ]*$/');
     const pattReplace = new RegExp('[^ 0-9áéíóúüñ]+');
-    let self = this;
-    $('#NumeroDos').on('input', function (e : any) {
-      if (!patt.test(self.value)) {
-        self.value = self.value.replace(pattReplace, '');
-      }
-    });
+    this.contactoFrom.controls['NumeroDos'].setValue(this.contactoFrom.controls['NumeroDos'].value.replace(pattReplace, ''));
+    // let self = this;
+    // $('#NumeroDos').on('input', function (e : any) {
+    //   if (!patt.test(self.value)) {
+    //     self.value = self.value.replace(pattReplace, '');
+    //   }
+    // });
   }
   validarNumeroTres() {
     const patt = new RegExp('/^[ 0-9áéíóúüñ]*$/');
     const pattReplace = new RegExp('[^ 0-9áéíóúüñ]+');
-    let self = this;
-    $('#NumeroTres').on('input', function (e : any) {
-      if (!patt.test(self.value)) {
-        self.value = self.value.replace(pattReplace, '');
-      }
-    });
+    //let self = this;
+    this.contactoFrom.controls['NumeroTres'].setValue(this.contactoFrom.controls['NumeroTres'].value.replace(pattReplace, ''));
+    // $('#NumeroTres').on('input', function (e : any) {
+    //   if (!patt.test(self.value)) {
+    //     self.value = self.value.replace(pattReplace, '');
+    //   }
+    // });
   }
   validarNumeroCuatro() {
     const patt = new RegExp('/^[ 0-9áéíóúüñ]*$/');
     const pattReplace = new RegExp('[^ 0-9áéíóúüñ]+');
-    let self = this;
-    $('#NumeroCuatro').on('input', function (e : any) {
-      if (!patt.test(self.value)) {
-        self.value = self.value.replace(pattReplace, '');
-      }
-    });
+    //let self = this;
+    this.contactoFrom.controls['NumeroCuatro'].setValue(this.contactoFrom.controls['NumeroCuatro'].value.replace(pattReplace, ''));
+    // $('#NumeroCuatro').on('input', function (e : any) {
+    //   if (!patt.test(self.value)) {
+    //     self.value = self.value.replace(pattReplace, '');
+    //   }
+    // });
   }
   validarDescrip() {
     let self = this;
@@ -1568,10 +1573,12 @@ value : any;
   }
 
   OservacionCapitalice() {
-    let self = this;
-    $('#observacion').keyup(function () {
-      $(self).val($(self).val().substr(0, 1).toUpperCase() + $(self).val().substr(1).toLowerCase());
-    });
+    //Observacion
+    this.contactoFrom.controls["Observacion"].setValue(this.contactoFrom.controls["Observacion"].value.substr(0, 1).toUpperCase() + this.contactoFrom.controls["Observacion"].value.substr(1).toLowerCase());
+    //let self = this;
+    // $('#observacion').keyup(function () {
+    //   $(self).val($(self).val().substr(0, 1).toUpperCase() + $(self).val().substr(1).toLowerCase());
+    // });
   }
 
   GuardarLog(formulario : any, operacion : number, cuenta : number, tercero : number, modulo : number) {

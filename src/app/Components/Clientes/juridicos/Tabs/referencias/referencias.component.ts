@@ -731,28 +731,32 @@ export class ReferenciasComponent implements OnInit {
   NombreEmpresaCapitalice() {
     let self = this;
     $('#nombreEmpresa').keyup(function () {
-      $(self).val($(self).val().substr(0, 1).toUpperCase() + $(self).val().substr(1).toLowerCase());
+      self.referenciasFrom.controls["NombreEmpresa"].setValue((self.referenciasFrom.controls["NombreEmpresa"].value.substr(0, 1).toUpperCase() + self.referenciasFrom.controls["NombreEmpresa"].value.substr(1).toLowerCase()))
+      //$(self).val($(self).val().substr(0, 1).toUpperCase() + $(self).val().substr(1).toLowerCase());
     });
   }
 
   EntidadCapitalice() {
     let self = this;
     $('#entidad').keyup(function () {
-      $(self).val($(self).val().substr(0, 1).toUpperCase() + $(self).val().substr(1).toLowerCase());
+      self.referenciasFrom.controls["Entidad"].setValue((self.referenciasFrom.controls["Entidad"].value.substr(0, 1).toUpperCase() + self.referenciasFrom.controls["Entidad"].value.substr(1).toLowerCase()))
+      //$(self).val($(self).val().substr(0, 1).toUpperCase() + $(self).val().substr(1).toLowerCase());
     });
   }
 
   OficinaCapitalice() {
     let self = this;
     $('#oficina').keyup(function () {
-      $(self).val($(self).val().substr(0, 1).toUpperCase() + $(self).val().substr(1).toLowerCase());
+      self.referenciasFrom.controls["Oficina"].setValue((self.referenciasFrom.controls["Oficina"].value.substr(0, 1).toUpperCase() + self.referenciasFrom.controls["Oficina"].value.substr(1).toLowerCase()))
+      //$(self).val($(self).val().substr(0, 1).toUpperCase() + $(self).val().substr(1).toLowerCase());
     });
   }
 
   ProductoCapitalice() {
     let self = this;
    $('#producto').keyup(function () {
-      $(self).val($(self).val().substr(0, 1).toUpperCase() + $(self).val().substr(1).toLowerCase());
+    self.referenciasFrom.controls["Producto"].setValue((self.referenciasFrom.controls["Producto"].value.substr(0, 1).toUpperCase() + self.referenciasFrom.controls["Producto"].value.substr(1).toLowerCase()))
+      //$(self).val($(self).val().substr(0, 1).toUpperCase() + $(self).val().substr(1).toLowerCase());
     });
   }
 
