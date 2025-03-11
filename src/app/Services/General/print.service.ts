@@ -70,7 +70,7 @@ export class PrintService {
               }
 
               body {
-                  margin-right: 0;
+                  margin-right: 40px;
                   padding-right: 0;
               }
 
