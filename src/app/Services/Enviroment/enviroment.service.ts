@@ -17,7 +17,7 @@ export class EnvironmentService {
   GetUrls(UrlBackEnvironmentInt : number) {
     switch (UrlBackEnvironmentInt) {
       case 1:
-        this.Url = 'http://localhost:64486';//http://localhost:64486/
+        this.Url = 'http://localhost:64486';
         //this.UrlCore =  "https://localhost:7154" 
         this.UrlCore = "https://PruebasERPBCore.coogranada.com.co";
         this.UrlFront = 'http://localhost:4200/';

@@ -32,9 +32,12 @@ $(function() {
 
     // Calculate min height
     function containerHeight() {
-        var availableHeight = $(window).height() - $('.page-container').offset().top - $('.navbar-fixed-bottom').outerHeight();
-        console.log("Tamaño",availableHeight)
-        $('.page-container').attr('style', 'min-height:' + availableHeight + 'px');
+        var $pageContainer = $('.page-container');
+        var $navbarFixedBottom = $('.navbar-fixed-bottom');
+        if ($pageContainer.length && $navbarFixedBottom.length) {
+            var availableHeight = $(window).height() - $pageContainer.offset().top - $navbarFixedBottom.outerHeight();
+            $pageContainer.attr('style', 'min-height:' + availableHeight + 'px');
+        }
     }
 
     // Initialize
