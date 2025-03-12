@@ -141,7 +141,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
 
   //#endregion
 
-  OperacionMarcada : any;
+  OperacionMarcada : any = undefined;
   ProEstado: any;
   ProRelacion: any;
   ProIdTutor: any;
@@ -4959,6 +4959,8 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.OperacionMarcada = undefined;
   }
   ValidaCambioCampo() {
+    if(this.basicosFrom.controls['numeroDocumento'].value == null || this.basicosFrom.controls['numeroDocumento'].value == "")
+      this.OperacionMarcada = undefined;
     if (this.OperacionMarcada !== undefined) {
       if (this.OperacionMarcada === '9') {          // Cambio estado
         if (this.ProEstado === this.basicosFrom.get('estado')?.value) {
