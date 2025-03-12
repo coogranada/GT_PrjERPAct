@@ -3252,7 +3252,7 @@
                                                         <div class="form-group">
                                                             <label class="textNegrilla">Primer apellido:</label>
                                                             <span class="grande"> *</span>
-                                                            <input type="text" class="form-control SoloMinuscula" formControlName="PrimerApellido" id="priApeRef" (blur)="validarValorCampoForm('priApeRef','PrimerApellido')" [attr.disabled]="formBuscarLocked" />
+                                                            <input type="text" class="form-control text-capitalize" formControlName="PrimerApellido" id="priApeRef" (blur)="validarValorCampo('priApeRef','PrimerApellido')" [attr.disabled]="formBuscarLocked" />
                                                             <span class="help-block validationSpan" *ngIf="referenciaForm.controls['PrimerApellido'].errors?.['required'] && (referenciaForm.controls['PrimerApellido'].dirty || referenciaForm.controls['PrimerApellido'].touched)">
                                                                 El primer apellido es obligatorio. </span>
                                                             <span class="help-block validationSpan" *ngIf="referenciaForm.controls['PrimerApellido'].errors?.['pattern'] && (referenciaForm.controls['PrimerApellido'].dirty || referenciaForm.controls['PrimerApellido'].touched)">
@@ -3264,7 +3264,7 @@
                                                         <div class="form-group">
                                                             <label class="textNegrilla">Segundo apellido:</label>
                                                             <span class="text-danger"></span>
-                                                            <input type="text" class="form-control SoloMinuscula" formControlName="SegundoApellido" id="segApeRef" (blur)="validarValorCampoForm('segApeRef','SegundoApellido')" [attr.disabled]="formBuscarLocked" />
+                                                            <input type="text" class="form-control text-capitalize" formControlName="SegundoApellido" id="segApeRef" (blur)="validarValorCampo('segApeRef','SegundoApellido')" [attr.disabled]="formBuscarLocked" />
                                                             <span class="help-block validationSpan" *ngIf="referenciaForm.controls['SegundoApellido'].errors?.['pattern'] && (referenciaForm.controls['SegundoApellido'].dirty || referenciaForm.controls['SegundoApellido'].touched)">
                                                                 El segundo apellido solo acepta letras.
                                                             </span>
@@ -3275,7 +3275,7 @@
                                                         <div class="form-group">
                                                             <label class="textNegrilla">Primer nombre:</label>
                                                             <span class="grande"> *</span>
-                                                            <input type="text" class="form-control SoloMinuscula" formControlName="PrimerNombre" id="priNomRef" (blur)="validarValorCampoForm('priNomRef','PrimerNombre')" [attr.disabled]="formBuscarLocked" />
+                                                            <input type="text" class="form-control text-capitalize" formControlName="PrimerNombre" id="priNomRef" (blur)="validarValorCampo('priNomRef','PrimerNombre')" [attr.disabled]="formBuscarLocked" />
                                                             <span class="help-block validationSpan" *ngIf="referenciaForm.controls['PrimerNombre'].errors?.['required'] && (referenciaForm.controls['PrimerNombre'].dirty || referenciaForm.controls['PrimerNombre'].touched)">
                                                                 El primer nombre es obligatorio. </span>
                                                             <span class="help-block validationSpan" *ngIf="referenciaForm.controls['PrimerNombre'].errors?.['pattern'] && (referenciaForm.controls['PrimerNombre'].dirty || referenciaForm.controls['PrimerNombre'].touched)">
@@ -3287,7 +3287,7 @@
                                                         <div class="form-group">
                                                             <label class="textNegrilla">Segundo nombre:</label>
                                                             <span class="text-danger"></span>
-                                                            <input type="text" class="form-control SoloMinuscula" formControlName="SegundoNombre" id="segNomRef" (blur)="validarValorCampoForm('segNomRef','SegundoNombre')" [attr.disabled]="formBuscarLocked" />
+                                                            <input type="text" class="form-control text-capitalize" formControlName="SegundoNombre" id="segNomRef" (blur)="validarValorCampo('segNomRef','SegundoNombre')" [attr.disabled]="formBuscarLocked" />
                                                             <span class="help-block validationSpan" *ngIf="referenciaForm.controls['SegundoNombre'].errors?.['pattern'] && (referenciaForm.controls['SegundoNombre'].dirty || referenciaForm.controls['SegundoNombre'].touched)">
                                                                 El segundo nombre solo acepta letras.
                                                             </span>

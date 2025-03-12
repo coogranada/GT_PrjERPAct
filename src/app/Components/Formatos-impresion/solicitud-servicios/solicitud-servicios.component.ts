@@ -105,6 +105,7 @@ export class SolicitudServiciosComponent implements OnInit {
   dataUser: any;
   @Input() dataActivosAllSol: any;
   @Input() dataParentescosSol: any;
+  dataParentescosSol1: any;
   @Input() dataParentescosPepsSol: any;
   @Input() dataSegurosSol: any;
   @Input() dataCargosSol: any;
@@ -269,7 +270,16 @@ export class SolicitudServiciosComponent implements OnInit {
     }
     this.dataTipoCliente = this.DataRequired.RelacionData;
     this.GetSeguros();
+    this.GetParentescos();
+
   }
+
+  GetParentescos() {
+        let parentesco : string | null = localStorage.getItem('parentesco');
+        this.dataParentescosSol1 = JSON.parse(window.atob(parentesco == null ? "" : parentesco));
+  }
+
+
   GetInfoGenNit(tercero : string) {
     this.clientesGetListService.GetInfoGenNit(tercero).subscribe(
       result => {
@@ -1357,8 +1367,8 @@ export class SolicitudServiciosComponent implements OnInit {
               }
             }
             if (elementDatoRef.IdTipoReferencia === 4) {
-              console.log('informacion dataParentesco - ' + this.dataParentescosSol);
-              this.dataParentescosSol.forEach((elementParent : any) => {
+              console.log('informacion dataParentesco - ' + this.dataParentescosSol1);
+              this.dataParentescosSol1.forEach((elementParent : any) => {
                 if (elementParent.Clase === elementDatoRef.IdParentesco) {
                   this.naturalesAllModel.parentescoPersonal = elementParent.Descripcion;
                 }
