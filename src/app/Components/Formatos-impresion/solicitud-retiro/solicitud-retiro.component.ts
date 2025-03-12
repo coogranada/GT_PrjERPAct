@@ -189,6 +189,6 @@ export class SolicitudRetiroComponent implements OnInit {
   }
 
   print() {
-    this.printService.printArea('printSolicitudRetiro', 'height=1238,width=794');
+    this.printService.printArea('printSolicitudRetiro', 'height=1438,width=930');
   }
 }

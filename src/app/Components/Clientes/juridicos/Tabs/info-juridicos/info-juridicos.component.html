@@ -111,7 +111,7 @@
                         <div class="form-group" id="2">
                             <label class="textBlod">CIIU: </label>
                             <span class="textBigRed">*</span>
-                            <input formControlName="Ciiu" class="form-control" id="ciiu" [attr.disabled]="bloquearForm" (blur)="validarCiiuList(infoJuridicoFrom.value)" (keypress)="limpiarActividad(); SoloNumerosInput('ciiu',$event)">
+                            <input formControlName="Ciiu" class="form-control" id="ciiu" [attr.disabled]="bloquearForm" (blur)="validarCiiuList(infoJuridicoFrom.value)" (keypress)="limpiarActividad(); SoloNumerosInput('Ciiu',$event)">
                             <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['Ciiu'].errors?.['required'] && (infoJuridicoFrom.controls['Ciiu'].dirty || infoJuridicoFrom.controls['Ciiu'].touched)">
                   El ciiu es obligatorio.
                 </span>
