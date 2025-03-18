@@ -3,9 +3,9 @@ import { EnvironmentService } from '../Enviroment/enviroment.service';
 import { UsuariosService } from '../Maestros/usuarios.service';
 import { interval } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { LoginService } from '../Login/login.service';
 import { Router } from '@angular/router';
-declare const signalR: any;
+import { detectIncognito } from 'detectincognitojs';
+import {HubConnection,HubConnectionBuilder,HubConnectionState} from '@microsoft/signalr';
 @Injectable({
   providedIn: 'root'
 })
@@ -13,8 +13,9 @@ export class WebSocketService  {
   connection: any = null;
   backgroundBool: boolean = false;
   timer: number = 1000;
-  constructor(private envirment: EnvironmentService, private usuariosServices: UsuariosService,
-    private loginService: LoginService, private router: Router) { 
+  methodChangeOffice : string = "ChangeOffice";
+  private _hubConnection! : HubConnection ;
+  constructor(private envirment: EnvironmentService, private usuariosServices: UsuariosService, private router: Router) { 
     window.addEventListener("storage", (even: any) => {
       let storage: any = event;
       if (storage != null && storage.key == "ChangeState") {
@@ -34,29 +35,50 @@ export class WebSocketService  {
     this.Init();
   }
   Init(type : number = 0) {
-  try {
-    let hubConnection: string = this.envirment.UrlCore + "/notify";
-    console.log("ruta",hubConnection)
-    this.connection = new signalR.HubConnectionBuilder().withUrl(hubConnection).build();
-        this.connection.on("ReceiveMessage", (message : any) => this.newMessage(message));
-    this.connection.on("CloseSesion", (message : any) => this.CloseSesion(message));
-
-    this.connection.start().then(() => {
-      let data : string | null = localStorage.getItem('Data');
-      let user = JSON.parse(window.atob(data == null ? "" : data));
-        if (type == 0) {
-          if(!this.backgroundBool)
-            this.BackGround();
-            this.Send("JoinGroup", user.IdUsuario); 
-        } else if (type == 1) {
-          this.Send("ClosedSesion", user.IdUsuario); 
-        }
-      }).catch((error : any) => {
-        return console.error("Error en la conexxion.",JSON.parse(error));
-      });
-    } catch (error) {
-      console.error("Error en la conexion.",error);
+    try {
+      this._hubConnection = new HubConnectionBuilder().withUrl(this.envirment.UrlCore + "/notify").build();
+      this._hubConnection.on("ReceiveMessage", (message : any) => this.newMessage(message));
+      this._hubConnection.on("CloseSesion", (message : any) => this.CloseSesion(message));
+      this._hubConnection.on(this.methodChangeOffice, (message : any) => this.ChangeOffice(message));
+      this._hubConnection.start().then(() => {
+             let data : string | null = localStorage.getItem('Data');
+             let user = JSON.parse(window.atob(data == null ? "" : data));
+               if (type == 0) {
+                 if(!this.backgroundBool)
+                   this.BackGround();
+                   this.Send("JoinGroup", user.IdUsuario); 
+               } else if (type == 1) {
+                 this.Send("ClosedSesion", user.IdUsuario); 
+               }
+             }).catch((error : any) => {
+               return console.error("Error en la conexxion.",error);
+             });
     }
+    catch(error : any){ 
+    }
+  }
+  Stop(){
+      this._hubConnection.stop();
+  }
+  ChangeOffice(messages : any){
+    const obj : any = JSON.parse(messages);
+    //console.log("Payload",obj);
+    let data : string | null = localStorage.getItem('Data');
+    let user = JSON.parse(window.atob(data == null ? "" : data));
+    detectIncognito().then((result : any) =>{
+      let browser =  {
+        browserName : result.browserName,
+        isPrivate : result.isPrivate
+      }
+      //console.log("browser",browser)
+      if(obj.userId == user.IdUsuario && (obj.payload.browser.browserName != browser.browserName || obj.payload.browser.isPrivate != browser.isPrivate)){
+        this.usuariosServices.ActualizarOficinaUsuario(obj.payload).subscribe(x => {
+          localStorage.setItem('Data', window.btoa(JSON.stringify(x)));
+          this.Stop();
+          window.location.reload();
+        });
+      }
+    });
   }
   CloseSesion(message: any) {
     console.log("close sesion", message);
@@ -67,7 +89,7 @@ export class WebSocketService  {
   BackGround() {
     this.backgroundBool = true;
     interval(this.timer).pipe(switchMap(() => {
-      if (signalR.HubConnectionState.Disconnected == this.connection.state)
+      if (HubConnectionState.Disconnected == this._hubConnection.state)
         this.Init();
       return [];
     })).subscribe();
@@ -75,9 +97,9 @@ export class WebSocketService  {
   Send(method: string, message: string, other: any = null) {
     console.log("Init send " + method + " MESSAGE  " + message + "  " + other)
     if (other == null)
-      this.connection.invoke(method, message);
+      this._hubConnection.invoke(method, message);
     else
-      this.connection.invoke(method, message, other);
+      this._hubConnection.invoke(method, message, other);
   }
   newMessage(messages: any) {
     console.log(messages);

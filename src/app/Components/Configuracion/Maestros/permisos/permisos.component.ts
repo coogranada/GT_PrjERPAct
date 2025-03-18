@@ -25,7 +25,7 @@ declare var $: any;
 export class PermisosComponent implements OnInit {
   public DenegadosResult : any[] = [];
   public PermitidosResult : any[] = [];
-  public dataResult : any = {};
+  public dataResult : any[] = [];
   private permisosModel: PermisosModel;
   public permisosForm!: FormGroup;
   public arrayAddPermiso: any;

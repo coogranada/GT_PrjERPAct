@@ -18,8 +18,7 @@ export class EnvironmentService {
     switch (UrlBackEnvironmentInt) {
       case 1:
         this.Url = 'http://localhost:64486';
-        //this.UrlCore =  "https://localhost:7154" 
-        this.UrlCore = "https://PruebasERPBCore.coogranada.com.co";
+        this.UrlCore =  "https://localhost:7154" 
         this.UrlFront = 'http://localhost:4200/';
         this.UrlBaseOlivos = 'https://losolivosmedellin.co/KaringPrueba/Api/';
         break;
