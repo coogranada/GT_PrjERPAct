@@ -11,7 +11,7 @@ import { UsuariosService } from '../../../app/Services/Maestros/usuarios.service
 import { WebSocketService } from '../../../app/Services/WebSocket/web-socket.service';
 import { GeneralesService } from '../../../app/Services/Productos/generales.service';
 import { AlertService } from '../../Services/Alert/alert.service';
-import { filter } from 'rxjs/operators';
+import { detectIncognito } from 'detectincognitojs';
 declare var $: any;
 @Component({
   selector: 'app-layout',
@@ -1076,7 +1076,7 @@ export class LayoutComponent implements OnInit {
     this.VerificarPaginaActual();
     this.GetModuloOfice();
     this.GetIpUltimaSesion();
-    //this.webSocket.Init();
+    this.webSocket.Init();
   }
   GetIpUltimaSesion() {
     this.usuariosServices.GetIpUltimaSesion(this.resulStore.IdUsuario).subscribe(x => {
@@ -1129,17 +1129,28 @@ export class LayoutComponent implements OnInit {
           OficinaActualiza: x.Oficina
         };
         this.serviceGenerales.Guardarlog(logJson, 1, null, null, 81).subscribe(result => {
-          // this.webSocket.TriggerLocal("ChangeOffice");
           setTimeout(() => {
             data = localStorage.getItem('Data');
             this.resulStore = JSON.parse(window.atob(data == null ? "" : data));
-            if (this.resulStore == null) {
-              // this.webSocket.TriggerLocal("CloseSesion");
-              // this.webSocket.CloseSesion("");
-            } else {
-              localStorage.removeItem("ChangeState");
-              window.location.reload();
-            }
+            
+            detectIncognito().then((result : any) =>{
+              payload.browser =  {
+                browserName : result.browserName,
+                isPrivate : result.isPrivate
+              }
+              let message: string = JSON.stringify({ userId: payload.IdUsuario, payload: payload });
+              this.webSocket.Send("ChangeOffice",message, payload.IdUsuario);
+              setTimeout(() => {
+                this.webSocket.TriggerLocal("ChangeOffice");
+                if (this.resulStore == null) {
+                  this.webSocket.TriggerLocal("CloseSesion");
+                  this.webSocket.CloseSesion("");
+              } else {
+                 localStorage.removeItem("ChangeState");
+                 window.location.reload();
+              }
+              }, 300);
+            });
           }, 1500);
         });
       }, 300);
