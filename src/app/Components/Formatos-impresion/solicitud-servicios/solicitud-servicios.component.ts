@@ -488,12 +488,13 @@ export class SolicitudServiciosComponent implements OnInit {
           // mapea la ciudad de expedicion
           console.log('mapea la ciudad de expedicion - ' + this.dataCiudad);
           if (result.tercerosDto.IdCiudadExpeDto !== null && result.tercerosDto.IdCiudadExpeDto !== undefined) {
+           if(result.tercerosDto.IdCiudadExpeDto !== 0 ){
             this.dataCiudadesAllSol.forEach((elementCiu : any) => {
               if (elementCiu.IdCiudad === result.tercerosDto.IdCiudadExpeDto) {
                 this.naturalesAllModel.LugarExpedicon = elementCiu.Descripcion;
               }
             });
-          } else {
+           }else{
             if (result.tercerosDto.IdPaisExpe !== null && result.tercerosDto.IdPaisExpe !== undefined) {
               this.dataPaisesAllSol.forEach((elementPais : any) => {
                 if (elementPais.IdPais === result.tercerosDto.IdPaisExpe) {
@@ -501,7 +502,9 @@ export class SolicitudServiciosComponent implements OnInit {
                 }
               });
             }
-          }
+           }
+
+          } 
           // mapea el genero
           this.generos.forEach(elementTipoDocu => {
             if (+elementTipoDocu.Value === result.tercerosDto.IdGenero) {

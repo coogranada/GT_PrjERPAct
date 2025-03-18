@@ -19,7 +19,7 @@
                             <div class="form-group" id="1">
                                 <label class="textBlod">Nombre/Empresa: </label>
                                 <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
-                                <input type="text" formControlName="NombreEmpresa" id="nombreEmpresa" class="form-control">
+                                <input type="text" formControlName="NombreEmpresa" id="nombreEmpresa" class="form-control" (blur)="validarValorCampoNombres('nombreEmpresa','NombreEmpresa')">
                                 <span class="help-block validationSpan" *ngIf="referenciasFrom.controls['NombreEmpresa'].errors?.['required'] && (referenciasFrom.controls['NombreEmpresa'].dirty || referenciasFrom.controls['NombreEmpresa'].touched)">
                                 El nombre/empresa es obligatorio.
                                 </span>
@@ -61,7 +61,7 @@
                             <div class="form-group" id="1">
                                 <label class="textBlod">Entidad: </label>
                                 <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
-                                <input type="text" formControlName="Entidad" id="entidad" class="form-control">
+                                <input type="text" formControlName="Entidad" id="entidad" class="form-control" (blur)="validarValorCampoNombres('entidad','Entidad')">
                                 <span class="help-block validationSpan" *ngIf="referenciasFrom.controls['Entidad'].errors?.['required'] && (referenciasFrom.controls['Entidad'].dirty || referenciasFrom.controls['Entidad'].touched)">
                                 La entidad es obligatoria.
                                  </span>
@@ -84,7 +84,7 @@
                             <div class="form-group" id="2">
                                 <label class="textBlod">Oficina: </label>
                                 <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
-                                <input type="text" formControlName="Oficina" id="oficina" class="form-control">
+                                <input type="text" formControlName="Oficina" id="oficina" class="form-control" (blur)="validarValorCampoNombres('oficina','Oficina')">
                                 <span class="help-block validationSpan" *ngIf="referenciasFrom.controls['Oficina'].errors?.['required'] && (referenciasFrom.controls['Oficina'].dirty || referenciasFrom.controls['Oficina'].touched)">
                                 La oficina es obligatoria.
                                 </span>
@@ -156,7 +156,7 @@
                             <div class="form-group" id="2">
                                 <label class="textBlod">Producto: </label>
                                 <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
-                                <input type="text" formControlName="Producto" id="producto" class="form-control">
+                                <input type="text" formControlName="Producto" id="producto" class="form-control" (blur)="validarValorCampoNombres('producto','Producto')">
                                 <span class="help-block validationSpan" *ngIf="referenciasFrom.controls['Producto'].errors?.['required'] && (referenciasFrom.controls['Producto'].dirty || referenciasFrom.controls['Producto'].touched)">
                                 El producto es obligatorio.
                                 </span>

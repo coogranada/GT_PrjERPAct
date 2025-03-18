@@ -47,6 +47,7 @@ const SecondaryGrey = 'rgb(13,165,80,0.7)';
 
 
 export class NaturalesComponent implements OnInit, OnDestroy  { 
+  
   //value :any;
   private _colorApi: any;
   public get colorApi(): any {
@@ -59,6 +60,8 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   private CodModulo = 11;
   neverShow = false;
   myModel = true;
+  @ViewChild('paisSelect') paisSelect: any;
+  
   @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
   @ViewChild('contactoPpal', { static: true }) private contactoPpal!: ElementRef;
   @ViewChild('tratamientodatos', { static: true }) private tratamientoDatos!: ElementRef;
@@ -1652,7 +1655,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
 
       localStorage.removeItem('DataService');
       this.selectAutomaticoDropEntrevista();
-      this.PreCargarPais();
+      this.PreCargarPais(3);
 
       this.segurosForm.get('tratamiento')?.setValue(true);
       this.segurosForm.get('debitoAuto')?.setValue(true);
@@ -6890,7 +6893,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           this.EliminarValidacionesEmail();
           this.EliminarValidacionesTelefonos();
           this.ElimnarValidacionesCelular();
-          this.PreCargarPais();
+          this.PreCargarPais(2);
           break;
         case 2: // Direccion laboral
           this.disableEmail = true;
@@ -6905,7 +6908,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           this.EliminarValidacionesEmail();
           this.EliminarValidacionesTelefonos();
           this.ElimnarValidacionesCelular();
-          this.PreCargarPais();
+          this.PreCargarPais(2);
           break;
         case 3: // Email
           this.disableEmail = false;
@@ -7028,7 +7031,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
               this.EliminarValidacionesEmail();
               this.EliminarValidacionesTelefonos();
               this.ElimnarValidacionesCelular();
-              this.PreCargarPais();
+              this.PreCargarPais(2);
               break;
             case 2: // Direccion laboral
               this.disableEmail = true;
@@ -7043,7 +7046,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
               this.EliminarValidacionesEmail();
               this.EliminarValidacionesTelefonos();
               this.ElimnarValidacionesCelular();
-              this.PreCargarPais();
+              this.PreCargarPais(2);
               break;
             case 3: // Email
               this.disableEmail = false;
@@ -7239,6 +7242,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.referenciaForm.controls['extEmpresarial'].setErrors(null);
     this.referenciaForm.controls['extEmpresarial'].clearValidators();
     if (referen !== '0') {
+      this.PreCargarPais(1);
       if (referen.Nombre === 'Familiar' || referen.Nombre === 'Personal') {
         if (referen.Nombre === 'Familiar') {
           this.MostrarParenFami = true;
@@ -7265,7 +7269,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         this.referenciaForm.get('IdCiudadR')?.reset();
         // this.NombresCapitaliceRefe();
         this.loading = false;
-        this.PreCargarPais();
       } else if (referen.Nombre === 'Comercial') {
         this.addVaidatorsComercial();
         this.removerValidatorFamiliarPersonal();
@@ -7278,7 +7281,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         this.referenciaForm.get('CiudadComercial')?.reset();
         this.referenciaForm.get('ServicioProductoComercial')?.reset();
         this.loading = false;
-        this.PreCargarPais();
       } else if (referen.Nombre === 'Financiera') {
         this.addValidatorsFinanciera();
         this.removerValidatorFamiliarPersonal();
@@ -7292,7 +7294,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         this.referenciaForm.get('ServicioProductoFinanciera')?.reset();
         this.referenciaForm.get('NumeroProductoFinanciera')?.reset();
         this.loading = false;
-        this.PreCargarPais();
       } else {
         this.removerValidatorFamiliarPersonal();
         this.referenciaForm.reset();
@@ -7665,7 +7666,8 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       }
     }
   }
-  validarValorCampo(campoJquery : string, campoAngular : string) {
+
+  validarValorCampoNombres(campoJquery : string, campoAngular : string) {
     const lentghCampo = $('#' + campoJquery + '').val();
     if (lentghCampo.length > 0) {
       if ($('#' + campoJquery + '').val().trim() === '') {
@@ -7681,6 +7683,43 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     $('#' + campoJquery + '').val(valorCorregido);
     this.basicosFrom.get('' + campoAngular + '')?.setValue(valorCorregido);
   }
+
+  validarValorCampo(campoJquery: string, campoAngular: string) {
+    let valorCampo = $('#' + campoJquery).val()?.toString().trim();
+    const lentghCampo = $('#' + campoJquery + '').val();
+  
+    if (lentghCampo.length > 0) {
+      if ($('#' + campoJquery + '').val().trim() === '') {
+        this.basicosFrom.get('' + campoAngular + '')?.reset();
+      }
+    }
+  
+    let valorCorregido = valorCampo
+      .toLowerCase()  
+      .replace(/\b[á-úa-zA-Z]+/g, (letra: any) => 
+        letra.charAt(0).toUpperCase() + letra.slice(1) 
+      );
+  
+    $('#' + campoJquery).val(valorCorregido);
+  
+    this.basicosFrom.get(campoAngular)?.setValue(valorCorregido);
+  }
+    
+  validarMinuscula(campoJquery: string, campoAngular: string) {
+    const valorCampo = $('#' + campoJquery).val().toString().trim(); 
+  
+    if (valorCampo.length === 0) {
+      this.notif.onWarning('Advertencia', 'El campo no puede contener espacios.');
+      this.basicosFrom.get(campoAngular)?.reset();
+      return; 
+    }
+  
+    const valorCorregido = valorCampo.toLowerCase();
+  
+    $('#' + campoJquery).val(valorCorregido);
+    this.basicosFrom.get(campoAngular)?.setValue(valorCorregido);
+  }
+  
 
   validarValorCampoForm(campoJquery : string, campoAngular : string) {
     const lentghCampo = $('#' + campoJquery + '').val();
@@ -12600,8 +12639,10 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.contactoModelList = [];
     this.JuridicoEdit = this.idTerceroConsulta;
     if (this.itemsContacto.length <= 0) {
+      this.loading=false;
       this.notif.onWarning('Advertencia', 'No hay registros relacionados para actualizar.');
     } else {
+      this.loading=true;
       this.itemsContacto.forEach(element => {
   
         if (element.TipoContacto.Id === 1 || element.TipoContacto.Id === 2 ) {
@@ -12677,6 +12718,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           result => {
             if (result) {
               this.dataCorrespondencia = [];
+                this.loading=false;
                 const tercero = localStorage.getItem('TerceroNatura');
                 this.notif.onSuccess('Exitoso', 'El registro se actualizó correctamente.');
                 this.AsesorModifica(tercero == null ? "" : tercero);
@@ -12689,15 +12731,18 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             }
           },
           error => {
+            this.loading=false;
             console.error('Error al realizar la actualizacion - juridicos: ' + error);
             this.notif.onDanger('Error', 'No se pudo realizar la actualizacion - Error: ' + error);
           });
       } else {
         if (tieneDir === null || tieneDir === undefined) {
+          this.loading=false;
           this.notif.onWarning('Advertencia', 'Debe ingresar una Dirección principal');
           this.EnableUpdateContacto = false;
         }
         if (tieneOtro === null || tieneOtro === undefined) {
+          this.loading=false;
           this.notif.onWarning('Advertencia', 'Debe ingresar Celular principal ');
           this.EnableUpdateContacto = false;
         }
@@ -13412,7 +13457,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.activoForm.controls['aFavor'].setErrors(null);
     this.activoForm.controls['aFavor'].clearValidators();
     this.activoForm.controls['aFavor'].setValidators(null);
-
+    this.PreCargarPais(4);
     if (this.activoForm.get('tipoActivo')?.value.Id === 2) {
       this.activoForm.get('activo')?.reset();
       this.activoForm.get('identificacionLegal')?.reset();
@@ -13469,7 +13514,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       this.activoForm.get('VrlAdeudado')?.reset();
       this.activoForm.get('hipotecado')?.reset();
       this.formLockedHipoPigno = true;
-      this.PreCargarPais();
     } else {
       this.activoForm.get('activo')?.reset();
       this.activoForm.get('identificacionLegal')?.reset();
@@ -14753,7 +14797,10 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                     } else if (elemento.tipoActivo.Id === 2) {
                       this.ActivoFormSet.get('aFavor')?.setValue(elemento.aFavor);
                     }
+
                     this.ActivoFormSet.get('Placa')?.setValue(elemento.Placa);
+                                        
+                    
                     if( elemento.Ciudad !== null && elemento.Ciudad !== undefined && elemento.Ciudad !== '' && elemento.Ciudad !== 0) {
                      this.ActivoFormSet.get('IdCiudad')?.setValue(elemento.Ciudad.IdCiudad);
                     } else {
@@ -15188,9 +15235,17 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             ' Meses - ' + this.conyugueForm.value.meses);
           this.antiguedadStr = this.conyugueForm.value.years + '|' + this.conyugueForm.value.meses;
           this.itemsConyugue.splice(this.indexConyugue, 1);
-          this.itemsConyugue.push(this.conyugueForm.value);
-          this.indexConyugue = null;
-          this.conyugueForm.reset();
+
+          const capitalizedValues = this.CapitalizeNombresConyuge();
+            
+            if ((capitalizedValues.primerNombre && capitalizedValues.primerNombre.trim() === '') || (capitalizedValues.primerApellido && capitalizedValues.primerApellido.trim() === '')) {
+              this.notif.onWarning('Advertencia', 'Debe diligenciar primer nombre y primer apellido.');
+            } else {
+
+              this.itemsConyugue.push(this.conyugueForm.value);
+              this.indexConyugue = null;
+              this.conyugueForm.reset();
+            }
         } else {
           if (this.itemsConyugue.length <= 0) {
 
@@ -15216,8 +15271,15 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             this.conyugueForm.get('AntiguedadEmpresa')?.setValue('Años - ' + this.conyugueForm.value.years +
               ' Meses - ' + this.conyugueForm.value.meses);
             this.antiguedadStr = this.conyugueForm.value.years + '|' + this.conyugueForm.value.meses;
-            this.itemsConyugue.push(this.conyugueForm.value);
-            this.conyugueForm.reset();
+            const capitalizedValues = this.CapitalizeNombresConyuge();
+            
+            if ((capitalizedValues.primerNombre && capitalizedValues.primerNombre.trim() === '') || (capitalizedValues.primerApellido && capitalizedValues.primerApellido.trim() === '')) {
+              this.notif.onWarning('Advertencia', 'Debe diligenciar primer nombre y primer apellido.');
+            } else {
+
+              this.itemsConyugue.push(this.conyugueForm.value);
+              this.conyugueForm.reset();
+            }
           } else {
             this.notif.onWarning('Advertencia', 'Solo puede agregar un conyugue.');
           }
@@ -15248,10 +15310,18 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             ' Meses - ' + this.conyugueForm.value.meses);
           this.antiguedadStr = this.conyugueForm.value.years + '|' + this.conyugueForm.value.meses;
           this.itemsConyugue.splice(this.indexConyugue, 1);
-          this.itemsConyugue.push(this.conyugueForm.value);
-          this.indexConyugue = null;
-          this.conyugueForm.reset();
-          this.EnableUpdateConyugue = true;
+          const capitalizedValues = this.CapitalizeNombresConyuge();
+            
+          if ((capitalizedValues.primerNombre && capitalizedValues.primerNombre.trim() === '') || (capitalizedValues.primerApellido && capitalizedValues.primerApellido.trim() === '')) {
+            this.notif.onWarning('Advertencia', 'Debe diligenciar primer nombre y primer apellido.');
+          } else {
+
+
+            this.itemsConyugue.push(this.conyugueForm.value);
+            this.indexConyugue = null;
+            this.conyugueForm.reset();
+            this.EnableUpdateConyugue = true;
+          }
         } else {
           if (this.itemsConyugue.length === 0) {
             this.conyugueForm.get('TipoDocumento')?.setValue(this.conyugueForm.value.TipoDocumento);
@@ -15279,9 +15349,15 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
 
             this.antiguedadStr = this.conyugueForm.value.years + '|' + this.conyugueForm.value.meses;
 
-            this.itemsConyugue.push(this.conyugueForm.value);
-            this.conyugueForm.reset();
-            this.EnableUpdateConyugue = true;
+            const capitalizedValues = this.CapitalizeNombresConyuge();
+
+            if ((capitalizedValues.primerNombre && capitalizedValues.primerNombre.trim() === '') || (capitalizedValues.primerApellido && capitalizedValues.primerApellido.trim() === '')) {
+              this.notif.onWarning('Advertencia', 'Debe diligenciar primer nombre y primer apellido.');
+            } else {
+              this.itemsConyugue.push(this.conyugueForm.value);
+              this.conyugueForm.reset();
+              this.EnableUpdateConyugue = true;
+            }
           } else {
             this.EnableUpdateConyugue = false;
             this.notif.onWarning('Advertencia', 'Solo puede agregar un conyugue.');
@@ -15289,6 +15365,44 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         }
       }
     }
+  }
+
+  CapitalizeNombresConyuge(): { primerNombre: string, primerApellido: string }{
+    const primerNombre = this.conyugueForm.value.PrimerNombreC;
+    const primerApellido = this.conyugueForm.value.PrimerApellidoC;
+    const segundoNombre = this.conyugueForm.value.SegundoNombreC;
+    const segundoApellido = this.conyugueForm.value.SegundoApellidoC;
+
+    if (primerNombre && primerNombre.trim() !== '') {
+      this.conyugueForm.get('PrimerNombreC')?.setValue(
+        primerNombre.charAt(0).toUpperCase() + primerNombre.slice(1).toLowerCase()
+      );
+    }
+
+    if (primerApellido && primerApellido.trim() !== '' ) {
+      this.conyugueForm.get('PrimerApellidoC')?.setValue(
+        primerApellido.charAt(0).toUpperCase() + primerApellido.slice(1).toLowerCase()
+      );
+    }
+
+
+    if (segundoNombre && segundoNombre.trim() !== '' ) {
+      this.conyugueForm.get('SegundoNombreC')?.setValue(
+        segundoNombre.charAt(0).toUpperCase() + segundoNombre.slice(1).toLowerCase()
+      );
+    }
+
+    if (segundoApellido && segundoApellido.trim() !== '' ) {
+      this.conyugueForm.get('SegundoApellidoC')?.setValue(
+        segundoApellido.charAt(0).toUpperCase() + segundoApellido.slice(1).toLowerCase()
+      );
+    }
+
+    return {
+      primerNombre,
+      primerApellido
+    } 
+
   }
 
   EliminarItemConyugue(index : number) {
@@ -16590,7 +16704,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
               this.laboralFormSet.get('IdTipoLocal')?.setValue(null);
             }
             if (elementlab.NombreArrendador !== null && elementlab.NombreArrendador !== undefined && elementlab.NombreArrendador !== '') {
-              this.laboralFormSet.get('NombreArrendador')?.setValue(elementlab.NombreArrendador);
+              this.laboralFormSet.get('NombreArrendador')?.setValue(  elementlab.NombreArrendador.charAt(0).toUpperCase() + elementlab.NombreArrendador.slice(1).toLowerCase());
             } else {
               this.laboralFormSet.get('NombreArrendador')?.setValue(null);
             }
@@ -17466,8 +17580,8 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                           this.dataPaisesAll.forEach((elementPais : any) => {
                             if (elementPais.IdPais === +this.referenciaForm.value.Pais) {
                               this.referenciaForm.get('Pais')?.setValue(elementPais);
-                              this.referenciaForm.value.DescripcionEmpresa = this.referenciaForm.value.DescripcionEmpresa.substr(0, 1).toUpperCase() +
-                                this.referenciaForm.value.DescripcionEmpresa.substr(1).toLowerCase();
+                              this.referenciaForm.value.DescripcionEmpresa =   this.referenciaForm.value.DescripcionEmpresa.charAt(0).toUpperCase() + 
+                              this.referenciaForm.value.DescripcionEmpresa.slice(1).toLowerCase();
                               this.itemsFinancieraComercial.push(this.referenciaForm.value);
                               this.referenciaForm.reset();
 
@@ -17599,8 +17713,8 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                           this.dataPaisesAll.forEach((elementPais : any) => {
                             if (elementPais.IdPais === +this.referenciaForm.value.Pais) {
                               this.referenciaForm.get('Pais')?.setValue(elementPais);
-                               this.referenciaForm.value.DescripcionEmpresaR =  this.referenciaForm.value.DescripcionEmpresaR.substr(0, 1).toUpperCase() +
-                              this.referenciaForm.value.DescripcionEmpresaR.substr(1).toLowerCase();
+                               this.referenciaForm.value.DescripcionEmpresaR =  this.referenciaForm.value.DescripcionEmpresaR.charAt(0).toUpperCase() + 
+                               this.referenciaForm.value.DescripcionEmpresaR.slice(1).toLowerCase();
                               this.itemsFinancieraComercial.push(this.referenciaForm.value);
                               this.referenciaForm.reset();
                             }
@@ -17674,7 +17788,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           // Valida que venga alguno de los dos numeros
           if (this.referenciaForm.value.IdParentesco === null || this.referenciaForm.value.IdParentesco === undefined) {
             this.notif.onWarning('Advertencia',
-              'Debe llenar los campos obligatorios.',
+              'Debe diligenciar los campos obligatorios.',
               );
           } else {
             if ((this.referenciaForm.get('celular')?.value === null || this.referenciaForm.get('celular')?.value === ''
@@ -17749,17 +17863,17 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                 this.referenciaForm.get('NombreEmpresa')?.setValue(this.referenciaForm.get('idTipoReferencia')?.value.Descripcion);
                 this.referenciaForm.get('idTipoReferencia')?.setValue(this.referenciaForm.get('idTipoReferencia')?.value.Id);
                 if (this.itemsFamiliaPersonal.length < 4) {
-                  this.referenciaForm.value.PrimerNombre =  this.referenciaForm.value.PrimerNombre.substr(0, 1).toUpperCase() +
-                  this.referenciaForm.value.PrimerNombre.substr(1).toLowerCase();
+                  this.referenciaForm.value.PrimerNombre = this.referenciaForm.value.PrimerNombre.charAt(0).toUpperCase() + 
+                  this.referenciaForm.value.PrimerNombre.slice(1).toLowerCase();
                   if (this.referenciaForm.value.SegundoNombre !== null && this.referenciaForm.value.SegundoNombre !== undefined) {
-                    this.referenciaForm.value.SegundoNombre = this.referenciaForm.value.SegundoNombre.substr(0, 1).toUpperCase() +
-                      this.referenciaForm.value.SegundoNombre.substr(1).toLowerCase();
+                    this.referenciaForm.value.SegundoNombre = this.referenciaForm.value.SegundoNombre.charAt(0).toUpperCase() + 
+                    this.referenciaForm.value.SegundoNombre.slice(1).toLowerCase();
                   }
-                  this.referenciaForm.value.PrimerApellido =  this.referenciaForm.value.PrimerApellido.substr(0, 1).toUpperCase() +
-                  this.referenciaForm.value.PrimerApellido.substr(1).toLowerCase();
+                  this.referenciaForm.value.PrimerApellido =  this.referenciaForm.value.primerApellido.charAt(0).toUpperCase() + 
+                  this.referenciaForm.value.primerApellido.slice(1).toLowerCase();
                   if(this.referenciaForm.value.SegundoApellido !== null && this.referenciaForm.value.SegundoApellido !== undefined){
-                   this.referenciaForm.value.SegundoApellido =  this.referenciaForm.value.SegundoApellido.substr(0, 1).toUpperCase() +
-                    this.referenciaForm.value.SegundoApellido.substr(1).toLowerCase();
+                   this.referenciaForm.value.SegundoApellido =  this.referenciaForm.value.SegundoApellido.charAt(0).toUpperCase() + 
+                   this.referenciaForm.value.SegundoApellido.slice(1).toLowerCase();
                   }
 
                   this.itemsFamiliaPersonal.push(this.referenciaForm.value);
@@ -17788,17 +17902,17 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                                     this.referenciaForm.get('Pais')?.setValue(elementPais);
                                     this.itemsFamiliaPersonal.splice(this.indexReferencia, 1);
                                     this.indexReferencia = null;
-                                    this.referenciaForm.value.PrimerNombre =  this.referenciaForm.value.PrimerNombre.substr(0, 1).toUpperCase() +
-                                    this.referenciaForm.value.PrimerNombre.substr(1).toLowerCase();
+                                    this.referenciaForm.value.PrimerNombre = this.referenciaForm.value.PrimerNombre.charAt(0).toUpperCase() + 
+                                    this.referenciaForm.value.PrimerNombre.slice(1).toLowerCase();
                                     if(this.referenciaForm.value.SegundoNombre !== null && this.referenciaForm.value.SegundoNombre !== undefined){
-                                    this.referenciaForm.value.SegundoNombre =  this.referenciaForm.value.SegundoNombre.substr(0, 1).toUpperCase() +
-                                    this.referenciaForm.value.SegundoNombre.substr(1).toLowerCase();
+                                    this.referenciaForm.value.SegundoNombre =  this.referenciaForm.value.SegundoNombre.charAt(0).toUpperCase() + 
+                                    this.referenciaForm.value.SegundoNombre.slice(1).toLowerCase();
                                     }
-                                    this.referenciaForm.value.PrimerApellido =  this.referenciaForm.value.PrimerApellido.substr(0, 1).toUpperCase() +
-                                    this.referenciaForm.value.PrimerApellido.substr(1).toLowerCase();
+                                    this.referenciaForm.value.PrimerApellido =  this.referenciaForm.value.PrimerApellido.charAt(0).toUpperCase() + 
+                                    this.referenciaForm.value.PrimerApellido.slice(1).toLowerCase();
                                     if(this.referenciaForm.value.SegundoApellido !== null && this.referenciaForm.value.SegundoApellido !== undefined){
-                                    this.referenciaForm.value.SegundoApellido =  this.referenciaForm.value.SegundoApellido.substr(0, 1).toUpperCase() +
-                                      this.referenciaForm.value.SegundoApellido.substr(1).toLowerCase();
+                                    this.referenciaForm.value.SegundoApellido = this.referenciaForm.value.SegundoApellido.charAt(0).toUpperCase() + 
+                                    this.referenciaForm.value.SegundoApellido.slice(1).toLowerCase();
                                     }
                                     this.itemsFamiliaPersonal.push(this.referenciaForm.value);
                                     this.referenciaForm.reset();
@@ -17819,17 +17933,17 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                                 this.dataPaisesAll.forEach((elementPais : any ) => {
                                   if (elementPais.IdPais === +this.referenciaForm.value.Pais) {
                                     this.referenciaForm.get('Pais')?.setValue(elementPais);
-                                    this.referenciaForm.value.PrimerNombre =  this.referenciaForm.value.PrimerNombre.substr(0, 1).toUpperCase() +
-                                    this.referenciaForm.value.PrimerNombre.substr(1).toLowerCase();
+                                    this.referenciaForm.value.PrimerNombre =  this.referenciaForm.value.PrimerNombre.charAt(0).toUpperCase() + 
+                                    this.referenciaForm.value.PrimerNombre.slice(1).toLowerCase();
                                     if(this.referenciaForm.value.SegundoNombre !== null && this.referenciaForm.value.SegundoNombre !== undefined){
-                                    this.referenciaForm.value.SegundoNombre =  this.referenciaForm.value.SegundoNombre.substr(0, 1).toUpperCase() +
-                                    this.referenciaForm.value.SegundoNombre.substr(1).toLowerCase();
+                                    this.referenciaForm.value.SegundoNombre =  this.referenciaForm.value.SegundoNombre.charAt(0).toUpperCase() + 
+                                    this.referenciaForm.value.SegundoNombre.slice(1).toLowerCase();
                                     }
-                                    this.referenciaForm.value.PrimerApellido =  this.referenciaForm.value.PrimerApellido.substr(0, 1).toUpperCase() +
-                                    this.referenciaForm.value.PrimerApellido.substr(1).toLowerCase();
+                                    this.referenciaForm.value.PrimerApellido =   this.referenciaForm.value.PrimerApellido.charAt(0).toUpperCase() + 
+                                    this.referenciaForm.value.PrimerApellido.slice(1).toLowerCase();
                                     if(this.referenciaForm.value.SegundoApellido !== null && this.referenciaForm.value.SegundoApellido !== undefined){
-                                    this.referenciaForm.value.SegundoApellido =  this.referenciaForm.value.SegundoApellido.substr(0, 1).toUpperCase() +
-                                      this.referenciaForm.value.SegundoApellido.substr(1).toLowerCase();
+                                    this.referenciaForm.value.SegundoApellido =  this.referenciaForm.value.SegundoApellido.charAt(0).toUpperCase() + 
+                                    this.referenciaForm.value.SegundoApellido.slice(1).toLowerCase();
                                     }
                                     this.itemsFamiliaPersonal.push(this.referenciaForm.value);
                                     this.referenciaForm.reset();
@@ -17860,17 +17974,17 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                           this.referenciaForm.get('Pais')?.setValue(elementPais);
                           this.itemsFamiliaPersonal.splice(this.indexReferencia, 1);
                           this.indexReferencia = null;
-                          this.referenciaForm.value.PrimerNombre =  this.referenciaForm.value.PrimerNombre.substr(0, 1).toUpperCase() +
-                          this.referenciaForm.value.PrimerNombre.substr(1).toLowerCase();
+                          this.referenciaForm.value.PrimerNombre =  this.referenciaForm.value.PrimerNombre.charAt(0).toUpperCase() + 
+                          this.referenciaForm.value.PrimerNombre.slice(1).toLowerCase();
                           if(this.referenciaForm.value.SegundoNombre !== null && this.referenciaForm.value.SegundoNombre !== undefined){
-                          this.referenciaForm.value.SegundoNombre =  this.referenciaForm.value.SegundoNombre.substr(0, 1).toUpperCase() +
-                          this.referenciaForm.value.SegundoNombre.substr(1).toLowerCase();
+                          this.referenciaForm.value.SegundoNombre = this.referenciaForm.value.SegundoNombre.charAt(0).toUpperCase() + 
+                          this.referenciaForm.value.SegundoNombre.slice(1).toLowerCase();
                           }
-                          this.referenciaForm.value.PrimerApellido =  this.referenciaForm.value.PrimerApellido.substr(0, 1).toUpperCase() +
-                          this.referenciaForm.value.PrimerApellido.substr(1).toLowerCase();
+                          this.referenciaForm.value.PrimerApellido =  this.referenciaForm.value.PrimerApellido.charAt(0).toUpperCase() + 
+                          this.referenciaForm.value.PrimerApellido.slice(1).toLowerCase();
                           if(this.referenciaForm.value.SegundoApellido !== null && this.referenciaForm.value.SegundoApellido !== undefined){
-                          this.referenciaForm.value.SegundoApellido =  this.referenciaForm.value.SegundoApellido.substr(0, 1).toUpperCase() +
-                            this.referenciaForm.value.SegundoApellido.substr(1).toLowerCase();
+                          this.referenciaForm.value.SegundoApellido =  this.referenciaForm.value.SegundoApellido.charAt(0).toUpperCase() + 
+                          this.referenciaForm.value.SegundoApellido.slice(1).toLowerCase();
                           }
                           this.itemsFamiliaPersonal.push(this.referenciaForm.value);
                           this.referenciaForm.reset();
@@ -17881,17 +17995,17 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                         this.dataPaisesAll.forEach((elementPais : any ) => {
                           if (elementPais.IdPais === +this.referenciaForm.value.Pais) {
                             this.referenciaForm.get('Pais')?.setValue(elementPais);
-                            this.referenciaForm.value.PrimerNombre =  this.referenciaForm.value.PrimerNombre.substr(0, 1).toUpperCase() +
-                            this.referenciaForm.value.PrimerNombre.substr(1).toLowerCase();
+                            this.referenciaForm.value.PrimerNombre =  this.referenciaForm.value.PrimerNombre.charAt(0).toUpperCase() + 
+                            this.referenciaForm.value.PrimerNombre.slice(1).toLowerCase();
                             if(this.referenciaForm.value.SegundoNombre !== null && this.referenciaForm.value.SegundoNombre !== undefined){
-                            this.referenciaForm.value.SegundoNombre =  this.referenciaForm.value.SegundoNombre.substr(0, 1).toUpperCase() +
-                            this.referenciaForm.value.SegundoNombre.substr(1).toLowerCase();
+                            this.referenciaForm.value.SegundoNombre = this.referenciaForm.value.SegundoNombre.charAt(0).toUpperCase() + 
+                            this.referenciaForm.value.SegundoNombre.slice(1).toLowerCase();
                             }
-                            this.referenciaForm.value.PrimerApellido =  this.referenciaForm.value.PrimerApellido.substr(0, 1).toUpperCase() +
-                            this.referenciaForm.value.PrimerApellido.substr(1).toLowerCase();
+                            this.referenciaForm.value.PrimerApellido =   this.referenciaForm.value.PrimerApellido.charAt(0).toUpperCase() + 
+                            this.referenciaForm.value.PrimerApellido.slice(1).toLowerCase();
                             if(this.referenciaForm.value.SegundoApellido !== null && this.referenciaForm.value.SegundoApellido !== undefined){
-                            this.referenciaForm.value.SegundoApellido =  this.referenciaForm.value.SegundoApellido.substr(0, 1).toUpperCase() +
-                              this.referenciaForm.value.SegundoApellido.substr(1).toLowerCase();
+                            this.referenciaForm.value.SegundoApellido =  this.referenciaForm.value.SegundoApellido.charAt(0).toUpperCase() + 
+                            this.referenciaForm.value.SegundoApellido.slice(1).toLowerCase();
                             }
                             this.itemsFamiliaPersonal.push(this.referenciaForm.value);
                             this.referenciaForm.reset();
@@ -22045,10 +22159,17 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
               }
               this.conyugueForm.get('TelefonoEmpresa')?.setValue(result.conyugueDto.EmpresaLabora);
               this.conyugueForm.get('DetalleOcupacionC')?.setValue(result.conyugueDto.DetalleOcupacion);
+              
+              const capitalizedValues = this.CapitalizeNombresConyuge();
+            
+              if ((capitalizedValues.primerNombre && capitalizedValues.primerNombre.trim() === '') || (capitalizedValues.primerApellido && capitalizedValues.primerApellido.trim() === '')) {
+                this.notif.onWarning('Advertencia', 'Debe diligenciar primer nombre y primer apellido.');
+              } else {
 
-              this.itemsConyugue.push(this.conyugueForm.value);
-              this.itemConyugueConsultado.push(this.conyugueForm.value);
-              this.conyugueForm.reset();
+                this.itemsConyugue.push(this.conyugueForm.value);
+                this.itemConyugueConsultado.push(this.conyugueForm.value);
+                this.conyugueForm.reset();
+              }
             }
             //#endregion
 
@@ -25416,39 +25537,53 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     }
   }
 
-  PreCargarPais() {
-    this.dataPaisesAll.forEach((elementPais : any ) => {
-      if (elementPais.IdPais === 42 ) {
-        this.PaisMapper = elementPais;
-        this.PaisMapperAct = elementPais;
-        this.PaisMapperNac = elementPais;
-        this.PaisMapperRefe = elementPais;
-        this.PaiseCargaInicial = elementPais.Descripcion;
-        this.basicosFrom.get('paisExpedicion')?.setValue(elementPais.IdPais);
-        this.basicosFrom.get('paisNacimiento')?.setValue(elementPais.IdPais);
-        this.contactoForm.get('Pais')?.setValue(elementPais.IdPais);
+PreCargarPais(val: number) {
+  const pais = this.dataPaisesAll.find((elementPais: any) => elementPais.IdPais === 42);
 
-        this.contactoForm.controls['Pais'].setErrors(null);
-        this.contactoForm.controls['Pais'].clearValidators();
-
-        this.activoForm.get('Pais')?.setValue(elementPais.IdPais);
-        this.referenciaForm.get('Pais')?.setValue(elementPais.IdPais);
-
-        this.recursosGeneralesService.GetDepartamentosList(elementPais.IdPais).subscribe(
-          resultDepart => {
-            this.dataDepartamentoNaci = resultDepart;
-            this.dataDepartamentoExp = resultDepart;
-            this.bloqDeparta = null;
-            this.bloqDepartaCont = null;
-            this.bloqDepartaRef = null;
-            this.bloqDepartaExp = null;
-            this.bloqDepartaAct = null;
-            this.dataDepartamentos = resultDepart;
-        });
+  switch(val){
+    case 1: //Precarga país para TAB REFERENCIAS
+      if (pais) {
+        this.referenciaForm.get('Pais')?.setValue(pais.IdPais);
+        //Ejecutan la función del método change para habilitar los campos Departamento
+        this.GetDepartamentosReferenList(this.referenciaForm.value)
+      } else {
+        console.error('No se precarga país Referencias');
       }
-
-    });
+    break;
+    case 2: //Precarga país para TAB CONTACTO
+      if (pais) {
+        this.contactoForm.get('Pais')?.setValue(pais.IdPais);
+        //Ejecutan la función del método change para habilitar los campos Departamento
+        this.GetDepartamentosContactoList(this.contactoForm.value);
+      } else {
+        console.error('No se precarga país Datos contacto');
+      }
+    break;
+    case 3: //Precarga país para DATOS BASICOS
+    if (pais) {
+      this.basicosFrom.get('paisNacimiento')?.setValue(pais.IdPais);
+      this.basicosFrom.get('paisExpedicion')?.setValue(pais.IdPais);
+      this.basicosFrom.get('IdNacionalidad')?.setValue(pais.IdPais);
+      //Ejecutan la función del método change para habilitar los campos Departamento
+      this.GetDepartamentosListExp(this.basicosFrom.value);
+      this.GetDepartamentosList(this.basicosFrom.value);
+    } else {
+      console.error('No se precarga país basicos');
+    }
+    break;
+    case 4: //Precarga país para TAB ACTIVOS
+    if (pais) {
+      this.activoForm.get('Pais')?.setValue(pais.IdPais);
+     //Ejecutan la función del método change para habilitar los campos Departamento
+      this.GetDepartamentosActivosist(this.activoForm.value)
+    } else {
+      console.error('No se precarga país activos');
+    }
+    break;
   }
+}
+
+
   NoPermitirTab() {
      $('#CiuRefe').on('keydown', function (e : any) {
     //  $('#').addEventListener('keydown', function (e) {

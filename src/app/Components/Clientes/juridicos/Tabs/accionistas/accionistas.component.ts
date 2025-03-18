@@ -59,7 +59,6 @@ export class AccionistasComponent implements OnInit {
 
   ngOnInit() {
     this.IrArriba();
-    this.RazonNombreCapitalice();
     this.itemAccionistas = [];
     this.GetTipoDocumentoAccionista();
     this.validarAccionistas();
@@ -132,7 +131,7 @@ export class AccionistasComponent implements OnInit {
             result => {
               if (result === null) {
                 this.notif.onWarning('Advertencia', 'No se encontró el accionista.');
-            
+                this.bloquearFormAcc = null;
               } else {
                 this.esOld = true;
                 this.esNew = false;
@@ -185,6 +184,7 @@ export class AccionistasComponent implements OnInit {
                 // this.loading = false;
                 if (result === null) {
                   this.notif.onWarning('Advertencia', 'No se encontró el accionista.');
+                  this.bloquearFormAcc = null;
                 } else  {
                   this.esOld = true;
                   this.esNew = false;
@@ -583,12 +583,6 @@ export class AccionistasComponent implements OnInit {
     }
   }
 
-  RazonNombreCapitalice() {
-    let self = this;
-    $('#razonNombre').keyup(function () {
-      $(self).val($(self).val().substr(0, 1).toUpperCase() + $(self).val().substr(1).toLowerCase());
-    });
-  }
 
   GuardarLog(formulario : any , operacion : number, cuenta : number, tercero : number, modulo : number) {
     this.generalesService.Guardarlog(formulario, operacion, cuenta, tercero, modulo).subscribe(
@@ -613,5 +607,20 @@ export class AccionistasComponent implements OnInit {
 
   }
   //#endregion
+
+  validarValorCampoNombres(campoJquery: string, campoAngular: string) {
+    let valorCampo = $('#' + campoJquery).val().toString().trim();
+    
+    if (valorCampo.length === 0) {
+      this.accionistasFrom.get(campoAngular)?.reset();
+    } else {
+      let valorCorregido = valorCampo
+        .toLowerCase()
+        .replace(/\b[á-úa-zA-Z]+/g, (letra: any) => letra.charAt(0).toUpperCase() + letra.slice(1));
+      
+      $('#' + campoJquery).val(valorCorregido);
+      this.accionistasFrom.get(campoAngular)?.setValue(valorCorregido);
+    }
+  }
 
 }

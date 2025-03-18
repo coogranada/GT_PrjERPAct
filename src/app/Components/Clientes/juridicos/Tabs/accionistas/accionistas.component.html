@@ -36,7 +36,7 @@
                         <div class="form-group" id="1">
                             <label class="textBlod">Razón social o nombre completo: </label>
                             <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
-                            <input type="text" class="form-control" formControlName="RazonNombre" id="razonNombre" [attr.disabled]="bloquearFormAcc">
+                            <input type="text" class="form-control" formControlName="RazonNombre" id="razonNombre" [attr.disabled]="bloquearFormAcc" (blur)="validarValorCampoNombres('razonNombre','RazonNombre')">
                             <span class="help-block validationSpan" *ngIf="accionistasFrom.controls['RazonNombre'].errors?.['required'] && (accionistasFrom.controls['RazonNombre'].dirty || accionistasFrom.controls['RazonNombre'].touched)">
                 La razón social o nombre completo es obligatorio.
               </span>
