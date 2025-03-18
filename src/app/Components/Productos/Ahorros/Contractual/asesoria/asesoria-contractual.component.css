@@ -22,3 +22,12 @@
 .pmayuscula {
     text-transform: capitalize;
 }
+
+.creacion-form {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.no-wrap-t {
+    white-space: nowrap;
+}

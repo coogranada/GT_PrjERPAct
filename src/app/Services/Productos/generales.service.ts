@@ -149,7 +149,7 @@ export class GeneralesService {
             IdAsesor: +dataUser.lngTercero,
             NumeroAsesoria:  NumeroAsesoria == 0 ? formValue.NumeroAsesoria : NumeroAsesoria
         };
-        this.url = this.environment.Url + '/GuardarLogAsesoria';
+        this.url = this.environment.Url + '/GuardarLogAsesoria';        
         return this._http.post<any>(this.url, parametersLOG);
     }
     Autofocus(nameInput : string) {
