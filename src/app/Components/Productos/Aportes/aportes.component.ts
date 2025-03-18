@@ -216,6 +216,7 @@ export class AportesComponent implements OnInit {
       let data = localStorage.getItem('Data');
       this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
       localStorage.removeItem('TerceroAportes');
+      
       if (this.dataUser.NumeroOficina === '3') {
         this.notif.onWarning('Advertencia', 'No se puede abrir una cuenta en la oficina de administración.');
         this.BloquearBuscar = false;
@@ -1782,6 +1783,7 @@ export class AportesComponent implements OnInit {
       this.notif.onWarning('Advertencia', 'Datos incorrectos.');
       return;
     } 
+    this.btnOpcionActualizarBeneficiario = false;
     let Accion: string = "Crear";
     let IdBeneficiario: number = 0;
     let fechaMatricula = formatDate(new Date(), 'yyyy/MM/dd  HH:mm', 'en'); 
@@ -2379,6 +2381,7 @@ export class AportesComponent implements OnInit {
     this.aportesFrom.get('IdUserLogin')?.setValue(this.dataUser.IdAsesor);
   }
   ObtenerHistorial() {
+    console.log("histo")
     this.loading = true;
     const IdOficina = this.aportesFrom.get('IdOficina')?.value ;
     const IdProductoCuenta = this.aportesFrom.get('IdProductoCuenta')?.value ;
@@ -2387,6 +2390,7 @@ export class AportesComponent implements OnInit {
     this.aportesServices.ObtenerHistorial
       ({ 'IdOficina': IdOficina, 'IdProductoCuenta': IdProductoCuenta, 'IdConsecutivo': IdConsecutivo, 'IdDigito': IdDigito  }).subscribe(
         result => {
+          console.log("h",result)
           this.loading = false;
           this.dataHistorial = result;
           this.dataHistorial.forEach(element => {

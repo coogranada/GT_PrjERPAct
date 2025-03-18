@@ -63,7 +63,6 @@ export class ConsecutivoTituloComponent implements OnInit {
   public BloquearMotivo : boolean | null = false;
 
   btnGuardar : boolean = false;
-  alertaMostrada = false;
   operacionEscogida = '';
   UsuarioYFechaReasignar = true;
   UsuarioYFechaAsignar = true;
@@ -84,8 +83,7 @@ export class ConsecutivoTituloComponent implements OnInit {
   motivo = false;
   saltoDeLinea = false;
   btn = true;
-  mensajeMostradoLibretas = false;
-  mensajeConfirmarMostrado = false
+  
   libretasAsignarFinal = false;
   NroLibretasngM = "";
   libretaHTML = document.querySelector("#libretas");
@@ -264,18 +262,14 @@ export class ConsecutivoTituloComponent implements OnInit {
     if (this.Iddocumento === '2') {
       this.notif.onWarning('Advertencia', 'La tarjeta no se encuentra asignada.');
     } else {
-      if (!this.mensajeMostradoLibretas) {
-        this.notif.onWarning('Advertencia', 'El registro no se encuentra asignado.');
-        if(this.consecutivoOperacionFrom.get("Codigo")?.value == '76') {
-          this.consecutivoFrom.get('NroRegistro')?.reset();         
-        }
-        this.mensajeMostradoLibretas = true;
+      
+      this.notif.onWarning('Advertencia', 'El registro no se encuentra asignado.');
+      if(this.consecutivoOperacionFrom.get("Codigo")?.value == '76') {
+        this.consecutivoFrom.get('NroRegistro')?.reset();         
       }
     }
   }
   ObtenerInfoTitulo(IntNroTitulo : string = "", Producto : number = 0) {
-    this.mensajeMostradoLibretas = false;
-    this.mensajeConfirmarMostrado = false;
     if (IntNroTitulo === undefined || IntNroTitulo === null || IntNroTitulo === "") {
       IntNroTitulo = this.consecutivoFrom.get('NroRegistro')?.value;
       this.BloquearBoton = false;
@@ -380,7 +374,6 @@ export class ConsecutivoTituloComponent implements OnInit {
             console.log(errorMessage);
           });
       }
-      this.alertaMostrada = false;
     }
     else if (this.IdModulo === 25) {
       this.ConsecutivotituloService.ObtenerNroTituloPagare(IntNroTitulo).subscribe(
@@ -444,8 +437,6 @@ export class ConsecutivoTituloComponent implements OnInit {
     this.btn = false;
     this.resultOficinaDestino = [];
     this.BloquearBoton = true;
-    this.mensajeConfirmarMostrado = false;
-    this.mensajeMostradoLibretas = false;
     if (this.consecutivoOperacionFrom.get('Codigo')?.value !== '78') {
       if (this.consecutivoOperacionFrom.get('Codigo')?.value !== '76') {
         if ((Iddocumento === "1" || Iddocumento === "6") && this.Idmodulo === '38') {
@@ -494,8 +485,6 @@ export class ConsecutivoTituloComponent implements OnInit {
     this.consecutivoFrom.get('NroTituloInicial')?.reset();
     this.consecutivoFrom.get('NroTituloFinal')?.reset();
     this.generalesService.Autofocus('documentos');
-    this.mensajeConfirmarMostrado = false;
-    this.mensajeMostradoLibretas = false;
   }
   ValorSeleccionadoModulo(Idmodulo : string) {
     this.ClearSelects(true);
@@ -512,8 +501,6 @@ export class ConsecutivoTituloComponent implements OnInit {
     this.BloquearBoton = true;
     this.buscarDisponible = true;
     this.resultOficinaDestino = [];
-    this.mensajeConfirmarMostrado = false;
-    this.mensajeMostradoLibretas = false;
     if (this.consecutivoOperacionFrom.get('Codigo')?.value === '45' && Idmodulo === '38') {
       this.BloquearProductos = null;
       this.disponibles = false;
@@ -702,8 +689,6 @@ export class ConsecutivoTituloComponent implements OnInit {
     this.formAsignar = true;
     this.btn = false;
     this.BloquearBoton = true;
-    this.mensajeConfirmarMostrado = false;
-    this.mensajeMostradoLibretas = false;
     if (this.consecutivoOperacionFrom.get('Codigo')?.value === '45') { // Asignar titulo
       var ofi = this.ValidarOficina("asignar títulos");
       if (ofi) {
@@ -1160,8 +1145,6 @@ export class ConsecutivoTituloComponent implements OnInit {
     const Final = parseInt(this.consecutivoFrom.get('NroTituloFinal')?.value);
     $("#libretasFin").val(isNaN(Final)? '' : Final);
     const Producto = parseInt(this.consecutivoFrom.get('IdProducto')?.value);
-    this.mensajeConfirmarMostrado = false;
-    this.mensajeMostradoLibretas = false;
 
     if (this.consecutivoOperacionFrom.get('Codigo')?.value !== '45') {
       console.log("R!",Inicial)
@@ -1220,7 +1203,6 @@ export class ConsecutivoTituloComponent implements OnInit {
           });
       }
     }
-    this.mensajeMostradoLibretas = false;
   }
   BuscarLibreta() {
     const Inicial = parseInt(this.consecutivoFrom.get('NroTituloInicial')?.value);
@@ -1397,8 +1379,6 @@ export class ConsecutivoTituloComponent implements OnInit {
     const Final = parseInt(this.consecutivoFrom.get('NroTituloFinal')?.value);
     const Producto = parseInt(this.consecutivoFrom.get('IdProducto')?.value);
     this.consecutivoFrom.get('IdOficinaDestino')?.reset();
-    this.mensajeConfirmarMostrado = false;
-    this.mensajeMostradoLibretas = false;
       if (this.consecutivoOperacionFrom.get('Codigo')?.value == '2') {
         this.BloquearBoton = null;
       }
@@ -1406,7 +1386,6 @@ export class ConsecutivoTituloComponent implements OnInit {
         if (Final >= Inicial) {
           this.BloquearBoton = false;
           this.ObtenerInfoTitulo(Inicial.toString(), Producto);
-          this.mensajeMostradoLibretas = false;
         } else if (isNaN(Final) && isNaN(Inicial) && this.IdModulo == 38) {
           this.notif.onWarning('Advertencia', 'Rango Incorrecto.');
           this.resultOficinaDestino = [];
@@ -1845,10 +1824,7 @@ export class ConsecutivoTituloComponent implements OnInit {
       }
     });
     if (!titulosCorrectos || !estadoCorrecto) {
-      if (!this.alertaMostrada) {
-        this.notif.onWarning('Advertencia', 'El rango a trasladar no cumple las condiciones.');
-        this.alertaMostrada = true;
-      }
+      this.notif.onWarning('Advertencia', 'El rango a trasladar no cumple las condiciones.');
       this.consecutivoFrom.get('NroTituloInicial')?.setValue('');
       this.consecutivoFrom.get('NroTituloFinal')?.setValue('');
       this.consecutivoFrom.get('IdOficina')?.setValue('');
@@ -2242,10 +2218,7 @@ export class ConsecutivoTituloComponent implements OnInit {
     });
 
     if (!titulosCorrectos || !estadoCorrecto) {
-      if (this.mensajeConfirmarMostrado = false) {
-        this.mensajeConfirmarMostrado = true;
-        this.notif.onWarning('Advertencia', 'El rango a confirmar no cumple las condiciones.');
-      }
+      this.notif.onWarning('Advertencia', 'El rango a confirmar no cumple las condiciones.');
       this.consecutivoFrom.get('NroTituloInicial')?.setValue('');
       this.consecutivoFrom.get('NroTituloFinal')?.setValue('');
       this.consecutivoFrom.get('IdOficina')?.setValue('');
