@@ -1,6 +1,6 @@
 <!-- Masked inputs -->
 <div>
-    <form method="get" [formGroup]="infoJuridicoFrom">
+    <form method="get" [formGroup]="infoJuridicoFrom" autocomplete="off">
         <div class="panel-body">
             <div class="row">
                 <!-- {{dataShared}} -->
@@ -37,7 +37,7 @@
                         <div class="form-group" id="1">
                             <label class="textBlod">Razón social: </label>
                             <span class="textBigRed">*</span>
-                            <input type="text" class="form-control Capitalice" id="razonSocial" formControlName="RazonSocial" [attr.disabled]="bloquearRazonSocial">
+                            <input type="text" class="form-control Capitalice" id="razonSocial" formControlName="RazonSocial" [attr.disabled]="bloquearRazonSocial" (blur)="validarValorCampoNombres('razonSocial','RazonSocial')">
                             <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['RazonSocial'].errors?.['required'] && (infoJuridicoFrom.controls['RazonSocial'].dirty || infoJuridicoFrom.controls['RazonSocial'].touched)">
                       La razón social es obligatoria.
                     </span>

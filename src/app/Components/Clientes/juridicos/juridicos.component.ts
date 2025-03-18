@@ -457,11 +457,11 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     });
 
     this.contactoComponet.PrecargarPais.subscribe(res => {
-      this.PreCargarPais();
+      this.PreCargarPais(2);
     });
 
     this.referenciasComponent.PrecargarPais.subscribe(res => {
-      this.PreCargarPais();
+      this.PreCargarPais(3);
     })
   }
 
@@ -680,7 +680,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
               this.patrimonioComponent.patrimonioFrom.get('ObligacionesFinancieras')?.setValue(0);
               this.patrimonioComponent.patrimonioFrom.get('CuentaPorPagar')?.setValue(0);
               this.patrimonioComponent.patrimonioFrom.get('OtrosPasivos')?.setValue(0);
-              this.PreCargarPais();
+              this.PreCargarPais(1);
               this.infoJuridicoComponent.PreguntaAsesorExt = false;
         } else if (operaSeleccionada === 31) { // Aprobar y o negrar ingreso
           this.AlertaProbaroNegar(operaSeleccionada);
@@ -6253,7 +6253,35 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       this.patrimonioComponent.TotalPatrimonio = 0;
   }
 
-  PreCargarPais() {
+
+  PreCargarPais(val: number) {
+    const pais = this.infoJuridicoComponent.dataPais.find((elementPais: any) => elementPais.IdPais === 42);
+    
+    if (pais) {
+
+      switch(val){
+        case 1: //Datos básicos
+          this.infoJuridicoComponent.infoJuridicoFrom.get('Pais')?.setValue(pais.IdPais);
+          this.infoJuridicoComponent.GetDepartamentosList(this.infoJuridicoComponent.infoJuridicoFrom.value)
+        break
+        case 2://Contacto
+          this.contactoComponet.contactoFrom.get('Pais')?.setValue(pais.IdPais);
+          this.contactoComponet.PaisMapper = pais;
+          this.contactoComponet.GetDepartamentosList(this.contactoComponet.contactoFrom.value);
+        break
+        case 3://Referencia
+         this.referenciasComponent.referenciasFrom.get('Pais')?.setValue(pais.IdPais);
+         this.referenciasComponent.PaisMapper = pais;
+         this.referenciasComponent.GetDepartamentosList(this.referenciasComponent.referenciasFrom.value);
+        break
+      }
+
+    }
+  }
+  
+
+  
+  PreCargarPais_() {
 
       this.infoJuridicoComponent.dataPais.forEach((elementPais : any) => {
         if (elementPais.IdPais === 42 ) {

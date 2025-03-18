@@ -2243,4 +2243,21 @@ value : any ;
   }
   
   //#endregion
+
+  validarValorCampoNombres(campoJquery: string, campoAngular: string) {
+    let valorCampo = $('#' + campoJquery).val().toString().trim();
+    
+    if (valorCampo.length === 0) {
+      this.infoJuridicoFrom.get(campoAngular)?.reset();
+    } else {
+      let valorCorregido = valorCampo
+        .toLowerCase()
+        .replace(/\b[á-úa-zA-Z]+/g, (letra: any) => letra.charAt(0).toUpperCase() + letra.slice(1));
+      
+      $('#' + campoJquery).val(valorCorregido);
+      this.infoJuridicoFrom.get(campoAngular)?.setValue(valorCorregido);
+    }
+  }
+  
+
 }

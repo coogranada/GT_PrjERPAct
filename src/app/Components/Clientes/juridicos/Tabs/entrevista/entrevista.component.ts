@@ -410,6 +410,7 @@ export class EntrevistaComponent implements OnInit {
     console.log('Cantidad -' + this.entrevistaModelLst.length);
     console.log('Cliente selec - '+ this.clienteSeleccionado);
     if (this.infoTabAllEntrevista.BasicosDto.IdRelacion === '15' && this.entrevistaModelLst.length === 0) {
+      this.loading = true;
       this.siguiente = true;
       this.emitEvent.emit(this.positionTab);
       this.infoTabAllEntrevista.EntrevistaDto = {};
@@ -423,11 +424,13 @@ export class EntrevistaComponent implements OnInit {
       this.tratamientoForm.get('checkTratamiento')?.setValue(true);
       this.GuardarJuridico(this.infoTabAllEntrevista);
     } else {
+      this.loading = true;
       const valide = this.ValidarPreguntasEntrevistas();
       if (!valide) {
         this.notif.onWarning('Advertencia', 'Debe responder todas las preguntas.');
+        this.loading = false;
      } else {
-      
+        this.loading = true;
         this.allItemFormEntrevista = [];
         this.infoTabAllEntrevista.EntrevistaDto = {};
         this.allItemFormEntrevista.push(this.entrevistaForm.value);
@@ -442,10 +445,11 @@ export class EntrevistaComponent implements OnInit {
         this.infoTabAllEntrevista.userWork = dataUser.Usuario;
         console.log(this.infoTabAllEntrevista);
         this.GuardarJuridico(this.infoTabAllEntrevista);
+        this.loading = false;
       }
     }
-    this.loading = false;
   }
+
     private MapearInformacionEntrevista() {
     this.allItemFormEntrevista.forEach(entrevista => {
     this.entrevistaModel = new EntrevistaModel();
@@ -607,7 +611,6 @@ export class EntrevistaComponent implements OnInit {
     this.juridicoService.GuardarJuridicosAll(infoTotal).subscribe(result => {
     /// debugger
       if (result != null) {
-        this.loading = false;
         localStorage.setItem('IdModuloActivo', window.btoa(JSON.stringify(12)));
         const dataJuridico = result;
         this.GuardarLog(result, this.OperacionSeleccionada, 0, dataJuridico.BasicosDto.IdTercero,12);
@@ -619,6 +622,7 @@ export class EntrevistaComponent implements OnInit {
         this.DesbloquearRespuesta3 = true;
         this.DesbloquearRespuesta16 = true;
         this.DesbloquearRespuesta13 = true;
+        this.loading = false;
         this.IrArriba();
       }
       else {
