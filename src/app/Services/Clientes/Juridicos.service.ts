@@ -84,7 +84,7 @@ export class JuridicosService {
         return this._http.get<any>(this.url,{params: params });
     } 
     CambiarRelacion(juridico: string, info: string, docu: string, asesor: string, objeto: string): Observable<any> {
-        this.url = `${this.environment.Url}/CambiarEstadoJuridico`;
+        this.url = `${this.environment.Url}/CambiarRelacionJuridico`;
         const params = new HttpParams()
         .set('juridico', juridico)
         .set('info', info)

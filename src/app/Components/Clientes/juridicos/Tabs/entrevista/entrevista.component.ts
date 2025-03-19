@@ -403,6 +403,7 @@ export class EntrevistaComponent implements OnInit {
       this.EnableUpdateEntrevista = false;
     }
   }
+ 
   GuardarJuridicoCompleto() {
     this.loading = true;
     let data = localStorage.getItem('Data');
@@ -445,7 +446,6 @@ export class EntrevistaComponent implements OnInit {
         this.infoTabAllEntrevista.userWork = dataUser.Usuario;
         console.log(this.infoTabAllEntrevista);
         this.GuardarJuridico(this.infoTabAllEntrevista);
-        this.loading = false;
       }
     }
   }
@@ -608,9 +608,11 @@ export class EntrevistaComponent implements OnInit {
     }
     console.log('infoTotal - Guardar juridico: ' + JSON.stringify(infoTotal));
    //debugger
+    this.loading = true;
     this.juridicoService.GuardarJuridicosAll(infoTotal).subscribe(result => {
     /// debugger
       if (result != null) {
+        this.loading = true;
         localStorage.setItem('IdModuloActivo', window.btoa(JSON.stringify(12)));
         const dataJuridico = result;
         this.GuardarLog(result, this.OperacionSeleccionada, 0, dataJuridico.BasicosDto.IdTercero,12);
