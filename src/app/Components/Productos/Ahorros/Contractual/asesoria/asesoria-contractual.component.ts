@@ -1535,6 +1535,8 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
 
       this.asesoriacontractualFrom.get('TasaEfectiva')?.setValue(this.dataTasaEfectiva);
       this.asesoriacontractualFrom.get('TasaNominal')?.setValue(this.dataTasaNominal);
+      if(!this.asesoriacontractualFrom.get('SegundoNombre')?.value) this.asesoriacontractualFrom.value.SegundoNombre = ''
+      if(!this.asesoriacontractualFrom.get('SegundoApellido')?.value) this.asesoriacontractualFrom.value.SegundoApellido = ''
       this.AsesoriaContractualServices.GuardarAsesoriaContractual(this.asesoriacontractualFrom.value).subscribe(
         result => {
           const currentRelacionId = this.asesoriacontractualFrom.get('Clase')?.value;
@@ -1620,7 +1622,8 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
           this.asesoriacontractualFrom.get('TasaEfectiva')?.setValue(this.dataTasaEfectiva);
           this.asesoriacontractualFrom.get('TasaNominal')?.setValue(this.dataTasaNominal);
 
-
+          if(!this.asesoriacontractualFrom.get('SegundoNombre')?.value) this.asesoriacontractualFrom.value.SegundoNombre = ''
+          if(!this.asesoriacontractualFrom.get('SegundoApellido')?.value) this.asesoriacontractualFrom.value.SegundoApellido = ''
           this.AsesoriaContractualServices.GuardarAsesoriaContractual(this.asesoriacontractualFrom.value).subscribe(
             result => {
               const currentRelacionId = this.asesoriacontractualFrom.get('Clase')?.value;
@@ -1704,7 +1707,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
     const NumeroAsesoria = this.asesoriacontractualFrom.get('NumeroAsesoria')?.value;
     this.AsesoriaContractualServices.ObtenerHistorial(NumeroAsesoria).subscribe(
         result => {
-          this.dataHistorial = result.map((data: any) => ({ ...data, Detalles: data.Detalles.replace(/[{}"]+/gi, '').replace(/,/g, ' ') }));
+          this.dataHistorial = result.map((data: any) => ({ ...data, Detalles: data.Detalles?.replace(/[{}"]+/gi, '')?.replace(/,/g, ' ') }));
         },
         error => {
           const errorMessage = <any>error;
