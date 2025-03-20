@@ -1512,7 +1512,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
     if (this.creacionFrom.get('PrimerNombre')?.value !== null
       && this.creacionFrom.get('PrimerNombre')?.value !== undefined
       && this.creacionFrom.get('PrimerNombre')?.value !== '') {
-      this.asesoriacontractualFrom.get('TipoDocumento')?.setValue(this.creacionFrom.get('TipoDocumento')?.value);
+      this.asesoriacontractualFrom.get('IdTipoDocumento')?.setValue(this.creacionFrom.get('TipoDocumento')?.value);
       this.asesoriacontractualFrom.get('PrimerNombre')?.setValue(this.creacionFrom.get('PrimerNombre')?.value);
       this.asesoriacontractualFrom.get('SegundoNombre')?.setValue(this.creacionFrom.get('SegundoNombre')?.value);
       this.asesoriacontractualFrom.get('PrimerApellido')?.setValue(this.creacionFrom.get('PrimerApellido')?.value);
@@ -1625,7 +1625,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
 
           if(!this.asesoriacontractualFrom.get('SegundoNombre')?.value) this.asesoriacontractualFrom.value.SegundoNombre = '';
           if(!this.asesoriacontractualFrom.get('PrimerApellido')?.value) this.asesoriacontractualFrom.value.PrimerApellido = '';
-          if(!this.asesoriacontractualFrom.get('SegundoApellido')?.value) this.asesoriacontractualFrom.value.SegundoApellido = '';
+          if(!this.asesoriacontractualFrom.get('SegundoApellido')?.value) this.asesoriacontractualFrom.value.SegundoApellido = '';          
           this.AsesoriaContractualServices.GuardarAsesoriaContractual(this.asesoriacontractualFrom.value).subscribe(
             result => {
               const currentRelacionId = this.asesoriacontractualFrom.get('Clase')?.value;
@@ -1846,7 +1846,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
       BuscarDocumento: BuscarDocumento,
       BuscarNombre: BuscarNombre,
       Nombre: Nombre,
-      TipoDocumento: TipoDocumento,
+      IdTipoDocumento: TipoDocumento,
       NumeroDocumento: NumeroDocumento,
       InteresBruto: InteresBruto,
       Retencion: Retencion,
