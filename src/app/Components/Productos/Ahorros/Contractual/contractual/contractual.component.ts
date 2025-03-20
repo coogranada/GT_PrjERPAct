@@ -1815,18 +1815,25 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
     }
   }
   BuscarPorCuenta() {
-    if (this.contractualFrom.get('IdOficina')?.value !== ''
-      && this.contractualFrom.get('IdOficina')?.value !== undefined
-      && this.contractualFrom.get('IdOficina')?.value !== null
-      && this.contractualFrom.get('IdProductoCuenta')?.value !== ''
-      && this.contractualFrom.get('IdProductoCuenta')?.value !== undefined
-      && this.contractualFrom.get('IdProductoCuenta')?.value !== null
-      && this.contractualFrom.get('IdConsecutivo')?.value !== ''
-      && this.contractualFrom.get('IdConsecutivo')?.value !== undefined
-      && this.contractualFrom.get('IdConsecutivo')?.value !== null
-      && this.contractualFrom.get('IdDigito')?.value !== ''
-      && this.contractualFrom.get('IdDigito')?.value !== undefined
-      && this.contractualFrom.get('IdDigito')?.value !== null
+
+    const idOficina = this.contractualFrom.get('IdOficina')?.value;
+    const idProductoCuenta = this.contractualFrom.get('IdProductoCuenta')?.value;
+    const idConsecutivo = this.contractualFrom.get('IdConsecutivo')?.value;
+    const idDigito = this.contractualFrom.get('IdDigito')?.value;
+
+    const todosVacios = 
+    (idOficina === '' || idOficina === undefined || idOficina === null) &&
+    (idProductoCuenta === '' || idProductoCuenta === undefined || idProductoCuenta === null) &&
+    (idConsecutivo === '' || idConsecutivo === undefined || idConsecutivo === null) &&
+    (idDigito === '' || idDigito === undefined || idDigito === null);
+
+
+   if (!todosVacios){
+    if (
+      idOficina !== '' && idOficina !== undefined && idOficina !== null &&
+      idProductoCuenta !== '' && idProductoCuenta !== undefined && idProductoCuenta !== null &&
+      idConsecutivo !== '' && idConsecutivo !== undefined && idConsecutivo !== null &&
+      idDigito !== '' && idDigito !== undefined && idDigito !== null
     ) {
       this.Bloquear = false;
       this.BloquearFormaPago = false;
@@ -1881,9 +1888,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           this.BloquearBuscar = null;
         }
       );
-    } else {
+    } else{
       this.notif.onWarning('Advertencia', 'Número de cuenta incompleto.');
     }
+  }
   }
   BuscarCuentaParaPuntos() {
     this.ContractualServices.getBuscarCuenta(this.contractualFrom.value).subscribe(
@@ -16788,17 +16796,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
     if (this.contractualFrom.get('DocumentoTitular')?.value !== null
       && this.contractualFrom.get('DocumentoTitular')?.value !== undefined
       && this.contractualFrom.get('DocumentoTitular')?.value !== '') {
-      if (this.contractualFrom.get('NumeroDocumento')?.value !== this.contractualFrom.get('DocumentoTitular')?.value) {
+      if (this.contractualFrom.get('NumeroDocumento')?.value !== this.contractualFrom.get('DocumentoTitular')?.value.trim()) {
         if (this.dataObjet === undefined) {
           this.loading = true;
           this.ContractualServices.BuscarTitular(this.contractualFrom.get('DocumentoTitular')?.value, '*').subscribe(
             result => {
               this.loading = false;
               if (result === null) {
-                this.notif.onWarning('Alerta', 'No se encontró el titular.');
+                this.notif.onWarning('Advertencia', 'No se encontró el titular.');
               } else {
                 if (result.IdRelacion === 10) {
-                  this.notif.onWarning('Alerta', 'El autorizado no puede ser menor.');
+                  this.notif.onWarning('Advertencia', 'El autorizado no puede ser menor.');
                 } else {
                   this.contractualFrom.get('DocumentoTitular')?.setValue(result.Documento);
                   this.contractualFrom.get('NombreTitular')?.setValue(result.PrimerApellido + ' ' +
@@ -16830,10 +16838,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
               result => {
                 this.loading = false;
                 if (result === null) {
-                  this.notif.onWarning('Alerta', 'No se encontró el titular.');
+                  this.notif.onWarning('Advertencia', 'No se encontró el titular.');
                 } else {
                   if (result.IdRelacion === 10) {
-                    this.notif.onWarning('Alerta', 'El autorizado no puede ser menor.');
+                    this.notif.onWarning('Advertencia', 'El autorizado no puede ser menor.');
                   } else {
                     this.BloquearDatoTitular = null;
                     this.contractualFrom.get('DocumentoTitular')?.setValue(result.Documento);
@@ -16851,7 +16859,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           }
         }
       } else {
-        this.notif.onWarning('Alerta', 'El autorizado debe ser diferente al titular.');
+        this.notif.onWarning('Advertencia', 'El autorizado debe ser diferente al titular.');
         this.clearTitulares();
       }
 
@@ -16869,10 +16877,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
             result => {
               this.loading = false;
               if (result.length === 0) {
-                this.notif.onWarning('Alerta', 'No se encontró el titular.');
+                this.notif.onWarning('Advertencia', 'No se encontró el titular.');
               } else if (result.length === 1) {
                 if (result[0].IdRelacion === 10) {
-                  this.notif.onWarning('Alerta', 'El autorizado no puede ser menor.');
+                  this.notif.onWarning('Advertencia', 'El autorizado no puede ser menor.');
                 } else {
                   this.contractualFrom.get('DocumentoTitular')?.setValue(result[0].Documento);
                   this.contractualFrom.get('NombreTitular')?.setValue(result[0].PrimerApellido + ' ' +
@@ -16907,10 +16915,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
               result => {
                 this.loading = false;
                 if (result.length === 0) {
-                  this.notif.onWarning('Alerta', 'No se encontró el titular.');
+                  this.notif.onWarning('Advertencia', 'No se encontró el titular.');
                 } else if (result.length === 1) {
                   if (result[0].IdRelacion === 10) {
-                    this.notif.onWarning('Alerta', 'El autorizado no puede ser menor.');
+                    this.notif.onWarning('Advertencia', 'El autorizado no puede ser menor.');
                   } else {
                     this.bloquearDatosTitulares = null;
                     this.contractualFrom.get('DocumentoTitular')?.setValue(result[0].Documento);
@@ -16932,7 +16940,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           }
         }
       } else {
-        this.notif.onWarning('Alerta', 'El autorizado debe ser diferente al titular.');
+        this.notif.onWarning('Advertencia', 'El autorizado debe ser diferente al titular.');
         this.clearTitulares();
       }
     }
@@ -17078,10 +17086,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
       result => {
         this.loading = false;
         if (result === null) {
-            this.notif.onWarning('Alerta', 'No se encontró el titular.');
+            this.notif.onWarning('Advertencia', 'No se encontró el titular.');
         } else {
         if (result.IdRelacion === 10) {
-          this.notif.onWarning('Alerta', 'El autorizado no puede ser menor.');
+          this.notif.onWarning('Advertencia', 'El autorizado no puede ser menor.');
         } else {
             if (this.contractualFrom.get('NumeroDocumento')?.value !== result.Documento) {
                 this.bloquearDatosTitulares = null;
@@ -17089,7 +17097,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
             this.contractualFrom.get('NombreTitular')?.setValue(result.PrimerApellido + ' ' +
               result.SegundoApellido + ' ' + result.PrimerNombre + ' ' + result.SegundoNombre);
           } else {
-            this.notif.onWarning('Alerta', 'El autorizado debe ser diferente al titular.');
+            this.notif.onWarning('Advertencia', 'El autorizado debe ser diferente al titular.');
             this.clearTitulares();
           } 
         }
@@ -17233,6 +17241,8 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
         this.contractualFrom.get('ValorPlan')?.reset();
         this.contractualFrom.get('CuotaMes')?.reset();
       }
+    }else{
+      this.contractualFrom.get('ValorPlan')?.reset();
     }
   }
   ObtenerTasa() {

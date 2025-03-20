@@ -71,6 +71,11 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
 
   ngOnInit() {
     console.log('esto se muestra desde el formato de impresion');
+    $('#ModalJuridicos').on('hidden.bs.modal', () => {
+      // Restaurar el padding-right y el overflow
+      document.body.style.paddingRight = '';  // Quitar padding extra
+      document.body.style.overflow = '';      // Restaurar el overflow
+    }); 
   }
 
   AbrirSolicitud(documento : string) {

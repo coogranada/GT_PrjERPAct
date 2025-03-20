@@ -2,11 +2,11 @@
     font-size: 12px;
 }
 
-.no-wrap{
+.no-wrap {
     flex-wrap: nowrap;
 }
 
-.wrap{
+.wrap {
     flex-wrap: wrap;
 }
 
@@ -25,3 +25,14 @@
     width: 200px !important;
     z-index: 9999;
 }
+
+.modal {
+    z-index: 1050;
+}
+
+body.modal-open {
+    padding-right: 0 !important;
+    overflow: auto !important;
+    /* Asegura que el scroll vuelva a estar disponible */
+}
+

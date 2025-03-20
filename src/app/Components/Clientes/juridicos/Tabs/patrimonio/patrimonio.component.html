@@ -11,7 +11,7 @@
                     <div class="form-group">
                         <label class="textBlod">Activos corrientes: </label>
                         <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
-                        <input type="text" class="form-control" formControlName="ActivosCorrientes" currencyMask [attr.disabled]="bloquearForm" (blur)="SumarActivos(); validValueActivoCorriente();" value="0">
+                        <input type="text" class="form-control" formControlName="ActivosCorrientes" currencyMask [options]="{precision : 0 }" [attr.disabled]="bloquearForm" (blur)="SumarActivos(); validValueActivoCorriente();" value="0">
                         <span class="help-block validationSpan" *ngIf="patrimonioFrom.controls['ActivosCorrientes'].errors?.['required']  && (patrimonioFrom.controls['ActivosCorrientes'].dirty || patrimonioFrom.controls['ActivosCorrientes'].touched)">
               Activos corrientes es obligatorio.
             </span>
@@ -22,7 +22,7 @@
                     <div class="form-group">
                         <label class="textBlod">Activos no corrientes: </label>
                         <span class="textBigRed"></span>
-                        <input type="text" class="form-control" formControlName="ActivosNoCorrientes" currencyMask [attr.disabled]="bloquearForm" (blur)="SumarActivos()" value="0">
+                        <input type="text" class="form-control" formControlName="ActivosNoCorrientes" currencyMask [options]="{precision : 0 }" [attr.disabled]="bloquearForm" (blur)="SumarActivos()" value="0">
                         <span class="help-block validationSpan" *ngIf="patrimonioFrom.controls['ActivosNoCorrientes'].errors?.['required']  && (patrimonioFrom.controls['ActivosNoCorrientes'].dirty || patrimonioFrom.controls['ActivosNoCorrientes'].touched)">
               Activos no corrientes es obligatorio.
             </span>
@@ -33,7 +33,7 @@
                     <div class="form-group">
                         <label class="textBlod">Otros activos : </label>
                         <span class="textBigRed"></span>
-                        <input type="text" class="form-control" formControlName="OtrosActivos" currencyMask [attr.disabled]="bloquearForm" (blur)="SumarActivos()" value="0">
+                        <input type="text" class="form-control" formControlName="OtrosActivos" currencyMask [options]="{precision : 0 }" [attr.disabled]="bloquearForm" (blur)="SumarActivos()" value="0">
                         <span class="help-block validationSpan" *ngIf="patrimonioFrom.controls['OtrosActivos'].errors?.['required']  && (patrimonioFrom.controls['OtrosActivos'].dirty || patrimonioFrom.controls['OtrosActivos'].touched)">
               Otros activos es obligatorio.
             </span>
@@ -54,7 +54,7 @@
                     <div class="form-group">
                         <label class="textBlod">Obligaciones financieras: </label>
                         <span class="textBigRed"></span>
-                        <input type="text" class="form-control" formControlName="ObligacionesFinancieras" currencyMask [attr.disabled]="bloquearForm" (blur)="SumarPasivos()" value="0">
+                        <input type="text" class="form-control" formControlName="ObligacionesFinancieras" currencyMask [options]="{precision : 0 }" [attr.disabled]="bloquearForm" (blur)="SumarPasivos()" value="0">
                         <span class="help-block validationSpan" *ngIf="patrimonioFrom.controls['ObligacionesFinancieras'].errors?.['required']  && (patrimonioFrom.controls['ObligacionesFinancieras'].dirty || patrimonioFrom.controls['ObligacionesFinancieras'].touched)">
               Obligaciones financieras es obligatorio.
             </span>
@@ -65,7 +65,7 @@
                     <div class="form-group">
                         <label class="textBlod">Cuentas por pagar: </label>
                         <span class="textBigRed"></span>
-                        <input type="text" class="form-control" formControlName="CuentaPorPagar" currencyMask [attr.disabled]="bloquearForm" (blur)="SumarPasivos()" value="0">
+                        <input type="text" class="form-control" formControlName="CuentaPorPagar" currencyMask [options]="{precision : 0 }" [attr.disabled]="bloquearForm" (blur)="SumarPasivos()" value="0">
                         <span class="help-block validationSpan" *ngIf="patrimonioFrom.controls['CuentaPorPagar'].errors?.['required']  && (patrimonioFrom.controls['CuentaPorPagar'].dirty || patrimonioFrom.controls['CuentaPorPagar'].touched)">
               Cuentas por pagar es obligatorio.
             </span>
@@ -76,7 +76,7 @@
                     <div class="form-group">
                         <label class="textBlod">Otros pasivos: </label>
                         <span class="textBigRed"></span>
-                        <input type="text" class="form-control" formControlName="OtrosPasivos" currencyMask [attr.disabled]="bloquearForm" (blur)="SumarPasivos()" value="0">
+                        <input type="text" class="form-control" formControlName="OtrosPasivos" currencyMask [options]="{precision : 0 }" [attr.disabled]="bloquearForm" (blur)="SumarPasivos()" value="0">
                         <span class="help-block validationSpan" *ngIf="patrimonioFrom.controls['OtrosPasivos'].errors?.['required']  && (patrimonioFrom.controls['OtrosPasivos'].dirty || patrimonioFrom.controls['OtrosPasivos'].touched)">
               Otros pasivos es obligatorio.
             </span>

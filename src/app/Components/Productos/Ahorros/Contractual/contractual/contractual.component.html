@@ -1,5 +1,5 @@
 <form>
-    <form method="get" [formGroup]="contractualFrom">
+    <form method="get" [formGroup]="contractualFrom" autocomplete="off">
         <div class="panel panel-white">
             <div class="panel-heading">
                 <h6 class="panel-title">Datos{{operacionEscogida}}</h6>
@@ -17,9 +17,13 @@
                 <div class="col-xs-12 col-md-12 col-lg-12">
                     <div class="col-xs-12 col-md-12 col-lg-12">
                         <!-- Inicio Operación -->
-                        <form method="get" [formGroup]="contractualOperacionFrom">
-                            <label class="col-xs-12 col-md-3 col-lg-1 textNegrilla">Operación:<span
-                                    class="grande">*</span></label>
+                        <form method="get" [formGroup]="contractualOperacionFrom" autocomplete="off">
+                            <div class="col-xs-12 col-md-3 col-lg-1 align-items-center">
+                                <br>
+                                <label class="textNegrilla">Operación:</label>
+                                <span class="grande"> *</span>
+                            </div>
+            
                             <div class="col-xs-10 col-md-8 col-lg-4">
                                 <select class="form-control" formControlName="Codigo" id="select"
                                     (change)=" ValorSeleccionado()">
@@ -267,7 +271,7 @@
                     <div class="col-xs-12 col-md-12 col-lg-12">
                         <br />
                         <!-- Inicio Asesor Externo -->
-                        <form method="get" [formGroup]="AsesorFrom">
+                        <form method="get" [formGroup]="AsesorFrom" autocomplete="off">
                             <div class="col-xs-12 col-md-3 col-lg-1">
                                 <label class="textNegrilla">Asesor externo:</label>
                             </div>
@@ -448,12 +452,12 @@
                                             class="form-control" formControlName="CuotaMes" *ngIf="!inputCuotaMes"
                                             [attr.disabled]="BloquearCuotaMes" (blur)="ValorTotalPlan()"
                                             (blur)="ObtenerTasa()" currencyMask
-                                            [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"
+                                            [options]="{prefix:'$ ',thousands:'.', decimal:'',precision: 0}"
                                             maxlength="10">
                                         <input style="text-align:right" type="text" id="SelectCuotaMes"
                                             class="form-control" formControlName="CuotaMes" *ngIf="!inputSinDecimal"
                                             [attr.disabled]="BloquearCuotaMes" (blur)="ValorTotalPlan()"
-                                            (blur)="ObtenerTasa()" currencyMask [options]="{prefix:'$ ',thousands:'.'}"
+                                            (blur)="ObtenerTasa()" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:'',precision: 0}"
                                             maxlength="10">
                                         <span class="help-block validationSpan"
                                             *ngIf="contractualFrom.controls['CuotaMes'].errors?.['pattern']">
@@ -471,12 +475,12 @@
                                         <input style="text-align:right" type="text" class="form-control"
                                             formControlName="ValorPlan" *ngIf="!inputCuotaMes"
                                             [attr.disabled]="BloquearValorTotalPlan" (blur)="ObtenerTasa()" currencyMask
-                                            [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"
+                                            [options]="{prefix:'$ ',thousands:'.', decimal:'',precision: 0}"
                                             maxlength="13">
                                         <input style="text-align:right" type="text" class="form-control"
                                             formControlName="ValorPlan" *ngIf="!inputSinDecimal"
                                             [attr.disabled]="BloquearValorTotalPlan" (blur)="ObtenerTasa()" currencyMask
-                                            [options]="{prefix:'$ ',thousands:'.'}" maxlength="13">
+                                            [options]="{prefix:'$ ',thousands:'.', decimal:'',precision: 0}" maxlength="13">
                                     </div>
                                     <!-- Fin ValorTotalPlan -->
                                 </div>
@@ -558,7 +562,7 @@
                                     <div class="col-xs-12 col-md-12 col-lg-1"> </div>
 
                                     <!-- Inicio Puntos adicionales   -->
-                                    <form method="get" [formGroup]="AdicionarPuntosFrom">
+                                    <form method="get" [formGroup]="AdicionarPuntosFrom" autocomplete="off">
                                         <div class="col-xs-12 col-md-4 col-lg-3">
                                             <label class="textNegrilla">Puntos adicionales:</label>
                                             <select class="form-control" name="select" id="SelectAdicionarPuntos"

@@ -36,7 +36,7 @@
                 <div class="form-group">
                     <label class="textBlod">Valor : </label>
                     <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
-                    <input type="text" class="form-control" formControlName="Valor" currencyMask [attr.disabled]="bloquearForm" (blur)="validarValor()">
+                    <input type="text" class="form-control" formControlName="Valor" currencyMask [options]="{precision : 0 }" [attr.disabled]="bloquearForm" (blur)="validarValor()">
                     <span class="help-block validationSpan" *ngIf="financieraFrom.controls['Valor'].errors?.required && (financieraFrom.controls['Valor'].dirty || financieraFrom.controls['Valor'].touched)">
                 El valor es obligatorio.
               </span>

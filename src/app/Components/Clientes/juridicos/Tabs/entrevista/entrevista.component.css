@@ -36,7 +36,19 @@
     
 }
 
-ngx-loading {
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: transparent;
+    z-index: 9998; 
+    pointer-events: auto; 
+  }
+  
+  
+  ngx-loading {
     position: fixed;
     top: 0;
     left: 0;
@@ -45,4 +57,5 @@ ngx-loading {
     z-index: 9999;
     pointer-events: none; 
   }
+  
   

@@ -69,7 +69,7 @@
                                 La ciudad solo acepta letras. </span>
                         </td>
                         <td>
-                            <input type="text" [attr.disabled]="DesbloquearRespuesta3" class="form-control" currencyMask formControlName="RPregunta24Si" placeholder="Monto promedio" (keydown)="habilitarActualizar()">
+                            <input type="text" [attr.disabled]="DesbloquearRespuesta3" class="form-control" currencyMask [options]="{precision : 0 }" formControlName="RPregunta24Si" placeholder="Monto promedio" (keydown)="habilitarActualizar()">
                             <span class="help-block validationSpan" *ngIf="entrevistaForm.controls['RPregunta24Si'].errors?.['required']  && 
                                                         (entrevistaForm.controls['RPregunta24Si'].dirty || entrevistaForm.controls['RPregunta24Si'].touched)">
                                 El monto promedio es obligatorio.
