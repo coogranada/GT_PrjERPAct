@@ -84,13 +84,13 @@
                             <span class="grande">*</span>
                         </div>
                         <div class="col-xs-4 col-md-3 col-lg-2">
-                            <input type="text" class="form-control" id="SelectNombre" maxlength="15" formControlName="NumeroDocumento" [attr.disabled]="BloquearNombre" (blur)="BuscarNombreXDocumento()" />
+                            <input type="text" class="form-control" id="SelectNombre" maxlength="15" formControlName="NumeroDocumento" [attr.disabled]="BloquearNombre" (blur)="BuscarNombreXDocumento()" (input)="onChangeAsociado()" />
                             <span class="help-block validationSpan" *ngIf="asesoriacontractualFrom.controls['NumeroDocumento'].errors?.['pattern']">
-                            El documento solo acepta números.
+                                Minimo 3 dígitos (alfanuméricos).
                             </span>
                         </div>
                         <div class="col-xs-6 col-md-5 col-lg-3">
-                            <input type="text" class="form-control pmayuscula" formControlName="Nombre" (blur)="ValidarCampoAsociado()" [attr.disabled]="BloquearNombre">
+                            <input type="text" class="form-control pmayuscula" formControlName="Nombre" (blur)="ValidarCampoAsociado()" (input)="asesoriacontractualFrom.get('NumeroDocumento')?.reset()" [attr.disabled]="BloquearNombre">
                             <span class="help-block validationSpan" *ngIf="MostrasAlertaAsociado">
                             Campo obligatorio.
                             </span>
@@ -388,17 +388,21 @@
                                             <table id="TablaDatosHistorial" class="table table-hover">
                                                 <thead>
                                                     <tr>
-                                                        <th class="text-bold">Nombre usuario</th>
-                                                        <th class="text-bold">Fecha</th>
-                                                        <th class="text-bold">Operación</th>
+                                                        <th class="text-bold no-wrap-t">Fecha</th>
+                                                        <th class="text-bold no-wrap-t">Oficina</th>
+                                                        <th class="text-bold no-wrap-t">Usuario responsable</th>
+                                                        <th class="text-bold no-wrap-t">Operación</th>
+                                                        <th class="text-bold no-wrap-t">Detalles</th>
 
                                                     </tr>
                                                 </thead>
                                                 <tbody *ngFor="let historial of dataHistorial;">
                                                     <tr>
-                                                        <td>{{historial.NombreCompleto}}</td>
-                                                        <td>{{historial.FechaHistorial | date:'yyyy/MM/dd HH:mm:ss'}}</td>
-                                                        <td>{{historial.Descripcion}}</td>
+                                                        <td class="no-wrap-t">{{historial.FechaHistorial | date:'yyyy/MM/dd HH:mm:ss'}}</td>
+                                                        <td class="no-wrap-t">{{historial.NombreOficina}}</td>
+                                                        <td class="no-wrap-t">{{historial.NombreCompleto}}</td>
+                                                        <td class="no-wrap-t">{{historial.Descripcion}}</td>
+                                                        <td class="no-wrap-t">{{ historial.Descripcion.includes('asesor externo') ? historial.Detalles : '' }}</td>
                                                     </tr>
                                                 </tbody>
 
@@ -616,52 +620,80 @@
                 <h6 class="modal-title">Registrar nombre</h6>
             </div>
             <div class="modal-body">
-                <form method="get" [formGroup]="creacionFrom">
-                    <div class="col-xs-12 col-md-12 col-lg-12">
+                <form method="get" [formGroup]="creacionFrom" class="pl-10 pr-10">
+                    <div class="creacion-form">
+                        <!-- Inicio TipoDocumento -->
+                        <div class="col-md-3">
+                            <label class="textNegrilla">Tipo documento:</label>
+                            <span class="grande"> *</span>
+                            <select class="form-control" formControlName="TipoDocumento" (change)="onChangeTipoDocumento(); onChangeCreacionForm()">
+                                <option value="">-- Seleccione --</option>
+                                <option *ngFor="let tipoDocumento of tiposDeDocumento"
+                                    [value]="tipoDocumento.Clase">
+                                    {{tipoDocumento.Descripcion}}</option>
+                            </select>
+                        </div>
+                        <!-- Fin TipoDocumento -->
 
-                        <!-- Inicio PrimerApellido -->
-                        <div class="col-xs-12 col-md-3 col-lg-3">
+                         <!-- Inicio PrimerApellido -->
+                         <div class="col-md-3" *ngIf="this.creacionFrom.get('TipoDocumento')?.value != 3">
                             <label class="textNegrilla">Primer apellido: <span class="grande">*</span></label>
-                            <input type="text" formControlName="PrimerApellido" class="form-control pmayuscula" [attr.disabled]="BloquearNombre" id="priApe" (blur)="validarValorCampo('priApe','PrimerApellido')" />
-                            <span class="help-block validationSpan" *ngIf="creacionFrom.controls['PrimerApellido'].errors?.['pattern']">
-                            El primer apellido solo acepta letras.
+                            <input type="text" formControlName="PrimerApellido" class="form-control pmayuscula"
+                                id="priApe"
+                                (input)="onChangeCreacionForm()" />
+                            <span class="help-block validationSpan"
+                                *ngIf="creacionFrom.controls['PrimerApellido'].errors?.['pattern']">
+                                El primer apellido solo acepta letras.
                             </span>
                         </div>
                         <!-- Fin PrimerApellido -->
                         <!-- Inicio SegundoApellido -->
-                        <div class="col-xs-12 col-md-3 col-lg-3">
+                        <div class="col-md-3" *ngIf="this.creacionFrom.get('TipoDocumento')?.value != 3">
                             <label class="textNegrilla">Segundo apellido:</label>
-                            <input type="text" formControlName="SegundoApellido" class="form-control pmayuscula" [attr.disabled]="BloquearNombre" id="segApe" (blur)="validarValorCampo('segApe','SegundoApellido')">
-                            <span class="help-block validationSpan" *ngIf="creacionFrom.controls['SegundoApellido'].errors?.['pattern']">
-                            El segundo apellido solo acepta letras.
+                            <input type="text" formControlName="SegundoApellido" class="form-control pmayuscula"
+                                id="segApe"
+                                (input)="onChangeCreacionForm()">
+                            <span class="help-block validationSpan"
+                                *ngIf="creacionFrom.controls['SegundoApellido'].errors?.['pattern']">
+                                El segundo apellido solo acepta letras.
                             </span>
                         </div>
                         <!-- Fin SegundoApellido -->
                         <!-- Inicio PrimerNombre -->
-                        <div class="col-xs-12 col-md-3 col-lg-3">
-                            <label class="textNegrilla">Primer nombre: <span class="grande">*</span> </label>
-                            <input type="text" formControlName="PrimerNombre" class="form-control pmayuscula" [attr.disabled]="BloquearNombre" id="priNom" (blur)="validarValorCampo('priNom','PrimerNombre')">
-                            <span class="help-block validationSpan" *ngIf="creacionFrom.controls['PrimerNombre'].errors?.['pattern']">
-                            El primer nombre solo acepta letras.
+                        <div class="col-md-3">
+                            <label class="textNegrilla">{{ this.creacionFrom.get('TipoDocumento')?.value == 3 ? 'Razón social' : 'Primer nombre' }}: <span class="grande">*</span> </label>
+                            <input type="text" formControlName="PrimerNombre" class="form-control pmayuscula"
+                                id="priNom"
+                                 (input)="onChangeCreacionForm()">
+                            <span class="help-block validationSpan"
+                                *ngIf="this.creacionFrom.get('TipoDocumento')?.value != 3 && creacionFrom.controls['PrimerNombre'].errors?.['pattern']">
+                                El primer nombre solo acepta letras.
                             </span>
                         </div>
                         <!-- Fin PrimerNombre -->
+                        
                         <!-- Inicio SegundoNombre -->
-                        <div class="col-xs-12 col-md-3 col-lg-3">
+                        <div class="col-md-3" *ngIf="this.creacionFrom.get('TipoDocumento')?.value != 3">
+                            <br>
                             <label class="textNegrilla">Segundo nombre:</label>
-                            <input type="text" formControlName="SegundoNombre" class="form-control pmayuscula" [attr.disabled]="BloquearNombre" id="segNom" (blur)="validarValorCampo('segNom','SegundoNombre')">
-                            <span class="help-block validationSpan" *ngIf="creacionFrom.controls['SegundoNombre'].errors?.['pattern']">
-                            El segundo nombre solo acepta letras.
+                            <input type="text" formControlName="SegundoNombre" class="form-control pmayuscula"
+                                id="segNom"
+                                (input)="onChangeCreacionForm()">
+                            <span class="help-block validationSpan"
+                                *ngIf="creacionFrom.controls['SegundoNombre'].errors?.['pattern']">
+                                El segundo nombre solo acepta letras.
                             </span>
                         </div>
                         <!-- Fin SegundoNombre -->
                         <!-- Inicio TelefonoAsesoria -->
-                        <div class="col-xs-12 col-md-3 col-lg-3">
-                            <br/>
+                        <div class="col-md-3">
+                            <br *ngIf="this.creacionFrom.get('TipoDocumento')?.value != 3">
                             <label class="textNegrilla">Celular: <span class="grande">*</span> </label>
-                            <input type="text" formControlName="TelefonoAsesoria" class="form-control pmayuscula" maxlength="10" [attr.disabled]="BloquearNombre">
-                            <span class="help-block validationSpan" *ngIf="creacionFrom.controls['TelefonoAsesoria'].errors?.['pattern']">
-                                El teléfono nombre solo acepta números.
+                            <input type="text" formControlName="TelefonoAsesoria" class="form-control pmayuscula"
+                                maxlength="10" (input)="onChangeCreacionForm()">
+                            <span class="help-block validationSpan"
+                                *ngIf="creacionFrom.controls['TelefonoAsesoria'].errors?.['pattern']">
+                                El celular acepta mínimo 10 números.
                             </span>
                         </div>
                         <!-- Fin TelefonoAsesoria -->
@@ -671,7 +703,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" data-dismiss="modal" style="visibility:hidden" data-dismiss="modal" #CerrarCreacionNombre></button>
-                <button type="button" class="btn Gt-btn-verde" (click)="GuardarNombre()">Guardar</button> &nbsp;
+                <button type="button" class="btn Gt-btn-verde" (click)="GuardarNombre()" [disabled]="isCreationButtonDisabled">Guardar</button> &nbsp;
                 <button type="button" class="btn Gt-btn-morado" data-dismiss="modal" (click)="CerrarNombre()">Cerrar</button>
             </div>
         </div>

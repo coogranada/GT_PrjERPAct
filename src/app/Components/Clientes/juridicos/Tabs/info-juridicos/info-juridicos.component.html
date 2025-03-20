@@ -326,8 +326,22 @@
             <input type="submit" *ngIf="mostrarCambiar" class="btn Gt-btn-verde" value="Cambiar" (click)="GestionarOperaciones()" /> &nbsp;
             <!-- <input type="submit" *ngIf="mostrarNuevoInfo" class="btn Gt-btn-morado" value="Nuevo" (click)="limpiarFormulario()" /> -->
         </div>
-    </div>
+    </div>     
 </div>
+<!-- Contenedor principal con bloqueador invisible -->
+<div *ngIf="loading" class="loading-overlay">
+    <ngx-loading 
+      [show]="loading" 
+      [config]="{
+        primaryColour: primaryColour, 
+        secondaryColour: secondaryColour, 
+        tertiaryColour: primaryColour, 
+        backdropBorderRadius: '3px',
+        backdrop: true
+      }">
+    </ngx-loading>
+  </div>
+  
 <!-- /masked inputs -->
 
 <button type="button" style="visibility:hidden" #BuscarAsesoresExt class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#ModalBuscarAsesor">
