@@ -142,3 +142,7 @@ thead tr th{
     
     overflow:scroll;
   }
+
+.capitalize {
+   text-transform: capitalize;
+}
