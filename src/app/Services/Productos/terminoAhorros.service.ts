@@ -58,14 +58,14 @@ export class TerminoAhorrosService {
         this.url = `${this.environment.Url}/BuscarAsesorTermino`;
         const params = new HttpParams()
             .set('strCodigo', Codigo)
-            .set('PstrNombre', Nombre);
+            .set('strNombre', Nombre);
         return this._http.get<any>(this.url, { params: params });
     } 
     BuscarAsociado(Documento: string, Nombre: string): Observable<any> {
-        this.url = `${this.environment.Url}/BuscarAsesorTermino`;
+        this.url = `${this.environment.Url}/BuscarAsociadoTermino`;
         const params = new HttpParams()
             .set('strDocumento', Documento)
-            .set('PstrNombre', Nombre);
+            .set('strNombre', Nombre);
         return this._http.get<any>(this.url, { params: params });
     } 
     CondicionesProducto(Datos: any): Observable<any> {

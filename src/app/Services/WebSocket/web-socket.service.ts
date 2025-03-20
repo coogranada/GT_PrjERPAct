@@ -9,19 +9,20 @@ import {HubConnection,HubConnectionBuilder,HubConnectionState} from '@microsoft/
 @Injectable({
   providedIn: 'root'
 })
-export class WebSocketService  {
+export class WebSocketService {
   connection: any = null;
   backgroundBool: boolean = false;
   timer: number = 1000;
   methodChangeOffice : string = "ChangeOffice";
+  methodClosedSesion : string = "ClosedSesion";
   private _hubConnection! : HubConnection ;
   constructor(private envirment: EnvironmentService, private usuariosServices: UsuariosService, private router: Router) { 
     window.addEventListener("storage", (even: any) => {
       let storage: any = event;
       if (storage != null && storage.key == "ChangeState") {
-        if (storage.newValue == "ChangeOffice" ||  storage.oldValue == "ChangeOffice")
+        if (storage.newValue == this.methodChangeOffice ||  storage.oldValue == this.methodChangeOffice)
           window.location.reload();
-        else if (storage.newValue == "CloseSesion" ||  storage.oldValue == "CloseSesion") {
+        else if (storage.newValue == this.methodClosedSesion ||  storage.oldValue == this.methodClosedSesion) {
           this.LogginOut();
         }        
         localStorage.removeItem("ChangeState");
@@ -31,27 +32,21 @@ export class WebSocketService  {
   TriggerLocal(strParam : string) {
     localStorage.setItem("ChangeState", strParam );
   }
-  ReconnectionSocket(){
-    this.Init();
-  }
-  Init(type : number = 0) {
+  Init() {
     try {
       this._hubConnection = new HubConnectionBuilder().withUrl(this.envirment.UrlCore + "/notify").build();
       this._hubConnection.on("ReceiveMessage", (message : any) => this.newMessage(message));
-      this._hubConnection.on("CloseSesion", (message : any) => this.CloseSesion(message));
+      this._hubConnection.on(this.methodClosedSesion, (message : any) => this.CloseSesion(message));
       this._hubConnection.on(this.methodChangeOffice, (message : any) => this.ChangeOffice(message));
       this._hubConnection.start().then(() => {
              let data : string | null = localStorage.getItem('Data');
              let user = JSON.parse(window.atob(data == null ? "" : data));
-               if (type == 0) {
-                 if(!this.backgroundBool)
+               if (!this.backgroundBool) {
                    this.BackGround();
                    this.Send("JoinGroup", user.IdUsuario); 
-               } else if (type == 1) {
-                 this.Send("ClosedSesion", user.IdUsuario); 
-               }
+                }
              }).catch((error : any) => {
-               return console.error("Error en la conexxion.",error);
+               return console.error("Error en la conexxion.",JSON.stringify(error));
              });
     }
     catch(error : any){ 
@@ -62,7 +57,6 @@ export class WebSocketService  {
   }
   ChangeOffice(messages : any){
     const obj : any = JSON.parse(messages);
-    //console.log("Payload",obj);
     let data : string | null = localStorage.getItem('Data');
     let user = JSON.parse(window.atob(data == null ? "" : data));
     detectIncognito().then((result : any) =>{
@@ -70,7 +64,6 @@ export class WebSocketService  {
         browserName : result.browserName,
         isPrivate : result.isPrivate
       }
-      //console.log("browser",browser)
       if(obj.userId == user.IdUsuario && (obj.payload.browser.browserName != browser.browserName || obj.payload.browser.isPrivate != browser.isPrivate)){
         this.usuariosServices.ActualizarOficinaUsuario(obj.payload).subscribe(x => {
           localStorage.setItem('Data', window.btoa(JSON.stringify(x)));
@@ -81,7 +74,7 @@ export class WebSocketService  {
     });
   }
   CloseSesion(message: any) {
-    console.log("close sesion", message);
+    this.Stop();
     this.LogginOut();
     this.TriggerLocal("CloseSesion");
     localStorage.removeItem("ChangeState");
@@ -95,7 +88,6 @@ export class WebSocketService  {
     })).subscribe();
   }
   Send(method: string, message: string, other: any = null) {
-    console.log("Init send " + method + " MESSAGE  " + message + "  " + other)
     if (other == null)
       this._hubConnection.invoke(method, message);
     else

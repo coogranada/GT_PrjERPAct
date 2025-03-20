@@ -14,8 +14,8 @@ import { WebSocketService } from '../../Services/WebSocket/web-socket.service';
 import { AlertService } from '../../Services/Alert/alert.service';
 const PrimaryWhite = 'rgb(13,165,80)';
 const SecondaryGrey = 'rgb(13,165,80,0.7)';
-//import { detectIncognito } from "src/assets/js/detectionIncognito/detectIncognito";
-//eclare var detectIncognito : any;
+import { detectIncognito } from "detectincognitojs";
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
   public  SessionUser = new SessionUser();
   constructor(private loginService: LoginService, private notif: AlertService,
     private environment: EnvironmentService,private usuariosServices: UsuariosService,
-    private clientesGetListService: ClientesGetListService,
+    private clientesGetListService: ClientesGetListService,private route : Router,
     private oficinasService: OficinasService, private webSocket : WebSocketService) {}
 
   ngOnInit() {
@@ -51,40 +51,6 @@ export class LoginComponent implements OnInit {
     this.GetTipoContacto();
     this.GetConceptosaAll();
     this.GetPeriodosPago();
-    //this.dteect();
-  }
-  getModeName(browserName : string) {
-    switch (browserName) {
-      case "Safari":
-      case "Firefox":
-      case "Brave":
-      case "Opera":
-        return "a Private Window";
-        break;
-      case "Chrome":
-      case "Chromium":
-        return "an Incognito Window";
-        break;
-      case "Internet Explorer":
-      case "Edge":
-        return "an InPrivate Window";
-        break;
-    }
-    throw new Error("Could not get mode name");
-  }
-  dteect() {
-    // var a = document.getElementById("answer");
-    // // We call the detectIncognito function and handle the promise
-    // detectIncognito().then(function (result) {
-    //   if (result.isPrivate) { // If the result is private, we display a message to the user
-    //     alert("<b>Yes</b>. You are using " + result.browserName + " in " + this.getModeName(result.browserName) + ".");
-    //   } else { // If the result is not private, we display a message to the user
-    //     alert("<b>No</b>. You are using " + result.browserName + " in a regular browser window.");
-    //   }
-    // }).catch(function (error) { // If there is an error, we display a message to the user & log the error to console
-    //   alert("<b>There was an error.</b> Check console for further information. If the problem persists, please <a href='https://github.com/Joe12387/detectIncognito/issues'>report the issue</a> on GitHub.");
-    //   console.error(error);
-    // });
   }
   GetParentescos() {
     this.clientesGetListService.GetParentescos().subscribe(
@@ -232,13 +198,13 @@ export class LoginComponent implements OnInit {
                 (result : any) => {
                   this.clientesGetListService.GetParentescos().subscribe(
                     (result : any) => {
-                      this.loginService.GetToken(this.dataUser.IdUsuario).subscribe((x : any) => {
+                      this.loginService.GetToken(this.dataUser.IdUsuario).subscribe(async (x : any) => {
                         var res = x;
                         localStorage.setItem('token', res.token);
                         this.ValidarMetodosCarga();
                         localStorage.setItem('parentescoChange', window.btoa(JSON.stringify(result)));
-                        let browser: any = navigator;
-                        let strBrowser: string = browser.userAgentData.brands[1].brand;
+                        let browser = await detectIncognito();
+                        let strBrowser: string = browser.browserName + "-" + (browser.isPrivate == true ? "Incognito" : "No Incognito");
                         let perfilLog: any[] = perfil;
                         perfilLog.forEach(x => {
                           delete x.$id;
@@ -251,34 +217,34 @@ export class LoginComponent implements OnInit {
                           IdTercero: this.dataUser.lngTercero,
                           Json : JSON.stringify(perfilLog)
                         };
-                        this.IniciarSesion(payload);
-                        // this.loginService.SesionOtroDispositivo(this.dataUser.IdUsuario,strBrowser).subscribe(result => {
-                        //   if(result)
-                        //   {
-                        //     swal({
-                        //       title: "Advertencia",
-                        //       text: '¿Deseas cerrar la sesión en el navegador anterior?',
-                        //       type: 'warning',
-                        //       showCancelButton: true,
-                        //       confirmButtonText: 'Si',
-                        //       cancelButtonText: 'No',
-                        //       confirmButtonColor: 'rgb(13,165,80)',
-                        //       cancelButtonColor: 'rgb(160,0,87)',
-                        //       allowOutsideClick: false,
-                        //       allowEscapeKey: false
-                        //     }).then((results) => {
-                        //       if (results.value) {
-                        //         //this.webSocket.Init(1);
-                        //         setTimeout(() => {
-                        //           this.IniciarSesion(payload);
-                        //         }, 500);
-                               
-                        //       }
-                        //      });
-                        //   }
-                        //   else 
-                            
-                        // });
+                         this.loginService.SesionOtroDispositivo(this.dataUser.IdUsuario,strBrowser).subscribe(result => {
+                          if(result)
+                           {
+                             Swal.fire({
+                               title: "Advertencia",
+                               text: '¿Deseas cerrar la sesión en el navegador anterior?',
+                               icon: 'warning',
+                               showCancelButton: true,
+                               confirmButtonText: 'Si',
+                               cancelButtonText: 'No',
+                               confirmButtonColor: 'rgb(13,165,80)',
+                               cancelButtonColor: 'rgb(160,0,87)',
+                               allowOutsideClick: false,
+                               allowEscapeKey: false
+                             }).then((results : any) => {
+                               if (results.value) {
+                                 this.webSocket.Init();
+                                 setTimeout(() => {
+                                  this.webSocket.Send("ClosedSesion",this.dataUser.IdUsuario);
+                                 }, 700);
+                                 setTimeout(() => {
+                                   this.IniciarSesion(payload);
+                                 }, 1500);
+                               }
+                              });
+                           } else   
+                            this.IniciarSesion(payload);
+                        });
                       });
                     },
                     (error : any )  => {
@@ -322,31 +288,13 @@ export class LoginComponent implements OnInit {
         }
       });
   }
-  checkIncognito(): Promise<boolean>{
-    return new Promise((resolve) => {
-      const fs = (window as any).RequestFileSystem || (window as any).webkitRequestFileSystem;
-      if (!fs)
-        resolve(false);
-      else
-        fs((window as any).TEMPORARY, 100, () =>{resolve(false)}, () =>{true})
-    })
-  }
- async detectionModeIncognito(){
-    if ("storage" in navigator && "estimate" in navigator.storage) {
-      const { usage, quota } = await navigator.storage.estimate();
-      console.log(usage + " +++ " + quota);
-      if (typeof quota === 'number' && quota < 120000000)
-        console.log("incognito");
-      else
-        console.log("not ing")
-   }
-   else
-   console.log("can't not detected")
-  }
   IniciarSesion(payload : any) {
     this.usuariosServices.InsertIpUltimaSesion(payload).subscribe((x : any) => {
-     window.location.reload();
-     window.location.href = this.environment.UrlFront;
+    // window.location.reload();
+     this.route.navigate(["/"]);
+     console.clear();
+     //window.location.href = this.environment.UrlFront;
+     
     });
   }
   ValidarMetodosCarga(): any {

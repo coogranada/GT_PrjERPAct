@@ -69,7 +69,6 @@ export class AppComponent implements OnInit,OnDestroy {
     this.idle.ngOnDestroy();
   }
   ngOnInit() {
-    // console.log('ERP - V.5');
     this.GetCargos();
     this.GetEstadosSeguro();
     this.GetLetra();
@@ -82,7 +81,6 @@ export class AppComponent implements OnInit,OnDestroy {
     if (localStorage.getItem('Data') !== null) {
       let data: string | null = localStorage.getItem('Data')
         if(data != null && data != ""){
-          console.log("Set inactividad")
           this.DatosUsuario = JSON.parse(window.atob(data));
           this.resulStore = JSON.parse(window.atob(data));
           this.idle.setIdle((60 * 120));  // Tiempo de inactividad antes de activar el timeout

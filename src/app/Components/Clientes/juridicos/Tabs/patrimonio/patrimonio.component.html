@@ -33,7 +33,8 @@
                     <div class="form-group">
                         <label class="textBlod">Otros activos : </label>
                         <span class="textBigRed"></span>
-                        <input type="text" class="form-control" formControlName="OtrosActivos" currencyMask [attr.disabled]="bloquearForm" (blur)="SumarActivos()" value="0">
+                        <input type="text" class="form-control" formControlName="OtrosActivos" 
+                         [attr.disabled]="bloquearForm" (blur)="SumarActivos()" value="0">
                         <span class="help-block validationSpan" *ngIf="patrimonioFrom.controls['OtrosActivos'].errors?.['required']  && (patrimonioFrom.controls['OtrosActivos'].dirty || patrimonioFrom.controls['OtrosActivos'].touched)">
               Otros activos es obligatorio.
             </span>
