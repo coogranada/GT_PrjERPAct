@@ -1557,6 +1557,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                 this.BloquearDatoTitular = null;
                 this.BloquaerProducto = null;
                 this.BloquearFormaPago = null;
+                this.MostrasAlertaAsociado=false;
               } else if (result.Mensaje !== undefined || result.Mensaje !== null) {
                 if (result.Mensaje === 'Gerencia de desarrollo.') {
                   swal.fire({
@@ -2068,8 +2069,14 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
         //this.datoCuentaDestino = this.dataObjet[0].IdCuentaDestino;
         this.AsesorFrom.get('strCodigo')?.setValue(this.dataObjet[0].IdAsesorExterno);
         this.datoAsesorExterno = +this.dataObjet[0].IdAsesorExterno;
-        this.AsesorFrom.get('strNombre')?.setValue(this.dataObjet[0].PrimerNombreAsesorE + ' ' + this.dataObjet[0].SegundoNombreAsesoreE +
-          ' ' + this.dataObjet[0].PrimerApellidoAsesorE + ' ' + this.dataObjet[0].SegundoApellidoAsesorE);
+        const nombreCompleto = [
+          this.dataObjet.PrimerNombreAsesorE,
+          this.dataObjet.SegundoNombreAsesorE,
+          this.dataObjet.PrimerApellidoAsesorE,
+          this.dataObjet.SegundoApellidoAsesorE
+        ].filter((nombre) => nombre?.trim()).join(' ');
+        
+        this.AsesorFrom.get('strNombre')?.setValue(nombreCompleto);
         this.contractualFrom.get('DireccionContractual')?.setValue(this.dataObjet[0].DireccionContractual);
         this.contractualFrom.get('TelefonoContractual')?.setValue(this.dataObjet[0].TelefonoContractual);
         this.contractualFrom.get('CiudadContractual')?.setValue(this.dataObjet[0].CiudadContractual);
@@ -2194,8 +2201,14 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
         this.AsesorFrom.get('strCodigo')?.setValue(this.dataObjet.IdAsesorExterno);
         this.datoAsesorExterno = +this.dataObjet.IdAsesorExterno;
-        this.AsesorFrom.get('strNombre')?.setValue(this.dataObjet.PrimerNombreAsesorE + ' ' + this.dataObjet.SegundoNombreAsesoreE +
-          ' ' + this.dataObjet.PrimerApellidoAsesorE + ' ' + this.dataObjet.SegundoApellidoAsesorE);
+        const nombreCompleto = [
+          this.dataObjet.PrimerNombreAsesorE,
+          this.dataObjet.SegundoNombreAsesorE,
+          this.dataObjet.PrimerApellidoAsesorE,
+          this.dataObjet.SegundoApellidoAsesorE
+        ].filter((nombre) => nombre?.trim()).join(' ');
+        
+        this.AsesorFrom.get('strNombre')?.setValue(nombreCompleto);
         this.contractualFrom.get('DireccionContractual')?.setValue(this.dataObjet.DireccionContractual);
         this.contractualFrom.get('TelefonoContractual')?.setValue(this.dataObjet.TelefonoContractual);
         this.contractualFrom.get('CiudadContractual')?.setValue(this.dataObjet.CiudadContractual);
@@ -2443,9 +2456,9 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
     }
   }
   BuscarAsesorExternoTodos() {
-    if (this.AsesorFrom.get('strCodigo')?.value === '       '
+    if (this.AsesorFrom.get('strCodigo')?.value === ''
      || this.AsesorFrom.get('strCodigo')?.value === null
-     && this.AsesorFrom.get('strNombre')?.value === '       '
+     && this.AsesorFrom.get('strNombre')?.value === ''
      || this.AsesorFrom.get('strNombre')?.value === null) {
       this.AsesorFrom.get('strCodigo')?.setValue('');
       this.AsesorFrom.get('strNombre')?.setValue('');
@@ -2470,6 +2483,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
             result.forEach((elementt : any) => {
               this.AsesorFrom.get('strNombre')?.setValue(elementt.Nombre);
               this.AsesorFrom.get('strCodigo')?.setValue(elementt.intIdAsesor);
+              this.bloquearbtnActalizar = true;
             });
           } else {
             this.AsesorFrom.get('strNombre')?.setValue('');
