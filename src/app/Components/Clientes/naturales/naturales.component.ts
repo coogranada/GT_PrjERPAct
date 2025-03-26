@@ -1476,7 +1476,9 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.operacionesModel.idModulo = +JSON.parse(window.atob(IdModuloActivo == null ? "" : IdModuloActivo));
     this.mostrarPorQueCobertura = false;
     this.solicitudRetiroForm.reset();
-    if (results === '5') { // Creacion 
+    if (results === '5') { // Creacion
+
+      this.ResetAllForm();
       this.LimpiaVariablesAlerta();
       this.EjecutarMetodosMaestros();
       this.btnBuscar = true;
@@ -3065,7 +3067,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                             const estadoAsociado = this.basicosFrom.get('estado')?.value;
                             if (result === null && fechaSolRetiro === null && fechaTabRetiro === null) {
                               this.notif.onWarning('Advertencia',
-                                'Validar, el asociado no tiene registrada fecha de Retiro',
+                                'Validar, el asociado no tiene registrada fecha de retiro',
                                 );
                               this.basicosFrom.get('operacion')?.reset();
                               this.btnGuardarOculto = false;
