@@ -1159,6 +1159,9 @@ export class AsesoriaTerminoComponent implements OnInit {
     const newTerceroData = this.creacionFrom.value;
     if(newTerceroData.SegundoNombre === null) newTerceroData.SegundoNombre = '';
     if(newTerceroData.SegundoApellido === null) newTerceroData.SegundoApellido = '';
+    Object.keys(newTerceroData).forEach(key => {
+      newTerceroData[key] = this.capitalize(newTerceroData[key]);
+    });
     if (newTerceroData.TipoDocumento) payload = { ...payload, ...newTerceroData };
     console.log("payload", payload)
     this.BloquearPuntosA = false;
@@ -1440,10 +1443,14 @@ export class AsesoriaTerminoComponent implements OnInit {
       { name: 'TelefonoAsesoria', regex: /^\d{10}$/ }
     ];
     if (this.creacionFrom.get('TipoDocumento')?.value != 3) {
-      requiredFieldNamesWithRegex.push({ name: 'PrimerApellido', regex: /^[^\d]+$/ });
+      requiredFieldNamesWithRegex.push(
+        { name: 'PrimerApellido', regex: /^[^\d]+$/ },
+        { name: 'SegundoNombre', regex: /^[A-Za-z]*$/ },
+        { name: 'SegundoApellido', regex: /^[A-Za-z]*$/ },
+      );
       requiredFieldNamesWithRegex[1].regex = /^[^\d]+$/
     }
-    const isSomeRequiredFieldMissing = requiredFieldNamesWithRegex.some(field => !this.creacionFrom.get(field.name)?.value || !field.regex.test(this.creacionFrom.get(field.name)?.value.trim()));
+    const isSomeRequiredFieldMissing = requiredFieldNamesWithRegex.some(field => !field.regex.test(this.creacionFrom.get(field.name)?.value?.trim()));
     this.isCreationButtonDisabled = isSomeRequiredFieldMissing;
   }
 
@@ -1599,6 +1606,12 @@ export class AsesoriaTerminoComponent implements OnInit {
       }
     );
   }
+
+  capitalize(str: string) {
+    if (!str) return str; 
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  }
+  
   GuardarNombre() {
     const requiredFieldNames = ['PrimerNombre', 'TelefonoAsesoria'];
     if (this.creacionFrom.get('TipoDocumento')?.value != 3) requiredFieldNames.push('PrimerApellido');
@@ -1608,15 +1621,11 @@ export class AsesoriaTerminoComponent implements OnInit {
       return;
     }
 
-    function capitalize(str : string) {
-      return str.replace(/^\w/, (c) => c.toUpperCase()).toLowerCase();
-    }
-
     const primerNombre = this.creacionFrom.get('PrimerNombre')?.value || '';
     const segundoNombre = this.creacionFrom.get('SegundoNombre')?.value || '';
     const primerApellido = this.creacionFrom.get('PrimerApellido')?.value || '';
     const segundoApellido = this.creacionFrom.get('SegundoApellido')?.value || '';
-    const fullName = [primerNombre, segundoNombre, primerApellido, segundoApellido].filter(Boolean).map(n => capitalize(n.trim()) ).join(' ');
+    const fullName = [primerNombre, segundoNombre, primerApellido, segundoApellido].filter(Boolean).map(n => this.capitalize(n.trim()) ).join(' ');
     this.asesoriaterminoForm.get('Nombre')?.setValue(fullName);
     this.BloquearProducto = null;
     this.MostrasAlertaAsociado = false;
