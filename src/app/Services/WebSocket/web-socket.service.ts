@@ -13,6 +13,7 @@ export class WebSocketService {
   connection: any = null;
   backgroundBool: boolean = false;
   timer: number = 1000;
+  sessionClose : boolean = false;
   methodChangeOffice : string = "ChangeOffice";
   methodClosedSesion : string = "ClosedSesion";
   private _hubConnection! : HubConnection ;
@@ -34,6 +35,7 @@ export class WebSocketService {
   }
   Init() {
     try {
+      this.sessionClose = false;
       this._hubConnection = new HubConnectionBuilder().withUrl(this.envirment.UrlCore + "/notify").build();
       this._hubConnection.on("ReceiveMessage", (message : any) => this.newMessage(message));
       this._hubConnection.on(this.methodClosedSesion, (message : any) => this.CloseSesion(message));
@@ -53,7 +55,8 @@ export class WebSocketService {
     }
   }
   Stop(){
-      this._hubConnection.stop();
+    this.sessionClose = true;
+    this._hubConnection.stop();
   }
   ChangeOffice(messages : any){
     const obj : any = JSON.parse(messages);
@@ -82,7 +85,7 @@ export class WebSocketService {
   BackGround() {
     this.backgroundBool = true;
     interval(this.timer).pipe(switchMap(() => {
-      if (HubConnectionState.Disconnected == this._hubConnection.state)
+      if (HubConnectionState.Disconnected == this._hubConnection.state && this.sessionClose == false)
         this.Init();
       return [];
     })).subscribe();

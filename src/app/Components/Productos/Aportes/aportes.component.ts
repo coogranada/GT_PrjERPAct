@@ -255,7 +255,7 @@ export class AportesComponent implements OnInit {
         $('#beneficiarios').removeClass('activar');
         $('#beneficiarios').removeClass('active');
         $('#historial').removeClass('activar');
-        $('#historial').removeClass('active');
+        $('#historial').removeClass('active');   
       }
     } else if (this.aportesOperacionFrom.get('Codigo')?.value  === '21') {  // Cambiar forma de pago
       if (this.aportesFrom.get('IdOficina')?.value  !== null
@@ -1580,7 +1580,8 @@ export class AportesComponent implements OnInit {
         if (this.aportesFrom.get('DocumentoBeneficiario')?.value .trim() !== this.aportesFrom.get('NumeroDocumento')?.value ) {
           if (this.dataObjetBeneficiarios.length == 0) {
             this.loading = true;
-            this.aportesServices.BuscarBeneficiario(this.aportesFrom.get('DocumentoBeneficiario')?.value ).subscribe(
+            this.aportesServices.BuscarBeneficiario(this.aportesFrom.get('DocumentoBeneficiario')?.value
+          ).subscribe(
               result => {
                 this.loading = false;
                 if (result != null && result.Mensaje != null && (result.Mensaje == "Gerencia de desarrollo." || result.Mensaje == "Oficial de cumplimiento.")) {
