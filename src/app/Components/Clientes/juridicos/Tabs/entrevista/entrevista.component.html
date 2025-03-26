@@ -1,4 +1,4 @@
-<form method="get" [formGroup]="entrevistaForm">
+<form method="get" [formGroup]="entrevistaForm" autocomplete="off">
     <div class="col-xs-12 col-md-12 col-lg-12">
         <div class="table-responsive ">
             <table id="tablaIngresos" class="table table-hover container-scroll">
@@ -16,7 +16,7 @@
                             <br>
                         </td>
                         <td>
-                            <input type="text" [attr.disabled]="DesbloquearRespuesta3" class="form-control SoloMinuscula" pattern="[a-zA-ZñÑ ]*" id="enQueEntidad" formControlName="RPregunta7Si" placeholder="En que entidad?" (keydown)="habilitarActualizar()">
+                            <input type="text" [attr.disabled]="DesbloquearRespuesta3" class="form-control SoloMinuscula" pattern="[a-zA-ZñÑ ]*" id="enQueEntidad" formControlName="RPregunta7Si" (blur)="validarValorCampoNombres('enQueEntidad','RPregunta7Si')" placeholder="En que entidad?" (keydown)="habilitarActualizar()">
                             <span class="help-block validationSpan" *ngIf="entrevistaForm.controls['RPregunta7Si'].errors?.['pattern']  && 
                                                                                 (entrevistaForm.controls['RPregunta7Si'].dirty || entrevistaForm.controls['RPregunta7Si'].touched)">
                                 La entidad solo acepta letras. </span>
@@ -27,7 +27,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <input type="text" [attr.disabled]="DesbloquearRespuesta3" class="form-control SoloMinuscula" pattern="[a-zA-ZñÑ ]*" formControlName="RPregunta11Si" id="tipoProducto" placeholder="Tipo producto" (keydown)="habilitarActualizar()">
+                            <input type="text" [attr.disabled]="DesbloquearRespuesta3" class="form-control SoloMinuscula" pattern="[a-zA-ZñÑ ]*" formControlName="RPregunta11Si" id="tipoProducto" placeholder="Tipo producto" (blur)="validarValorCampoNombres('tipoProducto','RPregunta11Si')" (keydown)="habilitarActualizar()">
                             <span class="help-block validationSpan" *ngIf="entrevistaForm.controls['RPregunta11Si'].errors?.['required']  && 
                                                                                 (entrevistaForm.controls['RPregunta11Si'].dirty || entrevistaForm.controls['RPregunta11Si'].touched)">
                                 El tipo producto es obligatorio.
@@ -59,7 +59,7 @@
                             </span>
                         </td>
                         <td>
-                            <input type="text" [attr.disabled]="DesbloquearRespuesta3" class="form-control SoloMinuscula" pattern="[a-zA-ZñÑ ]*" id="RPre24" formControlName="RPregunta13Si" id="ciudad" placeholder="Ciudad" (keydown)="habilitarActualizar()">
+                            <input type="text" [attr.disabled]="DesbloquearRespuesta3" class="form-control SoloMinuscula" pattern="[a-zA-ZñÑ ]*" id="RPre24" formControlName="RPregunta13Si" id="ciudad" (blur)="validarValorCampoNombres('ciudad','RPregunta13Si')" placeholder="Ciudad" (keydown)="habilitarActualizar()">
                             <span class="help-block validationSpan" *ngIf="entrevistaForm.controls['RPregunta13Si'].errors?.['required']  && 
                                                         (entrevistaForm.controls['RPregunta13Si'].dirty || entrevistaForm.controls['RPregunta13Si'].touched)">
                                 La ciudad es obligatoria.
@@ -165,7 +165,7 @@
     <br>
     <div class="col-xs-12 col-md-3 col-lg-3">
         <div class="container">
-            <form method="get" [formGroup]="tratamientoForm">
+            <form method="get" [formGroup]="tratamientoForm" autocomplete="off">
                 <br>
                 <div class="col-xs-12 col-md-12 col-lg-12">
                     <div class="col-xs-12 col-md-12 col-lg-6 alert alert-secondary" role="alert">

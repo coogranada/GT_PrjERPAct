@@ -5923,6 +5923,10 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     this.accionistasComponent.bloquearForm = true;
     this.referenciasComponent.bloquearForm = true;
     this.entrevistaComponent.bloquearForm = true;
+    this.entrevistaComponent.DesbloquearRespuesta3=true;
+    this.entrevistaComponent.DesbloquearRespuesta16=true;
+    this.entrevistaComponent.DesbloquearRespuesta13=true;
+
     this.mostrarBotonesSiguiente = false;
     this.mostrarBotonesAgregar = false;
     this.mostrarBotonesActualizar = false;
@@ -6060,6 +6064,9 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     this.accionistasComponent.bloquearForm = true;
     this.referenciasComponent.bloquearForm = true;
     this.entrevistaComponent.bloquearForm = true;
+    this.entrevistaComponent.DesbloquearRespuesta3=true;
+    this.entrevistaComponent.DesbloquearRespuesta16=true;
+    this.entrevistaComponent.DesbloquearRespuesta13=true;
 
     this.generalesService.AgregarDisabled('estadoJur');   
     

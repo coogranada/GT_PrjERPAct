@@ -167,7 +167,7 @@ export class AccionistasComponent implements OnInit {
           );
     } else {
       this.validar = false;
-      const documentoConsulta = this.accionistasFrom.get('NumeroDocumento').value;
+      const documentoConsulta = this.accionistasFrom.get('NumeroDocumento').value.trim();
       this.itemAccionistas.forEach(elementAcc => {
         if (elementAcc.NumeroDocumento === documentoConsulta) {
           this.validar = true;
@@ -175,7 +175,7 @@ export class AccionistasComponent implements OnInit {
       });
       if (this.validar) {
           this.notif.onWarning('Advertencia', 'El accionista ya fue ingresado.');
-          
+          this.accionistasFrom.get('NumeroDocumento').reset();
           } else {
             // this.loading = true;
             const documentoConsulta = this.accionistasFrom.get('NumeroDocumento').value;
@@ -258,8 +258,7 @@ export class AccionistasComponent implements OnInit {
              
               if (totalParticipacion <= 100) {
                 if (this.accionistasFrom.value.RazonNombre !== null && this.accionistasFrom.value.RazonNombre) {
-                  this.accionistasFrom.value.RazonNombre = this.accionistasFrom.value.RazonNombre.substr(0, 1).toUpperCase() +
-                  this.accionistasFrom.value.RazonNombre.substr(1).toLowerCase();
+                  this.accionistasFrom.value.RazonNombre = this.accionistasFrom.value.RazonNombre;
                 }
                 if (this.accionistasFrom.value.NumeroDocumento !== null) {
                 this.itemAccionistas.push(this.accionistasFrom.value);
@@ -289,8 +288,7 @@ export class AccionistasComponent implements OnInit {
 
             if (totalParticipacion <= 100) {
               if (this.accionistasFrom.value.RazonNombre !== null && this.accionistasFrom.value.RazonNombre) {
-                this.accionistasFrom.value.RazonNombre = this.accionistasFrom.value.RazonNombre.substr(0, 1).toUpperCase() +
-                this.accionistasFrom.value.RazonNombre.substr(1).toLowerCase();
+                this.accionistasFrom.value.RazonNombre = this.accionistasFrom.value.RazonNombre;
               }
               if (this.accionistasFrom.value.NumeroDocumento !== null) {
               this.itemAccionistas.push(this.accionistasFrom.value);
@@ -322,8 +320,7 @@ export class AccionistasComponent implements OnInit {
           if (this.itemAccionistas.length !== 6) {
             if (totalParticipacion <= 100) {
               if (this.accionistasFrom.value.RazonNombre !== null && this.accionistasFrom.value.RazonNombre) {
-                this.accionistasFrom.value.RazonNombre = this.accionistasFrom.value.RazonNombre.substr(0, 1).toUpperCase() +
-                  this.accionistasFrom.value.RazonNombre.substr(1).toLowerCase();
+                this.accionistasFrom.value.RazonNombre = this.accionistasFrom.value.RazonNombre;
               }
               if (this.accionistasFrom.value.NumeroDocumento !== null) {
                 this.itemAccionistas.push(this.accionistasFrom.value);
@@ -352,8 +349,7 @@ export class AccionistasComponent implements OnInit {
           if (totalParticipacion <= 100) {
             this.itemAccionistas.splice(this.indexAccionistas, 1);
             if (this.accionistasFrom.value.RazonNombre !== null && this.accionistasFrom.value.RazonNombre !== undefined) {
-              this.accionistasFrom.value.RazonNombre = this.accionistasFrom.value.RazonNombre.substr(0, 1).toUpperCase() +
-                this.accionistasFrom.value.RazonNombre.substr(1).toLowerCase();
+              this.accionistasFrom.value.RazonNombre = this.accionistasFrom.value.RazonNombre;
             }
             if (this.accionistasFrom.value.NumeroDocumento !== null) {
               this.itemAccionistas.push(this.accionistasFrom.value);
@@ -383,8 +379,7 @@ export class AccionistasComponent implements OnInit {
           if (this.itemAccionistas.length !== 6) {
             if (totalParticipacion <= 100) {
               if (this.accionistasFrom.value.RazonNombre !== null && this.accionistasFrom.value.RazonNombre) {
-                this.accionistasFrom.value.RazonNombre = this.accionistasFrom.value.RazonNombre.substr(0, 1).toUpperCase() +
-                  this.accionistasFrom.value.RazonNombre.substr(1).toLowerCase();
+                this.accionistasFrom.value.RazonNombre = this.accionistasFrom.value.RazonNombre;
               }
               if (this.accionistasFrom.value.NumeroDocumento !== null) {
                 this.itemAccionistas.push(this.accionistasFrom.value);
@@ -413,8 +408,7 @@ export class AccionistasComponent implements OnInit {
           if (totalParticipacion <= 100) {
             this.itemAccionistas.splice(this.indexAccionistas, 1);
             if (this.accionistasFrom.value.RazonNombre !== null && this.accionistasFrom.value.RazonNombre !== undefined) {
-              this.accionistasFrom.value.RazonNombre = this.accionistasFrom.value.RazonNombre.substr(0, 1).toUpperCase() +
-                this.accionistasFrom.value.RazonNombre.substr(1).toLowerCase();
+              this.accionistasFrom.value.RazonNombre = this.accionistasFrom.value.RazonNombre;
             }
             if (this.accionistasFrom.value.NumeroDocumento !== null) {
               this.itemAccionistas.push(this.accionistasFrom.value);
