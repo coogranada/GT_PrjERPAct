@@ -1589,6 +1589,8 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
           this.notif.onSuccess('Exitoso', 'La asesoría  se guardó correctamente.');
           this.asesoriacontractualOperacionFrom.get('Codigo')?.reset();
           this.ModalImpresionAsesoria.nativeElement.click();
+          this.logDataOnEditAsesorExterno.IdAsesorExternoAnterior = this.asesoriacontractualFrom.get('strCodigo')?.value || '';
+          this.logDataOnEditAsesorExterno.NombreAsesorExternoAnterior = this.asesoriacontractualFrom.get('strNombre')?.value || '';
           this.ObtenerHistorial();
         },
         error => {
@@ -1678,6 +1680,8 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
               this.notif.onSuccess('Exitoso', 'La asesoría  se guardó correctamente.');
               this.asesoriacontractualOperacionFrom.get('Codigo')?.reset();
               this.ModalImpresionAsesoria.nativeElement.click();
+              this.logDataOnEditAsesorExterno.IdAsesorExternoAnterior = this.asesoriacontractualFrom.get('strCodigo')?.value || '';
+              this.logDataOnEditAsesorExterno.NombreAsesorExternoAnterior = this.asesoriacontractualFrom.get('strNombre')?.value || '';
               this.ObtenerHistorial();
             },
             error => {
