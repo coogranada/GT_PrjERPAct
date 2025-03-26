@@ -399,7 +399,7 @@
                                                 <tbody *ngFor="let historial of dataHistorial;">
                                                     <tr>
                                                         <td class="no-wrap-t">{{historial.FechaHistorial | date:'yyyy/MM/dd HH:mm:ss'}}</td>
-                                                        <td class="no-wrap-t">{{historial.NombreOficina}}</td>
+                                                        <td class="no-wrap-t">{{historial?.NombreOficina}}</td>
                                                         <td class="no-wrap-t">{{historial.NombreCompleto}}</td>
                                                         <td class="no-wrap-t">{{historial.Descripcion}}</td>
                                                         <td class="no-wrap-t">{{ historial.Descripcion.includes('asesor externo') ? historial.Detalles : '' }}</td>

@@ -1513,10 +1513,10 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
       && this.creacionFrom.get('PrimerNombre')?.value !== undefined
       && this.creacionFrom.get('PrimerNombre')?.value !== '') {
       this.asesoriacontractualFrom.get('IdTipoDocumento')?.setValue(this.creacionFrom.get('TipoDocumento')?.value);
-      this.asesoriacontractualFrom.get('PrimerNombre')?.setValue(this.creacionFrom.get('PrimerNombre')?.value);
-      this.asesoriacontractualFrom.get('SegundoNombre')?.setValue(this.creacionFrom.get('SegundoNombre')?.value);
-      this.asesoriacontractualFrom.get('PrimerApellido')?.setValue(this.creacionFrom.get('PrimerApellido')?.value);
-      this.asesoriacontractualFrom.get('SegundoApellido')?.setValue(this.creacionFrom.get('SegundoApellido')?.value);
+      this.asesoriacontractualFrom.get('PrimerNombre')?.setValue(this.capitalize(this.creacionFrom.get('PrimerNombre')?.value));
+      this.asesoriacontractualFrom.get('SegundoNombre')?.setValue(this.capitalize(this.creacionFrom.get('SegundoNombre')?.value));
+      this.asesoriacontractualFrom.get('PrimerApellido')?.setValue(this.capitalize(this.creacionFrom.get('PrimerApellido')?.value));
+      this.asesoriacontractualFrom.get('SegundoApellido')?.setValue(this.capitalize(this.creacionFrom.get('SegundoApellido')?.value));
       this.asesoriacontractualFrom.get('TelefonoAsesoria')?.setValue(this.creacionFrom.get('TelefonoAsesoria')?.value);
     }
     if (this.AsesorFrom.get('strCodigo')?.value !== null
@@ -1625,7 +1625,8 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
 
           if(!this.asesoriacontractualFrom.get('SegundoNombre')?.value) this.asesoriacontractualFrom.value.SegundoNombre = '';
           if(!this.asesoriacontractualFrom.get('PrimerApellido')?.value) this.asesoriacontractualFrom.value.PrimerApellido = '';
-          if(!this.asesoriacontractualFrom.get('SegundoApellido')?.value) this.asesoriacontractualFrom.value.SegundoApellido = '';          
+          if(!this.asesoriacontractualFrom.get('SegundoApellido')?.value) this.asesoriacontractualFrom.value.SegundoApellido = ''; 
+          // console.log(this.asesoriacontractualFrom.value)         
           this.AsesoriaContractualServices.GuardarAsesoriaContractual(this.asesoriacontractualFrom.value).subscribe(
             result => {
               const currentRelacionId = this.asesoriacontractualFrom.get('Clase')?.value;
@@ -1747,6 +1748,12 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
     // console.log('blur')
   }
 
+  capitalize(str: string) {
+    if (!str) return str; 
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  }
+
+
   GuardarNombre() {
     const requiredFieldNames = ['PrimerNombre', 'TelefonoAsesoria'];
     if (this.creacionFrom.get('TipoDocumento')?.value != 3) requiredFieldNames.push('PrimerApellido');
@@ -1756,15 +1763,11 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    function capitalize(str: string) {
-      return str.replace(/^\w/, (c) => c.toUpperCase()).toLowerCase();
-    }
-
     const primerNombre = this.creacionFrom.get('PrimerNombre')?.value || '';
     const segundoNombre = this.creacionFrom.get('SegundoNombre')?.value || '';
     const primerApellido = this.creacionFrom.get('PrimerApellido')?.value || '';
     const segundoApellido = this.creacionFrom.get('SegundoApellido')?.value || '';
-    const fullName = [primerNombre, segundoNombre, primerApellido, segundoApellido].filter(Boolean).map(n => capitalize(n.trim()) ).join(' ');
+    const fullName = [primerNombre, segundoNombre, primerApellido, segundoApellido].filter(Boolean).map(n => this.capitalize(n.trim()) ).join(' ');
     this.asesoriacontractualFrom.get('Nombre')?.setValue(fullName);
     this.BloquearProducto = null;
     this.MostrasAlertaAsociado = false;

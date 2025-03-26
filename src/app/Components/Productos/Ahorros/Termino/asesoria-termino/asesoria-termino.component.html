@@ -599,7 +599,7 @@
                             <label class="textNegrilla">Segundo apellido:</label>
                             <input type="text" formControlName="SegundoApellido" class="form-control pmayuscula"
                                 [attr.disabled]="BloquearNuevoAsociadoForm" id="segApe"
-                                (blur)="ValidarValorCampo('segApe','SegundoApellido')">
+                                (blur)="ValidarValorCampo('segApe','SegundoApellido')" (input)="onChangeCreacionForm()">
                             <span class="help-block validationSpan"
                                 *ngIf="creacionFrom.controls['SegundoApellido'].errors?.['pattern']">
                                 El segundo apellido solo acepta letras.
@@ -625,7 +625,7 @@
                             <label class="textNegrilla">Segundo nombre:</label>
                             <input type="text" formControlName="SegundoNombre" class="form-control pmayuscula"
                                 [attr.disabled]="BloquearNuevoAsociadoForm" id="segNom"
-                                (blur)="ValidarValorCampo('segNom','SegundoNombre')">
+                                (blur)="ValidarValorCampo('segNom','SegundoNombre')" (input)="onChangeCreacionForm()">
                             <span class="help-block validationSpan"
                                 *ngIf="creacionFrom.controls['SegundoNombre'].errors?.['pattern']">
                                 El segundo nombre solo acepta letras.
