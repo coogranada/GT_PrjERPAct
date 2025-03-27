@@ -1334,6 +1334,18 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
       this.MostrasAlertaAsociado = true;
     }
   }
+
+  validarCero(campo : string){
+    if(this.asesoriacontractualFrom.get(campo)?.value == 0)
+      this.asesoriacontractualFrom.get(campo)?.setValue("");
+    else if(this.asesoriacontractualFrom.get(campo)?.value.length > 0){
+      let subStringTemp : string = this.asesoriacontractualFrom.get(campo)?.value;
+      let subStringTemp0 = subStringTemp.substring(0,1);
+      if(subStringTemp0 == "0")
+        this.asesoriacontractualFrom.get(campo)?.setValue(subStringTemp.substring(1,subStringTemp.length));
+    }
+}
+
   ActualizarAsesoria() {
     if (this.asesoriacontractualFrom.get('NumeroAsesoria')?.value !== undefined
       && this.asesoriacontractualFrom.get('NumeroAsesoria')?.value !== ''
