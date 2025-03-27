@@ -5612,9 +5612,14 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.blockBtnBasico = false;
     this.AsessorNecesario = true;
     const operacion = this.basicosFrom.get('operacion')?.value;
+    console.log("opera",operacion)
     this.clientesGetListService.GetTipoDocumento().subscribe(
       result => {
-        this.dataTipoDocumento = result;
+         let idTipoDoc : number = this.basicosFrom.value.tipoDocumento;
+         this.dataTipoDocumento = result;
+        setTimeout(() => {
+          this.basicosFrom.controls["tipoDocumento"].setValue(idTipoDoc);
+        }, 500);
         let data : string | null = localStorage.getItem('Data');
         const DataUserLog = JSON.parse(window.atob(data == null ? "": data));
         if (this.basicosFrom.value.tipoCliente === '10') { // Menor de edad
