@@ -1984,11 +1984,15 @@ export class AportesComponent implements OnInit {
       Numero.preventDefault();
     }
   }
-  validarCero(value : number = 0){
-    if(value == 0){
-      if(this.aportesFrom.get('DocumentoBeneficiario')?.value == 0)
-        this.aportesFrom.get('DocumentoBeneficiario')?.setValue("");
-    }
+  validarCero(campo : string){
+      if(this.aportesFrom.get(campo)?.value == 0)
+        this.aportesFrom.get(campo)?.setValue("");
+      else if(this.aportesFrom.get(campo)?.value.length > 0){
+        let subStringTemp : string = this.aportesFrom.get(campo)?.value;
+        let subStringTemp0 = subStringTemp.substring(0,1);
+        if(subStringTemp0 == "0")
+          this.aportesFrom.get(campo)?.setValue(subStringTemp.substring(1,subStringTemp.length));
+      }
   }
   GuardarAportes() {
     let data = localStorage.getItem('Data');
