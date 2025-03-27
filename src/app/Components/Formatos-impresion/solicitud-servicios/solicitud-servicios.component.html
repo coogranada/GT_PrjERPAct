@@ -1224,14 +1224,26 @@
                         </div>
                         <div class="col-xs-3 col-md-2 col-lg-3">
                             <div class="col-xs-12 col-md-2 col-lg-12">
-                                <div class="col-xs-4 col-md-2 col-lg-4" *ngIf="mostrarImporta">
-                                    <label class="letraGrande">Importa</label>
+                                <div class="col-xs-4 col-md-2 col-lg-4">
+                                    <label class="letraGrande">Importa:</label> &nbsp;
+                                    <label class="letraGrande">
+                                    <span *ngIf="mostrarImporta; else noTemplate">Si</span>
+                                    <ng-template #noTemplate>No</ng-template>
+                                    </label>
                                 </div>
-                                <div class="col-xs-4 col-md-2 col-lg-4" *ngIf="mostrarExporta">
-                                    <label class="letraGrande">Exporta</label>
-                                </div>
-                                <div class="col-xs-4 col-md-2 col-lg-4" *ngIf="mostrarGiros">
-                                    <label class="letraGrande">Giros</label>
+                                <div class="col-xs-4 col-md-2 col-lg-4">
+                                    <label class="letraGrande">Exporta:</label> &nbsp;
+                                    <label class="letraGrande">
+                                    <span *ngIf="mostrarExporta; else noTemplate">Si</span>
+                                    <ng-template #noTemplate>No</ng-template>
+                                    </label>
+                                 </div>
+                                <div class="col-xs-4 col-md-2 col-lg-4">
+                                    <label class="letraGrande">Giros:</label> &nbsp;
+                                    <label class="letraGrande">
+                                    <span *ngIf="mostrarGiros; else noTemplate">Si</span>
+                                    <ng-template #noTemplate>No</ng-template>
+                                    </label>
                                 </div>
                             </div>
                         </div>

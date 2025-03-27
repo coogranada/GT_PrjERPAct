@@ -1479,10 +1479,14 @@ export class TerminoComponent implements OnInit {
         this.TerminoForm.get('NombreOficinaAsociado')?.setValue(this.dataObjet.DescripcionOficinaAsociado);
         this.TerminoForm.get('Clase')?.setValue(this.dataObjet.IdRelacionTipo);
         this.AsesorForm.get('strCodigo')?.setValue(this.dataObjet.IdAsesorExterno);
+        const nombreCompleto = [
+          this.dataObjet.PrimerNombreAsesorE,
+          this.dataObjet.SegundoNombreAsesorE,
+          this.dataObjet.PrimerApellidoAsesorE,
+          this.dataObjet.SegundoApellidoAsesorE
+        ].filter((nombre) => nombre?.trim()).join(' ');
+        this.AsesorForm.get('strNombre')?.setValue(nombreCompleto);
         this.datoAsesorExterno = +this.dataObjet.IdAsesorExterno;
-        this.AsesorForm.get('strNombre')?.setValue(this.dataObjet.PrimerNombreAsesorE + ' ' + this.dataObjet.SegundoNombreAsesoreE +
-          ' ' + this.dataObjet.PrimerApellidoAsesorE + ' ' + this.dataObjet.SegundoApellidoAsesorE);
-
         this.TerminoForm.get('Edad')?.setValue(this.dataObjet.Edad + ' Años');
         this.TerminoForm.get('NroTitulo')?.setValue(this.dataObjet.NroTitulo);
         this.TerminoForm.get('NroTituloAnterior')?.setValue(this.dataObjet.NroTitulo);
@@ -1723,8 +1727,13 @@ export class TerminoComponent implements OnInit {
         this.TerminoForm.get('Clase')?.setValue(this.dataObjet.IdRelacionTipo);
         this.AsesorForm.get('strCodigo')?.setValue(this.dataObjet.IdAsesorExterno);
         this.datoAsesorExterno = +this.dataObjet.IdAsesorExterno;
-        this.AsesorForm.get('strNombre')?.setValue(this.dataObjet.PrimerNombreAsesorE + ' ' + this.dataObjet.SegundoNombreAsesoreE +
-          ' ' + this.dataObjet.PrimerApellidoAsesorE + ' ' + this.dataObjet.SegundoApellidoAsesorE);
+        const nombreCompleto = [
+          this.dataObjet.PrimerNombreAsesorE,
+          this.dataObjet.SegundoNombreAsesorE,
+          this.dataObjet.PrimerApellidoAsesorE,
+          this.dataObjet.SegundoApellidoAsesorE
+        ].filter((nombre) => nombre?.trim()).join(' ');
+        this.AsesorForm.get('strNombre')?.setValue(nombreCompleto);
 
         this.TerminoForm.get('Edad')?.setValue(this.dataObjet.Edad + ' Años');
         this.TerminoForm.get('NroTitulo')?.setValue(this.dataObjet.NroTitulo);

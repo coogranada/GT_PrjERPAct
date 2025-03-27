@@ -1018,9 +1018,14 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
           this.dataObjet[0].SegundoApellidoAsesor + ' ' + this.dataObjet[0].PrimerNombreAsesor + ' ' + this.dataObjet[0].SegundoNombreAsesor);
         this.AsesorFrom.get('strCodigo')?.setValue(this.dataObjet[0].IdAsesorExterno);
         this.datoAsesorExterno = this.dataObjet[0].IdAsesorExterno;
-        this.AsesorFrom.get('strNombre')?.setValue(this.dataObjet[0].PrimerApellidoAsesorE + ' ' +
-          this.dataObjet[0].SegundoApellidoAsesorE + ' ' + this.dataObjet[0].PrimerNombreAsesorE + ' ' +
-          this.dataObjet[0].SegundoNombreAsesoreE);
+        const nombreCompleto = [
+          this.dataObjet[0].PrimerNombreAsesorE,
+          this.dataObjet[0].SegundoNombreAsesorE,
+          this.dataObjet[0].PrimerApellidoAsesorE,
+          this.dataObjet[0].SegundoApellidoAsesorE
+        ].filter((nombre) => nombre?.trim()).join(' ');
+        
+        this.AsesorFrom.get('strNombre')?.setValue(nombreCompleto);
         this.asesoriacontractualFrom.get('Plazo')?.setValue(this.dataObjet[0].Plazo);
         this.datoPlazo = this.dataObjet[0].Plazo;
         this.asesoriacontractualFrom.get('CuotaMes')?.setValue(this.dataObjet[0].CuotaMes);
@@ -1080,9 +1085,14 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
           this.dataObjet.SegundoApellidoAsesor + ' ' + this.dataObjet.PrimerNombreAsesor + ' ' + this.dataObjet.SegundoNombreAsesor);
         this.AsesorFrom.get('strCodigo')?.setValue(this.dataObjet.IdAsesorExterno);
         this.datoAsesorExterno = this.dataObjet.IdAsesorExterno;
-        this.AsesorFrom.get('strNombre')?.setValue(this.dataObjet.PrimerApellidoAsesorE + ' ' +
-          this.dataObjet.SegundoApellidoAsesorE + ' ' + this.dataObjet.PrimerNombreAsesorE + ' ' +
-          this.dataObjet.SegundoNombreAsesoreE);
+        const nombreCompleto = [
+          this.dataObjet.PrimerNombreAsesorE,
+          this.dataObjet.SegundoNombreAsesorE,
+          this.dataObjet.PrimerApellidoAsesorE,
+          this.dataObjet.SegundoApellidoAsesorE
+        ].filter((nombre) => nombre?.trim()).join(' ');
+        
+        this.AsesorFrom.get('strNombre')?.setValue(nombreCompleto);
         this.asesoriacontractualFrom.get('Plazo')?.setValue(this.dataObjet.Plazo);
         this.datoPlazo = this.dataObjet.Plazo;
         this.asesoriacontractualFrom.get('CuotaMes')?.setValue(this.dataObjet.CuotaMes);

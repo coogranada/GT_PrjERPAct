@@ -878,7 +878,13 @@ export class AportesComponent implements OnInit {
         this.aportesFrom.get('SaldoTotal')?.setValue(this.dataObjet.SaldoTotal);
         this.AsesorFrom.get('strCodigo')?.setValue(this.dataObjet.IdAsesorExterno);
         this.datoAsesorExterno = +this.dataObjet.IdAsesorExterno;
-        this.AsesorFrom.get('strNombre')?.setValue(this.dataObjet.PrimerNombreAsesorE + ' ' + this.dataObjet.SegundoNombreAsesoreE + ' ' + this.dataObjet.PrimerApellidoAsesorE + ' ' + this.dataObjet.SegundoApellidoAsesorE);
+        const nombreCompleto = [
+          this.dataObjet.PrimerNombreAsesorE,
+          this.dataObjet.SegundoNombreAsesorE,
+          this.dataObjet.PrimerApellidoAsesorE,
+          this.dataObjet.SegundoApellidoAsesorE
+        ].filter((nombre) => nombre?.trim()).join(' ');
+        this.AsesorFrom.get('strNombre')?.setValue(nombreCompleto);
         this.ValorTotal();
         this.ObtenerHistorial();
         this.aportesFrom.get('FechaApertura')?.setValue(new DatePipe('en-CO').transform(this.dataObjet.FechaApertura, 'yyyy/MM/dd  HH:mm:ss'));
@@ -933,7 +939,13 @@ export class AportesComponent implements OnInit {
         this.aportesFrom.get('SaldoTotal')?.setValue(this.dataObjet.SaldoTotal);
         this.AsesorFrom.get('strCodigo')?.setValue(this.dataObjet.IdAsesorExterno);
         this.datoAsesorExterno = +this.dataObjet.IdAsesorExterno;
-        this.AsesorFrom.get('strNombre')?.setValue(this.dataObjet.PrimerNombreAsesorE + ' ' + this.dataObjet.SegundoNombreAsesoreE + ' ' + this.dataObjet.PrimerApellidoAsesorE + ' ' + this.dataObjet.SegundoApellidoAsesorE);
+        const nombreCompleto = [
+          this.dataObjet.PrimerNombreAsesorE,
+          this.dataObjet.SegundoNombreAsesorE,
+          this.dataObjet.PrimerApellidoAsesorE,
+          this.dataObjet.SegundoApellidoAsesorE
+        ].filter((nombre) => nombre?.trim()).join(' ');
+        this.AsesorFrom.get('strNombre')?.setValue(nombreCompleto);
         this.ValorTotal();
         this.ObtenerHistorial();
         this.aportesFrom.get('FechaApertura')?.setValue(

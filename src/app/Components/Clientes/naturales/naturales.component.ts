@@ -6787,7 +6787,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         Swal.fire({ // Se preguunta si necesita asesor externo
           title: 'Advertencia',
           text: '',
-          html: '! Se realizo un cambio en el estado civil se eliminaran los registros del conyugue ! ',
+          html: '¡ Se realizo un cambio en el estado civil se eliminaran los registros del cónyuge ! ',
           icon: 'warning',
           showCancelButton: false,
           confirmButtonText: 'Entiendo',
@@ -6816,7 +6816,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             Swal.fire({ // Se preguunta si necesita asesor externo
               title: 'Advertencia',
               text: '',
-              html: '! Se realizo un cambio en el estado civil se eliminaran los registros del conyugue ! ',
+              html: '¡ Se realizo un cambio en el estado civil se eliminaran los registros del cónyuge ! ',
               icon: 'warning',
               showCancelButton: false,
               confirmButtonText: 'Entiendo',
@@ -6829,6 +6829,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
               this.itemsConyugue = [];
               this.allItemsFormSaves.conyugueDto = [];
               localStorage.setItem('estadoSeleccionado', this.basicosFrom.get('estadoCivil')?.value);
+              this.limpiarFormularios(this.conyugueForm);
               if (results.value) {
                 this.cambioCivil = true;
               }
@@ -15192,6 +15193,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       if (this.estadoCivilSeleccionado === 25) {
         this.notif.onWarning('Advertencia', 'No se puede registrar el conyugue, para el estado civil seleccionado.');
         this.conyugueForm.reset();
+        this.limpiarFormularios(this.conyugueForm);
       } else {
         this.formBuscarLockedCreacion = true;
         if (this.indexConyugue !== null) {
@@ -25753,4 +25755,18 @@ PreCargarPais(val: number) {
   
 
   //#endregion
+    capitalizarLetra(string: string): string {
+    try {
+      if (!string) {
+        return string;
+      }
+      return string
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ')
+    } catch (error) {
+      return string; 
+    }
+  }
+
 }

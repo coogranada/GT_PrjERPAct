@@ -569,7 +569,7 @@ export class SolicitudServiciosComponent implements OnInit {
             }
           });
           // mapea la informacion del Arrendador
-          this.naturalesAllModel.NombreArrendador = result.asociadosNaturalesDto.NombreArrendador;
+          this.naturalesAllModel.NombreArrendador = this.capitalizarLetra(result.asociadosNaturalesDto.NombreArrendador);
           this.naturalesAllModel.TelefonoArrendador = result.asociadosNaturalesDto.TelefonoArrendador;
           // mapea celular y  correo
           console.log(' // mapea celular y  correo');
@@ -831,7 +831,7 @@ export class SolicitudServiciosComponent implements OnInit {
           });
           // mapea datos arrendador 
           result.laboralDto.forEach((elementLab : any) => {
-            this.naturalesAllModel.NomArrendadorLaboral = elementLab.NombreArrendador;
+            this.naturalesAllModel.NomArrendadorLaboral = this.capitalizarLetra(elementLab.NombreArrendador);
             this.naturalesAllModel.TeleArrendadorLaboral = elementLab.TelefonoArrendador;
             if (elementLab.IdTipoLocal === 1) {
               this.naturalesAllModel.TipoLocalLaboral = 'Arrendado';
@@ -1144,19 +1144,19 @@ export class SolicitudServiciosComponent implements OnInit {
                 }
               }
               if (element.NumeroPregunta === 7) { // Entidad
-                this.naturalesAllModel.Entidad = element.Respuesta;
+                this.naturalesAllModel.Entidad = this.capitalizarLetra(element.Respuesta);
               }
               if (element.NumeroPregunta === 8) { // importa
-                this.mostrarImporta = Boolean(element.Respuesta);
+                this.mostrarImporta = (element.Respuesta === 'true');
               }
               if (element.NumeroPregunta === 9) { // exporta
-                this.mostrarExporta = Boolean(element.Respuesta);
+                this.mostrarExporta = (element.Respuesta === 'true');
               }
               if (element.NumeroPregunta === 10) { // giros
-                this.mostrarGiros = Boolean(element.Respuesta);
+                this.mostrarGiros = (element.Respuesta === 'true');
               }
               if (element.NumeroPregunta === 11) { // tipoProducto
-                this.naturalesAllModel.TipoProducto = element.Respuesta;
+                this.naturalesAllModel.TipoProducto = this.capitalizarLetra(element.Respuesta);
               }
               if (element.NumeroPregunta === 12) { // Pais
                 if (element.Respuesta !== '' && element.Respuesta !== null) {
@@ -1170,7 +1170,7 @@ export class SolicitudServiciosComponent implements OnInit {
                 }
               }
               if (element.NumeroPregunta === 13) { // ciudad operacion
-                this.naturalesAllModel.Ciudadoperacion = element.Respuesta;
+                this.naturalesAllModel.Ciudadoperacion = this.capitalizarLetra(element.Respuesta);
               }
               if (element.NumeroPregunta === 24) { // Monto promedio
                 this.naturalesAllModel.MontoPromedio = element.Respuesta;
@@ -1541,6 +1541,20 @@ export class SolicitudServiciosComponent implements OnInit {
 
   MaysPrimera(string : string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  capitalizarLetra(string: string): string {
+    try {
+      if (!string) {
+        return string;
+      }
+      return string
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ')
+    } catch (error) {
+      return string; 
+    }
   }
 
   print() {
