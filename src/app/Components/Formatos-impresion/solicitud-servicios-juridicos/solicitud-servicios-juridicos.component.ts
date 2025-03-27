@@ -473,8 +473,8 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
           this.entrevista.TipoProducto = (element.Respuesta === null || element.Respuesta === '') ? '' : element.Respuesta;
         }
         if (element.NumeroPregunta === 12) {
-          this.dataPaises.forEach((elementPais : any) => {
-            if (elementPais.IdCiudad === +element.Respuesta) { this.entrevista.Pais = elementPais.Nombre; }
+          this.GetData.ListPais.some((elementPais : any) => {
+            if (elementPais.IdPais === +element.Respuesta) { this.entrevista.Pais = elementPais.Descripcion; return true; } return false;
           });
         }
         if (element.NumeroPregunta === 25) {
@@ -494,10 +494,8 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
         }
 
         if (element.NumeroPregunta === 15) {
-          this.dataPaises.forEach((elementPais : any) => {
-            this.dataPaises.forEach((elementPais : any) => {
-              if (elementPais.IdCiudad === +element.Respuesta) { this.entrevista.PaisInversion = elementPais.Nombre; }
-            });
+          this.GetData.ListPais.some((elementPais : any) => {
+            if (elementPais.IdPais === +element.Respuesta) { this.entrevista.PaisInversion = elementPais.Descripcion; return true; } return false;
           });
         }
         if (element.NumeroPregunta === 16) {
@@ -510,8 +508,8 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
           this.entrevista.CuentaMonedaExtrangera = (element.Respuesta !== null && element.Respuesta === 'true') ? 'Si' : 'No';
         }
         if (element.NumeroPregunta === 18) {
-          this.dataPaises.forEach((elementPais : any) => {
-            if (elementPais.IdCiudad === +element.Respuesta) { this.entrevista.PaisCuenta = elementPais.Nombre; }
+          this.GetData.ListPais.some((elementPais : any) => {
+            if (elementPais.IdPais === +element.Respuesta) { this.entrevista.PaisCuenta = elementPais.Descripcion; return true; } return false;
           });
         }
 

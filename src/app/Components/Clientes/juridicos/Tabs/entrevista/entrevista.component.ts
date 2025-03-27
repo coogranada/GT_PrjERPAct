@@ -90,9 +90,6 @@ export class EntrevistaComponent implements OnInit {
     this.IrArriba();
     this.validarTratamiento();
     this.validarEntrevista();
-    this.EntidadCapitalice();
-    this.ProductoCapitalice();
-    this.CiudadCapitalice();
     this.onChanges();
   }
 
@@ -1227,24 +1224,22 @@ export class EntrevistaComponent implements OnInit {
     return false;
   }
 
-  EntidadCapitalice() {
-    let self = this;
-    $('#enQueEntidad').keyup(function () {
-      $(self).val($(self).val().substr(0, 1).toUpperCase() + $(self).val().substr(1).toLowerCase());
-    });
-  }
-  ProductoCapitalice() {
-    let self = this;
-    $('#tipoProducto').keyup(function () {
-      $(self).val($(self).val().substr(0, 1).toUpperCase() + $(self).val().substr(1).toLowerCase());
-    });
-  }
-  CiudadCapitalice() {
-    let self = this;
-    $('#ciudad').keyup(function () {
-      $(self).val($(self).val().substr(0, 1).toUpperCase() + $(self).val().substr(1).toLowerCase());
-    });
-  }
   //#endregion
+
+  validarValorCampoNombres(campoJquery: string, campoAngular: string) {
+    let valorCampo = $('#' + campoJquery).val();
+  
+    if (valorCampo === undefined || valorCampo.trim().length === 0) {
+      this.entrevistaForm.get(campoAngular)?.reset();
+    } else {
+      let valorCorregido = valorCampo.toString().trim().toLowerCase()
+        .replace(/\b[á-úa-zA-Z]+/g, (letra: any) => letra.charAt(0).toUpperCase() + letra.slice(1));
+
+      $('#' + campoJquery).val(valorCorregido);
+      this.entrevistaForm.get(campoAngular)?.setValue(valorCorregido);
+    }
+  }
+
+
 
 }

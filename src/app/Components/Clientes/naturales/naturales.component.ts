@@ -1476,7 +1476,9 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.operacionesModel.idModulo = +JSON.parse(window.atob(IdModuloActivo == null ? "" : IdModuloActivo));
     this.mostrarPorQueCobertura = false;
     this.solicitudRetiroForm.reset();
-    if (results === '5') { // Creacion 
+    if (results === '5') { // Creacion
+
+      this.ResetAllForm();
       this.LimpiaVariablesAlerta();
       this.EjecutarMetodosMaestros();
       this.btnBuscar = true;
@@ -3065,7 +3067,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                             const estadoAsociado = this.basicosFrom.get('estado')?.value;
                             if (result === null && fechaSolRetiro === null && fechaTabRetiro === null) {
                               this.notif.onWarning('Advertencia',
-                                'Validar, el asociado no tiene registrada fecha de Retiro',
+                                'Validar, el asociado no tiene registrada fecha de retiro',
                                 );
                               this.basicosFrom.get('operacion')?.reset();
                               this.btnGuardarOculto = false;
@@ -3462,20 +3464,14 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                     this.clientesGetListService.GetTipoDocumento().subscribe(
                       result => {
                         this.dataTipoDocumento = result;
-                        if (cliente === 10) {
-                          this.dataTipoDocumento.splice(-6, 1);
-                          this.dataTipoDocumento.splice(0, 3);
+                        if (cliente === 10) { // menor
+                          this.dataTipoDocumento.splice(-9, 3);
                           this.dataTipoDocumento.splice(2, 1);
-                        } else if (cliente === 5) {
+                        } else if (cliente === 5) { //  asociado
+                          this.dataTipoDocumento.splice(2, 4);
+                        } else if (cliente === 15) { // tercero
                           this.dataTipoDocumento.splice(2, 1);
-                          this.dataTipoDocumento.splice(2, 1);
-                          this.dataTipoDocumento.splice(2, 1);
-                          this.dataTipoDocumento.splice(2, 1);
-                          this.dataTipoDocumento.splice(2, 1);
-                        } else if (cliente === 15) {
-                          this.dataTipoDocumento.splice(-6, 1);
-                          this.dataTipoDocumento.splice(2, 1);
-                          this.dataTipoDocumento.splice(2, 1);
+                          this.dataTipoDocumento.splice(4, 1);
                         } else {
                           this.dataTipoDocumento = [];
                         }
@@ -5701,8 +5697,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
               this.desbloquearFormBuscar();
               this.MostrarAsesorExterno = true;
               this.formTutorOculto = true;
-              this.dataTipoDocumento.splice(-6, 1);
-              this.dataTipoDocumento.splice(0, 3);
+              this.dataTipoDocumento.splice(-9, 3);
               this.dataTipoDocumento.splice(2, 1);
               this.basicosFrom.get('tipoDocumento')?.reset();
               this.validarMayorMenorEdad();
@@ -6010,11 +6005,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
               this.basicosFrom.controls['nivelEstudio'].updateValueAndValidity();
               this.basicosFrom.get('IdentificacionTutor')?.reset();
               this.basicosFrom.get('NombreTutor')?.reset();
-              this.dataTipoDocumento.splice(2, 1);
-              this.dataTipoDocumento.splice(2, 1);
-              this.dataTipoDocumento.splice(2, 1);
-              this.dataTipoDocumento.splice(2, 1);
-              this.dataTipoDocumento.splice(2, 1);
+              this.dataTipoDocumento.splice(2, 4);
               this.basicosFrom.get('tipoDocumento')?.reset();
               this.blockTratamiento = true;
               this.blockDebitoAtomatico = true;
@@ -6033,9 +6024,8 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           this.BlockInputService = null;
           this.segurosForm.get('tratamiento')?.setValue(true);
           this.segurosForm.get('debitoAuto')?.setValue(false);
-          this.dataTipoDocumento.splice(-6, 1);
           this.dataTipoDocumento.splice(2, 1);
-          this.dataTipoDocumento.splice(2, 1);
+          this.dataTipoDocumento.splice(4, 1);
           this.EsProveedor = true;
           this.oculatObligatorioTercero = false;
           this.oculatObligatorioTerceroProveedor = true;
