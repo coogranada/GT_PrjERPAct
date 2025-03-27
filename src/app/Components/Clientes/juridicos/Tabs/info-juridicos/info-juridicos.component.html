@@ -300,7 +300,7 @@
                             <span class="hiddenText">*</span>
                             <input type="text" class="form-control" [attr.disabled]="bloquearAsesorExt" id="asesorExterno" formControlName="NombreAsesorExt" (keypress)="LimpiarIdAsesorExternoCodigo()">
                             <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['NombreAsesorExt'].errors?.['pattern']  && (infoJuridicoFrom.controls['NombreAsesorExt'].dirty || infoJuridicoFrom.controls['NombreAsesorExt'].touched)">
-                    La Asesor Externo solo acepta letras.
+                    El Asesor Externo solo acepta letras.
                   </span>
                         </div>
                         <div class="col-md-3 col-lg-3">
@@ -308,9 +308,10 @@
                             <button type="button" class="btn Gt-btn-verde btn-icon legitRipple" [attr.disabled]="disableAsesorExt" (click)="GetAsesorExternoAll()">
                     <i class="icon-search4"></i>
                   </button>
-                            <button type="button" title="Desbloquear campos asesor" target="_blank" data-popup="tooltip" class="btn Gt-btn-verde btn-icon legitRipple" [attr.disabled]="AsessorNecesario" (click)="DesbloquearAsesorExterno()">
+                         <!--   <button type="button" title="Desbloquear campos asesor" target="_blank" data-popup="tooltip" class="btn Gt-btn-verde btn-icon legitRipple" [attr.disabled]="AsessorNecesario" (click)="DesbloquearAsesorExterno()">
                     <i class="icon-unlocked2"></i>
-                  </button>
+                  </button>-->
+
                         </div>
                     </div>
 

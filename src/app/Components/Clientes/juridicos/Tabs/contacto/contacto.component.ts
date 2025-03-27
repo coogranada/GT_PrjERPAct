@@ -1009,10 +1009,8 @@ export class ContactoComponent implements OnInit {
   }
 
   validarTipoContacto(form : any) {
-    console.log(form.TipoContacto.Id);
     this.indexItemContacto = null;
     if (form.TipoContacto.Id === 8) { // direccion 
-      console.log(form.TipoContacto.Id);
       this.bloquearContPpal = null;
       this.ocultarDireccion = null;
       this.ocultarUbicacion = null;

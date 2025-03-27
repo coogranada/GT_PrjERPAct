@@ -66,7 +66,6 @@ export class FinancieraComponent implements OnInit {
   ngOnInit() {
     this.IrArriba();
     this.validateJuridicos();
-    this.ObservacionCapitalice();
     this.validateJuridicos();
     this.dataCategoria = this.DataRequired.CategoriasData;
   }
@@ -377,13 +376,6 @@ export class FinancieraComponent implements OnInit {
     }
   }
 
-  ObservacionCapitalice() {
-    let self = this;
-    $('#Observa').keyup(function () {
-      self.financieraFrom.controls["Observacion"].setValue((self.financieraFrom.controls["Observacion"].value.substr(0, 1).toUpperCase() + self.financieraFrom.controls["Observacion"].value.substr(1).toLowerCase() ));
-      //$(self).val($(self).val().substr(0, 1).toUpperCase() + $(self).val().substr(1).toLowerCase());
-    });
-  }
 
   GuardarLog(formulario : any, operacion : number, cuenta : number, tercero : number, modulo : number) {
     this.generalesService.Guardarlog(formulario, operacion, cuenta, tercero, modulo).subscribe(

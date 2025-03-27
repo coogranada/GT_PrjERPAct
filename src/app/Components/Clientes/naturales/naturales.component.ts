@@ -891,7 +891,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     });
     
     this.VeredaCapitaliceContac();
-    this.EntrevistaCapitalice();
     $('#financieroTab').addClass('disableTab');
     $('#contactoTab').addClass('disableTab');
     $('#activoTab').addClass('disableTab');
@@ -7663,41 +7662,31 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   }
 
   validarValorCampoNombres(campoJquery : string, campoAngular : string) {
-    const lentghCampo = $('#' + campoJquery + '').val();
-    if (lentghCampo.length > 0) {
-      if ($('#' + campoJquery + '').val().trim() === '') {
-        this.notif.onWarning('Advertencia', 'El campo no puede contener espacios.');
-        this.basicosFrom.get('' + campoAngular + '')?.reset();
-      }
-    }
-    let valorCampo = $('#' + campoJquery + '').val().toString().trim();
-    let valorCorregido = valorCampo
-    .toLowerCase()
-    .replace(/\b[á-úa-zA-Z]+/g, (letra: any) =>letra.charAt(0).toUpperCase() + letra.slice(1));;
+    let valorCampo = $('#' + campoJquery).val();
+  
+    if (valorCampo === undefined || valorCampo.trim().length === 0) {
+      this.entrevistaForm.get(campoAngular)?.reset();
+    } else {
+      let valorCorregido = valorCampo.toString().trim().toLowerCase()
+        .replace(/\b[á-úa-zA-Z]+/g, (letra: any) => letra.charAt(0).toUpperCase() + letra.slice(1));
 
-    $('#' + campoJquery + '').val(valorCorregido);
-    this.basicosFrom.get('' + campoAngular + '')?.setValue(valorCorregido);
+      $('#' + campoJquery).val(valorCorregido);
+      this.entrevistaForm.get(campoAngular)?.setValue(valorCorregido);
+    }
   }
 
   validarValorCampo(campoJquery: string, campoAngular: string) {
-    let valorCampo = $('#' + campoJquery).val()?.toString().trim();
-    const lentghCampo = $('#' + campoJquery + '').val();
+    let valorCampo = $('#' + campoJquery).val();
   
-    if (lentghCampo.length > 0) {
-      if ($('#' + campoJquery + '').val().trim() === '') {
-        this.basicosFrom.get('' + campoAngular + '')?.reset();
-      }
+    if (valorCampo === undefined || valorCampo.trim().length === 0) {
+      this.entrevistaForm.get(campoAngular)?.reset();
+    } else {
+      let valorCorregido = valorCampo.toString().trim().toLowerCase()
+        .replace(/\b[á-úa-zA-Z]+/g, (letra: any) => letra.charAt(0).toUpperCase() + letra.slice(1));
+
+      $('#' + campoJquery).val(valorCorregido);
+      this.entrevistaForm.get(campoAngular)?.setValue(valorCorregido);
     }
-  
-    let valorCorregido = valorCampo
-      .toLowerCase()  
-      .replace(/\b[á-úa-zA-Z]+/g, (letra: any) => 
-        letra.charAt(0).toUpperCase() + letra.slice(1) 
-      );
-  
-    $('#' + campoJquery).val(valorCorregido);
-  
-    this.basicosFrom.get(campoAngular)?.setValue(valorCorregido);
   }
     
   validarMinuscula(campoJquery: string, campoAngular: string) {
@@ -7720,7 +7709,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     const lentghCampo = $('#' + campoJquery + '').val();
     if (lentghCampo.length > 0) {
       if ($('#' + campoJquery + '').val().trim() === '') {
-        this.notif.onWarning('Advertencia', 'El campo no puede contener espacios.');
         this.referenciaForm.get('' + campoAngular + '')?.reset();
       }
     }
@@ -25348,18 +25336,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     });
   }
 
-  EntrevistaCapitalice() {
-    const self = this;
-    $('#RPre12').keyup(function () {
-      $(self).val($(self).val().substr(0, 1).toUpperCase() + $(self).val().substr(1).toLowerCase());
-    });
-    $('#RPre20').keyup(function () {
-      $(self).val($(self).val().substr(0, 1).toUpperCase() + $(self).val().substr(1).toLowerCase());
-    });
-    $('#RPre24').keyup(function () {
-      $(self).val($(self).val().substr(0, 1).toUpperCase() + $(self).val().substr(1).toLowerCase());
-    });
-  }
 
   NombresApellidosPepsCapitalice() {
     const self = this;
