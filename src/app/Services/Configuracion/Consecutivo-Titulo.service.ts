@@ -96,11 +96,11 @@ export class ConsecutivoTituloService {
         return this._http.post<any>(this.url, Datos);
     }
     ObtenerInfoRangoTitulosTermino(NroTituloInicial: number, NroTituloFinal: number): Observable<any> {
-        this.url = `${this.environment.Url}/ObtenerInfoRangoTitulosTermino`;
+        this.url = `${this.environment.Url}/ObtenerInfoRangoTitulosTermino/${NroTituloInicial}/${NroTituloFinal}`;
         const params = new HttpParams()
         .set('intNroTituloInicial', NroTituloInicial)
         .set('intNroTituloFinal', NroTituloFinal);
-        return this._http.get<any>(this.url,{params: params });
+        return this._http.get<any>(this.url);
     }  
     ObtenerTitulosTerminoRegistrar(FechaInicial: string, FechaFinal: string, idOficina: string): Observable<any> {
         this.url = `${this.environment.Url}/ObtenerTitulosTerminoRegistrar`;

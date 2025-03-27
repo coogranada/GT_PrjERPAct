@@ -1968,9 +1968,14 @@ export class AportesComponent implements OnInit {
   ValidacionPuntoComa($event : any) {
     const Numero = $event;
     const key = Numero.keyCode;
-
     if (key === 46 || key === 44) {
       Numero.preventDefault();
+    }
+  }
+  validarCero(value : number = 0){
+    if(value == 0){
+      if(this.aportesFrom.get('DocumentoBeneficiario')?.value == 0)
+        this.aportesFrom.get('DocumentoBeneficiario')?.setValue("");
     }
   }
   GuardarAportes() {
@@ -1984,6 +1989,9 @@ export class AportesComponent implements OnInit {
     this.BloquearFormaPago = false;
     this.BloquearDatoBenf = false;
     this.BloquearNombreBenf = false;
+    this.LimpiarBeneficiarior();
+    this.bloquearDocumentoBenf = false;
+    this.btnOpcionActualizarBeneficiario = true
     this.aportesFrom.get('Beneficiarios')?.setValue(this.dataObjetBeneficiarios);
     if (this.AsesorFrom.get('strCodigo')?.value  !== null
       && this.AsesorFrom.get('strCodigo')?.value  !== undefined
@@ -1993,7 +2001,7 @@ export class AportesComponent implements OnInit {
       
       if (this.dataObjetBeneficiarios.length > 0) {
         
-        
+        this.aportesFrom.get('DocumentoBeneficiario')?.disable();
         let sumaPorcentaje = 0;
         let totalSuma;
         this.dataObjetBeneficiarios.forEach(element => {
@@ -2013,7 +2021,7 @@ export class AportesComponent implements OnInit {
               this.BloquearbtnBenef = false;
               this.BloquearAsesorExterno = false;
               this.BloquearFormaPago = false;
-              this.btnOpcionActualizarBeneficiario = false;
+              this.btnOpcionActualizarBeneficiario = true;
               this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
               this.btnGuardar = true;
               this.Bloquear = false;
@@ -2045,6 +2053,7 @@ export class AportesComponent implements OnInit {
       } else {
         this.aportesFrom.get('Beneficiarios')?.setValue(this.dataObjetBeneficiarios);
         this.loading = true;
+        this.aportesFrom.get('DocumentoBeneficiario')?.disable();
         this.aportesServices.getGuardarAportes(this.aportesFrom.value).subscribe(
           result => {
             this.loading = false;
@@ -2057,7 +2066,7 @@ export class AportesComponent implements OnInit {
             this.BloquearAsesorExterno = false;
             this.BloquearFormaPago = false;
             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
-            this.btnOpcionActualizarBeneficiario = false;
+            this.btnOpcionActualizarBeneficiario = true;
             this.btnGuardar = true;
             this.Bloquear = false;
             this.Guardarlog(10);
@@ -2109,6 +2118,7 @@ export class AportesComponent implements OnInit {
             totalSuma = sumaPorcentaje + +this.aportesFrom.get('Porcentaje')?.value ;
             if (totalSuma === 100) {
               this.loading = true;
+              this.aportesFrom.get('DocumentoBeneficiario')?.disable();
               this.aportesServices.getGuardarAportes(this.aportesFrom.value).subscribe(
                 result => {
                   this.loading = false;
@@ -2121,7 +2131,7 @@ export class AportesComponent implements OnInit {
                   this.BloquearAsesorExterno = false;
                   this.BloquearFormaPago = false;
                   this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
-                  this.btnOpcionActualizarBeneficiario = false;
+                  this.btnOpcionActualizarBeneficiario = true;
                   this.btnGuardar = true;
                   this.Bloquear = false;
                   this.Guardarlog(10);
@@ -2151,6 +2161,7 @@ export class AportesComponent implements OnInit {
             }
           } else {
             this.loading = true;
+            this.aportesFrom.get('DocumentoBeneficiario')?.disable();
             this.aportesServices.getGuardarAportes(this.aportesFrom.value).subscribe(
               result => {
                 this.loading = false;
@@ -2163,7 +2174,7 @@ export class AportesComponent implements OnInit {
                 this.BloquearAsesorExterno = false;
                 this.BloquearFormaPago = false;
                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
-                this.btnOpcionActualizarBeneficiario = false;
+                this.btnOpcionActualizarBeneficiario = true;
                 this.btnGuardar = true;
                 this.Bloquear = false;
                 this.Guardarlog(10);
