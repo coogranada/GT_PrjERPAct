@@ -3170,7 +3170,7 @@
                                                                 N/A
                                                             </td>
                                                             <td class="Capitalice"   *ngIf="itemLaboral.NombreArrendador !== '' && itemLaboral.NombreArrendador !== null && MostrarEmpresaDescripcion && !MostrarEmpresaBuscar">
-                                                                <p class="CapitaliceMayus">{{itemLaboral.NombreArrendador}}</p>
+                                                                {{itemLaboral.NombreArrendador}}
                                                             </td>
                                                             <td *ngIf="itemLaboral.NombreArrendador === '' || itemLaboral.NombreArrendador === null && MostrarEmpresaDescripcion && !MostrarEmpresaBuscar">
                                                                 N/A
@@ -3951,7 +3951,7 @@
                                                             <br>
                                                         </td>
                                                         <td>
-                                                            <input type="text" [attr.disabled]="DesbloquearRespuesta6" class="form-control" pattern="[a-zA-ZñÑ ]*" id="RPre7Si" formControlName="RPregunta7Si" placeholder="En que entidad?" (keydown)="habilitarActualizar()" (blur)="validarValorCampo('RPre7Si','RPregunta7Si')">
+                                                            <input type="text" [attr.disabled]="DesbloquearRespuesta6" class="form-control" pattern="[a-zA-ZñÑ ]*" id="RPre7Si" formControlName="RPregunta7Si" placeholder="¿En que entidad?" (keydown)="habilitarActualizar()" (blur)="validarValorCampo('RPre7Si','RPregunta7Si')">
                                                             <span class="help-block validationSpan" *ngIf="entrevistaForm.controls['RPregunta7Si'].errors?.['pattern'] && 
                                                                 (entrevistaForm.controls['RPregunta7Si'].dirty || entrevistaForm.controls['RPregunta7Si'].touched)">
                                                                 La entidad solo acepta letras. </span>

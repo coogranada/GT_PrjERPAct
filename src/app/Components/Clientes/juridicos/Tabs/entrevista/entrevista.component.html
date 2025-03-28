@@ -16,7 +16,7 @@
                             <br>
                         </td>
                         <td>
-                            <input type="text" [attr.disabled]="DesbloquearRespuesta3" class="form-control SoloMinuscula" pattern="[a-zA-ZñÑ ]*" id="enQueEntidad" formControlName="RPregunta7Si" (blur)="validarValorCampoNombres('enQueEntidad','RPregunta7Si')" placeholder="En que entidad?" (keydown)="habilitarActualizar()">
+                            <input type="text" [attr.disabled]="DesbloquearRespuesta3" class="form-control SoloMinuscula" pattern="[a-zA-ZñÑ ]*" id="enQueEntidad" formControlName="RPregunta7Si" (blur)="validarValorCampoNombres('enQueEntidad','RPregunta7Si')" placeholder="¿En qué entidad?" (keydown)="habilitarActualizar()">
                             <span class="help-block validationSpan" *ngIf="entrevistaForm.controls['RPregunta7Si'].errors?.['pattern']  && 
                                                                                 (entrevistaForm.controls['RPregunta7Si'].dirty || entrevistaForm.controls['RPregunta7Si'].touched)">
                                 La entidad solo acepta letras. </span>
