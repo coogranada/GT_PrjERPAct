@@ -175,7 +175,7 @@
                                                     <div class="form-group">
                                                         <label class="textNegrilla">Número documento:</label>
                                                         <span class="grande"> *</span>
-                                                        <input type="text" class="form-control" #CCdocumento Id="NumeroDocumento" formControlName="numeroDocumento" maxlength="15" [attr.disabled]="disableFormNumeroDocumento" (blur)="validarDocumnetoCreacionNatural()" />
+                                                        <input type="text" class="form-control" #CCdocumento Id="NumeroDocumento" formControlName="numeroDocumento" maxlength="15" [attr.disabled]="disableFormNumeroDocumento" (blur)="validarDocumnetoCreacionNatural()" (input)="validarCero('numeroDocumento')" />
                                                         <span class="help-block validationSpan" *ngIf="basicosFrom.controls['numeroDocumento'].errors?.['required'] && (basicosFrom.controls['numeroDocumento'].dirty || basicosFrom.controls['numeroDocumento'].touched)">
                                                             El número documento es obligatorio.
                                                         </span>
@@ -2381,7 +2381,7 @@
                                                     <div class="form-group">
                                                         <label class="textNegrilla">Número documento:</label>
                                                         <span class="grande"> *</span>
-                                                        <input type="text" class="form-control" formControlName="NumeroDocumento" [attr.disabled]="formBuscarLockedConyugue" (blur)="ValidarVetadosDocumentoConyugue()" (keypress)="limpiarConyugue()" />
+                                                        <input type="text" class="form-control" formControlName="NumeroDocumento" [attr.disabled]="formBuscarLockedConyugue" (blur)="ValidarVetadosDocumentoConyugue()" (keypress)="limpiarConyugue()" (input)="validarCero('NumeroDocumento',1)"  />
                                                         <span class="help-block validationSpan" *ngIf="conyugueForm.controls['NumeroDocumento'].errors?.['required'] && (conyugueForm.controls['NumeroDocumento'].dirty || conyugueForm.controls['NumeroDocumento'].touched)">
                                                             El número documento es obligatorio.
                                                         </span>
@@ -4442,7 +4442,7 @@
                                                             <label class="textNegrilla">Fecha respuesta
                                                                 aseguradora:</label>
                                                             <span class="text-danger"> </span>
-                                                            <input type="date" class="form-control" formControlName="fechaAsegurado" min="1900-01-01" max="9999-01-01" [attr.disabled]="BlockFecha" (blur)="validarFechaRpstaAseguradora()" />
+                                                            <input type="date" class="form-control" formControlName="fechaAsegurado" min="1900-01-01" max="{{fechaMax}}" [attr.disabled]="BlockFecha" (blur)="validarFechaRpstaAseguradora()" />
                                                         </div>
                                                     </div>
                                                     <input type="hidden" />
