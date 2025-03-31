@@ -16724,7 +16724,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
               this.laboralFormSet.get('IdTipoLocal')?.setValue(null);
             }
             if (elementlab.NombreArrendador !== null && elementlab.NombreArrendador !== undefined && elementlab.NombreArrendador !== '') {
-              this.laboralFormSet.get('NombreArrendador')?.setValue(  elementlab.NombreArrendador.charAt(0).toUpperCase() + elementlab.NombreArrendador.slice(1).toLowerCase());
+              this.laboralFormSet.get('NombreArrendador')?.setValue(this.capitalizarLetra(elementlab.NombreArrendador));
             } else {
               this.laboralFormSet.get('NombreArrendador')?.setValue(null);
             }
@@ -16779,7 +16779,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             this.laboralFormSet.get('NumPersonasCargo')?.setValue(elementlabo.NumPersonasCargo);
             this.laboralFormSet.get('EmpresaDescripcion')?.setValue(elementlabo.EmpresaString);
             this.laboralFormSet.get('IdTipoLocal')?.setValue(elementlabo.IdTipoLocal);
-            this.laboralFormSet.get('NombreArrendador')?.setValue(elementlabo.NombreArrendador);
+            this.laboralFormSet.get('NombreArrendador')?.setValue(this.capitalizarLetra(elementlabo.NombreArrendador));
             this.laboralFormSet.get('TelefonoArrendador')?.setValue(elementlabo.TelefonoArrendador);
             this.allItemsFormLaboral.push(this.laboralFormSet.value);
           });
@@ -16858,7 +16858,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             this.laboralFormSet.get('IdTipoLocal')?.setValue(null);
           }
           if (elementlab.NombreArrendador !== null && elementlab.NombreArrendador !== undefined && elementlab.NombreArrendador !== '') {
-            this.laboralFormSet.get('NombreArrendador')?.setValue(elementlab.NombreArrendador);
+            this.laboralFormSet.get('NombreArrendador')?.setValue(this.capitalizarLetra(elementlab.NombreArrendador));
           } else {
             this.laboralFormSet.get('NombreArrendador')?.setValue(null);
           }
@@ -16931,7 +16931,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             this.laboralFormSet.get('IdTipoLocal')?.setValue(null);
           }
           if (elementlab.NombreArrendador !== null && elementlab.NombreArrendador !== undefined && elementlab.NombreArrendador !== '') {
-            this.laboralFormSet.get('NombreArrendador')?.setValue(elementlab.NombreArrendador);
+            this.laboralFormSet.get('NombreArrendador')?.setValue(this.capitalizarLetra(elementlab.NombreArrendador));
           } else {
             this.laboralFormSet.get('NombreArrendador')?.setValue(null);
           }
