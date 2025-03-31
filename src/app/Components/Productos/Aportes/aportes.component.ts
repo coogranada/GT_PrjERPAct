@@ -886,7 +886,9 @@ export class AportesComponent implements OnInit {
         ].filter((nombre) => nombre?.trim()).join(' ');
         this.AsesorFrom.get('strNombre')?.setValue(nombreCompleto);
         this.ValorTotal();
-        this.ObtenerHistorial();
+        setTimeout(() => {
+          this.ObtenerHistorial();
+        }, 1200);
         this.aportesFrom.get('FechaApertura')?.setValue(new DatePipe('en-CO').transform(this.dataObjet.FechaApertura, 'yyyy/MM/dd  HH:mm:ss'));
         this.aportesFrom.get('FechaUltimaTrans')?.setValue(new DatePipe('en-CO').transform(this.dataObjet.FechaUltimaTrans, 'yyyy/MM/dd  HH:mm:ss'));
         if (this.dataObjet.FechaCancelacion != null) {
@@ -947,7 +949,9 @@ export class AportesComponent implements OnInit {
         ].filter((nombre) => nombre?.trim()).join(' ');
         this.AsesorFrom.get('strNombre')?.setValue(nombreCompleto);
         this.ValorTotal();
-        this.ObtenerHistorial();
+        setTimeout(() => {
+          this.ObtenerHistorial();
+        }, 1200);
         this.aportesFrom.get('FechaApertura')?.setValue(
           new DatePipe('en-CO').transform(this.dataObjet.FechaApertura, 'yyyy/MM/dd  HH:mm:ss'));
         this.aportesFrom.get('FechaUltimaTrans')?.setValue(
@@ -2053,7 +2057,9 @@ export class AportesComponent implements OnInit {
               }
               this.MapearDatosCuenta(result);
               this.BuscarPorCuenta();
-              this.ObtenerHistorial();
+              setTimeout(() => {
+                this.ObtenerHistorial();
+              }, 1200);
               this.VolverArriba();
               this.aportesOperacionFrom.get('Codigo')?.reset();
             },
@@ -2097,7 +2103,9 @@ export class AportesComponent implements OnInit {
             }
             this.MapearDatosCuenta(result);
             this.BuscarPorCuenta();
-            this.ObtenerHistorial();
+            setTimeout(() => {
+              this.ObtenerHistorial();
+            }, 1200);
             this.VolverArriba();
             this.aportesOperacionFrom.get('Codigo')?.reset();
           },
@@ -2162,7 +2170,9 @@ export class AportesComponent implements OnInit {
                   }
                   this.MapearDatosCuenta(result);
                   this.BuscarPorCuenta();
-                  this.ObtenerHistorial();
+                  setTimeout(() => {
+                    this.ObtenerHistorial();
+                  }, 1200);
                   this.VolverArriba();
                   this.aportesOperacionFrom.get('Codigo')?.reset();
                 },
@@ -2205,7 +2215,9 @@ export class AportesComponent implements OnInit {
                 }
                 this.MapearDatosCuenta(result);
                 this.BuscarPorCuenta();
-                this.ObtenerHistorial();
+                setTimeout(() => {
+                  this.ObtenerHistorial();
+                }, 1200);
                 this.VolverArriba();
                 this.aportesOperacionFrom.get('Codigo')?.reset();
               },
@@ -2242,7 +2254,7 @@ export class AportesComponent implements OnInit {
           Accion: x.Accion == "Crear" ? "Adicionar" : x.Accion,
           TipoDocumento: x.DescripcionTipoDocumento,
           Documento: x.NumeroDocumento,
-          Nombre: x.PrimerApellido + " " + (x.SegundoApellido == null ? '' : x.SegundoApellido) + " " + x.PrimerNombre + " " + (x.SegundoNombre == null ? '' : x.SegundoNombre),
+          Nombre: (x.PrimerApellido == null ? "" : x.PrimerApellido) + " " + (x.SegundoApellido == null ? '' : x.SegundoApellido) + " " + x.PrimerNombre + " " + (x.SegundoNombre == null ? '' : x.SegundoNombre),
           Porcentaje: x.Porcentaje + "%",
           Parentesco: x.DatosParentesco.Descripcion == null ? x.DatosParentesco : x.DatosParentesco.Descripcion,
           FechaMatricula: new DatePipe('en-CO').transform(x.FechaMatricula, 'yyyy/MM/dd  HH:mm:ss')
@@ -2309,7 +2321,9 @@ export class AportesComponent implements OnInit {
               this.VolverArriba();
               this.Guardarlog();
               this.aportesOperacionFrom.get('Codigo')?.reset();
-              this.ObtenerHistorial();
+              setTimeout(() => {
+                this.ObtenerHistorial();
+              }, 1200);
             },
             error => {
               this.loading = false;
@@ -2351,7 +2365,9 @@ export class AportesComponent implements OnInit {
                 this.BloquearFormaPago = false;
                 this.BloquearAsesorExterno = false;
                 this.aportesOperacionFrom.get('Codigo')?.reset();
-                this.ObtenerHistorial();
+                setTimeout(() => {
+                  this.ObtenerHistorial();
+                }, 1200);
               },
               error => {
                 this.loading = false;
@@ -2359,7 +2375,9 @@ export class AportesComponent implements OnInit {
                 console.log(errorMessage);
               });
 
-            this.ObtenerHistorial();
+              setTimeout(() => {
+                this.ObtenerHistorial();
+              }, 1200);
           } else if ((IdAsesor === null || IdAsesor === '' || IdAsesor === undefined) &&
             (NombreAsesor === null || NombreAsesor === '' || NombreAsesor === undefined)) {
             this.dataAsesor = this.AsesorFrom.get('strCodigo')?.value ;
@@ -2379,7 +2397,9 @@ export class AportesComponent implements OnInit {
                 this.btnGuardar = true;
                 this.Guardarlog();
                 this.aportesFrom.get('IdCuenta')?.setValue(result.IdCuenta);
-                this.ObtenerHistorial();
+                setTimeout(() => {
+                  this.ObtenerHistorial();
+                }, 1200);
                 this.btnActualizar = true;
                 this.btnActualizarBeneficiario = true;
                 this.BloquearFormaPago = false;
@@ -2391,7 +2411,9 @@ export class AportesComponent implements OnInit {
                 const errorMessage = <any>error;
                 console.log(errorMessage);
               });
-            this.ObtenerHistorial();
+              setTimeout(() => {
+                this.ObtenerHistorial();
+              }, 1200);
           } else {
             this.notif.onWarning('Advertencia', 'Debe seleccionar un asesor válido.');
           }
