@@ -225,7 +225,7 @@ export class AportesComponent implements OnInit {
         this.LimpiarBeneficiarior();        
       } else {
         this.generalesService.Autofocus('selectAsociado');
-        this.clearFormAportes();
+        this.clearFormAportes(1);
         this.clearFrom();
         this.LimpiarBeneficiarior();
         this.MapearDatosUsuario();
@@ -512,6 +512,7 @@ export class AportesComponent implements OnInit {
       }
     }
     this.ResetValorSeleccionado();
+    console.log("slog",this.aportesOperacionFrom.get('Codigo')?.value)
   }
 
   selectEstadoActivo() {
@@ -1440,10 +1441,11 @@ export class AportesComponent implements OnInit {
         console.log(errorMessage);
       });
   }
-  clearFormAportes() {
+  clearFormAportes(clearOpera : number = 0) {
     this.dataObjet = undefined;
     this.resultEstados = undefined;
-    this.aportesOperacionFrom.reset();
+    if(clearOpera == 0)
+      this.aportesOperacionFrom.reset();
     this.aportesFrom.reset();
     this.btnGuardar = true;
     this.btnActualizar = true;
@@ -2011,7 +2013,6 @@ export class AportesComponent implements OnInit {
     this.BloquearNombreBenf = false;
     this.LimpiarBeneficiarior();
     this.bloquearDocumentoBenf = false;
-    this.btnOpcionActualizarBeneficiario = true
     this.aportesFrom.get('Beneficiarios')?.setValue(this.dataObjetBeneficiarios);
     if (this.AsesorFrom.get('strCodigo')?.value  !== null
       && this.AsesorFrom.get('strCodigo')?.value  !== undefined
@@ -2021,7 +2022,6 @@ export class AportesComponent implements OnInit {
       
       if (this.dataObjetBeneficiarios.length > 0) {
         
-        this.aportesFrom.get('DocumentoBeneficiario')?.disable();
         let sumaPorcentaje = 0;
         let totalSuma;
         this.dataObjetBeneficiarios.forEach(element => {
@@ -2029,6 +2029,7 @@ export class AportesComponent implements OnInit {
         });
         totalSuma = sumaPorcentaje + +this.aportesFrom.get('Porcentaje')?.value ;
         if (totalSuma === 100) {
+          this.aportesFrom.get('DocumentoBeneficiario')?.disable();
           this.loading = true;
           this.aportesServices.getGuardarAportes(this.aportesFrom.value).subscribe(
             result => {
@@ -2131,7 +2132,7 @@ export class AportesComponent implements OnInit {
       }).then((results) => {
         if (results.value) {
         } else {
-          if (this.dataObjet !== undefined) {
+          if (this.dataObjetBeneficiarios.length > 0) {
             
             this.aportesFrom.get('Beneficiarios')?.setValue(this.dataObjetBeneficiarios);
             let sumaPorcentaje = 0;
@@ -2140,6 +2141,7 @@ export class AportesComponent implements OnInit {
               sumaPorcentaje = sumaPorcentaje + +element.Porcentaje;
             });
             totalSuma = sumaPorcentaje + +this.aportesFrom.get('Porcentaje')?.value ;
+            console.log("porse",totalSuma)
             if (totalSuma === 100) {
               this.loading = true;
               this.aportesFrom.get('DocumentoBeneficiario')?.disable();
