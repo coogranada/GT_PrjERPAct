@@ -835,7 +835,7 @@
                                                         <div class="form-group">
                                                             <label class="ocultarLabel">Asesor:</label>
                                                             <span class="grande"> </span>
-                                                            <input type="text" class="form-control" value="{{NombreAsesor}}" formControlName="strNombreAse" [attr.disabled]="disableAsesorPpal" (keypress)="LimpiarIdAsesorNombre()">
+                                                            <input type="text" class="form-control" value="{{NombreAsesor}}" formControlName="strNombreAse" [attr.disabled]="disableAsesorPpal" (keypress)="LimpiarIdAsesorNombre()" (blur)="LimpiarCodigoAsesor('strNombreAse','strCodigoAse')">
                                                         </div>
                                                     </div>
                                                     <div class="col-xs-1 col-md-1 col-lg-1">

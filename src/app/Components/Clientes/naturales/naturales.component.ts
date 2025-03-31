@@ -9579,7 +9579,10 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   LimpiarIdAsesorNombre() {
     this.asesorForm.get('strCodigoAse')?.reset();
   } 
-
+  LimpiarCodigoAsesor(campoNombre : string, campoCodigo : string){
+    if(this.asesorForm.get(campoNombre)?.value == "")
+      this.asesorForm.get(campoCodigo)?.setValue("");
+  }
   LimpiarIdAsesorCodigo() {
     this.asesorForm.get('strNombreAse')?.reset();
   }

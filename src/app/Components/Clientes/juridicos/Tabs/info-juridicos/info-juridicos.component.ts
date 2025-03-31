@@ -1778,7 +1778,20 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
 
     // this.terceroSave.value.IdAsesorExterno = '';
   }
-
+  LimpiarCodigoAsesor(campoNombre : string, campoCodigo : string){
+    if(this.infoJuridicoFrom.get(campoNombre)?.value == "")
+      this.infoJuridicoFrom.get(campoCodigo)?.setValue(""); 
+  }
+  validarCero(campo : string){
+    if(this.infoJuridicoFrom.get(campo)?.value == 0)
+      this.infoJuridicoFrom.get(campo)?.setValue("");
+    else if(this.infoJuridicoFrom.get(campo)?.value.length > 0){
+      let subStringTemp : string = this.infoJuridicoFrom.get(campo)?.value;
+      let subStringTemp0 = subStringTemp.substring(0,1);
+      if(subStringTemp0 == "0")
+        this.infoJuridicoFrom.get(campo)?.setValue(subStringTemp.substring(1,subStringTemp.length));
+    }
+}
   LimpiarIdAsesorCodigo() {
     this.infoJuridicoFrom.get('CodigoAsesor')?.reset();
   }
