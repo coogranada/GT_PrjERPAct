@@ -254,7 +254,14 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
 
     } else if (this.asesoriacontractualOperacionFrom.get('Codigo')?.value === '1') {  // Editar
       if (this.asesoriacontractualFrom.get('NumeroAsesoria')?.value) {
-        // this.generalesService.Autofocus('SelectProducto');
+        const creationDate = this.asesoriacontractualFrom.get('FechaCreacion')?.value.split(' ')[0];
+        const currentDate = new Date().toISOString().split('T')[0].replace(/-/g, '/');        
+        if (creationDate !== currentDate) {
+          this.asesoriacontractualFrom.get('Codigo')?.reset();
+          this.notif.onWarning('Advertencia', 'Asesoría no valida para editar.');
+          return;
+        }
+
         this.VolverAbajo();
         if (this.asesoriacontractualFrom.get('IdProducto')?.value === 207) {
           this.BloquearNegociacion = null;
@@ -1354,7 +1361,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
       if(subStringTemp0 == "0")
         this.asesoriacontractualFrom.get(campo)?.setValue(subStringTemp.substring(1,subStringTemp.length));
     }
-}
+  }
 
   ActualizarAsesoria() {
     if (this.asesoriacontractualFrom.get('NumeroAsesoria')?.value !== undefined
@@ -1508,7 +1515,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
                 this.logDataOnEditAsesoria.TotalInteresesAnterior = this.asesoriacontractualFrom.get('TotalInteres')?.value;
                 this.logDataOnEditAsesoria.FechaVencimientoAnterior = this.asesoriacontractualFrom.get('FechaVencimiento')?.value;
 
-                this.notif.onSuccess('Exitoso', 'El editar se actualizó correctamente.');
+                this.notif.onSuccess('Exitoso', 'La asesoria se actualizó correctamente.');
                 this.asesoriacontractualOperacionFrom.get('Codigo')?.reset();
                 this.ObtenerHistorial();
               },

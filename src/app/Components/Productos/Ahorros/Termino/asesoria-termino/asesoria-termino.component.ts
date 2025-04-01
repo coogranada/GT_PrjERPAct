@@ -1289,6 +1289,17 @@ export class AsesoriaTerminoComponent implements OnInit {
       this.MostrasAlertaAsociado = true;
     }
   }
+
+  validarCero(campo : string){
+    if(this.asesoriaterminoForm.get(campo)?.value == 0)
+      this.asesoriaterminoForm.get(campo)?.setValue("");
+    else if(this.asesoriaterminoForm.get(campo)?.value.length > 0){
+      let subStringTemp : string = this.asesoriaterminoForm.get(campo)?.value;
+      let subStringTemp0 = subStringTemp.substring(0,1);
+      if(subStringTemp0 == "0")
+        this.asesoriaterminoForm.get(campo)?.setValue(subStringTemp.substring(1,subStringTemp.length));
+    }
+  }
   BuscarNombreXNombre() {
     let Nombre = '*';
     if (this.asesoriaterminoForm.get('Nombre')?.value !== null
