@@ -805,7 +805,7 @@
                                 <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="dataObjetTitulares.length > 0">
                                     <br />
                                     <div class="table-responsive scrollTabla panel panel-default">
-                                        <table id="TablaTitulares " class="table table-hover">
+                                        <table id="TablaTitulares " class="table table-hover sticky-last-column">
                                             <thead>
                                                 <tr>
                                                     <th class="text-bold">Documento</th>
@@ -813,7 +813,7 @@
                                                     <th class="text-bold">Fecha matrícula</th>
                                                     <th class="text-bold">Tipo</th>
                                                     <th class="text-bold">Tipo firma</th>
-                                                    <th class="text-bold">Opciones</th>
+                                                    <th class="text-bold operacionFija centerColumn">Opciones</th>
 
                                                 </tr>
                                             </thead>
@@ -824,7 +824,7 @@
                                                     <td>{{Titulares.FechaMatricula | date : "yyyy/MM/dd HH:mm:ss" }}</td>
                                                     <td>{{Titulares.TipoTitular}}</td>
                                                     <td>{{Titulares.TipoFirma}}</td>
-                                                    <td><button class="btn Gt-btn-verde btn-icon legitRipple"
+                                                    <td class="operacionFija centerColumn"><button class="btn Gt-btn-verde btn-icon legitRipple"
                                                             (click)="IndiceAEditar(i, Titulares)"
                                                             [attr.disabled]="BloquearDatoTitularOpcion">
                                                             <i class="icon-pencil"></i></button> &nbsp;

@@ -1,6 +1,6 @@
 
-<form>
-    <form method="get" [formGroup]="TerminoForm">
+<form autocomplete="off">
+    <form method="get" [formGroup]="TerminoForm" autocomplete="off">
         <div class="panel panel-white">
             <div class="panel-heading">
                 <h6 class="panel-title">Datos{{operacionEscogida}}</h6>
@@ -17,8 +17,12 @@
                 <div class="col-xs-12 col-md-12 col-lg-12">
                     <div class="col-xs-12 col-md-12 col-lg-12">
                         <!-- Inicio Operación -->
-                        <form method="get" [formGroup]="TerminoOperacionForm">
-                            <label class="col-xs-12 col-md-3 col-lg-1 textNegrilla">Operación:<span class="grande">*</span></label>
+                        <form method="get" [formGroup]="TerminoOperacionForm" autocomplete="off">
+                            <div class="col-xs-12 col-md-3 col-lg-1 align-items-center">
+                                <br>
+                                <label class="textNegrilla">Operación:</label>
+                                <span class="grande"> *</span>
+                            </div>
                             <div class="col-xs-10 col-md-8 col-lg-4">
                                 <select class="form-control" formControlName="Codigo" id="select" (change)=" ValorSeleccionado()">
                                     <option *ngFor="let operacionTermino of resultOperaciones"
@@ -234,7 +238,7 @@
                     <div class="col-xs-12 col-md-12 col-lg-12">
                         <br />
                         <!-- Inicio Asesor Externo -->
-                        <form method="get" [formGroup]="AsesorForm">
+                        <form method="get" [formGroup]="AsesorForm" autocomplete="off">
                             <div class="col-xs-12 col-md-3 col-lg-1">
                                 <label class="textNegrilla">Asesor externo:</label>
                             </div>
@@ -430,7 +434,7 @@
                                     <div class="col-xs-12 col-md-12 col-lg-1"> </div>
 
                                     <!-- Inicio Puntos adicionales   -->
-                                    <form method="get" [formGroup]="AdicionarPuntosFrom">
+                                    <form method="get" [formGroup]="AdicionarPuntosFrom" autocomplete="off">
                                         <div class="col-xs-12 col-md-4 col-lg-3">
                                             <label class="textNegrilla">Puntos adicionales:</label>
                                             <select class="form-control" name="select" id="SelectAdicionarPuntos" formControlName="AdicionarPunto" [attr.disabled]="bloquearPuntos"  (change)=" SeleccionPuntos()">
@@ -686,7 +690,7 @@
                                 <div class="col-xs-12 col-md-12 col-lg-12">
                                     <br />                                   
                                 <div class="table-responsive scrollTabla panel panel-default" *ngIf="dataObjetBeneficiarios.length > 0">
-                                    <table id="TablaBeneficiarios " class="table table-hover">
+                                    <table id="TablaBeneficiarios " class="table table-hover sticky-last-column">
                                         <thead>
                                             <tr>  
                                                 <th class="Column_tipoDocumento">
@@ -701,7 +705,7 @@
                                                     <strong>Parentesco</strong></th>
                                                 <th class="Column_Porcentaje">
                                                     <strong>Porcentaje</strong> </th>
-                                                <th class="Column_Opciones">
+                                                <th class="operacionFija">
                                                     <strong>Opciones</strong></th>
                                 
                                             </tr>
@@ -723,7 +727,7 @@
                                                     N/A
                                                 </td>
                                                 <td>{{Beneficiario.Porcentaje}}</td>
-                                                <td class="column_tipoDocumento column_tipoDocumento : Beneficiario.TipoDocumento.length = 25">
+                                                <td class="operacionFija">
                                                     <button class="btn Gt-btn-verde btn-icon legitRipple" (click)="IndiceAEditarBenf(i, Beneficiario)" [disabled]="btnOpcionActualizarBeneficiario">
                                                     <i class="icon-pencil"></i></button> &nbsp;
                                                     <button class="btn Gt-btn-morado btn-icon legitRipple" (click)="IndiceAEliminarBenf(i)" [disabled]="btnOpcionActualizarBeneficiario">
@@ -803,15 +807,15 @@
                                         </div>
                                     </div> 
                                     <div class="table-responsive scrollTabla panel panel-default" *ngIf="dataObjetTitulares.length > 0">
-                                        <table id="TablaTitulares " class="table table-hover">
+                                        <table id="TablaTitulares " class="table table-hover sticky-last-column" >
                                             <thead>
                                                 <tr>
                                                     <th class="text-bold">Documento</th>
                                                     <th class="text-bold">Nombre</th>
                                                     <th class="text-bold">Fecha matrícula</th>
-                                                    <th class="text-bold">Tipo</th>
+                                                    <th class="text-bold centerColumn">Tipo</th>
                                                     <th class="text-bold">Tipo firma</th>
-                                                    <th class="text-bold">Opciones</th>
+                                                    <th class="text-bold operacionFija">Opciones</th>
 
                                                 </tr>
                                             </thead>
@@ -826,13 +830,13 @@
                                                     <td>
                                                         {{titulares.FechaMatricula | date : "yyyy/MM/dd HH:mm:ss"}}
                                                     </td>
-                                                    <td>
+                                                    <td class="centerColumn">
                                                         {{titulares.TipoTitular}}
                                                     </td>
                                                     <td>
                                                         {{titulares.TipoFirma}}
                                                     </td>
-                                                    <td><button class="btn Gt-btn-verde btn-icon legitRipple" (click)="IndiceAEditar(i, titulares)" [disabled]="btnOpcionesActualizarTitulares"  >
+                                                    <td class="operacionFija"><button class="btn Gt-btn-verde btn-icon legitRipple" (click)="IndiceAEditar(i, titulares)" [disabled]="btnOpcionesActualizarTitulares"  >
                                                             <i class="icon-pencil"></i></button> &nbsp; 
                                                         <button class="btn Gt-btn-morado btn-icon legitRipple" (click)="IndiceAEliminar(i)" [disabled]="btnOpcionesActualizarTitulares" >
                                                             <i class="icon-bin2 "></i></button></td>
@@ -943,7 +947,7 @@
                                                     <th class="text-bold">Documento</th>
                                                     <th class="text-bold">Nombre</th>
                                                     <th class="text-bold">Fecha matrícula</th>
-                                                    <th class="text-bold">Opciones</th>
+                                                    <th class="text-bold centerColumn">Opciones</th>
 
                                                 </tr>
                                             </thead>
@@ -958,7 +962,7 @@
                                                     <td>
                                                         {{sesiontitulo.FechaMatricula | date : "yyyy/MM/dd HH:mm:ss"}}
                                                     </td>
-                                                    <td>
+                                                    <td class="centerColumn">
                                                         <button class="btn Gt-btn-morado btn-icon legitRipple"  (click)="IndiceAEliminarCesionTitulo(i)" [disabled]="!disableCesionTitulo">
                                                         <i class="icon-bin2"></i></button>
                                                     </td>
@@ -1411,7 +1415,7 @@
 <div id="ModalCalcularAsesoria" class="modal fade" data-backdrop="static">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form method="get" [formGroup]="InteresForm">
+            <form method="get" [formGroup]="InteresForm" autocomplete="off">
                 <div class="modal-header bg-morado">
                 <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
                 <h6 class="modal-title">Calcular intereses</h6>
@@ -1687,7 +1691,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="get" [formGroup]="CambioEstadoFrom">
+                <form method="get" [formGroup]="CambioEstadoFrom" autocomplete="off">
                     <div class="col-xs-12 col-md-12 col-lg-12">
                         <div class="row">
                             <div class="col-xs-7 col-md-7 col-lg-7">   
@@ -1710,7 +1714,7 @@
                     <br>
                     <br>
                     <br>
-                    <form [formGroup]="ReciprocidadCreditoFrom">
+                    <form [formGroup]="ReciprocidadCreditoFrom" autocomplete="off">
                         <div class="row">
                             <div class="col-xs-12 col-md-12 col-lg-12"> 
                                 <div class="col-xs-3 col-md-3 col-lg-3">

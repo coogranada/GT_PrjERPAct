@@ -234,7 +234,6 @@ export class TerminoComponent implements OnInit {
     this.ObtenerRelacion();
     this.TipoFirma();
     this.Liquidacion();
-    this.NombresCapitaliceBasico();
     this.ObtenerTipoDocumento();
     this.Parentesco();
     $('#select').focus().select();
@@ -2698,6 +2697,7 @@ export class TerminoComponent implements OnInit {
             result.forEach(( elementt : any) => {
               this.AsesorForm.get('strNombre')?.setValue(elementt.Nombre);
               this.AsesorForm.get('strCodigo')?.setValue(elementt.intIdAsesor);
+              this.bloquearbtnActalizar = true;
             });
           } else {
             this.AsesorForm.get('strNombre')?.setValue('');
@@ -4741,31 +4741,20 @@ export class TerminoComponent implements OnInit {
       this.TerminoForm.get('Porcentaje')?.reset();
     }
   }
-  NombresCapitaliceBasico() {
-    let self = this;
-    $('#priApe').keyup(function () {
-      $(self).val($(self).val().substr(0, 1).toUpperCase() + $(self).val().substr(1).toLowerCase());
-    });
-    $('#segApe').keyup(function () {
-      $(self).val($(self).val().substr(0, 1).toUpperCase() + $(self).val().substr(1).toLowerCase());
-    });
-    $('#priNom').keyup(function () {
-      $(self).val($(self).val().substr(0, 1).toUpperCase() + $(self).val().substr(1).toLowerCase());
-    });
-    $('#segNom').keyup(function () {
-      $(self).val($(self).val().substr(0, 1).toUpperCase() + $(self).val().substr(1).toLowerCase());
-    });
-  }
-  validarValorCampo(campoJquery : string, campoAngular : string) {
-    const lentghCampo = $('#' + campoJquery + '').val();
-    if (lentghCampo.length > 0) {
-      if ($('#' + campoJquery + '').val().trim() === '') {
-        this.notif.onWarning('Advertencia', 'El campo no puede contener espacios.');
-        this.TerminoForm.get('' + campoAngular + '')?.reset();
-      }
+
+
+  validarValorCampo(campoJquery: string, campoAngular: string) {
+    let valorCampo = $('#' + campoJquery).val();
+  
+    if (valorCampo === undefined || valorCampo.trim().length === 0) {
+      this.TerminoForm.get(campoAngular)?.reset();
+    } else {
+      let valorCorregido = valorCampo.toString().trim().toLowerCase()
+        .replace(/\b[á-úa-zA-Z]+/g, (letra: any) => letra.charAt(0).toUpperCase() + letra.slice(1));
+
+      $('#' + campoJquery).val(valorCorregido);
+      this.TerminoForm.get(campoAngular)?.setValue(valorCorregido);
     }
-    if (!this.TerminoForm.controls[campoAngular].valid)
-      this.TerminoForm.controls[campoAngular].setValue("");
   }
   Parentesco() {
     this.loading = true;
