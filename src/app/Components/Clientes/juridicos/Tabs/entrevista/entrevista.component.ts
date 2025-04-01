@@ -29,6 +29,7 @@ export class EntrevistaComponent implements OnInit {
   @Output() emitEventEntrevista: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() emitEventGuardado: EventEmitter<any> = new EventEmitter<any>();
   @Input() OperacionActual: any;
+  @Output() tabSelected = new EventEmitter<number>();
   //#endregion
   //#region carga variables
   public siguiente = false;
@@ -96,6 +97,10 @@ export class EntrevistaComponent implements OnInit {
   onChanges(): void {
     this.ValidarCamposCambiantesUno();
   };
+
+  seleccionarTab(tab: number) {
+    this.tabSelected.emit(tab);
+  }
 
   private ValidarCamposCambiantesUno() { 
   
@@ -539,7 +544,7 @@ export class EntrevistaComponent implements OnInit {
       if (entrevista.RPregunta16Si != null) {
         this.entrevistaModel = new EntrevistaModel();
         this.entrevistaModel.IdTercero = 0;
-        this.entrevistaModel.NumeroPregunta = 15;
+        this.entrevistaModel.NumeroPregunta = 16;
         this.entrevistaModel.Respuesta = entrevista.RPregunta16Si.Id;
         this.entrevistaModelLst.push(this.entrevistaModel);
       }
@@ -893,6 +898,7 @@ export class EntrevistaComponent implements OnInit {
                   this.emitEventEntrevista.emit(true);
                   this.notif.onSuccess('Exitoso', 'El registro se actualizó correctamente.');
                   this.IrArriba();
+
                 },
                 error => {
                   console.error('EditarTratamiento - ' + error);
@@ -1239,7 +1245,4 @@ export class EntrevistaComponent implements OnInit {
       this.entrevistaForm.get(campoAngular)?.setValue(valorCorregido);
     }
   }
-
-
-
 }

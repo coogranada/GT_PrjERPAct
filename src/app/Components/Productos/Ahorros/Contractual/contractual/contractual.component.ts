@@ -820,6 +820,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
         this.contractualOperacionFrom.get('Codigo')?.reset();
       }
     } else if (this.contractualOperacionFrom.get('Codigo')?.value === '28') {  // Adicionar puntos
+      if (this.AdicionarPuntosFrom.get('AdicionarPunto')?.value != null || this.AdicionarPuntosFrom.get('AdicionarPunto')?.value?.PuntosAdicionales != null && this.AdicionarPuntosFrom.get('AdicionarPunto')?.value.PuntosAdicionales > 0){
+        this.notif.onWarning('Advertencia', 'La cuenta ya tiene puntos adicionales.');
+        this.contractualOperacionFrom.get('Codigo')?.reset(); 
+        return
+      }
       if (this.contractualFrom.get('IdOficina')?.value !== null
         && this.contractualFrom.get('IdOficina')?.value !== undefined
         && this.contractualFrom.get('IdOficina')?.value !== ''

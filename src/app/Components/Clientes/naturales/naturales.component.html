@@ -175,7 +175,7 @@
                                                     <div class="form-group">
                                                         <label class="textNegrilla">Número documento:</label>
                                                         <span class="grande"> *</span>
-                                                        <input type="text" class="form-control" #CCdocumento Id="NumeroDocumento" formControlName="numeroDocumento" maxlength="15" [attr.disabled]="disableFormNumeroDocumento" (blur)="validarDocumnetoCreacionNatural()" />
+                                                        <input type="text" class="form-control" #CCdocumento Id="NumeroDocumento" formControlName="numeroDocumento" maxlength="15" [attr.disabled]="disableFormNumeroDocumento" (blur)="validarDocumnetoCreacionNatural()" (input)="validarCero('numeroDocumento')" />
                                                         <span class="help-block validationSpan" *ngIf="basicosFrom.controls['numeroDocumento'].errors?.['required'] && (basicosFrom.controls['numeroDocumento'].dirty || basicosFrom.controls['numeroDocumento'].touched)">
                                                             El número documento es obligatorio.
                                                         </span>
@@ -835,7 +835,7 @@
                                                         <div class="form-group">
                                                             <label class="ocultarLabel">Asesor:</label>
                                                             <span class="grande"> </span>
-                                                            <input type="text" class="form-control" value="{{NombreAsesor}}" formControlName="strNombreAse" [attr.disabled]="disableAsesorPpal" (keypress)="LimpiarIdAsesorNombre()">
+                                                            <input type="text" class="form-control" value="{{NombreAsesor}}" formControlName="strNombreAse" [attr.disabled]="disableAsesorPpal" (keypress)="LimpiarIdAsesorNombre()" (blur)="LimpiarCodigoAsesor('strNombreAse','strCodigoAse')">
                                                         </div>
                                                     </div>
                                                     <div class="col-xs-1 col-md-1 col-lg-1">
@@ -2381,7 +2381,7 @@
                                                     <div class="form-group">
                                                         <label class="textNegrilla">Número documento:</label>
                                                         <span class="grande"> *</span>
-                                                        <input type="text" class="form-control" formControlName="NumeroDocumento" [attr.disabled]="formBuscarLockedConyugue" (blur)="ValidarVetadosDocumentoConyugue()" (keypress)="limpiarConyugue()" />
+                                                        <input type="text" class="form-control" formControlName="NumeroDocumento" [attr.disabled]="formBuscarLockedConyugue" (blur)="ValidarVetadosDocumentoConyugue()" (keypress)="limpiarConyugue()" (input)="validarCero('NumeroDocumento',1)"  />
                                                         <span class="help-block validationSpan" *ngIf="conyugueForm.controls['NumeroDocumento'].errors?.['required'] && (conyugueForm.controls['NumeroDocumento'].dirty || conyugueForm.controls['NumeroDocumento'].touched)">
                                                             El número documento es obligatorio.
                                                         </span>
@@ -3170,7 +3170,7 @@
                                                                 N/A
                                                             </td>
                                                             <td class="Capitalice"   *ngIf="itemLaboral.NombreArrendador !== '' && itemLaboral.NombreArrendador !== null && MostrarEmpresaDescripcion && !MostrarEmpresaBuscar">
-                                                                <p class="CapitaliceMayus">{{itemLaboral.NombreArrendador}}</p>
+                                                                {{itemLaboral.NombreArrendador}}
                                                             </td>
                                                             <td *ngIf="itemLaboral.NombreArrendador === '' || itemLaboral.NombreArrendador === null && MostrarEmpresaDescripcion && !MostrarEmpresaBuscar">
                                                                 N/A
@@ -3905,12 +3905,12 @@
                                                     </tr>
                                                     <tr>
                                                         <td colspan="2">¿Posee otra actividad económica secundaria que reporte ingresos ? </td>
-                                                        <td colspan="2">
+                                                        <td colspan="1" style="word-wrap: break-word;">
                                                             Si <input type="checkbox" class="switchery" formControlName="RPregunta2Si" [attr.disabled]="formBuscarLocked" (click)="ValidarSeleccion('si', 2)"> No <input type="checkbox" class="switchery"
                                                                 formControlName="RPregunta2No" [attr.disabled]="formBuscarLocked" (click)="ValidarSeleccion('No', 2)">
                                                         </td>
-                                                        <td>
-                                                            <input type="text" [attr.disabled]="DesbloquearRespuesta2" class="form-control SoloMinuscula" pattern="[a-zA-ZñÑ ]*" id="RPre24" formControlName="RPregunta3Si" placeholder="Cuál?" (keydown)="habilitarActualizar()">
+                                                        <td >
+                                                            <input type="text" [attr.disabled]="DesbloquearRespuesta2" class="form-control" pattern="[a-zA-ZñÑ ]*" id="RPre3Si" formControlName="RPregunta3Si" placeholder="¿Cuál?" (keydown)="habilitarActualizar()" (blur)="validarValorCampo('RPre3Si','RPregunta3Si')">
                                                             <span class="help-block validationSpan" *ngIf="entrevistaForm.controls['RPregunta3Si'].errors?.['required'] && (entrevistaForm.controls['RPregunta3Si'].dirty || entrevistaForm.controls['RPregunta3Si'].touched)">
                                                                 El campo cuál es obligatorio.
                                                             </span>
@@ -3918,16 +3918,17 @@
                                                                 El campo cuál solo acepta letras. </span>
                                                         </td>
                                                         <td>
-                                                            <input type="text" [attr.disabled]="DesbloquearRespuesta2" currencyMask [options]="{ precision:0 }" class="form-control SoloMinuscula" id="RPre24" formControlName="RPregunta4Si" placeholder="Por qué valor?" (keydown)="habilitarActualizar()">
+                                                            <input type="text" [attr.disabled]="DesbloquearRespuesta2" currencyMask [options]="{ precision:0 }" class="form-control SoloMinuscula" id="RPre24" formControlName="RPregunta4Si" placeholder="¿Por qué valor?" (keydown)="habilitarActualizar()">
                                                             <span class="help-block validationSpan" *ngIf="entrevistaForm.controls['RPregunta4Si'].errors?.['required'] && (entrevistaForm.controls['RPregunta4Si'].dirty || entrevistaForm.controls['RPregunta4Si'].touched)">
                                                                 El por qué valor es obligatorio.
                                                             </span>
                                                         </td>
+                                                        <td></td>
                                                     </tr>
                                                     <tr>
                                                         <td colspan="3">¿Cual es el valor promedio mensual de consignaciones que realiza en sus productos?</td>
                                                         <td colspan="3">
-                                                            <input type="text" currencyMask [attr.disabled]="formBuscarLocked" class="form-control SoloMinuscula" id="RPre24" formControlName="RPregunta5Si" placeholder="Valor promedio" (keydown)="habilitarActualizar()">
+                                                            <input type="text" currencyMask [options]="{ precision:0 }" [attr.disabled]="formBuscarLocked" class="form-control SoloMinuscula" id="RPre24" formControlName="RPregunta5Si" placeholder="Valor promedio" (keydown)="habilitarActualizar()">
                                                             <span class="help-block validationSpan" *ngIf="entrevistaForm.controls['RPregunta5Si'].errors?.['required'] && (entrevistaForm.controls['RPregunta5Si'].dirty || entrevistaForm.controls['RPregunta5Si'].touched)">
                                                                 El valor promedio es obligatorio.
                                                             </span>
@@ -3944,25 +3945,25 @@
                                                 <tbody>
                                                     <tr>
                                                         <td colspan="1">¿Realiza operaciones en moneda extranjera? </td>
-                                                        <td colspan="2">
+                                                        <td colspan="1" style="word-wrap: break-word;">
                                                             Si <input type="checkbox" class="switchery" formControlName="RPregunta6Si" [attr.disabled]="formBuscarLocked" (click)="ValidarSeleccion('si', 6)"> No <input type="checkbox" class="switchery"
                                                                 formControlName="RPregunta6No" [attr.disabled]="formBuscarLocked" (click)="ValidarSeleccion('No', 6)">
                                                             <br>
                                                         </td>
                                                         <td>
-                                                            <input type="text" [attr.disabled]="DesbloquearRespuesta6" class="form-control SoloMinuscula" pattern="[a-zA-ZñÑ ]*" id="RPre24" formControlName="RPregunta7Si" placeholder="En que entidad?" (keydown)="habilitarActualizar()">
+                                                            <input type="text" [attr.disabled]="DesbloquearRespuesta6" class="form-control" pattern="[a-zA-ZñÑ ]*" id="RPre7Si" formControlName="RPregunta7Si" placeholder="¿En que entidad?" (keydown)="habilitarActualizar()" (blur)="validarValorCampo('RPre7Si','RPregunta7Si')">
                                                             <span class="help-block validationSpan" *ngIf="entrevistaForm.controls['RPregunta7Si'].errors?.['pattern'] && 
                                                                 (entrevistaForm.controls['RPregunta7Si'].dirty || entrevistaForm.controls['RPregunta7Si'].touched)">
                                                                 La entidad solo acepta letras. </span>
                                                         </td>
-                                                        <td colspan="2">
+                                                        <td colspan="3">
                                                             Importa <input type="checkbox" class="switchery" formControlName="RPregunta8Si" [attr.disabled]="DesbloquearRespuesta6"> Exporta <input type="checkbox" class="switchery" formControlName="RPregunta9Si"
                                                                 [attr.disabled]="DesbloquearRespuesta6"> Giros <input type="checkbox" class="switchery" formControlName="RPregunta10Si" [attr.disabled]="DesbloquearRespuesta6">
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>
-                                                            <input type="text" [attr.disabled]="DesbloquearRespuesta6" class="form-control SoloMinuscula" pattern="[a-zA-ZñÑ ]*" id="RPre24" formControlName="RPregunta11Si" placeholder="Tipo producto" (keydown)="habilitarActualizar()">
+                                                        <td style="width: 20px;; " >
+                                                            <input type="text" [attr.disabled]="DesbloquearRespuesta6" class="form-control" pattern="[a-zA-ZñÑ ]*" id="RPre11Si" formControlName="RPregunta11Si" (blur)="validarValorCampo('RPre11Si','RPregunta11Si')" placeholder="Tipo producto" (keydown)="habilitarActualizar()">
                                                             <span class="help-block validationSpan" *ngIf="entrevistaForm.controls['RPregunta11Si'].errors?.['required'] && 
                                                                 (entrevistaForm.controls['RPregunta11Si'].dirty || entrevistaForm.controls['RPregunta11Si'].touched)">
                                                                 El tipo producto es obligatorio.
@@ -3998,7 +3999,7 @@
                                                             </span>
                                                         </td>
                                                         <td colspan="2">
-                                                            <input type="text" [attr.disabled]="DesbloquearRespuesta6" class="form-control SoloMinuscula" pattern="[a-zA-ZñÑ ]*" id="RPre24" formControlName="RPregunta13Si" placeholder="Ciudad" (keydown)="habilitarActualizar()">
+                                                            <input type="text" [attr.disabled]="DesbloquearRespuesta6" class="form-control" pattern="[a-zA-ZñÑ ]*" id="RPre13Si" formControlName="RPregunta13Si" (blur)="validarValorCampo('RPre13Si','RPregunta13Si')" placeholder="Ciudad" (keydown)="habilitarActualizar()">
                                                             <span class="help-block validationSpan" *ngIf="entrevistaForm.controls['RPregunta13Si'].errors?.['required'] && 
                                                                     (entrevistaForm.controls['RPregunta13Si'].dirty || entrevistaForm.controls['RPregunta13Si'].touched)">
                                                                 La ciudad es obligatoria.
@@ -4008,7 +4009,7 @@
                                                                 La ciudad solo acepta letras. </span>
                                                         </td>
                                                         <td>
-                                                            <input type="text" [attr.disabled]="DesbloquearRespuesta6" class="form-control" currencyMask id="RPre24" formControlName="RPregunta24Si" placeholder="Monto promedio" (keydown)="habilitarActualizar()">
+                                                            <input type="text" [attr.disabled]="DesbloquearRespuesta6" class="form-control" currencyMask [options]="{ precision:0 }" id="RPre24" formControlName="RPregunta24Si" placeholder="Monto promedio" (keydown)="habilitarActualizar()">
                                                             <span class="help-block validationSpan" *ngIf="entrevistaForm.controls['RPregunta24Si'].errors?.['required'] && 
                                                                                                                             (entrevistaForm.controls['RPregunta24Si'].dirty || entrevistaForm.controls['RPregunta24Si'].touched)">
                                                                 El monto promedio es obligatorio.
@@ -4441,7 +4442,7 @@
                                                             <label class="textNegrilla">Fecha respuesta
                                                                 aseguradora:</label>
                                                             <span class="text-danger"> </span>
-                                                            <input type="date" class="form-control" formControlName="fechaAsegurado" min="1900-01-01" max="9999-01-01" [attr.disabled]="BlockFecha" (blur)="validarFechaRpstaAseguradora()" />
+                                                            <input type="date" class="form-control" formControlName="fechaAsegurado" min="1900-01-01" max="{{fechaMax}}" [attr.disabled]="BlockFecha" (blur)="validarFechaRpstaAseguradora()" />
                                                         </div>
                                                     </div>
                                                     <input type="hidden" />

@@ -2555,8 +2555,13 @@ export class DisponiblesComponent implements OnInit {
         this.datoMedioPago = this.dataObjet[0].IdMedioPago;
         this.AsesorFrom.get('strCodigo')?.setValue(this.dataObjet[0].IdAsesorExterno);
         this.datoAsesorExterno.IdAsesorExterno = +this.dataObjet[0].IdAsesorExterno;
-        this.AsesorFrom.get('strNombre')?.setValue(this.dataObjet[0].PrimerNombreAsesorE + ' ' + this.dataObjet[0].SegundoNombreAsesoreE +
-          ' ' + this.dataObjet[0].PrimerApellidoAsesorE + ' ' + this.dataObjet[0].SegundoApellidoAsesorE);
+        const nombreCompleto = [
+          this.dataObjet[0].PrimerNombreAsesorE,
+          this.dataObjet[0].SegundoNombreAsesorE,
+          this.dataObjet[0].PrimerApellidoAsesorE,
+          this.dataObjet[0].SegundoApellidoAsesorE
+        ].filter((nombre) => nombre?.trim()).join(' ');
+        this.AsesorFrom.get('strNombre')?.setValue(nombreCompleto);
         this.datoAsesorExterno.NombreAsesorExterno = this.AsesorFrom.get('strNombre')?.value;
         // Tabs
         if (this.DisponibleForm.get('IdMedioPago')?.value === 0) {
@@ -2827,8 +2832,13 @@ export class DisponiblesComponent implements OnInit {
         this.datoMedioPago = this.dataObjet.IdMedioPago;
         this.AsesorFrom.get('strCodigo')?.setValue(this.dataObjet.IdAsesorExterno);
         this.datoAsesorExterno.IdAsesorExterno = +this.dataObjet.IdAsesorExterno;
-        this.AsesorFrom.get('strNombre')?.setValue(this.dataObjet.PrimerNombreAsesorE + ' ' + this.dataObjet.SegundoNombreAsesoreE +
-          ' ' + this.dataObjet.PrimerApellidoAsesorE + ' ' + this.dataObjet.SegundoApellidoAsesorE);
+        const nombreCompleto = [
+          this.dataObjet[0].PrimerNombreAsesorE,
+          this.dataObjet[0].SegundoNombreAsesorE,
+          this.dataObjet[0].PrimerApellidoAsesorE,
+          this.dataObjet[0].SegundoApellidoAsesorE
+        ].filter((nombre) => nombre?.trim()).join(' ');
+        this.AsesorFrom.get('strNombre')?.setValue(nombreCompleto);
         this.datoAsesorExterno.NombreAsesorExterno = this.AsesorFrom.get('strNombre')?.value;
         // tabs 
         if (this.DisponibleForm.get('IdMedioPago')?.value === 0) {

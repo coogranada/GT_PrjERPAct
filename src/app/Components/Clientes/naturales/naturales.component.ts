@@ -781,6 +781,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   @Output() oficinasEmit = new EventEmitter();
   private DataRequired = new RequiredData();
   public DatosUsuario : any;
+  fechaMax: any = null;
 
   
   //#region Constructor
@@ -816,8 +817,8 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           this.notif.onDanger('Error', error);
           const errorMessage = <any>error;
           console.log(errorMessage);
-        }
-      );
+        });
+        this.fechaMax = moment(new Date()).format('YYYY-MM-DD');
     }
     this.operacionesModel = new OperacionesModel();
     this.LogSeguroModel = new LogSegurosModel();
@@ -891,7 +892,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     });
     
     this.VeredaCapitaliceContac();
-    this.EntrevistaCapitalice();
     $('#financieroTab').addClass('disableTab');
     $('#contactoTab').addClass('disableTab');
     $('#activoTab').addClass('disableTab');
@@ -1287,6 +1287,10 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     const select = this.basicosFrom.get('tipoDocumento')?.value;
     const tipoCliente = +this.basicosFrom.get('tipoCliente')?.value;
     const tipoDocu = +this.basicosFrom.get('tipoDocumento')?.value;
+    let idTipoDoc : number = this.basicosFrom.value.tipoDocumento;
+        setTimeout(() => {
+          this.basicosFrom.controls["tipoDocumento"].setValue(idTipoDoc);
+        }, 100);
     if (select === '') {
       this.notif.onWarning('Advertencia', 'Debe seleccionar un tipo de documento válido.');
       this.basicosFrom.get('tipoDocumento')?.reset();
@@ -3322,6 +3326,8 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         }
       }     
     } else if (results === '17') { // Cambio tipo y documento
+      console.log("a",this.OperacionMarcada)
+      console.log("tipo",this.basicosFrom.get('tipoDocumento')?.value)
       if (this.OperacionMarcada !== undefined) {
         this.ValidaCambioCampo();        
       }
@@ -3463,7 +3469,12 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                     const cliente = +this.basicosFrom.value.tipoCliente;
                     this.clientesGetListService.GetTipoDocumento().subscribe(
                       result => {
+                        let idTipoDoc : number = this.basicosFrom.value.tipoDocumento;
                         this.dataTipoDocumento = result;
+                        this.dataTipoDocumento = result;
+                        setTimeout(() => {
+                          this.basicosFrom.controls["tipoDocumento"].setValue(idTipoDoc);
+                        }, 100);
                         if (cliente === 10) { // menor
                           this.dataTipoDocumento.splice(-9, 3);
                           this.dataTipoDocumento.splice(2, 1);
@@ -5067,6 +5078,26 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.validarTipoOperacion();    
 
   }
+  validarCero(campo : string,form : number = 0){
+    if(form == 0)
+      if(this.basicosFrom.get(campo)?.value == 0)
+        this.basicosFrom.get(campo)?.setValue("");
+      else if(this.basicosFrom.get(campo)?.value.length > 0){
+        let subStringTemp : string = this.basicosFrom.get(campo)?.value;
+        let subStringTemp0 = subStringTemp.substring(0,1);
+        if(subStringTemp0 == "0")
+          this.basicosFrom.get(campo)?.setValue(subStringTemp.substring(1,subStringTemp.length));
+      }
+    if(form == 1)
+      if(this.conyugueForm.get(campo)?.value == 0)
+        this.conyugueForm.get(campo)?.setValue("");
+      else if(this.conyugueForm.get(campo)?.value.length > 0){
+        let subStringTemp : string = this.conyugueForm.get(campo)?.value;
+        let subStringTemp0 = subStringTemp.substring(0,1);
+        if(subStringTemp0 == "0")
+          this.conyugueForm.get(campo)?.setValue(subStringTemp.substring(1,subStringTemp.length));
+      }
+}
   RegresaOperacion() {
     // regresa a la operacion anterior como  estaba antes
     if (this.OperacionMarcada === '9') {
@@ -5615,7 +5646,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
          this.dataTipoDocumento = result;
         setTimeout(() => {
           this.basicosFrom.controls["tipoDocumento"].setValue(idTipoDoc);
-        }, 500);
+        }, 100);
         let data : string | null = localStorage.getItem('Data');
         const DataUserLog = JSON.parse(window.atob(data == null ? "": data));
         if (this.basicosFrom.value.tipoCliente === '10') { // Menor de edad
@@ -6788,7 +6819,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         Swal.fire({ // Se preguunta si necesita asesor externo
           title: 'Advertencia',
           text: '',
-          html: '! Se realizo un cambio en el estado civil se eliminaran los registros del conyugue ! ',
+          html: '¡ Se realizo un cambio en el estado civil se eliminaran los registros del cónyuge ! ',
           icon: 'warning',
           showCancelButton: false,
           confirmButtonText: 'Entiendo',
@@ -6817,7 +6848,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             Swal.fire({ // Se preguunta si necesita asesor externo
               title: 'Advertencia',
               text: '',
-              html: '! Se realizo un cambio en el estado civil se eliminaran los registros del conyugue ! ',
+              html: '¡ Se realizo un cambio en el estado civil se eliminaran los registros del cónyuge ! ',
               icon: 'warning',
               showCancelButton: false,
               confirmButtonText: 'Entiendo',
@@ -6830,6 +6861,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
               this.itemsConyugue = [];
               this.allItemsFormSaves.conyugueDto = [];
               localStorage.setItem('estadoSeleccionado', this.basicosFrom.get('estadoCivil')?.value);
+              this.limpiarFormularios(this.conyugueForm);
               if (results.value) {
                 this.cambioCivil = true;
               }
@@ -7663,41 +7695,31 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   }
 
   validarValorCampoNombres(campoJquery : string, campoAngular : string) {
-    const lentghCampo = $('#' + campoJquery + '').val();
-    if (lentghCampo.length > 0) {
-      if ($('#' + campoJquery + '').val().trim() === '') {
-        this.notif.onWarning('Advertencia', 'El campo no puede contener espacios.');
-        this.basicosFrom.get('' + campoAngular + '')?.reset();
-      }
-    }
-    let valorCampo = $('#' + campoJquery + '').val().toString().trim();
-    let valorCorregido = valorCampo
-    .toLowerCase()
-    .replace(/\b[á-úa-zA-Z]+/g, (letra: any) =>letra.charAt(0).toUpperCase() + letra.slice(1));;
+    let valorCampo = $('#' + campoJquery).val();
+  
+    if (valorCampo === undefined || valorCampo.trim().length === 0) {
+      this.entrevistaForm.get(campoAngular)?.reset();
+    } else {
+      let valorCorregido = valorCampo.toString().trim().toLowerCase()
+        .replace(/\b[á-úa-zA-Z]+/g, (letra: any) => letra.charAt(0).toUpperCase() + letra.slice(1));
 
-    $('#' + campoJquery + '').val(valorCorregido);
-    this.basicosFrom.get('' + campoAngular + '')?.setValue(valorCorregido);
+      $('#' + campoJquery).val(valorCorregido);
+      this.entrevistaForm.get(campoAngular)?.setValue(valorCorregido);
+    }
   }
 
   validarValorCampo(campoJquery: string, campoAngular: string) {
-    let valorCampo = $('#' + campoJquery).val()?.toString().trim();
-    const lentghCampo = $('#' + campoJquery + '').val();
+    let valorCampo = $('#' + campoJquery).val();
   
-    if (lentghCampo.length > 0) {
-      if ($('#' + campoJquery + '').val().trim() === '') {
-        this.basicosFrom.get('' + campoAngular + '')?.reset();
-      }
+    if (valorCampo === undefined || valorCampo.trim().length === 0) {
+      this.entrevistaForm.get(campoAngular)?.reset();
+    } else {
+      let valorCorregido = valorCampo.toString().trim().toLowerCase()
+        .replace(/\b[á-úa-zA-Z]+/g, (letra: any) => letra.charAt(0).toUpperCase() + letra.slice(1));
+
+      $('#' + campoJquery).val(valorCorregido);
+      this.entrevistaForm.get(campoAngular)?.setValue(valorCorregido);
     }
-  
-    let valorCorregido = valorCampo
-      .toLowerCase()  
-      .replace(/\b[á-úa-zA-Z]+/g, (letra: any) => 
-        letra.charAt(0).toUpperCase() + letra.slice(1) 
-      );
-  
-    $('#' + campoJquery).val(valorCorregido);
-  
-    this.basicosFrom.get(campoAngular)?.setValue(valorCorregido);
   }
     
   validarMinuscula(campoJquery: string, campoAngular: string) {
@@ -7720,7 +7742,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     const lentghCampo = $('#' + campoJquery + '').val();
     if (lentghCampo.length > 0) {
       if ($('#' + campoJquery + '').val().trim() === '') {
-        this.notif.onWarning('Advertencia', 'El campo no puede contener espacios.');
         this.referenciaForm.get('' + campoAngular + '')?.reset();
       }
     }
@@ -9558,7 +9579,10 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   LimpiarIdAsesorNombre() {
     this.asesorForm.get('strCodigoAse')?.reset();
   } 
-
+  LimpiarCodigoAsesor(campoNombre : string, campoCodigo : string){
+    if(this.asesorForm.get(campoNombre)?.value == "")
+      this.asesorForm.get(campoCodigo)?.setValue("");
+  }
   LimpiarIdAsesorCodigo() {
     this.asesorForm.get('strNombreAse')?.reset();
   }
@@ -15204,6 +15228,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       if (this.estadoCivilSeleccionado === 25) {
         this.notif.onWarning('Advertencia', 'No se puede registrar el conyugue, para el estado civil seleccionado.');
         this.conyugueForm.reset();
+        this.limpiarFormularios(this.conyugueForm);
       } else {
         this.formBuscarLockedCreacion = true;
         if (this.indexConyugue !== null) {
@@ -16699,7 +16724,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
               this.laboralFormSet.get('IdTipoLocal')?.setValue(null);
             }
             if (elementlab.NombreArrendador !== null && elementlab.NombreArrendador !== undefined && elementlab.NombreArrendador !== '') {
-              this.laboralFormSet.get('NombreArrendador')?.setValue(  elementlab.NombreArrendador.charAt(0).toUpperCase() + elementlab.NombreArrendador.slice(1).toLowerCase());
+              this.laboralFormSet.get('NombreArrendador')?.setValue(this.capitalizarLetra(elementlab.NombreArrendador));
             } else {
               this.laboralFormSet.get('NombreArrendador')?.setValue(null);
             }
@@ -16754,7 +16779,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             this.laboralFormSet.get('NumPersonasCargo')?.setValue(elementlabo.NumPersonasCargo);
             this.laboralFormSet.get('EmpresaDescripcion')?.setValue(elementlabo.EmpresaString);
             this.laboralFormSet.get('IdTipoLocal')?.setValue(elementlabo.IdTipoLocal);
-            this.laboralFormSet.get('NombreArrendador')?.setValue(elementlabo.NombreArrendador);
+            this.laboralFormSet.get('NombreArrendador')?.setValue(this.capitalizarLetra(elementlabo.NombreArrendador));
             this.laboralFormSet.get('TelefonoArrendador')?.setValue(elementlabo.TelefonoArrendador);
             this.allItemsFormLaboral.push(this.laboralFormSet.value);
           });
@@ -16833,7 +16858,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             this.laboralFormSet.get('IdTipoLocal')?.setValue(null);
           }
           if (elementlab.NombreArrendador !== null && elementlab.NombreArrendador !== undefined && elementlab.NombreArrendador !== '') {
-            this.laboralFormSet.get('NombreArrendador')?.setValue(elementlab.NombreArrendador);
+            this.laboralFormSet.get('NombreArrendador')?.setValue(this.capitalizarLetra(elementlab.NombreArrendador));
           } else {
             this.laboralFormSet.get('NombreArrendador')?.setValue(null);
           }
@@ -16906,7 +16931,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             this.laboralFormSet.get('IdTipoLocal')?.setValue(null);
           }
           if (elementlab.NombreArrendador !== null && elementlab.NombreArrendador !== undefined && elementlab.NombreArrendador !== '') {
-            this.laboralFormSet.get('NombreArrendador')?.setValue(elementlab.NombreArrendador);
+            this.laboralFormSet.get('NombreArrendador')?.setValue(this.capitalizarLetra(elementlab.NombreArrendador));
           } else {
             this.laboralFormSet.get('NombreArrendador')?.setValue(null);
           }
@@ -25348,18 +25373,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     });
   }
 
-  EntrevistaCapitalice() {
-    const self = this;
-    $('#RPre12').keyup(function () {
-      $(self).val($(self).val().substr(0, 1).toUpperCase() + $(self).val().substr(1).toLowerCase());
-    });
-    $('#RPre20').keyup(function () {
-      $(self).val($(self).val().substr(0, 1).toUpperCase() + $(self).val().substr(1).toLowerCase());
-    });
-    $('#RPre24').keyup(function () {
-      $(self).val($(self).val().substr(0, 1).toUpperCase() + $(self).val().substr(1).toLowerCase());
-    });
-  }
 
   NombresApellidosPepsCapitalice() {
     const self = this;
@@ -25777,4 +25790,18 @@ PreCargarPais(val: number) {
   
 
   //#endregion
+    capitalizarLetra(string: string): string {
+    try {
+      if (!string) {
+        return string;
+      }
+      return string
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ')
+    } catch (error) {
+      return string; 
+    }
+  }
+
 }
