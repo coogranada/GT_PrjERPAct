@@ -1245,7 +1245,4 @@ export class EntrevistaComponent implements OnInit {
       this.entrevistaForm.get(campoAngular)?.setValue(valorCorregido);
     }
   }
-
-
-
 }
