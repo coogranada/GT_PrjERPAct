@@ -143,7 +143,8 @@ export class TerminoAhorrosService {
         return this._http.post<any>(this.url, Datos);
     }   
     ConvertNumeroALetras(num: number): Observable<any> {
-        this.url = `${this.environment.Url}/ConvertirNumeroALetras/${num}`;
+        let strNum: string = num.toString().replace(".", "-");
+        this.url = `${this.environment.Url}/ConvertirNumeroALetras/${strNum}`;
         return this._http.get<any>(this.url);
     }
     getEditarAsesorExterno(Datos: any): Observable<any> {
@@ -183,12 +184,8 @@ export class TerminoAhorrosService {
         return this._http.get<any>(this.url);
     }
     ActualizarNroTitulo(idNroTutilo : number , idCuenta : number,idnumeroTituloAnt : number): Observable<any> {
-        this.url = `${this.environment.Url}/ActualizarNroTituloTermino`;
-        const params = new HttpParams()
-            .set('/', idNroTutilo)
-            .set('/', idCuenta)
-            .set('/', idnumeroTituloAnt);
-        return this._http.get<any>(this.url, { params: params }); // revisar
+        this.url = `${this.environment.Url}/ActualizarNroTituloTermino/`+ idNroTutilo + "/" + idCuenta + "/" + idnumeroTituloAnt;;
+        return this._http.get<any>(this.url);
     }   
     ObtenerCuentaReciprocidadTermino(cedula: number): Observable<any> {
         this.url = `${this.environment.Url}/ObtenerCuentaReciprocidadTermino/${cedula}`; 

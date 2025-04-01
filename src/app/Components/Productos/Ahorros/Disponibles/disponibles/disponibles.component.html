@@ -1154,15 +1154,15 @@
                                 <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="dataObjetTitulares.length > 0">
                                     <br />
                                     <div class="table-responsive scrollTabla panel panel-default">
-                                        <table id="TablaTitulares " class="table table-hover">
+                                        <table id="TablaTitulares " class="table table-hover sticky-last-column">
                                             <thead>
                                                 <tr>
                                                     <th class="text-bold">Documento</th>
                                                     <th class="text-bold">Nombre</th>
                                                     <th class="text-bold">Fecha matrícula</th>
-                                                    <th class="text-bold">Tipo</th>
+                                                    <th class="text-bold centerColumn">Tipo</th>
                                                     <th class="text-bold">Tipo Firma</th>
-                                                    <th class="text-bold">Opciones</th>
+                                                    <th class="text-bold operacionFija centerColumn">Opciones</th>
 
                                                 </tr>
                                             </thead>
@@ -1171,9 +1171,9 @@
                                                     <td>{{Titulares.Documento}}</td>
                                                     <td>{{Titulares.Nombre}}</td>
                                                     <td>{{Titulares.FechaMatricula | date : "yyyy/MM/dd HH:mm:ss" }}</td>
-                                                    <td>{{Titulares.TipoTitular}}</td>
+                                                    <td class="centerColumn">{{Titulares.TipoTitular}}</td>
                                                     <td>{{Titulares.TipoFirma}}</td>
-                                                    <td><button class="btn Gt-btn-verde btn-icon legitRipple" (click)="IndiceAEditar(i, Titulares)" [disabled]="!BloquearDatoAutorizado">
+                                                    <td class="operacionFija centerColumn"><button class="btn Gt-btn-verde btn-icon legitRipple" (click)="IndiceAEditar(i, Titulares)" [disabled]="!BloquearDatoAutorizado">
                                                                     <i class="icon-pencil"></i></button> &nbsp;
                                                         <button class="btn Gt-btn-morado btn-icon legitRipple" (click)="IndiceAEliminar(i)" [disabled]="!BloquearDatoAutorizado">
                                                                     <i class="icon-bin2 "></i></button></td>
