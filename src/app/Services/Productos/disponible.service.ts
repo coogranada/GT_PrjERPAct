@@ -306,4 +306,15 @@ export class DisponiblesService {
     ActivarLibretas(IdsToUpdate: number[]): Observable<any> {
         this.url = this.environment.Url + '/ActivarLibretas';
         return this._http.post<any>(this.url, IdsToUpdate );
-    }}
+    }
+    LiberarTarjeta(Tarjeta: number): Observable<any> {
+        this.url = this.environment.Url + `/LiberarTarjeta?NumeroTarjeta=${Tarjeta}`;
+        return this._http.get<any>(this.url);
+    }
+    LiberarLibreta(libreta: number): Observable<any> {
+        this.url = this.environment.Url + `/LiberarLibreta?NumeroLibreta=${libreta}`;
+        return this._http.get<any>(this.url);
+    }
+}
+
+

@@ -4068,6 +4068,30 @@ export class DisponiblesComponent implements OnInit {
                 );
               }  
               // fin notificador
+              // liberar tarjeta o libreta
+                swal.fire({
+                  title: '¿Desea liberar tarjeta y/o libreta de cuenta anulada?',
+                  text: '',
+                  icon: 'question',
+                  showCancelButton: true,
+                  confirmButtonText: 'Si',
+                  cancelButtonText: 'No',
+                  confirmButtonColor: 'rgb(13,165,80)',
+                  cancelButtonColor: 'rgb(160,0,87)',
+                  allowOutsideClick: false,
+                  allowEscapeKey: false
+              }).then((results) => {
+                if (results.value) {
+                  if (this.DisponibleForm.get('IdMedioPago')?.value == 50 ||
+                    this.DisponibleForm.get('IdMedioPago')?.value == 10) {
+                    this.LiberarTarjeta();
+                    this.notif.success('Exitoso', 'La liberacion de tarjeta se realizo correctamente.', ConfiguracionNotificacion.configRightTop);
+                  } else if (this.DisponibleForm.get('IdMedioPago')?.value == 0) {
+                    this.LiberarLibreta();
+                    this.notif.success('Exitoso', 'La liberacion de libreta se realizo correctamente.', ConfiguracionNotificacion.configRightTop);
+                  }
+                }
+              });
               this.CambioEstadoFrom.reset();
               this.DisponibleOperacionFrom.get('Codigo')?.reset();
               this.DisponibleForm.get('IdObseCambioEstado')?.reset();
@@ -4205,6 +4229,31 @@ export class DisponiblesComponent implements OnInit {
     this.selectEstado = true;
     this.inputEstado = false;
   }
+  LiberarTarjeta() {
+    var NumeroTarjeta = this.DisponibleForm.get('NumeroTarjeta')?.value;
+    this.DisponiblesServices.LiberarTarjeta(+NumeroTarjeta).subscribe(
+      (      result: any) => {
+        this.DisponibleForm.get('NumeroTarjeta')?.setValue(0);
+      },
+      (error: any) => {
+        const errorMessage = <any>error;
+        console.log(errorMessage);
+      }
+    );
+  }
+  LiberarLibreta() {
+    var NumeroLibreta = this.DisponibleForm.get('Inicial')?.value;
+    this.DisponiblesServices.LiberarLibreta(+NumeroLibreta).subscribe(
+      (result: any) => {
+        this.DisponibleForm.get('Inicial')?.setValue(0);
+        this.DisponibleForm.get('Final')?.setValue(0);
+      },
+      (error: any) => {
+        const errorMessage = <any>error;
+        console.log(errorMessage);
+      }
+    );
+  }
   obtenerIdObseCambioEstado() {
     this.DisponiblesServices.obtenerIdObseCambioEstado(this.DisponibleForm.get('IdCuenta')?.value).subscribe(
       result => {
@@ -4287,6 +4336,7 @@ export class DisponiblesComponent implements OnInit {
         return;
       }
     } else if (this.DisponibleForm.get('IdMedioPago')?.value == '10' || this.DisponibleForm.get('IdMedioPago')?.value == '60') { // sin cupo
+      this.ValidacionMediopagoInputs();
       this.enableBtnActualizar = false;
       this.MostrarLibreta = true;
       this.MostrarTarjeta = false;
@@ -4345,6 +4395,7 @@ export class DisponiblesComponent implements OnInit {
       }, 200);
       
     } else if (this.DisponibleForm.get('IdMedioPago')?.value == '50' || this.DisponibleForm.get('IdMedioPago')?.value == '70') { // con cupo
+      this.ValidacionMediopagoInputs();
       this.enableBtnActualizar = false;
       this.MostrarLibreta = true;
       this.MostrarTarjeta = false;
@@ -4404,23 +4455,35 @@ export class DisponiblesComponent implements OnInit {
       }, 200);
     }   
   }
-  ValidacionMediopagoInputs() {
+  ValidacionMediopagoInputs(): false | undefined {
     if (this.DisponibleOperacionFrom.get('Codigo')?.value == 10 || this.DisponibleOperacionFrom.get('Codigo')?.value == 40 || this.DisponibleOperacionFrom.get('Codigo')?.value == 38) {
+      this.enableBtnActualizar = false;
       if (this.DisponibleForm.get('IdProducto')?.value === 109 || this.DisponibleForm.get('IdProducto')?.value === 110) {
-        
         this.enableBtnActualizar = true;
       }
-      if ((this.DisponibleForm.get('IdMedioPago')?.value == 10 && this.DisponibleForm.get('IdConvenio')?.value != 0 && this.DisponibleForm.get('NumeroTarjeta')?.value != "") ||
-        (this.DisponibleForm.get('IdMedioPago')?.value == 50 && this.DisponibleForm.get('IdConvenio')?.value != 0 && this.DisponibleForm.get('NumeroTarjeta')?.value != "" && this.DisponibleForm.get('NumeroPagare')?.value != "" && this.DisponibleForm.get('IdDiaCorte')?.value != "0" && this.DisponibleForm.get('IdPlazo')?.value != "0") ||
-        (this.DisponibleForm.get('IdMedioPago')?.value == 60 && this.DisponibleForm.get('IdConvenio')?.value != 0) ||
-        (this.DisponibleForm.get('IdMedioPago')?.value == 70 && this.DisponibleForm.get('IdConvenio')?.value != 0 && this.DisponibleForm.get('NumeroPagare')?.value != "" && this.DisponibleForm.get('IdDiaCorte')?.value != "0" && this.DisponibleForm.get('IdPlazo')?.value != "0")) {
+      if ((this.DisponibleForm.get('IdMedioPago')?.value == "10"
+        && this.DisponibleForm.get('IdConvenio')?.value != 0
+        && this.DisponibleForm.get('NumeroTarjeta')?.value != "") ||
+        (this.DisponibleForm.get('IdMedioPago')?.value == "50"
+        && this.DisponibleForm.get('IdConvenio')?.value != 0
+        && this.DisponibleForm.get('NumeroTarjeta')?.value != ""
+        && this.DisponibleForm.get('NumeroPagare')?.value != null
+        && this.DisponibleForm.get('NumeroPagare')?.value != ""
+        && this.DisponibleForm.get('IdDiaCorte')?.value != "0"
+        && this.DisponibleForm.get('IdPlazo')?.value != "0") ||
+        (this.DisponibleForm.get('IdMedioPago')?.value == "60"
+        && this.DisponibleForm.get('IdConvenio')?.value != 0) ||
+        (this.DisponibleForm.get('IdMedioPago')?.value == "70"
+        && this.DisponibleForm.get('IdConvenio')?.value != 0
+        && this.DisponibleForm.get('NumeroPagare')?.value != null && this.DisponibleForm.get('NumeroPagare')?.value != "" && this.DisponibleForm.get('IdDiaCorte')?.value != "0" && this.DisponibleForm.get('IdPlazo')?.value != "0")) {
         this.enableBtnActualizar = true;
-      }     
+      } else {
+        this.enableBtnActualizar = false;
+      }
     }
     else {
       return false;
-    } 
-    return true;   
+    }
   }
   GenerarCertificado(){
     if(this.CertificadoFrom.get('SaldoCertificado')?.value == 1 || this.CertificadoFrom.get('SaldoCertificado')?.value == 2 || this.CertificadoFrom.get('SaldoCertificado')?.value == 3) {
@@ -4656,6 +4719,12 @@ export class DisponiblesComponent implements OnInit {
               $('#tarjeta').removeClass('active');
               $('#libreta').removeClass('activar');
               $('#libreta').removeClass('active');
+              setTimeout(() => {
+                // impresion  de formato de novedad de ahorro cuando es con cupo 
+                if (this.DisponibleForm.get('IdMedioPago')?.value == "70" || this.DisponibleForm.get('IdMedioPago')?.value == "50") {
+                  this.NovedadesAhorrosPDF('Apertura cuenta');
+                }
+              }, 1000);
             },
             error => {
               this.loading = false;
@@ -4721,6 +4790,12 @@ export class DisponiblesComponent implements OnInit {
                   $('#tarjeta').removeClass('active');
                   $('#libreta').removeClass('activar');
                   $('#libreta').removeClass('active');
+                  setTimeout(() => {
+                    // impresion  de formato de novedad de ahorro cuando es con cupo 
+                    if (this.DisponibleForm.get('IdMedioPago')?.value == "70" || this.DisponibleForm.get('IdMedioPago')?.value == "50") {
+                      this.NovedadesAhorrosPDF('Apertura cuenta');
+                    }
+                  }, 1000); 
                 },
                 error => {
                   this.loading = false;
@@ -4776,6 +4851,12 @@ export class DisponiblesComponent implements OnInit {
             $('#tarjeta').removeClass('active');
             $('#libreta').removeClass('activar');
             $('#libreta').removeClass('active');
+            setTimeout(() => {
+              // impresion  de formato de novedad de ahorro cuando es con cupo 
+              if (this.DisponibleForm.get('IdMedioPago')?.value == "70" || this.DisponibleForm.get('IdMedioPago')?.value == "50") {
+                this.NovedadesAhorrosPDF('Apertura cuenta');
+              }
+            }, 1000); 
           },
           error => {
             this.loading = false;
@@ -4841,6 +4922,12 @@ export class DisponiblesComponent implements OnInit {
                 $('#tarjeta').removeClass('active');
                 $('#libreta').removeClass('activar');
                 $('#libreta').removeClass('active');
+                setTimeout(() => {
+                  // impresion  de formato de novedad de ahorro cuando es con cupo 
+                  if (this.DisponibleForm.get('IdMedioPago')?.value == "70" || this.DisponibleForm.get('IdMedioPago')?.value == "50") {
+                    this.NovedadesAhorrosPDF('Apertura cuenta');
+                  }
+                }, 1000); 
               },
               error => {
                 this.loading = false;
@@ -5476,6 +5563,41 @@ export class DisponiblesComponent implements OnInit {
           }
         );
       } else if (this.DisponibleOperacionFrom.get('Codigo')?.value === '38') {  // Cambiar medio pago
+        // valida datos completos
+        if (this.DisponibleForm.get('IdMedioPago')?.value === "10") { // tarjeta sin cupo
+          if (this.DisponibleForm.get('IdConvenio')?.value === 0
+            && this.DisponibleForm.get('NumeroTarjeta')?.value === "") {
+            this.notif.warning('Advertencia', 'Datos incompletos.', ConfiguracionNotificacion.configRightTop);
+            this.enableBtnActualizar = false;
+            return;
+          }
+        }
+        else if (this.DisponibleForm.get('IdMedioPago')?.value == "50") { // tarejta con cupo
+          if (this.DisponibleForm.get('IdConvenio')?.value === 0
+            && this.DisponibleForm.get('NumeroTarjeta')?.value === ""
+            && this.DisponibleForm.get('NumeroPagare')?.value === null
+            && this.DisponibleForm.get('IdDiaCorte')?.value === "0"
+            && this.DisponibleForm.get('IdPlazo')?.value === "0") {
+            this.notif.warning('Advertencia', 'Datos incompletos.', ConfiguracionNotificacion.configRightTop);
+            this.enableBtnActualizar = false;
+            return;
+          }
+        } else if (this.DisponibleForm.get('IdMedioPago')?.value == "60") { // sin tarjeta sin cupo
+          if (this.DisponibleForm.get('IdConvenio')?.value === 0) {
+            this.notif.warning('Advertencia', 'Datos incompletos.', ConfiguracionNotificacion.configRightTop);
+            this.enableBtnActualizar = false;
+            return;
+          }
+        } else if (this.DisponibleForm.get('IdMedioPago')?.value == "70") { // sin  tarjeta con cupo
+          if (this.DisponibleForm.get('IdConvenio')?.value === 0
+            && this.DisponibleForm.get('NumeroPagare')?.value === null
+            && this.DisponibleForm.get('IdDiaCorte')?.value === "0"
+            && this.DisponibleForm.get('IdPlazo')?.value === "0") {
+            this.notif.warning('Advertencia', 'Datos incompletos.', ConfiguracionNotificacion.configRightTop);
+            this.enableBtnActualizar = false;
+            return;
+          }
+        }  
         if (this.DisponibleForm.get('IdMedioPago')?.value === '0') {
           this.notif.warning('Advertencia', 'Cuando medio de pago es libreta no se puede cambiar.', ConfiguracionNotificacion.configRightTop);
           this.enableBtnActualizar = false;
@@ -6345,9 +6467,11 @@ export class DisponiblesComponent implements OnInit {
               if (result.IdProducto === 102) {
                 if (this.DisponibleForm.get('IdProducto')?.value === result.IdProducto) {
                   this.ProductoTarjeta = true;
+                  this.ValidacionMediopagoInputs();
                 }
               } else if (result.IdProducto === 101) {
                 this.ProductoTarjeta = true;
+                this.ValidacionMediopagoInputs();
               }
               if (this.ProductoTarjeta == true) { 
                 if(this.tarjetaOld == this.DisponibleForm.get('NumeroTarjeta')?.value)
@@ -6378,8 +6502,10 @@ export class DisponiblesComponent implements OnInit {
               } else if (result.IdEstado === 47){
                 this.notif.warning('Advertencia', 'El número de tarjeta no está disponible.', ConfiguracionNotificacion.configRightTop);
                 this.DisponibleForm.get('NumeroTarjeta')?.reset(); 
-              }              
-            } 
+              } else if (result.IdEstado === 55) {
+                this.notif.warning('Advertencia', 'El número de tarjeta no es valido.', ConfiguracionNotificacion.configRightTop);
+              this.DisponibleForm.get('NumeroTarjeta')?.reset();             
+            }} 
           } else {
             this.enableBtnActualizar = false;
             this.notif.warning('Advertencia','El número de tarjeta tiene otra oficina asignada.',ConfiguracionNotificacion.configRightTop);
