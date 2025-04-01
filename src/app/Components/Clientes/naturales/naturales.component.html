@@ -2349,7 +2349,7 @@
                                                         <div class="col-xs-12 col-md-4 col-lg-2">
                                                             <div class="form-group">
                                                                 <label class="textNegrilla">Total pasivos:</label>
-                                                                <input type="text" currencyMask class="form-control text-right textNegrilla" formControlName="tlPasivo" value="{{patrimonioForm.controls['tlPasivo'].value | currency:'$':'symbol':'1.0-0'}}" [attr.disabled]="formPasivoLocked" (blur)="calcularPatrimonio()" (keypress)="habilitarBtnUpdate()" />
+                                                                <input type="text" currencyMask class="form-control text-right textNegrilla" formControlName="tlPasivo" currencyMask [options]="{precision : 0 }"  [attr.disabled]="formPasivoLocked" (blur)="calcularPatrimonio()" (keypress)="habilitarBtnUpdate()" />
                                                                 <span class="help-block validationSpan" *ngIf="activoForm.controls['VrlAdeudado'].errors?.['pattern'] && (activoForm.controls['VrlAdeudado'].dirty || activoForm.controls['VrlAdeudado'].touched)">
                                                                     El total pasivos solo acepta números.
                                                                 </span>
@@ -4090,7 +4090,7 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td colspan="2">Declaro que no realizo transacciones en moneda extranjera</td>
+                                                        <td colspan="2">Declaro que no realizo transacciones en moneda extranjera:</td>
                                                         <td colspan="6">
                                                             Si <input type="checkbox" class="switchery" formControlName="RPregunta28Si" [attr.disabled]="formBuscarLocked" (click)="ValidarSeleccion('si', 28)"> No <input type="checkbox" class="switchery"
                                                                 formControlName="RPregunta28No" [attr.disabled]="formBuscarLocked" (click)="ValidarSeleccion('No', 28)">

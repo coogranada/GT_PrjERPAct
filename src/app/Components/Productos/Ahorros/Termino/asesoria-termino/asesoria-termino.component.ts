@@ -701,7 +701,7 @@ export class AsesoriaTerminoComponent implements OnInit {
       setTimeout(() => {
         this.AdicionarPuntosFrom.get('AdicionarPunto')?.setValue(puntos[0].IdPuntosAdicionales);
         this.AdicionarPuntosFrom.get('AdicionarPuntoDescripcion')?.setValue(dato.intPuntosAdicionales);
-        this.SumaPuntos();
+        // this.SumaPuntos();
       }, 700);
     }
   }
