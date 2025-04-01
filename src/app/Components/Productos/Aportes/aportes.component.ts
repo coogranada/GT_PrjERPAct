@@ -225,7 +225,7 @@ export class AportesComponent implements OnInit {
         this.LimpiarBeneficiarior();        
       } else {
         this.generalesService.Autofocus('selectAsociado');
-        this.clearFormAportes();
+        this.clearFormAportes(1);
         this.clearFrom();
         this.LimpiarBeneficiarior();
         this.MapearDatosUsuario();
@@ -512,6 +512,7 @@ export class AportesComponent implements OnInit {
       }
     }
     this.ResetValorSeleccionado();
+    console.log("slog",this.aportesOperacionFrom.get('Codigo')?.value)
   }
 
   selectEstadoActivo() {
@@ -886,7 +887,9 @@ export class AportesComponent implements OnInit {
         ].filter((nombre) => nombre?.trim()).join(' ');
         this.AsesorFrom.get('strNombre')?.setValue(nombreCompleto);
         this.ValorTotal();
-        this.ObtenerHistorial();
+        setTimeout(() => {
+          this.ObtenerHistorial();
+        }, 1200);
         this.aportesFrom.get('FechaApertura')?.setValue(new DatePipe('en-CO').transform(this.dataObjet.FechaApertura, 'yyyy/MM/dd  HH:mm:ss'));
         this.aportesFrom.get('FechaUltimaTrans')?.setValue(new DatePipe('en-CO').transform(this.dataObjet.FechaUltimaTrans, 'yyyy/MM/dd  HH:mm:ss'));
         if (this.dataObjet.FechaCancelacion != null) {
@@ -947,7 +950,9 @@ export class AportesComponent implements OnInit {
         ].filter((nombre) => nombre?.trim()).join(' ');
         this.AsesorFrom.get('strNombre')?.setValue(nombreCompleto);
         this.ValorTotal();
-        this.ObtenerHistorial();
+        setTimeout(() => {
+          this.ObtenerHistorial();
+        }, 1200);
         this.aportesFrom.get('FechaApertura')?.setValue(
           new DatePipe('en-CO').transform(this.dataObjet.FechaApertura, 'yyyy/MM/dd  HH:mm:ss'));
         this.aportesFrom.get('FechaUltimaTrans')?.setValue(
@@ -1436,10 +1441,11 @@ export class AportesComponent implements OnInit {
         console.log(errorMessage);
       });
   }
-  clearFormAportes() {
+  clearFormAportes(clearOpera : number = 0) {
     this.dataObjet = undefined;
     this.resultEstados = undefined;
-    this.aportesOperacionFrom.reset();
+    if(clearOpera == 0)
+      this.aportesOperacionFrom.reset();
     this.aportesFrom.reset();
     this.btnGuardar = true;
     this.btnActualizar = true;
@@ -2007,7 +2013,6 @@ export class AportesComponent implements OnInit {
     this.BloquearNombreBenf = false;
     this.LimpiarBeneficiarior();
     this.bloquearDocumentoBenf = false;
-    this.btnOpcionActualizarBeneficiario = true
     this.aportesFrom.get('Beneficiarios')?.setValue(this.dataObjetBeneficiarios);
     if (this.AsesorFrom.get('strCodigo')?.value  !== null
       && this.AsesorFrom.get('strCodigo')?.value  !== undefined
@@ -2017,7 +2022,6 @@ export class AportesComponent implements OnInit {
       
       if (this.dataObjetBeneficiarios.length > 0) {
         
-        this.aportesFrom.get('DocumentoBeneficiario')?.disable();
         let sumaPorcentaje = 0;
         let totalSuma;
         this.dataObjetBeneficiarios.forEach(element => {
@@ -2025,6 +2029,7 @@ export class AportesComponent implements OnInit {
         });
         totalSuma = sumaPorcentaje + +this.aportesFrom.get('Porcentaje')?.value ;
         if (totalSuma === 100) {
+          this.aportesFrom.get('DocumentoBeneficiario')?.disable();
           this.loading = true;
           this.aportesServices.getGuardarAportes(this.aportesFrom.value).subscribe(
             result => {
@@ -2053,7 +2058,9 @@ export class AportesComponent implements OnInit {
               }
               this.MapearDatosCuenta(result);
               this.BuscarPorCuenta();
-              this.ObtenerHistorial();
+              setTimeout(() => {
+                this.ObtenerHistorial();
+              }, 1200);
               this.VolverArriba();
               this.aportesOperacionFrom.get('Codigo')?.reset();
             },
@@ -2097,7 +2104,9 @@ export class AportesComponent implements OnInit {
             }
             this.MapearDatosCuenta(result);
             this.BuscarPorCuenta();
-            this.ObtenerHistorial();
+            setTimeout(() => {
+              this.ObtenerHistorial();
+            }, 1200);
             this.VolverArriba();
             this.aportesOperacionFrom.get('Codigo')?.reset();
           },
@@ -2123,7 +2132,7 @@ export class AportesComponent implements OnInit {
       }).then((results) => {
         if (results.value) {
         } else {
-          if (this.dataObjet !== undefined) {
+          if (this.dataObjetBeneficiarios.length > 0) {
             
             this.aportesFrom.get('Beneficiarios')?.setValue(this.dataObjetBeneficiarios);
             let sumaPorcentaje = 0;
@@ -2132,6 +2141,7 @@ export class AportesComponent implements OnInit {
               sumaPorcentaje = sumaPorcentaje + +element.Porcentaje;
             });
             totalSuma = sumaPorcentaje + +this.aportesFrom.get('Porcentaje')?.value ;
+            console.log("porse",totalSuma)
             if (totalSuma === 100) {
               this.loading = true;
               this.aportesFrom.get('DocumentoBeneficiario')?.disable();
@@ -2162,7 +2172,9 @@ export class AportesComponent implements OnInit {
                   }
                   this.MapearDatosCuenta(result);
                   this.BuscarPorCuenta();
-                  this.ObtenerHistorial();
+                  setTimeout(() => {
+                    this.ObtenerHistorial();
+                  }, 1200);
                   this.VolverArriba();
                   this.aportesOperacionFrom.get('Codigo')?.reset();
                 },
@@ -2205,7 +2217,9 @@ export class AportesComponent implements OnInit {
                 }
                 this.MapearDatosCuenta(result);
                 this.BuscarPorCuenta();
-                this.ObtenerHistorial();
+                setTimeout(() => {
+                  this.ObtenerHistorial();
+                }, 1200);
                 this.VolverArriba();
                 this.aportesOperacionFrom.get('Codigo')?.reset();
               },
@@ -2242,7 +2256,7 @@ export class AportesComponent implements OnInit {
           Accion: x.Accion == "Crear" ? "Adicionar" : x.Accion,
           TipoDocumento: x.DescripcionTipoDocumento,
           Documento: x.NumeroDocumento,
-          Nombre: x.PrimerApellido + " " + (x.SegundoApellido == null ? '' : x.SegundoApellido) + " " + x.PrimerNombre + " " + (x.SegundoNombre == null ? '' : x.SegundoNombre),
+          Nombre: (x.PrimerApellido == null ? "" : x.PrimerApellido) + " " + (x.SegundoApellido == null ? '' : x.SegundoApellido) + " " + x.PrimerNombre + " " + (x.SegundoNombre == null ? '' : x.SegundoNombre),
           Porcentaje: x.Porcentaje + "%",
           Parentesco: x.DatosParentesco.Descripcion == null ? x.DatosParentesco : x.DatosParentesco.Descripcion,
           FechaMatricula: new DatePipe('en-CO').transform(x.FechaMatricula, 'yyyy/MM/dd  HH:mm:ss')
@@ -2309,7 +2323,9 @@ export class AportesComponent implements OnInit {
               this.VolverArriba();
               this.Guardarlog();
               this.aportesOperacionFrom.get('Codigo')?.reset();
-              this.ObtenerHistorial();
+              setTimeout(() => {
+                this.ObtenerHistorial();
+              }, 1200);
             },
             error => {
               this.loading = false;
@@ -2351,7 +2367,9 @@ export class AportesComponent implements OnInit {
                 this.BloquearFormaPago = false;
                 this.BloquearAsesorExterno = false;
                 this.aportesOperacionFrom.get('Codigo')?.reset();
-                this.ObtenerHistorial();
+                setTimeout(() => {
+                  this.ObtenerHistorial();
+                }, 1200);
               },
               error => {
                 this.loading = false;
@@ -2359,7 +2377,9 @@ export class AportesComponent implements OnInit {
                 console.log(errorMessage);
               });
 
-            this.ObtenerHistorial();
+              setTimeout(() => {
+                this.ObtenerHistorial();
+              }, 1200);
           } else if ((IdAsesor === null || IdAsesor === '' || IdAsesor === undefined) &&
             (NombreAsesor === null || NombreAsesor === '' || NombreAsesor === undefined)) {
             this.dataAsesor = this.AsesorFrom.get('strCodigo')?.value ;
@@ -2379,7 +2399,9 @@ export class AportesComponent implements OnInit {
                 this.btnGuardar = true;
                 this.Guardarlog();
                 this.aportesFrom.get('IdCuenta')?.setValue(result.IdCuenta);
-                this.ObtenerHistorial();
+                setTimeout(() => {
+                  this.ObtenerHistorial();
+                }, 1200);
                 this.btnActualizar = true;
                 this.btnActualizarBeneficiario = true;
                 this.BloquearFormaPago = false;
@@ -2391,7 +2413,9 @@ export class AportesComponent implements OnInit {
                 const errorMessage = <any>error;
                 console.log(errorMessage);
               });
-            this.ObtenerHistorial();
+              setTimeout(() => {
+                this.ObtenerHistorial();
+              }, 1200);
           } else {
             this.notif.onWarning('Advertencia', 'Debe seleccionar un asesor válido.');
           }

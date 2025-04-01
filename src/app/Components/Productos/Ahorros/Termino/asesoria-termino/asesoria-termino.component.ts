@@ -701,7 +701,7 @@ export class AsesoriaTerminoComponent implements OnInit {
       setTimeout(() => {
         this.AdicionarPuntosFrom.get('AdicionarPunto')?.setValue(puntos[0].IdPuntosAdicionales);
         this.AdicionarPuntosFrom.get('AdicionarPuntoDescripcion')?.setValue(dato.intPuntosAdicionales);
-        this.SumaPuntos();
+        // this.SumaPuntos();
       }, 700);
     }
   }
@@ -1287,6 +1287,17 @@ export class AsesoriaTerminoComponent implements OnInit {
       this.MostrasAlertaAsociado = false;
     } else {
       this.MostrasAlertaAsociado = true;
+    }
+  }
+
+  validarCero(campo : string){
+    if(this.asesoriaterminoForm.get(campo)?.value == 0)
+      this.asesoriaterminoForm.get(campo)?.setValue("");
+    else if(this.asesoriaterminoForm.get(campo)?.value.length > 0){
+      let subStringTemp : string = this.asesoriaterminoForm.get(campo)?.value;
+      let subStringTemp0 = subStringTemp.substring(0,1);
+      if(subStringTemp0 == "0")
+        this.asesoriaterminoForm.get(campo)?.setValue(subStringTemp.substring(1,subStringTemp.length));
     }
   }
   BuscarNombreXNombre() {

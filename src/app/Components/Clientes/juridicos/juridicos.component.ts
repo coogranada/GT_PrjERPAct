@@ -241,7 +241,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
   public dataVias: any;
   public obliAsteriscoPadre = true;
   btnBuscar = true;
-
+  aceptaTratamientoDatos : boolean = false;
   esReimpresion = false;
   constructor(private moduleValidationService: ModuleValidationService, private el: ElementRef,
     private operacionesService: OperacionesService, private notif: AlertService, private oficinasService: OficinasService,
@@ -334,6 +334,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
 
     this.entrevistaComponent.emitEventEntrevista.subscribe(res => {
       if (res) {
+        console.log("entre",res)
         this.juridicosFrom.get('operacion')?.reset();
         this.consultarJuridicosNit(this.infoJuridicoComponent.infoJuridicoFrom.get('Nit')?.value);
       }
@@ -507,6 +508,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       this.juridicosService.BuscarJuridicosAll(dataMap.Documento, '*').subscribe(
         result => {
           this.CargarTabs(result);
+          this.aceptaTratamientoDatos = result.TratamientoDto.Acepto;
           this.JuridicoSeleccionado = result.JuridicoDto.IdJuridico;
           this.entrevistaComponent.idJuridicoSearch = result.JuridicoDto.IdJuridico;
           this.entrevistaComponent.fechaMatricula = result.JuridicoDto.FechaMatricula;
@@ -2178,6 +2180,11 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           this.SiguienteTab(1);
         }
         else {
+          if(this.aceptaTratamientoDatos){
+            this.notif.onWarning('Advertencia', 'El tratamiento de datos ya se encuentra marcado.');
+            this.juridicosFrom.get('operacion')?.reset();
+            return;
+          }
           this.OpcionSeleccionada = '/Marcar tratamiento datos';
           this.ActivarBtnOpciones = false;
           this.mostrarBotonesCambiar = false;
@@ -2220,6 +2227,11 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         this.SiguienteTab(1);
       }
       else {
+        if(this.aceptaTratamientoDatos){
+          this.notif.onWarning('Advertencia', 'El tratamiento de datos ya se encuentra marcado.');
+          this.juridicosFrom.get('operacion')?.reset();
+          return;
+        }
         this.OpcionSeleccionada = '/Marcar tratamiento datos';
         this.ActivarBtnOpciones = false;
         this.mostrarBotonesCambiar = false;
@@ -2262,6 +2274,11 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           this.SiguienteTab(1);
         }
         else {
+          if(!this.aceptaTratamientoDatos){
+            this.notif.onWarning('Advertencia', 'El tratamiento de datos ya se encuentra desmarcado.');
+            this.juridicosFrom.get('operacion')?.reset();
+            return;
+          }
           this.OpcionSeleccionada = '/Desmarcar tratamiento datos.';
           this.ActivarBtnOpciones = false;
           this.mostrarBotonesCambiar = false;
@@ -2306,6 +2323,11 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         this.SiguienteTab(1);
       }
       else {
+        if(!this.aceptaTratamientoDatos){
+          this.notif.onWarning('Advertencia', 'El tratamiento de datos ya se encuentra desmarcado.');
+          this.juridicosFrom.get('operacion')?.reset();
+          return;
+        }
         this.OpcionSeleccionada = '/Desmarcar tratamiento datos.';
         this.ActivarBtnOpciones = false;
         this.mostrarBotonesCambiar = false;
@@ -2331,9 +2353,6 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         this.IrAbajo();
       }
     }
-
-
-    
   }
   SolicitudRertiro() {
     const valueState = this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.value;
@@ -2950,7 +2969,6 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
                   this.infoJuridicoComponent.AnteriorEstadoSeleccion = elementEstado;
                 }
               });
-
             } else if (this.OperacionMarcada === '29') {
               this.infoJuridicoComponent.infoJuridicoFrom.get('Nit')?.setValue(this.ProNit);
             } else if (this.OperacionMarcada === '30') {
@@ -6349,6 +6367,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (result !== null) {
             if (result.JuridicoDto !== null) {
               this.CargarTabs(result);
+              this.aceptaTratamientoDatos = result.TratamientoDto.Acepto;
               this.JuridicoSeleccionado = result.JuridicoDto.IdJuridico;
               this.entrevistaComponent.idJuridicoSearch = result.JuridicoDto.IdJuridico;
               this.entrevistaComponent.fechaMatricula = result.JuridicoDto.FechaMatricula;

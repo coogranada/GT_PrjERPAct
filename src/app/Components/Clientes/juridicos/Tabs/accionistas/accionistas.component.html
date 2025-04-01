@@ -7,7 +7,7 @@
                         <div class="form-group" id="1">
                             <label class="textBlod">Número: </label>
                             <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
-                            <input type="text" class="form-control" formControlName="NumeroDocumento" [attr.disabled]="bloquearForm" maxlength="15" (blur)="GetAccionista()" (keypress)="limpiarInputs()">
+                            <input type="text" class="form-control" formControlName="NumeroDocumento" [attr.disabled]="bloquearForm" maxlength="15" (blur)="GetAccionista()" (keypress)="limpiarInputs()" (input)="validarCero('NumeroDocumento')">
                             <span class="help-block validationSpan" *ngIf="accionistasFrom.controls['NumeroDocumento'].errors?.['required'] && (accionistasFrom.controls['NumeroDocumento'].dirty || accionistasFrom.controls['NumeroDocumento'].touched)">
                 El número es obligatorio.
               </span>

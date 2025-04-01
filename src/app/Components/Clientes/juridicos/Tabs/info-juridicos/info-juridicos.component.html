@@ -24,7 +24,7 @@
                         <div class="form-group" id="1">
                             <label class="textBlod">Nit : </label>
                             <span class="textBigRed">*</span>
-                            <input type="text" class="form-control" formControlName="Nit" id="nit" [attr.disabled]="bloquearNit" maxlength="10" (input)="SoloNumerosInput('Nit',$event)" (blur)="ValidarJuridicosRegistrados()">
+                            <input type="text" class="form-control" formControlName="Nit" id="nit" [attr.disabled]="bloquearNit" maxlength="10" (input)="SoloNumerosInput('Nit',$event)" (input)="validarCero('Nit')" (blur)="ValidarJuridicosRegistrados()">
                             <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['Nit'].errors?.['required'] && (infoJuridicoFrom.controls['Nit'].dirty || infoJuridicoFrom.controls['Nit'].touched)">
                       El nit es obligatorio.
                     </span>
@@ -274,7 +274,7 @@
                         <div class="col-md-8 col-lg-8">
                             <label class="hiddenText">Nit : </label>
                             <span class="hiddenText">*</span>
-                            <input type="text" class="form-control" [attr.disabled]="bloquearAsesor" id="asesor" formControlName="NombreAsesor" (keypress)="LimpiarIdAsesorCodigo()">
+                            <input type="text" class="form-control" [attr.disabled]="bloquearAsesor" id="asesor" formControlName="NombreAsesor" (keypress)="LimpiarIdAsesorCodigo()" (blur)="LimpiarCodigoAsesor('NombreAsesor','CodigoAsesor')">
                             <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['NombreAsesor'].errors?.['pattern']  && (infoJuridicoFrom.controls['NombreAsesor'].dirty || infoJuridicoFrom.controls['NombreAsesor'].touched)">
                                  La Asesor solo acepta letras.
                                 </span>
@@ -298,8 +298,8 @@
                         <div class="col-md-5 col-lg-5">
                             <label class="hiddenText">Nit: </label>
                             <span class="hiddenText">*</span>
-                            <input type="text" class="form-control" [attr.disabled]="bloquearAsesorExt" id="asesorExterno" formControlName="NombreAsesorExt" (keypress)="LimpiarIdAsesorExternoCodigo()">
-                            <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['NombreAsesorExt'].errors?.['pattern']  && (infoJuridicoFrom.controls['NombreAsesorExt'].dirty || infoJuridicoFrom.controls['NombreAsesorExt'].touched)">
+                            <input type="text" class="form-control" [attr.disabled]="bloquearAsesorExt" id="asesorExterno" formControlName="NombreAsesorExt" (keypress)="LimpiarIdAsesorExternoCodigo()" (blur)="LimpiarCodigoAsesor('NombreAsesorExt','CodigoAsesorExt')">
+                            <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['NombreAsesorExt'].errors?.['pattern']  && (infoJuridicoFrom.controls['NombreAsesorExt'].dirty || infoJuridicoFrom.controls['NombreAsesorExt'].touched)" >
                     El Asesor Externo solo acepta letras.
                   </span>
                         </div>

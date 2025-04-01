@@ -230,7 +230,16 @@ export class AccionistasComponent implements OnInit {
   }
 
  
-
+  validarCero(campo : string){
+    if(this.accionistasFrom.get(campo)?.value == 0)
+      this.accionistasFrom.get(campo)?.setValue("");
+    else if(this.accionistasFrom.get(campo)?.value.length > 0){
+      let subStringTemp : string = this.accionistasFrom.get(campo)?.value;
+      let subStringTemp0 = subStringTemp.substring(0,1);
+      if(subStringTemp0 == "0")
+        this.accionistasFrom.get(campo)?.setValue(subStringTemp.substring(1,subStringTemp.length));
+    }
+}
   limpiarInputs() {
     const tipoDoc = this.accionistasFrom.get('TipoDocumento').value;
     if (tipoDoc !== null && tipoDoc !== undefined) {
