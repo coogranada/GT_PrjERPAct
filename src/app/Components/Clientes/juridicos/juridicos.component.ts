@@ -784,8 +784,8 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     // Alerta para las operaciones que si tienen cambio
     if (this.OperacionMarcada !== undefined) {
       swal.fire({
-        title: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-        text: '',
+        title: 'Advertencia',
+        text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'Si',
@@ -917,8 +917,8 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     // Alerta para las operaciones que si tienen cambio
     if (this.OperacionMarcada !== undefined) {
       swal.fire({
-        title: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-        text: '',
+        title: 'Advertencia',
+        text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'Si',
@@ -2946,8 +2946,8 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       // Alerta para las operaciones que si tienen cambio
       if (this.OperacionMarcada !== undefined) {
         swal.fire({
-          title: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-          text: '',
+          title: 'Advertencia',
+          text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
           icon: 'question',
           showCancelButton: true,
           confirmButtonText: 'Si',
@@ -3069,8 +3069,8 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       // Alerta para las operaciones que si tienen cambio
       if (this.OperacionMarcada !== undefined) {
         swal.fire({
-          title: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-          text: '',
+          title: 'Advertencia',
+          text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
           icon: 'question',
           showCancelButton: true,
           confirmButtonText: 'Si',
@@ -3200,8 +3200,8 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       // Alerta para las operaciones que si tienen cambio
       if (this.OperacionMarcada !== undefined) {
         swal.fire({
-          title: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-          text: '',
+          title: 'Advertencia',
+          text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
           icon: 'question',
           showCancelButton: true,
           confirmButtonText: 'Si',
@@ -3443,8 +3443,8 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       // Alerta para las operaciones que si tienen cambio
       if (this.OperacionMarcada !== undefined) {
         swal.fire({
-          title: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-          text: '',
+          title: 'Advertencia',
+          text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
           icon: 'question',
           showCancelButton: true,
           confirmButtonText: 'Si',
@@ -3561,8 +3561,8 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       // Alerta para las operaciones que si tienen cambio
       if (this.OperacionMarcada !== undefined) {
         swal.fire({
-          title: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-          text: '',
+          title: 'Advertencia',
+          text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
           icon: 'question',
           showCancelButton: true,
           confirmButtonText: 'Si',
@@ -3677,8 +3677,8 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       // Alerta para las operaciones que si tienen cambio
       if (this.OperacionMarcada !== undefined) {
         swal.fire({
-          title: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-          text: '',
+          title: 'Advertencia',
+          text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
           icon: 'question',
           showCancelButton: true,
           confirmButtonText: 'Si',
@@ -3799,8 +3799,8 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       // Alerta para las operaciones que si tienen cambio
       if (this.OperacionMarcada !== undefined) {
         swal.fire({
-          title: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-          text: '',
+          title: 'Advertencia',
+          text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
           icon: 'question',
           showCancelButton: true,
           confirmButtonText: 'Si',
@@ -3924,8 +3924,8 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       // Alerta para las operaciones que si tienen cambio
       if (this.OperacionMarcada !== undefined) {
         swal.fire({
-          title: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-          text: '',
+          title: 'Advertencia',
+          text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
           icon: 'question',
           showCancelButton: true,
           confirmButtonText: 'Si',
@@ -4047,9 +4047,9 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       }
       // Alerta para las operaciones que si tienen cambio
       if (this.OperacionMarcada !== undefined) {
-        swal.fire({
-          title: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-          text: '',
+        swal.fire({          
+          title: 'Advertencia',
+          text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
           icon: 'question',
           showCancelButton: true,
           confirmButtonText: 'Si',
@@ -4179,8 +4179,8 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       // Alerta para las operaciones que si tienen cambio
       if (this.OperacionMarcada !== undefined) {
         swal.fire({
-          title: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-          text: '',
+          title: 'Advertencia',
+          text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
           icon: 'question',
           showCancelButton: true,
           confirmButtonText: 'Si',
@@ -4310,8 +4310,8 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       // Alerta para las operaciones que si tienen cambio
       if (this.OperacionMarcada !== undefined) {
         swal.fire({
-          title: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-          text: '',
+          title: 'Advertencia',
+          text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
           icon: 'question',
           showCancelButton: true,
           confirmButtonText: 'Si',
@@ -4441,8 +4441,8 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       // Alerta para las operaciones que si tienen cambio
       if (this.OperacionMarcada !== undefined) {
         swal.fire({
-          title: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-          text: '',
+          title: 'Advertencia',
+          text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
           icon: 'question',
           showCancelButton: true,
           confirmButtonText: 'Si',
@@ -4572,8 +4572,8 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       // Alerta para las operaciones que si tienen cambio
       if (this.OperacionMarcada !== undefined) {
         swal.fire({
-          title: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-          text: '',
+          title: 'Advertencia',
+          text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
           icon: 'question',
           showCancelButton: true,
           confirmButtonText: 'Si',
@@ -4703,8 +4703,8 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       // Alerta para las operaciones que si tienen cambio
       if (this.OperacionMarcada !== undefined) {
         swal.fire({
-          title: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-          text: '',
+          title: 'Advertencia',
+          text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
           icon: 'question',
           showCancelButton: true,
           confirmButtonText: 'Si',
