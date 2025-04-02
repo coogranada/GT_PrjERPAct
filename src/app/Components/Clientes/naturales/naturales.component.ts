@@ -1480,8 +1480,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.operacionesModel.idModulo = +JSON.parse(window.atob(IdModuloActivo == null ? "" : IdModuloActivo));
     this.mostrarPorQueCobertura = false;
     this.solicitudRetiroForm.reset();
-    if (results === '5') { // Creacion
-
+    if (results === '5') { // Creacion           
       this.ResetAllForm();
       this.LimpiaVariablesAlerta();
       this.EjecutarMetodosMaestros();
@@ -5435,7 +5434,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.asesorForm.reset();
     this.patrimonioForm.reset();
     this.tratamientoForm.reset();
-    this.terceroSave.reset();
+    this.terceroSave.reset();    
     this.itemsLogSeguro = [];
     this.dataActivos = [];
     this.itemsEgresos = [];
@@ -5456,6 +5455,8 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.datatratamientoLog = [];
     this.allItemEntrevista = [];
     this.allItemFormEntrevista = [];
+    this.allItemsFormFinanciero = [];
+    this.allItemsForm = [];
     this.allItemsFormSaves = {
       asociadosNaturalesDto: {},
       tercerosDto: {},
@@ -5514,6 +5515,8 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.datatratamientoLog = [];
     this.allItemEntrevista = [];
     this.allItemFormEntrevista = [];
+    this.allItemsFormFinanciero = [];
+    this.allItemsForm = [];
     this.allItemsFormSaves = {
       asociadosNaturalesDto: {},
       tercerosDto: {},

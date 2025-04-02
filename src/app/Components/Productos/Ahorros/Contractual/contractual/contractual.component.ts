@@ -457,7 +457,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           this.bloquearbtnActalizar = false;
           this.bloquearbtnCalcular = false;
           this.bloquearbtnCambioEstado = false;
-          this.operacionEscogida = '/Cambiar Tipo cuenta destino';
+          this.operacionEscogida = '/Cambiar tipo cuenta destino';
           this.devolverTab(1);
           this.VolverAbajo();
           this.tab1.nativeElement.click();
@@ -15870,7 +15870,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                   this.BloquearBontonPuntos = false;
                   this.BloquearCuentaOrigen = false;
                   this.BloquearNombreDebito = false;
-                  this.notif.onSuccess('Exitoso', 'El cambio de Tipo cuenta destino se actualizó correctamente.',
+                  this.notif.onSuccess('Exitoso', 'El cambio de tipo cuenta destino se actualizó correctamente.',
         );
                   this.btnGuardar = true;
                   this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
@@ -15913,7 +15913,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                 }
               );
             } else {
-              this.notif.onWarning('Advertencia', 'Debe cambiar Tipo cuenta destino');
+              this.notif.onWarning('Advertencia', 'Debe cambiar tipo cuenta destino');
               this.bloquearbtnActalizar = false;
               this.bloquearbtnCalcular = false;
             }
@@ -15965,7 +15965,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                 this.BloquearBontonPuntos = false;
                 this.BloquearCuentaOrigen = false;
                 this.BloquearNombreDebito = false;
-                this.notif.onSuccess('Exitoso', 'El cambio de Tipo cuenta destino se actualizó correctamente.');
+                this.notif.onSuccess('Exitoso', 'El cambio de tipo cuenta destino se actualizó correctamente.');
                 this.btnGuardar = true;
                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                 this.btnActualizar = false;
@@ -16007,7 +16007,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
               }
             );
           } else {
-            this.notif.onWarning('Advertencia', 'Debe cambiar Tipo cuenta destino.');
+            this.notif.onWarning('Advertencia', 'Debe cambiar tipo cuenta destino.');
             this.bloquearbtnActalizar = false;
             this.bloquearbtnCalcular = false;
           }

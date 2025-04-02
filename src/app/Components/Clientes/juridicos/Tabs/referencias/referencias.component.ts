@@ -604,11 +604,11 @@ export class ReferenciasComponent implements OnInit {
           if (countFina > 2 || countComer > 2) {
             this.notif.onWarning('Advertencia', 'Solo puede relacionar dos referencias comerciales y dos referencias financieras.');
           } else {
-            this.notif.onWarning('Advertencia', 'Debe agregar una referencia comercial y una financiera.');
+            this.notif.onWarning('Advertencia', 'Debe agregar una referencia comercial y/o una financiera.');
           }
         }
       } else {
-        this.notif.onWarning('Advertencia', 'Debe agregar una referencia comercial y una financiera.');
+        this.notif.onWarning('Advertencia', 'Debe agregar una referencia comercial y/o  una financiera.');
       }
     }
   }
@@ -678,7 +678,7 @@ export class ReferenciasComponent implements OnInit {
             this.notif.onDanger('Error', 'No se pudo realizar la actualizacion - Error: ' + error);
           });
       } else {
-        this.notif.onWarning('Advertencia', 'Debe ingresar una referencia comercial y una financiera.');
+        this.notif.onWarning('Advertencia', 'Debe ingresar una referencia comercial y/o una financiera.');
       }
     }
   }
