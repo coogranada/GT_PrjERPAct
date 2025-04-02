@@ -9391,6 +9391,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     if (this.asesorForm.get('strNombre')?.value === '') {
       this.asesorForm.get('strCodigo')?.reset();
     }
+    this.blockBtnBasico = false;
   }
 
   GetAsesorExternoCodigoFirst(codigo : string) {
@@ -9570,10 +9571,13 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
 
   LimpiarExterno(Datos : string) {
     if (Datos === 'strCodigo') {
+      this.terceroSave.get('IdAsesorExterno')?.reset();
       this.asesorForm.get('strNombre')?.reset();
     } else if (Datos === 'strNombre') {
+      this.terceroSave.get('IdAsesorExterno')?.reset();
       this.asesorForm.get('strCodigo')?.reset();
     }
+    this.blockBtnBasico = false;
   }
 
   LimpiarIdAsesorNombre() {
@@ -10928,8 +10932,8 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           });
       } else if (this.basicosFrom.value.operacion === '19') { // Cambiar asesor externo
         this.blockBtnBasico = true;
-        if (this.asesorForm.value.strCodigo !== '' && this.asesorForm.value.strCodigo !== null
-          && this.asesorForm.value.strCodigo !== undefined) {
+        // if (this.asesorForm.value.strCodigo !== '' && this.asesorForm.value.strCodigo !== null
+        //   && this.asesorForm.value.strCodigo !== undefined) {
             if(this.asesorForm.value.strCodigo !== this.CedulaAsesorExt) {
               let TerceroNatura : string | null = localStorage.getItem('TerceroNatura');
               this.EditarAsesorExterno(TerceroNatura == null ? "" : TerceroNatura, this.terceroSave.value.IdAsesorExterno);
@@ -10939,13 +10943,13 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
               this.notif.onWarning('Advertencia', 'Debe seleccionar un asesor externo diferente.');
               this.disableAsesor = null;
             }
-          }  else {
-          this.blockBtnBasico = false;
-          this.notif.onWarning('Advertencia', 'Debe seleccionar un asesor externo válido.');
-          this.disableAsesor = null;
-          this.asesorForm.get('strCodigo')?.reset();
-          this.asesorForm.get('strNombre')?.reset();
-        }
+        //   }  else {
+        //   this.blockBtnBasico = false;
+        //   this.notif.onWarning('Advertencia', 'Debe seleccionar un asesor externo válido.');
+        //   this.disableAsesor = null;
+        //   this.asesorForm.get('strCodigo')?.reset();
+        //   this.asesorForm.get('strNombre')?.reset();
+        // }
       } else if (this.basicosFrom.value.operacion === '24') { // Cancelar solicitud retiro
       } else if (this.basicosFrom.value.operacion === '26') { // Cambiar asesor
         this.blockBtnBasico = true;
@@ -21199,7 +21203,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       }
       const dataAsesor = 'Asesor externo modificado - ' + tercero + ' -' + asesor;
       this.GuardarLog(dataAsesor, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
-      this.clientesService.EditarAsesorExterno(tercero, asesor.toString()).subscribe(
+      this.clientesService.EditarAsesorExterno(tercero, asesor == null ? "0" : asesor.toString()).subscribe(
         result => {
           this.basicosFrom.get('operacion')?.reset();
           this.botonSiguiente.nativeElement.click();
