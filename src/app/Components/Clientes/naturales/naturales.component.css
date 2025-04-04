@@ -377,3 +377,7 @@ p::first-letter {
 .CapitaliceMayus {
     text-transform: uppercase !important;
 }
+
+.custom-text {
+    font-size: 10px;
+}
