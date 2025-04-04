@@ -1246,6 +1246,7 @@ export class LayoutComponent implements OnInit {
   LogginOut() {
     this.loginService.CerrarSesionUser(this.DataUser.IdUsuario).subscribe(result => {
       this.isLoginError = false;
+      this.webSocket.Send("ClosedSesion",this.DataUser.IdUsuario);
       this.router.navigateByUrl('/Login');
       this.nameUser = '';
       this.NombreOficinaActual = '';
