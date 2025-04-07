@@ -1212,6 +1212,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
       this.notif.onWarning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.');
   }
   FormaPagoSeleccionada() {
+    if(this.dataObjet.IdFormaPago === 1 && this.dataObjet.IdFormaPago == this.contractualFrom.get('IdFormaPago')?.value) {
+      this.bloquearbtnActalizar = false;
+      return;
+    }
+    
     if (this.contractualFrom.get('IdFormaPago')?.value === '0') {
       this.DebitoAutomaticoFrom.reset();
       this.bloquearbtnActalizar = true;

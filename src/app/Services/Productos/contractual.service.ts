@@ -238,7 +238,7 @@ export class ContractualService {
         return this._http.post<any>(this.url, Datos);
     }
     GetDatosDebito(idCuenta: number) : Observable<any> {
-        this.url = `${this.environment.Url}/GenerarPDFImpresionContractual/${idCuenta}`;
+        this.url = `${this.environment.Url}/GetDatosDebeito/${idCuenta}`;
         return this._http.get<any>(this.url);
     }
 }
