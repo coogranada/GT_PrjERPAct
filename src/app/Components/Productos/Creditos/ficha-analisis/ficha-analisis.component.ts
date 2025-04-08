@@ -34,6 +34,7 @@ export class FichaAnalisisComponent implements OnInit {
   public secondaryColour = ColorSecundario;
   private CodModulo = 75;
 
+  public isProcessing = false;;
   //forms
   public FichaOperacionForm!: FormGroup;
   public FichaAnalisisDataForm!: FormGroup;
@@ -115,7 +116,7 @@ export class FichaAnalisisComponent implements OnInit {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
       })
     );
-    obs.subscribe((resulr) => console.log(resulr));
+    obs.subscribe((resulr) => console.log(resulr));    
   }
 
   ngOnInit() {
@@ -397,7 +398,13 @@ export class FichaAnalisisComponent implements OnInit {
   }
 
   DocumentoChange(event : any) {
-    this.FichaOperacionForm.get('Radicado')?.reset();
+    const valorRadicado = this.FichaOperacionForm.get('Radicado')?.value;
+    const valorDocumento = this.FichaOperacionForm.get('Documento')?.value;
+
+    if(valorDocumento === 'null' && valorRadicado !== 'null' ){
+      this.FichaOperacionForm.get('Radicado')?.reset();
+    }
+
     if (event.KeyCode == 13) {
       $("#btnBuscar").click();
     }
@@ -880,7 +887,13 @@ export class FichaAnalisisComponent implements OnInit {
   }
 
   recolectarInfo() {
+    this.loading=true;
     let act = null;
+
+    if (this.isProcessing) return; 
+
+    this.isProcessing = true;
+
     if (this.contenidoCodigo != 90) {
       this.jsonDto = this.armarJsonDto();
       act = this.compararDataParaActualizar()
@@ -898,10 +911,13 @@ export class FichaAnalisisComponent implements OnInit {
         this.btnGuardar = false;
         this.strDatos="/Buscar"
         this.OperacionBuscarFichaAnalisis();
+        this.isProcessing = false;
       }, 1500);
       this.loading = false;
     } else {
       this.notif.onWarning('Advertencia', 'Debe realizar un cambio para actualizar.');
+      this.loading = false;
+      this.isProcessing = false;
     }
   }
   
@@ -2179,9 +2195,9 @@ export class FichaAnalisisComponent implements OnInit {
       puntExpirianAso: new FormControl('',{updateOn:'change'}),
       puntajeTransAso: new FormControl({value:"", disabled:true}, []),
       scoringAso: new FormControl('', { updateOn: 'change' }),
-      MaxOpCancelRealAso : new FormControl('', { updateOn: 'change' }),
-      MaxOpCancelFinanAso : new FormControl('', { updateOn: 'change' }),
-      MaxOpCancelFinanCoograAso : new FormControl('', { updateOn: 'change' }),
+      MaxOpCancelRealAso : new FormControl({value:"", disabled:true}, { updateOn: 'change' }),
+      MaxOpCancelFinanAso : new FormControl({value:"", disabled:true}, { updateOn: 'change' }),
+      MaxOpCancelFinanCoograAso : new FormControl({value:"", disabled:true}, { updateOn: 'change' }),
       activosAso: new FormControl({value:"", disabled:true}, []),
       pasivosAso: new FormControl({value:"", disabled:true}, []),
       patrimonioAso: new FormControl({value:"", disabled:true}, []),
@@ -2189,14 +2205,14 @@ export class FichaAnalisisComponent implements OnInit {
       prcSolvenciaAso: new FormControl({value:"", disabled:true}, []),
       utilidadNetaAso: new FormControl('', {updateOn:'change'}),
       ROAAso: new FormControl({value:"", disabled:true}, []),
-      ROEAso: new FormControl('', {updateOn:'change'}),
+      ROEAso: new FormControl({ value: '', disabled: true }, {updateOn:'change'}),
       capacidadPagoAso: new FormControl('', {updateOn:'change'}),
       capacidadPagoTotalAso: new FormControl('', {updateOn:'change'}),
       endeudamientoDirAso: new FormControl({value:"", disabled:true}, []),
       endeudamientoTotAso: new FormControl({value:"", disabled:true}, []),
       descActivosAso: new FormControl('', { updateOn: 'change' }),
       RecomendacionAnalista: new FormControl('', { updateOn: 'change' }),
-      AnalistaEncargado: new FormControl('', {updateOn: 'change'}),
+      AnalistaEncargado: new FormControl({ value: '', disabled: true }, { updateOn: 'change' }),
       ConceptoFinal: new FormControl('', { updateOn: 'change' }),
       InfoActualizadaSGF: new FormControl('', { updateOn: 'change' }),
       CondicionesCredito: new FormControl('', {updateOn:'change'}),
@@ -2224,9 +2240,9 @@ export class FichaAnalisisComponent implements OnInit {
       puntExpirianCode: new FormControl('',{updateOn:'change'}),
       puntajeTransCod: new FormControl({ value: "", disabled: true }, []),
       scoringCode: new FormControl('', { updateOn: 'change' }),
-      MaxOpCancelRealCode : new FormControl('', { updateOn: 'change' }),
-      MaxOpCancelFinanCode : new FormControl('', { updateOn: 'change' }),
-      MaxOpCancelFinanCoograCode : new FormControl('', { updateOn: 'change' }),
+      MaxOpCancelRealCode : new FormControl({ value: "", disabled: true }, { updateOn: 'change' }),
+      MaxOpCancelFinanCode : new FormControl({ value: "", disabled: true }, { updateOn: 'change' }),
+      MaxOpCancelFinanCoograCode : new FormControl({ value: "", disabled: true }, { updateOn: 'change' }),
      
       //info finan
       activosCod: new FormControl({value:"", disabled:true}, []),
@@ -2237,8 +2253,8 @@ export class FichaAnalisisComponent implements OnInit {
       capacidadPagoCode: new FormControl('', {updateOn:'change'}),
       utilidadNetaCode: new FormControl('', { updateOn: 'change' }),
       AnalisisEstFinanCode: new FormControl('', { updateOn: 'change' }),
-      ROACode: new FormControl('', {updateOn:'change'}),
-      ROECode: new FormControl('', {updateOn:'change'}),
+      ROACode: new FormControl({value:"", disabled:true}, {updateOn:'change'}),
+      ROECode: new FormControl({value:"", disabled:true}, {updateOn:'change'}),
       capacidadPagoTotalCode: new FormControl('', {updateOn:'change'}),
       endeudamientoDirCod: new FormControl({value:"", disabled:true}, []),
       endeudamientoTotCod: new FormControl({value:"", disabled:true}, []),

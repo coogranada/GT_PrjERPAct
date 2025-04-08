@@ -346,7 +346,7 @@
                           <div class="col-xs-12 col-md-6 col-lg-3">
                             <div class="form-group">
                               <label class="textNegrilla">Max. operación real cancelada:</label>
-                              <input type="text" class="form-control" formControlName="MaxOpCancelRealAso"  [disabled]="true == true"  currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"/>
+                              <input type="text" class="form-control" formControlName="MaxOpCancelRealAso"  [disabled]="true"  currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"/>
                             </div>
                           </div>
                           <div class="col-xs-0 col-md-0 col-lg-1"></div>
@@ -357,7 +357,7 @@
                                 <i class="icon-info22"></i>
                                 <span class="mensajeInfoText">Máxima operación financiera cancelada</span>
                               </div>
-                              <input type="text" class="form-control" formControlName="MaxOpCancelFinanAso" [disabled]="true == true" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"/>
+                              <input type="text" class="form-control" formControlName="MaxOpCancelFinanAso" [disabled]="true" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"/>
                             </div>
                           </div>
                           <div class="col-xs-0 col-md-0 col-lg-1"></div>
@@ -368,7 +368,7 @@
                                 <i class="icon-info22"></i>
                                 <span class="mensajeInfoText">Máxima operación financiera cancelada(Coogranada)</span>
                               </div>
-                              <input type="text" class="form-control" formControlName="MaxOpCancelFinanCoograAso" [disabled]="true == true" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"/>
+                              <input type="text" class="form-control" formControlName="MaxOpCancelFinanCoograAso" [disabled]="true" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"/>
                             </div>
                           </div>
                           <div class="col-xs-0 col-md-0 col-lg-1"></div>
@@ -702,7 +702,7 @@
                           <div class="col-xs-12 col-md-6 col-lg-5">
                             <div class="form-group">
                               <label class="textNegrilla">Analista de créditos:</label>
-                              <input type="text" class="form-control" formControlName="AnalistaEncargado" [disabled]="true == true">
+                              <input type="text" class="form-control" formControlName="AnalistaEncargado" [disabled]="true">
                             </div>
                           </div>
                           <div class="col-xs-12 col-md-12 col-lg-12 tt_padding">
@@ -808,7 +808,7 @@
                     </article>
                   </div>
                   <div class="col-xs-12 col-lg-12 col-md-12 text-right" *ngIf="btnGuardar">
-                    <button type="button" class="btn Gt-btn-verde btn-icon" (click)="recolectarInfo()" [attr.disabled]="BloquearBotonGuardar" >
+                    <button type="button" class="btn Gt-btn-verde btn-icon" (click)="recolectarInfo()" [attr.disabled]="BloquearBotonGuardar">
                       {{contenidoBoton}}
                     </button>
                   </div>
@@ -979,7 +979,7 @@
                       <div class="col-xs-12 col-md-6 col-lg-3">
                         <div class="form-group">
                           <label class="textNegrilla">Max. operación real cancelada:</label>
-                          <input type="text" class="form-control" formControlName="MaxOpCancelRealCode" [disabled]="true == true" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"/>
+                          <input type="text" class="form-control" formControlName="MaxOpCancelRealCode" [disabled]="true" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"/>
                         </div>
                       </div>
                       <div class="col-xs-0 col-md-0 col-lg-1"></div>
@@ -990,7 +990,7 @@
                             <i class="icon-info22"></i>
                             <span class="mensajeInfoText">Máxima operación financiera cancelada</span>
                           </div>
-                          <input type="text" class="form-control" formControlName="MaxOpCancelFinanCode" [disabled]="true == true" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"/>
+                          <input type="text" class="form-control" formControlName="MaxOpCancelFinanCode" [disabled]="true" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}"/>
                         </div>
                       </div>
                       <div class="col-xs-0 col-md-0 col-lg-1"></div>
@@ -1240,7 +1240,7 @@
                         <div class="col-xs-12 col-md-6 col-lg-3">
                           <div class="form-group">
                             <label class="textNegrilla">Rentabilidad del activo total:</label>
-                            <input type="text" class="form-control" formControlName="ROACode" [disabled]="true == true"/>
+                            <input type="text" class="form-control" formControlName="ROACode" [disabled]="true"/>
                           </div>
                         </div>
                         <div class="col-xs-0 col-md-0 col-lg-1"></div>
@@ -1261,7 +1261,7 @@
                         <div class="col-xs-12 col-md-6 col-lg-3">
                           <div class="form-group">
                             <label class="textNegrilla">Rentabilidad del patrimonio:</label>
-                            <input type="text" class="form-control" formControlName="ROECode" [disabled]="true == true"/>
+                            <input type="text" class="form-control" formControlName="ROECode" [disabled]="true"/>
                           </div>
                         </div>
                         <div class="col-xs-0 col-md-0 col-lg-1"></div>
