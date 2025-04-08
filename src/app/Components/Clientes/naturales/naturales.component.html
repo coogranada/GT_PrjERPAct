@@ -4584,47 +4584,47 @@
                                                     <table id="tablaLogSeguro" class="table table-hover">
                                                         <thead>
                                                             <tr>
-                                                                <th>
+                                                                <th class="inline-text">
                                                                     <strong>Seguro</strong>
                                                                 </th>
-                                                                <th>
+                                                                <th class="inline-text">
                                                                     <strong>Estado</strong>
                                                                 </th>
-                                                                <th>
+                                                                <th class="inline-text">
                                                                     <strong>Fecha creación</strong>
                                                                 </th>
-                                                                <th>
+                                                                <th class="inline-text">
                                                                     <strong>Fecha modificación</strong>
                                                                 </th>
-                                                                <th>
+                                                                <th class="inline-text">
                                                                     <strong>Fecha rpta aseguradora</strong>
                                                                 </th>
-                                                                <th>
+                                                                <th class="inline-text">
                                                                     <strong>Monto asegurado</strong>
                                                                 </th>
                                                             </tr>
                                                         </thead>
                                                         <tbody *ngFor="let logSeguro of itemsLogSeguro; let i = index">
                                                             <tr class="filSegt_{{i}}" (click)="CambiarColor(i,13)">
-                                                                <td>
+                                                                <td class="inline-text">
                                                                     {{logSeguro.Seguro}}
                                                                 </td>
-                                                                <td>
+                                                                <td class="inline-text">
                                                                     {{logSeguro.Estado}}
                                                                 </td>
-                                                                <td>
+                                                                <td class="inline-text">
                                                                     {{logSeguro.FechaCreacion | date: 'yyyy/MM/dd HH:mm:ss'}}
                                                                 </td>
-                                                                <td>
+                                                                <td class="inline-text">
                                                                     {{logSeguro.FechaModificacion | date: 'yyyy/MM/dd HH:mm:ss'}}
                                                                 </td>
-                                                                <td *ngIf="logSeguro.FechaRptaAseguradora !== null">
+                                                                <td class="inline-text" *ngIf="logSeguro.FechaRptaAseguradora !== null">
                                                                     {{logSeguro.FechaRptaAseguradora |date:'yyyy/MM/dd HH:mm:ss'}}
                                                                 </td>
-                                                                <td *ngIf="logSeguro.FechaRptaAseguradora === null">
+                                                                <td class="inline-text" *ngIf="logSeguro.FechaRptaAseguradora === null">
                                                                     N/A
                                                                 </td>
-                                                                <td>
+                                                                <td class="inline-text">
                                                                     {{logSeguro.MontoAsegurado | currency}}
                                                                 </td>
                                                             </tr>
@@ -4693,38 +4693,38 @@
                                                         <table id="tablaLogSeguro" class="table table-hover">
                                                             <thead>
                                                                 <tr>
-                                                                    <th>
+                                                                    <th class="inline-text">
                                                                         <strong>Nombre usuario</strong>
                                                                     </th>
-                                                                    <th>
+                                                                    <th class="inline-text">
                                                                         <strong>Fecha de aceptación</strong>
                                                                     </th>
-                                                                    <th>
+                                                                    <th class="inline-text">
                                                                         <strong>Fecha de no aceptación</strong>
                                                                     </th>
-                                                                    <th>
+                                                                    <th class="inline-text">
                                                                         <strong>Respuesta</strong>
                                                                     </th>
                                                                 </tr>
                                                             </thead>
-                                                            <tbody *ngFor="let logTratamiento of datatratamientoLog; let i = index">
-                                                                <tr class="fillogtra_{{i}}" (click)="CambiarColor(i,14)">
-                                                                    <td>
+                                                            <tbody >
+                                                                <tr *ngFor="let logTratamiento of datatratamientoLog; let i = index" class="fillogtra_{{i}}" (click)="CambiarColor(i,14)">
+                                                                    <td class="inline-text">
                                                                         {{logTratamiento.IdAsesor}}
                                                                     </td>
-                                                                    <td *ngIf="logTratamiento.FechaAceptacion === null">
+                                                                    <td class="inline-text" *ngIf="logTratamiento.FechaAceptacion === null">
                                                                         N/A
                                                                     </td>
-                                                                    <td *ngIf="logTratamiento.FechaAceptacion !== null">
+                                                                    <td class="inline-text" *ngIf="logTratamiento.FechaAceptacion !== null">
                                                                         {{logTratamiento.FechaAceptacion}}
                                                                     </td>
-                                                                    <td *ngIf="logTratamiento.fechaNoAceptacion === null">
+                                                                    <td class="inline-text" *ngIf="logTratamiento.fechaNoAceptacion === null">
                                                                         N/A
                                                                     </td>
-                                                                    <td *ngIf="logTratamiento.fechaNoAceptacion !== null">
+                                                                    <td class="inline-text" *ngIf="logTratamiento.fechaNoAceptacion !== null">
                                                                         {{logTratamiento.fechaNoAceptacion}}
                                                                     </td>
-                                                                    <td>
+                                                                    <td class="inline-text">
                                                                         {{logTratamiento.Acepto}}
                                                                     </td>
                                                                 </tr>
@@ -4741,38 +4741,38 @@
                                                         <table id="tablaLogSeguro" class="table table-hover">
                                                             <thead>
                                                                 <tr>
-                                                                    <th>
+                                                                    <th class="inline-text">
                                                                         <strong>Nombre usuario</strong>
                                                                     </th>
-                                                                    <th>
+                                                                    <th class="inline-text">
                                                                         <strong>Fecha marcación</strong>
                                                                     </th>
-                                                                    <th>
+                                                                    <th class="inline-text">
                                                                         <strong>Fecha desmarcación</strong>
                                                                     </th>
-                                                                    <th>
+                                                                    <th class="inline-text">
                                                                         <strong>Respuesta</strong>
                                                                     </th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody *ngFor="let logPeps of dataPepsLog; let i = index">
                                                                 <tr class="fillogpeps_{{i}}" (click)="CambiarColor(i,15)">
-                                                                    <td>
+                                                                    <td class="inline-text">
                                                                         {{logPeps.AsesorMarca}}
                                                                     </td>
-                                                                    <td *ngIf="logPeps.FechaMarcacion === null">
+                                                                    <td class="inline-text" *ngIf="logPeps.FechaMarcacion === null">
                                                                         N/A
                                                                     </td>
-                                                                    <td *ngIf="logPeps.FechaMarcacion !== null">
+                                                                    <td class="inline-text" *ngIf="logPeps.FechaMarcacion !== null">
                                                                         {{logPeps.FechaMarcacion | date:'yyyy/MM/dd HH:mm:ss' }}
                                                                     </td>
-                                                                    <td *ngIf="logPeps.FechaDesmarcacion === null">
+                                                                    <td class="inline-text" *ngIf="logPeps.FechaDesmarcacion === null">
                                                                         N/A
                                                                     </td>
-                                                                    <td *ngIf="logPeps.FechaDesmarcacion !== null">
+                                                                    <td class="inline-text" *ngIf="logPeps.FechaDesmarcacion !== null">
                                                                         {{logPeps.FechaDesmarcacion | date:'yyyy/MM/dd HH:mm:ss'}}
                                                                     </td>
-                                                                    <td>
+                                                                    <td class="inline-text">
                                                                         {{logPeps.marca}}
                                                                     </td>
                                                                 </tr>
@@ -4789,19 +4789,19 @@
                                                         <table id="tablaLogSeguro" class="table table-hover">
                                                             <thead>
                                                                 <tr>
-                                                                    <th class="column_NombreU">
+                                                                    <th class="column_NombreU inline-text">
                                                                         <strong>Nombre usuario</strong>
                                                                     </th>
-                                                                    <th class="column_FechaR">
+                                                                    <th class="column_FechaR inline-text">
                                                                         <strong>Fecha del retiro</strong>
                                                                     </th>
-                                                                    <th class="column_Motivo">
+                                                                    <th class="column_Motivo inline-text">
                                                                         <strong>Motivo del retiro</strong>
                                                                     </th>
-                                                                    <th class="column_DesResp">
+                                                                    <th class="column_DesResp inline-text">
                                                                         <strong>Descripción y/o Respuesta</strong>
                                                                     </th>
-                                                                    <th>
+                                                                    <th class="inline-text">
                                                                         <strong>Opciones </strong>
                                                                     </th>
 
@@ -4839,20 +4839,20 @@
                                                         <table id="tablaLogSeguro" class="table table-hover">
                                                             <thead>
                                                                 <tr>
-                                                                    <th>
+                                                                    <th class="inline-text">
                                                                         <strong>Nombre usuario</strong>
                                                                     </th>
-                                                                    <th>
+                                                                    <th class="inline-text">
                                                                         <strong>Fecha del reingreso</strong>
                                                                     </th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody *ngFor="let logReingreso of dataReingresoLog; let i = index">
                                                                 <tr class="fillogRein_{{i}}" (click)="CambiarColor(i,17)">
-                                                                    <td>
+                                                                    <td class="inline-text">
                                                                         {{logReingreso.IdAsesor}}
                                                                     </td>
-                                                                    <td>
+                                                                    <td class="inline-text">
                                                                         {{logReingreso.FechaReingreso | date:'yyyy/MM/dd HH:mm:ss'}}
                                                                     </td>
 
