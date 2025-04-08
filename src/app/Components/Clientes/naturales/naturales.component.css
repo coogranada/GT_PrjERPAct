@@ -381,3 +381,7 @@ p::first-letter {
 .custom-text {
     font-size: 10px;
 }
+
+.inline-text {
+    white-space: nowrap;
+}

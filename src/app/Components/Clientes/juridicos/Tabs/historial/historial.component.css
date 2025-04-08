@@ -13,3 +13,8 @@
 .columnDesResp {
     min-width: 300px !important;
 }
+
+thead th,
+tbody td {
+    white-space: nowrap;
+}
