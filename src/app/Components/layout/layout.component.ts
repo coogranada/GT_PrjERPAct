@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild,OnDestroy, ElementRef } from '@angular/core';
 import { LoginService } from '../../Services/Login/login.service';
 import { NavigationEnd, Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
@@ -12,15 +12,16 @@ import { WebSocketService } from '../../../app/Services/WebSocket/web-socket.ser
 import { GeneralesService } from '../../../app/Services/Productos/generales.service';
 import { AlertService } from '../../Services/Alert/alert.service';
 import { detectIncognito } from 'detectincognitojs';
+import { DEFAULT_INTERRUPTSOURCES, Idle } from '@ng-idle/core';
 declare var $: any;
 @Component({
   selector: 'app-layout',
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.css'],
-  providers: [DatePipe, LoginService, OperacionesService, UsuariosService, WebSocketService, GeneralesService],
+  providers: [DatePipe, LoginService, OperacionesService, UsuariosService, WebSocketService, GeneralesService,Idle],
   standalone: false
 })
-export class LayoutComponent implements OnInit {
+export class LayoutComponent implements OnInit,OnDestroy {
 
   //#region Declaracion variables
   private PassJs = new PassEncriptJs();
@@ -288,12 +289,9 @@ export class LayoutComponent implements OnInit {
   consultarImg: boolean = false;
 
   constructor(private loginService: LoginService, private router: Router, private notif: AlertService,
-    public datepipe: DatePipe, private userIdle: UserIdleService,
+    public datepipe: DatePipe, private userIdle: UserIdleService,private idle : Idle,
     private operacionesService: OperacionesService, private usuariosServices: UsuariosService, private webSocket: WebSocketService, private serviceGenerales: GeneralesService) {
   }
-  // @HostListener('document:keyup', ['$event'])
-  // @HostListener('document:click', ['$event'])
-  // @HostListener('document:wheel', ['$event'])
   ip: string = "";
   fechaUltimoIngreso: string = "";
   restart() {
@@ -460,11 +458,58 @@ export class LayoutComponent implements OnInit {
     if(id != 7)
       this.isAuditoriaOpen = false;
   }
+  public timeout() {
+    let datauser: string | null = localStorage.getItem('Data');
+    if (datauser == null)
+      return;
+    
+    this.DataUser = JSON.parse(window.atob(datauser));
+    this.loginService.CerrarSesionUser(this.DataUser.IdUsuario).subscribe(result => { 
+      this.webSocket.Send("ClosedSesion",this.DataUser.IdUsuario);
+      Swal.fire({
+        title: 'Advertencia',
+        text: '',
+        html: 'Su session ha caducado ',
+        icon: 'warning',
+        showCancelButton: false,
+        confirmButtonText: 'Aceptar',       
+        confirmButtonColor: 'rgb(13,165,80)',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+    }).then((result) => {
+        localStorage.clear();
+        if (result.value) {
+          $("#popupBusquedaParroquia").modal('hide');//ocultamos el modal
+          $('body').removeClass('modal-open');//eliminamos la clase del body para poder hacer scroll
+          $('.modal-backdrop').remove();//eliminamos el backdrop del modal
+          window.location.reload();
+          this.router.navigate(['Login']);
+        }
+    });
+      
+    },error => {
+      console.log(error);
+      this.notif.onDanger('Error', error);
+    });
+  }
   ngOnInit() {
 
     this.consultarImg = true;
 
+    this.idle.setIdle((60 * 120));  // Tiempo de inactividad antes de activar el timeout
+    this.idle.setTimeout(10);  // Tiempo de espera después del idle antes de hacer algo (ej. logout)
+    this.idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);  // Configura las interrupciones (click, teclado, etc.)
+    this.idle.onIdleEnd.subscribe(() => {console.log('No longer idle.')});
 
+    this.idle.onIdleStart.subscribe(() => {console.log('You\'ve gone idle!')});
+
+    this.idle.onTimeout.subscribe(() => {
+      console.log('Timed out!')
+      this.timeout();
+    });
+
+    // Comienza el monitoreo de inactividad
+    this.idle.watch();
     // Start watching for user inactivity.
     this.userIdle.startWatching();
 
@@ -1201,6 +1246,9 @@ export class LayoutComponent implements OnInit {
         this.oficinaSeleccionada = { Descripcion: "", IdLista: 0 };
       this.conutStatus = 0;
     });
+  }
+  ngOnDestroy() {
+    this.idle.ngOnDestroy();
   }
   stop() {
     this.userIdle.stopTimer();
