@@ -290,11 +290,8 @@ export class LoginComponent implements OnInit {
   }
   IniciarSesion(payload : any) {
     this.usuariosServices.InsertIpUltimaSesion(payload).subscribe((x : any) => {
-    // window.location.reload();
      this.route.navigate(["/"]);
-     console.clear();
-     //window.location.href = this.environment.UrlFront;
-     
+     console.clear();     
     });
   }
   ValidarMetodosCarga(): any {

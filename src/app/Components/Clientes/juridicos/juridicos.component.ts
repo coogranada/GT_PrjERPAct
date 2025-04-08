@@ -283,7 +283,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
 
   ngOnInit() { 
     this.generalesService.Autofocus('operacionJs');
-
+    this.OperacionMarcada = undefined;
     this.IrArriba();
     this.GetCiudad();
     this.GetPaisesList();
@@ -786,7 +786,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       swal.fire({
         title: 'Advertencia',
         text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-        icon: 'question',
+        icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Si',
         cancelButtonText: 'No',
@@ -919,7 +919,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       swal.fire({
         title: 'Advertencia',
         text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-        icon: 'question',
+        icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Si',
         cancelButtonText: 'No',
@@ -1102,11 +1102,6 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     const valueState = this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.value;
     if (valueState !== null) {
       if (valueState.IdEstado != 42 && valueState.IdEstado != 47 && valueState.IdEstado != 55) {
-        this.OpcionSeleccionada = '/Cambiar oficina';
-        this.mostrarOficina = true;
-        this.ProOficina = this.juridicosFrom.get('oficina')?.value;
-        this.ProDescripcionOpe = 'Cambiar oficina'
-        this.OperacionMarcada = '20';
         const strNit = this.infoJuridicoComponent.infoJuridicoFrom.get('Nit')?.value;
         if (strNit === '' || strNit === null || strNit === undefined) {
           this.notif.onWarning('Advertencia', 'Debe buscar un asociado para realizar esta operación.');
@@ -1117,6 +1112,10 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         }
         else {
           this.OpcionSeleccionada = '/Cambiar oficina';
+          this.mostrarOficina = true;
+          this.ProOficina = this.juridicosFrom.get('oficina')?.value;
+          this.ProDescripcionOpe = 'Cambiar oficina'
+          this.OperacionMarcada = '20';
           this.bloquearBuscar = true;
           this.bloquearNombre = true;
           this.bloquearOficina = null;
@@ -2948,7 +2947,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         swal.fire({
           title: 'Advertencia',
           text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-          icon: 'question',
+          icon: 'warning',
           showCancelButton: true,
           confirmButtonText: 'Si',
           cancelButtonText: 'No',
@@ -3071,7 +3070,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         swal.fire({
           title: 'Advertencia',
           text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-          icon: 'question',
+          icon: 'warning',
           showCancelButton: true,
           confirmButtonText: 'Si',
           cancelButtonText: 'No',
@@ -3202,7 +3201,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         swal.fire({
           title: 'Advertencia',
           text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-          icon: 'question',
+          icon: 'warning',
           showCancelButton: true,
           confirmButtonText: 'Si',
           cancelButtonText: 'No',
@@ -3325,9 +3324,9 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       // Alerta para las operaciones que si tienen cambio
       if (this.OperacionMarcada !== undefined) {
         swal.fire({
-          title: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-          text: '',
-          icon: 'question',
+          title: 'Advertencia',
+          text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
+          icon: 'warning',
           showCancelButton: true,
           confirmButtonText: 'Si',
           cancelButtonText: 'No',
@@ -3445,7 +3444,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         swal.fire({
           title: 'Advertencia',
           text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-          icon: 'question',
+          icon: 'warning',
           showCancelButton: true,
           confirmButtonText: 'Si',
           cancelButtonText: 'No',
@@ -3563,7 +3562,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         swal.fire({
           title: 'Advertencia',
           text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-          icon: 'question',
+          icon: 'warning',
           showCancelButton: true,
           confirmButtonText: 'Si',
           cancelButtonText: 'No',
@@ -3679,7 +3678,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         swal.fire({
           title: 'Advertencia',
           text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-          icon: 'question',
+          icon: 'warning',
           showCancelButton: true,
           confirmButtonText: 'Si',
           cancelButtonText: 'No',
@@ -3801,7 +3800,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         swal.fire({
           title: 'Advertencia',
           text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-          icon: 'question',
+          icon: 'warning',
           showCancelButton: true,
           confirmButtonText: 'Si',
           cancelButtonText: 'No',
@@ -3926,7 +3925,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         swal.fire({
           title: 'Advertencia',
           text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-          icon: 'question',
+          icon: 'warning',
           showCancelButton: true,
           confirmButtonText: 'Si',
           cancelButtonText: 'No',
@@ -4050,7 +4049,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         swal.fire({          
           title: 'Advertencia',
           text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-          icon: 'question',
+          icon: 'warning',
           showCancelButton: true,
           confirmButtonText: 'Si',
           cancelButtonText: 'No',
@@ -4181,7 +4180,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         swal.fire({
           title: 'Advertencia',
           text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-          icon: 'question',
+          icon: 'warning',
           showCancelButton: true,
           confirmButtonText: 'Si',
           cancelButtonText: 'No',
@@ -4312,7 +4311,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         swal.fire({
           title: 'Advertencia',
           text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-          icon: 'question',
+          icon: 'warning',
           showCancelButton: true,
           confirmButtonText: 'Si',
           cancelButtonText: 'No',
@@ -4443,7 +4442,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         swal.fire({
           title: 'Advertencia',
           text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-          icon: 'question',
+          icon: 'warning',
           showCancelButton: true,
           confirmButtonText: 'Si',
           cancelButtonText: 'No',
@@ -4574,7 +4573,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         swal.fire({
           title: 'Advertencia',
           text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-          icon: 'question',
+          icon: 'warning',
           showCancelButton: true,
           confirmButtonText: 'Si',
           cancelButtonText: 'No',
@@ -4705,7 +4704,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         swal.fire({
           title: 'Advertencia',
           text: '¿No se confirmó el cambio en la operacion anterior, ' + this.ProDescripcionOpe + ', desea continuar?',
-          icon: 'question',
+          icon: 'warning',
           showCancelButton: true,
           confirmButtonText: 'Si',
           cancelButtonText: 'No',

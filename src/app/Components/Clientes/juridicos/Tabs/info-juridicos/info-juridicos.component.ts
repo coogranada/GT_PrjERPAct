@@ -1294,7 +1294,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
       const info = this.infoJuridicoFrom.get('CodigoAsesorExt')?.value;
       const infoName = this.infoJuridicoFrom.get('NombreAsesorExt')?.value;      
         this.GuardarLog('Cambio de asesor externo: ' + info + ' juridico : ' + juridico, this.OperacionActual, 0, juridico,12);
-        this.juridicoService.CambiarAsesorExterno(juridico, info, this.userConect.lngTercero).subscribe(
+        this.juridicoService.CambiarAsesorExterno(juridico, (info == "" || info == null ? "0" : info), this.userConect.lngTercero).subscribe(
           result => {
             this.loading = false;
             if (result) {
@@ -1488,7 +1488,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
               }
             );
           } else {
-            this.notif.onWarning('Advertencia', 'Los datos ingresados no son validos.');
+            //.notif.onWarning('Advertencia', 'Los datos ingresados no son validos.');
             this.infoJuridicoFrom.get('NombreAsesorExt')?.setValue('');
             this.infoJuridicoFrom.get('CodigoAsesorExt')?.setValue('');
           }

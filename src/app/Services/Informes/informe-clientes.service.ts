@@ -17,7 +17,7 @@ export class InformeClientesService {
       return this._http.post<any>(this.url, Datos);
     }
     ValidatUsuario(usuario: string): Observable<any> {
-      this.url = `${this.environment.Url}/ValidaUsuario?usuario=${usuario}`;
+      this.url = `${this.environment.Url}/ValidaUsuario/${usuario}`;
       return this._http.get<any>(this.url);
     }
     getOcupaciones(tipoEmpleo: number): Observable<any> {

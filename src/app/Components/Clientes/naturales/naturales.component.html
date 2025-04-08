@@ -422,7 +422,7 @@
                                                     <div class="form-group">
                                                         <label class="textNegrilla">Primer nombre:</label>
                                                         <span class="grande"> *</span>
-                                                        <input type="text" class="form-control text-capitalize " formControlName="primerNombre" Id="priNom" [attr.disabled]="disableFormPN" (blur)="ValidarVetadosNombre()" (change)="validarValorCampoNombres('priNom','primerNombre')" maxlength="20" (blur)="ActivaBotonCambiar()" />
+                                                        <input type="text" class="form-control text-capitalize " formControlName="primerNombre" Id="priNom" [attr.disabled]="disableFormPN" (change)="validarValorCampoNombres('priNom','primerNombre')" maxlength="20" (blur)="ActivaBotonCambiar()" />
                                                         <span class="help-block validationSpan" *ngIf="basicosFrom.controls['primerNombre'].errors?.['required'] && (basicosFrom.controls['primerNombre'].dirty || basicosFrom.controls['primerNombre'].touched)">
                                                             El primer nombre es obligatorio.
                                                         </span>
@@ -435,7 +435,7 @@
                                                     <div class="form-group">
                                                         <label class="textNegrilla">Segundo nombre:</label>
                                                         <span class="text-danger"> </span>
-                                                        <input type="text" class="form-control text-capitalize" formControlName="segundoNombre" id="segNom" [attr.disabled]="disableFormSN" (blur)="ValidarVetadosNombre()" (change)="validarValorCampoNombres('segNom','segundoNombre')" maxlength="20" (blur)="ActivaBotonCambiar()" />
+                                                        <input type="text" class="form-control text-capitalize" formControlName="segundoNombre" id="segNom" [attr.disabled]="disableFormSN" (change)="validarValorCampoNombres('segNom','segundoNombre')" maxlength="20" (blur)="ActivaBotonCambiar()" />
                                                         <span class="help-block validationSpan" *ngIf="basicosFrom.controls['segundoNombre'].errors?.['pattern'] && (basicosFrom.controls['segundoNombre'].dirty || basicosFrom.controls['segundoNombre'].touched)">
                                                             El segundo nombre solo acepta letras.
                                                         </span>
@@ -6011,8 +6011,8 @@
                             </div>
                             </div>
                             <div class="col-xs-12 col-md-12 col-lg-12 text-center">
-                                <div>¿No se confirmó el cambio en la operacion anterior,</div>
-                                <div>{{ProDescripcionOpe}}, desea continuar?</div>
+                                <div class="custom-text">¿No se confirmó el cambio en la operacion anterior,</div>
+                                <div class="custom-text">{{ProDescripcionOpe}}, desea continuar?</div>
                                 <br/>
                             </div>
                         </div>

@@ -1480,8 +1480,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.operacionesModel.idModulo = +JSON.parse(window.atob(IdModuloActivo == null ? "" : IdModuloActivo));
     this.mostrarPorQueCobertura = false;
     this.solicitudRetiroForm.reset();
-    if (results === '5') { // Creacion
-
+    if (results === '5') { // Creacion           
       this.ResetAllForm();
       this.LimpiaVariablesAlerta();
       this.EjecutarMetodosMaestros();
@@ -2021,6 +2020,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           this.ProEstado = this.basicosFrom.get('estado')?.value;
           this.OperacionMarcada = '9';
           this.ProDescripcionOpe = 'Cambiar estado';
+          this.disableCampos();
           this.btnBuscar = true;
           this.devolverTab(1);
           this.removeActiveTab();
@@ -2322,6 +2322,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                 });
             }
           } else {
+            this.disableCampos();
             this.notif.onWarning('Advertencia', 'El asociado ya está marcado.');
             this.basicosFrom.get('operacion')?.reset();
             this.btnGuardarOculto = false;
@@ -2471,6 +2472,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                 });
             }
           } else {
+            this.disableCampos();
             this.notif.onWarning('Advertencia', 'El asociado ya está desmarcado.');
             this.basicosFrom.get('operacion')?.reset();
             this.btnGuardarOculto = false;
@@ -2512,6 +2514,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           this.btnMarcarEntrevista = false;
           this.formLockedHipoPigno = true;
           this.BlockFecha = true;
+          this.disableCampos();
           localStorage.removeItem('DataService');
           this.operacionEscogida = '/Imprimir afiliación';
           const strNumeroDocumento = this.basicosFrom.get('DocumentoBusqueda')?.value;
@@ -2842,6 +2845,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             $('#entrevistaTab').removeClass('disableTab');
             $('#seguroTab').removeClass('disableTab');
             $('#fechasTab').addClass('disableTab');
+            this.disableCampos();
           }
         } else {
           this.notif.onWarning('Advertencia', 'No se puede marcar el tratamiento de datos en la oficina administración');
@@ -2990,9 +2994,10 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       if (this.OperacionMarcada === undefined) {
         let data : string | null = localStorage.getItem('Data');
         const resultPerfil = JSON.parse(window.atob(data == null ? "": data));
+        this.disableCampos();
         if (resultPerfil.NumeroOficina !== '3') {
           this.operacionEscogida = '/Reingreso';
-          this.btnBuscar = true;
+          this.btnBuscar = true; 
           this.disbaleBusqueda = true;
           this.disableFromPEPS = true;
           this.AsessorNecesario = true;
@@ -3183,6 +3188,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             this.OperacionMarcada = '4';
             this.ProDescripcionOpe = 'Cambiar relación';
             this.blockBtnBasico = true;
+            this.disableCampos();
             this.devolverTab(1);
             this.removeActiveTab();
             this.operacionEscogida = '/Cambiar relación';
@@ -3326,8 +3332,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         }
       }     
     } else if (results === '17') { // Cambio tipo y documento
-      console.log("a",this.OperacionMarcada)
-      console.log("tipo",this.basicosFrom.get('tipoDocumento')?.value)
       if (this.OperacionMarcada !== undefined) {
         this.ValidaCambioCampo();        
       }
@@ -3342,6 +3346,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           this.ProDescripcionOpe = 'Cambio tipo y número de documento';
           this.operacionEscogida = '/Cambio tipo y número de documento';
           this.btnBuscar = true;
+          this.disableCampos();
           this.blockBtnBasico = true;
           const strNumeroDocumento = this.basicosFrom.get('DocumentoBusqueda')?.value;
           if (strNumeroDocumento === '' || strNumeroDocumento === null || strNumeroDocumento === undefined) {
@@ -3511,6 +3516,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           this.OperacionMarcada = '18';
           this.ProDescripcionOpe = 'Cambiar nombres y apellidos';
           this.btnBuscar = true;
+          this.disableCampos();
           this.operacionEscogida = '/Cambiar nombres y apellidos';
           this.blockBtnBasico = true;
           const strNumeroDocumento = this.basicosFrom.get('DocumentoBusqueda')?.value;
@@ -3703,6 +3709,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                     this.siguienteOculto = true;
                   } else {
                     //#region Editar asesor externo
+                    this.disableCampos();
                     this.operacionEscogida = '/Cambiar asesor externo';
                     this.MostrarAsesorExterno = true;
                     this.disableAsesor = null;
@@ -3852,6 +3859,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                     this.btnGuardarOculto = false;
                     this.siguienteOculto = true;
                   } else {
+                    this.disableCampos();
                     //#region cambiar fecha act
                     this.operacionEscogida = '/Cambiar fecha de actualización';
                     this.btnGuardarOculto = true;
@@ -3954,6 +3962,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           this.OperacionMarcada = '20';
           this.ProDescripcionOpe = 'Cambiar oficina';
           this.operacionEscogida = '/Cambiar oficina';
+          this.disableCampos();
           this.btnBuscar = true;
           this.blockBtnBasico = true;
           const strNumeroDocumento = this.basicosFrom.get('DocumentoBusqueda')?.value;
@@ -4274,6 +4283,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                         this.DesbloquearRespuesta14 = true;
                         this.DesbloquearRespuesta17 = true;
                         this.mostrarFemiliaresPeps = false;
+                        this.disableCampos();
                       }
                     }
                   } else {
@@ -4305,6 +4315,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         if (resultPerfil.NumeroOficina !== '3') {
           this.btnBuscar = true;
           this.operacionEscogida = '/Cancelar solicitud de retiro';
+          this.disableCampos();
           const strNumeroDocumento = this.basicosFrom.get('DocumentoBusqueda')?.value;
           if (strNumeroDocumento === '' || strNumeroDocumento === null || strNumeroDocumento === undefined) {
             this.notif.onWarning('Advertencia','Debe buscar un asociado para realizar esta operación.');
@@ -4505,6 +4516,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                     this.siguienteOculto = true;
                     this.SoloBloquearForm();
                   } else {
+                    this.disableCampos();
                     //#region Editar asesor
                     this.operacionEscogida = '/Cambiar asesor';
                     this.MostrarAsesorExterno = true;
@@ -5435,7 +5447,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.asesorForm.reset();
     this.patrimonioForm.reset();
     this.tratamientoForm.reset();
-    this.terceroSave.reset();
+    this.terceroSave.reset();    
     this.itemsLogSeguro = [];
     this.dataActivos = [];
     this.itemsEgresos = [];
@@ -5456,6 +5468,8 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.datatratamientoLog = [];
     this.allItemEntrevista = [];
     this.allItemFormEntrevista = [];
+    this.allItemsFormFinanciero = [];
+    this.allItemsForm = [];
     this.allItemsFormSaves = {
       asociadosNaturalesDto: {},
       tercerosDto: {},
@@ -5514,6 +5528,8 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.datatratamientoLog = [];
     this.allItemEntrevista = [];
     this.allItemFormEntrevista = [];
+    this.allItemsFormFinanciero = [];
+    this.allItemsForm = [];
     this.allItemsFormSaves = {
       asociadosNaturalesDto: {},
       tercerosDto: {},
@@ -9391,6 +9407,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     if (this.asesorForm.get('strNombre')?.value === '') {
       this.asesorForm.get('strCodigo')?.reset();
     }
+    this.blockBtnBasico = false;
   }
 
   GetAsesorExternoCodigoFirst(codigo : string) {
@@ -9570,10 +9587,13 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
 
   LimpiarExterno(Datos : string) {
     if (Datos === 'strCodigo') {
+      this.terceroSave.get('IdAsesorExterno')?.reset();
       this.asesorForm.get('strNombre')?.reset();
     } else if (Datos === 'strNombre') {
+      this.terceroSave.get('IdAsesorExterno')?.reset();
       this.asesorForm.get('strCodigo')?.reset();
     }
+    this.blockBtnBasico = false;
   }
 
   LimpiarIdAsesorNombre() {
@@ -10928,8 +10948,8 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           });
       } else if (this.basicosFrom.value.operacion === '19') { // Cambiar asesor externo
         this.blockBtnBasico = true;
-        if (this.asesorForm.value.strCodigo !== '' && this.asesorForm.value.strCodigo !== null
-          && this.asesorForm.value.strCodigo !== undefined) {
+        // if (this.asesorForm.value.strCodigo !== '' && this.asesorForm.value.strCodigo !== null
+        //   && this.asesorForm.value.strCodigo !== undefined) {
             if(this.asesorForm.value.strCodigo !== this.CedulaAsesorExt) {
               let TerceroNatura : string | null = localStorage.getItem('TerceroNatura');
               this.EditarAsesorExterno(TerceroNatura == null ? "" : TerceroNatura, this.terceroSave.value.IdAsesorExterno);
@@ -10939,13 +10959,13 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
               this.notif.onWarning('Advertencia', 'Debe seleccionar un asesor externo diferente.');
               this.disableAsesor = null;
             }
-          }  else {
-          this.blockBtnBasico = false;
-          this.notif.onWarning('Advertencia', 'Debe seleccionar un asesor externo válido.');
-          this.disableAsesor = null;
-          this.asesorForm.get('strCodigo')?.reset();
-          this.asesorForm.get('strNombre')?.reset();
-        }
+        //   }  else {
+        //   this.blockBtnBasico = false;
+        //   this.notif.onWarning('Advertencia', 'Debe seleccionar un asesor externo válido.');
+        //   this.disableAsesor = null;
+        //   this.asesorForm.get('strCodigo')?.reset();
+        //   this.asesorForm.get('strNombre')?.reset();
+        // }
       } else if (this.basicosFrom.value.operacion === '24') { // Cancelar solicitud retiro
       } else if (this.basicosFrom.value.operacion === '26') { // Cambiar asesor
         this.blockBtnBasico = true;
@@ -21199,7 +21219,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       }
       const dataAsesor = 'Asesor externo modificado - ' + tercero + ' -' + asesor;
       this.GuardarLog(dataAsesor, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
-      this.clientesService.EditarAsesorExterno(tercero, asesor.toString()).subscribe(
+      this.clientesService.EditarAsesorExterno(tercero, asesor == null ? "0" : asesor.toString()).subscribe(
         result => {
           this.basicosFrom.get('operacion')?.reset();
           this.botonSiguiente.nativeElement.click();
@@ -23652,6 +23672,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             this.VolverArriba();
             this.btnGuardarOculto = false;
             this.siguienteOculto = true;
+            this.disableCampos();
             this.basicosFrom.get('operacion')?.reset();
             this.notif.onWarning('Advertencia', 'El asociado ya está desmarcado.');
           }
@@ -23663,13 +23684,44 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         });
     }
   }
-
+  disableCampos(){
+    this.bloqDeparta = false;
+    this.bloqCiudad = false;
+    this.bloqDepartaExp = false;
+    this.bloqCiudadExp = false;
+    this.bloqCiudad = false;
+    this.bloqDepartaAct = true;
+    this.blockTratamientoFecha = false;
+    this.Blockseguro = false;
+    this.BlockMonto = false;
+    this.BlockEstado = false;
+    this.btnGuardarOculto = false;
+    this.mostrarBtnTercero = false;
+    this.disableForm = true;
+    this.disableFormProfesion = true;
+    this.disableFormNumHijos = true;
+    this.btnOcultoBuscar = false;
+    this.disableClean = true;
+    this.formBuscarLocked = true;
+    this.bloquearCampoDirActivo = true;
+    this.bloquearCampoDir = true;
+    this.BlockActivo = true;
+    this.formBuscarLockedConyugue = true;
+    this.disableFormEps = true;
+    this.disableForm = true;
+    this.BlockReferencia = true;
+    this.BlockFecha = true;
+    this.blockRefeBtn = false;
+    this.formLockedPersonNatura = true;
+    this.BlockTipoContacto = true;
+  }
   MarcarPPESEntrevista() {
     const ppes = new MarcarDesmarcarPPESModel();
     let data : string | null = localStorage.getItem('Data');
     const dataUser = JSON.parse(window.atob(data == null ? "": data));
     ppes.IdAsesorMarca = dataUser.lngTercero;
     ppes.IdTerceroMarca = Number(localStorage.getItem('TerceroNatura'));
+    this.disableCampos()
     if (this.operacionesModel.idOperacion.toString() === '7') {
       const respta1 = this.entrevistaForm.get('RPregunta20Si')?.value;
       const respta2 = this.entrevistaForm.get('RPregunta21Si')?.value;
@@ -23719,6 +23771,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                   this.formLockedReconocimiento = true;
                   this.formLockedRecursos = true;
                   this.blockBtnBasico = false;
+                  this.disableCampos();
                   this.notif.onWarning('Advertencia', 'El asociado ya está marcado.');
                   this.BloquearPreguntasPeps = true;
                 }
