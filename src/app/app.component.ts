@@ -1,15 +1,13 @@
 import { LoginService } from './Services/Login/login.service';
-import {  Component, OnInit, ElementRef, Output, EventEmitter, ViewChild, OnDestroy} from '@angular/core';
+import {  Component, OnInit, ElementRef, Output, EventEmitter, ViewChild} from '@angular/core';
 import { Router } from '@angular/router';
 import { PlatformLocation } from '@angular/common';
 import { ClientesGetListService } from './Services/Clientes/clientesGetList.service';
 import { OperacionesService } from './Services/Maestros/operaciones.service';
 import { RecursosGeneralesService } from './Services/Utilidades/recursosGenerales.service';
 import { OficinasService } from './Services/Maestros/oficinas.service';
-import Swal from 'sweetalert2'
 import { SecurityService } from './Services/Auth/security.service';
 import { GestionesService  } from './Services/Gestiones/gestiones.service';
-import { DEFAULT_INTERRUPTSOURCES, Idle } from '@ng-idle/core'; 
 import { AlertService } from './Services/Alert/alert.service';
 declare var $: any;
   
@@ -20,11 +18,11 @@ declare var $: any;
   standalone : false,
   providers: [LoginService, ClientesGetListService, OperacionesService,
     GestionesService, RecursosGeneralesService, OficinasService,
-    ClientesGetListService,SecurityService,Idle]
+    ClientesGetListService,SecurityService]
 })
 
 
-export class AppComponent implements OnInit,OnDestroy {
+export class AppComponent implements OnInit {
   public now = Date.now();
   title = 'app';
   public sub : any = null;
@@ -53,8 +51,7 @@ export class AppComponent implements OnInit,OnDestroy {
     private notif: AlertService,
     private location: PlatformLocation,
     private clientesGetListService: ClientesGetListService,
-    private Security: SecurityService ,
-    private idle : Idle ) {
+    private Security: SecurityService) {
 
     if (localStorage.getItem('Data') !== null) {
       let data : string | null = localStorage.getItem('Data');
@@ -64,9 +61,6 @@ export class AppComponent implements OnInit,OnDestroy {
       this.router.navigateByUrl('/Login');
       localStorage.clear();
     }
-  }
-  ngOnDestroy() {
-    this.idle.ngOnDestroy();
   }
   ngOnInit() {
     this.GetCargos();
@@ -78,20 +72,6 @@ export class AppComponent implements OnInit,OnDestroy {
       this.TimerRefresToken();
     },3600000);
     
-    if (localStorage.getItem('Data') !== null) {
-      let data: string | null = localStorage.getItem('Data')
-        if(data != null && data != ""){
-          this.DatosUsuario = JSON.parse(window.atob(data));
-          this.resulStore = JSON.parse(window.atob(data));
-          this.idle.setIdle((60 * 120));  // Tiempo de inactividad antes de activar el timeout
-          this.idle.setTimeout(10);  // Tiempo de espera después del idle antes de hacer algo (ej. logout)
-          this.idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);  // Configura las interrupciones (click, teclado, etc.)
-        } 
-      } else {
-        this.router.navigateByUrl('/Login');
-        localStorage.clear();
-      }
-
     this.location.onPopState(() => {
       let data : string | null = localStorage.getItem('Data');
       this.resulStore = JSON.parse(window.atob(data == null ? "" : data));
@@ -114,26 +94,6 @@ export class AppComponent implements OnInit,OnDestroy {
     $(document).on('contextmenu',  { passive: true },function (e : any) {
       e.preventDefault();
     });
-    this.idle.onIdleEnd.subscribe(() => {
-      this.idleState = 'No longer idle.';
-      console.log(this.idleState)
-      this.timedOut = false;
-    });
-
-    this.idle.onIdleStart.subscribe(() => {
-      this.idleState = 'You\'ve gone idle!';
-      console.log(this.idleState)
-    });
-
-    this.idle.onTimeout.subscribe(() => {
-      this.idleState = 'Timed out!';
-      this.timedOut = true;
-      console.log(this.idleState)
-      this.timeout();
-    });
-
-    // Comienza el monitoreo de inactividad
-    this.idle.watch();
    }
   validacionUsuarios() {
     if (localStorage.getItem('Data') !== null && localStorage.getItem('Data') !== undefined) {
@@ -227,39 +187,6 @@ export class AppComponent implements OnInit,OnDestroy {
         console.error(errorMessage);
       }
     );
-  }
-  public timeout() {
-    let datauser: string | null = localStorage.getItem('Data');
-    if (datauser == null)
-      return;
-    
-    this.DataUser = JSON.parse(window.atob(datauser));
-    this.loginService.CerrarSesionUser(this.DataUser.IdUsuario).subscribe(result => { 
-      localStorage.clear();
-    },error => {
-      console.log(error);
-      this.notif.onDanger('Error', error);
-    });
-    
-    Swal.fire({
-        title: 'Advertencia',
-        text: '',
-        html: 'Su session ha caducado ',
-        icon: 'warning',
-        showCancelButton: false,
-        confirmButtonText: 'Aceptar',       
-        confirmButtonColor: 'rgb(13,165,80)',
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-    }).then((result) => {
-        if (result.value) {
-          $("#popupBusquedaParroquia").modal('hide');//ocultamos el modal
-          $('body').removeClass('modal-open');//eliminamos la clase del body para poder hacer scroll
-          $('.modal-backdrop').remove();//eliminamos el backdrop del modal
-          window.location.reload();
-          this.router.navigate(['Login']);
-        }
-    });
   }
   public reset(event: any) {
     event.resetEvent;
