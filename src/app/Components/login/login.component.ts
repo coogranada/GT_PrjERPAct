@@ -194,69 +194,73 @@ export class LoginComponent implements OnInit {
               this.loading = false;
               localStorage.setItem('userName', window.btoa(JSON.stringify(this.dataUser.Usuario)));
               this.isLoginError = false;
-              this.loginService.SetSesionUser(this.SessionUser).subscribe(
+              this.clientesGetListService.GetParentescos().subscribe(
                 (result : any) => {
-                  this.clientesGetListService.GetParentescos().subscribe(
-                    (result : any) => {
-                      this.loginService.GetToken(this.dataUser.IdUsuario).subscribe(async (x : any) => {
-                        var res = x;
-                        localStorage.setItem('token', res.token);
-                        this.ValidarMetodosCarga();
-                        localStorage.setItem('parentescoChange', window.btoa(JSON.stringify(result)));
-                        let browser = await detectIncognito();
-                        let strBrowser: string = browser.browserName + "-" + (browser.isPrivate == true ? "Incognito" : "No Incognito");
-                        let perfilLog: any[] = perfil;
-                        perfilLog.forEach(x => {
-                          delete x.$id;
-                          delete x.IdPerfilUsuario;
-                        });
-                        let payload: any = {
-                          UserId : this.dataUser.IdUsuario,
-                          Browser: strBrowser,
-                          IdOficina: this.dataUser.NumeroOficina,
-                          IdTercero: this.dataUser.lngTercero,
-                          Json : JSON.stringify(perfilLog)
-                        };
-                         this.loginService.SesionOtroDispositivo(this.dataUser.IdUsuario,strBrowser).subscribe(result => {
-                          if(result)
-                           {
-                             Swal.fire({
-                               title: "Advertencia",
-                               text: '¿Deseas cerrar la sesión en el navegador anterior?',
-                               icon: 'warning',
-                               showCancelButton: true,
-                               confirmButtonText: 'Si',
-                               cancelButtonText: 'No',
-                               confirmButtonColor: 'rgb(13,165,80)',
-                               cancelButtonColor: 'rgb(160,0,87)',
-                               allowOutsideClick: false,
-                               allowEscapeKey: false
-                             }).then((results : any) => {
-                               if (results.value) {
-                                 this.webSocket.Init();
-                                 setTimeout(() => {
-                                  this.webSocket.Send("ClosedSesion",this.dataUser.IdUsuario);
-                                 }, 700);
-                                 setTimeout(() => {
-                                   this.IniciarSesion(payload);
-                                 }, 1500);
-                               }
-                              });
-                           } else   
-                            this.IniciarSesion(payload);
-                        });
-                      });
-                    },
-                    (error : any )  => {
-                      const errorMessage = <any>error;
-                      this.notif.onDanger('Error', errorMessage);
-                      console.error(errorMessage);
+                  this.loginService.GetToken(this.dataUser.IdUsuario).subscribe(async (x : any) => {
+                    var res = x;
+                    localStorage.setItem('token', res.token);
+                    this.ValidarMetodosCarga();
+                    localStorage.setItem('parentescoChange', window.btoa(JSON.stringify(result)));
+                    let browser = await detectIncognito();
+                    let strBrowser: string = browser.browserName + "-" + (browser.isPrivate == true ? "Incognito" : "No Incognito");
+                    let perfilLog: any[] = perfil;
+                    perfilLog.forEach(x => {
+                      delete x.$id;
+                      delete x.IdPerfilUsuario;
                     });
+                    let payload: any = {
+                      UserId : this.dataUser.IdUsuario,
+                      Browser: strBrowser,
+                      IdOficina: this.dataUser.NumeroOficina,
+                      IdTercero: this.dataUser.lngTercero,
+                      Json : JSON.stringify(perfilLog)
+                    };
+                     this.loginService.SesionOtroDispositivo(this.dataUser.IdUsuario,strBrowser).subscribe(result => {
+                      if(result)
+                       {
+                         Swal.fire({
+                           title: "Advertencia",
+                           text: '¿Deseas cerrar la sesión en el navegador anterior?',
+                           icon: 'warning',
+                           showCancelButton: true,
+                           confirmButtonText: 'Si',
+                           cancelButtonText: 'No',
+                           confirmButtonColor: 'rgb(13,165,80)',
+                           cancelButtonColor: 'rgb(160,0,87)',
+                           allowOutsideClick: false,
+                           allowEscapeKey: false
+                         }).then((results : any) => {
+                           if (results.value) {
+                             this.webSocket.Init();
+                             setTimeout(() => {
+                              this.webSocket.Send("ClosedSesion",this.dataUser.IdUsuario);
+                             }, 700);
+                             setTimeout(() => {
+                              this.loginService.SetSesionUser(this.SessionUser).subscribe((result : any) => {
+                                this.IniciarSesion(payload);
+                              },
+                              (error : any )  => {
+                                console.error('Error SetSesionUser - ' + error);
+                              });   
+                             }, 1500);
+                           }
+                          });
+                       } else   
+                          this.loginService.SetSesionUser(this.SessionUser).subscribe((result : any) => {
+                              this.IniciarSesion(payload);
+                          },
+                          (error : any )  => {
+                            console.error('Error SetSesionUser - ' + error);
+                          });   
+                    });
+                  });
                 },
                 (error : any )  => {
-                  console.error('Error SetSesionUser - ' + error);
-                }
-              );
+                  const errorMessage = <any>error;
+                  this.notif.onDanger('Error', errorMessage);
+                  console.error(errorMessage);
+                });
+             
             }
           });
       }, (error : any )  => {
