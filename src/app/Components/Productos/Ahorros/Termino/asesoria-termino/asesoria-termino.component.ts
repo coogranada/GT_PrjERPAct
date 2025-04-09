@@ -691,17 +691,19 @@ export class AsesoriaTerminoComponent implements OnInit {
     }
 
     this.GetHistorial(dato.NumeroAsesoria);
-     setTimeout(() => {
+
+    setTimeout(() => {
       this.BloquearbtnActalizar = false;
       this.BloquearCalcularIntereces = false;
     }, 500);
+    
     if (dato.intPuntosAdicionales != null) {
       dato.intPuntosAdicionales /= 10; 
       let puntos: any[] = this.resultPuntosAdicionales.filter((x : any) => x.PuntosAdicionales == Number(dato.intPuntosAdicionales));
       setTimeout(() => {
         this.AdicionarPuntosFrom.get('AdicionarPunto')?.setValue(puntos[0].IdPuntosAdicionales);
         this.AdicionarPuntosFrom.get('AdicionarPuntoDescripcion')?.setValue(dato.intPuntosAdicionales);
-        // this.SumaPuntos();
+        if(dato.Tasa !== 0) this.SumaPuntos();
       }, 700);
     }
   }
