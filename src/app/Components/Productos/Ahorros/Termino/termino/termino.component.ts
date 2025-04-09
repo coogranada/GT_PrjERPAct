@@ -2865,6 +2865,7 @@ export class TerminoComponent implements OnInit {
                       this.VolverArriba();
                       this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
                       this.Guardarlog(itemsLogApertura);
+                      this.bloquearCampos();
                       this.btnOpcionActualizarBeneficiario = true;
                       this.btnOpcionesActualizarTitulares = true;
                       this.btnGuardar = true;
@@ -2950,6 +2951,7 @@ export class TerminoComponent implements OnInit {
                           this.VolverArriba();
                           this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
                           this.Guardarlog(itemsLogApertura);
+                          this.bloquearCampos();
                           this.btnOpcionActualizarBeneficiario = true;
                           this.btnOpcionesActualizarTitulares = true;
                           this.btnGuardar = true;
@@ -3032,6 +3034,7 @@ export class TerminoComponent implements OnInit {
                         this.VolverArriba();
                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
                         this.Guardarlog(itemsLogApertura);
+                        this.bloquearCampos();
                         this.btnOpcionActualizarBeneficiario = true;
                         this.btnOpcionesActualizarTitulares = true;
                         this.btnGuardar = true;
@@ -3118,6 +3121,7 @@ export class TerminoComponent implements OnInit {
                             this.VolverArriba();
                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
                             this.Guardarlog(itemsLogApertura);
+                            this.bloquearCampos();
                             this.btnOpcionActualizarBeneficiario = true;
                             this.btnOpcionesActualizarTitulares = true;
                             this.btnGuardar = true;
@@ -3158,7 +3162,7 @@ export class TerminoComponent implements OnInit {
                     });
                   }
                 } else {
-                  this.notif.onWarning('Advertencia', 'Debe ingresar al menos un autorizado cuando el titular es juridico.');
+                  this.notif.onWarning('Advertencia', 'Debe ingresar al menos un autorizado cuando el titular es jurídico.');
                 }
               }
               else {
@@ -3201,6 +3205,7 @@ export class TerminoComponent implements OnInit {
                       this.VolverArriba();
                       this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
                       this.Guardarlog(itemsLogApertura);
+                      this.bloquearCampos();
                       this.btnOpcionActualizarBeneficiario = true;
                       this.btnOpcionesActualizarTitulares = true;
                       this.btnGuardar = true;
@@ -3288,6 +3293,7 @@ export class TerminoComponent implements OnInit {
                           this.VolverArriba();
                           this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
                           this.Guardarlog(itemsLogApertura);
+                          this.bloquearCampos();
                           this.btnOpcionActualizarBeneficiario = true;
                           this.btnOpcionesActualizarTitulares = true;
                           this.btnGuardar = true;
@@ -3462,6 +3468,7 @@ export class TerminoComponent implements OnInit {
                     this.VolverArriba();
                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
                     this.Guardarlog(itemsLogApertura);
+                    this.bloquearCampos();
                     this.btnOpcionActualizarBeneficiario = true;
                     this.btnOpcionesActualizarTitulares = true;
                     this.btnGuardar = true;
@@ -3547,6 +3554,7 @@ export class TerminoComponent implements OnInit {
                         this.VolverArriba();
                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
                         this.Guardarlog(itemsLogApertura);
+                        this.bloquearCampos();
                         this.btnOpcionActualizarBeneficiario = true;
                         this.btnOpcionesActualizarTitulares = true;
                         this.btnGuardar = true;
@@ -3629,6 +3637,7 @@ export class TerminoComponent implements OnInit {
                       this.VolverArriba();
                       this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
                       this.Guardarlog(itemsLogApertura);
+                      this.bloquearCampos();
                       this.btnOpcionActualizarBeneficiario = true;
                       this.btnOpcionesActualizarTitulares = true;
                       this.btnGuardar = true;
@@ -3713,6 +3722,7 @@ export class TerminoComponent implements OnInit {
                           this.VolverArriba();
                           this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
                           this.Guardarlog(itemsLogApertura);
+                          this.bloquearCampos();
                           this.btnOpcionActualizarBeneficiario = true;
                           this.btnOpcionesActualizarTitulares = true;
                           this.btnGuardar = true;
@@ -3753,7 +3763,7 @@ export class TerminoComponent implements OnInit {
                   });
                 }
               } else {
-                this.notif.onWarning('Advertencia', 'Debe ingresar al menos un autorizado cuando el titular es juridico.');
+                this.notif.onWarning('Advertencia', 'Debe ingresar al menos un autorizado cuando el titular es jurídico.');
               }
             }
             else {
@@ -3794,6 +3804,7 @@ export class TerminoComponent implements OnInit {
                     this.VolverArriba();
                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
                     this.Guardarlog(itemsLogApertura);
+                    this.bloquearCampos();
                     this.btnOpcionActualizarBeneficiario = true;
                     this.btnOpcionesActualizarTitulares = true;
                     this.btnGuardar = true;
@@ -3879,6 +3890,7 @@ export class TerminoComponent implements OnInit {
                         this.VolverArriba();
                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
                         this.Guardarlog(itemsLogApertura);
+                        this.bloquearCampos();
                         this.btnOpcionActualizarBeneficiario = true;
                         this.btnOpcionesActualizarTitulares = true;
                         this.btnGuardar = true;
@@ -4985,11 +4997,13 @@ export class TerminoComponent implements OnInit {
       this.TerminoForm.controls["NombreTitular"].disable();
       this.TerminoForm.controls["Tipo"].disable();
       this.TerminoForm.controls["TipoFirma"].disable();
+      this.btnOpcionesActualizarTitulares = true;
     } else {
       this.TerminoForm.controls["DocumentoTitular"].enable();
       this.TerminoForm.controls["NombreTitular"].enable();
       this.TerminoForm.controls["Tipo"].enable();
       this.TerminoForm.controls["TipoFirma"].enable();
+      this.btnOpcionesActualizarTitulares = false;
     }
 
   }
@@ -7012,7 +7026,7 @@ export class TerminoComponent implements OnInit {
             this.notif.onWarning('Advertencia', 'Debe ingresar al menos un autorizado cuando el titular es menor.');
           }
         } else {
-          if (this.TerminoForm.get('IdTipoDocumento')?.value === 3) {
+          if (this.TerminoForm.get('TipoDocumento')?.value === "Nit") {
             if (this.dataObjetTitulares.length != 0) {
               this.dataTitulareslist = this.dataObjetTitulares;
               this.TerminoForm.get('Titulares')?.setValue(this.dataTitulareslist);
@@ -7082,7 +7096,7 @@ export class TerminoComponent implements OnInit {
               );
               this.ObtenerHistorial();              
             } else {              
-              this.notif.onWarning('Advertencia', 'Debe ingresar al menos un autorizado cuando el titular es juridico.');
+              this.notif.onWarning('Advertencia', 'Debe ingresar al menos un autorizado cuando el titular es jurídico.');
             }
           }
           else { 
@@ -7607,5 +7621,13 @@ export class TerminoComponent implements OnInit {
       console.log("tasa ", this.dataObjet.TasaAdicional)
     else
       console.log("no hay")
+  }
+  bloquearCampos(){
+    this.TerminoForm.get('IdTipoDocumento')?.reset();
+    this.TerminoForm.controls['DocumentoBeneficiario'].disable();
+    this.TerminoForm.controls["DocumentoTitular"].disable();
+    this.TerminoForm.controls["NombreTitular"].disable();
+    this.TerminoForm.controls["Tipo"].disable();
+    this.TerminoForm.controls['TipoFirma'].disable();
   }
 }
