@@ -2592,6 +2592,7 @@ export class TerminoComponent implements OnInit {
     }
     let data = localStorage.getItem('Data')
     this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.TerminoForm.get('NroTitulo')?.setValue(this.TerminoForm.get('NroTitulo')?.value.replace(/\s/g, ''));
     if (this.TerminoForm.get('NroTitulo')?.value !== null
       && this.TerminoForm.get('NroTitulo')?.value !== undefined
       && this.TerminoForm.get('NroTitulo')?.value !== '') {
@@ -6605,6 +6606,16 @@ export class TerminoComponent implements OnInit {
         console.log(errorMessage);
       }
     );
+  }
+  CloseImpresion(){
+    console.log("close")
+    document.querySelector("object")!.data = "";
+    document.querySelector("object")!.name = "";
+    document.querySelector("object")!.type = "";
+    setTimeout(() => {
+      $("#ImpresionTermino").hide();
+      $('#ModalImpresion').modal('hide');  
+    },1000);
   }
   LimpiaOperacion() {
     this.TerminoOperacionForm.get('Codigo')?.reset();
