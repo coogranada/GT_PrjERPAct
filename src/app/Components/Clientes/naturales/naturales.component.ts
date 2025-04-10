@@ -7710,15 +7710,25 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     }
   }
 
-  validarValorCampoNombres(campoJquery : string, campoAngular : string) {
+  validarValorCampoNombres(campoJquery: string, campoAngular: string) {
     let valorCampo = $('#' + campoJquery).val();
-  
-    if (valorCampo === undefined || valorCampo.trim().length === 0) {
+
+    // Validación de null o undefined antes de continuar
+    if (valorCampo === null || valorCampo === undefined) {
+      // Si el valor es null o undefined, resetear el campo de Angular
+      this.entrevistaForm.get(campoAngular)?.reset();
+      return;
+    }
+
+    // Si el valor es una cadena vacía o solo espacios
+    if (valorCampo.trim().length === 0) {
       this.entrevistaForm.get(campoAngular)?.reset();
     } else {
+      // Si el valor es válido, corregir la capitalización de las palabras
       let valorCorregido = valorCampo.toString().trim().toLowerCase()
         .replace(/\b[á-úa-zA-Z]+/g, (letra: any) => letra.charAt(0).toUpperCase() + letra.slice(1));
 
+      // Asignar el valor corregido al campo Jquery y al formulario Angular
       $('#' + campoJquery).val(valorCorregido);
       this.entrevistaForm.get(campoAngular)?.setValue(valorCorregido);
     }
@@ -10083,13 +10093,24 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                       }
                     this.terceroSave.get('PrimerNombre')?.setValue(this.basicosFrom.value.primerNombre.charAt(0).toUpperCase() + 
                     this.basicosFrom.value.primerNombre.slice(1).toLowerCase());
-                    this.terceroSave.get('SegundoNombre')?.setValue(this.basicosFrom.value.segundoNombre.charAt(0).toUpperCase() + 
-                    this.basicosFrom.value.segundoNombre.slice(1).toLowerCase());
-                    this.terceroSave.get('PrimerApellido')?.setValue(this.basicosFrom.value.primerApellido.charAt(0).toUpperCase() + 
+                const segundoNombre = this.basicosFrom.value.segundoNombre;
+
+                this.terceroSave.get('SegundoNombre')?.setValue(
+                  segundoNombre
+                    ? segundoNombre.charAt(0).toUpperCase() + segundoNombre.slice(1).toLowerCase()
+                    : ''
+                );
+                  this.terceroSave.get('PrimerApellido')?.setValue(this.basicosFrom.value.primerApellido.charAt(0).toUpperCase() + 
                     this.basicosFrom.value.primerApellido.slice(1).toLowerCase());
-                    this.terceroSave.get('SegundoApellido')?.setValue(this.basicosFrom.value.segundoApellido.charAt(0).toUpperCase() + 
-                    this.basicosFrom.value.segundoApellido.slice(1).toLowerCase());
-                    this.terceroSave.get('IdGenero')?.setValue(this.basicosFrom.value.genero);
+
+                const segundoApellido = this.basicosFrom.value.segundoNombre;
+
+                this.terceroSave.get('SegundoApellido')?.setValue(
+                  segundoApellido
+                    ? segundoApellido.charAt(0).toUpperCase() + segundoApellido.slice(1).toLowerCase()
+                    : ''
+                );
+                  this.terceroSave.get('IdGenero')?.setValue(this.basicosFrom.value.genero);
                     this.terceroSave.get('IdEstado')?.setValue(this.basicosFrom.value.estado);
                     this.terceroSave.get('IdAsesorExterno')?.setValue(this.terceroSave.value.IdAsesorExterno);
                     this.allItemsFormSaves.asociadosNaturalesDto = {};

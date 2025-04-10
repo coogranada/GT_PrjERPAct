@@ -821,11 +821,6 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
         this.contractualOperacionFrom.get('Codigo')?.reset();
       }
     } else if (this.contractualOperacionFrom.get('Codigo')?.value === '28') {  // Adicionar puntos
-      if (this.AdicionarPuntosFrom.get('AdicionarPunto')?.value != null || this.AdicionarPuntosFrom.get('AdicionarPunto')?.value?.PuntosAdicionales != null && this.AdicionarPuntosFrom.get('AdicionarPunto')?.value.PuntosAdicionales > 0){
-        this.notif.onWarning('Advertencia', 'La cuenta ya tiene puntos adicionales.');
-        this.contractualOperacionFrom.get('Codigo')?.reset(); 
-        return
-      }
       if (this.contractualFrom.get('IdOficina')?.value !== null
         && this.contractualFrom.get('IdOficina')?.value !== undefined
         && this.contractualFrom.get('IdOficina')?.value !== ''
@@ -838,12 +833,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
         && this.contractualFrom.get('IdDigito')?.value !== null
         && this.contractualFrom.get('IdDigito')?.value !== undefined
         && this.contractualFrom.get('IdDigito')?.value !== '') {
-          if (this.contractualFrom.get('IdEstado')?.value !== 25 && this.contractualFrom.get('IdEstado')?.value !== 10) {
-              if (this.AdicionarPuntosFrom.get('AdicionarPunto')?.value == null || this.AdicionarPuntosFrom.get('AdicionarPunto')?.value.PuntosAdicionales == null)
-                  this.log.PuntosAdicionalesAnterior = 0;
-              else
-                  this.log.PuntosAdicionalesAnterior = Number(this.AdicionarPuntosFrom.get('AdicionarPunto')?.value.PuntosAdicionales);
-                  
+        if (this.AdicionarPuntosFrom.get('AdicionarPunto')?.value != null || this.AdicionarPuntosFrom.get('AdicionarPunto')?.value?.PuntosAdicionales != null && this.AdicionarPuntosFrom.get('AdicionarPunto')?.value.PuntosAdicionales > 0) {
+          this.notif.onWarning('Advertencia', 'La cuenta ya tiene puntos adicionales.');
+          this.contractualOperacionFrom.get('Codigo')?.reset();
+          return
+        }
+        if (this.contractualFrom.get('IdEstado')?.value !== 25 && this.contractualFrom.get('IdEstado')?.value !== 10) {
+          if (this.AdicionarPuntosFrom.get('AdicionarPunto')?.value == null || this.AdicionarPuntosFrom.get('AdicionarPunto')?.value.PuntosAdicionales == null)
+              this.log.PuntosAdicionalesAnterior = 0;
+            else
+          this.log.PuntosAdicionalesAnterior = Number(this.AdicionarPuntosFrom.get('AdicionarPunto')?.value.PuntosAdicionales);                  
           this.operacionEscogida = '/Adicionar puntos';
           this.generalesService.Autofocus('SelectAdicionarPuntos');
           this.ObtenerPuntosAdicionales();
