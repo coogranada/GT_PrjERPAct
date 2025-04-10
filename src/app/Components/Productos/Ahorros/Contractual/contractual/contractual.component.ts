@@ -113,6 +113,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
   activaHistorial = false;
   MostrasAlertaAsociado = false;
   MostrasAlertaProducto = false;
+  DocumentoSugDebito = '';
 
   public itemsSend = {
     NombrePlan: {},
@@ -1211,21 +1212,29 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
     } else
       this.notif.onWarning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.');
   }
-  FormaPagoSeleccionada() {
-    if(this.dataObjet.IdFormaPago === 1 && this.dataObjet.IdFormaPago == this.contractualFrom.get('IdFormaPago')?.value) {
-      this.bloquearbtnActalizar = false;
-      return;
-    }
-    
-    if (this.contractualFrom.get('IdFormaPago')?.value === '0') {
+  FormaPagoSeleccionada(event: Event): void {
+    const selectElement = event?.target as HTMLSelectElement;
+    const selectedValue = selectElement.value;
+       
+    if (selectedValue === '0') {
       this.DebitoAutomaticoFrom.reset();
       this.bloquearbtnActalizar = true;
-    } else if (this.contractualFrom.get('IdFormaPago')?.value === '1') {
+    } else if (selectedValue === '1') {
+      this.DocumentoSugDebito = this.contractualFrom.get('NumeroDocumento')?.value;
       this.ModalDebitoAutomatico.nativeElement.click();
-    } else if (this.contractualFrom.get('IdFormaPago')?.value === '2') {
+      this.DebitoAutomaticoFrom.get('DocumentoDebito')?.patchValue(this.DocumentoSugDebito);
+      this.BuscarAsociadoCuentaOrigen();
+    } else if (selectedValue === '2') {
       this.DebitoAutomaticoFrom.reset();
       this.ÖbtenerConvenio();
     }
+
+    if(selectedValue === '1' && selectedValue == this.contractualFrom.get('IdFormaPago')?.value) {
+      this.bloquearbtnActalizar = false;
+    }else{
+      this.bloquearbtnActalizar = true;
+    }
+
   }
   MapearDatosUsuario() {
     let data = localStorage.getItem('Data');
@@ -17589,6 +17598,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
     return false;
   }
   BuscarAsociadoCuentaOrigen() {
+    this.DebitoAutomaticoFrom.get('IdCuentaOrigen')?.reset(); 
     let Documento = '*';
     let Nombre = '*';
     if (this.DebitoAutomaticoFrom.get('DocumentoDebito')?.value !== null
@@ -17689,12 +17699,13 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
       && this.DebitoAutomaticoFrom.get('IdCuentaOrigen')?.value !== null
       && this.DebitoAutomaticoFrom.get('IdCuentaOrigen')?.value !== undefined
       && this.DebitoAutomaticoFrom.get('IdCuentaOrigen')?.value !== ''
+      && this.DebitoAutomaticoFrom.get('IdCuentaOrigen')?.value !== '0'
     ) {
       this.CerrarDebito.nativeElement.click();
       this.bloquearbtnActalizar = true;
 
     } else {
-      this.notif.onWarning('Advertencia', 'Debe llenar los datos para guardar el débito.');
+      this.notif.onWarning('Advertencia', 'Debe diligenciar los datos para guardar el débito.');
       this.bloquearbtnActalizar = false;
       this.bloquearbtnCalcular = false;
     }
@@ -18003,5 +18014,9 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
     this.AdicionarPuntosFrom = new FormGroup({
       AdicionarPunto: AdicionarPunto,
     });
+  }
+  ClearInfoDebito(){
+    this.DebitoAutomaticoFrom.get('NombreDebito')?.reset();
+    this.DebitoAutomaticoFrom.get('IdCuentaOrigen')?.reset(); 
   }
 }
