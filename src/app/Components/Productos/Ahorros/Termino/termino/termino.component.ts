@@ -2442,32 +2442,41 @@ export class TerminoComponent implements OnInit {
             this.notif.onWarning('Advertencia', 'No se encontró el producto.');
             this.TerminoForm.get('IdProducto')?.reset();
           } else if (result.length === 1) {
-            const fechaHoy = new DatePipe('en-CO').transform(new Date(), 'yyyy/MM/dd');
-            const fechaVigencia = new DatePipe('en-CO').transform(this.ArrayCondiciones.FechaVigencia, 'yyyy/MM/dd');
-            if ( fechaHoy != null && fechaVigencia != null && fechaHoy <= fechaVigencia) {
-              const producto = result[0].IdProducto;
-              const edad = this.TerminoForm.get('Edad')?.value;
-              if (producto === 302) {
-                if (this.TerminoForm.get('IdTipoDocumento')?.value === 3) {
-                  this.TerminoForm.get('IdProducto')?.setValue("");
-                  this.TerminoForm.get('DescripcionProducto')?.setValue("");
-                  this.notif.onWarning('Advertencia', 'Producto no valido para un asociado jurídico.');
-                  return;
-                }
-                if (edad >= 75) {
-                  this.TerminoForm.get('IdProducto')?.setValue(result[0].IdProducto);
-                  this.TerminoForm.get('DescripcionProducto')?.setValue(result[0].DescripcionProducto);
-                  this.MostrasAlertaProducto = false;
-                } else {
-                  this.notif.onWarning('Advertencia', 'Edad del asociado no valida para este producto.');
-                  this.TerminoForm.get('IdProducto')?.reset();
-                  this.TerminoForm.get('DescripcionProducto')?.reset();
-                }
+            const producto = result[0].IdProducto;
+            const edad = this.TerminoForm.get('Edad')?.value;
+            if (producto === 302){
+              if (this.TerminoForm.get('IdTipoDocumento')?.value === 3) {
+                this.TerminoForm.get('IdProducto')?.setValue("");
+                this.TerminoForm.get('DescripcionProducto')?.setValue("");
+                this.notif.onWarning('Advertencia', 'Producto no valido para un asociado jurídico.');
+                return;
+              }
+              if (edad >= 75) {
+                this.TerminoForm.get('IdProducto')?.setValue(result[0].IdProducto);
+                this.TerminoForm.get('DescripcionProducto')?.setValue(result[0].DescripcionProducto);
+                this.MostrasAlertaProducto = false;
+              } else {
+                this.notif.onWarning('Advertencia', 'Edad del asociado no valida para este producto.');
+                this.TerminoForm.get('IdProducto')?.reset();
+                this.TerminoForm.get('DescripcionProducto')?.reset();
+              }
+
+
+            } else {
+              if (edad >= 75) {
+                this.notif.onWarning('Advertencia', 'Edad del asociado no valida para este producto.');
+                this.TerminoForm.get('IdProducto')?.reset();
+                this.TerminoForm.get('DescripcionProducto')?.reset();
+                return;
               } else {
                 this.TerminoForm.get('IdProducto')?.setValue(result[0].IdProducto);
                 this.TerminoForm.get('DescripcionProducto')?.setValue(result[0].DescripcionProducto);
                 this.MostrasAlertaProducto = false;
               }
+            }
+            const fechaHoy = new DatePipe('en-CO').transform(new Date(), 'yyyy/MM/dd');
+            const fechaVigencia = new DatePipe('en-CO').transform(this.ArrayCondiciones.FechaVigencia, 'yyyy/MM/dd');
+            if ( fechaHoy != null && fechaVigencia != null && fechaHoy <= fechaVigencia) { 
               if (this.TerminoOperacionForm.get('Codigo')?.value === '10'
                 || this.TerminoOperacionForm.get('Codigo')?.value === '40') {
                 this.TerminoForm.get('PlazoDias')?.reset();
@@ -2485,9 +2494,14 @@ export class TerminoComponent implements OnInit {
                 this.btnAsesoria = false;
               }
             } else {
-              this.notif.onWarning('Advertencia', 'El producto no está vigente.');
-              this.TerminoForm.get('IdProducto')?.reset();
-              this.TerminoForm.get('DescripcionProducto')?.reset();
+              if (this.TerminoForm.get('Clase')?.value === 10) {
+                this.TerminoForm.get('IdProducto')?.setValue("");
+                this.TerminoForm.get('DescripcionProducto')?.setValue("");
+              } else{
+                this.notif.onWarning('Advertencia', 'El producto no está vigente.');
+                this.TerminoForm.get('IdProducto')?.reset();
+                this.TerminoForm.get('DescripcionProducto')?.reset();
+              }              
             }
           } else if (result.length > 1) {
             this.bloquearNegociacion = null;
@@ -4271,9 +4285,15 @@ export class TerminoComponent implements OnInit {
     if (this.TerminoForm.get('PlazoDias')?.value !== undefined
       && this.TerminoForm.get('PlazoDias')?.value !== null) {
       if (JSON.parse(this.TerminoForm.get('PlazoDias')?.value) >= this.ArrayCondiciones.PlazoMinimo
-        && JSON.parse(this.TerminoForm.get('PlazoDias')?.value) <= this.ArrayCondiciones.PlazoMaximo && (Number(this.TerminoForm.get('PlazoDias')?.value) % 30) == 0) {
-        this.TerminoForm.get('IdFrecuenciaPago')?.setValue(-1);
-        this.ObtenerFrecuenciaPago();
+        && JSON.parse(this.TerminoForm.get('PlazoDias')?.value) <= this.ArrayCondiciones.PlazoMaximo) {
+        if ((Number(this.TerminoForm.get('PlazoDias')?.value) % 30) == 0){
+          this.TerminoForm.get('IdFrecuenciaPago')?.setValue(-1);
+          this.ObtenerFrecuenciaPago();
+        }else{
+          this.TerminoForm.get('IdFrecuenciaPago')?.setValue(-1);
+          this.ObtenerFrecuenciaPago();
+        }
+         
       } else {
         this.notif.onWarning('Advertencia', 'El plazo ingresado no es permitido para este producto.');
         this.TerminoForm.get('ValorTotal')?.reset();

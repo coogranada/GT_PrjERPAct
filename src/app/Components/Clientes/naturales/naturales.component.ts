@@ -7710,15 +7710,25 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     }
   }
 
-  validarValorCampoNombres(campoJquery : string, campoAngular : string) {
+  validarValorCampoNombres(campoJquery: string, campoAngular: string) {
     let valorCampo = $('#' + campoJquery).val();
-  
-    if (valorCampo === undefined || valorCampo.trim().length === 0) {
+
+    // Validación de null o undefined antes de continuar
+    if (valorCampo === null || valorCampo === undefined) {
+      // Si el valor es null o undefined, resetear el campo de Angular
+      this.entrevistaForm.get(campoAngular)?.reset();
+      return;
+    }
+
+    // Si el valor es una cadena vacía o solo espacios
+    if (valorCampo.trim().length === 0) {
       this.entrevistaForm.get(campoAngular)?.reset();
     } else {
+      // Si el valor es válido, corregir la capitalización de las palabras
       let valorCorregido = valorCampo.toString().trim().toLowerCase()
         .replace(/\b[á-úa-zA-Z]+/g, (letra: any) => letra.charAt(0).toUpperCase() + letra.slice(1));
 
+      // Asignar el valor corregido al campo Jquery y al formulario Angular
       $('#' + campoJquery).val(valorCorregido);
       this.entrevistaForm.get(campoAngular)?.setValue(valorCorregido);
     }
