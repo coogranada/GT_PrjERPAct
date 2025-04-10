@@ -736,6 +736,15 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
     if (this.asesoriacontractualFrom.get('Plazo')?.value !== ''
       && this.asesoriacontractualFrom.get('Plazo')?.value !== undefined
       && this.asesoriacontractualFrom.get('Plazo')?.value !== null) {
+
+      if(this.asesoriacontractualFrom.get('IdProducto')?.value === 207 && (this.asesoriacontractualFrom.get('ValorPlan')?.value < this.ArrayCondiciones.SdoMinimo
+      || this.asesoriacontractualFrom.get('ValorPlan')?.value > this.ArrayCondiciones.SdoMaximo)) {
+        this.notif.onWarning('Advertencia', 'El valor total plan tiene un monto no permitido para este producto.');
+        this.asesoriacontractualFrom.get('TasaEfectiva')?.reset();        
+        this.asesoriacontractualFrom.get('TasaNominal')?.reset();
+        return;
+      }
+
       this.loading = true;
       this.AsesoriaContractualServices.ObtenerTasa(this.asesoriacontractualFrom.value).subscribe(
         result => {
@@ -791,6 +800,12 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
             this.loading = false;
             this.asesoriacontractualFrom.get('InteresBruto')?.setValue(result.toFixed(0));
             this.obtenerRetencion();
+            const TasaNominal = this.returnFormatNum(this.asesoriacontractualFrom.get('TasaNominal')?.value);
+            const TasaNominalFinal = TasaNominal + "%"
+            this.asesoriacontractualFrom.get('TasaNominal')?.setValue(TasaNominalFinal);
+            const TasaEfectiva = this.returnFormatNum(this.asesoriacontractualFrom.get('TasaEfectiva')?.value);
+            const TasaEfectivaFinal = TasaEfectiva + "%"
+            this.asesoriacontractualFrom.get('TasaEfectiva')?.setValue(TasaEfectivaFinal);
           },
           error => {
             this.loading = false;
