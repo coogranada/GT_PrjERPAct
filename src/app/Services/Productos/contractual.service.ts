@@ -241,4 +241,8 @@ export class ContractualService {
         this.url = `${this.environment.Url}/GetDatosDebeito/${idCuenta}`;
         return this._http.get<any>(this.url);
     }
+    GenerarFormatoCuentaDestinoPDFContractual(itemsSend: any): Observable<any> {
+        this.url = `${this.environment.Url}/GenerarFormatoCuentaDestinoPDFContractual`;
+        return this._http.post<any>(this.url, itemsSend);
+    }
 }

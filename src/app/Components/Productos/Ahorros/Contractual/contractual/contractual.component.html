@@ -940,12 +940,6 @@
             <input type="button" style="visibility:hidden" data-toggle="tab" href="#tab3" #tab3 />
             <input type="button" style="visibility:hidden" data-toggle="tab" href="#tab4" #tab4 />
         </div>
-        <div class="col-xs-12 col-md-12 col-lg-12 text-right">
-            <app-formato-cambio-cuentadestino #FormatoCambioCuentaDestino></app-formato-cambio-cuentadestino>
-            <button type="button" style="visibility:hidden" #ModalImpresionCambioCuentaDestino
-                (click)="FormatoCambioCuentaDestino.AbrirFormato(CuentaDestionoSend)"></button>
-            <button type="button" style="visibility:hidden" #Cerrar (click)="LimpiaOperacion()"></button>
-        </div>
     </form>
     <ngx-loading [show]="loading"
         [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
@@ -1335,7 +1329,7 @@
     <div class="modal-dialog">
         <div class="modal-content modal-lg">
             <div class="modal-header bg-morado">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button type="button" class="close" (click)="CloseImpresion()">&times;</button>
                 <h6 class="modal-title">Contractual</h6>
             </div>
             <div class="modal-body">
