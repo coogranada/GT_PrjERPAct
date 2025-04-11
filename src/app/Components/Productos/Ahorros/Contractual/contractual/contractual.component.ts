@@ -36,7 +36,6 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
   @ViewChild('ModalDebitoAutomatico', { static: true }) private ModalDebitoAutomatico!: ElementRef;
   @ViewChild('ModalImpresionCambioCuentaDestino', { static: true }) private ModalImpresionCambioCuentaDestino!: ElementRef;
   @ViewChild('CerrarDebito', { static: true }) private CerrarDebito!: ElementRef;
-  @ViewChild('Cerrar', { static: true }) private Cerrar!: ElementRef;
   @ViewChild('tab1', { static: true }) private tab1!: ElementRef;
   @ViewChild('tab3', { static: true }) private tab3!: ElementRef;
   @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
@@ -131,18 +130,6 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
     CuentaAhorros: {},
     Sorteo: {}
   };
-
-  public CuentaDestionoSend = {
-    NombreOficina: {},
-    Nombre: {},
-    NumeroDocumento: {},
-    IdLiquidacion: {},
-    Cuenta: {},
-    CuentaDestino: {},
-    TipoDocumento: {},
-    NombreProducto: {},
-  };
-
   dataTitulareslist: any;
   dataObservacionCuentalist: any;
   dataObjet: any;
@@ -427,7 +414,6 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
         && this.contractualFrom.get('IdDigito')?.value !== undefined
         && this.contractualFrom.get('IdDigito')?.value !== ''
       ) {
-        console.log("f",this.contractualFrom.get('CuentaDestino')?.value)
         if (this.contractualFrom.get('IdEstado')?.value !== 25 && this.contractualFrom.get('IdEstado')?.value !== 10) {
           this.log.TipoCuentaDestinoAnterior = this.resultLiquidacion.filter((x : any) => x.IdLiquidacion == this.contractualFrom.get('IdLiquidacion')?.value)[0].DescripcionLiquidacion;
           if(this.contractualFrom.get('CuentaDestino')?.value != "" && this.contractualFrom.get('CuentaDestino')?.value != null && this.contractualFrom.get('CuentaDestino')?.value != undefined)
@@ -692,7 +678,6 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
         this.GenerarImpresion();
         $("#ImpresionContractual").show();
         this.ModalImpresion.nativeElement.click();
-        this.Cerrar.nativeElement.click();
         this.BloquearNroTitulo = false;
         this.bloquearConsultaCuenta = false;
         this.MostrasAlertaAsociado = false;
@@ -1145,20 +1130,22 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
    GenerarImpresion(){
       this.ContractualServices.GenerarImpresion(this.itemsSend).subscribe(
       result => {
+        document.querySelector("object")!.data = "";
+        document.querySelector("object")!.name = "";
+        document.querySelector("object")!.type = "";
         const pdfinBase64 = result.FileStream._buffer;
-          const byteArray = new Uint8Array(atob(pdfinBase64).split("").map((char) => char.charCodeAt(0)));
-          const newBolb = new Blob([byteArray], { type: "application/pdf" });
-          this.linkPdf = URL.createObjectURL(newBolb);
-          const url = window.URL.createObjectURL(newBolb);
-          document.querySelector("object")!.data = url;
-          document.querySelector("object")!.name = "Impresion";
-          document.querySelector("object")!.type = "application/pdf";
+        const byteArray = new Uint8Array(atob(pdfinBase64).split("").map((char) => char.charCodeAt(0)));
+        const newBolb = new Blob([byteArray], { type: "application/pdf" });
+        this.linkPdf = URL.createObjectURL(newBolb);
+        const url = window.URL.createObjectURL(newBolb);
+        document.querySelector("object")!.data = url;
+        document.querySelector("object")!.name = "Impresion";
+        document.querySelector("object")!.type = "application/pdf";
       },
       error => {
         const errorMessage = <any>error;
         console.log(errorMessage);
-      }
-    );
+      });
    }
   SolicitarGestion() {
     this.CuentaSolicitud = new CuentaModel();
@@ -15905,17 +15892,9 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                   this.ContractualServices.getBuscarCuenta(this.contractualFrom.value).subscribe(
                     // tslint:disable-next-line:no-shadowed-variable
                     result => {
-                      let data = localStorage.getItem('Data');
-                      this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
-                      this.CuentaDestionoSend.NombreOficina = this.dataUser.Oficina;
-                      this.CuentaDestionoSend.Nombre = this.contractualFrom.get('Nombre')?.value;
-                      this.CuentaDestionoSend.NumeroDocumento = this.contractualFrom.get('NumeroDocumento')?.value;
-                      this.CuentaDestionoSend.IdLiquidacion = this.contractualFrom.get('IdLiquidacion')?.value;
-                      this.CuentaDestionoSend.Cuenta = this.contractualFrom.get('Cuenta')?.value;
-                      this.CuentaDestionoSend.TipoDocumento = this.contractualFrom.get('TipoDocumento')?.value;
-                      this.CuentaDestionoSend.NombreProducto = this.contractualFrom.get('DescripcionProducto')?.value;
-                      this.CuentaDestionoSend.CuentaDestino = result.CuentaDestino;
-                      this.ModalImpresionCambioCuentaDestino.nativeElement.click();
+                      this.GenerarFormatoCuentaDestinoPDFContractual();
+                      $("#ImpresionContractual").show();
+                      this.ModalImpresion.nativeElement.click();
                     },
                   );
                 },
@@ -15999,17 +15978,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                 this.ContractualServices.getBuscarCuenta(this.contractualFrom.value).subscribe(
                   // tslint:disable-next-line:no-shadowed-variable
                   result => {
-                    let data = localStorage.getItem('Data');
-                    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
-                    this.CuentaDestionoSend.NombreOficina = this.dataUser.Oficina;
-                    this.CuentaDestionoSend.Nombre = this.contractualFrom.get('Nombre')?.value;
-                    this.CuentaDestionoSend.NumeroDocumento = this.contractualFrom.get('NumeroDocumento')?.value;
-                    this.CuentaDestionoSend.IdLiquidacion = this.contractualFrom.get('IdLiquidacion')?.value;
-                    this.CuentaDestionoSend.Cuenta = this.contractualFrom.get('Cuenta')?.value;
-                    this.CuentaDestionoSend.TipoDocumento = this.contractualFrom.get('TipoDocumento')?.value;
-                    this.CuentaDestionoSend.NombreProducto = this.contractualFrom.get('DescripcionProducto')?.value;
-                    this.CuentaDestionoSend.CuentaDestino = result.CuentaDestino;
-                    this.ModalImpresionCambioCuentaDestino.nativeElement.click();
+                    
+                     this.GenerarFormatoCuentaDestinoPDFContractual();
+                      $("#ImpresionContractual").show();
+                      this.ModalImpresion.nativeElement.click();
                   },
                 );
               },
@@ -17386,7 +17358,57 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
     );
   }
   // FIN TABS
+   GenerarFormatoCuentaDestinoPDFContractual() {
+    let payload: any = {
+      Nombre: this.contractualFrom.controls["Nombre"].value,
+      TipoDocumento: this.dataObjet.TipoDocumento,
+      Documento: this.dataObjet.NumeroDocumento,
+      TipoAhorro: this.dataObjet.DescripcionProducto,
+      Cuenta: this.dataObjet.Cuenta,
+      CuentaDesembolso: this.contractualFrom.controls['IdLiquidacion'].value == '0' ? "" : this.resultCuentaNegociacion.filter(( x: any) => x.IdCuenta == this.contractualFrom.controls['IdCuentaDestino'].value)[0].Cuenta,
+      TipoPdf: "Contractual",
+      TitiloPdf: "FORMATO MODIFICACIÓN PRODUCTO CONTRATUAL CUENTA DESTINO",
+      CiudadPdf: "",
+      OficinaPdf: this.dataUser.Oficina
+    }
+     this.linkPdf = "";
+     this.loading = true;
+     document.querySelector("object")!.data = "";
+     document.querySelector("object")!.name = "";
+     document.querySelector("object")!.type = "";
+     this.itemsSend.Ciudad = this.itemsSend.Ciudad == null ? "" : this.itemsSend.Ciudad;
+     this.itemsSend.Telefono = this.itemsSend.Telefono == null ? "" : this.itemsSend.Telefono;
+     this.ContractualServices.GenerarFormatoCuentaDestinoPDFContractual(payload).subscribe(
+       result => {
+         const pdfinBase64 = result.FileStream._buffer;
+         const byteArray = new Uint8Array(atob(pdfinBase64).split("").map((char) => char.charCodeAt(0)));
+         const newBolb = new Blob([byteArray], { type: "application/pdf" });
+         this.linkPdf = URL.createObjectURL(newBolb);
+         const url = window.URL.createObjectURL(newBolb);
+         document.querySelector("object")!.data = url;
+         document.querySelector("object")!.name = "Impresion";
+         document.querySelector("object")!.type = "application/pdf";
+         this.loading = false;
+       },
+       error => {
+         this.loading = false
+         const errorMessage = <any>error;
+         this.notif.onDanger('Error', errorMessage);
+         console.log(errorMessage);
+       });
+   }
 
+   CloseImpresion(){
+    console.log("close")
+    document.querySelector("object")!.data = "";
+    document.querySelector("object")!.name = "";
+    document.querySelector("object")!.type = "";
+    this.LimpiaOperacion();
+    setTimeout(() => {
+      $("#ImpresionContractual").hide();
+      $('#ModalImpresion').modal('hide');  
+    },1000);
+  }
   // GENERAL
   LimpiarCampos(Datos : any) {
     if (Datos === 'IdAsesor') {
