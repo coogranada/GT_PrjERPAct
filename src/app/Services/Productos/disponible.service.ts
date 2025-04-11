@@ -11,7 +11,7 @@ export class DisponiblesService {
     constructor(private _http: HttpClient,private environment: EnvironmentService) { }
 
     BuscarAsociado(Documento: string, Nombre: string): Observable<any> {
-        this.url = `${this.environment.Url}/BuscarProductoContractual`;
+        this.url = `${this.environment.Url}/BuscarAsociadoDisponible`;
         const params = new HttpParams()
             .set('strDocumento', Documento)
             .set('strNombre', Nombre);

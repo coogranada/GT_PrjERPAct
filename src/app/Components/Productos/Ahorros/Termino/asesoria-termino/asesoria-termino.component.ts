@@ -1160,6 +1160,7 @@ export class AsesoriaTerminoComponent implements OnInit {
     }
     const newTerceroData = this.creacionFrom.value;
     if(newTerceroData.SegundoNombre === null) newTerceroData.SegundoNombre = '';
+    if(newTerceroData.PrimerApellido === null) newTerceroData.PrimerApellido = '';
     if(newTerceroData.SegundoApellido === null) newTerceroData.SegundoApellido = '';
     Object.keys(newTerceroData).forEach(key => {
       newTerceroData[key] = this.capitalize(newTerceroData[key]);
