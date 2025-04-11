@@ -1054,6 +1054,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
         && this.contractualFrom.get('IdDigito')?.value !== undefined
         && this.contractualFrom.get('IdDigito')?.value !== ''
       ) {
+        if (this.contractualFrom.get('IdProductoCuenta')?.value === 207) {
+          this.notif.onWarning('Advertencia', 'Este producto no puede cambiar nro titulo');
+          this.contractualOperacionFrom.get('Codigo')?.reset();
+          return
+        }
         if (this.contractualFrom.get('IdEstado')?.value !== 25 && this.contractualFrom.get('IdEstado')?.value !== 10) {
           this.log.NumeroTituloAnterior = this.contractualFrom.get('NroTitulo')?.value == null ? "" : this.contractualFrom.get('NroTitulo')?.value; 
           this.DescriTipoFirma = true;
