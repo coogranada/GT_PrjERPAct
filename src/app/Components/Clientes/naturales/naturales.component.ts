@@ -9789,14 +9789,20 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                       }
                       this.terceroSave.get('PrimerNombre')?.setValue(this.basicosFrom.value.primerNombre.charAt(0).toUpperCase() + 
                       this.basicosFrom.value.primerNombre.slice(1).toLowerCase());
-                      this.terceroSave.get('SegundoNombre')?.setValue(this.basicosFrom.value.segundoNombre.charAt(0).toUpperCase() + 
-                      this.basicosFrom.value.segundoNombre.slice(1).toLowerCase());
+                      const segundoNombre = this.basicosFrom.value.segundoNombre;
+                      this.terceroSave.get('SegundoNombre')?.setValue(
+                      segundoNombre
+                      ? segundoNombre.charAt(0).toUpperCase() + segundoNombre.slice(1).toLowerCase()
+                      : ''
+                      );                      
                       this.terceroSave.get('PrimerApellido')?.setValue(this.basicosFrom.value.primerApellido.charAt(0).toUpperCase() + 
                       this.basicosFrom.value.primerApellido.slice(1).toLowerCase());
-                  
-                      this.terceroSave.get('SegundoApellido')?.setValue(this.basicosFrom.value.segundoApellido.charAt(0).toUpperCase() + 
-                      this.basicosFrom.value.segundoApellido.slice(1).toLowerCase());
-
+                      const segundoApellido = this.basicosFrom.value.segundoNombre;
+                      this.terceroSave.get('SegundoApellido')?.setValue(
+                      segundoApellido
+                      ? segundoApellido.charAt(0).toUpperCase() + segundoApellido.slice(1).toLowerCase()
+                      : ''
+                      );  
                       this.terceroSave.get('IdGenero')?.setValue(this.basicosFrom.value.genero);
                       this.terceroSave.get('IdEstado')?.setValue(this.basicosFrom.value.estado);
                       this.terceroSave.get('IdAsesorExterno')?.setValue(this.terceroSave.value.IdAsesorExterno);
@@ -9928,13 +9934,20 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                       }
                     this.terceroSave.get('PrimerNombre')?.setValue(this.basicosFrom.value.primerNombre.charAt(0).toUpperCase() + 
                     this.basicosFrom.value.primerNombre.slice(1).toLowerCase());
-                    this.terceroSave.get('SegundoNombre')?.setValue(this.basicosFrom.value.segundoNombre.charAt(0).toUpperCase() + 
-                    this.basicosFrom.value.segundoNombre.slice(1).toLowerCase());
+                    const segundoNombre = this.basicosFrom.value.segundoNombre;
+                    this.terceroSave.get('SegundoNombre')?.setValue(
+                    segundoNombre
+                    ? segundoNombre.charAt(0).toUpperCase() + segundoNombre.slice(1).toLowerCase()
+                    : ''
+                    );                     
                     this.terceroSave.get('PrimerApellido')?.setValue(this.basicosFrom.value.primerApellido.charAt(0).toUpperCase() + 
                     this.basicosFrom.value.primerApellido.slice(1).toLowerCase());
-                    this.terceroSave.get('SegundoApellido')?.setValue(this.basicosFrom.value.segundoApellido.charAt(0).toUpperCase() + 
-                    this.basicosFrom.value.segundoApellido.slice(1).toLowerCase());
-
+                    const segundoApellido = this.basicosFrom.value.segundoNombre;
+                    this.terceroSave.get('SegundoApellido')?.setValue(
+                    segundoApellido
+                    ? segundoApellido.charAt(0).toUpperCase() + segundoApellido.slice(1).toLowerCase()
+                    : ''
+                    );   
                     this.terceroSave.get('IdGenero')?.setValue(this.basicosFrom.value.genero);
                     this.terceroSave.get('IdEstado')?.setValue(this.basicosFrom.value.estado);
                     this.terceroSave.get('IdAsesorExterno')?.setValue(this.terceroSave.value.IdAsesorExterno);
@@ -10094,22 +10107,19 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                     this.terceroSave.get('PrimerNombre')?.setValue(this.basicosFrom.value.primerNombre.charAt(0).toUpperCase() + 
                     this.basicosFrom.value.primerNombre.slice(1).toLowerCase());
                 const segundoNombre = this.basicosFrom.value.segundoNombre;
-
                 this.terceroSave.get('SegundoNombre')?.setValue(
                   segundoNombre
                     ? segundoNombre.charAt(0).toUpperCase() + segundoNombre.slice(1).toLowerCase()
                     : ''
-                );
+                  );
                   this.terceroSave.get('PrimerApellido')?.setValue(this.basicosFrom.value.primerApellido.charAt(0).toUpperCase() + 
                     this.basicosFrom.value.primerApellido.slice(1).toLowerCase());
-
-                const segundoApellido = this.basicosFrom.value.segundoNombre;
-
-                this.terceroSave.get('SegundoApellido')?.setValue(
+                  const segundoApellido = this.basicosFrom.value.segundoNombre;
+                  this.terceroSave.get('SegundoApellido')?.setValue(
                   segundoApellido
                     ? segundoApellido.charAt(0).toUpperCase() + segundoApellido.slice(1).toLowerCase()
                     : ''
-                );
+                  );
                   this.terceroSave.get('IdGenero')?.setValue(this.basicosFrom.value.genero);
                     this.terceroSave.get('IdEstado')?.setValue(this.basicosFrom.value.estado);
                     this.terceroSave.get('IdAsesorExterno')?.setValue(this.terceroSave.value.IdAsesorExterno);
@@ -10240,12 +10250,20 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                       }
                   this.terceroSave.get('PrimerNombre')?.setValue(this.basicosFrom.value.primerNombre.charAt(0).toUpperCase() + 
                   this.basicosFrom.value.primerNombre.slice(1).toLowerCase());
-                  this.terceroSave.get('SegundoNombre')?.setValue(this.basicosFrom.value.segundoNombre.charAt(0).toUpperCase() + 
-                  this.basicosFrom.value.segundoNombre.slice(1).toLowerCase());
+                  const segundoNombre = this.basicosFrom.value.segundoNombre;
+                  this.terceroSave.get('SegundoNombre')?.setValue(
+                  segundoNombre
+                  ? segundoNombre.charAt(0).toUpperCase() + segundoNombre.slice(1).toLowerCase()
+                  : ''
+                  );                 
                   this.terceroSave.get('PrimerApellido')?.setValue(this.basicosFrom.value.primerApellido.charAt(0).toUpperCase() + 
                   this.basicosFrom.value.primerApellido.slice(1).toLowerCase());
-                  this.terceroSave.get('SegundoApellido')?.setValue(this.basicosFrom.value.segundoApellido.charAt(0).toUpperCase() + 
-                  this.basicosFrom.value.segundoApellido.slice(1).toLowerCase());
+                  const segundoApellido = this.basicosFrom.value.segundoNombre;
+                  this.terceroSave.get('SegundoApellido')?.setValue(
+                  segundoApellido
+                  ? segundoApellido.charAt(0).toUpperCase() + segundoApellido.slice(1).toLowerCase()
+                  : ''
+                  );                  
                   this.terceroSave.get('IdGenero')?.setValue(this.basicosFrom.value.genero);
                   this.terceroSave.get('IdEstado')?.setValue(this.basicosFrom.value.estado);
                   this.terceroSave.get('IdAsesorExterno')?.setValue(this.terceroSave.value.IdAsesorExterno);
@@ -10416,12 +10434,20 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             }
             this.terceroSave.get('PrimerNombre')?.setValue(this.basicosFrom.value.primerNombre.charAt(0).toUpperCase() + 
             this.basicosFrom.value.primerNombre.slice(1).toLowerCase());
-            this.terceroSave.get('SegundoNombre')?.setValue(this.basicosFrom.value.segundoNombre.charAt(0).toUpperCase() + 
-            this.basicosFrom.value.segundoNombre.slice(1).toLowerCase());
+            const segundoNombre = this.basicosFrom.value.segundoNombre;
+            this.terceroSave.get('SegundoNombre')?.setValue(
+              segundoNombre
+                ? segundoNombre.charAt(0).toUpperCase() + segundoNombre.slice(1).toLowerCase()
+                : ''
+            );             
             this.terceroSave.get('PrimerApellido')?.setValue(this.basicosFrom.value.primerApellido.charAt(0).toUpperCase() + 
             this.basicosFrom.value.primerApellido.slice(1).toLowerCase());
-            this.terceroSave.get('SegundoApellido')?.setValue(this.basicosFrom.value.segundoApellido.charAt(0).toUpperCase() + 
-            this.basicosFrom.value.segundoApellido.slice(1).toLowerCase());
+            const segundoApellido = this.basicosFrom.value.segundoNombre;
+            this.terceroSave.get('SegundoApellido')?.setValue(
+              segundoApellido
+                ? segundoApellido.charAt(0).toUpperCase() + segundoApellido.slice(1).toLowerCase()
+                : ''
+            );            
             this.terceroSave.get('IdGenero')?.setValue(this.basicosFrom.value.genero);
             this.terceroSave.get('IdEstado')?.setValue(this.basicosFrom.value.estado);
             this.terceroSave.get('IdAsesorExterno')?.setValue(this.terceroSave.value.IdAsesorExterno);
@@ -10563,12 +10589,20 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           }
           this.terceroSave.get('PrimerNombre')?.setValue(this.basicosFrom.value.primerNombre.charAt(0).toUpperCase() + 
           this.basicosFrom.value.primerNombre.slice(1).toLowerCase());
-          this.terceroSave.get('SegundoNombre')?.setValue(this.basicosFrom.value.segundoNombre.charAt(0).toUpperCase() + 
-          this.basicosFrom.value.segundoNombre.slice(1).toLowerCase());
+          const segundoNombre = this.basicosFrom.value.segundoNombre;
+          this.terceroSave.get('SegundoNombre')?.setValue(
+            segundoNombre
+              ? segundoNombre.charAt(0).toUpperCase() + segundoNombre.slice(1).toLowerCase()
+              : ''
+          );             
           this.terceroSave.get('PrimerApellido')?.setValue(this.basicosFrom.value.primerApellido.charAt(0).toUpperCase() + 
           this.basicosFrom.value.primerApellido.slice(1).toLowerCase());
-          this.terceroSave.get('SegundoApellido')?.setValue(this.basicosFrom.value.segundoApellido.charAt(0).toUpperCase() + 
-          this.basicosFrom.value.segundoApellido.slice(1).toLowerCase());
+          const segundoApellido = this.basicosFrom.value.segundoNombre;
+          this.terceroSave.get('SegundoApellido')?.setValue(
+            segundoApellido
+              ? segundoApellido.charAt(0).toUpperCase() + segundoApellido.slice(1).toLowerCase()
+              : ''
+          );          
           this.terceroSave.get('IdGenero')?.setValue(this.basicosFrom.value.genero);
           this.terceroSave.get('IdEstado')?.setValue(this.basicosFrom.value.estado);
           this.terceroSave.get('IdAsesorExterno')?.setValue(this.terceroSave.value.IdAsesorExterno);
