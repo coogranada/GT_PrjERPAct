@@ -1207,24 +1207,30 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
     const selectElement = event?.target as HTMLSelectElement;
     const selectedValue = selectElement.value;
        
+    if(this.contractualOperacionFrom.get('Codigo')?.value === '21'){
+      if(selectedValue === '1' && selectedValue === this.datoformaPago.toString()) {
+        this.bloquearbtnActalizar = false;
+        return;
+      }else{
+        this.bloquearbtnActalizar = true;
+      }
+    }
+
+
     if (selectedValue === '0') {
       this.DebitoAutomaticoFrom.reset();
       this.bloquearbtnActalizar = true;
     } else if (selectedValue === '1') {
-      this.DocumentoSugDebito = this.contractualFrom.get('NumeroDocumento')?.value;
-      this.ModalDebitoAutomatico.nativeElement.click();
-      this.DebitoAutomaticoFrom.get('DocumentoDebito')?.patchValue(this.DocumentoSugDebito);
-      this.BuscarAsociadoCuentaOrigen();
+        this.bloquearbtnActalizar = true;
+        this.DocumentoSugDebito = this.contractualFrom.get('NumeroDocumento')?.value;
+        this.ModalDebitoAutomatico.nativeElement.click();
+        this.DebitoAutomaticoFrom.get('DocumentoDebito')?.patchValue(this.DocumentoSugDebito);
+        this.BuscarAsociadoCuentaOrigen();
     } else if (selectedValue === '2') {
       this.DebitoAutomaticoFrom.reset();
       this.ÖbtenerConvenio();
     }
 
-    if(selectedValue === '1' && selectedValue == this.contractualFrom.get('IdFormaPago')?.value) {
-      this.bloquearbtnActalizar = false;
-    }else{
-      this.bloquearbtnActalizar = true;
-    }
 
   }
   MapearDatosUsuario() {
