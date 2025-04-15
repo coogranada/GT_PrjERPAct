@@ -590,7 +590,7 @@ export class MiListaProductosService {
     return this._http.post<any>(this.url, Datos);
   }
   getCertificadoSaldos(year: any, idTercero: string): Observable<any> {
-    this.url = `${this.environment.Url}/CenerarXLSXAnalisisCuentas`;
+    this.url = `${this.environment.Url}/getCertificadoSaldos`;
     const params = new HttpParams()
         .set('year', year)
         .set('tercero', idTercero);
