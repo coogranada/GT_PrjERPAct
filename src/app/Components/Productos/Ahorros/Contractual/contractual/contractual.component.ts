@@ -1057,6 +1057,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
         && this.contractualFrom.get('IdDigito')?.value !== undefined
         && this.contractualFrom.get('IdDigito')?.value !== ''
       ) {
+        if (this.contractualFrom.get('IdProductoCuenta')?.value === 207) {
+          this.notif.onWarning('Advertencia', 'Este producto no puede cambiar nro titulo');
+          this.contractualOperacionFrom.get('Codigo')?.reset();
+          return
+        }
         if (this.contractualFrom.get('IdEstado')?.value !== 25 && this.contractualFrom.get('IdEstado')?.value !== 10) {
           this.log.NumeroTituloAnterior = this.contractualFrom.get('NroTitulo')?.value == null ? "" : this.contractualFrom.get('NroTitulo')?.value; 
           this.DescriTipoFirma = true;
@@ -1219,24 +1224,30 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
     const selectElement = event?.target as HTMLSelectElement;
     const selectedValue = selectElement.value;
        
+    if(this.contractualOperacionFrom.get('Codigo')?.value === '21'){
+      if(selectedValue === '1' && selectedValue === this.datoformaPago.toString()) {
+        this.bloquearbtnActalizar = false;
+        return;
+      }else{
+        this.bloquearbtnActalizar = true;
+      }
+    }
+
+
     if (selectedValue === '0') {
       this.DebitoAutomaticoFrom.reset();
       this.bloquearbtnActalizar = true;
     } else if (selectedValue === '1') {
-      this.DocumentoSugDebito = this.contractualFrom.get('NumeroDocumento')?.value;
-      this.ModalDebitoAutomatico.nativeElement.click();
-      this.DebitoAutomaticoFrom.get('DocumentoDebito')?.patchValue(this.DocumentoSugDebito);
-      this.BuscarAsociadoCuentaOrigen();
+        this.bloquearbtnActalizar = true;
+        this.DocumentoSugDebito = this.contractualFrom.get('NumeroDocumento')?.value;
+        this.ModalDebitoAutomatico.nativeElement.click();
+        this.DebitoAutomaticoFrom.get('DocumentoDebito')?.patchValue(this.DocumentoSugDebito);
+        this.BuscarAsociadoCuentaOrigen();
     } else if (selectedValue === '2') {
       this.DebitoAutomaticoFrom.reset();
       this.ÖbtenerConvenio();
     }
 
-    if(selectedValue === '1' && selectedValue == this.contractualFrom.get('IdFormaPago')?.value) {
-      this.bloquearbtnActalizar = false;
-    }else{
-      this.bloquearbtnActalizar = true;
-    }
 
   }
   MapearDatosUsuario() {

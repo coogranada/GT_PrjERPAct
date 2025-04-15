@@ -141,6 +141,7 @@ export class MiListaProductosComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.IrArriba();
     let datas = localStorage.getItem("Data");
     this.resultDataStore = JSON.parse(window.atob(datas == null ? "" : datas));
     this.arrayExample = [
@@ -1967,5 +1968,9 @@ export class MiListaProductosComponent implements OnInit {
   limpiarCampoNombre(campo : string) {
     this.misProductosFrom.get(campo)?.reset();
     this.disbaleBusqueda = null;
+  }
+  IrArriba() {
+    $('html, body').animate({ scrollTop: 0 }, 'slow');
+    return false;
   }
 }

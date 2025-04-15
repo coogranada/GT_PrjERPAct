@@ -508,7 +508,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       this.juridicosService.BuscarJuridicosAll(dataMap.Documento, '*').subscribe(
         result => {
           this.CargarTabs(result);
-          this.aceptaTratamientoDatos = result.TratamientoDto.Acepto;
+          this.aceptaTratamientoDatos = result.TratamientoDto?.Acepto === true;
           this.JuridicoSeleccionado = result.JuridicoDto.IdJuridico;
           this.entrevistaComponent.idJuridicoSearch = result.JuridicoDto.IdJuridico;
           this.entrevistaComponent.fechaMatricula = result.JuridicoDto.FechaMatricula;
@@ -1279,7 +1279,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
                                   this.IrArriba();
                                   this.organizarTab(1);
                                   this.botonBasico.nativeElement.click();
-                                  this.consultarJuridicosNit(this.JuridicoSeleccionado);
+                                  this.consultarJuridicosNit(this.infoJuridicoComponent.infoJuridicoFrom.get('Nit')?.value);
                                 }
                               }
                             )
@@ -1323,7 +1323,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
                                   this.IrArriba();
                                   this.organizarTab(1);
                                   this.botonBasico.nativeElement.click();
-                                  this.consultarJuridicosNit(this.JuridicoSeleccionado);
+                                  this.consultarJuridicosNit(this.infoJuridicoComponent.infoJuridicoFrom.get('Nit')?.value);
                                 }
                               }
                             )
@@ -1438,7 +1438,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
                                 this.IrArriba();
                                 this.organizarTab(1);
                                 this.botonBasico.nativeElement.click();
-                                this.consultarJuridicosNit(this.JuridicoSeleccionado);
+                                this.consultarJuridicosNit(this.infoJuridicoComponent.infoJuridicoFrom.get('Nit')?.value);
                               }
                             }
                           )
@@ -1482,7 +1482,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
                                 this.IrArriba();
                                 this.organizarTab(1);
                                 this.botonBasico.nativeElement.click();
-                                this.consultarJuridicosNit(this.JuridicoSeleccionado);
+                                this.consultarJuridicosNit(this.infoJuridicoComponent.infoJuridicoFrom.get('Nit')?.value);
                               }
                             }
                           )
@@ -6366,7 +6366,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (result !== null) {
             if (result.JuridicoDto !== null) {
               this.CargarTabs(result);
-              this.aceptaTratamientoDatos = result.TratamientoDto.Acepto;
+              this.aceptaTratamientoDatos = result.TratamientoDto?.Acepto === true;
               this.JuridicoSeleccionado = result.JuridicoDto.IdJuridico;
               this.entrevistaComponent.idJuridicoSearch = result.JuridicoDto.IdJuridico;
               this.entrevistaComponent.fechaMatricula = result.JuridicoDto.FechaMatricula;
