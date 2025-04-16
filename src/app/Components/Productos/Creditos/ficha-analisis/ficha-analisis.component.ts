@@ -181,20 +181,21 @@ export class FichaAnalisisComponent implements OnInit {
     }
   }
   OperacionSeleccionada() {
+    this.bloquearBuscar = true
     this.contenidoCodigo = this.FichaOperacionForm.get("Codigo")?.value;
     this.resultOperaciones.forEach((element : any) => {
       if (element.ERP_tblOperacion.IdOperacion == this.contenidoCodigo) {
         this.strDatos = "/" + element.ERP_tblOperacion.Descripcion;
       }
     });
-    if (this.contenidoCodigo == 90 || this.contenidoCodigo == 2) {
+    if (this.contenidoCodigo == 90 || this.contenidoCodigo == 2) { // Crear y buscar
       this.contenidoBoton = "Crear";
       this.ClearAll(1);
       this.FichaOperacionForm.get('Documento')?.reset();
       this.FichaOperacionForm.get('Radicado')?.reset();
       this.FormRadicado = null;
       this.btn = false;
-      if (this.contenidoCodigo == 90) {
+      if (this.contenidoCodigo == 90) {  //Crear
         this.btnGuardar = true;
         this.currencyOptions.precision = 0;
         //[jherrera][2024/04/16] se settea el valor null del botón para que cuando se cambie de operación tenga su estado normal

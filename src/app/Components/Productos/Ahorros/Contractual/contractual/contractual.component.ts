@@ -285,8 +285,25 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
       this.btnCambiarEstado = true;
       this.btnActualizar = true;
     if (this.contractualOperacionFrom.get('Codigo')?.value !== '2' && this.contractualOperacionFrom.get('Codigo')?.value !== '10' &&
-        this.contractualOperacionFrom.get('Codigo')?.value !== '40' && this.contractualOperacionFrom.get('Codigo')?.value !== '13')
+        this.contractualOperacionFrom.get('Codigo')?.value !== '40'){
+          if(this.contractualOperacionFrom.get('Codigo')?.value !== '13')
             this.BuscarPorCuenta();
+          if ((this.contractualFrom.get('IdOficina')?.value == null || this.contractualFrom.get('IdOficina')?.value == undefined || this.contractualFrom.get('IdOficina')?.value == '')
+            && (this.contractualFrom.get('IdProductoCuenta')?.value == null || this.contractualFrom.get('IdProductoCuenta')?.value == undefined || this.contractualFrom.get('IdProductoCuenta')?.value == '')
+            && (this.contractualFrom.get('IdConsecutivo')?.value == null || this.contractualFrom.get('IdConsecutivo')?.value == undefined || this.contractualFrom.get('IdConsecutivo')?.value == '')
+            && (this.contractualFrom.get('IdDigito')?.value == null || this.contractualFrom.get('IdDigito')?.value == undefined || this.contractualFrom.get('IdDigito')?.value == '')){
+             
+              this.contractualFrom.controls["IdAsesor"].setValue("");
+              this.contractualFrom.controls["NombreAsesor"].setValue("");
+              this.contractualFrom.controls["NumeroOficina"].setValue("");
+              this.contractualFrom.controls["NombreOficina"].setValue("");
+              this.contractualFrom.controls["DescripcionEstado"].setValue("");
+              this.contractualFrom.controls["DescripcionEstado"].setValue("");
+              this.contractualFrom.controls["DescripcionOperacion"].setValue("");
+              this.clearFormContractual(1);
+            }
+        }
+           
         
     if (this.contractualOperacionFrom.get('Codigo')?.value === '2') {          // Buscar
       this.generalesService.Autofocus('SelectBuscar');
@@ -1631,8 +1648,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
             }
           );
         } else {
-          this.notif.onWarning('Advertencia', 'La apertura debe ser de diferente titular.',
-  );
+          this.notif.onWarning('Advertencia', 'La apertura debe ser de diferente titular.');
           this.contractualFrom.get('NumeroDocumento')?.reset();
         }
       }
@@ -1767,16 +1783,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
       result => {
         this.loading = false;
         this.dataObjet = undefined;
+        console.log("persona",result)
         if (result.length === 0) {
           this.notif.onWarning('Advertencia', 'No se encontró el asociado.');
           this.btnGuardar = false;
         } else if (result.length === 1) {
           this.contractualFrom.get('NumeroDocumento')?.setValue(result[0].NumeroDocumento);
-          this.contractualFrom.get('Nombre')?.setValue(result[0].PrimerApellido + ' ' +
-            result[0].SegundoApellido + ' ' + result[0].PrimerNombre + ' ' + result[0].SegundoNombre);
+          this.contractualFrom.get('Nombre')?.setValue(result[0].PrimerApellido + ' ' + result[0].SegundoApellido + ' ' + result[0].PrimerNombre + ' ' + result[0].SegundoNombre);
           this.contractualFrom.get('NumeroOficinaAsociado')?.setValue(result[0].IdOficina);
           this.contractualFrom.get('NombreOficinaAsociado')?.setValue(result[0].NombreOficina);
-          this.contractualFrom.get('Clase')?.setValue(result[0].IdRelacionTipo);
+          this.contractualFrom.get('Clase')?.setValue(result[0].IdRelacionTipo); 
           this.contractualFrom.get('LngTercero')?.setValue(result[0].lngTercero);
           this.MostrasAlertaAsociado = false;
         } else if (result.length > 1) {
@@ -1997,6 +2013,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
         this.contractualFrom.get('LngTercero')?.setValue(this.dataObjet.LngTercero);
         this.contractualFrom.get('NumeroDocumento')?.setValue(this.dataObjet[0].NumeroDocumento);
         this.contractualFrom.get('TipoDocumento')?.setValue(this.dataObjet[0].TipoDocumento);
+
         this.contractualFrom.get('Nombre')?.setValue(this.dataObjet[0].PrimerApellido + ' ' + this.dataObjet[0].SegundoApellido +
           ' ' + this.dataObjet[0].PrimerNombre + ' ' + this.dataObjet[0].SegundoNombre);
         this.contractualFrom.get('IdAsesor')?.setValue(this.dataObjet[0].IdAsesor);
@@ -2570,6 +2587,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
   }
 
   GuardarContractual() {
+    if(this.contractualFrom.get('Clase')?.value === 5 && (this.dataObjetTitulares == null || this.dataObjetTitulares.length == 0)){
+      this.notif.onWarning('Advertencia', 'Debe ingresar al menos un autorizado cuando el titular es jurídico.');
+      return;
+    }
     if (this.contractualFrom.get('TasaNominal')?.value !== '0.0000%'){    
         let data = localStorage.getItem('Data');
         this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
@@ -16009,6 +16030,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           }
         }
       } else if (this.contractualOperacionFrom.get('Codigo')?.value === '12') {  // Actualizar titulares contractual
+        if(this.contractualFrom.get('Clase')?.value === 5 && (this.dataObjetTitulares == null || this.dataObjetTitulares.length == 0)){
+          this.notif.onWarning('Advertencia', 'Debe ingresar al menos un autorizado cuando el titular es jurídico.');
+          return;
+        }
         if (this.contractualFrom.get('Clase')?.value === 10) {
             if (this.dataObjetTitulares.length !== 0) {
                 this.btnActualizarTitulares = false;
@@ -17444,7 +17469,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
       this.contractualFrom.get('BuscarDocumento')?.reset();
     }
   }
-  clearFormContractual() {
+  clearFormContractual(value : number = 0) {
     $('#select').focus().select();
     this.LimpiarItemSend();
     this.dataObjet = [];
@@ -17452,7 +17477,8 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
     this.dataObservacion = undefined;
     this.itemsDataObejct = [];
     this.resultEstados = undefined;
-    this.contractualOperacionFrom.reset();
+    if(value == 0)
+      this.contractualOperacionFrom.reset();
     this.contractualFrom.reset();
     this.DebitoAutomaticoFrom.reset();
     this.AdicionarPuntosFrom.reset();

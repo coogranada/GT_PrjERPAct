@@ -24,7 +24,7 @@
                                 <span class="grande"> *</span>
                             </div>
                             <div class="col-xs-10 col-md-8 col-lg-4">
-                                <select class="form-control" formControlName="Codigo" id="select" (change)=" ValorSeleccionado()">
+                                <select class="form-control" formControlName="Codigo" id="select" (change)="ValorSeleccionado()">
                                     <option *ngFor="let operacionTermino of resultOperaciones"
                                         [value]="operacionTermino.ERP_tblOperacion.IdOperacion">
                                         {{operacionTermino.ERP_tblOperacion.Descripcion}}</option>
