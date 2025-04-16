@@ -364,9 +364,25 @@ export class TerminoComponent implements OnInit {
     this.TerminoForm.get('DocumentoBeneficiario')?.disable();
     this.listAutorizadoEliminar = [];
     if (this.TerminoOperacionForm.get('Codigo')?.value !== '2' && this.TerminoOperacionForm.get('Codigo')?.value !== '10' &&
-      this.TerminoOperacionForm.get('Codigo')?.value !== '40' && this.TerminoOperacionForm.get('Codigo')?.value !== '13' &&
-      this.TerminoOperacionForm.get('Codigo')?.value !== '103')
-      this.BuscarPorCuenta();
+      this.TerminoOperacionForm.get('Codigo')?.value !== '40' ){
+        if(this.TerminoOperacionForm.get('Codigo')?.value !== '13' && this.TerminoOperacionForm.get('Codigo')?.value !== '103')
+          this.BuscarPorCuenta();
+        if ((this.TerminoForm.get('IdOficina')?.value == null || this.TerminoForm.get('IdOficina')?.value == undefined || this.TerminoForm.get('IdOficina')?.value == '')
+          && (this.TerminoForm.get('IdProductoCuenta')?.value == null || this.TerminoForm.get('IdProductoCuenta')?.value == undefined || this.TerminoForm.get('IdProductoCuenta')?.value == '')
+          && (this.TerminoForm.get('IdConsecutivo')?.value == null || this.TerminoForm.get('IdConsecutivo')?.value == undefined || this.TerminoForm.get('IdConsecutivo')?.value == '')
+          && (this.TerminoForm.get('IdDigito')?.value == null || this.TerminoForm.get('IdDigito')?.value == undefined || this.TerminoForm.get('IdDigito')?.value == '')){
+            this.bloquearAsociado = true;
+            this.bloquearNroTitulo = true;
+            this.TerminoForm.controls["IdAsesor"].setValue("");
+            this.TerminoForm.controls["NombreAsesor"].setValue("");
+            this.TerminoForm.controls["NumeroOficina"].setValue("");
+            this.TerminoForm.controls["NombreOficina"].setValue("");
+            this.TerminoForm.controls["DescripcionEstado"].setValue("");
+            this.TerminoForm.controls["DescripcionEstado"].setValue("");
+            this.TerminoForm.controls["DescripcionOperacion"].setValue("");
+            this.ClearFromTermino(1);
+          }
+      }
     if (this.TerminoOperacionForm.get('Codigo')?.value === '2') {          //Buscar
       this.BenificiariosElminar = [];
       this.ClearFrom();
@@ -6552,10 +6568,10 @@ export class TerminoComponent implements OnInit {
     }
 
   }
-  ClearFromTermino() {
+  ClearFromTermino(value : number = 0) {
     this.ClearFrom();
-    this.clearBeneficiario;
-    this.clearTitulares;
+    this.clearBeneficiario();
+    this.clearTitulares();
     this.dataObjetBeneficiarios = [];
     this.dataObjetTitulares = [];
     this.dataObjetRenovacion = [];
@@ -6563,7 +6579,8 @@ export class TerminoComponent implements OnInit {
     this.dataObjetReciprocidad = [];
     this.dataObjetReciprocidadR = [];
     this.dataHistorial = [];
-    this.TerminoOperacionForm.get('Codigo')?.reset();
+    if(value == 0)
+      this.TerminoOperacionForm.get('Codigo')?.reset();
     this.bloquearDatosTitulares = false;
     this.bloquearAsociado = false;
     this.bloquearProducto = false;

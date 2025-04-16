@@ -202,6 +202,7 @@ export class AportesComponent implements OnInit {
     this.btnActualizarBeneficiarios = false;
     this.btnCambiarEstado = true;
     this.BloquearDatoBenf = null;
+    
   if (((this.aportesFrom.get('IdEstado')?.value  == 25 || this.aportesFrom.get('IdEstado')?.value  == 10) && this.aportesOperacionFrom.get('Codigo')?.value  != '2' ) &&  this.aportesOperacionFrom.get('Codigo')?.value  != '10')
     {
       this.notif.onWarning('Advertencia', 'Cuenta no se puede editar, estado no válido.');
@@ -210,8 +211,23 @@ export class AportesComponent implements OnInit {
     }
     this.dataObjetBeneficiarios = [];
     if (this.aportesOperacionFrom.get('Codigo')?.value  !== '2' && this.aportesOperacionFrom.get('Codigo')?.value  !== '10' &&
-    this.aportesOperacionFrom.get('Codigo')?.value  !== '40' && this.aportesOperacionFrom.get('Codigo')?.value  !== '13')
+    this.aportesOperacionFrom.get('Codigo')?.value  !== '40' && this.aportesOperacionFrom.get('Codigo')?.value  !== '13'){
       this.BuscarPorCuenta(true);
+      if ((this.aportesFrom.get('IdOficina')?.value == null || this.aportesFrom.get('IdOficina')?.value == undefined || this.aportesFrom.get('IdOficina')?.value == '')
+        && (this.aportesFrom.get('IdProductoCuenta')?.value == null || this.aportesFrom.get('IdProductoCuenta')?.value == undefined || this.aportesFrom.get('IdProductoCuenta')?.value == '')
+        && (this.aportesFrom.get('IdConsecutivo')?.value == null || this.aportesFrom.get('IdConsecutivo')?.value == undefined || this.aportesFrom.get('IdConsecutivo')?.value == '')
+        && (this.aportesFrom.get('IdDigito')?.value == null || this.aportesFrom.get('IdDigito')?.value == undefined || this.aportesFrom.get('IdDigito')?.value == '')){
+          this.aportesFrom.controls["IdAsesor"].setValue("");
+          this.aportesFrom.controls["NombreAsesor"].setValue("");
+          this.aportesFrom.controls["NumeroOficina"].setValue("");
+          this.aportesFrom.controls["NombreOficina"].setValue("");
+          this.aportesFrom.controls["IdEstado"].setValue("");
+          this.aportesFrom.controls["DescripcionEstado"].setValue("");
+          this.aportesFrom.controls["DescripcionOperacion"].setValue("");
+          this.clearFormAportes(1);
+        }
+    }
+      
     if (this.aportesOperacionFrom.get('Codigo')?.value  === '10') {         // Apertura Cuenta
       let data = localStorage.getItem('Data');
       this.dataUser = JSON.parse(window.atob(data == null ? "" : data));

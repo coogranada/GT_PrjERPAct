@@ -204,6 +204,10 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
     );
   }
   ValorSeleccionado() {
+    if((this.asesoriacontractualFrom.controls['NumeroAsesoria'].value == "" || this.asesoriacontractualFrom.controls['NumeroAsesoria'].value == null)
+    && this.asesoriacontractualOperacionFrom.get('Codigo')?.value !== '2' && this.asesoriacontractualOperacionFrom.get('Codigo')?.value !== '43'){
+      this.ClearForm();
+    }
     if (this.asesoriacontractualOperacionFrom.get('Codigo')?.value === '2') {          // Buscar
       this.generalesService.Autofocus('BuscarAsesoria');
       this.ClearForm();

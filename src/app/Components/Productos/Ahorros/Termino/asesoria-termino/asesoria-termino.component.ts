@@ -354,6 +354,10 @@ export class AsesoriaTerminoComponent implements OnInit {
     this.inputFrecuencia = false;
     this.BloquearPuntosA = true;
     this.logDataOnEditAsesoria.ProductoAnterior = null;
+    if((this.asesoriaterminoForm.controls['NumeroAsesoria'].value == "" || this.asesoriaterminoForm.controls['NumeroAsesoria'].value == null)
+      && this.asesoriaterminoOperacionFrom.get('Codigo')?.value !== '2' && this.asesoriaterminoOperacionFrom.get('Codigo')?.value !== '43'){
+        this.ClearForm();
+      }
     if(this.asesoriaterminoOperacionFrom.get('Codigo')?.value !== '13') this.AdicionarPuntosFrom.reset();
     this.asesoriaterminoForm.controls['BuscarDocumento'].disable();
     this.asesoriaterminoForm.controls['BuscarNombre'].disable();
