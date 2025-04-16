@@ -2740,7 +2740,7 @@ export class TerminoComponent implements OnInit {
     if (this.TerminoForm.get('PlazoDias')?.value !== undefined
       && this.TerminoForm.get('PlazoDias')?.value !== null) {
       if (JSON.parse(this.TerminoForm.get('PlazoDias')?.value) >= this.ArrayCondiciones.PlazoMinimo
-        && JSON.parse(this.TerminoForm.get('PlazoDias')?.value) <= this.ArrayCondiciones.PlazoMaximo && (Number(this.TerminoForm.get('PlazoDias')?.value) % 30) == 0) {
+        && JSON.parse(this.TerminoForm.get('PlazoDias')?.value) <= this.ArrayCondiciones.PlazoMaximo && (Number(this.TerminoForm.get('PlazoDias')?.value))) {
   
         // Guarda termino
 
