@@ -2586,8 +2586,8 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
     return conveTasa
   }
 
-  GuardarContractual() {
-    if(this.contractualFrom.get('Clase')?.value === 5 && (this.dataObjetTitulares == null || this.dataObjetTitulares.length == 0)){
+  GuardarContractual() {   
+    if (this.contractualFrom.get('TipoDocumento')?.value === 3 && (this.dataObjetTitulares == null || this.dataObjetTitulares.length == 0)){
       this.notif.onWarning('Advertencia', 'Debe ingresar al menos un autorizado cuando el titular es jurídico.');
       return;
     }
