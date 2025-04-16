@@ -643,6 +643,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
   MapearDatosAsesorExterno(datos : any) {
     this.asesoriacontractualFrom.get('strCodigo')?.setValue(datos.intIdAsesor);
     this.asesoriacontractualFrom.get('strNombre')?.setValue(datos.Nombre);
+    this.BloquearbtnActalizar = true;
   }
   Periodo() {
     this.AsesoriaContractualServices.Periodo().subscribe(
@@ -1248,7 +1249,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
           this.AsesoriaContractualServices.BuscarNombreXDocumento(Documento).subscribe(
             result => {
               this.loading = false;
-              if (result === null) {
+              if (result.NumeroDocumento === null) {
                 this.clientesGetListService.GetTipoDocumento().subscribe(
                   result => {
                     this.ModalCreacionNombre.nativeElement.click();
@@ -1267,7 +1268,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
                 this.creacionFrom.get('TelefonoAsesoria')?.reset();
                 this.asesoriacontractualFrom.get('Nombre')?.reset();
                 this.datoRelacion = 15;
-              } else if (result !== null) {
+              } else if (result.NumeroDocumento) {
                 this.asesoriacontractualFrom.get('NumeroDocumento')?.setValue(result.NumeroDocumento);
                 this.asesoriacontractualFrom.get('Nombre')?.setValue(result.PrimerApellido + ' ' + result.SegundoApellido +
                   ' ' + result.PrimerNombre + ' ' + result.SegundoNombre);
@@ -1281,6 +1282,36 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
                 this.creacionFrom.get('SegundoApellido')?.reset();
                 this.creacionFrom.get('TelefonoAsesoria')?.reset();
                 this.BloquearProducto = null;
+              } else if (result.Mensaje) { 
+                if (result.Mensaje === 'Gerencia de desarrollo.') {
+                  swal.fire({
+                    title: '<strong>! Advertencia ¡</strong>',
+                    text: '',
+                    icon: 'error',
+                    animation: false,
+                    html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>' + result.Mensaje + '.',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    confirmButtonText: 'Ok',
+                    confirmButtonColor: 'rgb(160, 0, 87)'
+                  });
+                } else if (result.Mensaje === 'Oficial de cumplimiento.') {
+                  swal.fire({
+                    title: '<strong>! Advertencia ¡</strong>',
+                    text: '',
+                    icon: 'error',
+                    animation: false,
+                    html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'+ result.Mensaje + '.',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    confirmButtonText: 'Ok',
+                    confirmButtonColor: 'rgb(160, 0, 87)'
+                  });
+                } else {
+                  this.notif.onWarning('Advertencia', result.Mensaje);
+                }
+                this.asesoriacontractualFrom.get('Nombre')?.reset();
+                this.asesoriacontractualFrom.get('NumeroDocumento')?.reset();                
               }
             },
             error => {
@@ -1339,7 +1370,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
           this.ModalCreacionNombre.nativeElement.click();
           this.asesoriacontractualFrom.get('Nombre')?.reset();
           this.datoRelacion = 15;
-        } else if (result !== null) {
+        } else if (result.NumeroDocumento) {
           this.asesoriacontractualFrom.get('NumeroDocumento')?.setValue(result.NumeroDocumento);
           this.asesoriacontractualFrom.get('Nombre')?.setValue(result.PrimerApellido + ' ' + result.SegundoApellido +
             ' ' + result.PrimerNombre + ' ' + result.SegundoNombre);
@@ -1352,6 +1383,36 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
           this.creacionFrom.get('SegundoApellido')?.reset();
           this.creacionFrom.get('TelefonoAsesoria')?.reset();
           this.BloquearProducto = null;
+        } else if (result.Mensaje) { 
+          if (result.Mensaje === 'Gerencia de desarrollo.') {
+            swal.fire({
+              title: '<strong>! Advertencia ¡</strong>',
+              text: '',
+              icon: 'error',
+              animation: false,
+              html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>' + result.Mensaje + '.',
+              allowOutsideClick: false,
+              allowEscapeKey: false,
+              confirmButtonText: 'Ok',
+              confirmButtonColor: 'rgb(160, 0, 87)'
+            });
+          } else if (result.Mensaje === 'Oficial de cumplimiento.') {
+            swal.fire({
+              title: '<strong>! Advertencia ¡</strong>',
+              text: '',
+              icon: 'error',
+              animation: false,
+              html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'+ result.Mensaje + '.',
+              allowOutsideClick: false,
+              allowEscapeKey: false,
+              confirmButtonText: 'Ok',
+              confirmButtonColor: 'rgb(160, 0, 87)'
+            });
+          } else {
+            this.notif.onWarning('Advertencia', result.Mensaje);
+          }
+          this.asesoriacontractualFrom.get('Nombre')?.reset();
+          this.asesoriacontractualFrom.get('NumeroDocumento')?.reset();
         }
       },
       error => {

@@ -341,7 +341,7 @@ export class MiListaProductosService {
     return this._http.get<any>(this.url);
   }
   getlstDiferidos(lngcuenta: number): Observable<any> {
-    this.url = `${this.environment.Url}/ObtenerReestructuracionReliquidacion?lngCuenta=${lngcuenta}`;
+    this.url = `${this.environment.Url}/ObtenerDiferidosProductoCartera?lngCuenta=${lngcuenta}`;
     return this._http.get<any>(this.url);
   }
   getCobrosCartera(lngcuenta: number): Observable<any> {
