@@ -2693,9 +2693,6 @@ export class TerminoComponent implements OnInit {
         error => {
           this.loading = false;
           this.notif.onWarning('Advertencia', 'El valor ingresado no tiene el formato correcto');
-          const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
-          console.log(errorMessage);
         }
       );
     }
