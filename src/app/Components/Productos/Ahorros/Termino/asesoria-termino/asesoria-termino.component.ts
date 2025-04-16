@@ -1393,37 +1393,65 @@ export class AsesoriaTerminoComponent implements OnInit {
   }
   BuscarNombreModal(Documento = '*') {
     this.loading = true;
-    this.AsesoriaTerminoServices.BuscarNombreXDocumento(Documento).subscribe(
+    this.AsesoriaTerminoServices.BuscarAsociado(Documento, '*').subscribe(
       result => {
         this.loading = false;
-        if (result === null) {
-          this.notif.warning('Advertencia', 'No se encontraron datos.', ConfiguracionNotificacion.configRightTop);
-          this.creacionFrom.get('PrimerNombre')?.reset();
-          this.creacionFrom.get('SegundoNombre')?.reset();
-          this.creacionFrom.get('PrimerApellido')?.reset();
-          this.creacionFrom.get('SegundoApellido')?.reset();
-          this.creacionFrom.get('TelefonoAsesoria')?.reset();
-          this.ModalCreacionNombre.nativeElement.click();
-          this.asesoriaterminoForm.get('Nombre')?.reset();
-          this.datoRelacion = 15;
-        } else if (result !== null) {
-          console.log("persona",result)
-          this.asesoriaterminoForm.get('NumeroDocumento')?.setValue(result.NumeroDocumento);
-          this.asesoriaterminoForm.get('Nombre')?.setValue(result.PrimerApellido + ' ' + result.SegundoApellido +  ' ' + result.PrimerNombre + ' ' + result.SegundoNombre);
-          this.asesoriaterminoForm.get('Clase')?.setValue(result.IdRelacionTipo);
-          this.datoRelacion = result.IdRelacionTipo;
+        this.creacionFrom.reset();
+        this.asesoriaterminoForm.get('Edad')?.reset();
+        if (result.length === 1) {
+          // this.BuscarAsociadoModal(result[0].NumeroDocumento);
+          if ((this.asesoriaterminoForm.get('IdProducto')?.value === 302 && result[0].Edad < 75) || (this.asesoriaterminoForm.get('IdProducto')?.value !== 302 && result[0].Edad >= 75)  ) {
+            this.cleanNegociacionData();
+            this.asesoriaterminoForm.get('IdProducto')?.reset();
+            this.asesoriaterminoForm.get('DescripcionProducto')?.reset();
+          }
+          this.asesoriaterminoForm.get('NumeroDocumento')?.setValue(result[0].NumeroDocumento);
+          this.asesoriaterminoForm.get('Nombre')?.setValue(result[0].PrimerApellido + ' ' + result[0].SegundoApellido + ' ' + result[0].PrimerNombre + ' ' + result[0].SegundoNombre);
+          this.asesoriaterminoForm.get('Clase')?.setValue(result[0].IdRelacionTipo);
+          this.asesoriaterminoForm.get('Edad')?.setValue(result[0].Edad);
+          this.asesoriaterminoForm.get('IdTipoDocumento')?.setValue(result[0].TipoDocumento);
+          this.idObjetoSocial = result[0].IdObjetoSocial;
           this.MostrasAlertaAsociado = false;
-          this.creacionFrom.get('PrimerNombre')?.reset();
-          this.creacionFrom.get('SegundoNombre')?.reset();
-          this.creacionFrom.get('PrimerApellido')?.reset();
-          this.creacionFrom.get('SegundoApellido')?.reset();
-          this.creacionFrom.get('TelefonoAsesoria')?.reset();
           this.BloquearProducto = null;
+          this.generalesService.Autofocus('SelectProducto');
+        } else if (result.Mensaje !== undefined || result.Mensaje !== null) {
+          if (result.Mensaje === 'Gerencia de desarrollo.') {
+            swal.fire({
+              title: '<strong>! Advertencia ¡</strong>',
+              text: '',
+              icon: 'error',
+              animation: false,
+              html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>' + result.Mensaje + '.',
+              allowOutsideClick: false,
+              allowEscapeKey: false,
+              confirmButtonText: 'Ok',
+              confirmButtonColor: 'rgb(160, 0, 87)'
+            });
+          } else if (result.Mensaje === 'Oficial de cumplimiento.') {
+            swal.fire({
+              title: '<strong>! Advertencia ¡</strong>',
+              text: '',
+              icon: 'error',
+              animation: false,
+              html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'+ result.Mensaje + '.',
+              allowOutsideClick: false,
+              allowEscapeKey: false,
+              confirmButtonText: 'Ok',
+              confirmButtonColor: 'rgb(160, 0, 87)'
+            });
+          } else {
+            this.notif.warning('Advertencia', result.Mensaje, ConfiguracionNotificacion.configRightTop);
+            this.MapearDatosUsuario();
+          }
+          this.asesoriaterminoForm.get('NumeroDocumento')?.reset();
+          this.asesoriaterminoForm.get('Nombre')?.reset();
+          this.MapearDatosUsuario();
         }
       },
       error => {
         this.loading = false;
         const errorMessage = <any>error;
+        this.notif.error('Error', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
         console.log(errorMessage);
       }
     );
@@ -1896,8 +1924,6 @@ export class AsesoriaTerminoComponent implements OnInit {
             const producto = result[0].IdProducto;
             const edad = this.asesoriaterminoForm.get('Edad')?.value;
             const idTipoDocumento = this.creacionFrom.get('TipoDocumento')?.value;
-            console.log({idTipoDocumento, edad});
-
             if (producto === 302) {
               if (this.asesoriaterminoForm.get('IdTipoDocumento')?.value === 3 || idTipoDocumento == '3') {
                  this.asesoriaterminoForm.get('IdProducto')?.setValue("");
