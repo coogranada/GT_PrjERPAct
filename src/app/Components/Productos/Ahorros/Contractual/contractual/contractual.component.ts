@@ -1794,6 +1794,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           this.contractualFrom.get('NombreOficinaAsociado')?.setValue(result[0].NombreOficina);
           this.contractualFrom.get('Clase')?.setValue(result[0].IdRelacionTipo); 
           this.contractualFrom.get('LngTercero')?.setValue(result[0].lngTercero);
+          this.contractualFrom.get('IdTipoDocumento')?.setValue(result[0].IdTipoDocumento);
           this.MostrasAlertaAsociado = false;
         } else if (result.length > 1) {
           this.resultAsociados = result;
@@ -2587,7 +2588,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
   }
 
   GuardarContractual() {   
-    if (this.contractualFrom.get('TipoDocumento')?.value === 3 && (this.dataObjetTitulares == null || this.dataObjetTitulares.length == 0)){
+    if (this.contractualFrom.get('IdTipoDocumento')?.value === 3 && (this.dataObjetTitulares == null || this.dataObjetTitulares.length == 0)){
       this.notif.onWarning('Advertencia', 'Debe ingresar al menos un autorizado cuando el titular es jurídico.');
       return;
     }
@@ -17961,6 +17962,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
     const AdicionarP = new FormControl('', []);
     const NroTitulo = new FormControl('', [Validators.required, Validators.pattern('[0-9]*')]);
     const NroTituloAnterior = new FormControl('', []);
+    const IdTipoDocumento = new FormControl('', []);
 
     this.contractualFrom = new FormGroup({
       IdProducto: IdProducto,
@@ -18040,7 +18042,8 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
       TipoDocumento: TipoDocumento,
       AdicionarP: AdicionarP,
       NroTitulo: NroTitulo,
-      NroTituloAnterior: NroTituloAnterior
+      NroTituloAnterior: NroTituloAnterior,
+      IdTipoDocumento: IdTipoDocumento
 
     });
     this.contractualOperacionFrom = new FormGroup({
