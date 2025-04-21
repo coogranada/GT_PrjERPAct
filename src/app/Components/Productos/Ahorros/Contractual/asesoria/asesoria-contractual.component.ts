@@ -294,6 +294,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
         this.BloquearPeriodo = false;
         this.MostrasAlertaAsociado = false;
         this.btnActualizar = false;
+        this.BloquearbtnActalizar = false;
         this.btnGuardar = true;
         this.operacionEscogida = '/Editar';
         this.devolverTab(1);
