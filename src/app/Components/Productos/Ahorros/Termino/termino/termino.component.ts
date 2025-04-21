@@ -4774,7 +4774,7 @@ export class TerminoComponent implements OnInit {
   ValidarDocumento() {
     const valor = this.TerminoForm.get('DocumentoBeneficiario')?.value;
     if (valor < 0 || valor === null) {
-      this.TerminoForm.get('DocumentoBeneficiario')?.setValue(0);
+      this.TerminoForm.get('DocumentoBeneficiario')?.setValue('');
     }
     if (this.TerminoForm.get('DocumentoBeneficiario')?.valid === false) {
       this.TerminoForm.get('IdTipoDocumento')?.reset();
