@@ -88,4 +88,8 @@ export class AsesoriaContractualService {
         this.url = `${this.environment.Url}/ObtenerHistorialAsesoria?NumeroAsesoria=${NumeroAsesoria}`;
         return this._http.get<any>(this.url);
     } 
+    GenerarImpresion(payload : any): Observable<any> {
+        this.url = `${this.environment.Url}/GenerarFormatAsesoriaPDFContractual`;
+        return this._http.post<any>(this.url, payload);
+    }
 }
