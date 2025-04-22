@@ -52,10 +52,16 @@
                     </span>
                 </div>
 
-                <div class="col-xs-12 col-md-3 col-lg-3">
+                <div class="col-xs-12 col-md-1 col-lg-1">
                     <label><strong>Estado:</strong></label><span class="text-danger ObligatorioGrande"> *</span>
-                    <div class="text-center" style="width: 25%;">
+                    <div class="text-center" style="width: 80%; justify-content: center; text-align: center;">
                         <input class="check-ena" type="checkbox" formControlName="estado" style="margin-top: 10px;">
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-2 col-lg-2">
+                    <label><strong>¿Eliminar al subir?</strong></label><span class="text-danger ObligatorioGrande"> *</span>
+                    <div class="text-center" style="width: 80%; justify-content: center; text-align: center;">
+                        <input class="check-ena" type="checkbox" formControlName="eliminaArchivo" style="margin-top: 10px;">
                     </div>
                 </div>
 
@@ -279,6 +285,7 @@
                         <th><strong>GPG recipient</strong></th>
                         <th><strong>Ruta llave</strong></th>
                         <th><strong>Creado</strong></th>
+                        <th><strong>Eliminar al subir</strong></th>
                         <th class="operacionFija"><strong>Opciones</strong></th>
                     </tr>
                 </thead>
@@ -304,6 +311,8 @@
                         <td>{{parametro.GPGRecipient}}</td>
                         <td>{{parametro.RutaLlave}}</td>
                         <td>{{parametro.FechaCreacion | date:'yyyy/MM/dd'}}</td>
+                        <td class="text-center"><input class="check-dis" type="checkbox"
+                            [checked]="parametro.EliminaArchivo === 1"></td>
                         <td class="operacionFija">
                             <button class="btn Gt-btn-verde btn-icon legitRipple" (click)="selectRow(parametro)">
                                 <i class="icon-pencil"></i></button> &nbsp;

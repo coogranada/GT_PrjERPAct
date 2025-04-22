@@ -818,7 +818,7 @@ export class LayoutComponent implements OnInit,OnDestroy {
 
             /* Transmisión archivos */
 
-            if (element.IdModulo === 72) {
+            if (element.IdModulo === 81) {
               //$('#transmisionarchivos').show();
               this.Transmisionarchivos = true;
               //this.InformeConsecutivoTituloModel = element;

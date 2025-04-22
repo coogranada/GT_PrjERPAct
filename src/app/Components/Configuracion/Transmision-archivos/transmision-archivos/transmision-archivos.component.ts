@@ -88,7 +88,8 @@ export class TransmisionArchivosComponent implements OnInit {
       gpgRecipient: [''],
       rutaLlave: [''],
       fechaCreacion: [''],
-      estado: [1]
+      estado: [1],
+      eliminaArchivo: [0]
     });
   }
 
@@ -117,6 +118,7 @@ export class TransmisionArchivosComponent implements OnInit {
       rutaLlave: parametro.RutaLlave,
       fechaCreacion: parametro.FechaCreacion,
       estado: parametro.Estado,
+      eliminaArchivo: parametro.EliminaArchivo,
     });
     this.cambiarEstado();
     this.onChangeProtocol(2);
@@ -235,6 +237,12 @@ export class TransmisionArchivosComponent implements OnInit {
       } else {
         this.parametrosTransmisionForm.get('estado')?.patchValue(20);
       }
+      const eliminarSubir = this.parametrosTransmisionForm.get('eliminaArchivo')?.value;
+      if (eliminarSubir == 1 || eliminarSubir == true) {
+        this.parametrosTransmisionForm.get('eliminaArchivo')?.patchValue(1);
+      } else {
+        this.parametrosTransmisionForm.get('eliminaArchivo')?.patchValue(0);
+      }
       this.loading = true;
       this.TransmisionArchivosServices.GuardarParametrosTransmision(this.parametrosTransmisionForm.value).subscribe(
         (response) => {
@@ -291,6 +299,13 @@ export class TransmisionArchivosComponent implements OnInit {
       } else {
         this.parametrosTransmisionForm.get('estado')?.patchValue(20);
       }
+      const eliminarSubir = this.parametrosTransmisionForm.get('eliminaArchivo')?.value;
+      if (eliminarSubir == 1 || eliminarSubir == true) {
+        this.parametrosTransmisionForm.get('eliminaArchivo')?.patchValue(1);
+      } else {
+        this.parametrosTransmisionForm.get('eliminaArchivo')?.patchValue(0);
+      }
+
       this.loading = true;
       if (result) {
         this.TransmisionArchivosServices.ActualizarParametrosTransmision(this.parametrosTransmisionForm.value).subscribe(
