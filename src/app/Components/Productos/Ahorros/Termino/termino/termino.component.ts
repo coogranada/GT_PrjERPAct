@@ -2693,9 +2693,6 @@ export class TerminoComponent implements OnInit {
         error => {
           this.loading = false;
           this.notif.onWarning('Advertencia', 'El valor ingresado no tiene el formato correcto');
-          const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
-          console.log(errorMessage);
         }
       );
     }
@@ -2756,7 +2753,7 @@ export class TerminoComponent implements OnInit {
     if (this.TerminoForm.get('PlazoDias')?.value !== undefined
       && this.TerminoForm.get('PlazoDias')?.value !== null) {
       if (JSON.parse(this.TerminoForm.get('PlazoDias')?.value) >= this.ArrayCondiciones.PlazoMinimo
-        && JSON.parse(this.TerminoForm.get('PlazoDias')?.value) <= this.ArrayCondiciones.PlazoMaximo && (Number(this.TerminoForm.get('PlazoDias')?.value) % 30) == 0) {
+        && JSON.parse(this.TerminoForm.get('PlazoDias')?.value) <= this.ArrayCondiciones.PlazoMaximo && (Number(this.TerminoForm.get('PlazoDias')?.value))) {
   
         // Guarda termino
 
@@ -4777,7 +4774,7 @@ export class TerminoComponent implements OnInit {
   ValidarDocumento() {
     const valor = this.TerminoForm.get('DocumentoBeneficiario')?.value;
     if (valor < 0 || valor === null) {
-      this.TerminoForm.get('DocumentoBeneficiario')?.setValue(0);
+      this.TerminoForm.get('DocumentoBeneficiario')?.setValue('');
     }
     if (this.TerminoForm.get('DocumentoBeneficiario')?.valid === false) {
       this.TerminoForm.get('IdTipoDocumento')?.reset();
