@@ -6,7 +6,6 @@ import { NgxLoadingModule } from 'ngx-loading';
 import { ContractualComponent } from '../Components/Productos/Ahorros/Contractual/contractual/contractual.component';
 import { CurrencyMaskModule } from "ng2-currency-mask";
 import { AsesoriaContractualComponent } from '../Components/Productos/Ahorros/Contractual/asesoria/asesoria-contractual.component';
-import { FormatoAsesoriaComponent } from '../Components/Formatos-impresion/formato-asesoria/formato-asesoria.component';
 import { AportesComponent } from '../Components/Productos/Aportes/aportes.component';
 import { TerminoComponent } from '../Components/Productos/Ahorros/Termino/termino/termino.component';
 import { ScoreCreditosComponent } from '../Components/Productos/Creditos/score-creditos/score-creditos.component';
@@ -21,7 +20,6 @@ import { AsesoriaTerminoComponent } from '../Components/Productos/Ahorros/Termin
   declarations: [
     ContractualComponent,
     AsesoriaContractualComponent,
-    FormatoAsesoriaComponent,
     AportesComponent,
     TerminoComponent,
     ScoreCreditosComponent,
