@@ -35,6 +35,8 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
   @ViewChild('CerrarCreacionNombre', { static: true }) private CerrarCreacionNombre!: ElementRef;
   @ViewChild('tab1', { static: true }) private tab1!: ElementRef;
   @ViewChild('ModalImpresion', { static: true }) private ModalImpresion!: ElementRef;
+  @ViewChild('codigoAsesorExterno') codigoAsesorExternoRef!: ElementRef;
+
   private emitEventContractual: EventEmitter<boolean> = new EventEmitter<boolean>();
   public loading = false;
   public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
@@ -1722,6 +1724,10 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
         allowEscapeKey: false
       }).then((results : any) => {
         if (results.value) {
+          this.VolverArriba();
+          setTimeout(() => {
+            this.codigoAsesorExternoRef.nativeElement.focus();
+          }, 500);
         } else {
           if (this.asesoriacontractualFrom.get('IdProducto')?.value === 207) {
             const Plazo = this.asesoriacontractualFrom.get('Plazo')?.value;
@@ -1729,15 +1735,12 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
             this.asesoriacontractualFrom.get('CuotaMes')?.setValue(Valor / Plazo);
           }
           this.loading = true;
-
-          
           this.asesoriacontractualFrom.get('TasaEfectiva')?.setValue(this.dataTasaEfectiva);
           this.asesoriacontractualFrom.get('TasaNominal')?.setValue(this.dataTasaNominal);
 
           if(!this.asesoriacontractualFrom.get('SegundoNombre')?.value) this.asesoriacontractualFrom.value.SegundoNombre = '';
           if(!this.asesoriacontractualFrom.get('PrimerApellido')?.value) this.asesoriacontractualFrom.value.PrimerApellido = '';
           if(!this.asesoriacontractualFrom.get('SegundoApellido')?.value) this.asesoriacontractualFrom.value.SegundoApellido = ''; 
-          // console.log(this.asesoriacontractualFrom.value)         
           this.AsesoriaContractualServices.GuardarAsesoriaContractual(this.asesoriacontractualFrom.value).subscribe(
             result => {
               const currentRelacionId = this.asesoriacontractualFrom.get('Clase')?.value;
