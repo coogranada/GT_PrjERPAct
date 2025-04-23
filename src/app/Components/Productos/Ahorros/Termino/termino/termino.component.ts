@@ -4918,7 +4918,7 @@ export class TerminoComponent implements OnInit {
         } else {
           this.notif.onWarning('Advertencia', 'La suma del porcentaje supera el 100%.');
         }
-        this.clearTitulares();
+        this.clearBeneficiario();
       }
     } else {
       this.notif.onWarning('Advertencia', 'Los datos están incompletos.');

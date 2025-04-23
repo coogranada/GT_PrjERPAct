@@ -458,7 +458,7 @@
                                             class="form-control" formControlName="CuotaMes" *ngIf="!inputSinDecimal"
                                             [attr.disabled]="BloquearCuotaMes" (blur)="ValorTotalPlan()"
                                             (blur)="ObtenerTasa()" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:'',precision: 0}"
-                                            maxlength="10">
+                                            maxlength="12">
                                         <span class="help-block validationSpan"
                                             *ngIf="contractualFrom.controls['CuotaMes'].errors?.['pattern']">
                                             La cuota mes solo acepta números y ceros como decimales.

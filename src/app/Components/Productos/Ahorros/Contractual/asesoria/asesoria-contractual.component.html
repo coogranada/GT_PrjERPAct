@@ -156,7 +156,7 @@
                                 <label class="textNegrilla">Asesor externo:</label>
                             </div>
                             <div class="col-xs-4 col-md-3 col-lg-1">
-                                <input type="text" class="form-control" id="SelectAsesorExterno" tooltip="Id asesor" placement="top" show-delay="500" formControlName="strCodigo" (blur)="BuscarAsesorExternoCodigo()" [attr.disabled]="BloquearAsesorExterno" (keypress)="LimpiarCampos('strCodigo')"
+                                <input #codigoAsesorExterno type="text" class="form-control" id="SelectAsesorExterno" tooltip="Id asesor" placement="top" show-delay="500" formControlName="strCodigo" (blur)="BuscarAsesorExternoCodigo()" [attr.disabled]="BloquearAsesorExterno" (keypress)="LimpiarCampos('strCodigo')"
                                     maxlength="4" />
                                 <span class="help-block validationSpan" *ngIf="AsesorFrom.controls['strCodigo'].errors?.['pattern']">
                                     El Id asesor solo acepta números.
@@ -274,7 +274,7 @@
                                     <div class="col-xs-12 col-md-4 col-lg-3">
                                         <label class="textNegrilla">Cuota mes:</label>
                                         <span *ngIf="!obligatorio" class="grande"> *</span>
-                                        <input style="text-align:right" type="text" id="SelectCuotaMes" class="form-control" formControlName="CuotaMes" [attr.disabled]="BloquearCuotaMes" (blur)="ValorTotalPlan()" (blur)="ObtenerTasa()" currencyMask [options]="{prefix:'$ ',thousands:'.',precision: 0}" maxlength="10">
+                                        <input style="text-align:right" type="text" id="SelectCuotaMes" class="form-control" formControlName="CuotaMes" [attr.disabled]="BloquearCuotaMes" (blur)="ValorTotalPlan()" (blur)="ObtenerTasa()" currencyMask [options]="{prefix:'$ ',thousands:'.',precision: 0}" maxlength="12">
                                         <span class="help-block validationSpan" *ngIf="asesoriacontractualFrom.controls['CuotaMes'].errors?.['pattern']">
                                             La cuota mes solo acepta números y ceros como  decimales.
                                         </span>
