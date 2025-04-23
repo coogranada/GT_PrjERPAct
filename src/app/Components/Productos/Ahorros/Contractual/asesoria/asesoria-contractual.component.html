@@ -1,3 +1,4 @@
+
 <form>
     <form method="get" [formGroup]="asesoriacontractualFrom">
         <div class="panel panel-white">
@@ -13,6 +14,7 @@
                     </ul>
                 </div>
             </div>
+            <!-- <button type="button" class="btn-success" (click)="GenerarImpresion()" >&times;xxxxxxxxxx</button> -->
             <div class="panel-body">
                 <div class="col-xs-12 col-md-12 col-lg-12">
                     <div class="col-xs-12 col-md-12 col-lg-12">
@@ -20,7 +22,7 @@
                         <form method="get" [formGroup]="asesoriacontractualOperacionFrom">
                             <label class="col-xs-12 col-md-3 col-lg-1 textNegrilla">Operación:<span class="grande">*</span></label>
                             <div class="col-xs-10 col-md-8 col-lg-4">
-                                <select class="form-control" formControlName="Codigo" id="select" (change)=" ValorSeleccionado()">
+                                <select class="form-control" formControlName="Codigo" id="select" (change)="ValorSeleccionado()">
                                     <option *ngFor="let operacionContractual of resultOperaciones"
                                         [value]="operacionContractual.ERP_tblOperacion.IdOperacion">
                                         {{operacionContractual.ERP_tblOperacion.Descripcion}}</option>
@@ -154,7 +156,7 @@
                                 <label class="textNegrilla">Asesor externo:</label>
                             </div>
                             <div class="col-xs-4 col-md-3 col-lg-1">
-                                <input type="text" class="form-control" id="SelectAsesorExterno" tooltip="Id asesor" placement="top" show-delay="500" formControlName="strCodigo" (blur)="BuscarAsesorExternoCodigo()" [attr.disabled]="BloquearAsesorExterno" (keypress)="LimpiarCampos('strCodigo')"
+                                <input #codigoAsesorExterno type="text" class="form-control" id="SelectAsesorExterno" tooltip="Id asesor" placement="top" show-delay="500" formControlName="strCodigo" (blur)="BuscarAsesorExternoCodigo()" [attr.disabled]="BloquearAsesorExterno" (keypress)="LimpiarCampos('strCodigo')"
                                     maxlength="4" />
                                 <span class="help-block validationSpan" *ngIf="AsesorFrom.controls['strCodigo'].errors?.['pattern']">
                                     El Id asesor solo acepta números.
@@ -199,6 +201,7 @@
             <input type="hidden" #ModalAsesoria data-toggle="modal" data-target="#ModalAsesoria" data-popup="tooltip" data-trigger="hover" data-placement="top">
             <input type="hidden" #ModalNombre data-toggle="modal" data-target="#ModalNombre" data-popup="tooltip" data-trigger="hover" data-placement="top">
             <input type="hidden" #ModalCreacionNombre data-toggle="modal" data-target="#ModalCreacionNombre" data-popup="tooltip" data-trigger="hover" data-placement="top">
+            <input type="hidden" #ModalImpresion data-toggle="modal" data-target="#ModalImpresion" data-popup="tooltip" data-trigger="hover" data-placement="top">
         </div>
         <div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelTab">
             <div class="panel-body">
@@ -271,7 +274,7 @@
                                     <div class="col-xs-12 col-md-4 col-lg-3">
                                         <label class="textNegrilla">Cuota mes:</label>
                                         <span *ngIf="!obligatorio" class="grande"> *</span>
-                                        <input style="text-align:right" type="text" id="SelectCuotaMes" class="form-control" formControlName="CuotaMes" [attr.disabled]="BloquearCuotaMes" (blur)="ValorTotalPlan()" (blur)="ObtenerTasa()" currencyMask [options]="{prefix:'$ ',thousands:'.',precision: 0}" maxlength="10">
+                                        <input style="text-align:right" type="text" id="SelectCuotaMes" class="form-control" formControlName="CuotaMes" [attr.disabled]="BloquearCuotaMes" (blur)="ValorTotalPlan()" (blur)="ObtenerTasa()" currencyMask [options]="{prefix:'$ ',thousands:'.',precision: 0}" maxlength="12">
                                         <span class="help-block validationSpan" *ngIf="asesoriacontractualFrom.controls['CuotaMes'].errors?.['pattern']">
                                             La cuota mes solo acepta números y ceros como  decimales.
                                         </span>
@@ -423,11 +426,6 @@
         <div class="col-xs-3 col-md-12 col-lg-3 text-right">
             <input type="button" style="visibility:hidden" data-toggle="tab" href="#tab1" #tab1/>
         </div>
-        <div class="col-xs-12 col-md-12 col-lg-12 text-right">
-            <app-formato-asesoria #FormatoAsesoria></app-formato-asesoria>
-            <button type="button" style="visibility:hidden" #ModalImpresionAsesoria (click)="FormatoAsesoria.AbrirFormatoAsesoria(items)"></button>
-        </div>
-
     </form>
 
     <ngx-loading [show]="loading" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
@@ -751,3 +749,20 @@
     </div>
 </div>
 <!--/ Fin Modal Asociado -->
+ <!--/ formato  de impresion nuevo-->
+ <div id="ModalImpresion" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" (click)="GenerarImpresion()" >&times;</button>
+                <h6 class="modal-title">Formato</h6>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <object id="ImpresionContractual"></object>
+                </div>
+            </div>
+        </div>
+    </div>
+ </div>
+ <!--/ Fin formato de impresion nuevo -->

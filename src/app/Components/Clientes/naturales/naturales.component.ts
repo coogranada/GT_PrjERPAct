@@ -2592,7 +2592,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                   this.disableFormCedula = true;
                   this.formPasivoLocked = true;
                   this.disableMetodo = true;
-                  this.disbaleBusqueda = null;
+                  this.disbaleBusqueda = true;
                   this.disableFromPEPS = true;
                   this.disableFormNumHijos = true;
                   this.formBuscarLocked = true;

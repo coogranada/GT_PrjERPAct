@@ -18,6 +18,7 @@ export class ParametrosTransmisionData {
     GPGRecipient: string;
     RutaLlave: string;
     FechaCreacion: Date;
+    EliminaArchivo: number;
 
     constructor(
       IdParametro: number,
@@ -38,7 +39,8 @@ export class ParametrosTransmisionData {
       RutaRemotaSalida: string,
       GPGRecipient: string,
       RutaLlave: string,
-      FechaCreacion: Date
+      FechaCreacion: Date,
+      EliminaArchivo: number,
     ) {
       // Inicializando las propiedades con los parámetros
       this.IdParametro = IdParametro;
@@ -60,6 +62,7 @@ export class ParametrosTransmisionData {
       this.GPGRecipient = GPGRecipient;
       this.RutaLlave = RutaLlave;
       this.FechaCreacion = FechaCreacion;
+      this.EliminaArchivo = EliminaArchivo;
     }
   }
   

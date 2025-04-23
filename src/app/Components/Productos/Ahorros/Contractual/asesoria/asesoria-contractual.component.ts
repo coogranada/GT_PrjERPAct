@@ -33,8 +33,9 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
   @ViewChild('ModalCreacionNombre', { static: true }) private ModalCreacionNombre!: ElementRef;
   @ViewChild('ModalNombre', { static: true }) private ModalNombre!: ElementRef;
   @ViewChild('CerrarCreacionNombre', { static: true }) private CerrarCreacionNombre!: ElementRef;
-  @ViewChild('ModalImpresionAsesoria', { static: true }) private ModalImpresionAsesoria!: ElementRef;
   @ViewChild('tab1', { static: true }) private tab1!: ElementRef;
+  @ViewChild('ModalImpresion', { static: true }) private ModalImpresion!: ElementRef;
+  @ViewChild('codigoAsesorExterno') codigoAsesorExternoRef!: ElementRef;
 
   private emitEventContractual: EventEmitter<boolean> = new EventEmitter<boolean>();
   public loading = false;
@@ -322,7 +323,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
         this.MostrasAlertaAsociado = false;
         this.btnActualizar = true;
         this.btnGuardar = true;
-        this.ModalImpresionAsesoria.nativeElement.click();
+        this.GenerarImpresion();
         this.GuardarlogAsesoria('', 13);
         this.asesoriacontractualOperacionFrom.get('Codigo')?.reset();
       } else {
@@ -1698,7 +1699,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
           this.GuardarlogAsesoria(logAsesoria, 43);
           this.notif.onSuccess('Exitoso', 'La asesoría  se guardó correctamente.');
           this.asesoriacontractualOperacionFrom.get('Codigo')?.reset();
-          this.ModalImpresionAsesoria.nativeElement.click();
+          this.GenerarImpresion();
           this.logDataOnEditAsesorExterno.IdAsesorExternoAnterior = this.asesoriacontractualFrom.get('strCodigo')?.value || '';
           this.logDataOnEditAsesorExterno.NombreAsesorExternoAnterior = this.asesoriacontractualFrom.get('strNombre')?.value || '';
           this.ObtenerHistorial();
@@ -1723,6 +1724,10 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
         allowEscapeKey: false
       }).then((results : any) => {
         if (results.value) {
+          this.VolverArriba();
+          setTimeout(() => {
+            this.codigoAsesorExternoRef.nativeElement.focus();
+          }, 500);
         } else {
           if (this.asesoriacontractualFrom.get('IdProducto')?.value === 207) {
             const Plazo = this.asesoriacontractualFrom.get('Plazo')?.value;
@@ -1730,15 +1735,12 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
             this.asesoriacontractualFrom.get('CuotaMes')?.setValue(Valor / Plazo);
           }
           this.loading = true;
-
-          
           this.asesoriacontractualFrom.get('TasaEfectiva')?.setValue(this.dataTasaEfectiva);
           this.asesoriacontractualFrom.get('TasaNominal')?.setValue(this.dataTasaNominal);
 
           if(!this.asesoriacontractualFrom.get('SegundoNombre')?.value) this.asesoriacontractualFrom.value.SegundoNombre = '';
           if(!this.asesoriacontractualFrom.get('PrimerApellido')?.value) this.asesoriacontractualFrom.value.PrimerApellido = '';
           if(!this.asesoriacontractualFrom.get('SegundoApellido')?.value) this.asesoriacontractualFrom.value.SegundoApellido = ''; 
-          // console.log(this.asesoriacontractualFrom.value)         
           this.AsesoriaContractualServices.GuardarAsesoriaContractual(this.asesoriacontractualFrom.value).subscribe(
             result => {
               const currentRelacionId = this.asesoriacontractualFrom.get('Clase')?.value;
@@ -1789,7 +1791,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
               this.GuardarlogAsesoria(logAsesoria, 43);
               this.notif.onSuccess('Exitoso', 'La asesoría  se guardó correctamente.');
               this.asesoriacontractualOperacionFrom.get('Codigo')?.reset();
-              this.ModalImpresionAsesoria.nativeElement.click();
+              this.GenerarImpresion();
               this.logDataOnEditAsesorExterno.IdAsesorExternoAnterior = this.asesoriacontractualFrom.get('strCodigo')?.value || '';
               this.logDataOnEditAsesorExterno.NombreAsesorExternoAnterior = this.asesoriacontractualFrom.get('strNombre')?.value || '';
               this.ObtenerHistorial();
@@ -1888,7 +1890,76 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
     this.CerrarCreacionNombre.nativeElement.click();
     this.asesoriacontractualFrom.get('Clase')?.setValue(15);
   }
-
+  linkPdf : string = "";
+  GenerarImpresion() {
+    $("#ImpresionContractual").show();
+    this.ModalImpresion.nativeElement.click();
+    this.linkPdf = "";
+    let pdfinBase64 = null;
+    let byteArray = null;
+    let newBolb = null;
+    let url = null;
+    this.loading = true;
+    let itemsSend: any = {
+      TituliDoc: "FORMATO DE ASESORÍA DE CONTRACTUAL",
+      NumeroAsesoria: this.asesoriacontractualFrom.get('NumeroAsesoria')?.value,
+      Oficina: this.asesoriacontractualFrom.controls['NombreOficina'].value,
+      NombreAsesor: this.asesoriacontractualFrom.controls['NombreAsesor'].value,
+      NombreAsociado: this.asesoriacontractualFrom.controls['Nombre'].value,
+      Documento: this.asesoriacontractualFrom.controls['NumeroDocumento'].value,
+      Producto: this.asesoriacontractualFrom.controls['DescripcionProducto'].value,
+      PlazoDias: this.asesoriacontractualFrom.controls['Plazo'].value,
+      Plazo: this.asesoriacontractualFrom.controls['Plazo'].value,
+      FrecuenciaPago: "Al vencimiento",
+      Periodo : this.resultPeriodo.find(x => x.IdPeriodo == this.asesoriacontractualFrom.controls['IdPeriodo'].value).DescripcionPeriodo,
+      TasaEfectiva: this.asesoriacontractualFrom.controls['TasaEfectiva'].value.slice(0, -3) + '%',
+      TasaNominal: this.asesoriacontractualFrom.controls['TasaNominal'].value.slice(0, -3) + '%',
+      FechaVencimiento:  this.asesoriacontractualFrom.controls['FechaVencimiento'].value,
+      InteresBruto:  this.asesoriacontractualFrom.controls['InteresBruto'].value,
+      ValorCuota : this.asesoriacontractualFrom.controls['CuotaMes'].value,
+      ValorPlan : this.asesoriacontractualFrom.controls['ValorPlan'].value,
+      TotalRetencion:  this.asesoriacontractualFrom.controls['Retencion'].value,
+      TotalInteresNeto:  this.asesoriacontractualFrom.controls['TotalInteres'].value,
+    };
+    document.querySelector("object")!.data = "";
+    document.querySelector("object")!.name = "";
+    document.querySelector("object")!.type = "";
+    // this.itemsSend.Ciudad = this.itemsSend.Ciudad == null ? "" : this.itemsSend.Ciudad;
+    // this.itemsSend.Telefono = this.itemsSend.Telefono == null ? "" : this.itemsSend.Telefono;
+    this.AsesoriaContractualServices.GenerarImpresion(itemsSend).subscribe(
+      result => {
+        pdfinBase64 = result.FileStream._buffer;
+        byteArray = new Uint8Array(
+          atob(pdfinBase64)
+            .split("")
+            .map((char) => char.charCodeAt(0))
+        );
+        newBolb = new Blob([byteArray], { type: "application/pdf" });
+        this.linkPdf = URL.createObjectURL(newBolb);
+        url = window.URL.createObjectURL(newBolb);
+        document.querySelector("object")!.data = url;
+        document.querySelector("object")!.name = "Impresion";
+        document.querySelector("object")!.type = "application/pdf";
+        this.loading = false;
+      },
+      error => {
+        this.loading = false
+        const errorMessage = <any>error;
+        this.notif.onDanger('Error', errorMessage);
+        console.log(errorMessage);
+      }
+    );
+  }
+  CloseImpresion(){
+    console.log("close")
+    document.querySelector("object")!.data = "";
+    document.querySelector("object")!.name = "";
+    document.querySelector("object")!.type = "";
+    setTimeout(() => {
+      $("#ImpresionTermino").hide();
+      $('#ModalImpresion').modal('hide');  
+    },1000);
+  }
   CerrarNombre() {
     this.creacionFrom.reset();
     this.isCreationButtonDisabled = true;
