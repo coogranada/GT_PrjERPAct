@@ -4760,16 +4760,16 @@
                                                                     <td class="inline-text">
                                                                         {{logPeps.AsesorMarca}}
                                                                     </td>
-                                                                    <td class="inline-text" *ngIf="logPeps.FechaMarcacion === null || logPeps.FechaMarcacion == ''">
+                                                                    <td class="inline-text" *ngIf="logPeps.FechaMarcacion == null || logPeps.FechaMarcacion == ''">
                                                                         N/A
                                                                     </td>
-                                                                    <td class="inline-text" *ngIf="logPeps.FechaMarcacion !== null">
+                                                                    <td class="inline-text" *ngIf="logPeps.FechaMarcacion != null && logPeps.FechaMarcacion != ''">
                                                                         {{logPeps.FechaMarcacion | date:'yyyy/MM/dd HH:mm:ss' }}
                                                                     </td>
-                                                                    <td class="inline-text" *ngIf="logPeps.FechaDesmarcacion === null || logPeps.FechaDesmarcacion == ''">
+                                                                    <td class="inline-text" *ngIf="logPeps.FechaDesmarcacion == null || logPeps.FechaDesmarcacion == ''">
                                                                         N/A
                                                                     </td>
-                                                                    <td class="inline-text" *ngIf="logPeps.FechaDesmarcacion !== null">
+                                                                    <td class="inline-text" *ngIf="logPeps.FechaDesmarcacion !== null && logPeps.FechaDesmarcacion !== ''">
                                                                         {{logPeps.FechaDesmarcacion | date:'yyyy/MM/dd HH:mm:ss'}}
                                                                     </td>
                                                                     <td class="inline-text">
