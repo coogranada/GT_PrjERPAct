@@ -20,7 +20,7 @@ export class EnvironmentService {
         this.Url = 'http://localhost:64486';
         this.UrlCore = "https://PruebasERPBCore.coogranada.com.co";// "https://localhost:7154" 
         this.UrlFront = 'http://localhost:4200/';
-        this.UrlBaseOlivos = 'https://losolivosmedellin.co/KaringPrueba/Api/';
+        this.UrlBaseOlivos = 'https://losolivosmedellin.co/KaringPrevision/Api/';
         break;
       case 2:
         this.Url = 'https://pruebaserpb.coogranada.com.co';
@@ -34,9 +34,9 @@ export class EnvironmentService {
         this.UrlFront = 'https://produccionerp.coogranada.com.co';
         this.UrlBaseOlivos = 'https://losolivosmedellin.co/KaringPrueba/Api/';
         break;
-      case 4:
+      case 4: //produccion 
         this.Url = 'https://proerpb.coogranada.com.co/';
-        this.UrlCore = "TODO";
+        this.UrlCore = "https://ProduccionERPBCore.coogranada.com.co";
         this.UrlFront = 'https://erp.coogranada.com.co/';
         this.UrlBaseOlivos = 'https://losolivosmedellin.co/KaringPrevision/Api/';
         break;

@@ -2653,7 +2653,6 @@ export class TerminoComponent implements OnInit {
         },
         error => {
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
           console.log(errorMessage);
         }
       );
@@ -6140,7 +6139,7 @@ export class TerminoComponent implements OnInit {
           } else {
             this.notif.onSuccess('Exitoso', 'El cambio estado se realizó correctamente.');
             console.log("lista", this.ListCuentaAgregadasReciprocidad)
-            debugger
+         
             this.GuardarCuentasReciprocidad();
             let listLog: any[] = [];
             this.ListCuentaAgregadasReciprocidad.forEach(( x: any) => {

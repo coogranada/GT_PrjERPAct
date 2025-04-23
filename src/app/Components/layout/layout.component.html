@@ -534,8 +534,9 @@
                                             <li id="debitosautomaticos" *ngIf="DebitosAutomaticos">
                                                 <a [routerLink]="['/Informes/DebitosAutomaticos']" (click)="setModuloLocalStorage(DebitosAutomaticosModel.IdModuloPermiso)">Débito automático</a>
                                             </li>
-                                            <li id="gestionOperaciones" *ngIf="GestionOperaciones">
-                                                <a [routerLink]="['/Informes/GestionOperaciones']" (click)="setModuloLocalStorage(GestionOperacionesModel.IdModuloPermiso)">Gestión operaciones</a> </li>
+                                            <!-- <li id="gestionOperaciones" *ngIf="GestionOperaciones">
+                                                <a [routerLink]="['/Informes/GestionOperaciones']" (click)="setModuloLocalStorage(GestionOperacionesModel.IdModuloPermiso)">Gestión operaciones</a> 
+                                            </li> -->
                                             <li id="estadisticos">
                                                 
                                                 <a [routerLink]="" (click)="toggleInformeEstadisticosMenu()">Estadísticos</a>

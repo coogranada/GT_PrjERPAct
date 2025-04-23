@@ -609,10 +609,10 @@ export class EntrevistaComponent implements OnInit {
     infoTotal.BasicosDto.DebitoAutomatico = false;
     }
     console.log('infoTotal - Guardar juridico: ' + JSON.stringify(infoTotal));
-   //debugger
+  
     this.loading = true;
     this.juridicoService.GuardarJuridicosAll(infoTotal).subscribe(result => {
-    /// debugger
+    
       if (result != null) {
         this.loading = true;
         localStorage.setItem('IdModuloActivo', window.btoa(JSON.stringify(12)));

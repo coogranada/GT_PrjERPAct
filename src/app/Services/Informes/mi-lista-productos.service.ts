@@ -17,7 +17,8 @@ export class MiListaProductosService {
   private UrlOlCuota : string = "";
   
   constructor(private _http: HttpClient,private environment: EnvironmentService) {
-    this.UrlBaseOlivos = this.environment.UrlBaseOlivos;
+    this.UrlBaseOlivos = '/api/'
+    // this.UrlBaseOlivos = this.environment.UrlBaseOlivos;
     this.UrlOlAuth = this.UrlBaseOlivos + 'LoginAPI/Authenticate';
     this.UrlOlData = this.UrlBaseOlivos + 'PrevisionApi/GetContratosAll?identificacion=';
     this.UrlOlContrato = this.UrlBaseOlivos + 'PrevisionApi/GetContrato?contrato=';
@@ -668,7 +669,7 @@ export class MiListaProductosService {
       'Authorization-Token': token
     });
   
-    const url = `${this.UrlOlData}/${tercero}`;
+    const url = `${this.UrlOlData}${tercero}`;
   
     return this._http.get<any>(url, { headers })
       .pipe(
@@ -684,7 +685,7 @@ export class MiListaProductosService {
       'Authorization-Token': token
     });
   
-    const url = `${this.UrlOlAfiliadosV2}/${tercero}`;
+    const url = `${this.UrlOlAfiliadosV2}${tercero}`;
   
     return this._http.get<any>(url, { headers })
       .pipe(
@@ -700,7 +701,7 @@ export class MiListaProductosService {
       'Authorization-Token': token
     });
   
-    const url = `${this.UrlOlContrato}/${contrato}`;
+    const url = `${this.UrlOlContrato}${contrato}`;
   
     return this._http.get<any>(url, { headers })
       .pipe(
@@ -717,7 +718,7 @@ export class MiListaProductosService {
       'clave': 'ApICoogranada2022'
     });
   
-    const url = `${this.UrlOlCuota}/${contrato}`;
+    const url = `${this.UrlOlCuota}${contrato}`;
   
     return this._http.get<any>(url, { headers })
       .pipe(
