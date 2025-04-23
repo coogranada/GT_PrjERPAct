@@ -1,0 +1,8 @@
+{
+    "/api": {
+        "target": "https://losolivosmedellin.co/KaringPrueba/",        
+        "secure": false,
+        "changeOrigin": true,
+        "logLevel": "debug"
+    }
+}

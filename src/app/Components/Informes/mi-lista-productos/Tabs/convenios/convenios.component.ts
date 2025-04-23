@@ -197,7 +197,7 @@ export class ConveniosComponent implements OnInit {
   obtenerToken() {
     this.MiListaProductosService.getToken().subscribe(
       (result : any[]) => {
-        if (result.length == 0) {
+        if (result.length == 1) {
           if (result[0].Token == null || result[0].Horas >= 24) {
             this.MiListaProductosService.AutenticacionOlivos(result[0].Usuario, result[0].Clave).pipe(
               retry(3),

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { EnvironmentService } from '../Enviroment/enviroment.service';
 import { Observable } from 'rxjs';
 
@@ -39,14 +39,23 @@ export class GmfDisponibleService {
     } 
     ConsultarInfoAsociado(Datos: any): Observable<any> {
         this.url = `${this.environment.Url}/ConsultarInfoAsociado`;
-        return this._http.post<any>(this.url, Datos);
-    } 
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json'
+        });
+        return this._http.post<any>(this.url, Datos, { headers });
+    }
     DesmarcacionGMF(Datos: any): Observable<any> {
         this.url = `${this.environment.Url}/DesmarcacionGMF`;
-        return this._http.post<any>(this.url, Datos);
-    } 
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json'
+        });
+        return this._http.post<any>(this.url, Datos, { headers });
+    }
     MarcacionGMF(Datos: any): Observable<any> {
         this.url = `${this.environment.Url}/MarcacionGMF`;
-        return this._http.post<any>(this.url, Datos);
-    }
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json'
+        });
+        return this._http.post<any>(this.url, Datos, { headers });
+    }    
 }

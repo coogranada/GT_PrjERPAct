@@ -6504,7 +6504,7 @@ export class DisponiblesComponent implements OnInit {
       let log: any = {};
       let garantiaList: any = [];
       log.CupoCancelado = payload.CupoAprobado;
-      debugger
+    
       this.dataObjetR.forEach(( x: any) => {
         let garantia: any = {
           TipoGarantia: x.TipoGarantia,
@@ -6841,7 +6841,7 @@ export class DisponiblesComponent implements OnInit {
           this.loading = true;
           this.DisponiblesServices.BuscarTitular('*', this.DisponibleForm.get('NombreTitular')?.value).subscribe(
             result => {
-              debugger
+              
               this.loading = false;
               if (result.length === 0) {
                 this.DisponibleForm.get('NombreTitular')?.setValue("");
@@ -6964,7 +6964,7 @@ export class DisponiblesComponent implements OnInit {
                       } else {
                         if (this.DisponibleForm.get('NumeroDocumento')?.value !== result[0].NumeroDocumento) {
                           this.validar = false;
-                          debugger
+                         
                           const CedulaDigitada = result[0].NumeroDocumento;
                           this.dataObjetTitulares.forEach(elementB => {
                             if (elementB.Documento == CedulaDigitada)
