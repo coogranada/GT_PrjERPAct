@@ -24,6 +24,8 @@ declare var $: any;
 export class LayoutComponent implements OnInit,OnDestroy {
 
   //#region Declaracion variables
+  isModalOpen = false;
+
   private PassJs = new PassEncriptJs();
   public resulStore: any = null;
   public isLoginError = false;
@@ -1326,5 +1328,19 @@ export class LayoutComponent implements OnInit,OnDestroy {
   destroyed(e: any) {
     console.log("destroyd", e)
   }
+
+  openModal() {
+    this.isModalOpen = true;
+  }
+  
+  closeModal() {
+    this.isModalOpen = false;
+  }
+  
+  // Para cerrar si se hace clic fuera del modal
+  onBackdropClick(event: MouseEvent) {
+    this.closeModal();
+  }
+  
 }
 
