@@ -1914,6 +1914,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
       FechaVencimiento:  this.asesoriacontractualFrom.controls['FechaVencimiento'].value,
       InteresBruto:  this.asesoriacontractualFrom.controls['InteresBruto'].value,
       ValorCuota : this.asesoriacontractualFrom.controls['CuotaMes'].value,
+      ValorPlan : this.asesoriacontractualFrom.controls['ValorPlan'].value,
       TotalRetencion:  this.asesoriacontractualFrom.controls['Retencion'].value,
       TotalInteresNeto:  this.asesoriacontractualFrom.controls['TotalInteres'].value,
     };
