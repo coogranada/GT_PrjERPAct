@@ -77,7 +77,6 @@ const customCurrencyMaskConfig = {
     // { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig },
     // { provide: LOCALE_ID, useValue: 'es-CO' },
     // { provide: UrlSerializer, useClass: LowerCaseUrlSerializer },
-    // { provide: AuthHttpInterceptorService, useFactory: (backend: XHRBackend, options: RequestOptions,Security : SecurityService) => { return new AuthHttpInterceptorService(backend, options,Security); }, deps: [XHRBackend, RequestOptions,SecurityService] },
      { provide: HTTP_INTERCEPTORS, useClass: AuthHttpClientInterceptorService,multi : true},
      { provide: LocationStrategy, useClass: HashLocationStrategy },
     ExcelService,

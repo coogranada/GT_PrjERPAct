@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { EnvironmentService } from '../Enviroment/enviroment.service';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 
 @Injectable()
 export class LoginService {

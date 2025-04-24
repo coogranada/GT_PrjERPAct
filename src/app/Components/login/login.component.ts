@@ -265,31 +265,31 @@ export class LoginComponent implements OnInit {
           });
       }, (error : any )  => {
         this.loading = false;
-        if (error.includes('El usuario se encuentra en estado inactivo.')) {
-          Swal.fire({
-            title: 'Advertencia',
-            text: '',
-            html:'El usuario se encuentra en estado inactivo. ',
-            icon: 'warning',
-            showCancelButton: false,
-            confirmButtonText: '<i class="glyphicon glyphicon-log-out"></i>  Cerrar',
-            cancelButtonText: 'No',
-            confirmButtonColor: 'rgb(13,165,80)',
-            cancelButtonColor: 'rgb(160,0,87)',
-            allowOutsideClick: false,
-            allowEscapeKey: false
-          }).then((results : any) => {
-            if (results.value) {
-              localStorage.removeItem('Data');
-              this.dataUser = null;
-            }
-          });
-        } else {
-          this.loginFrom.controls["Clave"].reset();
-          console.log(error);
-          this.notif.onDanger('Error', error);
-          this.isLoginError = true;
-        }
+         if (error.TipoAlerta == "Error") {
+           Swal.fire({
+             title: 'Advertencia',
+             text: '',
+             html: error.Mensaje,
+             icon: 'warning',
+             showCancelButton: false,
+             confirmButtonText: '<i class="glyphicon glyphicon-log-out"></i>  Cerrar',
+             cancelButtonText: 'No',
+             confirmButtonColor: 'rgb(13,165,80)',
+             cancelButtonColor: 'rgb(160,0,87)',
+             allowOutsideClick: false,
+             allowEscapeKey: false
+           }).then((results : any) => {
+             if (results.value) {
+               localStorage.removeItem('Data');
+               this.dataUser = null;
+             }
+           });
+         } else {
+           this.loginFrom.controls["Clave"].reset();
+           console.log(error);
+           this.notif.onDanger('Error', error);
+           this.isLoginError = true;
+         }
       });
   }
   IniciarSesion(payload : any) {

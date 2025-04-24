@@ -1924,8 +1924,6 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
     document.querySelector("object")!.data = "";
     document.querySelector("object")!.name = "";
     document.querySelector("object")!.type = "";
-    // this.itemsSend.Ciudad = this.itemsSend.Ciudad == null ? "" : this.itemsSend.Ciudad;
-    // this.itemsSend.Telefono = this.itemsSend.Telefono == null ? "" : this.itemsSend.Telefono;
     this.AsesoriaContractualServices.GenerarImpresion(itemsSend).subscribe(
       result => {
         pdfinBase64 = result.FileStream._buffer;
