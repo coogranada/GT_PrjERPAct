@@ -86,8 +86,7 @@
               "buildTarget": "GT_PrjERP:build:production"
             },
             "development": {
-              "buildTarget": "GT_PrjERP:build:development",
-              "proxyConfig": "proxy.conf.json"
+              "buildTarget": "GT_PrjERP:build:development"
             }
           },
           "defaultConfiguration": "development"

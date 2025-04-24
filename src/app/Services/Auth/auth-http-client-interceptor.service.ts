@@ -13,8 +13,10 @@ export class AuthHttpClientInterceptorService implements HttpInterceptor {
   constructor(private Security: SecurityService, private router: Router) { }
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     let jwt: string | null = this.Security.GetToken();
-    let authRequest: any = null;
-    if (jwt != "" && jwt != null)
+    let authRequest: any = null;    
+    if (req.url.includes('losolivosmedellin.co'))
+      return next.handle(req);    
+    else if (jwt != "" && jwt != null)
       authRequest = req.clone({
         setHeaders: { Authorization: "Bearer " + jwt }
       });

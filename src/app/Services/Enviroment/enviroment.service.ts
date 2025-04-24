@@ -20,7 +20,7 @@ export class EnvironmentService {
         this.Url = 'http://localhost:64486';
         this.UrlCore = "https://PruebasERPBCore.coogranada.com.co";// "https://localhost:7154" 
         this.UrlFront = 'http://localhost:4200/';
-        this.UrlBaseOlivos = 'https://losolivosmedellin.co/KaringPrevision/Api/';
+        this.UrlBaseOlivos = 'https://losolivosmedellin.co/KaringPrueba/Api/';
         break;
       case 2:
         this.Url = 'https://pruebaserpb.coogranada.com.co';
