@@ -19,21 +19,16 @@ export class AuthHttpClientInterceptorService implements HttpInterceptor {
         setHeaders: { Authorization: "Bearer " + jwt }
       });
     else
-    authRequest = req.clone({});
-    //console.log("httpClient", req)
+      authRequest = req.clone({});
     return next.handle(authRequest).pipe(
-
       catchError((err: any) => {
-        //console.log("eerrr", err)
         if (err.status == 401) {
           localStorage.clear();
           window.location.reload();
-          return EMPTY;
-        }else if(err.status == 400){
-          return throwError(() => new Error(err.error));
-        }
-        return throwError(() => new Error('Error en la solicitud HTTP'));
-      })
-    )
+          return throwError(() => err.error);
+        }else if(err.status == 400)
+          return throwError(() => err.error);
+        return throwError(() => new Error('Error en la solicitud HTTP',err.error));
+      }));
   }
 }
