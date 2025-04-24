@@ -17,8 +17,7 @@ export class MiListaProductosService {
   private UrlOlCuota : string = "";
   
   constructor(private _http: HttpClient,private environment: EnvironmentService) {
-    this.UrlBaseOlivos = '/api/'
-    // this.UrlBaseOlivos = this.environment.UrlBaseOlivos;
+    this.UrlBaseOlivos = this.environment.UrlBaseOlivos;
     this.UrlOlAuth = this.UrlBaseOlivos + 'LoginAPI/Authenticate';
     this.UrlOlData = this.UrlBaseOlivos + 'PrevisionApi/GetContratosAll?identificacion=';
     this.UrlOlContrato = this.UrlBaseOlivos + 'PrevisionApi/GetContrato?contrato=';
