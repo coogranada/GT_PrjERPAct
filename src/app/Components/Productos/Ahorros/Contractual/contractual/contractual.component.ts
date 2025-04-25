@@ -203,6 +203,8 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
   private CodModulo = 20;
   public Modulo = this.CodModulo;
+  public showDecimals = false;
+  
   constructor(private ContractualServices: ContractualService,
     private notif: AlertService,
     private operacionesService: OperacionesService,
@@ -284,6 +286,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
       this.BloquearDatoTitularOpcion = false;
       this.btnCambiarEstado = true;
       this.btnActualizar = true;
+      this.showDecimals = false;
     if (this.contractualOperacionFrom.get('Codigo')?.value !== '2' && this.contractualOperacionFrom.get('Codigo')?.value !== '10' &&
         this.contractualOperacionFrom.get('Codigo')?.value !== '40'){
           if(this.contractualOperacionFrom.get('Codigo')?.value !== '13')
@@ -2006,6 +2009,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
       console.log("Cuenta",result);
       let data = localStorage.getItem('Data');
       this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+      this.showDecimals = true;
       if (result.length >= 1) {
         this.dataObjet = result;
         this.contractualFrom.get('Cuenta')?.setValue(this.dataObjet[0].Cuenta);

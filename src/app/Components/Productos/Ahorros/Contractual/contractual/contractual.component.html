@@ -452,8 +452,8 @@
                                             class="form-control" formControlName="CuotaMes" *ngIf="!inputCuotaMes"
                                             [attr.disabled]="BloquearCuotaMes" (blur)="ValorTotalPlan()"
                                             (blur)="ObtenerTasa()" currencyMask
-                                            [options]="{prefix:'$ ',thousands:'.', decimal:'',precision: 0}"
-                                            maxlength="10">
+                                            [options]="{prefix:'$ ',thousands:'.',precision: showDecimals ? 2 : 0}"
+                                            [attr.maxlength]="showDecimals ? 15 : 12">
                                         <input style="text-align:right" type="text" id="SelectCuotaMes"
                                             class="form-control" formControlName="CuotaMes" *ngIf="!inputSinDecimal"
                                             [attr.disabled]="BloquearCuotaMes" (blur)="ValorTotalPlan()"
@@ -475,8 +475,8 @@
                                         <input style="text-align:right" type="text" class="form-control"
                                             formControlName="ValorPlan" *ngIf="!inputCuotaMes"
                                             [attr.disabled]="BloquearValorTotalPlan" (blur)="ObtenerTasa()" currencyMask
-                                            [options]="{prefix:'$ ',thousands:'.', decimal:'',precision: 0}"
-                                            maxlength="13">
+                                            [options]="{prefix:'$ ',thousands:'.',precision: showDecimals ? 2 : 0}"
+                                            [attr.maxlength]="showDecimals ? 16 : 13">
                                         <input style="text-align:right" type="text" class="form-control"
                                             formControlName="ValorPlan" *ngIf="!inputSinDecimal"
                                             [attr.disabled]="BloquearValorTotalPlan" (blur)="ObtenerTasa()" currencyMask
