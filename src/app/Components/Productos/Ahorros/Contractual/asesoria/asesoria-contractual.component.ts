@@ -108,6 +108,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
 
   private CodModulo = 60;
   public Modulo = this.CodModulo;
+  public showDecimals = false;
   constructor(
     private clientesGetListService: ClientesGetListService,
     private AsesoriaContractualServices: AsesoriaContractualService,
@@ -205,6 +206,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
     );
   }
   ValorSeleccionado() {
+    this.showDecimals = false;
     if((this.asesoriacontractualFrom.controls['NumeroAsesoria'].value == "" || this.asesoriacontractualFrom.controls['NumeroAsesoria'].value == null)
     && this.asesoriacontractualOperacionFrom.get('Codigo')?.value !== '2' && this.asesoriacontractualOperacionFrom.get('Codigo')?.value !== '43'){
       this.ClearForm();
@@ -875,7 +877,8 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
             const retencion = result;
             const interesBruto = this.asesoriacontractualFrom.get('InteresBruto')?.value;
             this.asesoriacontractualFrom.get('TotalInteres')?.setValue(interesBruto - retencion);
-          }
+          }          
+          this.asesoriacontractualFrom.get('TotalInteres')?.setValue(Math.round(this.asesoriacontractualFrom.get('TotalInteres')?.value));
         },
         error => {
           this.loading = false;
@@ -1030,6 +1033,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
     if (result !== null) {
       let data = localStorage.getItem('Data');
       this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+      this.showDecimals = true;
       if (result.length >= 1) {
         this.dataObjet = result;
         this.asesoriacontractualFrom.get('NumeroAsesoria')?.setValue(this.dataObjet[0].NumeroAsesoria);
@@ -1916,7 +1920,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
       TasaNominal: this.asesoriacontractualFrom.controls['TasaNominal'].value.slice(0, -3) + '%',
       FechaVencimiento:  this.asesoriacontractualFrom.controls['FechaVencimiento'].value,
       InteresBruto:  this.asesoriacontractualFrom.controls['InteresBruto'].value,
-      ValorCuota : this.asesoriacontractualFrom.controls['CuotaMes'].value,
+      ValorCuota : this.asesoriacontractualFrom.controls['CuotaMes'].value ?? 0,
       ValorPlan : this.asesoriacontractualFrom.controls['ValorPlan'].value,
       TotalRetencion:  this.asesoriacontractualFrom.controls['Retencion'].value,
       TotalInteresNeto:  this.asesoriacontractualFrom.controls['TotalInteres'].value,
