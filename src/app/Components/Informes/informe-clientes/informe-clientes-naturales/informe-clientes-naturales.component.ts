@@ -226,6 +226,11 @@ export class InformeClientesNaturalesComponent implements OnInit {
       case "26":  
         this.TituloGenerico = "Fecha Ultima Actualización";
         break;
+      case "27":  
+        this.TituloGenerico = "Regimen tributario:";
+        this.alertGenerico = "El regimen tributario es obligatorio.";
+        this.ListGenerico = [{ id:2, descri:"Simple" }, { id:1, descri:"No responsable" }]
+        break;
     }
     this.btnMore = false;
   }
@@ -515,7 +520,7 @@ export class InformeClientesNaturalesComponent implements OnInit {
     }
     else if (s == 2 || s == 3 || s == 4 || s == 5 || s == 6 || s == 7 || s == 8 || s == 9
       || s == 10 || s == 11 || s == 13 || s == 18 || s == 19 || s == 20 || s == 21 || s == 22
-      || s == 24 || s == 25)
+      || s == 24 || s == 25 || s == 27)
       this.AddFiltro(this.filtroSelect,this.SelectedCombo, this.TituloGenerico, this.SelectedNombre, "", "Es Igual");
     
     this.limpiarSelected();
