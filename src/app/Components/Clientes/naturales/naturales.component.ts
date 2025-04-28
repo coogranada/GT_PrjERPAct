@@ -21668,7 +21668,9 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
               
               this.dataCiudadesAll.forEach((elementCiu : any ) => {
                 if (elementCiu.IdCiudad === result.tercerosDto.IdCiudadExpeDto) {
-                  this.basicosFrom.get('ciudadExpedicion')?.setValue(+result.tercerosDto.IdCiudadExpeDto);
+                  setTimeout(() => {
+                    this.basicosFrom.get('ciudadExpedicion')?.setValue(+result.tercerosDto.IdCiudadExpeDto);
+                  }, 500);
                   this.CiudadMapperExp = elementCiu;
                   this.CiuCargaInicial = elementCiu.Descripcion;
                   this.BasicosEdit.get('EditCiudadExp')?.setValue(elementCiu);
@@ -21676,7 +21678,9 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                   this.objMotivoEnvio.CiudadExpedicion = elementCiu.Descripcion;
                   this.dataDepartamentosAll.forEach((elementDep : any ) => {
                     if (elementDep.IdDepartamento === elementCiu.IdDepartamento) {
-                      this.basicosFrom.get('departExpedicion')?.setValue(elementCiu.IdDepartamento);
+                      setTimeout(() => {
+                        this.basicosFrom.get('departExpedicion')?.setValue(elementCiu.IdDepartamento);
+                      }, 500);
                       this.DepartMapperExp = elementDep;
                       this.DepaCargaInicialExp = elementDep.Descripcion;
                       this.dataPaisesAll.forEach((elementPais : any ) => {
@@ -21708,12 +21712,16 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
               this.AgregarValidadoresDepaCiuNaci();
               this.dataCiudadesAll.forEach((elementCiu : any ) => {
                 if (elementCiu.IdCiudad === result.tercerosDto.IdCiudadNto) {
-                  this.basicosFrom.get('ciudadNacimiento')?.setValue(+result.tercerosDto.IdCiudadNto);
+                  setTimeout(() => {
+                    this.basicosFrom.get('ciudadNacimiento')?.setValue(+result.tercerosDto.IdCiudadNto);
+                  }, 500);
                   this.CiudadMapperNac = elementCiu;
                   this.BasicosEdit.get('EditCiudadNto')?.setValue(elementCiu);
                   this.dataDepartamentosAll.forEach((elementDep : any ) => {
                     if (elementDep.IdDepartamento === elementCiu.IdDepartamento) {
-                      this.basicosFrom.get('departNacimiento')?.setValue(elementCiu.IdDepartamento);
+                      setTimeout(() => {
+                        this.basicosFrom.get('departNacimiento')?.setValue(elementCiu.IdDepartamento);
+                      }, 500);
                       this.DepartMapperNac = elementDep;
                       this.DepaCargaInicialNaci = elementDep.Descripcion;
                       this.dataPaisesAll.forEach((elementPais : any ) => {
