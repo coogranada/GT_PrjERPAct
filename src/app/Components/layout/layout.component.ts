@@ -122,8 +122,8 @@ export class LayoutComponent implements OnInit,OnDestroy {
   /*Fin Productos */
 
   /*  Transacciones Financieras */
-  public TransaccionesFinancieras = false;
-  public TransaccionesFinancierasInterno = false;
+  public transaccionesFinancieras = false;
+  public transaccionesFinancierasInterno = false;
   /* Fin Transacciones Financieras */
 
   /* Cartera */
@@ -788,11 +788,11 @@ export class LayoutComponent implements OnInit,OnDestroy {
 
             /*  Transacciones Financieras */
             else if (element.IdModulo === 31) {
-              this.TransaccionesFinancieras = true;
+              this.transaccionesFinancieras = true;
               this.TransaccionesFinancierasModel = element;
             }
             else if (element.IdModulo === 31) {
-              this.TransaccionesFinancierasInterno = true;
+              this.transaccionesFinancierasInterno = true;
               this.TransaccionesFinancierasInternoModel = element;
             }
             /* Fin Transacciones Financieras */
