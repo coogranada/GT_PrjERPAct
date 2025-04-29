@@ -9797,7 +9797,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                       );                      
                       this.terceroSave.get('PrimerApellido')?.setValue(this.basicosFrom.value.primerApellido.charAt(0).toUpperCase() + 
                       this.basicosFrom.value.primerApellido.slice(1).toLowerCase());
-                      const segundoApellido = this.basicosFrom.value.segundoNombre;
+                      const segundoApellido = this.basicosFrom.value.segundoApellido;
                       this.terceroSave.get('SegundoApellido')?.setValue(
                       segundoApellido
                       ? segundoApellido.charAt(0).toUpperCase() + segundoApellido.slice(1).toLowerCase()
@@ -9942,7 +9942,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                     );                     
                     this.terceroSave.get('PrimerApellido')?.setValue(this.basicosFrom.value.primerApellido.charAt(0).toUpperCase() + 
                     this.basicosFrom.value.primerApellido.slice(1).toLowerCase());
-                    const segundoApellido = this.basicosFrom.value.segundoNombre;
+                    const segundoApellido = this.basicosFrom.value.segundoApellido;
                     this.terceroSave.get('SegundoApellido')?.setValue(
                     segundoApellido
                     ? segundoApellido.charAt(0).toUpperCase() + segundoApellido.slice(1).toLowerCase()
@@ -10114,7 +10114,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                   );
                   this.terceroSave.get('PrimerApellido')?.setValue(this.basicosFrom.value.primerApellido.charAt(0).toUpperCase() + 
                     this.basicosFrom.value.primerApellido.slice(1).toLowerCase());
-                  const segundoApellido = this.basicosFrom.value.segundoNombre;
+                const segundoApellido = this.basicosFrom.value.segundoApellido;
                   this.terceroSave.get('SegundoApellido')?.setValue(
                   segundoApellido
                     ? segundoApellido.charAt(0).toUpperCase() + segundoApellido.slice(1).toLowerCase()
@@ -10258,7 +10258,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                   );                 
                   this.terceroSave.get('PrimerApellido')?.setValue(this.basicosFrom.value.primerApellido.charAt(0).toUpperCase() + 
                   this.basicosFrom.value.primerApellido.slice(1).toLowerCase());
-                  const segundoApellido = this.basicosFrom.value.segundoNombre;
+                  const segundoApellido = this.basicosFrom.value.segundoApellido;
                   this.terceroSave.get('SegundoApellido')?.setValue(
                   segundoApellido
                   ? segundoApellido.charAt(0).toUpperCase() + segundoApellido.slice(1).toLowerCase()
@@ -10442,7 +10442,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             );             
             this.terceroSave.get('PrimerApellido')?.setValue(this.basicosFrom.value.primerApellido.charAt(0).toUpperCase() + 
             this.basicosFrom.value.primerApellido.slice(1).toLowerCase());
-            const segundoApellido = this.basicosFrom.value.segundoNombre;
+            const segundoApellido = this.basicosFrom.value.segundoApellido;
             this.terceroSave.get('SegundoApellido')?.setValue(
               segundoApellido
                 ? segundoApellido.charAt(0).toUpperCase() + segundoApellido.slice(1).toLowerCase()
@@ -10597,7 +10597,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           );             
           this.terceroSave.get('PrimerApellido')?.setValue(this.basicosFrom.value.primerApellido.charAt(0).toUpperCase() + 
           this.basicosFrom.value.primerApellido.slice(1).toLowerCase());
-          const segundoApellido = this.basicosFrom.value.segundoNombre;
+          const segundoApellido = this.basicosFrom.value.segundoApellido;
           this.terceroSave.get('SegundoApellido')?.setValue(
             segundoApellido
               ? segundoApellido.charAt(0).toUpperCase() + segundoApellido.slice(1).toLowerCase()
