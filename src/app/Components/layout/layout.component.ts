@@ -137,6 +137,13 @@ export class LayoutComponent implements OnInit,OnDestroy {
   public ConciliacionComisiones = false;
   public DebitosAutomaticos = false;
   public GestionOperaciones = false;
+  public estadisticos = false;
+  public transacciones = false;
+  public canalesExternos = false;
+  public composicionPortafolio = false;
+  public evolucionOficina = false;
+  public IndicadoresGerenciales = false;
+  public ListaProductos = false;
   public InformeClientes = false;
   public LogAuditoria = false;
   /* Fin informes */
@@ -538,131 +545,7 @@ export class LayoutComponent implements OnInit,OnDestroy {
     let data: string | null = localStorage.getItem('Data')
     if (data != null)
       this.resulStore = JSON.parse(window.atob(data));
-    //#region  variablesJquery
-    /* Usuarios */
-    $('#gestionesOperaciones').hide();
-    /* Fin Usuarios */
 
-    /* Configuracion */
-    $('#configuracion').hide();
-
-    /* Maestros */
-    $('#maestros').hide();
-    $('#areas').hide();
-    $('#cargos').hide();
-    $('#oficinas').hide();
-    $('#perfiles').hide();
-    $('#usuariosTipos').hide();
-    $('#modulos').hide();
-    $('#permisos').hide();
-    $('#usuarios').hide();
-    $('#usuariosproveedores').hide();
-    $('#GestionEmail').hide();
-
-    $('#operacionesPerfiles').hide();
-    $('#operacionesEstado').hide();
-    $('#operacionesModulos').hide();
-    $('#observacionesModulos').hide();
-    $('#permisosEspeciales').hide();
-    $('#servidores').hide();
-    $('#oficinasServidores').hide();
-    $('#controlSession').hide();
-    $('#imagenesBanner').hide();
-    $('#llaves').hide();
-    /* Fin Maestros */
-
-    /* Maestros productos */
-    $('#maestrosproductos').hide();
-    $('#maestrosahorros').hide();
-    $('#consecutivotitulo').hide();
-    /* Fin Maestros productos */
-
-    /* Informes*/
-    $('#informeconsecutivotitulo').hide();
-    $('#informesmaestros').hide();
-    $('#informesmaestrosahorros').hide();
-    /* Fin informes */
-
-    /* Transmisión archivos*/
-    $('#transmisionarchivos').hide();
-    /* Fin  Transmisión archivos *
-  
-    /* Fin Configuracion */
-
-    /* Clientes */
-    $('#clientes').hide();
-    $('#naturales').hide();
-    $('#juridicos').hide();
-    $('#terceros').hide();
-    $('#privilegiados').hide();
-    $('#vetados').hide();
-    /* Fin Clientes */
-
-    /* Productos */
-    $('#productos').hide();
-    $('#aportes').hide();
-    $('#ahorros').hide();
-    $('#simuladorAhorro').hide();
-    $('#termino').hide();
-    $('#TerminoInterno').hide();
-    $('#asesoriatermino').hide();
-    $('#contractuales').hide();
-    $('#contractualesInterno').hide();
-    $('#asesoriacontractual').hide();
-    $('#disponibles').hide();
-    $('#disponiblesInterno').hide();
-    $('#tarjetaHabientes').hide();
-    $('#gmf').hide();
-    $('#cuentasCorriente').hide();
-    $('#creditos').hide();
-    $('#simuladorCredito').hide();
-    $('#score').hide();
-    $('#fichaAnalisis').hide();
-    $('#seguros').hide();
-    $('#general').hide();
-    $('#cancelacion').hide();
-    /*Fin Productos */
-
-    /*  Transacciones Financieras */
-    $('#transaccionesFinancieras').hide();
-    $('#transaccionesFinancierasInterno').hide();
-    /* Fin Transacciones Financieras */
-
-    /* Cartera */
-    $('#cartera').hide();
-    $('#carteraInterno').hide();
-    /* Fin cartera */
-
-    /* Informes */
-    $('#informes').hide();
-    $('#informesInterno').hide();
-    $('#conciliacionComisiones').hide();
-    $('#debitosautomaticos').hide();
-    $('#gestionOperaciones').hide();
-    $('#estadisticos').hide();
-    $('#transacciones').hide();
-    $('#canalesExternos').hide();
-    $('#composisionPortafolio').hide();
-    $('#evolucionOficina').hide();
-    $('#IndicadoresGerenciales').hide();
-    $('#ListaProductos').hide();
-    $('#informeclientes').hide();
-    $('#logauditoria').hide();
-    /* Fin informes */
-
-    /* utilidades */
-    $('#utilidades').hide();
-    $('#crearNotificaciones').hide();
-    $('#diferenciasSaldos').hide();
-    $('#consultaRecaudoEpm').hide();
-    /* Fin utilidades */
-
-    /* auditorias */
-    $('#auditorias').hide();
-    $('#auditoriaScore').hide();
-    $('#auditoriasGmf').hide();
-    /* Fin auditorias */
-    //#endregion
     data = localStorage.getItem('Data');
     const dataUser = JSON.parse(window.atob(data == null ? "" : data));
     if (dataUser !== '' && dataUser !== null) {
@@ -681,172 +564,131 @@ export class LayoutComponent implements OnInit,OnDestroy {
           result.forEach((element: any) => {
             /* Configuracion */
             if (element.IdModulo === 63) {
-              //$('#configuracion').show();
               this.Configuracion = true;
               this.ConfiguracionModel = element;
             }
             /* Maestros */
-            if (element.IdModulo === 1) {
-              //$('#maestros').show();
+            else if (element.IdModulo === 1) {
               this.Maestros = true;
               this.MaestrosModel = element;
             }
-            if (element.IdModulo === 2) {
-              //$('#areas').show();
+            else if (element.IdModulo === 2) {
               this.Areas = true;
               this.AreasModel = element;
             }
-            if (element.IdModulo === 3) {
-              //$('#cargos').show();
+            else if (element.IdModulo === 3) {
               this.Cargos = true;
               this.CargosModel = element;
             }
-            if (element.IdModulo === 4) {
-              //$('#oficinas').show();
+            else if (element.IdModulo === 4) {
               this.Oficinas = true;
               this.OficinasModel = element;
             }
-            if (element.IdModulo === 5) {
-              //$('#perfiles').show();
+            else if (element.IdModulo === 5) {
               this.Perfiles = true;
               this.PerfilesModel = element;
             }
-            if (element.IdModulo === 6) {
-              //$('#usuariosTipos').show();
+            else if (element.IdModulo === 6) {
               this.UsuariosTipos = true;
               this.UsuariosTiposModel = element;
             }
-            if (element.IdModulo === 7) {
-              //$('#modulos').show();
+            else if (element.IdModulo === 7) {
               this.Modulos = true;
               this.ModulosModel = element;
             }
-            if (element.IdModulo === 8) {
-              //$('#permisos').show();
+            else if (element.IdModulo === 8) {
               this.Permisos = true;
               this.PermisosModel = element;
             }
-            if (element.IdModulo === 48) {
-              //$('#permisosEspeciales').show();
+            else if (element.IdModulo === 48) {
               this.PermisosEspeciales = true;
               this.PermisosEspecialesModel = element;
             }
-            if (element.IdModulo === 9) {
-              //$('#usuarios').show();
+            else if (element.IdModulo === 9) {
               this.Usuarios = true;
               this.UsuariosModel = element;
             }
-
-            if (element.IdModulo === 78) {
-              //$('#GestionEmail').show();
+            else if (element.IdModulo === 78) {
               this.GestionEmail = true;
               this.GestionEmailModel = element;
             }
-
-            if (element.IdModulo === 71) {
-              //$('#usuariosproveedores').show();
+            else if (element.IdModulo === 71) {
               this.UsuarioProveedores = true;
               this.UsuariosProveedoresModel = element;
             }
-            if (element.IdModulo === 50) {
-              //$('#operacionesModulos').show();
+            else if (element.IdModulo === 50) {
               this.OperacionesModulos = true;
               this.OperacionesModulosModel = element;
             }
-            if (element.IdModulo === 42) {
-              //$('#operacionesPerfiles').show();
+            else if (element.IdModulo === 42) {
               this.OperacionesPerfiles = true;
               this.OperacionesPerfilesModel = element;
             }
-            if (element.IdModulo === 43) {
-              //$('#operacionesEstado').show();
+            else if (element.IdModulo === 43) {
               this.OperacionesEstado = true;
               this.OperacionesEstadoModel = element;
             }
-            if (element.IdModulo === 53) {
-              //$('#controlSession').show();
+            else if (element.IdModulo === 53) {
               this.ObservacionesModulos = true;
               this.ObservacionesModulosModel = element;
             }
-            if (element.IdModulo === 68) {
-              //$('#llaves').show();
+            else if (element.IdModulo === 68) {
               this.Llaves = true;
               this.LlavesModel = element;
             }
             /* Fin  Maestros */
-
             /* Maestros productos */
-            if (element.IdModulo === 64) {
-              //$('#maestrosproductos').show();
+            else if (element.IdModulo === 64) {
               this.MaestrosProdutos = true;
               this.MaestrosProductosModel = element;
             }
-            if (element.IdModulo === 65) {
-              //$('#maestrosahorros').show();
+            else if (element.IdModulo === 65) {
               this.MaestrosAhorros = true;
               this.MaestrosAhorrosModel = element;
             }
-            if (element.IdModulo === 66) {
-              //$('#consecutivotitulo').show();
+            else if (element.IdModulo === 66) {
               this.ConsecutivoTitulo = true;
               this.ConsecutivoTituloModel = element;
             }
-            if (element.IdModulo === 67) {
-              //$('#GestionBanner').show();
+            else if (element.IdModulo === 67) {
               this.GestionBanner = true;
               this.GestionBannerModel = element;
             }
             /* Fin  Maestros productos*/
-
             /* Informes */
-
-            if (element.IdModulo === 72) {
-              //$('#informeconsecutivotitulo').show();
+            else if (element.IdModulo === 72) {
               this.InformesConsecutivoTitulo = true;
               this.InformeConsecutivoTituloModel = element;
             }
-            if (element.IdModulo === 73) {
-              //$('#informesmaestros').show();
+            else if (element.IdModulo === 73) {
               this.InformesMaestros = true;
               this.InformesMaestrosModel = element;
             }
-            if (element.IdModulo === 74) {
-              //$('#informesmaestrosahorros').show();
+            else if (element.IdModulo === 74) {
               this.InformesMaestrosAhorros = true;
               this.InformesMaestrosAhorrosModel = element;
             }
-
             /* Fin  Informes */
-
             /* Transmisión archivos */
-
-            if (element.IdModulo === 81) {
-              //$('#transmisionarchivos').show();
+            else if (element.IdModulo === 81) {
               this.Transmisionarchivos = true;
-              //this.InformeConsecutivoTituloModel = element;
             }
             /* Fin Transmisión archivos */
-
             /* Fin  Configuracion */
-
             /* Clientes */
-            if (element.IdModulo === 10) {
-              //$('#clientes').show();
+            else if (element.IdModulo === 10) {
               this.Clientes = true;
               this.ClientesModel = element;
             }
-            if (element.IdModulo === 11) {
-              //$('#naturales').show();
+            else if (element.IdModulo === 11) {
               this.Naturales = true;
               this.NaturalesModel = element;
             }
-            if (element.IdModulo === 12) {
-              //$('#juridicos').show();
+            else if (element.IdModulo === 12) {
               this.Juridicos = true;
               this.JuridicosModel = element;
             }
-            // if (element.IdModulo === 13) {
-            //   $('#terceros').show();
+            // else if (element.IdModulo === 13) {
             //   this.Terceros = true;
             //   this.TercerosModel = element;
             // }
@@ -854,253 +696,197 @@ export class LayoutComponent implements OnInit,OnDestroy {
             /* Fin Clientes */
 
             /* Productos */
-            if (element.IdModulo === 37) {
-              //$('#productos').show();
+            else if (element.IdModulo === 37) {
               this.Productos = true;
               this.ProductosModel = element;
             }
-            if (element.IdModulo === 16) {
-              //$('#aportes').show();
+            else if (element.IdModulo === 16) {
               this.Aportes = true;
               this.AportesModel = element;
             }
-            if (element.IdModulo === 17) {
-              //$('#ahorros').show();
+            else if (element.IdModulo === 17) {
               this.Ahorros = true;
               this.AhorrosModel = element;
             }
-            if (element.IdModulo === 18) {
-              //$('#simuladorAhorro').show();
+            else if (element.IdModulo === 18) {
               this.SimuladorAhorro = true;
               this.SimuladorAhorroModel = element;
             }
-            if (element.IdModulo === 61) {
-              //$('#termino').show();
+            else if (element.IdModulo === 61) {
               this.Termino = true;
               this.TerminoModel = element;
             }
-            if (element.IdModulo === 19) {
-              //$('#TerminoInterno').show();
+            else if (element.IdModulo === 19) {
               this.TerminoInterno = true;
               this.TerminoInternoModel = element;
             }
-            if (element.IdModulo === 59) {
-              //$('#contractuales').show();
+            else if (element.IdModulo === 59) {
               this.Contractuales = true;
               this.ContractualesModel = element;
             }
-            if (element.IdModulo === 20) {
-              //$('#contractualesInterno').show();
+            else if (element.IdModulo === 20) {
               this.ContractualesInterno = true;
               this.ContractualesInternoModel = element;
             }
-            if (element.IdModulo === 21) {
-              //$('#disponibles').show();
+            else if (element.IdModulo === 21) {
               this.Disponibles = true;
               this.DisponiblesModel = element;
             }
-            if (element.IdModulo === 38) {
-              //$('#disponiblesInterno').show();
+            else if (element.IdModulo === 38) {
               this.DisponiblesInterno = true;
               this.DisponiblesInternoModel = element;
             }
-            if (element.IdModulo === 22) {
-              //$('#tarjetaHabientes').show();
+            else if (element.IdModulo === 22) {
               this.TarjetaHabientes = true;
               this.TarjetaHabientesModel = element;
             }
-            if (element.IdModulo === 23) {
-              //$('#gmf').show();
+            else if (element.IdModulo === 23) {
               this.Gmf = true;
               this.GmfModel = element;
             }
-            // if (element.IdModulo === 24) {
-            //   $('#cuentasCorriente').show();
+            // else if (element.IdModulo === 24) {
             //   this.CuentasCorriente = true;
             //   this.CuentasCorrienteModel = element;
             // }
-            if (element.IdModulo === 25) {
-              //$('#creditos').show();
+            else if (element.IdModulo === 25) {
               this.Creditos = true;
               this.CreditosModel = element;
             }
-            if (element.IdModulo === 26) {
-              //$('#simuladorCredito').show();
+            else if (element.IdModulo === 26) {
               this.SimuladorCredito = true;
               this.SimuladorCreditoModel = element;
             }
-            if (element.IdModulo === 27) {
-              //$('#score').show();
+            else if (element.IdModulo === 27) {
               this.Score = true;
               this.ScoreModel = element;
             }
-            if (element.IdModulo === 75) {
-              //$('#fichaAnalisis').show();
+            else if (element.IdModulo === 75) {
               this.FichaAnalisis = true;
               this.FichaAnalisisModel = element;
             }
-            if (element.IdModulo === 28) {
-              //$('#seguros').show();
+            else if (element.IdModulo === 28) {
               this.Seguros = true;
               this.SegurosModel = element;
             }
-            if (element.IdModulo === 29) {
-              //$('#general').show();
+            else if (element.IdModulo === 29) {
               this.Generales = true;
               this.GeneralesModel = element;
             }
-            if (element.IdModulo === 30) {
-              //$('#cancelacion').show();
+            else if (element.IdModulo === 30) {
               this.Cancelacion = true;
               this.CancelacionModel = element;
             }
-            if (element.IdModulo === 60) {
-              //$('#asesoriacontractual').show();
+            else if (element.IdModulo === 60) {
               this.AsesoriaContractual = true;
               this.AsesoriaContractualModel = element;
             }
-            if (element.IdModulo === 77) {
-              //$('#asesoriatermino').show();
+            else if (element.IdModulo === 77) {
               this.AsesoriaTermino = true;
               this.AsesoriaTerminoModel = element;
             }
             /* Fin Productos */
 
             /*  Transacciones Financieras */
-            if (element.IdModulo === 31) {
-              $('#transaccionesFinancieras').show();
+            else if (element.IdModulo === 31) {
               this.TransaccionesFinancieras = true;
               this.TransaccionesFinancierasModel = element;
             }
-            if (element.IdModulo === 31) {
-              $('#transaccionesFinancierasInterno').show();
+            else if (element.IdModulo === 31) {
               this.TransaccionesFinancierasInterno = true;
               this.TransaccionesFinancierasInternoModel = element;
             }
             /* Fin Transacciones Financieras */
 
             /* Cartera */
-            if (element.IdModulo === 32) {
-              $('#cartera').show();
+            else if (element.IdModulo === 32) {
               this.Cartera = true;
               this.CarteraModel = element;
-            }
-            if (element.IdModulo === 45) {
-              $('#carteraInterno').show();
+            } else if (element.IdModulo === 45) {
               this.CarteraInterno = true;
               this.CarteraInternoModel = element;
             }
             /* Fin cartera */
 
             /* Informes */
-            if (element.IdModulo === 33) {
-             // $('#informes').show();
+            else if (element.IdModulo === 33) {
               this.Informes = true;
               this.InformesModel = element;
             }
-            // if (element.IdModulo === 46) {
-            //   $('#informesInterno').show();
+            // else if (element.IdModulo === 46) {
             //   this.InformesInterno = true;
             //   this.InformesInternoModel = element;
             // }
-            if (element.IdModulo === 47) {
-             // $('#conciliacionComisiones').show();
+            else if (element.IdModulo === 47) {
               this.ConciliacionComisiones = true;
               this.ConciliacionComisionesModel = element;
-            }
-            if (element.IdModulo === 51) {
-              //$('#debitosautomaticos').show();
+            } else if (element.IdModulo === 51) {
               this.DebitosAutomaticos = true;
               this.DebitosAutomaticosModel = element;
-            }
-            if (element.IdModulo === 52) {
-              //$('#gestionOperaciones').show();
+            } else if (element.IdModulo === 52) {
               this.GestionOperaciones = true;
               this.GestionOperacionesModel = element;
-            }
-            if (element.IdModulo === 54) {
-              $('#estadisticos').show();
+            } else if (element.IdModulo === 54) {
+              this.estadisticos = true;
               this.GestionOperaciones = true;
               this.GestionOperacionesModel = element;
-            }
-            if (element.IdModulo === 55) {
-              $('#transacciones').show();
+            } else if (element.IdModulo === 55) {
+              this.transacciones = true;
               this.GestionOperaciones = true;
               this.TransaccionesModel = element;
-            }
-            if (element.IdModulo === 56) {
-              $('#canalesExternos').show();
+            } else if (element.IdModulo === 56) {
+              this.canalesExternos = true;
               this.GestionOperaciones = true;
               this.CanalesExternosModel = element;
-            }
-            if (element.IdModulo === 57) {
-              $('#composisionPortafolio').show();
+            } else if (element.IdModulo === 57) {
+              this.composicionPortafolio = true;
               this.GestionOperaciones = true;
               this.ComposisionPortafolioModel = element;
-            }
-            if (element.IdModulo === 58) {
-              $('#evolucionOficina').show();
+            } else if (element.IdModulo === 58) {
+              this.evolucionOficina = true;
               this.GestionOperaciones = true;
               this.EvolucionOficinaModel = element;
-            }
-            if (element.IdModulo === 80) {
-              $('#IndicadoresGerenciales').show();
+            } else if (element.IdModulo === 80) {
+              this.IndicadoresGerenciales = true;
               this.GestionOperaciones = true;
               this.IndicadoresGerencialesModel = element;
-            }
-            if (element.IdModulo === 69) {
-              $('#ListaProductos').show();
+            } else if (element.IdModulo === 69) {
+              this.ListaProductos = true;
               this.GestionOperaciones = true;
               this.ListaMisProductosModel = element;
-            }
-            if (element.IdModulo === 76) {
-              //$('#informeclientes').show();
+            } else if (element.IdModulo === 76) {
               this.InformeClientes = true;
               this.InformeClientesModel = element;
-            }
-            if (element.IdModulo === 79) {
-              //$('#logauditoria').show();
+            } else if (element.IdModulo === 79) {
               this.LogAuditoria = true;
               this.LogAuditoriaModel = element;
             }
             /* Fin informes */
 
             /* utilidades */
-            if (element.IdModulo === 39) {
-              //$('#utilidades').show();
+            else if (element.IdModulo === 39) {
               this.Utilidades = true;
               this.UtilidadesModel = element;
-            }
-            if (element.IdModulo === 40) {
-              //$('#crearNotificaciones').show();
+            } else if (element.IdModulo === 40) {
               this.CrearNotificaciones = true;
               this.CrearNotificacionesModel = element;
-            }
-            if (element.IdModulo === 41) {
-              //$('#diferenciasSaldos').show();
+            } else if (element.IdModulo === 41) {
               this.DiferenciasSaldos = true;
               this.DiferenciasSaldosModel = element;
             }
             /* Fin utilidades */
 
             /* auditorias */
-            if (element.IdModulo === 34) {
-              //$('#auditorias').show();
+            else if (element.IdModulo === 34) {
               this.Auditorias = true;
               this.AuditoriasModel = element;
-            }
-            if (element.IdModulo === 35) {
-              //$('#auditoriaScore').show();
+            } else if (element.IdModulo === 35) {
               this.AuditoriaScore = true;
               this.AuditoriaScoreModel = element;
-            }
-            if (element.IdModulo === 36) {
-              //$('#auditoriasGmf').show();
+            } else if (element.IdModulo === 36) {
               this.AuditoriasGmf = true;
               this.AuditoriasGmfModel = element;
             }
             /* Fin auditorias */
-
           });
         },
         error => {
