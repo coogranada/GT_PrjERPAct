@@ -77,8 +77,8 @@ export class InformeClientesService {
       this.AddCampo(Campos,29, "ISNULL(dbo.ERP_FNDescribeTipoEmpleo(N.IdTipoEmpleo), '') AS TipoEmpleo", "Tipo empleo");
       this.AddCampo(Campos,30, "ISNULL(dbo.ERP_FNDescribeOcupacion(N.IdTipoOcupacion), '') AS TipoOcupacion", "Tipo ocupación");
       this.AddCampo(Campos,31, "ISNULL((SELECT STR(intId) + ' - ' + strDescripcion  FROM admCiiu WHERE intId = n.IdActividadEconomica), '') AS CIIU", "Actividad económica");
-      this.AddCampo(Campos,32, "ISNULL(CASE WHEN N.Dependiente = 0 THEN 'Independiente'  WHEN N.Dependiente is null THEN '' ELSE  'Dependiente' END, '') AS Dependiente", "Dependiente");
       this.AddCampo(Campos,93, "ISNULL( (CASE WHEN N.RegimenTributario = 0 THEN 'Simple' ELSE 'No responsable' END), '') AS RegimenTributario", "Regimen tributario");
+      this.AddCampo(Campos,32, "ISNULL(CASE WHEN N.Dependiente = 0 THEN 'Independiente'  WHEN N.Dependiente is null THEN '' ELSE  'Dependiente' END, '') AS Dependiente", "Dependiente");
       this.AddCampo(Campos,33, "ISNULL(dbo.fn_ERPCelular(T.IdTercero), '') as Celular", "Celular");
       this.AddCampo(Campos,34, "ISNULL(dbo.fn_ERPEmail(T.IdTercero), '') AS Email", "Email");
       this.AddCampo(Campos,35, "ISNULL(dbo.fn_ERPDirRes(T.IdTercero), '') as DireccionResidencia", "Dirección residencia");
