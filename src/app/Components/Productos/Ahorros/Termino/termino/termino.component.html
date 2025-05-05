@@ -420,8 +420,8 @@
                                     <!-- Inicio CuentaAhorro -->
                                     <div class="col-xs-12 col-md-3 col-lg-3">
                                         <label class="textNegrilla">Cuenta ahorros:</label>
-                                        <select class="form-control" formControlName="IdCuentaDestino" name="select" [attr.disabled]="bloquearCuentaNegociacion" *ngIf="!selectCuenta">
-                                            <option [value]="0" >-- Seleccion --</option>
+                                        <select class="form-control" formControlName="IdCuentaDestino" name="select" [attr.disabled]="bloquearCuentaNegociacion" *ngIf="!selectCuenta" (change)="bloquearActualizar = true;">
+                                            <option value="0" >-- Seleccion --</option>
                                             <option *ngFor="let Cuenta of resultCuentaNegociacion"
                                                 [value]="Cuenta.IdCuenta">
                                                 {{Cuenta.CuentaD}}
