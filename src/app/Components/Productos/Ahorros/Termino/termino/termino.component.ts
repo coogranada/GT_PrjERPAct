@@ -363,6 +363,8 @@ export class TerminoComponent implements OnInit {
     this.btnOpcionActualizarBeneficiario = true;
     this.TerminoForm.get('DocumentoBeneficiario')?.disable();
     this.listAutorizadoEliminar = [];
+    this.selectCuenta = true;
+    this.inputCuenta = false;
     if (this.TerminoOperacionForm.get('Codigo')?.value !== '2' && this.TerminoOperacionForm.get('Codigo')?.value !== '10' &&
       this.TerminoOperacionForm.get('Codigo')?.value !== '40' ){
         if(this.TerminoOperacionForm.get('Codigo')?.value !== '13' && this.TerminoOperacionForm.get('Codigo')?.value !== '103')
@@ -1061,7 +1063,6 @@ export class TerminoComponent implements OnInit {
           this.btnCalcularTasa = true;
           this.btnCambiarEstado = true;
           this.bloquearAsesorExterno = false;
-          this.bloquearbtnActalizar = false;
           this.bloquearbtnCambioEstado = false;
           this.bloquearDatosTitulares = false;
           this.btnAsesoria = true;
@@ -1071,7 +1072,7 @@ export class TerminoComponent implements OnInit {
           this.TabSeleccion("negociacion");
           this.generalesService.Autofocus('SelectCuentaDestino');
           this.SeleccionLiquidacion();
-
+          this.bloquearActualizar = false;
         } else {
           this.notif.onWarning('Advertencia', 'Cuenta no se puede editar, estado no válido.');
           this.TerminoOperacionForm.get('Codigo')?.reset();
@@ -4151,9 +4152,12 @@ export class TerminoComponent implements OnInit {
       this.loading = true;
       this.TerminoService.BuscarCuentaDisponible(this.TerminoForm.value).subscribe(
         result => {
-          this.loading = false;
           if (result.length >= 1) {
             this.resultCuentaNegociacion = result;
+            setTimeout(() => {
+              this.TerminoForm.get('IdCuentaDestino')?.setValue(this.dataObjet?.IdCuentaDestino);
+              this.loading = false;
+            });
           } else if (result.Mensaje !== undefined || result.Mensaje !== null) {
             this.notif.onWarning('Advertencia', result.Mensaje);
             this.TerminoForm.get('IdLiquidacion')?.setValue('0');
@@ -6856,9 +6860,9 @@ export class TerminoComponent implements OnInit {
 
         let cambiatTipoCuentaDestinoLog: any = {
           TipoCuentaDestinoAnterior: this.resultLiquidacion.filter(( x: any) => x.IdLiquidacion == this.datoLiquidacion)[0].DescripcionLiquidacion,
-          CuentaAnterior: this.dataObjet.IdCuentaDestino == null ? null : this.resultCuentaNegociacion.filter(( x: any) => x.IdCuenta == this.dataObjet.IdCuentaDestino)[0].CuentaD,
+          CuentaAnterior: this.dataObjet.IdCuentaDestino == null ? null : this.resultCuentaNegociacion.filter(( x: any) => x.IdCuenta == this.dataObjet.IdCuentaDestino)[0]?.CuentaD,
           TipoCuentaDestinoActualiza: this.resultLiquidacion.filter(( x: any) => x.IdLiquidacion == this.TerminoForm.get('IdLiquidacion')?.value)[0].DescripcionLiquidacion,
-          CuentaActualiza: this.TerminoForm.get('IdCuentaDestino')?.value == null ? null : this.resultCuentaNegociacion.filter(( x: any) => x.IdCuenta == this.TerminoForm.get('IdCuentaDestino')?.value)[0].CuentaD,
+          CuentaActualiza: this.TerminoForm.get('IdCuentaDestino')?.value == null ? null : this.resultCuentaNegociacion.filter(( x: any) => x.IdCuenta == this.TerminoForm.get('IdCuentaDestino')?.value)[0]?.CuentaD,
         }
         if (this.TerminoForm.get('IdLiquidacion')?.value == '1') { // Cuenta ahorros
           if (this.TerminoForm.get('IdCuentaDestino')?.value !== undefined

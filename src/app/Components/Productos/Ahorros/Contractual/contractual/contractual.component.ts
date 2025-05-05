@@ -461,10 +461,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           this.btnCalcularTasa = true;
           this.btnCambiarEstado = true;
           this.BloquearAsesorExterno = false;
-          this.bloquearbtnActalizar = false;
           this.bloquearbtnCalcular = false;
           this.bloquearbtnCambioEstado = false;
           this.operacionEscogida = '/Cambiar tipo cuenta destino';
+          this.SeleccionLiquidacion();
+          this.bloquearbtnActalizar = false;
           this.devolverTab(1);
           this.VolverAbajo();
           this.tab1.nativeElement.click();
@@ -15856,13 +15857,13 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
         this.log.TipoCuentaDestinoActualiza = this.resultLiquidacion.filter((x : any) => x.IdLiquidacion == this.contractualFrom.get('IdLiquidacion')?.value)[0].DescripcionLiquidacion;
  
-        if (this.contractualFrom.get('IdLiquidacion')?.value === '1') {
-          this.log.CuentaAhorroActualiza = this.resultCuentaNegociacion.filter((x : any ) => x.IdCuenta == this.contractualFrom.get('IdCuentaDestino')?.value)[0].CuentaD;
+        if (this.contractualFrom.get('IdLiquidacion')?.value == '1') { // Cuenta ahorros
+          this.log.CuentaAhorroActualiza = this.resultCuentaNegociacion.filter((x : any ) => x.IdCuenta == this.contractualFrom.get('IdCuentaDestino')?.value)[0]?.CuentaD;
           if (this.contractualFrom.get('IdCuentaDestino')?.value !== undefined
-            && this.contractualFrom.get('IdCuentaDestino')?.value !== ''
+            && this.contractualFrom.get('IdCuentaDestino')?.value != '0'
             && this.contractualFrom.get('IdCuentaDestino')?.value !== null) {
 
-            if (+this.contractualFrom.get('IdLiquidacion')?.value !== this.datoLiquidacion) {
+            if (+this.contractualFrom.get('IdLiquidacion')?.value !== this.datoLiquidacion || this.contractualFrom.get('IdCuentaDestino')?.value != this.dataObjet.IdCuentaDestino) {
               this.datoformaPago = +this.contractualFrom.get('IdLiquidacion')?.value;
 
               if (this.contractualFrom.get('Plazo')?.value !== this.datoPlazo) {
@@ -15943,13 +15944,14 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
               );
             } else {
               this.notif.onWarning('Advertencia', 'Debe cambiar tipo cuenta destino');
-              this.bloquearbtnActalizar = false;
+              // this.bloquearbtnActalizar = false;
               this.bloquearbtnCalcular = false;
             }
           } else {
             this.notif.onWarning('Advertencia', 'Debe seleccionar una cuenta ahorros.');
           }
-        } else if (this.contractualFrom.get('IdLiquidacion')?.value === '0') {
+        } else if (this.contractualFrom.get('IdLiquidacion')?.value == '0') {
+          
           if (+this.contractualFrom.get('IdLiquidacion')?.value !== this.datoLiquidacion) {
             this.datoformaPago = +this.contractualFrom.get('IdLiquidacion')?.value;
 
@@ -16030,7 +16032,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
             );
           } else {
             this.notif.onWarning('Advertencia', 'Debe cambiar tipo cuenta destino.');
-            this.bloquearbtnActalizar = false;
+            // this.bloquearbtnActalizar = false;
             this.bloquearbtnCalcular = false;
           }
         }
@@ -16790,8 +16792,8 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
       }
     );
   }
-  SeleccionLiquidacion() {
-    if (this.contractualFrom.get('IdLiquidacion')?.value === '0') {
+  SeleccionLiquidacion() {    
+    if (this.contractualFrom.get('IdLiquidacion')?.value == '0') {
       this.BloquearCuentaNegociacion = false;
       this.contractualFrom.get('IdCuentaDestino')?.reset();
       this.contractualFrom.get('CuentaDestino')?.reset();
@@ -16814,9 +16816,12 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
         this.loading = true;
       this.ContractualServices.getBuscarCuentaDisponible(this.contractualFrom.value).subscribe(
         result => {
-          this.loading = false;
           if (result.length >= 1) {
             this.resultCuentaNegociacion = result;
+            setTimeout(() => {
+              this.contractualFrom.get('IdCuentaDestino')?.setValue(this.dataObjet?.IdCuentaDestino);
+              this.loading = false;
+            });
           } else if (result.Mensaje !== undefined || result.Mensaje !== null) {
             this.notif.onWarning('Advertencia', result.Mensaje);
             this.contractualFrom.get('IdLiquidacion')?.setValue('0');
