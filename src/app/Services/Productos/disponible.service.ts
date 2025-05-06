@@ -66,7 +66,7 @@ export class DisponiblesService {
         return this._http.get<any>(this.url);
     }  
     BuscarProducto(Producto: string, Descripcion: string): Observable<any> {
-        this.url = `${this.environment.Url}/BuscarProductoContractual`;
+        this.url = `${this.environment.Url}/BuscarProductoDisponibles`;
         const params = new HttpParams()
             .set('PstrProducto', Producto)
             .set('PstrDescripcionProducto', Descripcion);
