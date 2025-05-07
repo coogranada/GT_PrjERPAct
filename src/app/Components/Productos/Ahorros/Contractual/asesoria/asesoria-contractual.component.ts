@@ -1015,6 +1015,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
             this.asesoriacontractualOperacionFrom.get('Codigo')?.reset();
           } else if (result.length > 1) {
             this.resultAsesoria = result;
+            this.resultAsesoria.sort((a: any, b: any) => b.NumeroAsesoria - a.NumeroAsesoria);
             this.ModalAsesoria.nativeElement.click();
             this.asesoriacontractualFrom.get('BuscarDocumento')?.reset();
             this.asesoriacontractualFrom.get('BuscarNombre')?.reset();
