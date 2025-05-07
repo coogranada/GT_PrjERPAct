@@ -107,7 +107,7 @@ export class InformeClientesNaturalesComponent implements OnInit {
   }
   InitFiltros(oficinaOrAdmin : number) {
     this.Filtros = this.informeClientesService.GetFiltros(oficinaOrAdmin, false);
-    this.Filtros = this.Filtros.sort((a, b) => a.NombreFiltro.localeCompare(b.NombreFiltro))
+    this.Filtros.sort((a, b) => a.NombreFiltro.localeCompare(b.NombreFiltro))
   }
   opcionSelectedFilter(value : number) {
     this.ListGenerico = [];
