@@ -190,6 +190,7 @@ export class InformeJuridicosComponent implements OnInit {
   }
   InitFiltros(oficinaOrAdmin : number) {
     this.Filtros = this.servicesInforme.GetFiltros(oficinaOrAdmin, false);
+    this.Filtros.sort((a, b) => a.NombreFiltro.localeCompare(b.NombreFiltro));
   }
   InitCampos() {
     this.Campos = this.servicesInforme.GetCampos();

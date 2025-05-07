@@ -10796,6 +10796,16 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                     this.ValidErrorForm(this.basicosFrom);
                   }
                 } else {
+                  if(this.basicosFrom.get('paisNacimiento')?.value != 42) {
+                    this.basicosFrom.controls['ciudadNacimiento'].setErrors(null);
+                    this.basicosFrom.controls['ciudadNacimiento'].clearValidators();
+                  }
+
+                  if(this.basicosFrom.get('paisExpedicion')?.value != 42) {
+                    this.basicosFrom.controls['ciudadExpedicion'].setErrors(null);
+                    this.basicosFrom.controls['ciudadExpedicion'].clearValidators();
+                  }
+
                   if (this.basicosFrom.valid) {
                     this.setDataBasicos();
                   } else {
@@ -12918,8 +12928,10 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
          );
        }
 
-      if (data.Barrio !== null && data.Barrio !== undefined && data.Barrio !== '') {
-        this.contactoForm.get('Barrio')?.setValue(data.Barrio.IdBarrio);
+      if (data.Barrio !== null && data.Barrio !== undefined && data.Barrio !== '') {        
+        setTimeout(() => {
+          this.contactoForm.get('Barrio')?.setValue(data.Barrio.IdBarrio);
+        });
         this.BarrioMapper = data.Barrio;
       } else {
         this.contactoForm.get('Barrio')?.setValue(null);
@@ -17493,7 +17505,9 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         }
         this.bloqCiudad = null;
         if(data.Ciudad !== null) {
-          this.referenciaForm.get('Ciudad')?.setValue(data.Ciudad.IdCiudad);
+          setTimeout(() => {
+            this.referenciaForm.get('Ciudad')?.setValue(data.Ciudad.IdCiudad);
+          }, 1000);
           this.CiudadMapperRefe = data.Ciudad;
           this.bloqCiudadRef = null;
         } else {
