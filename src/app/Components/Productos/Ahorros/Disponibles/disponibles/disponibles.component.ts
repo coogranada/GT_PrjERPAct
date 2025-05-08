@@ -261,7 +261,7 @@ export class DisponiblesComponent implements OnInit {
     this.ConvenioTarjetas();
     this.Canales();
     this.VolverArriba();
-    this.ActivarSaldo();   
+    this.ActivarSaldo();  
     $('#select').focus().select();
   }
   ActivarSaldo() {
@@ -2930,6 +2930,8 @@ export class DisponiblesComponent implements OnInit {
 
         // tarjeta
         if (this.DisponibleForm.get('IdMedioPago')?.value === 10 || this.DisponibleForm.get('IdMedioPago')?.value === 50 || this.DisponibleForm.get('IdMedioPago')?.value === 60 || this.DisponibleForm.get('IdMedioPago')?.value === 70) {
+          this.resultPlazo = undefined;
+          this.resultDiaCortePago = undefined;
           this.DisponibleForm.get('IdConvenio')?.setValue(this.dataObjet.Tarjetas.IdConvenio);
           this.DisponibleForm.get('NumeroTarjeta')?.setValue(this.dataObjet.Tarjetas.NumeroTarjeta);
           this.tarjetaOld = this.dataObjet.Tarjetas.NumeroTarjeta;
@@ -4607,6 +4609,19 @@ export class DisponiblesComponent implements OnInit {
   }
 
   GuardarDisponible() {
+    const mediopago = this.DisponibleForm.get('IdMedioPago')?.value;
+    const numeroTarjeta = this.DisponibleForm.get('NumeroTarjeta')?.value;
+    const numeroPagare = this.DisponibleForm.get('NumeroPagare')?.value;
+    const plazo = this.DisponibleForm.get('IdPlazo')?.value;
+    const diaCorte = this.DisponibleForm.get('IdDiaCorte')?.value;
+
+    if ((mediopago === '10' || mediopago === '50') && (!numeroTarjeta || numeroTarjeta.trim()==='')) {
+      this.notif.warning('Advertencia', 'Debe ingresar el número de la tarjeta para el medio de pago seleccionado.', ConfiguracionNotificacion.configRightTop);
+    } else if((mediopago === '50') && (!numeroPagare || numeroPagare.trim()==='' || !plazo || plazo.trim()==='' || !diaCorte || diaCorte.trim()==='' )) {
+      this.notif.warning('Advertencia', 'Debe ingresar los campos obligatorios para el medio de pago seleccionado.', ConfiguracionNotificacion.configRightTop);
+    } else if((mediopago === '70') && (!numeroPagare || numeroPagare.trim()==='' || !plazo || plazo.trim()==='' || !diaCorte || diaCorte.trim()==='' )) {
+      this.notif.warning('Advertencia', 'Debe ingresar los campos obligatorios para el medio de pago seleccionado.', ConfiguracionNotificacion.configRightTop);
+    }else{
     this.BloquearConvenio = false;
     this.BloquearNumeroTarjeta = false;
     this.BloquearDiaCortePlazo = false;
@@ -4930,6 +4945,7 @@ export class DisponiblesComponent implements OnInit {
         });
       }
     }
+  }
   }
   selectCanalChange() {
     this.BloquearCanales = true;
@@ -5554,6 +5570,20 @@ export class DisponiblesComponent implements OnInit {
           }
         );
       } else if (this.DisponibleOperacionFrom.get('Codigo')?.value === '38') {  // Cambiar medio pago
+        const mediopago = this.DisponibleForm.get('IdMedioPago')?.value;
+        const numeroTarjeta = this.DisponibleForm.get('NumeroTarjeta')?.value;
+        const numeroPagare = this.DisponibleForm.get('NumeroPagare')?.value;
+        const plazo = this.DisponibleForm.get('IdPlazo')?.value;
+        const diaCorte = this.DisponibleForm.get('IdDiaCorte')?.value;
+
+        if ((mediopago === '10' || mediopago === '50') && (!numeroTarjeta || numeroTarjeta.trim()==='')) {
+          this.notif.warning('Advertencia', 'Debe ingresar el número de la tarjeta para el medio de pago seleccionado.', ConfiguracionNotificacion.configRightTop);
+        } else if((mediopago === '50') && (!numeroPagare || numeroPagare.trim()==='' || !plazo || plazo.trim()==='' || !diaCorte || diaCorte.trim()==='' )) {
+          this.notif.warning('Advertencia', 'Debe ingresar los campos obligatorios para el medio de pago seleccionado.', ConfiguracionNotificacion.configRightTop);
+        } else if((mediopago === '70') && (!numeroPagare || numeroPagare.trim()==='' || !plazo || plazo.trim()==='' || !diaCorte || diaCorte.trim()==='' )) {
+          this.notif.warning('Advertencia', 'Debe ingresar los campos obligatorios para el medio de pago seleccionado.', ConfiguracionNotificacion.configRightTop);
+        }else{
+    
         if (this.DisponibleForm.get('IdMedioPago')?.value === '0') {
           this.notif.warning('Advertencia', 'Cuando medio de pago es libreta no se puede cambiar.', ConfiguracionNotificacion.configRightTop);
           this.enableBtnActualizar = false;
@@ -5710,6 +5740,7 @@ export class DisponiblesComponent implements OnInit {
           this.TipoNovedad = 'Cambio medio de pago';
           this.ActualizarDisponible();
         }, 1200);
+      }
       } else if (this.DisponibleOperacionFrom.get('Codigo')?.value === '34') {  // Asignar cupo 
         this.loading = true;
         let payload: any = this.DisponibleForm.value;
@@ -5730,7 +5761,7 @@ export class DisponiblesComponent implements OnInit {
             this.inputEstado = false;
             this.bloquearbtnActalizar = false;
             this.enableBtnActualizar = false;
-            this.GuardarGarantiasAndLog("log");
+            this.GuardarGarantiasAndLog("guardar");
             setTimeout(() => {
               this.ObtenerHistorial();
               this.itemsDataObejct = [];
@@ -6589,7 +6620,7 @@ export class DisponiblesComponent implements OnInit {
   CancelarCupo() {
     this.loading = true;
     let payload: any = this.DisponibleForm.value;
-    payload.Real = this.ListGarantiasRealesAgregadas;
+    payload.Real = this.dataObjetR;
     payload.Codeudor = this.dataObjetCd;
     payload.Canales = this.dataObjetC.Canales;
     $("#ModalCancelarCupo").modal("hide");
