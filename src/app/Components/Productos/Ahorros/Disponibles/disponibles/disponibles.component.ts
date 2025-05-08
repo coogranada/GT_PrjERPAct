@@ -1040,6 +1040,7 @@ export class DisponiblesComponent implements OnInit {
         && this.DisponibleForm.get('IdDigito')?.value !== undefined
         && this.DisponibleForm.get('IdDigito')?.value !== ''
       ) {
+        this.enableBtnActualizar = false;
         if (this.DisponibleForm.get('IdEstado')?.value !== 25 && this.DisponibleForm.get('IdEstado')?.value !== 10) {
           if (this.DisponibleForm.get('CupoUtilizado')?.value != null && this.DisponibleForm.get('CupoUtilizado')?.value > 0) {
             this.notif.warning('Advertencia', 'No puede usar la operación medio pago, primero debe estar en saldo cero (0).', ConfiguracionNotificacion.configRightTop);
@@ -4134,7 +4135,43 @@ export class DisponiblesComponent implements OnInit {
                   }
                 );
               }
-              // fin notificador              
+              // fin notificador  
+              // liberar tarjeta o libreta
+              swal.fire({
+                title: '¿Desea liberar tarjeta y/o libreta de cuenta anulada?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Sí',
+                cancelButtonText: 'No',
+                confirmButtonColor: 'rgb(13,165,80)',
+                cancelButtonColor: 'rgb(160,0,87)',
+                allowOutsideClick: false,
+                allowEscapeKey: false
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  const medioPago = this.DisponibleForm.get('IdMedioPago')?.value;
+                  switch (medioPago) {
+                    case 50:
+                    case 10:
+                      this.LiberarTarjeta();
+                      this.notif.success( 'Exitoso','La liberación de tarjeta se realizó correctamente.',
+                        ConfiguracionNotificacion.configRightTop
+                      );
+                      break;
+                    case 0:
+                      this.LiberarLibreta();
+                      this.notif.success('Exitoso','La liberación de libreta se realizó correctamente.',
+                        ConfiguracionNotificacion.configRightTop
+                      );
+                      break;
+                    default:
+                      this.notif.warning('Atención','El tipo de medio de pago no es válido para liberar.',
+                        ConfiguracionNotificacion.configRightTop
+                      );
+                      break;
+                  }
+                }
+              });          
               this.CambioEstadoFrom.reset();
               this.DisponibleOperacionFrom.get('Codigo')?.reset();
               this.DisponibleForm.get('IdObseCambioEstado')?.reset();
@@ -4194,6 +4231,31 @@ export class DisponiblesComponent implements OnInit {
     this.btnCambiarEstado = false;
     this.selectEstado = true;
     this.inputEstado = false;
+  }
+  LiberarTarjeta() {
+    var NumeroTarjeta = this.DisponibleForm.get('NumeroTarjeta')?.value;
+    this.DisponiblesServices.LiberarTarjeta(+NumeroTarjeta).subscribe(
+      result => {
+        this.DisponibleForm.get('NumeroTarjeta')?.setValue(0);
+      },
+      error => {
+        const errorMessage = <any>error;
+        console.log(errorMessage);
+      }
+    );
+  }
+  LiberarLibreta() {
+    var NumeroLibreta = this.DisponibleForm.get('Inicial')?.value;
+    this.DisponiblesServices.LiberarLibreta(+NumeroLibreta).subscribe(
+      result => {
+        this.DisponibleForm.get('Inicial')?.setValue(0);
+        this.DisponibleForm.get('Final')?.setValue(0);
+      },
+      error => {
+        const errorMessage = <any>error;
+        console.log(errorMessage);
+      }
+    );
   }
   obtenerIdObseCambioEstado() {
     this.DisponiblesServices.obtenerIdObseCambioEstado(this.DisponibleForm.get('IdCuenta')?.value).subscribe(
@@ -4277,6 +4339,7 @@ export class DisponiblesComponent implements OnInit {
         return;
       }
     } else if (this.DisponibleForm.get('IdMedioPago')?.value == '10' || this.DisponibleForm.get('IdMedioPago')?.value == '60') { // sin cupo
+      this.ValidacionMediopagoInputs();
       this.enableBtnActualizar = false;
       this.MostrarLibreta = true;
       this.MostrarTarjeta = false;
@@ -4335,6 +4398,7 @@ export class DisponiblesComponent implements OnInit {
       }, 200);
       
     } else if (this.DisponibleForm.get('IdMedioPago')?.value == '50' || this.DisponibleForm.get('IdMedioPago')?.value == '70') { // con cupo
+      this.ValidacionMediopagoInputs();
       this.enableBtnActualizar = false;
       this.MostrarLibreta = true;
       this.MostrarTarjeta = false;
@@ -4646,6 +4710,12 @@ export class DisponiblesComponent implements OnInit {
               $('#tarjeta').removeClass('active');
               $('#libreta').removeClass('activar');
               $('#libreta').removeClass('active');
+              setTimeout(() => {
+                // impresion  de formato de novedad de ahorro cuando es con cupo 
+                if (this.DisponibleForm.get('IdMedioPago')?.value == "70" || this.DisponibleForm.get('IdMedioPago')?.value == "50") {
+                  this.NovedadesAhorrosPDF('Apertura cuenta');
+                }
+              }, 1000); 
             },
             error => {
               this.loading = false;
@@ -4711,6 +4781,12 @@ export class DisponiblesComponent implements OnInit {
                   $('#tarjeta').removeClass('active');
                   $('#libreta').removeClass('activar');
                   $('#libreta').removeClass('active');
+                  setTimeout(() => {
+                    // impresion  de formato de novedad de ahorro cuando es con cupo 
+                    if (this.DisponibleForm.get('IdMedioPago')?.value == "70" || this.DisponibleForm.get('IdMedioPago')?.value == "50") {
+                      this.NovedadesAhorrosPDF('Apertura cuenta');
+                    }
+                  }, 1000); 
                 },
                 error => {
                   this.loading = false;
@@ -4766,6 +4842,12 @@ export class DisponiblesComponent implements OnInit {
             $('#tarjeta').removeClass('active');
             $('#libreta').removeClass('activar');
             $('#libreta').removeClass('active');
+            setTimeout(() => {
+              // impresion  de formato de novedad de ahorro cuando es con cupo 
+              if (this.DisponibleForm.get('IdMedioPago')?.value == "70" || this.DisponibleForm.get('IdMedioPago')?.value == "50") {
+                this.NovedadesAhorrosPDF('Apertura cuenta');
+              }
+            }, 1000); 
           },
           error => {
             this.loading = false;
@@ -4831,6 +4913,12 @@ export class DisponiblesComponent implements OnInit {
                 $('#tarjeta').removeClass('active');
                 $('#libreta').removeClass('activar');
                 $('#libreta').removeClass('active');
+                setTimeout(() => {
+                  // impresion  de formato de novedad de ahorro cuando es con cupo 
+                  if (this.DisponibleForm.get('IdMedioPago')?.value == "70" || this.DisponibleForm.get('IdMedioPago')?.value == "50") {
+                    this.NovedadesAhorrosPDF('Apertura cuenta');
+                  }
+                }, 1000); 
               },
               error => {
                 this.loading = false;
@@ -6335,9 +6423,11 @@ export class DisponiblesComponent implements OnInit {
               if (result.IdProducto === 102) {
                 if (this.DisponibleForm.get('IdProducto')?.value === result.IdProducto) {
                   this.ProductoTarjeta = true;
+                  this.ValidacionMediopagoInputs();
                 }
               } else if (result.IdProducto === 101) {
                 this.ProductoTarjeta = true;
+                this.ValidacionMediopagoInputs();
               }
               if (this.ProductoTarjeta == true) { 
                 if(this.tarjetaOld == this.DisponibleForm.get('NumeroTarjeta')?.value)
@@ -6368,7 +6458,10 @@ export class DisponiblesComponent implements OnInit {
               } else if (result.IdEstado === 47){
                 this.notif.warning('Advertencia', 'El número de tarjeta no está disponible.', ConfiguracionNotificacion.configRightTop);
                 this.DisponibleForm.get('NumeroTarjeta')?.reset(); 
-              }              
+              } else if (result.IdEstado === 55) {
+                this.notif.warning('Advertencia', 'El número de tarjeta no es valido.', ConfiguracionNotificacion.configRightTop);
+                this.DisponibleForm.get('NumeroTarjeta')?.reset();
+              }            
             } 
           } else {
             this.enableBtnActualizar = false;

@@ -1805,6 +1805,7 @@ export class FichaAnalisisComponent implements OnInit {
     this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
     this.FichaAnalisisService.GenerarPDFFichaAnalisis(this.radicadoActual).subscribe(
       (result) => {
+        this.loading = false;
         const pdfinBase64 = result.FileStream._buffer;
         this.linkPdf = pdfinBase64;
         this.dataAttachFiles.base64 = this.linkPdf;
