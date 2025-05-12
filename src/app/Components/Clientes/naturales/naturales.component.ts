@@ -17631,6 +17631,18 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       if (this.referenciaForm.value.idTipoReferencia !== null && this.referenciaForm.value.idTipoReferencia !== '') {
 
         if (this.referenciaForm.value.idTipoReferencia.Id === 1) {// Comercial
+
+          if (
+            !this.referenciaForm.get('idTipoReferencia')?.value ||
+            !this.referenciaForm.get('DescripcionEmpresa')?.value?.trim() ||
+            !this.referenciaForm.get('Pais')?.value ||
+            !this.referenciaForm.get('TelefonoEmpresas')?.value?.trim() ||
+            ( this.referenciaForm.get('Pais')?.value == 42 && (!this.referenciaForm.get('Departamento')?.value || !this.referenciaForm.get('Ciudad')?.value) )
+          ) {
+            this.notif.onWarning('Advertencia', 'Debe llenar los campos obligatorios.');
+            return;
+          }
+
           if (this.referenciaForm.value.DescripcionEmpresa !== '' && this.referenciaForm.value.DescripcionEmpresa !== null) {
             if (this.referenciaForm.value.Ciudad !== null &&
               this.referenciaForm.value.Ciudad !== undefined
@@ -17763,6 +17775,18 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           }
 
         } else if (this.referenciaForm.value.idTipoReferencia.Id === 3) {// Financiera
+
+          if (
+            !this.referenciaForm.get('idTipoReferencia')?.value ||
+            !this.referenciaForm.get('DescripcionEmpresaR')?.value?.trim() ||
+            !this.referenciaForm.get('TelefonoFinanciera')?.value?.trim() ||
+            !this.referenciaForm.get('Pais')?.value ||
+            ( this.referenciaForm.get('Pais')?.value == 42 && (!this.referenciaForm.get('Departamento')?.value || !this.referenciaForm.get('Ciudad')?.value) )
+          ) {
+            this.notif.onWarning('Advertencia', 'Debe llenar los campos obligatorios.');
+            return;
+          }
+
           if (this.referenciaForm.value.DescripcionEmpresaR !== '' && this.referenciaForm.value.DescripcionEmpresaR !== null) {
             if (this.referenciaForm.value.Ciudad !== null &&
               this.referenciaForm.value.Ciudad !== undefined &&
@@ -17895,15 +17919,20 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
 
         } else { // Familia-personal
           // Valida que venga alguno de los dos numeros
-          if (this.referenciaForm.value.IdParentesco === null || this.referenciaForm.value.IdParentesco === undefined) {
+          if (
+            !this.referenciaForm.value.IdParentesco ||                 
+            !this.referenciaForm.get('idTipoReferencia')?.value ||
+            !this.referenciaForm.get('PrimerApellido')?.value?.trim() ||
+            !this.referenciaForm.get('PrimerNombre')?.value?.trim() ||
+            !this.referenciaForm.get('Pais')?.value ||
+            !this.referenciaForm.get('celular')?.value?.trim() ||
+            ( this.referenciaForm.get('Pais')?.value == 42 && (!this.referenciaForm.get('Departamento')?.value || !this.referenciaForm.get('Ciudad')?.value) )
+          ) {
             this.notif.onWarning('Advertencia',
               'Debe diligenciar los campos obligatorios.',
               );
           } else {
-            if ((this.referenciaForm.get('celular')?.value === null || this.referenciaForm.get('celular')?.value === ''
-              || this.referenciaForm.get('celular')?.value === undefined)
-              && (this.referenciaForm.get('TelefonoContactos')?.value === null || this.referenciaForm.get('TelefonoContactos')?.value === ''
-                || this.referenciaForm.get('TelefonoContactos')?.value === undefined)) {
+            if (!this.referenciaForm.get('celular')?.value?.trim()) {
               this.notif.onWarning('Advertencia',
                 'Debe ingresar un número de celular o de teléfono.',
                 );
@@ -18147,6 +18176,17 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
 
         if (this.referenciaForm.value.idTipoReferencia.Id === 1) { // Comercial
 
+          if (
+            !this.referenciaForm.get('idTipoReferencia')?.value ||
+            !this.referenciaForm.get('DescripcionEmpresa')?.value?.trim() ||
+            !this.referenciaForm.get('Pais')?.value ||
+            !this.referenciaForm.get('TelefonoEmpresas')?.value?.trim() ||
+            ( this.referenciaForm.get('Pais')?.value == 42 && (!this.referenciaForm.get('Departamento')?.value || !this.referenciaForm.get('Ciudad')?.value) )
+          ) {
+            this.notif.onWarning('Advertencia', 'Debe llenar los campos obligatorios.');
+            return;
+          }
+
           if (this.referenciaForm.value.DescripcionEmpresa !== '' && this.referenciaForm.value.DescripcionEmpresa !== null) {
 
             if ((this.referenciaForm.value.Ciudad !== null && this.referenciaForm.value.Ciudad !== '' &&
@@ -18245,6 +18285,19 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           }
 
         } else if (this.referenciaForm.value.idTipoReferencia.Id === 3) { // Financiera
+
+          if (
+            !this.referenciaForm.get('idTipoReferencia')?.value ||
+            !this.referenciaForm.get('DescripcionEmpresaR')?.value?.trim() ||
+            !this.referenciaForm.get('TelefonoFinanciera')?.value?.trim() ||
+            !this.referenciaForm.get('Pais')?.value ||
+            ( this.referenciaForm.get('Pais')?.value == 42 && (!this.referenciaForm.get('Departamento')?.value || !this.referenciaForm.get('Ciudad')?.value) )
+          ) {
+            this.notif.onWarning('Advertencia', 'Debe llenar los campos obligatorios.');
+            return;
+          }
+
+
           if (this.referenciaForm.value.DescripcionEmpresaR !== '' && this.referenciaForm.value.DescripcionEmpresaR !== null) {
             if ((this.referenciaForm.value.Ciudad !== null && this.referenciaForm.value.Ciudad !== '' &&
                 this.referenciaForm.value.Ciudad !== undefined) ||
@@ -18340,16 +18393,21 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             this.notif.onWarning('Advertencia', 'La empresa es obligatoria.');
           }
         } else { // Familiar o personal
-          if (this.referenciaForm.value.IdParentesco === null || this.referenciaForm.value.IdParentesco === undefined) {
+          if (
+            !this.referenciaForm.value.IdParentesco ||                 
+            !this.referenciaForm.get('idTipoReferencia')?.value ||
+            !this.referenciaForm.get('PrimerApellido')?.value?.trim() ||
+            !this.referenciaForm.get('PrimerNombre')?.value?.trim() ||
+            !this.referenciaForm.get('Pais')?.value ||
+            !this.referenciaForm.get('celular')?.value?.trim() ||
+            ( this.referenciaForm.get('Pais')?.value == 42 && (!this.referenciaForm.get('Departamento')?.value || !this.referenciaForm.get('Ciudad')?.value) )
+          ) {
             this.EnableUpdateReferencia = false;
             this.notif.onWarning('Advertencia',
               'Debe llenar los campos obligatorios.',
               );
           } else {
-            if ((this.referenciaForm.get('celular')?.value === null || this.referenciaForm.get('celular')?.value === ''
-              || this.referenciaForm.get('celular')?.value === undefined)
-              && (this.referenciaForm.get('TelefonoContactos')?.value === null || this.referenciaForm.get('TelefonoContactos')?.value === ''
-              || this.referenciaForm.get('TelefonoContactos')?.value === undefined)) {
+            if (!this.referenciaForm.get('celular')?.value?.trim()) {
               this.EnableUpdateReferencia = false;
               this.notif.onWarning('Advertencia',
                 'Debe llenar los campos obligatorios.',

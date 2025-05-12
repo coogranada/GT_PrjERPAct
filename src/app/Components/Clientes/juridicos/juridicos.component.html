@@ -118,7 +118,7 @@
                             <!--Tabs juridicos info-->
 
                             <div id="juridico" class="tab-pane fade in active">
-                                <app-info-juridicos *ngIf="condicionBaisco" #infoJuridicoComponent (emitEvent)="SiguienteTab($event)" [infoTabAllInfo]="infoTabAll" [DataBasico]="DataBasico" [DataInfoJuridico]="DataInfoJuridico" [mostrarActualizar]="mostrarBotonesActualizar" [mostrarSiguiente]="mostrarBotonesSiguiente"
+                                <app-info-juridicos *ngIf="condicionBaisco" #infoJuridicoComponent (emitEvent)="SiguienteTab($event)" [desbloquearTabs]="desbloquearTabs" [infoTabAllInfo]="infoTabAll" [DataBasico]="DataBasico" [DataInfoJuridico]="DataInfoJuridico" [mostrarActualizar]="mostrarBotonesActualizar" [mostrarSiguiente]="mostrarBotonesSiguiente"
                                     [mostrarNuevoInfo]="mostrarBotonesLimpiarInfo" [mostrarCambiar]="mostrarBotonesCambiar"></app-info-juridicos>
                             </div>
 
@@ -152,7 +152,7 @@
                             </div>
 
                             <div id="entrevista" class="tab-pane fade">
-                                <app-entrevista *ngIf="condicion" #entrevistaComponent (emitEvent)="SiguienteTab($event)" [infoTabAllEntrevista]="infoTabAll" [mostrarActualizar]="mostrarBotonesActualizar" [mostrarAgregar]="mostrarBotonesAgregar" [mostrarSiguiente]="mostrarBotonesSiguiente"
+                                <app-entrevista *ngIf="condicion" #entrevistaComponent (emitEvent)="SiguienteTab($event)" [desbloquearTabs]="desbloquearTabs" [infoTabAllEntrevista]="infoTabAll" [mostrarActualizar]="mostrarBotonesActualizar" [mostrarAgregar]="mostrarBotonesAgregar" [mostrarSiguiente]="mostrarBotonesSiguiente"
                                     [mostrarMarcarDesmarcar]="mostrarBotonesMarcarDesmarcar" [mostrarLimpiar]="mostrarBotonesLimpiar"></app-entrevista>
                             </div>
 
