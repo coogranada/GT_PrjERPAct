@@ -60,6 +60,7 @@ export class EntrevistaComponent implements OnInit {
   @Input() bloquearCheckTratamiento : boolean | null = true;
   @Input() bloquearCheckDebito = true;
   @Input() bloquearFechaExento : boolean | null = true;
+  @Input() desbloquearTabs!: () => void;
   validoPregunta1 = false;
   validoPregunta2 = false;
   validoPregunta3 = false;
@@ -898,7 +899,7 @@ export class EntrevistaComponent implements OnInit {
                   this.emitEventEntrevista.emit(true);
                   this.notif.onSuccess('Exitoso', 'El registro se actualizó correctamente.');
                   this.IrArriba();
-
+                  this.desbloquearTabs();
                 },
                 error => {
                   console.error('EditarTratamiento - ' + error);
@@ -925,6 +926,7 @@ export class EntrevistaComponent implements OnInit {
                   this.MostrarFechaTratamiento = false;
                   this.notif.onSuccess('Exitoso', 'El registro se actualizó correctamente.');
                   this.IrArriba();
+                  this.desbloquearTabs();
                 },
                 error => {
                   console.error('EditarTratamiento - ' + error);
@@ -951,6 +953,7 @@ export class EntrevistaComponent implements OnInit {
                 this.emitEventEntrevista.emit(true);
                 this.notif.onSuccess('Exitoso', 'El registro se actualizó correctamente.');
                 this.IrArriba();
+                this.desbloquearTabs();
               },
               error => {
                 console.error('EditarTratamiento - ' + error);
@@ -977,6 +980,7 @@ export class EntrevistaComponent implements OnInit {
 
                 this.notif.onSuccess('Exitoso', 'El registro se actualizó correctamente.');
                 this.IrArriba();
+                this.desbloquearTabs();
               },
               error => {
                 console.error('EditarTratamiento - ' + error);
