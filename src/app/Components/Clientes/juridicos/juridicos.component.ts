@@ -1347,6 +1347,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
                     this.BloquearCamposFormularios();
                     this.BloquearCamposInfoJuridico();
                   }
+                  this.desbloquearTabs();
                 });
             } else {
               this.notif.onWarning('Advertencia',

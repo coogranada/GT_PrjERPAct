@@ -204,6 +204,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
   private CodModulo = 20;
   public Modulo = this.CodModulo;
   public showDecimals = false;
+  private oldFormasPago = [];
   
   constructor(private ContractualServices: ContractualService,
     private notif: AlertService,
@@ -370,6 +371,13 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
         && this.contractualFrom.get('IdDigito')?.value !== undefined
         && this.contractualFrom.get('IdDigito')?.value !== ''
       ) {
+
+        if (this.contractualFrom.get('IdProducto')?.value === 207) {
+          this.notif.onWarning('Advertencia', 'Operación no permitida para producto 207.');
+          this.contractualOperacionFrom.get('Codigo')?.reset();
+          return;
+        }
+
         if (this.contractualFrom.get('IdEstado')?.value !== 25 && this.contractualFrom.get('IdEstado')?.value !== 10) {
           this.generalesService.Autofocus('SelectFormaPago');
           this.DebitoAutomaticoFrom.reset();
@@ -1316,11 +1324,13 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                 this.BloquearPeriodo = null;
                 this.Bloquearliquidacion = null;
                 this.BloquearCuentaNegociacion = null;
+                if (!this.oldFormasPago.length) this.oldFormasPago = this.resultFormaPago;
                 if (this.contractualFrom.get('IdProducto')?.value === 207) {
                   this.contractualFrom.get('NroTitulo')?.setValue(0);
                   this.BloquearNroTitulo = false;
                   this.oTitulo = true;
-                }
+                  this.resultFormaPago = this.resultFormaPago.filter((formaPago: any) => formaPago.IdFormaPago === 0);
+                } else this.resultFormaPago = this.oldFormasPago;
               }
             } else {
               this.notif.onWarning('Advertencia', 'El producto no está vigente.');

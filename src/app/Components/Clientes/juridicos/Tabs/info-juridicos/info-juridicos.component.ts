@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ElementRef, ViewChild, AfterViewInit, input } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { ClientesGetListService } from '../../../../../Services/Clientes/clientesGetList.service';
 import { RecursosGeneralesService } from '../../../../../Services/Utilidades/recursosGenerales.service';
@@ -67,6 +67,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
   @ViewChild('BuscarAsesoresPpal', { static: true }) private BuscarAsesoresPpal!: ElementRef;
   @ViewChild('CerrarDescripcion', { static: true }) private CerrarDescripcion!: ElementRef;
   @ViewChild('AbrirDescripcion', { static: true }) private AbrirDescripcion!: ElementRef;
+  @Input() desbloquearTabs!: () => void;
  
 
   public dataDepartamentos : any[] = [];
@@ -999,6 +1000,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
           } else {
             this.CambiarOficina();
           }
+          this.desbloquearTabs();
         });
  
     } else if (this.OperacionActual === 29) {
@@ -1033,6 +1035,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
             } else {
               this.CambiarRelacion();
             }
+            this.desbloquearTabs();
           });
       }
       
@@ -1112,6 +1115,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
                 console.error('Error al realizar la actualizacion - juridicos: ' + result);
                 this.notif.onDanger('Error', 'No se pudo realizar la actualización - Error ');
               }
+              this.desbloquearTabs();
             },
             error => {
               this.loading = false;
@@ -1160,7 +1164,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
                   $('#OperacionMarcada').val(1);
                   $('#ProDescripcionOpe').val(1);
                   this.loading = false;
-        
+                  this.desbloquearTabs();
                 }
               },
             error => {
@@ -1270,6 +1274,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
               this.IrArriba();
               $('#OperacionMarcada').val(1);
               $('#ProDescripcionOpe').val(1);
+              this.desbloquearTabs();
             }
           },
           error => {
@@ -1311,6 +1316,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
               this.IrArriba();
               $('#OperacionMarcada').val(1);
               $('#ProDescripcionOpe').val(1);
+              this.desbloquearTabs();
             }
           },
           error => {
@@ -1371,6 +1377,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
               this.IrArriba();
               $('#OperacionMarcada').val(1);
               $('#ProDescripcionOpe').val(1);
+              this.desbloquearTabs();
             }
           },
           error => {
