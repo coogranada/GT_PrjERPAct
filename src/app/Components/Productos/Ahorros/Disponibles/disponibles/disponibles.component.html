@@ -319,7 +319,7 @@
 
                         <input type="button" class="btn Gt-btn-morado" value="Limpiar" (click)="clearFromDisponibles()" />&nbsp; &nbsp;
 
-                        <input type="button" *ngIf="!btnGuardar" class="btn Gt-btn-verde" value="Guardar" (click)="GuardarDisponible()" [disabled]="!enableBtnActualizar" />
+                        <input type="button" *ngIf="!btnGuardar" class="btn Gt-btn-verde" value="Guardar" (click)="GuardarDisponible()" [disabled]="!enableBtnActualizar || isSaving" />
 
                         <input id="btnActualizarId" type="button" *ngIf="!btnActualizar" [disabled]="!enableBtnActualizar" class="btn Gt-btn-verde" value="Actualizar" (click)="ActualizarDisponible()" />
 

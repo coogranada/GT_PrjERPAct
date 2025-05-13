@@ -123,6 +123,7 @@ export class DisponiblesComponent implements OnInit {
   dataObservacion: any;
   SaldoCobro : any;
   dataProductos : any;
+  isSaving: boolean = false;
 
   indexCanales : number | null = null;
   indexAutorizado : number | null = null;
@@ -2420,12 +2421,12 @@ export class DisponiblesComponent implements OnInit {
       this.BuscarCuentaPorNombre();
      }
   }
-  BuscarDatosCuenta(IdOficina : string, IdProductoCuenta : string, IdConsecutivo : string, IdDigito : string) {
+  async BuscarDatosCuenta(IdOficina : string, IdProductoCuenta : string, IdConsecutivo : string, IdDigito : string) {
     this.loading = true;
     this.ResetValorSeleccionado(1);
-    this.DisponiblesServices.BuscarCuenta
-      ({ 'IdOficina': IdOficina, 'IdProductoCuenta': IdProductoCuenta, 'IdConsecutivo': IdConsecutivo, 'IdDigito': IdDigito }).subscribe(
-        result => {
+    try{
+    const result = await this.DisponiblesServices.BuscarCuenta
+      ({ 'IdOficina': IdOficina, 'IdProductoCuenta': IdProductoCuenta, 'IdConsecutivo': IdConsecutivo, 'IdDigito': IdDigito }).toPromise()
           this.loading = false;
           this.MapearDatosCuenta(result);;
           this.BloquearBtnRegistroFirma = true;
@@ -2488,13 +2489,12 @@ export class DisponiblesComponent implements OnInit {
               this.itemsSendRegistro.TelefoinoAutorizado2 = null;
               this.itemsSendRegistro.CodicionesAutorizado2 = null;
             }
-        },
-        error => {
+        }catch(error) {
           this.loading = false;
           const errorMessage = <any>error;
-          console.log(errorMessage);
-        }
-      );
+          this.notif.error('Error', errorMessage);
+          console.error(errorMessage);
+        };
   }
   canalesListOld: any[] = [];
   MapearDatosCuenta(result : any) {
@@ -4609,6 +4609,8 @@ export class DisponiblesComponent implements OnInit {
   }
 
   GuardarDisponible() {
+    if (this.isSaving) return;
+
     const mediopago = this.DisponibleForm.get('IdMedioPago')?.value;
     const numeroTarjeta = this.DisponibleForm.get('NumeroTarjeta')?.value;
     const numeroPagare = this.DisponibleForm.get('NumeroPagare')?.value;
@@ -4622,6 +4624,7 @@ export class DisponiblesComponent implements OnInit {
     } else if((mediopago === '70') && (!numeroPagare || numeroPagare.trim()==='' || !plazo || plazo.trim()==='' || !diaCorte || diaCorte.trim()==='' )) {
       this.notif.warning('Advertencia', 'Debe ingresar los campos obligatorios para el medio de pago seleccionado.', ConfiguracionNotificacion.configRightTop);
     }else{
+    this.isSaving = true;
     this.BloquearConvenio = false;
     this.BloquearNumeroTarjeta = false;
     this.BloquearDiaCortePlazo = false;
@@ -4706,8 +4709,17 @@ export class DisponiblesComponent implements OnInit {
               this.BloquearLinea = false;
               this.BloquearTimbrarMensaje = false;
               this.notif.success('Exitoso', 'La cuenta se guardó correctamente.', ConfiguracionNotificacion.configRightTop);
+              this.isSaving = false;
               this.btnGuardar = true;
-              this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
+              this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito)
+              .then(() => {
+                setTimeout(() => {
+                  // impresion  de formato de novedad de ahorro en apertura de cuentas excepto libretas
+                  if (this.DisponibleForm.get('IdMedioPago')?.value == "10" || this.DisponibleForm.get('IdMedioPago')?.value == "50" || this.DisponibleForm.get('IdMedioPago')?.value == "60" || this.DisponibleForm.get('IdMedioPago')?.value == "70") {
+                    this.NovedadesAhorrosPDF('Apertura cuenta');
+                  }
+                }, 1000);
+              });
               this.Guardarlog(aperturaCuentaLog);
               this.DisponibleOperacionFrom.get('Codigo')?.reset();
               this.itemsDataObejct = [];
@@ -4724,21 +4736,17 @@ export class DisponiblesComponent implements OnInit {
               $('#tarjeta').removeClass('activar');
               $('#tarjeta').removeClass('active');
               $('#libreta').removeClass('activar');
-              $('#libreta').removeClass('active');
-              setTimeout(() => {
-                // impresion  de formato de novedad de ahorro cuando es con cupo 
-                if (this.DisponibleForm.get('IdMedioPago')?.value == "70" || this.DisponibleForm.get('IdMedioPago')?.value == "50") {
-                  this.NovedadesAhorrosPDF('Apertura cuenta');
-                }
-              }, 1000); 
+              $('#libreta').removeClass('active'); 
             },
             error => {
+              this.isSaving = false;
               this.loading = false;
               const errorMessage = <any>error;
               console.log(errorMessage);
             }
           );
         } else {
+          this.isSaving = false;
           swal.fire({
             title: '¿Desea agregar un asesor externo?',
             text: '',
@@ -4777,8 +4785,17 @@ export class DisponiblesComponent implements OnInit {
                   this.BloquearLinea = false;
                   this.BloquearTimbrarMensaje = false;
                   this.notif.success('Exitoso', 'La cuenta se guardó correctamente.', ConfiguracionNotificacion.configRightTop);
+                  this.isSaving = false;
                   this.btnGuardar = true;
-                  this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
+                  this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito)
+                  .then(() => {
+                    setTimeout(() => {
+                      // impresion  de formato de novedad de ahorro en apertura de cuentas excepto libretas
+                      if (this.DisponibleForm.get('IdMedioPago')?.value == "10" || this.DisponibleForm.get('IdMedioPago')?.value == "50" || this.DisponibleForm.get('IdMedioPago')?.value == "60" || this.DisponibleForm.get('IdMedioPago')?.value == "70") {
+                        this.NovedadesAhorrosPDF('Apertura cuenta');
+                      }
+                    }, 1000);
+                  });
                   this.Guardarlog();
                   this.DisponibleOperacionFrom.get('Codigo')?.reset();
                   this.itemsDataObejct = [];
@@ -4796,14 +4813,9 @@ export class DisponiblesComponent implements OnInit {
                   $('#tarjeta').removeClass('active');
                   $('#libreta').removeClass('activar');
                   $('#libreta').removeClass('active');
-                  setTimeout(() => {
-                    // impresion  de formato de novedad de ahorro cuando es con cupo 
-                    if (this.DisponibleForm.get('IdMedioPago')?.value == "70" || this.DisponibleForm.get('IdMedioPago')?.value == "50") {
-                      this.NovedadesAhorrosPDF('Apertura cuenta');
-                    }
-                  }, 1000); 
                 },
                 error => {
+                  this.isSaving = false;
                   this.loading = false;
                   const errorMessage = <any>error;
                   console.log(errorMessage);
@@ -4815,6 +4827,7 @@ export class DisponiblesComponent implements OnInit {
         }
       } else {
         this.notif.warning('Advertencia', 'Debe ingresar al menos un autorizado cuando el titular es menor.', ConfiguracionNotificacion.configRightTop);
+        this.isSaving = false;
       }
     } else {
       if (this.AsesorFrom.get('strCodigo')?.value !== null
@@ -4838,8 +4851,17 @@ export class DisponiblesComponent implements OnInit {
             this.BloquearLinea = false;
             this.BloquearTimbrarMensaje = false;
             this.notif.success('Exitoso', 'La cuenta se guardó correctamente.', ConfiguracionNotificacion.configRightTop);
+            this.isSaving = false;
             this.btnGuardar = true;
-            this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
+            this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito)
+            .then(() => {
+              setTimeout(() => {
+                // impresion  de formato de novedad de ahorro en apertura de cuentas excepto libretas
+                if (this.DisponibleForm.get('IdMedioPago')?.value == "10" || this.DisponibleForm.get('IdMedioPago')?.value == "50" || this.DisponibleForm.get('IdMedioPago')?.value == "60" || this.DisponibleForm.get('IdMedioPago')?.value == "70") {
+                  this.NovedadesAhorrosPDF('Apertura cuenta');
+                }
+              }, 1000);
+            });
             this.Guardarlog(aperturaCuentaLog);
             this.DisponibleOperacionFrom.get('Codigo')?.reset();
             this.itemsDataObejct = [];
@@ -4857,20 +4879,16 @@ export class DisponiblesComponent implements OnInit {
             $('#tarjeta').removeClass('active');
             $('#libreta').removeClass('activar');
             $('#libreta').removeClass('active');
-            setTimeout(() => {
-              // impresion  de formato de novedad de ahorro cuando es con cupo 
-              if (this.DisponibleForm.get('IdMedioPago')?.value == "70" || this.DisponibleForm.get('IdMedioPago')?.value == "50") {
-                this.NovedadesAhorrosPDF('Apertura cuenta');
-              }
-            }, 1000); 
           },
           error => {
+            this.isSaving = false;
             this.loading = false;
             const errorMessage = <any>error;
             console.log(errorMessage);
           }
         );
       } else {
+        this.isSaving = false;
         swal.fire({
           title: '¿Desea agregar un asesor externo?',
           text: '',
@@ -4909,8 +4927,17 @@ export class DisponiblesComponent implements OnInit {
                 this.BloquearLinea = false;
                 this.BloquearTimbrarMensaje = false;
                 this.notif.success('Exitoso', 'La cuenta se guardó correctamente.', ConfiguracionNotificacion.configRightTop);
+                this.isSaving = false;
                 this.btnGuardar = true;
-                this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
+                this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito)
+                .then(() => {
+                  setTimeout(() => {
+                    // impresion  de formato de novedad de ahorro en apertura de cuentas excepto libretas
+                    if (this.DisponibleForm.get('IdMedioPago')?.value == "10" || this.DisponibleForm.get('IdMedioPago')?.value == "50" || this.DisponibleForm.get('IdMedioPago')?.value == "60" || this.DisponibleForm.get('IdMedioPago')?.value == "70") {
+                      this.NovedadesAhorrosPDF('Apertura cuenta');
+                    }
+                  }, 1000);
+                });
                 this.Guardarlog(aperturaCuentaLog);
                 this.DisponibleOperacionFrom.get('Codigo')?.reset();
                 this.itemsDataObejct = [];
@@ -4928,14 +4955,9 @@ export class DisponiblesComponent implements OnInit {
                 $('#tarjeta').removeClass('active');
                 $('#libreta').removeClass('activar');
                 $('#libreta').removeClass('active');
-                setTimeout(() => {
-                  // impresion  de formato de novedad de ahorro cuando es con cupo 
-                  if (this.DisponibleForm.get('IdMedioPago')?.value == "70" || this.DisponibleForm.get('IdMedioPago')?.value == "50") {
-                    this.NovedadesAhorrosPDF('Apertura cuenta');
-                  }
-                }, 1000); 
               },
               error => {
+                this.isSaving = false;
                 this.loading = false;
                 const errorMessage = <any>error;
                 console.log(errorMessage);
