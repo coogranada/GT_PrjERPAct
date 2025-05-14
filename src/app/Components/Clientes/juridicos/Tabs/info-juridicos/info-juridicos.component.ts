@@ -1233,6 +1233,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
                     $('#ProDescripcionOpe').val(1);
                   }
                 }
+                this.desbloquearTabs();
               },
             error => {
               this.loading = false;
