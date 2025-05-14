@@ -1087,6 +1087,7 @@ export class DisponiblesComponent implements OnInit {
           this.BloquearLinea = false;
           this.BloquearPuntos = false;
           this.BloquearGarantiaReal = false;
+          this.ValidarDisponibles();// filtra el medio de pago
               } else {
                 this.notif.warning('Advertencia', 'Asociado debe actualizar datos.', ConfiguracionNotificacion.configRightTop);
                 this.DisponibleOperacionFrom.get('Codigo')?.reset();
@@ -1979,7 +1980,7 @@ export class DisponiblesComponent implements OnInit {
   
   onCheckboxChange(libretaId: number, target: any): void {
 
-    if (target.isChecked) {
+    if (target.checked) {
       this.selectedIds.push(libretaId);
     } else {
       this.selectedIds = this.selectedIds.filter(id => id !== libretaId);
