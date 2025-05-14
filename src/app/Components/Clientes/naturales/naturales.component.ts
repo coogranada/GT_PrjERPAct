@@ -21297,7 +21297,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         $('#referenciaTab').removeClass('disableTab');
         $('#entrevistaTab').removeClass('disableTab');
         $('#seguroTab').removeClass('disableTab');
-        $('#fechasTab').addClass('disableTab');        
+        $('#fechasTab').removeClass('disableTab');        
         this.btnOcultoBuscar = false;
         this.btnGuardarOculto = false;
         this.siguienteOculto = true;

@@ -643,10 +643,6 @@ export class TerminoComponent implements OnInit {
           const yearApertura: Number = FechaApertura.getFullYear();     
           const MesRenovacion: Number = FechaRenovacion.getMonth() + 1;
           const yearRenovacion: Number = FechaRenovacion.getFullYear();   
-          console.log('MesApertura', MesApertura);
-          console.log('MesActual', MesActual);
-          console.log('yearApertura', yearApertura);
-          console.log('yearActual', yearActual);
           
           if (this.datoFechaRenovacion !== null) {
             if (MesRenovacion !== MesActual || yearRenovacion !== yearActual) {
@@ -1399,7 +1395,8 @@ export class TerminoComponent implements OnInit {
     }
   }
   BuscarPorCuenta() {
-    if (this.TerminoForm.get('IdOficina')?.value !== ''
+    return new Promise((resolve, reject) => {
+      if (this.TerminoForm.get('IdOficina')?.value !== ''
       && this.TerminoForm.get('IdOficina')?.value !== undefined
       && this.TerminoForm.get('IdOficina')?.value !== null
       && this.TerminoForm.get('IdProductoCuenta')?.value !== ''
@@ -1420,6 +1417,7 @@ export class TerminoComponent implements OnInit {
             this.bloquearCuenta = false;
             this.ResetValorSeleccionado(1);
             this.MapearDatosCuenta(result);
+            resolve('');
           } else {
             this.loading = false;
             this.notif.onWarning('Advertencia', 'La cuenta no existe.');
@@ -1447,8 +1445,10 @@ export class TerminoComponent implements OnInit {
           console.log(errorMessage);
         }
       );
-
     }
+    })
+
+    
   }
   MapearDatosCuenta(result : any) {
     if (result !== null) {
@@ -7256,11 +7256,12 @@ export class TerminoComponent implements OnInit {
           let tempPuntos: any =
           {  
             PuntosAdicionalesAnterior: puntosActualizaU,
-            PuntosAdicionalesActualiza: PuntosAdicionalesA  
-          }
+            PuntosAdicionalesActualiza: PuntosAdicionalesA,
+            TasaEfectivaAnterior: this.dataObjet.TasaEfectiva.toFixed(4) + '%',
+          }          
           
             this.TerminoService.ActualizarTasaTermino(this.TerminoForm.value).subscribe(
-              result => {
+              async result => {
                 this.loading = false;
                 this.bloquear = false;
                 this.bloquearNroTitulo = false;
@@ -7289,10 +7290,11 @@ export class TerminoComponent implements OnInit {
                 this.btnActualizarTab = true;
                 this.btnCalcularTasa = true;
                 this.bloquearPuntos = false;
+                await this.BuscarPorCuenta();
+                tempPuntos.TasaEfectivaActualiza = this.TerminoForm.get('TasaEfectiva')?.value;
                 this.Guardarlog(tempPuntos);
                 this.TerminoOperacionForm.get('Codigo')?.reset();
                 this.ObtenerHistorial();
-                this.BuscarPorCuenta();
               },
               error => {
                 this.loading = false;
