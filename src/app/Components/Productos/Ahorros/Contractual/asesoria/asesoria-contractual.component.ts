@@ -206,7 +206,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
     );
   }
   ValorSeleccionado() {
-    this.showDecimals = false;
+    this.showDecimals = true;
     if((this.asesoriacontractualFrom.controls['NumeroAsesoria'].value == "" || this.asesoriacontractualFrom.controls['NumeroAsesoria'].value == null)
     && this.asesoriacontractualOperacionFrom.get('Codigo')?.value !== '2' && this.asesoriacontractualOperacionFrom.get('Codigo')?.value !== '43'){
       this.ClearForm();
@@ -235,6 +235,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
       $('#historial').removeClass('active');
 
     } else if (this.asesoriacontractualOperacionFrom.get('Codigo')?.value === '43') {  // Nueva asesoria
+      this.showDecimals = false;
       this.generalesService.Autofocus('SelectNombre');
       this.ClearForm();
       this.MapearDatosUsuario();
@@ -268,7 +269,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
           this.notif.onWarning('Advertencia', 'Asesoría no valida para editar.');
           return;
         }
-
+        this.showDecimals = false;
         this.VolverAbajo();
         if (this.asesoriacontractualFrom.get('IdProducto')?.value === 207) {
           this.BloquearNegociacion = null;
@@ -279,6 +280,14 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
           this.BloquearCuotaMes = null;
           this.BloquearValorTotal = false;
         }
+
+        this.asesoriacontractualFrom.get('IdRelacionTipo')?.setValue(5);
+        this.AsesoriaContractualServices.CondicionesProducto(this.asesoriacontractualFrom.value).subscribe(
+          result => {
+            if (result !== null) {
+              this.ArrayCondiciones = result;
+            }
+          })
         this.logDataOnEditAsesoria.ProductoAnterior = this.asesoriacontractualFrom.get('DescripcionProducto')?.value;
         this.logDataOnEditAsesoria.PlazoAnterior = this.asesoriacontractualFrom.get('Plazo')?.value;
         this.logDataOnEditAsesoria.CuotaAnterior = this.asesoriacontractualFrom.get('CuotaMes')?.value;
