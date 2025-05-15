@@ -273,6 +273,10 @@ export class DisponiblesService {
         this.url = `${this.environment.Url}/MarcarODesmarcarGMF`;
         return this._http.post<any>(this.url, Datos);
     }
+    MarcarODesmarcarExentoGMF(Datos: any): Observable<any> {
+        this.url = `${this.environment.Url}/MarcarODesmarcarExentoGMF`;
+        return this._http.post<any>(this.url, Datos);
+    }
     TimbrarMensaje(Datos: any): Observable<any> {
         this.url = `${this.environment.Url}/TimbrarMensaje`;
         return this._http.post<any>(this.url, Datos);

@@ -168,6 +168,7 @@ export class DisponiblesComponent implements OnInit {
   PlazoCorteObligatoria = false;
 
   ExoneradaGmfOld: boolean = false;
+  ExentaGmfOld: boolean = false;
   public itemsDataObejct: any[] = [];
   public validar = true;
   public indefinido = undefined;
@@ -233,6 +234,7 @@ export class DisponiblesComponent implements OnInit {
   formatDateNow = new DatePipe('en-CO').transform(Date(), 'yyyy/MM/dd');
   FormatDateNow2: string = moment(new Date()).format("YYYY-MM-DD");
   EnableExoneradaGMF: boolean | null = false;
+  EnableExentaGMF: boolean | null = false;
   TibrarComentarioOld: boolean = false;
   ExoCobroHastaOld: string | null = null;
   typeExoCobroHasta: string = "text";
@@ -316,6 +318,7 @@ export class DisponiblesComponent implements OnInit {
     this.AsignarCupo = false;
     this.AsignarCupoLog = {};
     this.EnableExoneradaGMF = false;
+    this.EnableExentaGMF = false;
     this.BloquearTimbrarMensaje = false;
     this.BloquearExoCobroHasta = false;
     this.PagareObligatorio = false;
@@ -1315,12 +1318,12 @@ export class DisponiblesComponent implements OnInit {
 
         if (this.DisponibleForm.get('IdEstado')?.value == 25 || this.DisponibleForm.get('IdEstado')?.value == 10) {
           this.notif.warning('Advertencia', 'Cuenta no se puede editar, estado no valido.', ConfiguracionNotificacion.configRightTop);
-          this.DisponibleOperacionFrom.get('Codigo')?.reset(); 
+          this.DisponibleOperacionFrom.get('Codigo')?.reset();
           return;
         }
-        // valida que sea solo para juridicos ysalazar
-        if (this.DisponibleForm.get('TipoDocumento')?.value != 'Nit') {
-          this.notif.warning('Advertencia', 'Cuenta no se puede editar, solo es para personas juridicas.', ConfiguracionNotificacion.configRightTop);
+        // valida que la cuenta no esté marcada como exenta G.M.F
+        if (this.DisponibleForm.get('Exenta')?.value === '1' || this.DisponibleForm.get('Exenta')?.value === 1 || this.DisponibleForm.get('Exenta')?.value === true || this.DisponibleForm.get('Exenta')?.value === 'true') {
+          this.notif.warning('Advertencia', 'La cuenta está marcada como exenta.', ConfiguracionNotificacion.configRightTop);
           this.DisponibleOperacionFrom.get('Codigo')?.reset();
           return;
         }
@@ -1913,11 +1916,12 @@ export class DisponiblesComponent implements OnInit {
                     allowOutsideClick: false,
                     allowEscapeKey: false
                   }).then((results) => {
-                    if (results.value)
+                    if (results.value){
                       this.ActivarCuenta();
-                    else
-                    this.DisponibleOperacionFrom.get('Codigo')?.reset();
-                    this.notif.warning('Advertencia', 'La cuenta ya esta activa.', ConfiguracionNotificacion.configRightTop);
+                    }else{
+                      this.DisponibleOperacionFrom.get('Codigo')?.reset();
+                      this.notif.warning('Advertencia', 'La cuenta ya esta activa.', ConfiguracionNotificacion.configRightTop);
+                    }
                   });
                 } else {
                   this.notif.warning('Advertencia', 'La cuenta ya esta activa.', ConfiguracionNotificacion.configRightTop);
@@ -1965,7 +1969,69 @@ export class DisponiblesComponent implements OnInit {
             console.error(error);
           }
         )
-    }
+      } else if (this.DisponibleOperacionFrom.get('Codigo')?.value === '117') { // Marcar y Desmarcar exento GMF
+        if (this.DisponibleForm.get('IdOficina')?.value !== null
+          && this.DisponibleForm.get('IdOficina')?.value !== undefined
+          && this.DisponibleForm.get('IdOficina')?.value !== ''
+          && this.DisponibleForm.get('IdProductoCuenta')?.value !== null
+          && this.DisponibleForm.get('IdProductoCuenta')?.value !== undefined
+          && this.DisponibleForm.get('IdProductoCuenta')?.value !== ''
+          && this.DisponibleForm.get('IdConsecutivo')?.value !== null
+          && this.DisponibleForm.get('IdConsecutivo')?.value !== undefined
+          && this.DisponibleForm.get('IdConsecutivo')?.value !== ''
+          && this.DisponibleForm.get('IdDigito')?.value !== null
+          && this.DisponibleForm.get('IdDigito')?.value !== undefined
+          && this.DisponibleForm.get('IdDigito')?.value !== ''
+        ) {
+  
+          if (this.DisponibleForm.get('IdEstado')?.value == 25 || this.DisponibleForm.get('IdEstado')?.value == 10) {
+            this.notif.warning('Advertencia', 'Cuenta no se puede editar, estado no válido.', ConfiguracionNotificacion.configRightTop);
+            this.DisponibleOperacionFrom.get('Codigo')?.reset(); 
+            return;
+          }
+          // valida que sea solo para juridicos
+          if (this.DisponibleForm.get('TipoDocumento')?.value != 'Nit') {
+            this.notif.warning('Advertencia', 'Cuenta no se puede editar, operación sólo es para personas jurídicas.', ConfiguracionNotificacion.configRightTop);
+            this.DisponibleOperacionFrom.get('Codigo')?.reset();
+            return;
+          }
+          // valida que la cuenta no esté marcada como exonerada G.M.F
+          if ( this.DisponibleForm.get('ExoneradaGmf')?.value === '1' || this.DisponibleForm.get('ExoneradaGmf')?.value === 1 || this.DisponibleForm.get('ExoneradaGmf')?.value === true || this.DisponibleForm.get('ExoneradaGmf')?.value === 'true') {
+            this.notif.warning('Advertencia', 'La cuenta está marcada como exonerada.', ConfiguracionNotificacion.configRightTop);
+            this.DisponibleOperacionFrom.get('Codigo')?.reset();
+            return;
+          }
+
+          const IdTercero = this.DisponibleForm.get('LngTercero')?.value
+          this.DisponiblesServices.ValidaFechaActualiza(IdTercero).subscribe(
+            result => {
+              const fechaHoyString = new DatePipe('en-CO').transform(new Date(), 'yyyy/MM/dd');
+              const fechaActualizaString = new DatePipe('en-CO').transform(result.FechaActualizacion, 'yyyy/MM/dd');
+  
+              const fechaHoy = new Date(fechaHoyString == null ? "" : fechaHoyString);
+              const fechaActualiza = new Date(fechaActualizaString == null ? "" : fechaActualizaString);
+  
+              const diferenciaEnDias = this.calcularDiferenciaEnDias(fechaHoy, fechaActualiza);
+  
+              if (diferenciaEnDias <= 180) { 
+          this.operacionEscogida = '/marcar y desmarcar exento GMF';
+          this.EnableExentaGMF = null;
+          this.ExentaGmfOld = this.DisponibleForm.get('Exenta')?.value;
+          this.btnActualizar = false;
+          setTimeout(() => {
+            this.generalesService.Autofocus('volver1');
+          }, 300);
+              } else {
+                this.notif.warning('Advertencia', 'Asociado debe actualizar datos.', ConfiguracionNotificacion.configRightTop);
+                this.DisponibleOperacionFrom.get('Codigo')?.reset();
+              }
+            },
+          )              
+        } else {
+          this.notif.warning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.',ConfiguracionNotificacion.configRightTop);
+          this.DisponibleOperacionFrom.get('Codigo')?.reset();
+        }
+      }
     this.ResetValorSeleccionado();
   } 
 
@@ -5289,10 +5355,12 @@ export class DisponiblesComponent implements OnInit {
                   CuponFinalActualiza: Number(this.DisponibleForm.get('Final')?.value)
                 }
                 this.Guardarlog(cambioLibretaTarjeta);
-                setTimeout(() => {
-                  this.ObtenerHistorial();
-                  this.NovedadesAhorrosPDF('Cambio de libreta', "", true);
-                }, 1000);
+                if (this.DisponibleForm.get('IdMedioPago')?.value !== 0){ // no se genera para libretas
+                  setTimeout(() => {
+                    this.ObtenerHistorial();
+                    this.NovedadesAhorrosPDF('Cambio de libreta', "", true);
+                  }, 1000);
+              }
                 
                 this.itemsDataObejct = [];
                 this.BuscarPorCuenta();
@@ -5335,10 +5403,12 @@ export class DisponiblesComponent implements OnInit {
                 this.BuscarPorCuenta();
                 this.BloquearCuponInicial = false;
                 this.BloquearMedioPago = false;
-                setTimeout(() => {
-                  this.NovedadesAhorrosPDF('Cambio de tarjeta', "", true);
-                  this.ObtenerHistorial();
-                }, 1000);
+                if (this.DisponibleForm.get('IdMedioPago')?.value !== 0){ // no se genera para libretas
+                  setTimeout(() => {
+                    this.NovedadesAhorrosPDF('Cambio de tarjeta', "", true);
+                    this.ObtenerHistorial();
+                  }, 1000);
+              }
                 this.DisponibleOperacionFrom.get('Codigo')?.reset();
               },
               error => {
@@ -5362,7 +5432,7 @@ export class DisponiblesComponent implements OnInit {
               result => {
                 this.loading = false;
                 this.BloquearAsociado = false;
-                this.notif.success('Exitoso', 'El cambio de libreta o tarjeta se actualizó correctamente.', ConfiguracionNotificacion.configRightTop);
+                this.notif.success('Exitoso', 'Corrección de libreta o tarjeta se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
                 this.BloquearNumeroTarjeta = false;
                 this.btnGuardar = true;
                 this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
@@ -5405,7 +5475,7 @@ export class DisponiblesComponent implements OnInit {
               result => {
                 this.loading = false;
                 this.BloquearAsociado = false;
-                this.notif.success('Exitoso', 'El cambio de libreta o tarjeta se actualizó correctamente.', ConfiguracionNotificacion.configRightTop);
+                this.notif.success('Exitoso', 'Corrección de libreta o tarjeta se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
                 this.BloquearNumeroTarjeta = false;
                 this.btnGuardar = true;
                 this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
@@ -5848,7 +5918,7 @@ export class DisponiblesComponent implements OnInit {
         }
         this.DisponiblesServices.MarcarODesmarcarGMF(payload).subscribe(( x: any) => {
           this.loading = false;
-          this.notif.success('Exitoso', 'Se marcar/desmarcar GMF correctamente.', ConfiguracionNotificacion.configRightTop);
+          this.notif.success('Exitoso', 'Se marca/desmarca GMF correctamente.', ConfiguracionNotificacion.configRightTop);
           this.Guardarlog({ExoneradaGMFActualiza : this.DisponibleForm.get('ExoneradaGmf')?.value});
           setTimeout(() => {
             this.ObtenerHistorial();
@@ -5919,6 +5989,31 @@ export class DisponiblesComponent implements OnInit {
            this.loading = false;
            const errorMessage = <any>error;
            console.log(errorMessage);
+        })
+      } else if (this.DisponibleOperacionFrom.get('Codigo')?.value === '117') { // Marcar y desmarcar exento GMF
+        if (this.ExentaGmfOld == this.DisponibleForm.get('Exenta')?.value) {
+          this.notif.warning('Advertencia','Debe cambiar exento G.M.F.', ConfiguracionNotificacion.configRightTop);
+          return;
+        }
+        this.loading = true;
+        this.EnableExentaGMF = false;
+        this.btnActualizar = true;
+        let payload: any = {
+          IdCuenta: this.DisponibleForm.get('IdCuenta')?.value,
+          blnExenta : this.DisponibleForm.get('Exenta')?.value
+        }
+        this.DisponiblesServices.MarcarODesmarcarExentoGMF(payload).subscribe(( x: any) => {
+          this.loading = false;
+          this.notif.success('Exitoso', 'Se marca/desmarca exento GMF correctamente.', ConfiguracionNotificacion.configRightTop);
+          this.Guardarlog({ExentoGMFActualiza : this.DisponibleForm.get('Exenta')?.value});
+          setTimeout(() => {
+            this.ObtenerHistorial();
+          }, 1000);
+          this.DisponibleOperacionFrom.get('Codigo')?.reset();
+         }, error => {
+          this.loading = false;
+          const errorMessage = <any>error;
+          console.log(errorMessage);
         })
       }
     } else 
@@ -7733,7 +7828,9 @@ export class DisponiblesComponent implements OnInit {
   }
   ChangeCheck(value : string) {
     if (value == 'ExoneradaGmf' && this.ExoneradaGmfOld != this.DisponibleForm.get('ExoneradaGmf')?.value)      
-    this.enableBtnActualizar = true      
+    this.enableBtnActualizar = true
+    else if (value == 'Exenta' && this.ExentaGmfOld != this.DisponibleForm.get('Exenta')?.value) 
+      this.enableBtnActualizar = true   
    else if (value == 'TibrarComentario' && this.TibrarComentarioOld != this.DisponibleForm.get('TibrarComentario')?.value) 
       this.enableBtnActualizar = true  
     else if (value == 'ExoCobroHasta' && this.ExoCobroHastaOld != this.DisponibleForm.get('ExoCobroHasta')?.value) {

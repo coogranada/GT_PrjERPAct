@@ -301,7 +301,7 @@
 
                         <div class="col-xs-12 col-md-12 col-lg-12">
                             <input type="checkbox" class="switchery" formControlName="ActivaMovimiento" [attr.disabled]="Bloquear" />Activa por Mvto
-                            <input type="checkbox" class="switchery" formControlName="Exenta" [attr.disabled]="Bloquear" />Exento G.M.F
+                            <input type="checkbox" class="switchery" id="volver1" formControlName="Exenta" [attr.disabled]="EnableExentaGMF" (change)="ChangeCheck('Exenta')"/>Exento G.M.F
                             <input type="checkbox" class="switchery" id="volver" formControlName="ExoneradaGmf"  [attr.disabled]="EnableExoneradaGMF" (change)="ChangeCheck('ExoneradaGmf')" />Exonerada G.M.F
                             <input type="checkbox" class="switchery" id="TibrarComentarioId" formControlName="TibrarComentario" [attr.disabled]="BloquearTimbrarMensaje" (change)="ChangeCheck('TibrarComentario')" />Timbrar mensaje
 
