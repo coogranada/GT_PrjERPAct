@@ -2943,7 +2943,9 @@ export class TerminoComponent implements OnInit {
                     allowEscapeKey: false
                   }).then((results) => {
                     if (results.value) {
-                      this.generalesService.Autofocus('SelectAsesorExterno');
+                      setTimeout(() => {
+                        this.generalesService.Autofocus('SelectAsesorExterno');
+                      }, 500);
                       this.VolverArriba();
                     } else {
 
@@ -3112,7 +3114,10 @@ export class TerminoComponent implements OnInit {
                       allowEscapeKey: false
                     }).then((results) => {
                       if (results.value) {
-                        this.generalesService.Autofocus('SelectAsesorExterno');
+                        this.VolverArriba();
+                        setTimeout(() => {
+                          this.generalesService.Autofocus('SelectAsesorExterno');
+                        }, 500);
                       } else {
 
                         var TasaAdicionalSin = this.TerminoForm.get('TasaAdicional')?.value;
@@ -3283,7 +3288,9 @@ export class TerminoComponent implements OnInit {
                     allowEscapeKey: false
                   }).then((results) => {
                     if (results.value) {
-                      this.generalesService.Autofocus('SelectAsesorExterno');
+                      setTimeout(() => {
+                        this.generalesService.Autofocus('SelectAsesorExterno');
+                      }, 500);
                       this.VolverArriba();
                     } else {
 
@@ -3546,7 +3553,9 @@ export class TerminoComponent implements OnInit {
                   allowEscapeKey: false
                 }).then((results) => {
                   if (results.value) {
-                    this.generalesService.Autofocus('SelectAsesorExterno');
+                    setTimeout(() => {
+                      this.generalesService.Autofocus('SelectAsesorExterno');
+                    }, 500);
                     this.VolverArriba();
                   } else {
 
@@ -3715,7 +3724,10 @@ export class TerminoComponent implements OnInit {
                     allowEscapeKey: false
                   }).then((results) => {
                     if (results.value) {
-                      this.generalesService.Autofocus('SelectAsesorExterno');
+                      this.VolverArriba();
+                      setTimeout(() => {
+                        this.generalesService.Autofocus('SelectAsesorExterno');
+                      }, 500);
                     } else {
 
                       var TasaAdicionalSin = this.TerminoForm.get('TasaAdicional')?.value;
@@ -3882,7 +3894,9 @@ export class TerminoComponent implements OnInit {
                   allowEscapeKey: false
                 }).then((results) => {
                   if (results.value) {
-                    this.generalesService.Autofocus('SelectAsesorExterno');
+                    setTimeout(() => {
+                      this.generalesService.Autofocus('SelectAsesorExterno');
+                    }, 500);
                     this.VolverArriba();
                   } else {
 
