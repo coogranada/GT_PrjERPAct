@@ -345,6 +345,8 @@
                 <input type="hidden" #ModalGarantiasReales data-toggle="modal" data-target="#ModalGarantiasReales" data-popup="tooltip" data-trigger="hover" data-placement="top">
                 <input type="hidden" #ModalLibretas data-toggle="modal" data-target="#ModalLibretas" data-popup="tooltip" data-trigger="hover" data-placement="top">
                 <input type="hidden" #ModalCancelarCupo data-toggle="modal" data-target="#ModalCancelarCupo" data-popup="tooltip" data-trigger="hover" data-placement="top">
+                <input type="hidden" #ModalReglamentoVivienda data-toggle="modal" data-target="#ModalReglamentoVivienda" data-popup="tooltip" data-trigger="hover" data-placement="top">
+           
             </div>
         </div>
         <div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelTab">
@@ -1937,3 +1939,30 @@
     </div>
 </div>
 <!-- Fin activar multiples libretas -->
+
+ <!-- inicio Generar Reglamento Vivienda PDF -->
+<div id="ModalReglamentoVivienda" class="modal" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Reglamento Ahorro Programado Vivienda</h6>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <object id="ImpresionReglamentoViviendaDisponible"></object>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="panel-body">
+                    <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                        <button class="btn Gt-btn-verde " (click)="generarReglamentoVivienda()">
+                            <i class="icon-download4"></i>&nbsp; PDF
+                        </button>&nbsp;
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fin Reglamento Vivienda -->

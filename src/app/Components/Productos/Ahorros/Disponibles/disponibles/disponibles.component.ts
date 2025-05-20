@@ -41,8 +41,10 @@ export class DisponiblesComponent implements OnInit {
   @ViewChild('ModalCertificadoCuentaPDF', { static: true }) private ModalCertificadoCuentaPDF!: ElementRef;
   @ViewChild('ModalImpresion', { static: true }) private ModalImpresion!: ElementRef;
   @ViewChild('ModalGarantiasReales', { static: true }) private ModalGarantiasReales!: ElementRef;
- @ViewChild('ModalCancelarCupo', { static: true }) private ModalCancelarCupo!: ElementRef;
+  @ViewChild('ModalCancelarCupo', { static: true }) private ModalCancelarCupo!: ElementRef;
   @ViewChild('ModalLibretas', { static: true }) private ModalLibretas!: ElementRef;
+  @ViewChild('ModalReglamentoVivienda', { static: true }) private ModalReglamentoVivienda!: ElementRef;
+
 
   @ViewChild('tab1', { static: true }) private tab1!: ElementRef;
   @ViewChild('tab2', { static: true }) private tab2!: ElementRef;
@@ -4783,6 +4785,10 @@ export class DisponiblesComponent implements OnInit {
               this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito)
               .then(() => {
                 setTimeout(() => {
+                  // impresión reglamento de vivienda 109
+                  if(this.DisponibleForm.get('IdProducto')?.value === 109){
+                    this.GenerarReglamentoVivienda();
+                  }
                   // impresion  de formato de novedad de ahorro en apertura de cuentas excepto libretas
                   if (this.DisponibleForm.get('IdMedioPago')?.value == "10" || this.DisponibleForm.get('IdMedioPago')?.value == "50" || this.DisponibleForm.get('IdMedioPago')?.value == "60" || this.DisponibleForm.get('IdMedioPago')?.value == "70") {
                     this.NovedadesAhorrosPDF('Apertura cuenta');
@@ -4859,6 +4865,10 @@ export class DisponiblesComponent implements OnInit {
                   this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito)
                   .then(() => {
                     setTimeout(() => {
+                      // impresión reglamento de vivienda 109
+                      if (this.DisponibleForm.get('IdProducto')?.value === 109) {
+                        this.GenerarReglamentoVivienda();
+                      }
                       // impresion  de formato de novedad de ahorro en apertura de cuentas excepto libretas
                       if (this.DisponibleForm.get('IdMedioPago')?.value == "10" || this.DisponibleForm.get('IdMedioPago')?.value == "50" || this.DisponibleForm.get('IdMedioPago')?.value == "60" || this.DisponibleForm.get('IdMedioPago')?.value == "70") {
                         this.NovedadesAhorrosPDF('Apertura cuenta');
@@ -4923,14 +4933,18 @@ export class DisponiblesComponent implements OnInit {
             this.isSaving = false;
             this.btnGuardar = true;
             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito)
-            .then(() => {
-              setTimeout(() => {
-                // impresion  de formato de novedad de ahorro en apertura de cuentas excepto libretas
-                if (this.DisponibleForm.get('IdMedioPago')?.value == "10" || this.DisponibleForm.get('IdMedioPago')?.value == "50" || this.DisponibleForm.get('IdMedioPago')?.value == "60" || this.DisponibleForm.get('IdMedioPago')?.value == "70") {
-                  this.NovedadesAhorrosPDF('Apertura cuenta');
-                }
-              }, 1000);
-            });
+              .then(() => {
+                setTimeout(() => {
+                  // impresión reglamento de vivienda 109
+                  if (this.DisponibleForm.get('IdProducto')?.value === 109) {
+                    this.GenerarReglamentoVivienda();
+                  }
+                  // impresion  de formato de novedad de ahorro en apertura de cuentas excepto libretas
+                  if (this.DisponibleForm.get('IdMedioPago')?.value == "10" || this.DisponibleForm.get('IdMedioPago')?.value == "50" || this.DisponibleForm.get('IdMedioPago')?.value == "60" || this.DisponibleForm.get('IdMedioPago')?.value == "70") {
+                    this.NovedadesAhorrosPDF('Apertura cuenta');
+                  }
+                }, 1000);
+              });
             this.Guardarlog(aperturaCuentaLog);
             this.DisponibleOperacionFrom.get('Codigo')?.reset();
             this.itemsDataObejct = [];
@@ -5001,6 +5015,10 @@ export class DisponiblesComponent implements OnInit {
                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito)
                 .then(() => {
                   setTimeout(() => {
+                    // impresión reglamento de vivienda 109
+                    if (this.DisponibleForm.get('IdProducto')?.value === 109) {
+                      this.GenerarReglamentoVivienda();
+                    }
                     // impresion  de formato de novedad de ahorro en apertura de cuentas excepto libretas
                     if (this.DisponibleForm.get('IdMedioPago')?.value == "10" || this.DisponibleForm.get('IdMedioPago')?.value == "50" || this.DisponibleForm.get('IdMedioPago')?.value == "60" || this.DisponibleForm.get('IdMedioPago')?.value == "70") {
                       this.NovedadesAhorrosPDF('Apertura cuenta');
@@ -8127,4 +8145,48 @@ export class DisponiblesComponent implements OnInit {
     });
 
   }
+  GenerarReglamentoVivienda() {
+    $("#ImpresionReglamentoViviendaDisponible").show();
+    this.ModalReglamentoVivienda.nativeElement.click();
+    let html: HTMLObjectElement = document.getElementById("ImpresionReglamentoViviendaDisponible") as HTMLObjectElement;
+    this.linkPdf = "";
+    let pdfinBase64 = null;
+    let byteArray = null;
+    let newBolb = null;
+    let url = null;
+    html.data = "";
+    html.name = "";
+    html.type = "";
+
+    this.DisponiblesServices.GenerarReglamentoVivienda('asd', 'asd', 'asd').subscribe(
+      result => {
+        pdfinBase64 = result.FileStream._buffer;
+        byteArray = new Uint8Array(atob(pdfinBase64).split("").map((char) => char.charCodeAt(0)));
+        newBolb = new Blob([byteArray], { type: "application/pdf" });
+        this.linkPdf = pdfinBase64;
+        url = window.URL.createObjectURL(newBolb);
+        html.data = url;
+        html.name = "Reglamento Ahorro Programado Vivienda";
+        html.type = "application/pdf";
+        this.loading = false;
+      },
+      error => {
+        const errorMessage = <any>error;
+        this.notif.error('Error', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
+        console.error(errorMessage);
+        this.loading = false;
+      });
+  }
+
+  generarReglamentoVivienda() {
+    this.loading = true;
+    const linkSource = `data:application/pdf;base64,${this.linkPdf}`;
+    const downloadLink = document.createElement("a");
+    let fileName: string ="REGLAMENTO AHORRO PROGRAMADO PARA VIVIENDA.pdf";
+    downloadLink.href = linkSource;
+    downloadLink.download = fileName;
+    downloadLink.click();
+    this.loading = false;
+  }
+
 }

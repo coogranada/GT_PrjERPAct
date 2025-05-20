@@ -319,6 +319,18 @@ export class DisponiblesService {
         this.url = this.environment.Url + `/LiberarLibreta?NumeroLibreta=${libreta}`;
         return this._http.get<any>(this.url);
     }
+    GenerarReglamentoVivienda(nombreAsociado: any, documentoAsociado: any, expedicionAsociado: any): Observable<any> {
+        const url = `${this.environment.Url}/GenerarReglamentoVivienda`;
+        
+        const params = new HttpParams()
+            .set('nombreAsociado', nombreAsociado)
+            .set('documentoAsociado', documentoAsociado)
+            .set('expedicionAsociado', expedicionAsociado);
+    
+        return this._http.post<any>(url, null, { params });
+    }
+    
+    
 }
 
 
