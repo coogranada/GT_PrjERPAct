@@ -1321,6 +1321,7 @@ export class DisponiblesComponent implements OnInit {
           this.DisponibleOperacionFrom.get('Codigo')?.reset();
           return;
         }
+        
         // valida que la cuenta no esté marcada como exenta G.M.F
         if (this.DisponibleForm.get('Exenta')?.value === '1' || this.DisponibleForm.get('Exenta')?.value === 1 || this.DisponibleForm.get('Exenta')?.value === true || this.DisponibleForm.get('Exenta')?.value === 'true') {
           this.notif.warning('Advertencia', 'La cuenta está marcada como exenta.', ConfiguracionNotificacion.configRightTop);
@@ -5906,7 +5907,16 @@ export class DisponiblesComponent implements OnInit {
         this.ObtenerHistorial();
       } else if (this.DisponibleOperacionFrom.get('Codigo')?.value === '111') { // Marcar y desmarcar GMF
         if (this.ExoneradaGmfOld == this.DisponibleForm.get('ExoneradaGmf')?.value) {
-          this.notif.warning('Advertencia','Debe cambiar exonerada G.M.F.', ConfiguracionNotificacion.configRightTop);
+          this.notif.warning('Advertencia', 'Debe cambiar exonerada G.M.F.', ConfiguracionNotificacion.configRightTop);
+          return;
+        }
+        // valida que la cuenta no esté marcada como exenta G.M.F
+        if (this.DisponibleForm.get('Exenta')?.value === '1' || this.DisponibleForm.get('Exenta')?.value === 1 || this.DisponibleForm.get('Exenta')?.value === true || this.DisponibleForm.get('Exenta')?.value === 'true') {
+          this.notif.warning('Advertencia', 'La cuenta está marcada como exenta.', ConfiguracionNotificacion.configRightTop);
+          this.DisponibleOperacionFrom.get('Codigo')?.reset();
+          this.DisponibleForm.get('ExoneradaGmf')?.setValue(this.ExoneradaGmfOld );
+          this.EnableExoneradaGMF = false;
+          this.btnActualizar = true;
           return;
         }
         this.loading = true;
@@ -5992,7 +6002,16 @@ export class DisponiblesComponent implements OnInit {
         })
       } else if (this.DisponibleOperacionFrom.get('Codigo')?.value === '117') { // Marcar y desmarcar exento GMF
         if (this.ExentaGmfOld == this.DisponibleForm.get('Exenta')?.value) {
-          this.notif.warning('Advertencia','Debe cambiar exento G.M.F.', ConfiguracionNotificacion.configRightTop);
+          this.notif.warning('Advertencia', 'Debe cambiar exento G.M.F.', ConfiguracionNotificacion.configRightTop);
+          return;
+        }
+        // valida que la cuenta no esté marcada como exonerada G.M.F
+        if (this.DisponibleForm.get('ExoneradaGmf')?.value === '1' || this.DisponibleForm.get('ExoneradaGmf')?.value === 1 || this.DisponibleForm.get('ExoneradaGmf')?.value === true || this.DisponibleForm.get('ExoneradaGmf')?.value === 'true') {
+          this.notif.warning('Advertencia', 'La cuenta está marcada como exonerada.', ConfiguracionNotificacion.configRightTop);
+          this.DisponibleOperacionFrom.get('Codigo')?.reset();
+          this.DisponibleForm.get('Exenta')?.setValue(this.ExentaGmfOld);
+          this.EnableExentaGMF = false;
+          this.btnActualizar = true;
           return;
         }
         this.loading = true;
