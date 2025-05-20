@@ -221,7 +221,7 @@
                     <div class="col-md-3">
                         <div class="form-group" id="4">
                             <label class="textBlod"> Tipo sociedad:</label>
-                            <span class="textBigRed">*</span>
+                            <span *ngIf="obliTipoSociedad" class="textBigRed">*</span>
                             <select class="form-control" name="select" formControlName="TipoSociedad" [attr.disabled]="bloquearForm" (change)="GenericoSelect('TipoSociedad' ,infoJuridicoFrom)">
                   <option value="0">-- Seleccione --</option>
                   <option *ngFor="let tipoSociedad of dataTiposociedad" [value]="tipoSociedad.IdTipoSociedad">
@@ -290,7 +290,7 @@
                         <div class="col-md-4 col-lg-4">
                             <label class="textBlod">Asesor Externo: </label>
                             <span class="textBigRed"></span>
-                            <input type="text" class="form-control" [attr.disabled]="bloquearAsesorExt" formControlName="CodigoAsesorExt" maxlength="3" (blur)="GetAsesorExternoCodigo()" (keypress)="LimpiarIdAsesorExternoNombre()">
+                            <input #asesorExterno type="text" class="form-control" [attr.disabled]="bloquearAsesorExt" formControlName="CodigoAsesorExt" maxlength="3" (blur)="GetAsesorExternoCodigo()" (keypress)="LimpiarIdAsesorExternoNombre()">
                             <span class="help-block validationSpan" *ngIf="infoJuridicoFrom.controls['CodigoAsesorExt'].errors?.['pattern']  && (infoJuridicoFrom.controls['CodigoAsesorExt'].dirty || infoJuridicoFrom.controls['CodigoAsesorExt'].touched)">
                  El codigo solo acepta números.
                 </span>

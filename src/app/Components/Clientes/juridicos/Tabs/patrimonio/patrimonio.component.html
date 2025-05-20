@@ -10,7 +10,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label class="textBlod">Activos corrientes: </label>
-                        <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                        <span class="textBigRed">*</span>
                         <input type="text" class="form-control" formControlName="ActivosCorrientes" currencyMask [options]="{precision : 0 }" [attr.disabled]="bloquearForm" (blur)="SumarActivos(); validValueActivoCorriente();" value="0">
                         <span class="help-block validationSpan" *ngIf="patrimonioFrom.controls['ActivosCorrientes'].errors?.['required']  && (patrimonioFrom.controls['ActivosCorrientes'].dirty || patrimonioFrom.controls['ActivosCorrientes'].touched)">
               Activos corrientes es obligatorio.

@@ -2147,6 +2147,10 @@ export class AportesComponent implements OnInit {
         allowEscapeKey: false
       }).then((results) => {
         if (results.value) {
+          this.VolverArriba();
+          setTimeout(() => {
+            this.AsesorExterno.nativeElement.focus();
+          }, 500);
         } else {
           if (this.dataObjetBeneficiarios.length > 0) {
             

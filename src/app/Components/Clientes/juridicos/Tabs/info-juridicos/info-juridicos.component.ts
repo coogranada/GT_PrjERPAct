@@ -67,6 +67,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
   @ViewChild('BuscarAsesoresPpal', { static: true }) private BuscarAsesoresPpal!: ElementRef;
   @ViewChild('CerrarDescripcion', { static: true }) private CerrarDescripcion!: ElementRef;
   @ViewChild('AbrirDescripcion', { static: true }) private AbrirDescripcion!: ElementRef;
+  @ViewChild('asesorExterno', { static: true }) private asesorExterno!: ElementRef;
   @Input() desbloquearTabs!: () => void;
  
 
@@ -153,6 +154,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
   public obliCiudad = false;
   public obliLocal = false;
   public obliObjeto = false;
+  public obliTipoSociedad = false;
 
   
   private CodModulo = 12;
@@ -594,6 +596,8 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
     this.operacionesModel.idPerfil = resultPerfil.idPerfilUsuario;
     this.operacionesModel.idModulo = this.CodModulo;
     if (tipoClienteSelect === 15) { // Tercero
+      this.AsignarObligatoriosTercero();
+      this.AgregarValidacionesTercero();
       let state = localStorage.getItem('state');
       this.dataEstados = JSON.parse(window.atob(state == null ? "" : state));;
       this.dataEstados.forEach((elementEsta : any) => {
@@ -828,6 +832,9 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
             // tslint:disable-next-line:no-shadowed-variable
           }).then((results) => {
             if (results.value) {
+              setTimeout(() => {
+                this.asesorExterno.nativeElement?.focus();
+              }, 500);
               this.bloquearAsesorExt = null;
               // aqui poner las validaciones a los campos de obligacio
               this.PreguntaAsesorExt = true;
@@ -2186,14 +2193,24 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
     this.infoJuridicoFrom.controls['Pais'].setValidators([Validators.required]);
     this.infoJuridicoFrom.controls['Pais'].setErrors({ 'incorrect': true });
     this.infoJuridicoFrom.controls['Pais'].updateValueAndValidity();
+    if(this.infoJuridicoFrom.get('Pais')?.value == 42) {
+      this.infoJuridicoFrom.controls['Departamento'].setValidators([Validators.required]);
+      this.infoJuridicoFrom.controls['Departamento'].setErrors({ 'incorrect': true });
+      this.infoJuridicoFrom.controls['Departamento'].updateValueAndValidity();
   
-    this.infoJuridicoFrom.controls['Departamento'].setValidators([Validators.required]);
-    this.infoJuridicoFrom.controls['Departamento'].setErrors({ 'incorrect': true });
-    this.infoJuridicoFrom.controls['Departamento'].updateValueAndValidity();
-
-    this.infoJuridicoFrom.controls['Ciudad'].setValidators([Validators.required]);
-    this.infoJuridicoFrom.controls['Ciudad'].setErrors({ 'incorrect': true });
-    this.infoJuridicoFrom.controls['Ciudad'].updateValueAndValidity();
+      this.infoJuridicoFrom.controls['Ciudad'].setValidators([Validators.required]);
+      this.infoJuridicoFrom.controls['Ciudad'].setErrors({ 'incorrect': true });
+      this.infoJuridicoFrom.controls['Ciudad'].updateValueAndValidity();  
+    } else {
+      this.infoJuridicoFrom.controls['Departamento'].setValidators(null);
+      this.infoJuridicoFrom.controls['Departamento'].setErrors(null);
+      this.infoJuridicoFrom.controls['Departamento'].clearValidators();
+  
+      this.infoJuridicoFrom.controls['Ciudad'].setValidators(null);
+      this.infoJuridicoFrom.controls['Ciudad'].setErrors(null);
+      this.infoJuridicoFrom.controls['Ciudad'].clearValidators();
+    }
+  
 
     this.infoJuridicoFrom.controls['Conocio'].setValidators([Validators.required]);
     this.infoJuridicoFrom.controls['Conocio'].setErrors({ 'incorrect': true });
@@ -2206,28 +2223,52 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
     this.infoJuridicoFrom.controls['ObjetoSocial'].setValidators([Validators.required]);
     this.infoJuridicoFrom.controls['ObjetoSocial'].setErrors({ 'incorrect': true });
     this.infoJuridicoFrom.controls['ObjetoSocial'].updateValueAndValidity();
+    this.infoJuridicoFrom.controls['TipoSociedad'].setValidators([Validators.required]);
+    this.infoJuridicoFrom.controls['TipoSociedad'].setErrors({ 'incorrect': true });
+    this.infoJuridicoFrom.controls['TipoSociedad'].updateValueAndValidity();
     
   }
-  AgregarValidacionesTercero() {
-    this.infoJuridicoFrom.controls['FechaConstitucion'].setValidators([Validators.required]);
-    this.infoJuridicoFrom.controls['FechaConstitucion'].setErrors({ 'incorrect': true });
-    this.infoJuridicoFrom.controls['FechaConstitucion'].updateValueAndValidity();
-   
-    this.infoJuridicoFrom.controls['Estrato'].setValidators([Validators.required]);
-    this.infoJuridicoFrom.controls['Estrato'].setErrors({ 'incorrect': true });
-    this.infoJuridicoFrom.controls['Estrato'].updateValueAndValidity();
-    
+  AgregarValidacionesTercero() {    
     this.infoJuridicoFrom.controls['Pais'].setValidators([Validators.required]);
     this.infoJuridicoFrom.controls['Pais'].setErrors({ 'incorrect': true });
     this.infoJuridicoFrom.controls['Pais'].updateValueAndValidity();
   
-    this.infoJuridicoFrom.controls['Departamento'].setValidators([Validators.required]);
-    this.infoJuridicoFrom.controls['Departamento'].setErrors({ 'incorrect': true });
-    this.infoJuridicoFrom.controls['Departamento'].updateValueAndValidity();
+    if(this.infoJuridicoFrom.get('Pais')?.value == 42) {
+      this.infoJuridicoFrom.controls['Departamento'].setValidators([Validators.required]);
+      this.infoJuridicoFrom.controls['Departamento'].setErrors({ 'incorrect': true });
+      this.infoJuridicoFrom.controls['Departamento'].updateValueAndValidity();
+  
+      this.infoJuridicoFrom.controls['Ciudad'].setValidators([Validators.required]);
+      this.infoJuridicoFrom.controls['Ciudad'].setErrors({ 'incorrect': true });
+      this.infoJuridicoFrom.controls['Ciudad'].updateValueAndValidity();  
+    } else {
+      this.infoJuridicoFrom.controls['Departamento'].setValidators(null);
+      this.infoJuridicoFrom.controls['Departamento'].setErrors(null);
+      this.infoJuridicoFrom.controls['Departamento'].clearValidators();
+  
+      this.infoJuridicoFrom.controls['Ciudad'].setValidators(null);
+      this.infoJuridicoFrom.controls['Ciudad'].setErrors(null);
+      this.infoJuridicoFrom.controls['Ciudad'].clearValidators();
+    }
 
-    this.infoJuridicoFrom.controls['Ciudad'].setValidators([Validators.required]);
-    this.infoJuridicoFrom.controls['Ciudad'].setErrors({ 'incorrect': true });
-    this.infoJuridicoFrom.controls['Ciudad'].updateValueAndValidity();
+    this.infoJuridicoFrom.controls['Conocio'].setErrors(null);
+    this.infoJuridicoFrom.controls['Conocio'].clearValidators();
+    this.infoJuridicoFrom.controls['Conocio'].setValidators(null);
+    this.infoJuridicoFrom.controls['FechaConstitucion'].setValidators(null);
+    this.infoJuridicoFrom.controls['FechaConstitucion'].setErrors(null);
+    this.infoJuridicoFrom.controls['FechaConstitucion'].clearValidators();
+    this.infoJuridicoFrom.controls['Estrato'].setValidators(null);
+    this.infoJuridicoFrom.controls['Estrato'].setErrors(null);
+    this.infoJuridicoFrom.controls['Estrato'].clearValidators();
+    this.infoJuridicoFrom.controls['TipoLocal'].setErrors(null);
+    this.infoJuridicoFrom.controls['TipoLocal'].clearValidators();
+    this.infoJuridicoFrom.controls['TipoLocal'].setValidators(null);
+    this.infoJuridicoFrom.controls['ObjetoSocial'].setErrors(null);
+    this.infoJuridicoFrom.controls['ObjetoSocial'].clearValidators();
+    this.infoJuridicoFrom.controls['ObjetoSocial'].setValidators(null);
+    this.infoJuridicoFrom.controls['TipoSociedad'].setErrors(null);
+    this.infoJuridicoFrom.controls['TipoSociedad'].clearValidators();
+    this.infoJuridicoFrom.controls['TipoSociedad'].setValidators(null);
     
   }
 
@@ -2244,13 +2285,14 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
 
   AsignarObligatoriosTercero() {
     this.obliConocio = false;
-    this.obliFecha = true;
-    this.obliEstrato = true;
+    this.obliFecha = false;
+    this.obliEstrato = false;
     this.obliPais = true;
     this.obliDepart = true;
     this.obliCiudad = true;
     this.obliLocal = false;
     this.obliObjeto = false;
+    this.obliTipoSociedad = false;
   }
 
   MostrarObligatorios() {
@@ -2262,6 +2304,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
     this.obliCiudad = true;
     this.obliLocal = true;
     this.obliObjeto = true;
+    this.obliTipoSociedad = true;
   }
 
   IrArriba() {

@@ -6,7 +6,7 @@
                     <div class="col-md-3">
                         <div class="form-group" id="1">
                             <label class="textBlod">Número documento: </label>
-                            <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                            <span class="textBigRed">*</span>
                             <input type="text" class="form-control" formControlName="NumeroDocumento" [attr.disabled]="bloquearForm" maxlength="15" (blur)="GetRepresentante()" (keypress)="limpiarFormularioKey()">
                             <span class="help-block validationSpan" *ngIf="representanteFrom.controls['NumeroDocumento'].errors?.['required'] && (representanteFrom.controls['NumeroDocumento'].dirty || representanteFrom.controls['NumeroDocumento'].touched)">
               El número documento es obligatorio.
