@@ -57,5 +57,14 @@
     z-index: 9999;
     pointer-events: none; 
   }
+
+.textBigRed {
+    font-size: 25px !important;
+    color: #D84315;
+    margin-top: -5px !important;
+    margin-left: 6px;
+    position: absolute;
+}
+
   
   

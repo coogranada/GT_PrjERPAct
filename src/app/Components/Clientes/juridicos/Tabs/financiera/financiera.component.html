@@ -5,7 +5,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label class="textBlod">Categoría: </label>
-                    <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                    <span class="textBigRed">*</span>
                     <select class="form-control" name="select" formControlName="Categoria" (change)="GetConceptos(financieraFrom.value.Categoria)" [attr.disabled]="bloquearForm">
               <option value="0">-- Seleccione --</option>
               <option *ngFor="let categorias of dataCategoria" [ngValue]="categorias">
@@ -20,7 +20,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label class="textBlod">Concepto: </label>
-                    <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                    <span class="textBigRed">*</span>
                     <select class="form-control" name="select" formControlName="Concepto" (change)="GenericoSelect('Concepto',financieraFrom)" [attr.disabled]="bloquearForm">
               <option value="0">-- Seleccione --</option>
               <option *ngFor="let conceptos of dataConceptos" [ngValue]="conceptos">
@@ -35,7 +35,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label class="textBlod">Valor : </label>
-                    <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                    <span class="textBigRed">*</span>
                     <input type="text" class="form-control" formControlName="Valor" currencyMask [options]="{precision : 0 }" [attr.disabled]="bloquearForm" (blur)="validarValor()">
                     <span class="help-block validationSpan" *ngIf="financieraFrom.controls['Valor'].errors?.required && (financieraFrom.controls['Valor'].dirty || financieraFrom.controls['Valor'].touched)">
                 El valor es obligatorio.
