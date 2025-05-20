@@ -290,8 +290,8 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
           })
         this.logDataOnEditAsesoria.ProductoAnterior = this.asesoriacontractualFrom.get('DescripcionProducto')?.value;
         this.logDataOnEditAsesoria.PlazoAnterior = this.asesoriacontractualFrom.get('Plazo')?.value;
-        this.logDataOnEditAsesoria.CuotaAnterior = this.asesoriacontractualFrom.get('CuotaMes')?.value;
-        this.logDataOnEditAsesoria.ValorTotalAnterior = this.asesoriacontractualFrom.get('ValorPlan')?.value;
+        this.logDataOnEditAsesoria.CuotaAnterior = this.asesoriacontractualFrom.get('CuotaMes')?.value || '';
+        this.logDataOnEditAsesoria.ValorTotalAnterior = Math.round(this.asesoriacontractualFrom.get('ValorPlan')?.value);        
         this.logDataOnEditAsesoria.TasaEfectivaAnterior = this.asesoriacontractualFrom.get('TasaEfectiva')?.value;
         this.logDataOnEditAsesoria.TasaNominalAnterior = this.asesoriacontractualFrom.get('TasaNominal')?.value;
         this.logDataOnEditAsesoria.InteresBrutoAnterior = this.asesoriacontractualFrom.get('InteresBruto')?.value;
@@ -1011,8 +1011,8 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
             this.logDataOnEditAsesorExterno.NombreAsesorExternoAnterior = this.asesoriacontractualFrom.get('strNombre')?.value || '';
             this.logDataOnEditAsesoria.ProductoAnterior = this.asesoriacontractualFrom.get('DescripcionProducto')?.value;
             this.logDataOnEditAsesoria.PlazoAnterior = this.asesoriacontractualFrom.get('Plazo')?.value;
-            this.logDataOnEditAsesoria.CuotaAnterior = this.asesoriacontractualFrom.get('CuotaMes')?.value;
-            this.logDataOnEditAsesoria.ValorTotalAnterior = this.asesoriacontractualFrom.get('ValorPlan')?.value;
+            this.logDataOnEditAsesoria.CuotaAnterior = this.asesoriacontractualFrom.get('CuotaMes')?.value || '';
+            this.logDataOnEditAsesoria.ValorTotalAnterior = Math.round(this.asesoriacontractualFrom.get('ValorPlan')?.value);
             this.logDataOnEditAsesoria.TasaEfectivaAnterior = this.asesoriacontractualFrom.get('TasaEfectiva')?.value;
             this.logDataOnEditAsesoria.TasaNominalAnterior = this.asesoriacontractualFrom.get('TasaNominal')?.value;
             this.logDataOnEditAsesoria.InteresBrutoAnterior = this.asesoriacontractualFrom.get('InteresBruto')?.value;
@@ -1591,8 +1591,8 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
                 this.MapearAsesoria(result);
                 this.logDataOnEditAsesoria.ProductoActualiza = this.asesoriacontractualFrom.get('DescripcionProducto')?.value;
                 this.logDataOnEditAsesoria.PlazoActualiza = this.asesoriacontractualFrom.get('Plazo')?.value;
-                this.logDataOnEditAsesoria.CuotaActualiza = this.asesoriacontractualFrom.get('CuotaMes')?.value;
-                this.logDataOnEditAsesoria.ValorTotalActualiza = this.asesoriacontractualFrom.get('ValorPlan')?.value;
+                this.logDataOnEditAsesoria.CuotaActualiza = this.asesoriacontractualFrom.get('CuotaMes')?.value || '';
+                this.logDataOnEditAsesoria.ValorTotalActualiza = Math.round(this.asesoriacontractualFrom.get('ValorPlan')?.value);
                 this.logDataOnEditAsesoria.TasaEfectivaActualiza = this.asesoriacontractualFrom.get('TasaEfectiva')?.value;
                 this.logDataOnEditAsesoria.TasaNominalActualiza = this.asesoriacontractualFrom.get('TasaNominal')?.value;
                 this.logDataOnEditAsesoria.InteresBrutoActualiza = this.asesoriacontractualFrom.get('InteresBruto')?.value;
@@ -1602,8 +1602,8 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
                 this.GuardarlogAsesoria(this.logDataOnEditAsesoria, 1);
                 this.logDataOnEditAsesoria.ProductoAnterior = this.asesoriacontractualFrom.get('DescripcionProducto')?.value;
                 this.logDataOnEditAsesoria.PlazoAnterior = this.asesoriacontractualFrom.get('Plazo')?.value;
-                this.logDataOnEditAsesoria.CuotaAnterior = this.asesoriacontractualFrom.get('CuotaMes')?.value;
-                this.logDataOnEditAsesoria.ValorTotalAnterior = this.asesoriacontractualFrom.get('ValorPlan')?.value;
+                this.logDataOnEditAsesoria.CuotaAnterior = this.asesoriacontractualFrom.get('CuotaMes')?.value || '';
+                this.logDataOnEditAsesoria.ValorTotalAnterior = Math.round(this.asesoriacontractualFrom.get('ValorPlan')?.value);
                 this.logDataOnEditAsesoria.TasaEfectivaAnterior = this.asesoriacontractualFrom.get('TasaEfectiva')?.value;
                 this.logDataOnEditAsesoria.TasaNominalAnterior = this.asesoriacontractualFrom.get('TasaNominal')?.value;
                 this.logDataOnEditAsesoria.InteresBrutoAnterior = this.asesoriacontractualFrom.get('InteresBruto')?.value;
@@ -1777,6 +1777,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
 
               }
               if (!logAsesoria.AsesorExterno) delete logAsesoria.AsesorExterno;
+              if(this.asesoriacontractualFrom.get('IdProducto')?.value === 207) delete logAsesoria.CuotaMes;
               let newTerceroData = this.creacionFrom.value;
               if (newTerceroData.TipoDocumento) {
                 const tipoDocumento = this.tiposDeDocumento.find((tipoD: any) => tipoD.Clase == newTerceroData.TipoDocumento).Descripcion;
