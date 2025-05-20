@@ -1355,7 +1355,7 @@ export class ContactoComponent implements OnInit {
     this.contactoFrom.controls['Vias'].setValidators([Validators.required]);
     this.contactoFrom.controls['Vias'].setErrors({ 'incorrect': true });
 
-    this.contactoFrom.controls['NumeroUno'].setValidators([Validators.required]);
+    this.contactoFrom.controls['NumeroUno'].setValidators([Validators.required, Validators.pattern('^(?!\\s*$).+')]);
     this.contactoFrom.controls['NumeroUno'].setErrors({ 'incorrect': true });
   }
   AgregarValidacionesEmail() {

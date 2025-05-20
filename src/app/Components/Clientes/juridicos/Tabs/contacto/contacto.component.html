@@ -7,7 +7,7 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label class="textBlod">Tipo contacto: </label>
-                            <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                            <span class="textBigRed">*</span>
                             <select class="form-control" formControlName="TipoContacto" name="select" [attr.disabled]="bloquearForm" (change)="validarTipoContacto(contactoFrom.value); GenericoSelect('TipoContacto',contactoFrom)">
                                 <option value="0">-- Seleccione --</option>
                                 <option *ngFor="let dataContactos of dataContacto" [ngValue]="dataContactos">
@@ -24,7 +24,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label class="textBlod">País: </label>
-                                <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                                <span class="textBigRed">*</span>
                                 <select class="form-control" formControlName="Pais" name="select" [attr.disabled]="bloquearForm" (change)="GetDepartamentosList(contactoFrom.value)">
                                         <option value="">-- Seleccione --</option>
                                         <option *ngFor="let pais of dataPais" [value]="pais.IdPais">
@@ -39,7 +39,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label class="textBlod">Departamento: </label>
-                                <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                                <span class="textBigRed">*</span>
                                 <select class="form-control" formControlName="Departamento" name="select" [attr.disabled]="bloqDeparta" (change)="GetCiudadList(contactoFrom.value)">
                                         <option value="">-- Seleccione --</option>
                                         <option *ngFor="let depart of dataDepartamentos" [value]="depart.IdDepartamento">
@@ -53,7 +53,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label class="textBlod">Ciudad: </label>
-                                <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                                <span class="textBigRed">*</span>
                                 <select class="form-control" formControlName="Ciudad" name="select" [attr.disabled]="bloqCiudad" (change)="validarCiudadList(contactoFrom.value);  GetBarrioList(contactoFrom.value)">
                                         <option value="">-- Seleccione --</option>
                                         <option *ngFor="let ciudad of dataCiudades" [value]="ciudad.IdCiudad">
@@ -110,7 +110,7 @@
                     <div class="col-xs-12 col-md-12 col-lg-2">
                         <div class="form-group">
                             <label class="">Tipo vía</label>
-                            <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                            <span class="textBigRed">*</span>
                             <select class="form-control" formControlName="Vias" id="via" name="select" (change)="ConcatenarDireccion('via',contactoFrom.value.Vias)">
                                 <option value="0" disabled> -- Seleccione --</option>
                                 <option *ngFor="let vias of dataVias" [ngValue]="vias">
@@ -125,7 +125,7 @@
                     <div class="col-xs-12 col-md-12 col-lg-2">
                         <div class="form-group" *ngIf="descripcionNumero">
                             <label class="">Número</label>
-                            <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                            <span class="textBigRed">*</span>
                             <input type="text" class="form-control" id="NumeroUno" formControlName="NumeroUno" (blur)="ConcatenarDireccion('num',contactoFrom.value.NumeroUno)" (input)="validarNumeros()" />
                             <span class="help-block validationSpan" *ngIf="contactoFrom.controls['NumeroUno'].errors?.['required']  && (contactoFrom.controls['NumeroUno'].dirty || contactoFrom.controls['NumeroUno'].touched)">
                                 El número es obligatorio.
@@ -291,7 +291,7 @@
                     <div class="col-xs-12 col-md-12 col-lg-12">
                         <div class="form-group">
                             <label class="textBlod">Celular:</label>
-                            <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
+                            <span class="textBigRed">*</span>
                             <input type="text" class="form-control" formControlName="Celular" minlength="10" maxlength="10" />
                             <span class="help-block validationSpan" *ngIf="contactoFrom.controls['Celular'].errors?.['required']  && (contactoFrom.controls['Celular'].dirty || contactoFrom.controls['Celular'].touched)">
                                 El celular es obligatorio.

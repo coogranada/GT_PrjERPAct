@@ -1116,7 +1116,9 @@ export class AsesoriaTerminoComponent implements OnInit {
           allowEscapeKey: false
         }).then((results) => {
           if (results.value) {
-            this.generalesService.Autofocus('SelectAsesorExterno');
+            setTimeout(() => {
+              this.generalesService.Autofocus('SelectAsesorExterno');
+            }, 500);
             this.VolverArriba();
             return;
           } else

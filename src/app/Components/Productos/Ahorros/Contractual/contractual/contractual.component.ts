@@ -40,6 +40,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
   @ViewChild('tab3', { static: true }) private tab3!: ElementRef;
   @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
   @ViewChild('AbrirSolicitudGestion', { static: true }) private AbrirSolicitudGestion!: ElementRef;
+  @ViewChild('asesorExterno', { static: true }) private asesorExterno!: ElementRef;
   public loading = false;
   public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = ColorPrimario;
@@ -4314,7 +4315,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                         allowEscapeKey: false
                         }).then((results) => {
                             if (results.value) {
-                                this.generalesService.Autofocus('SelectAsesorExterno');
+                              this.VolverArriba();
+                              setTimeout(() => {
+                                this.asesorExterno.nativeElement.focus();
+                              }, 500);
                                 this.contractualFrom.get('TasaEfectiva')?.setValue(this.contractualFrom.get('TasaEfectiva')?.value + "%");
                                 this.contractualFrom.get('TasaNominal')?.setValue(this.contractualFrom.get('TasaNominal')?.value + "%");
                             } else {
@@ -7550,7 +7554,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                         allowEscapeKey: false
                         }).then((results) => {
                             if (results.value) {
-                                this.generalesService.Autofocus('SelectAsesorExterno');
+                              this.VolverArriba();
+                              setTimeout(() => {
+                                this.asesorExterno.nativeElement.focus();
+                              }, 500);
                                 this.contractualFrom.get('TasaEfectiva')?.setValue(this.contractualFrom.get('TasaEfectiva')?.value + "%")
                                 this.contractualFrom.get('TasaNominal')?.setValue(this.contractualFrom.get('TasaNominal')?.value + "%")
 
@@ -10855,7 +10862,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                     allowEscapeKey: false
                 }).then((results) => {
                     if (results.value) {
-                    this.generalesService.Autofocus('SelectAsesorExterno');
+                      this.VolverArriba();
+                      setTimeout(() => {
+                        this.asesorExterno.nativeElement.focus();
+                      }, 500);
                     this.contractualFrom.get('TasaEfectiva')?.setValue(this.contractualFrom.get('TasaEfectiva')?.value + "%");
                     this.contractualFrom.get('TasaNominal')?.setValue(this.contractualFrom.get('TasaNominal')?.value + "%");
                     } else {
@@ -14119,7 +14129,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                       allowEscapeKey: false
                   }).then((results) => {
                       if (results.value) {
-                      this.generalesService.Autofocus('SelectAsesorExterno');
+                        this.VolverArriba();
+                        setTimeout(() => {
+                          this.asesorExterno.nativeElement.focus();
+                        }, 500);
                       this.contractualFrom.get('TasaEfectiva')?.setValue(this.contractualFrom.get('TasaEfectiva')?.value + "%")
                       this.contractualFrom.get('TasaNominal')?.setValue(this.contractualFrom.get('TasaNominal')?.value + "%")
 

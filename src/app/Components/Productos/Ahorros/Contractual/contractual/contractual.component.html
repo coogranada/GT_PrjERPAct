@@ -276,7 +276,7 @@
                                 <label class="textNegrilla">Asesor externo:</label>
                             </div>
                             <div class="col-xs-4 col-md-3 col-lg-1">
-                                <input type="text" class="form-control" id="SelectAsesorExterno" tooltip="Id asesor"
+                                <input #asesorExterno type="text" class="form-control" id="SelectAsesorExterno" tooltip="Id asesor"
                                     placement="top" show-delay="500" formControlName="strCodigo"
                                     (blur)="BuscarAsesorExternoCodigo()" [attr.disabled]="BloquearAsesorExterno"
                                     (keypress)="LimpiarCampos('strCodigo')" maxlength="4" />
