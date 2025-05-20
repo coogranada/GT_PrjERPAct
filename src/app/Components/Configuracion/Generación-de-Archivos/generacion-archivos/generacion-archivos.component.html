@@ -1,0 +1,178 @@
+<div class="panel panel-white">
+    <div class="panel-heading">
+        <h6 class="panel-title">Datos</h6>
+        <div class="heading-elements">
+            <ul class="icons-list">
+                <li>
+                    <a data-toggle="modal" data-target="#ModalAyuda">
+                        <i class="icon-question6 " title="Ayuda" data-popup="tooltip" data-trigger="hover"
+                            data-placement="top"></i>
+                    </a>
+                </li>
+                <li>
+                    <a data-action="collapse"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <form [formGroup]="GeneracionAForm" autocomplete="off">
+        <div class="panel-body">
+            <!-- Agrupación de Campos Generales -->
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <div class="col-xs-12 col-md-3 col-lg-3">
+                    <label><strong>Nombre Sp:</strong></label><span class="text-danger ObligatorioGrande"> *</span>
+                    <input type="text" class="form-control" formControlName="NombreSP" maxlength="100" (blur)="borrarSiEspacios('NombreSP')" />
+                    <span class="help-block validationSpan"
+                        *ngIf="GeneracionAForm.controls['NombreSP'].errors?.['required'] && (GeneracionAForm.controls['NombreSP'].dirty || GeneracionAForm.controls['NombreSP'].touched)">
+                        El nombre del Sp es obligatorio.
+                    </span>
+                </div>
+
+                <div class="col-xs-12 col-md-3 col-lg-3">
+                    <label><strong>Nombre Salida:</strong></label><span class="text-danger ObligatorioGrande"> *</span>
+                    <input type="text" class="form-control" formControlName="NombreSalida" maxlength="100" (blur)="borrarSiEspacios('NombreSalida')"/>
+                    <span class="help-block validationSpan"
+                        *ngIf="GeneracionAForm.controls['NombreSalida'].errors?.['required'] && (GeneracionAForm.controls['NombreSalida'].dirty || GeneracionAForm.controls['NombreSalida'].touched)">
+                        El nombre salida es obligatorio.
+                    </span>
+                </div>
+
+                <div class="col-xs-12 col-md-3 col-lg-3">
+                    <label><strong>Ruta Local Salida:</strong></label><span class="text-danger ObligatorioGrande"> *</span>
+                    <input type="text" class="form-control" formControlName="RutaLocalSalida" maxlength="100" (blur)="borrarSiEspacios('RutaLocalSalida')"/>
+                    <span class="help-block validationSpan"
+                        *ngIf="GeneracionAForm.controls['RutaLocalSalida'].errors?.['required'] && (GeneracionAForm.controls['RutaLocalSalida'].dirty || GeneracionAForm.controls['RutaLocalSalida'].touched)">
+                        El ruta local salida es obligatorio.
+                    </span>
+                </div>
+
+               
+
+                <div class="col-xs-12 col-md-1 col-lg-1">
+                    <label><strong>Estado:</strong></label><span class="text-danger ObligatorioGrande"> *</span>
+                    <div class="text-center" style="width: 80%; justify-content: center; text-align: center;">
+                        <input class="check-ena" type="checkbox" formControlName="Estado" style="margin-top: 10px;">
+                    </div>
+                </div>
+                <!-- <div class="col-xs-12 col-md-2 col-lg-2">
+                    <label><strong>¿Eliminar al subir?</strong></label><span class="text-danger ObligatorioGrande"> *</span>
+                    <div class="text-center" style="width: 80%; justify-content: center; text-align: center;">
+                        <input class="check-ena" type="checkbox" formControlName="eliminaArchivo" style="margin-top: 10px;">
+                    </div>
+                </div> -->
+
+
+
+            </div>
+            
+            <!-- Fin Agrupación de Campos Opcionales -->
+
+           
+            <!-- Agrupación de Campos Otros -->
+            <div class="col-xs-12 col-md-12 col-lg-12 contorno-rutas div-espacio1">
+                <span class="titulo">Ejecución</span>
+                <div class="col-xs-12 col-md-12 col-lg-12">
+
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <label><strong>Frecuencia:</strong></label><span class="text-danger ObligatorioGrande">
+                            *</span>
+                        <input type="number" readonly min="1" max="1" maxlength="1" placeholder="1" class="form-control" formControlName="Frecuencia" />
+                    </div>
+
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <label><strong>Dia Inicial:</strong></label><span class="text-danger ObligatorioGrande">
+                            *</span>
+                        <input type="date" class="form-control" formControlName="DiaInicial" />
+                        <span class="help-block validationSpan"
+                            *ngIf="GeneracionAForm.controls['DiaInicial'].errors?.['required'] && (GeneracionAForm.controls['DiaInicial'].dirty || GeneracionAForm.controls['DiaInicial'].touched)">
+                            La hora de entrada es obligatoria.
+                        </span>
+                    </div>
+
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <label><strong>Dia Final:</strong></label><span class="text-danger ObligatorioGrande">
+                            *</span>
+                        <input type="date" class="form-control" formControlName="DiaFinal" />
+                        <span class="help-block validationSpan"
+                            *ngIf="GeneracionAForm.controls['DiaFinal'].errors?.['required'] && (GeneracionAForm.controls['DiaFinal'].dirty || GeneracionAForm.controls['DiaFinal'].touched)">
+                            La hora de salida es obligatoria.
+                        </span>
+                    </div>
+
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <label><strong>Dia Generado:</strong></label><span class="text-danger ObligatorioGrande">
+                            *</span>
+                        <input type="date" class="form-control" formControlName="DiaGenera" />
+                        <span class="help-block validationSpan"
+                            *ngIf="GeneracionAForm.controls['DiaGenera'].errors?.['required'] && (GeneracionAForm.controls['DiaGenera'].dirty || GeneracionAForm.controls['DiaGenera'].touched)">
+                            La dia generado es obligatoria.
+                        </span>
+                    </div>
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <label><strong>Hora Generado:</strong></label><span class="text-danger ObligatorioGrande">
+                            *</span>
+                        <input type="time" class="form-control" formControlName="HoraGenera" />
+                        <span class="help-block validationSpan"
+                            *ngIf="GeneracionAForm.controls['HoraGenera'].errors?.['required'] && (GeneracionAForm.controls['HoraGenera'].dirty || GeneracionAForm.controls['HoraGenera'].touched)">
+                            La dia generado es obligatoria.
+                        </span>
+                    </div>
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <label><strong>Separador:</strong></label><span class="text-danger ObligatorioGrande"> *</span>
+                        <input type="text" class="form-control" formControlName="Separador" maxlength="20" (blur)="borrarSiEspacios('Separador')" />
+                        <span class="help-block validationSpan"
+                            *ngIf="GeneracionAForm.controls['Separador'].errors?.['required'] && (GeneracionAForm.controls['Separador'].dirty || GeneracionAForm.controls['Separador'].touched)">
+                            El separador es obligatorio.
+                        </span>
+                    </div>
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <label><strong>Formato Fecha:</strong></label><span class="text-danger ObligatorioGrande"> *</span>
+                        <input type="text" class="form-control" formControlName="FormatoFecha" maxlength="20" (blur)="borrarSiEspacios('FormatoFecha')" />
+                        <span class="help-block validationSpan"
+                            *ngIf="GeneracionAForm.controls['FormatoFecha'].errors?.['required'] && (GeneracionAForm.controls['FormatoFecha'].dirty || GeneracionAForm.controls['FormatoFecha'].touched)">
+                            El formato de fecha es obligatorio.
+                        </span>
+                    </div>
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <label><strong>Tipo Archivo Fecha:</strong></label><span class="text-danger ObligatorioGrande"> *</span>
+                        <input type="text" class="form-control" formControlName="TipoDeArchivo" maxlength="20" (blur)="borrarSiEspacios('TipoDeArchivo')" />
+                        <span class="help-block validationSpan"
+                            *ngIf="GeneracionAForm.controls['TipoDeArchivo'].errors?.['required'] && (GeneracionAForm.controls['TipoDeArchivo'].dirty || GeneracionAForm.controls['TipoDeArchivo'].touched)">
+                            El tipo de archivoes obligatorio.
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+            <!-- Fin agrupación de Campos de ejecución -->
+
+           
+
+            <div class="col-xs-12 col-md-12 col-lg-12" style="justify-items: end; padding: 1em;">
+                <div class="actions clearfix">
+                    <button class="btn Gt-btn-morado btn-icon legitRipple" (click)="limpiarFormulario()" type="button">
+                        LIMPIAR
+                    </button>&nbsp;
+
+                    <button class="btn Gt-btn-verde btn-icon legitRipple" type="submit" [disabled]="GeneracionAForm.invalid"
+                        *ngIf="!vbleBtnactualizar">
+                        <i class=""></i>&nbsp; GUARDAR
+                    </button>&nbsp;
+
+                    <button class="btn Gt-btn-verde btn-icon legitRipple" type="submit" [disabled]="GeneracionAForm.invalid"
+                        *ngIf="vbleBtnactualizar">
+                        <i class=""></i>&nbsp; ACTUALIZAR
+                    </button>
+
+                </div>
+            </div>
+
+        </div>
+
+
+
+    </form>
+
+
+</div>

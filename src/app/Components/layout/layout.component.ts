@@ -82,6 +82,7 @@ export class LayoutComponent implements OnInit,OnDestroy {
 
   /* Transmision de archivos */
   public Transmisionarchivos = false;
+  GeneracionArchivos : boolean = false;
   /* Fin Maestros productos */
 
   /* Fin Configuracion */
@@ -563,6 +564,7 @@ export class LayoutComponent implements OnInit,OnDestroy {
           }
           result.forEach((element: any) => {
             /* Configuracion */
+            console.log("per",element.Descripcion + "   " + element.IdModulo)
             if (element.IdModulo === 63) {
               this.Configuracion = true;
               this.ConfiguracionModel = element;
@@ -670,9 +672,10 @@ export class LayoutComponent implements OnInit,OnDestroy {
             }
             /* Fin  Informes */
             /* Transmisión archivos */
-            else if (element.IdModulo === 81) {
+            else if (element.IdModulo === 81)
               this.Transmisionarchivos = true;
-            }
+            else if (element.IdModulo === 82) 
+              this.GeneracionArchivos = true;
             /* Fin Transmisión archivos */
             /* Fin  Configuracion */
             /* Clientes */

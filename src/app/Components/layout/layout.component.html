@@ -314,6 +314,13 @@
                                                 <span>Transmisión de archivos</span>
                                             </a>
                                         </li>
+                                        <li  *ngIf="GeneracionArchivos">
+                                            <a (click)="toggletransmisionarchivosMenu()"
+                                                [routerLink]="['Configuracion/GeneracionArchivos']">
+                                                <i></i>
+                                                <span>Generación de archivos</span>
+                                            </a>
+                                        </li>
                                     </ul>
                                 <li id="clientes" *ngIf="Clientes">
                                     <a (click)="toggleClientesMenu()">

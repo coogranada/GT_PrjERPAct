@@ -20,6 +20,7 @@ import { LlavesComponent } from '../Components/Configuracion/Maestros/llaves/lla
 import { ConsecutivoTituloComponent } from '../Components/Configuracion/Maestros-productos/Maestros-ahorros/Consecutivo-titulo/consecutivo-titulo.component';
 import { InformeConsecutivoTituloComponent } from '../Components/Configuracion/Informes/Maestros-ahorros/Consecutivo-titulo/informe-consecutivo-titulo/informe-consecutivo-titulo.component';
 import { TransmisionArchivosComponent } from '../Components/Configuracion/Transmision-archivos/transmision-archivos/transmision-archivos.component';
+import { GeneracionArchivosComponent } from '../Components/Configuracion/Generación-de-Archivos/generacion-archivos/generacion-archivos.component';
 
 const routesConfiguracion: Routes = [
   { path: "Maestros/Areas", component: AreasComponent },
@@ -41,7 +42,8 @@ const routesConfiguracion: Routes = [
   { path: "Maestros/llaves", component : LlavesComponent },
   { path: "Maestros-productos/Maestros-ahorros/Consecutivo-titulo", component: ConsecutivoTituloComponent },
   { path: "Informes/Maestros-ahorros/Consecutivo-titulo/informe-consecutivo-titulo", component: InformeConsecutivoTituloComponent },
-  { path: "TransmisionArchivos", component: TransmisionArchivosComponent }
+  { path: "TransmisionArchivos", component: TransmisionArchivosComponent },
+  { path: "GeneracionArchivos", component: GeneracionArchivosComponent }
   
 ];
 
