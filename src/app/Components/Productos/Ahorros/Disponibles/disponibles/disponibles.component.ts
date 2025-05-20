@@ -3477,7 +3477,7 @@ export class DisponiblesComponent implements OnInit {
                   this.ValidarDisponibles();
 
                 } else {
-                  this.notif.warning('Alerta', 'El producto no está vigente.', ConfiguracionNotificacion.configRightTop);
+                  this.notif.warning('Alerta', 'El producto no está vigente, o no es válido para la relación.', ConfiguracionNotificacion.configRightTop);
                   this.DisponibleForm.get('IdProducto')?.reset();
                   this.DisponibleForm.get('DescripcionProducto')?.reset();
                   this.DisponibleForm.get('IdMedioPago')?.setValue("9999")
@@ -3488,7 +3488,7 @@ export class DisponiblesComponent implements OnInit {
                 this.DisponibleForm.get('IdProducto')?.reset();
                 this.DisponibleForm.get('IdMedioPago')?.setValue("9999")
                 this.BloquearMedioPago = false;
-              }              
+              }
             } else {
               if (result[0].IdProducto === 101 || result[0].IdProducto === 112) {
                 const Edad = this.DisponibleForm.get('Edad')?.value;
@@ -3504,7 +3504,7 @@ export class DisponiblesComponent implements OnInit {
                     this.ValidarDisponibles();
 
                   } else {
-                    this.notif.warning('Alerta', 'El producto no está vigente.', ConfiguracionNotificacion.configRightTop);
+                    this.notif.warning('Alerta', 'El producto no está vigente, o no es válido para la relación.', ConfiguracionNotificacion.configRightTop);
                     this.DisponibleForm.get('IdProducto')?.reset();
                     this.DisponibleForm.get('DescripcionProducto')?.reset();
                     this.DisponibleForm.get('IdMedioPago')?.setValue("9999")
@@ -3523,7 +3523,7 @@ export class DisponiblesComponent implements OnInit {
                       this.ValidarDisponibles();
 
                     } else {
-                      this.notif.warning('Alerta', 'El producto no está vigente.', ConfiguracionNotificacion.configRightTop);
+                      this.notif.warning('Alerta', 'El producto no está vigente, o no es válido para la relación.', ConfiguracionNotificacion.configRightTop);
                       this.DisponibleForm.get('IdProducto')?.reset();
                       this.DisponibleForm.get('DescripcionProducto')?.reset();
                       this.DisponibleForm.get('IdMedioPago')?.setValue("9999")
@@ -3533,9 +3533,9 @@ export class DisponiblesComponent implements OnInit {
                     this.notif.warning('Advertencia', 'El número de producto ingresado no es para menores', ConfiguracionNotificacion.configRightTop);
                     this.DisponibleForm.get('IdProducto')?.reset();
                   }
-                }                
+                }
               } else {
-                if (this.DisponibleForm.get('Clase')?.value === 5) {
+                if (this.DisponibleForm.get('Clase')?.value === 5 || this.DisponibleForm.get('Clase')?.value === 15) {
                   const fechaHoy = new DatePipe('en-CO').transform(new Date(), 'yyyy/MM/dd');
                   const fechaVigencia = new DatePipe('en-CO').transform(this.ArrayCondiciones.FechaVigencia, 'yyyy/MM/dd');
                   if (fechaHoy != null && fechaVigencia != null && fechaHoy <= fechaVigencia) {
@@ -3547,23 +3547,24 @@ export class DisponiblesComponent implements OnInit {
                     this.ValidarDisponibles();
 
                   } else {
-                    this.notif.warning('Alerta', 'El producto no está vigente.', ConfiguracionNotificacion.configRightTop);
+                    this.notif.warning('Alerta', 'El producto no está vigente, o no es válido para la relación.', ConfiguracionNotificacion.configRightTop);
                     this.DisponibleForm.get('IdProducto')?.reset();
                     this.DisponibleForm.get('DescripcionProducto')?.reset();
                     this.DisponibleForm.get('IdMedioPago')?.setValue("9999")
                     this.BloquearMedioPago = false;
                   }
                 } else {
+
                   this.notif.warning('Advertencia', 'El número de producto ingresado no es para menores', ConfiguracionNotificacion.configRightTop);
                   this.DisponibleForm.get('IdProducto')?.reset();
                 }
-              } 
+              }
             }
-          } else if (result.length > 1) {            
+          } else if (result.length > 1) {
             this.resultProducto = result;
             this.ModalDisponible.nativeElement.click();
             this.DisponibleForm.get('IdMedioPago')?.setValue("9999");
-            this.BloquearMedioPago = false;            
+            this.BloquearMedioPago = false;
           }
         },
         error => {
@@ -3596,12 +3597,12 @@ export class DisponiblesComponent implements OnInit {
             this.resultProducto = result;
             this.ModalDisponible.nativeElement.click();
             this.DisponibleForm.get('IdMedioPago')?.setValue("9999")
-            this.BloquearMedioPago = false; 
+            this.BloquearMedioPago = false;
           } else if (result.length > 1) {
             this.resultProducto = result;
             this.ModalDisponible.nativeElement.click();
             this.DisponibleForm.get('IdMedioPago')?.setValue("9999")
-            this.BloquearMedioPago = false;     
+            this.BloquearMedioPago = false;
           }
         },
         error => {
