@@ -5432,7 +5432,7 @@ export class DisponiblesComponent implements OnInit {
               result => {
                 this.loading = false;
                 this.BloquearAsociado = false;
-                this.notif.success('Exitoso', 'Corrección de libreta o tarjeta se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+                this.notif.success('Exitoso', 'Cambio de libreta o tarjeta se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
                 this.BloquearNumeroTarjeta = false;
                 this.btnGuardar = true;
                 this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
@@ -5475,7 +5475,7 @@ export class DisponiblesComponent implements OnInit {
               result => {
                 this.loading = false;
                 this.BloquearAsociado = false;
-                this.notif.success('Exitoso', 'Corrección de libreta o tarjeta se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+                this.notif.success('Exitoso', 'Cambio de libreta o tarjeta se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
                 this.BloquearNumeroTarjeta = false;
                 this.btnGuardar = true;
                 this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
