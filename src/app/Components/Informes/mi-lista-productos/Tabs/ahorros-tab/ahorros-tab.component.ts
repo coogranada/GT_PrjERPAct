@@ -2001,6 +2001,7 @@ export class AhorrosTabComponent implements OnInit {
         this.saldosDisponibles.SaldoTotal = result.Canje + result.Efectivo;
         this.saldosDisponibles.SaldoPromedioMesAnterior = result.SaldoPromedioMesAnterior;
         this.saldosDisponibles.InteresMesAnterior = result.InteresMesAnterior;
+        this.saldosDisponibles.GMFAdescontar = result.GMFAdescontar;
         var posactivos = 0;
 
         if (result.Titulares.length > 0) {

@@ -122,6 +122,7 @@ export class SaldosDisponibles {
     InteresMesAnterior: string = "";
     RetirosPeriodos: string = "";
     AliasCuenta: string = "";
+    GMFAdescontar: string ="";
 }
 export class Libreta{
   curInicial: string = "";

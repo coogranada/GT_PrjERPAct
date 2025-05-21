@@ -2817,7 +2817,7 @@ export class DisponiblesComponent implements OnInit {
         this.DisponibleForm.get('Efectivo')?.setValue(this.dataObjet[0].Efectivo);
         this.DisponibleForm.get('SaldoPromedioMesAnterior')?.setValue(this.dataObjet[0].SaldoPromedioMesAnterior);
         this.DisponibleForm.get('InteresMesAnterior')?.setValue(this.dataObjet[0].InteresMesAnterior);
-
+        this.DisponibleForm.get('GMFAdescontar')?.setValue(this.dataObjet[0].GMFAdescontar)
 
         // fin saldos
 
@@ -3087,7 +3087,7 @@ export class DisponiblesComponent implements OnInit {
         this.DisponibleForm.get('Efectivo')?.setValue(this.dataObjet.Efectivo);
         this.DisponibleForm.get('SaldoPromedioMesAnterior')?.setValue(this.dataObjet.SaldoPromedioMesAnterior);
         this.DisponibleForm.get('InteresMesAnterior')?.setValue(this.dataObjet.InteresMesAnterior);
-
+        this.DisponibleForm.get('GMFAdescontar')?.setValue(this.dataObjet.GMFAdescontar);
 
         // fin saldos
 
@@ -7923,6 +7923,7 @@ export class DisponiblesComponent implements OnInit {
     const RetencionFuentePeriodo = new FormControl('', []);
     const Efectivo = new FormControl('', []);
     const SaldoTotal = new FormControl('', []);
+    const GMFAdescontar = new FormControl('', []);
     const FechaApertura = new FormControl('', []);
     const FechaUltimaTrans = new FormControl('', []);
     const FechaCancelacion = new FormControl('', []);
@@ -8044,6 +8045,7 @@ export class DisponiblesComponent implements OnInit {
       RetencionFuentePeriodo: RetencionFuentePeriodo,
       Efectivo: Efectivo,
       SaldoTotal: SaldoTotal,
+      GMFAdescontar: GMFAdescontar,
       FechaApertura: FechaApertura,
       FechaUltimaTrans: FechaUltimaTrans,
       FechaCancelacion: FechaCancelacion,

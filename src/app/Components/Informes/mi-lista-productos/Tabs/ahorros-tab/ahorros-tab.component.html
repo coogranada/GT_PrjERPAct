@@ -830,6 +830,15 @@
                                                 <input style="text-align:right" type="text" class="form-control" [attr.disabled]="true" value=" {{saldosDisponibles.SaldoTotal |  currency}}" currencyMask />
                                             </div>
                                         </div>
+
+                                        <div class="col-xs-12 col-md-4 col-lg-3">
+                                            <div class="form-group">
+                                                <label>GMF a descontar:</label>
+                                                <span class="text-danger"></span>
+                                                <input style="text-align:right" type="text" class="form-control" [attr.disabled]="true" value=" {{saldosDisponibles.GMFAdescontar |  currency}}" currencyMask />
+                                            </div>
+                                        </div>
+
                                         <div class="col-xs-12 col-md-4 col-lg-1"></div>
 
                                         <!-- fin saldos    -->
