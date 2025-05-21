@@ -243,6 +243,11 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
   btnBuscar = true;
   aceptaTratamientoDatos : boolean = false;
   esReimpresion = false;
+  idTipoRelacion: number = 0;
+
+  updateTipoRelacion(id: number) {
+    this.idTipoRelacion = id;
+  }
   constructor(private moduleValidationService: ModuleValidationService, private el: ElementRef,
     private operacionesService: OperacionesService, private notif: AlertService, private oficinasService: OficinasService,
     private clientesGetListService: ClientesGetListService, private recursosGeneralesService: RecursosGeneralesService,

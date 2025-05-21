@@ -61,7 +61,7 @@ export class EntrevistaComponent implements OnInit {
   @Input() bloquearCheckDebito = true;
   @Input() bloquearFechaExento : boolean | null = true;
   @Input() desbloquearTabs!: () => void;
-  @Input() tipoRelacion: any;
+  @Input() idTipoRelacion!: number;
   validoPregunta1 = false;
   validoPregunta2 = false;
   validoPregunta3 = false;
