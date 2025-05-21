@@ -9,7 +9,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td colspan="2">¿Realiza operaciones en moneda extranjera?<span class="textBigRed" *ngIf="tipoRelacion === '5'">*</span></td>
+                        <td colspan="2">¿Realiza operaciones en moneda extranjera?<span class="textBigRed" *ngIf="idTipoRelacion === 5">*</span></td>
                         <td colspan="1">
                             Si <input type="checkbox" class="switchery" formControlName="RPregunta6Si" [attr.disabled]="bloquearForm" (click)="ValidarSeleccion('si', 6)"> No <input type="checkbox" class="switchery" formControlName="RPregunta6No" [attr.disabled]="bloquearForm"
                                 (click)="ValidarSeleccion('No', 6)">
@@ -79,7 +79,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2">¿Tiene inversiones en moneda extranjera?<span class="textBigRed" *ngIf="tipoRelacion === '5'">*</span></td>
+                        <td colspan="2">¿Tiene inversiones en moneda extranjera?<span class="textBigRed" *ngIf="idTipoRelacion === 5">*</span></td>
                         <td colspan="1">
                             Si <input type="checkbox" class="switchery" formControlName="RPregunta14Si" [attr.disabled]="bloquearForm" (click)="ValidarSeleccion('si', 14)"> No <input type="checkbox" class="switchery" formControlName="RPregunta14No" [attr.disabled]="bloquearForm"
                                 (click)="ValidarSeleccion('No', 14)">
@@ -110,7 +110,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2">¿Posee cuentas en moneda extranjera?<span class="textBigRed" *ngIf="tipoRelacion === '5'">*</span></td>
+                        <td colspan="2">¿Posee cuentas en moneda extranjera?<span class="textBigRed" *ngIf="idTipoRelacion === 5">*</span></td>
                         <td colspan="1">
                             Si <input type="checkbox" class="switchery" formControlName="RPregunta17Si" [attr.disabled]="bloquearForm" (click)="ValidarSeleccion('si', 17)"> No <input type="checkbox" class="switchery" formControlName="RPregunta17No" [attr.disabled]="bloquearForm"
                                 (click)="ValidarSeleccion('No', 17)">
@@ -147,7 +147,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2">Declaro que no realizo transacciones en moneda extranjera<span class="textBigRed" *ngIf="tipoRelacion === '5'">*</span></td>
+                        <td colspan="2">Declaro que no realizo transacciones en moneda extranjera<span class="textBigRed" *ngIf="idTipoRelacion === 5">*</span></td>
                         <td colspan="1">
                             Si <input type="checkbox" class="switchery" formControlName="RPregunta28Si" [attr.disabled]="bloquearForm" (click)="ValidarSeleccion('si', 28)"> No <input type="checkbox" class="switchery" formControlName="RPregunta28No" [attr.disabled]="bloquearForm"
                                 (click)="ValidarSeleccion('No', 28)">

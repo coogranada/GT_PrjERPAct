@@ -63,6 +63,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
   @Output() emitEventOficina: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() emitEventResetOperacion: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() clienteSeleccionado: EventEmitter<any> = new EventEmitter<any>();
+  @Output() tipoRelacionUpdated: EventEmitter<any> = new EventEmitter<any>();
   @ViewChild('BuscarAsesoresExt', { static: true }) private BuscarAsesoresExt!: ElementRef;
   @ViewChild('BuscarAsesoresPpal', { static: true }) private BuscarAsesoresPpal!: ElementRef;
   @ViewChild('CerrarDescripcion', { static: true }) private CerrarDescripcion!: ElementRef;
@@ -179,10 +180,12 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
     this.GetObjetoSocial();
     this.GetCiiuList();
     localStorage.setItem('IdModuloActivo', window.btoa(JSON.stringify(this.CodModulo)));
-    
-   
-
     this.onChanges();
+
+    this.infoJuridicoFrom.get('Relacion')?.valueChanges.subscribe(value => {      
+      this.tipoRelacionUpdated.emit(+value);
+    })
+
   }
 
   onChanges(): void {
