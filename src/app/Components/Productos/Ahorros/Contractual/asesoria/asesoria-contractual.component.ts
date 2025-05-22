@@ -1685,6 +1685,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
 
           }
           if (!logAsesoria.AsesorExterno) delete logAsesoria.AsesorExterno;
+          if(this.asesoriacontractualFrom.get('IdProducto')?.value === 207) delete logAsesoria.CuotaMes;
           let newTerceroData = this.creacionFrom.value;
           if (newTerceroData.TipoDocumento) {
             const tipoDocumento = this.tiposDeDocumento.find((tipoD: any) => tipoD.Clase == newTerceroData.TipoDocumento).Descripcion;
