@@ -9674,6 +9674,9 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                   this.AsessorNecesario = null;
                   this.AsessorNecesarioMarca = true;
                   this.AnteriorTab.nativeElement.click();
+                  setTimeout(() => {
+                    this.generalesService.Autofocus('codigoAsesorExterno');
+                  }, 500);
                   // Mostrar el campo asesor en rojo y no dejarlo ir si no lo llena
                   $('#financieroTab').addClass('disableTab');
                   this.disableTabFinanciero = false;
@@ -9993,6 +9996,9 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                 this.AsessorNecesario = null;
                 this.AsessorNecesarioMarca = true;
                 this.AnteriorTab.nativeElement.click();
+                setTimeout(() => {
+                  this.generalesService.Autofocus('codigoAsesorExterno');
+                }, 500);
                 // Mostrar el campo asesor en rojo y no dejarlo ir si no lo llena
                 $('#financieroTab').addClass('disableTab');
                 this.disableTabFinanciero = false;
@@ -12418,7 +12424,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.contactoForm.controls['Ciudad'].setErrors({ 'incorrect': true });
     this.contactoForm.controls['Vias'].setValidators([Validators.required]);
     this.contactoForm.controls['Vias'].setErrors({ 'incorrect': true });
-    this.contactoForm.controls['NumeroUno'].setValidators([Validators.required]);
+    this.contactoForm.controls['NumeroUno'].setValidators([Validators.required, Validators.pattern('^(?!\\s*$).+')]);
     this.contactoForm.controls['NumeroUno'].setErrors({ 'incorrect': true });
   }
   EliminarValidacionesDireccionContacto(){
