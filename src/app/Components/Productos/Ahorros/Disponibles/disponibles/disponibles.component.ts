@@ -5968,10 +5968,11 @@ export class DisponiblesComponent implements OnInit {
         }
         this.DisponiblesServices.MarcarODesmarcarGMF(payload).subscribe(( x: any) => {
           this.loading = false;
+          this.BuscarPorCuenta();
           this.notif.success('Exitoso', 'Se marca/desmarca GMF correctamente.', ConfiguracionNotificacion.configRightTop);
           this.Guardarlog({ExoneradaGMFActualiza : this.DisponibleForm.get('ExoneradaGmf')?.value});
           setTimeout(() => {
-            this.ObtenerHistorial();
+            this.ObtenerHistorial();            
           }, 1000);
           this.DisponibleOperacionFrom.get('Codigo')?.reset();
          }, error => {
@@ -6516,11 +6517,14 @@ export class DisponiblesComponent implements OnInit {
       && this.DisponibleForm.get('MontoMaximo')?.value !== undefined
       && this.DisponibleForm.get('MontoMaximo')?.value !== '') {
 
-      if (this.editarCanal != null && this.indexCanales != null && this.editarCanal.Canal == this.DisponibleForm.get('Canal')?.value &&
-        this.editarCanal.NumeroOperaciones == this.DisponibleForm.get('NumeroOperaciones')?.value && this.editarCanal.MontoMaximo == this.DisponibleForm.get('MontoMaximo')?.value) {
+      if (this.dataObjetC.Canales.length !== 0)
+        {
+          if (this.editarCanal != null && this.indexCanales != null && this.editarCanal.Canal == this.DisponibleForm.get('Canal')?.value &&
+          this.editarCanal.NumeroOperaciones == this.DisponibleForm.get('NumeroOperaciones')?.value && this.editarCanal.MontoMaximo == this.DisponibleForm.get('MontoMaximo')?.value) {
           this.notif.warning('Advertencia', 'Debe cambiar el canal.', ConfiguracionNotificacion.configRightTop);
-        return;
-      }
+          return;
+          }
+        }     
         if (this.indexCanales !== null) {
           this.dataObjetC.Canales.splice(this.indexCanales, 1);
       }
