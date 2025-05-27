@@ -385,3 +385,11 @@ p::first-letter {
 .inline-text {
     white-space: nowrap;
 }
+
+.textBigRed {
+    font-size: 25px !important;
+    color: #D84315;
+    margin-top: -5px !important;
+    margin-left: 6px;
+    position: absolute;
+}

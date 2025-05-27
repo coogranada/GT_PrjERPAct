@@ -195,7 +195,7 @@
                                                 <div class="col-xs-12 col-md-4 col-lg-3">
                                                     <div class="form-group">
                                                         <label class="textNegrilla">Como conoció a Coogranada:</label>
-                                                        <span class="grande" *ngIf="oculatObligatorioTerceroProveedor"> *</span>
+                                                        <span class="grande" *ngIf="oculatObligatorioTercero"> *</span>
                                                         <select class="form-control" formControlName="metodo" name="select" (change)="validarMetodo()" [attr.disabled]="disableForm">
                                                             <option value="">-- Seleccione --</option>
                                                             <option *ngFor="let metodos of metodosConocio"
@@ -590,7 +590,6 @@
                                                 <div class="col-xs-12 col-md-4 col-lg-3">
                                                     <div class="form-group">
                                                         <label class="textNegrilla">Número de hijos:</label>
-                                                        <span class="grande" *ngIf="oculatObligatorioTercero"> *</span>
                                                         <input type="text" class="form-control" (keypress)="onPuntoComa($event)" formControlName="numHijos" value="0" min="0" maxlength="2" [attr.disabled]="disableForm" (blur)="validarNumHijos()" onPaste="javascript:this.value=''" />
                                                         <span class="help-block validationSpan" *ngIf="basicosFrom.controls['numHijos'].errors?.['required'] && (basicosFrom.controls['numHijos'].dirty || basicosFrom.controls['numHijos'].touched)">
                                                             El número de hijos es obligatorio.
@@ -601,7 +600,6 @@
                                                     <div class="form-group">
                                                         <label class="textNegrilla">Número de hijos que
                                                             estudian:</label>
-                                                        <span class="grande" *ngIf="oculatObligatorioTercero"> *</span>
                                                         <input type="text" class="form-control" (keypress)="onPuntoComa($event)" formControlName="numHijosEstudian" value="0" min="0" maxlength="2" [attr.disabled]="disableFormNumHijos" (blur)="validarNumHijosNegativo()" onPaste="javascript:this.value=''" />
                                                         <span class="help-block validationSpan" *ngIf="basicosFrom.controls['numHijosEstudian'].errors?.['required'] && (basicosFrom.controls['numHijosEstudian'].dirty || basicosFrom.controls['numHijosEstudian'].touched)">
                                                             El número de hijos que estudian es obligatorio.
@@ -852,7 +850,7 @@
                                                             <div class="form-group">
                                                                 <label class="textNegrilla">Asesor externo:</label>
                                                                 <span class="grande"> </span>
-                                                                <input type="text" class="form-control" [attr.disabled]="disableAsesor" formControlName="strCodigo" (keypress)="LimpiarExterno('strCodigo')" (blur)="GetAsesorExternoCodigo()">
+                                                                <input type="text" class="form-control" [attr.disabled]="disableAsesor" id="codigoAsesorExterno" formControlName="strCodigo" (keypress)="LimpiarExterno('strCodigo')" (blur)="GetAsesorExternoCodigo()">
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-12 col-md-3 col-lg-3">
@@ -3896,6 +3894,7 @@
                                                 <tbody>
                                                     <tr>
                                                         <td colspan="2">¿Administra dineros de terceros a su nombre?
+                                                            <span class="textBigRed" *ngIf="basicosFrom.get('tipoCliente')?.value != 15">*</span>
                                                         </td>
                                                         <td colspan="2">
                                                             Si <input type="checkbox" class="switchery" formControlName="RPregunta1Si" [attr.disabled]="formBuscarLocked" (click)="ValidarSeleccion('si', 1)"> No <input type="checkbox" class="switchery"
@@ -3904,7 +3903,7 @@
                                                         <td colspan="2"></td>
                                                     </tr>
                                                     <tr>
-                                                        <td colspan="2">¿Posee otra actividad económica secundaria que reporte ingresos ? </td>
+                                                        <td colspan="2">¿Posee otra actividad económica secundaria que reporte ingresos ? <span class="textBigRed" *ngIf="this.basicosFrom.get('tipoCliente')?.value != 15">*</span></td>
                                                         <td colspan="1" style="word-wrap: break-word;">
                                                             Si <input type="checkbox" class="switchery" formControlName="RPregunta2Si" [attr.disabled]="formBuscarLocked" (click)="ValidarSeleccion('si', 2)"> No <input type="checkbox" class="switchery"
                                                                 formControlName="RPregunta2No" [attr.disabled]="formBuscarLocked" (click)="ValidarSeleccion('No', 2)">
@@ -3926,7 +3925,10 @@
                                                         <td></td>
                                                     </tr>
                                                     <tr>
-                                                        <td colspan="3">¿Cual es el valor promedio mensual de consignaciones que realiza en sus productos?</td>
+                                                        <td colspan="3">
+                                                            ¿Cual es el valor promedio mensual de consignaciones que realiza en sus productos?
+                                                            <span class="textBigRed" *ngIf="this.basicosFrom.get('tipoCliente')?.value != 15">*</span>
+                                                        </td>
                                                         <td colspan="3">
                                                             <input type="text" currencyMask [options]="{ precision:0 }" [attr.disabled]="formBuscarLocked" class="form-control SoloMinuscula" id="RPre24" formControlName="RPregunta5Si" placeholder="Valor promedio" (keydown)="habilitarActualizar()">
                                                             <span class="help-block validationSpan" *ngIf="entrevistaForm.controls['RPregunta5Si'].errors?.['required'] && (entrevistaForm.controls['RPregunta5Si'].dirty || entrevistaForm.controls['RPregunta5Si'].touched)">
@@ -3944,7 +3946,7 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td colspan="1">¿Realiza operaciones en moneda extranjera? </td>
+                                                        <td colspan="1">¿Realiza operaciones en moneda extranjera? <span class="textBigRed" *ngIf="this.basicosFrom.get('tipoCliente')?.value != 15">*</span></td>
                                                         <td colspan="1" style="word-wrap: break-word;">
                                                             Si <input type="checkbox" class="switchery" formControlName="RPregunta6Si" [attr.disabled]="formBuscarLocked" (click)="ValidarSeleccion('si', 6)"> No <input type="checkbox" class="switchery"
                                                                 formControlName="RPregunta6No" [attr.disabled]="formBuscarLocked" (click)="ValidarSeleccion('No', 6)">
@@ -4017,7 +4019,7 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td colspan="2">¿Tiene inversiones en moneda extranjera? </td>
+                                                        <td colspan="2">¿Tiene inversiones en moneda extranjera? <span class="textBigRed" *ngIf="this.basicosFrom.get('tipoCliente')?.value != 15">*</span></td>
                                                         <td colspan="2">
                                                             Si <input type="checkbox" class="switchery" formControlName="RPregunta14Si" [attr.disabled]="formBuscarLocked" (click)="ValidarSeleccion('si', 14)"> No <input type="checkbox" class="switchery"
                                                                 formControlName="RPregunta14No" [attr.disabled]="formBuscarLocked" (click)="ValidarSeleccion('No', 14)">
@@ -4051,7 +4053,7 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td colspan="2">¿Posee cuentas en moneda extranjera?</td>
+                                                        <td colspan="2">¿Posee cuentas en moneda extranjera? <span class="textBigRed" *ngIf="this.basicosFrom.get('tipoCliente')?.value != 15">*</span></td>
                                                         <td colspan="1">
                                                             Si <input type="checkbox" class="switchery" formControlName="RPregunta17Si" [attr.disabled]="formBuscarLocked" (click)="ValidarSeleccion('si', 17)"> No <input type="checkbox" class="switchery"
                                                                 formControlName="RPregunta17No" [attr.disabled]="formBuscarLocked" (click)="ValidarSeleccion('No', 17)">
@@ -4091,7 +4093,7 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td colspan="2">Declaro que no realizo transacciones en moneda extranjera:</td>
+                                                        <td colspan="2">Declaro que no realizo transacciones en moneda extranjera: <span class="textBigRed" *ngIf="this.basicosFrom.get('tipoCliente')?.value != 15">*</span></td>
                                                         <td colspan="6">
                                                             Si <input type="checkbox" class="switchery" formControlName="RPregunta28Si" [attr.disabled]="formBuscarLocked" (click)="ValidarSeleccion('si', 28)"> No <input type="checkbox" class="switchery"
                                                                 formControlName="RPregunta28No" [attr.disabled]="formBuscarLocked" (click)="ValidarSeleccion('No', 28)">
@@ -4107,6 +4109,7 @@
                                                 <tbody>
                                                     <tr>
                                                         <td colspan="3">¿Es una persona expuesta politica o publicamente?
+                                                            <span class="textBigRed" *ngIf="this.basicosFrom.get('tipoCliente')?.value != 15">*</span>
                                                         </td>
                                                         <td colspan="3" class="text-center">
                                                             Si <input type="checkbox" class="switchery" formControlName="RPregunta20Si" [attr.disabled]="BloquearPreguntas" (click)="ValidarSeleccion('si', 20)"> No <input type="checkbox" class="switchery"
@@ -4114,28 +4117,28 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td colspan="3">¿Maneja recursos publicos? </td>
+                                                        <td colspan="3">¿Maneja recursos publicos? <span class="textBigRed" *ngIf="this.basicosFrom.get('tipoCliente')?.value != 15">*</span></td>
                                                         <td colspan="3" class="text-center">
                                                             Si <input type="checkbox" class="switchery" formControlName="RPregunta21Si" [attr.disabled]="BloquearPreguntasPeps" (click)="ValidarSeleccion('si', 21)"> No <input type="checkbox" class="switchery"
                                                                 formControlName="RPregunta21No" [attr.disabled]="BloquearPreguntasPeps" (click)="ValidarSeleccion('No', 21)">
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td colspan="3">¿Por su cargo o actividad ejerce algún grado de poder público? </td>
+                                                        <td colspan="3">¿Por su cargo o actividad ejerce algún grado de poder público? <span class="textBigRed" *ngIf="this.basicosFrom.get('tipoCliente')?.value != 15">*</span></td>
                                                         <td colspan="3" class="text-center">
                                                             Si <input type="checkbox" class="switchery" formControlName="RPregunta22Si" [attr.disabled]="BloquearPreguntasPeps" (click)="ValidarSeleccion('si', 22)"> No <input type="checkbox" class="switchery"
                                                                 formControlName="RPregunta22No" [attr.disabled]="BloquearPreguntasPeps" (click)="ValidarSeleccion('No', 22)">
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td colspan="3">¿Por su actividad u oficio, goza usted de reconocimiento público? </td>
+                                                        <td colspan="3">¿Por su actividad u oficio, goza usted de reconocimiento público? <span class="textBigRed" *ngIf="this.basicosFrom.get('tipoCliente')?.value != 15">*</span></td>
                                                         <td colspan="3" class="text-center">
                                                             Si <input type="checkbox" class="switchery" formControlName="RPregunta26Si" [attr.disabled]="BloquearPreguntasPeps" (click)="ValidarSeleccion('si', 26)"> No <input type="checkbox" class="switchery"
                                                                 formControlName="RPregunta26No" [attr.disabled]="BloquearPreguntasPeps" (click)="ValidarSeleccion('No', 26)">
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td colspan="3">¿Existe algún vínculo entre usted y una persona considerada públicamente expuesta? </td>
+                                                        <td colspan="3">¿Existe algún vínculo entre usted y una persona considerada públicamente expuesta? <span class="textBigRed" *ngIf="this.basicosFrom.get('tipoCliente')?.value != 15">*</span> </td>
                                                         <td colspan="3" class="text-center">
                                                             Si <input type="checkbox" class="switchery" formControlName="RPregunta23Si" [attr.disabled]="BloquearPreguntasPeps" (click)="ValidarSeleccion('si', 23)"> No <input type="checkbox" class="switchery"
                                                                 formControlName="RPregunta23No" [attr.disabled]="BloquearPreguntasPeps" (click)="ValidarSeleccion('No', 23)">
