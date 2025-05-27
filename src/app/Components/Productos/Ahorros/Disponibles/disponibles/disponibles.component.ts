@@ -337,6 +337,7 @@ export class DisponiblesComponent implements OnInit {
     if (this.DisponibleOperacionFrom.get('Codigo')?.value === '2') {          // Buscar
       this.clearFrom();
       this.MedioPago();
+      this.resultDiaCortePago = undefined;
       this.BloquearBtnRegistroFirma = false;
       this.generalesService.Autofocus('SelectBuscar');
       this.BloquearBuscar = null;
@@ -4461,8 +4462,7 @@ export class DisponiblesComponent implements OnInit {
 
       if(this.DisponibleOperacionFrom.get('Codigo')?.value === '38'){
         if ((medioPagoAnterior == '10'|| medioPagoAnterior == '50') && (this.DisponibleForm.get('IdMedioPago')?.value == '10' || this.DisponibleForm.get('IdMedioPago')?.value == '50') ) {
-          this.DisponibleForm.get('NumeroTarjeta')?.setValue(this.tarjetaOld);
-          this.BloquearNumeroTarjeta = false;
+          this.DisponibleForm.get('NumeroTarjeta')?.setValue(this.tarjetaOld);;
         } 
       }
 
@@ -4561,6 +4561,7 @@ export class DisponiblesComponent implements OnInit {
         (this.DisponibleForm.get('IdMedioPago')?.value == 60 && this.DisponibleForm.get('IdConvenio')?.value != 0) ||
         (this.DisponibleForm.get('IdMedioPago')?.value == 70 && this.DisponibleForm.get('IdConvenio')?.value != 0 && this.DisponibleForm.get('NumeroPagare')?.value != "" && this.DisponibleForm.get('IdDiaCorte')?.value != "0" && this.DisponibleForm.get('IdPlazo')?.value != "0")) {
         this.enableBtnActualizar = true;
+        this.BloquearNumeroTarjeta = false;
       }     
     }
     else {
@@ -6246,8 +6247,12 @@ export class DisponiblesComponent implements OnInit {
       itemsSendNovedad.NumeroTarjeta = this.DisponibleForm.get('NumeroTarjeta')?.value;
     else if (this.DisponibleForm.get('IdMedioPago')?.value == '50' || this.DisponibleForm.get('IdMedioPago')?.value == '70') {
       itemsSendNovedad.Plazo = this.DisponibleForm.get('IdPlazo')?.value;
-      let Corte: any = this.resultDiaCortePago.filter(( x: any) => x.intDiaCorte == this.DisponibleForm.get('IdDiaCorte')?.value)[0];
-      itemsSendNovedad.DiaCorte = Corte.intDiaCorte + " - " + Corte.intDiaPago;
+      if(this.DisponibleForm.get('IdDiaCorte')?.value !== '0' ){
+        let Corte: any = this.resultDiaCortePago.filter(( x: any) => x.intDiaCorte == this.DisponibleForm.get('IdDiaCorte')?.value)[0];
+        itemsSendNovedad.DiaCorte = Corte.intDiaCorte + " - " + Corte.intDiaPago;
+      }else{
+        itemsSendNovedad.DiaCorte = "";
+      }
       if (this.DisponibleForm.get('IdMedioPago')?.value == '50')
         itemsSendNovedad.NumeroTarjeta = this.DisponibleForm.get('NumeroTarjeta')?.value;   
     }
@@ -6795,6 +6800,9 @@ export class DisponiblesComponent implements OnInit {
   }
   CancelarCupo() {
     this.loading = true;
+    this.DisponibleForm.get('IdPlazo')?.setValue("0");
+    this.DisponibleForm.get('IdDiaCorte')?.setValue("0");
+
     let payload: any = this.DisponibleForm.value;
     payload.Real = this.dataObjetR;
     payload.Codeudor = this.dataObjetCd;
@@ -6818,7 +6826,22 @@ export class DisponiblesComponent implements OnInit {
       });
       if (garantiaList.length > 0)
         log.GarantiasReales = garantiaList;
-      this.activaCupo = false
+      this.activaCupo = false;
+      this.activaTarjeta = true;
+      this.devolverTab(2);
+      this.tab2.nativeElement.click();
+      $('#saldos').removeClass('activar');
+      $('#saldos').removeClass('active');
+      $('#historial').removeClass('activar');
+      $('#historial').removeClass('active');
+      $('#autorizados').removeClass('activar');
+      $('#autorizados').removeClass('active');
+      $('#cupo').removeClass('activar');
+      $('#cupo').removeClass('active');
+      $('#tarjeta').addClass('activar');
+      $('#tarjeta').addClass('active');
+      $('#libreta').removeClass('activar');
+      $('#libreta').removeClass('active');
       this.notif.success('Exitoso', 'La cancelación de cupo se guardó correctamente.', ConfiguracionNotificacion.configRightTop);
       this.Guardarlog(log);
       this.NovedadesAhorrosPDF("Cancelar cupo");
