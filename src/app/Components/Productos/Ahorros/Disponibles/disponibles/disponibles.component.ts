@@ -2631,6 +2631,7 @@ export class DisponiblesComponent implements OnInit {
         this.AsesorFrom.get('strNombre')?.setValue(this.dataObjet[0].PrimerNombreAsesorE + ' ' + this.dataObjet[0].SegundoNombreAsesoreE +
           ' ' + this.dataObjet[0].PrimerApellidoAsesorE + ' ' + this.dataObjet[0].SegundoApellidoAsesorE);
         this.datoAsesorExterno.NombreAsesorExterno = this.AsesorFrom.get('strNombre')?.value;
+        this.AsesorFrom.get('strNombre')?.setValue(this.AsesorFrom.get('strNombre')?.value.trim());
         // Tabs
         if (this.DisponibleForm.get('IdMedioPago')?.value === 0) {
           //libretas con cupo
@@ -2903,6 +2904,7 @@ export class DisponiblesComponent implements OnInit {
         this.AsesorFrom.get('strNombre')?.setValue(this.dataObjet.PrimerNombreAsesorE + ' ' + this.dataObjet.SegundoNombreAsesoreE +
           ' ' + this.dataObjet.PrimerApellidoAsesorE + ' ' + this.dataObjet.SegundoApellidoAsesorE);
         this.datoAsesorExterno.NombreAsesorExterno = this.AsesorFrom.get('strNombre')?.value;
+        this.AsesorFrom.get('strNombre')?.setValue(this.AsesorFrom.get('strNombre')?.value.trim());
         // tabs 
         if (this.DisponibleForm.get('IdMedioPago')?.value === 0) {
           // libreta con cupo
@@ -5978,10 +5980,11 @@ export class DisponiblesComponent implements OnInit {
         }
         this.DisponiblesServices.MarcarODesmarcarGMF(payload).subscribe(( x: any) => {
           this.loading = false;
+          this.BuscarPorCuenta();
           this.notif.success('Exitoso', 'Se marca/desmarca GMF correctamente.', ConfiguracionNotificacion.configRightTop);
           this.Guardarlog({ExoneradaGMFActualiza : this.DisponibleForm.get('ExoneradaGmf')?.value});
           setTimeout(() => {
-            this.ObtenerHistorial();
+            this.ObtenerHistorial();            
           }, 1000);
           this.DisponibleOperacionFrom.get('Codigo')?.reset();
          }, error => {
@@ -6526,11 +6529,14 @@ export class DisponiblesComponent implements OnInit {
       && this.DisponibleForm.get('MontoMaximo')?.value !== undefined
       && this.DisponibleForm.get('MontoMaximo')?.value !== '') {
 
-      if (this.editarCanal != null && this.indexCanales != null && this.editarCanal.Canal == this.DisponibleForm.get('Canal')?.value &&
-        this.editarCanal.NumeroOperaciones == this.DisponibleForm.get('NumeroOperaciones')?.value && this.editarCanal.MontoMaximo == this.DisponibleForm.get('MontoMaximo')?.value) {
+      if (this.dataObjetC.Canales.length !== 0)
+        {
+          if (this.editarCanal != null && this.indexCanales != null && this.editarCanal.Canal == this.DisponibleForm.get('Canal')?.value &&
+          this.editarCanal.NumeroOperaciones == this.DisponibleForm.get('NumeroOperaciones')?.value && this.editarCanal.MontoMaximo == this.DisponibleForm.get('MontoMaximo')?.value) {
           this.notif.warning('Advertencia', 'Debe cambiar el canal.', ConfiguracionNotificacion.configRightTop);
-        return;
-      }
+          return;
+          }
+        }     
         if (this.indexCanales !== null) {
           this.dataObjetC.Canales.splice(this.indexCanales, 1);
       }
