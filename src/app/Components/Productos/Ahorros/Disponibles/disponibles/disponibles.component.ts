@@ -2630,6 +2630,7 @@ export class DisponiblesComponent implements OnInit {
         this.AsesorFrom.get('strNombre')?.setValue(this.dataObjet[0].PrimerNombreAsesorE + ' ' + this.dataObjet[0].SegundoNombreAsesoreE +
           ' ' + this.dataObjet[0].PrimerApellidoAsesorE + ' ' + this.dataObjet[0].SegundoApellidoAsesorE);
         this.datoAsesorExterno.NombreAsesorExterno = this.AsesorFrom.get('strNombre')?.value;
+        this.AsesorFrom.get('strNombre')?.setValue(this.AsesorFrom.get('strNombre')?.value.trim());
         // Tabs
         if (this.DisponibleForm.get('IdMedioPago')?.value === 0) {
           //libretas con cupo
@@ -2902,6 +2903,7 @@ export class DisponiblesComponent implements OnInit {
         this.AsesorFrom.get('strNombre')?.setValue(this.dataObjet.PrimerNombreAsesorE + ' ' + this.dataObjet.SegundoNombreAsesoreE +
           ' ' + this.dataObjet.PrimerApellidoAsesorE + ' ' + this.dataObjet.SegundoApellidoAsesorE);
         this.datoAsesorExterno.NombreAsesorExterno = this.AsesorFrom.get('strNombre')?.value;
+        this.AsesorFrom.get('strNombre')?.setValue(this.AsesorFrom.get('strNombre')?.value.trim());
         // tabs 
         if (this.DisponibleForm.get('IdMedioPago')?.value === 0) {
           // libreta con cupo
