@@ -338,6 +338,7 @@ export class DisponiblesComponent implements OnInit {
       this.clearFrom();
       this.MedioPago();
       this.resultDiaCortePago = undefined;
+      this.resultPlazo = undefined;
       this.BloquearBtnRegistroFirma = false;
       this.generalesService.Autofocus('SelectBuscar');
       this.BloquearBuscar = null;
@@ -5761,6 +5762,8 @@ export class DisponiblesComponent implements OnInit {
               && this.DisponibleForm.get('NumeroTarjeta')?.value !== undefined && this.DisponibleForm.get('IdMedioPago')?.value === '10') || (this.DisponibleForm.get('IdMedioPago')?.value === '60'))) {
             
             this.loading = true;
+            payload.FechaCambioPlazo = 'NULL';
+            payload.FechaRediferir = 'NULL';
             this.DisponiblesServices.ActualizarMedioPago(payload).subscribe(
               result => {
                 this.loading = false;
@@ -5822,6 +5825,13 @@ export class DisponiblesComponent implements OnInit {
             && this.DisponibleForm.get('IdPlazo')?.value != '0'
             && this.DisponibleForm.get('IdPlazo')?.value !== undefined) {
             this.loading = true;
+            const fechaActual = new Date();
+            const formatoFecha = fechaActual.getFullYear() + '/' + 
+                     String(fechaActual.getMonth() + 1).padStart(2, '0') + '/' + 
+                     String(fechaActual.getDate()).padStart(2, '0');
+
+            payload.FechaCambioPlazo = formatoFecha;
+            payload.FechaRediferir = formatoFecha;
             this.DisponiblesServices.ActualizarMedioPago(payload).subscribe(
               result => {
                 this.loading = false;
