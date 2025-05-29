@@ -4586,7 +4586,7 @@ export class DisponiblesComponent implements OnInit {
       itemsSendCertificado.Estado = this.DisponibleForm.get('DescripcionEstado')?.value;
       itemsSendCertificado.Codigo = this.DisponibleForm.get('AliasCuenta')?.value == null ? "" : this.DisponibleForm.get('AliasCuenta')?.value == null;
       itemsSendCertificado.FormatoId = this.CertificadoFrom.get('SaldoCertificado')?.value;
-      itemsSendCertificado.SaldoTotal = this.DisponibleForm.get('SaldoTotal')?.value;
+      itemsSendCertificado.SaldoTotal = this.DisponibleForm.get('Efectivo')?.value;
       itemsSendCertificado.TerceroId = Number(this.DisponibleForm.get('LngTercero')?.value);
       $("#ImpresionCertificadoDisponible").show();
       this.ModalCertificadoCuentaPDF.nativeElement.click();
@@ -4656,7 +4656,7 @@ export class DisponiblesComponent implements OnInit {
     itemsSendCertificado.Estado = this.DisponibleForm.get('DescripcionEstado')?.value;
     itemsSendCertificado.Codigo = this.DisponibleForm.get('AliasCuenta')?.value == null ? "" : this.DisponibleForm.get('AliasCuenta')?.value == null;
     itemsSendCertificado.FormatoId = this.CertificadoFrom.get('SaldoCertificado')?.value;
-    itemsSendCertificado.SaldoTotal = this.DisponibleForm.get('SaldoTotal')?.value;
+    itemsSendCertificado.SaldoTotal = this.DisponibleForm.get('Efectivo')?.value;
     itemsSendCertificado.TerceroId = Number(this.DisponibleForm.get('LngTercero')?.value);
     itemsSendCertificado.FileName = this.NombreArchivoCertificadoCuenta("", "");
     let datas = localStorage.getItem("Data")
