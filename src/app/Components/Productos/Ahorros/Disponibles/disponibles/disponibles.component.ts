@@ -4586,7 +4586,7 @@ export class DisponiblesComponent implements OnInit {
       itemsSendCertificado.Estado = this.DisponibleForm.get('DescripcionEstado')?.value;
       itemsSendCertificado.Codigo = this.DisponibleForm.get('AliasCuenta')?.value == null ? "" : this.DisponibleForm.get('AliasCuenta')?.value == null;
       itemsSendCertificado.FormatoId = this.CertificadoFrom.get('SaldoCertificado')?.value;
-      itemsSendCertificado.SaldoTotal = this.DisponibleForm.get('SaldoTotal')?.value;
+      itemsSendCertificado.SaldoTotal = this.DisponibleForm.get('Efectivo')?.value;
       itemsSendCertificado.TerceroId = Number(this.DisponibleForm.get('LngTercero')?.value);
       $("#ImpresionCertificadoDisponible").show();
       this.ModalCertificadoCuentaPDF.nativeElement.click();
@@ -4656,7 +4656,7 @@ export class DisponiblesComponent implements OnInit {
     itemsSendCertificado.Estado = this.DisponibleForm.get('DescripcionEstado')?.value;
     itemsSendCertificado.Codigo = this.DisponibleForm.get('AliasCuenta')?.value == null ? "" : this.DisponibleForm.get('AliasCuenta')?.value == null;
     itemsSendCertificado.FormatoId = this.CertificadoFrom.get('SaldoCertificado')?.value;
-    itemsSendCertificado.SaldoTotal = this.DisponibleForm.get('SaldoTotal')?.value;
+    itemsSendCertificado.SaldoTotal = this.DisponibleForm.get('Efectivo')?.value;
     itemsSendCertificado.TerceroId = Number(this.DisponibleForm.get('LngTercero')?.value);
     itemsSendCertificado.FileName = this.NombreArchivoCertificadoCuenta("", "");
     let datas = localStorage.getItem("Data")
@@ -5766,6 +5766,19 @@ export class DisponiblesComponent implements OnInit {
             this.loading = true;
             payload.FechaCambioPlazo = 'NULL';
             payload.FechaRediferir = 'NULL';
+            //Generar cobro de tarjeta si cambia el plastico ysalazar 28/05/2025
+            const tarjetaAhora = this.DisponibleForm.get('NumeroTarjeta')?.value;
+            if (this.tarjetaOld !== tarjetaAhora){
+              this.DisponiblesServices.ActualizarLibretaTarjetaSinCobro(this.DisponibleForm.value).subscribe(
+                result => {
+                  this.notif.warning('Advertencia', 'Se ha identificado cambio en el número de tarjeta, recuerde generar el cobro del plástico al asociado.', ConfiguracionNotificacion.configRightTop);
+                },
+                error => {
+                  const errorMessage = <any>error;
+                  console.log(errorMessage);
+                }
+              );
+            }
             this.DisponiblesServices.ActualizarMedioPago(payload).subscribe(
               result => {
                 this.loading = false;
@@ -5900,6 +5913,7 @@ export class DisponiblesComponent implements OnInit {
             this.notif.success('Exitoso', 'El asignar cupo se actualizó correctamente.', ConfiguracionNotificacion.configRightTop);
             this.btnGuardar = true;
             this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
+            this.DisponibleForm.get('IdCuentaCupo')?.setValue(result.IdCuentaCupo);
             this.btnActualizar = true;
             this.btnActualizarCanales = true;
             this.BloquearCanales = false;
