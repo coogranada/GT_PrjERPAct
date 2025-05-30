@@ -5766,19 +5766,7 @@ export class DisponiblesComponent implements OnInit {
             this.loading = true;
             payload.FechaCambioPlazo = 'NULL';
             payload.FechaRediferir = 'NULL';
-            //Generar cobro de tarjeta si cambia el plastico ysalazar 28/05/2025
-            const tarjetaAhora = this.DisponibleForm.get('NumeroTarjeta')?.value;
-            if (this.tarjetaOld !== tarjetaAhora){
-              this.DisponiblesServices.ActualizarLibretaTarjetaSinCobro(this.DisponibleForm.value).subscribe(
-                result => {
-                  this.notif.warning('Advertencia', 'Se ha identificado cambio en el número de tarjeta, recuerde generar el cobro del plástico al asociado.', ConfiguracionNotificacion.configRightTop);
-                },
-                error => {
-                  const errorMessage = <any>error;
-                  console.log(errorMessage);
-                }
-              );
-            }
+           
             this.DisponiblesServices.ActualizarMedioPago(payload).subscribe(
               result => {
                 this.loading = false;
@@ -5895,9 +5883,55 @@ export class DisponiblesComponent implements OnInit {
             this.notif.warning('Advertencia', 'Los datos están incompletos.', ConfiguracionNotificacion.configRightTop);
         }
         setTimeout(() => {
-          this.DisponibleOperacionFrom.get('Codigo')?.setValue("33");
+          //cuando hay cambio de tarjetas ysalazar 30/05/2025
+          const MedioPagoAnterior = this.datoMedioPago;
+          const tarjetaAhora = this.DisponibleForm.get('NumeroTarjeta')?.value;
+          const MedioPagoAhora = this.DisponibleForm.get('IdMedioPago')?.value;
+          if (MedioPagoAnterior === 0) {// Medio de pago anterior Libreta
+            if (MedioPagoAhora !== 60 || MedioPagoAhora !== 70)
+            this.DisponiblesServices.ActualizarLibretaTarjetaSinCobro(this.DisponibleForm.value).subscribe(
+              result => {                
+                },
+              error => {
+                const errorMessage = <any>error;
+                console.log(errorMessage);
+              }
+            );
+          } else if (MedioPagoAnterior === 10 || MedioPagoAnterior === 50){ // Medio de pago anterior tarjeta sin cupo o con cupo
+            if (this.tarjetaOld !== tarjetaAhora){
+              this.DisponiblesServices.ActualizarLibretaTarjeta(this.DisponibleForm.value).subscribe(
+                result => {
+                  swal.fire({
+                    title: '<strong>¡Advertencia!</strong>',
+                    text: '',
+                    icon: 'warning', 
+                    animation: false,
+                    html: 'Se ha identificado cambio en el número de tarjeta, recuerde generar el cobro del plástico al asociado.',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    confirmButtonText: 'Ok',
+                    confirmButtonColor: 'rgb(160, 0, 87)'
+                  });
+                 },
+                error => {
+                  const errorMessage = <any>error;
+                  console.log(errorMessage);
+                }
+              );
+            }
+          }else if (MedioPagoAnterior === 60 || MedioPagoAnterior === 70){ // Medio de pago anterior sin tarjeta sin cupo y con cupo
+            this.DisponiblesServices.ActualizarLibretaTarjetaSinCobro(this.DisponibleForm.value).subscribe(
+              result => {
+              },
+              error => {
+                const errorMessage = <any>error;
+                console.log(errorMessage);
+              }
+            );
+          }
           this.TipoNovedad = 'Cambio medio de pago';
-          this.ActualizarDisponible();
+          this.DisponibleOperacionFrom.get('Codigo')?.reset();
+          
         }, 1200);
       }
       } else if (this.DisponibleOperacionFrom.get('Codigo')?.value === '34') {  // Asignar cupo 
