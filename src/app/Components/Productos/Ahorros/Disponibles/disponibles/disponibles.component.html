@@ -1295,8 +1295,6 @@
                                                                 <i class="icon-file-text3"></i></button>
                                                             <button type="button" *ngIf="historial.Operacion == 32 && historial.FormatDate == formatDateNow && DisponibleForm.get('IdMedioPago')?.value != '0'" class="btn Gt-btn-verde btn-icon legitRipple" (click)="NovedadesAhorrosPDF('Cambio de tarjeta','',true);">
                                                                 <i class="icon-file-text3"></i></button>
-                                                            <button type="button" *ngIf="historial.Operacion == 32 && historial.FormatDate == formatDateNow && DisponibleForm.get('IdMedioPago')?.value == '0'" class="btn Gt-btn-verde btn-icon legitRipple" (click)="NovedadesAhorrosPDF('Cambio de libreta','',true);">
-                                                                <i class="icon-file-text3"></i></button>
                                                             <button type="button" *ngIf="historial.Operacion == 38 && historial.FormatDate == formatDateNow" class="btn Gt-btn-verde btn-icon legitRipple" (click)="NovedadesAhorrosPDF('Cambio medio de pago','',true);">
                                                                 <i class="icon-file-text3"></i></button>
                                                             <button type="button" *ngIf="historial.Operacion == 9  && historial.FormatDate == formatDateNow && (historial.IdTiposObservaciones == 8 || historial.IdTiposObservaciones == 12)" class="btn Gt-btn-verde btn-icon legitRipple" (click)="NovedadesAhorrosPDF('Cambio estado', historial.TiposObservaciones == null ? '' : historial.TiposObservaciones );">
