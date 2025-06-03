@@ -6895,7 +6895,7 @@ export class DisponiblesComponent implements OnInit {
           TipoGarantia: x.TipoGarantia,
           NumeroMatricula: x.NumeroMatricula,
           Descripcion: x.Descripcion,
-          ValorRespandado: x.ValorRespandado,
+          ValorRespaldado: x.ValorRespaldado,
           ValorCobertura: x.ValorCobertura,
           ValorDisponible: x.ValorDisponible
         }
@@ -6969,7 +6969,7 @@ export class DisponiblesComponent implements OnInit {
         //dataObjetR
         if (this.ListGarantiasReales.length > 0 && idGarantia == 5) {
           this.ListGarantiasReales.forEach(( x: any) => {
-            x.ValorDisponible = Number(x.ValorCobertura) - Number(x.ValorRespandado)
+            x.ValorDisponible = Number(x.ValorCobertura) - Number(x.ValorRespaldado)
           });
           this.ListGarantiasRealesAgregadas.forEach(( x: any) => {
             this.ListGarantiasReales = this.ListGarantiasReales.filter(( xx: any) => xx.NumeroMatricula != x.NumeroMatricula);
