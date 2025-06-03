@@ -1809,6 +1809,16 @@ export class DisponiblesComponent implements OnInit {
         && this.DisponibleForm.get('IdDigito')?.value !== undefined
         && this.DisponibleForm.get('IdDigito')?.value !== ''
       ) {
+        
+        const notValidStates = ['Nueva', 'Cancelado', 'Anulada'];
+        if(notValidStates.includes(this.DisponibleForm.get('DescripcionEstado')?.value)) {
+          this.notif.warning('Advertencia', 'Estado no válido.', ConfiguracionNotificacion.configRightTop);
+          this.DisponibleOperacionFrom.get('Codigo')?.reset();
+          this.bloquearConsultaCuenta = false;
+          this.BloquearBuscar = false;
+          return;
+        }
+
         this.Certificados = [ { id: 1, opcion: "Certificación Coogranada con saldo" },
           { id: 2, opcion: "Certificación Coogranada sin saldo" },
           { id: 3, opcion: "Certificación banco cooperativo Coopcentral" }];
@@ -4114,6 +4124,7 @@ export class DisponiblesComponent implements OnInit {
               this.DisponibleForm.get('IdEstado')?.setValue(0);
             } else {
               this.notif.success('Exitoso', 'El cambio estado se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+              this.btnCambiarEstado = false;
               this.Guardarlog(estadoLog);
               if (this.cambioEstadoGenerarPdfBool) {
                 let motivo: any = this.dataObservacion.filter(( x: any) => x.IdTipoObservacion == this.estadoObservacion)[0];  
@@ -4159,6 +4170,7 @@ export class DisponiblesComponent implements OnInit {
               this.DisponibleForm.get('IdEstado')?.setValue(0);
             } else {
               this.notif.success('Exitoso', 'El cambio estado se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+              this.btnCambiarEstado = false;
               this.Guardarlog(estadoLog);
               this.BuscarPorCuenta();
               // Notificador
@@ -4199,6 +4211,7 @@ export class DisponiblesComponent implements OnInit {
               this.DisponibleForm.get('IdEstado')?.setValue(0);
             } else {
               this.notif.success('Exitoso', 'El cambio estado se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+              this.btnCambiarEstado = false;
               this.Guardarlog(estadoLog);
               this.BuscarPorCuenta();
               // Notificador
@@ -4275,6 +4288,7 @@ export class DisponiblesComponent implements OnInit {
               this.DisponibleForm.get('IdEstado')?.setValue(0);
             } else {
               this.notif.success('Exitoso', 'El cambio estado se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+              this.btnCambiarEstado = false;
               this.Guardarlog(estadoLog);
               this.BuscarPorCuenta();
               // Notificador
@@ -4305,7 +4319,6 @@ export class DisponiblesComponent implements OnInit {
           }
         );
     }
-    this.btnCambiarEstado = false;
     this.selectEstado = true;
     this.inputEstado = false;
   }
