@@ -4633,7 +4633,7 @@ export class DisponiblesComponent implements OnInit {
           this.loading = false;
         });
     } else
-      this.notif.warning('Advertencia', 'Debes seleccionar una opcion', ConfiguracionNotificacion.configRightTop);
+      this.notif.warning('Advertencia', 'Debe seleccionar una opción', ConfiguracionNotificacion.configRightTop);
   }
   generarCertificadoCuenta() {
     this.loading = true;
@@ -5942,7 +5942,9 @@ export class DisponiblesComponent implements OnInit {
               }
             );
           }
-          this.TipoNovedad = 'Cambio medio de pago';
+          this.BuscarPorCuenta();
+          this.ObtenerHistorial();
+          this.NovedadesAhorrosPDF('Cambio medio de pago');
           this.DisponibleOperacionFrom.get('Codigo')?.reset();
           
         }, 1200);

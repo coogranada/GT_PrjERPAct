@@ -4266,7 +4266,8 @@ export class TerminoComponent implements OnInit {
       && this.TerminoForm.get('ValorTotal')?.value !== null
       && this.TerminoForm.get('IdFrecuenciaPago')?.value !== ''
       && this.TerminoForm.get('IdFrecuenciaPago')?.value !== undefined
-      && this.TerminoForm.get('IdFrecuenciaPago')?.value !== null) {
+      && this.TerminoForm.get('IdFrecuenciaPago')?.value !== null
+      && this.TerminoForm.get('IdFrecuenciaPago')?.value !== -1) { 
 
       this.TerminoForm.get('Plazo')?.setValue(this.TerminoForm.get('PlazoDias')?.value);
       this.loading = true;
