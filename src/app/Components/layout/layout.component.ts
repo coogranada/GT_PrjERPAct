@@ -82,6 +82,10 @@ export class LayoutComponent implements OnInit,OnDestroy {
 
   /* Transmision de archivos */
   public Transmisionarchivos = false;
+
+  /* Transmision de archivos */
+  public Generacionarchivos = false;
+
   /* Fin Maestros productos */
 
   /* Fin Configuracion */
@@ -315,6 +319,7 @@ export class LayoutComponent implements OnInit,OnDestroy {
   isInformesMenuOpen: boolean = false;
   isInformesMaestroAhorrosMenuOpen: boolean = false;
   istransmisionarchivosMenuOpen: boolean = false;
+  isgeneracionarchivosMenuOpen: boolean = false;
   isClientesMenuOpen: boolean = false;
   isProductosMenuOpen: boolean = false;
   isProductosAhorrosMenuOpen: boolean = false;
@@ -368,6 +373,9 @@ export class LayoutComponent implements OnInit,OnDestroy {
   }
   toggletransmisionarchivosMenu() {
     this.istransmisionarchivosMenuOpen = !this.istransmisionarchivosMenuOpen;
+  }
+  togglegeneracionarchivosMenu() {
+    this.isgeneracionarchivosMenuOpen = !this.isgeneracionarchivosMenuOpen;
   }
   toggleClientesMenu() {
     this.isClientesMenuOpen = !this.isClientesMenuOpen;
@@ -672,8 +680,15 @@ export class LayoutComponent implements OnInit,OnDestroy {
             /* Transmisión archivos */
             else if (element.IdModulo === 81) {
               this.Transmisionarchivos = true;
+              this.Generacionarchivos = true;
             }
             /* Fin Transmisión archivos */
+            /* Transmisión archivos */
+            else if (element.IdModulo === 81) {
+                this.Generacionarchivos = true;
+            }
+             /* Fin Transmisión archivos */
+
             /* Fin  Configuracion */
             /* Clientes */
             else if (element.IdModulo === 10) {

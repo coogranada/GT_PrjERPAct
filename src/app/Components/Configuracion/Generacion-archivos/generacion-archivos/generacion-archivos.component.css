@@ -1,0 +1,126 @@
+.div-espacio {
+    margin-top: 10px
+}
+
+.div-espacio1 {
+    margin-top: 13px
+}
+
+
+.contorno-rutas {
+    border: 1px solid #852662;
+    padding: 10px;
+    border-radius: 10px;
+    padding-top: 20px;
+    /* Espacio para que el texto no se superponga al borde */
+    position: relative;
+}
+
+.titulo {
+    position: absolute;
+    top: -10px;
+    left: 18px;
+    font-weight: bold;
+    font-size: 14px;
+    background-color: white;
+    padding: 0 5px;
+}
+
+
+.check-dis {
+    transform: scale(1.5);
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 1;
+}
+
+.check-ena {
+    transform: scale(1.5);
+    opacity: 1;
+}
+
+.input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-container .form-control {
+    width: 100%;
+}
+
+.input-container .glyphicon {
+    position: absolute;
+    right: 10px;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+#imgContrasena {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.text-truncate {
+    max-width: 600px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.table th {
+    font-weight: bold;
+}
+
+.table tbody tr {
+    height: 40px !important;
+}
+
+.table td {
+    vertical-align: middle;
+    /* Alinea el contenido verticalmente en el centro */
+    padding: 1px 5px 0;
+    white-space: nowrap;
+}
+
+
+.selected-row {
+    background-color: rgb(229, 229, 229);
+    /* Color de fondo gris para la fila seleccionada */
+}
+
+.selected-row1 {
+    background-color: rgb(229, 229, 229);
+    /* Color de fondo gris para la fila seleccionada */
+}
+
+.labelSucces {
+    color: #269051;
+    border-color: #269051;
+}
+
+.labelDanger {
+    color: #F44336;
+    border-color: #F44336;
+}
+
+.sticky-last-column td:last-child {
+    position: sticky;
+    right: 0;
+    z-index: 1;
+    text-align: center;
+}
+
+
+
+.operacionFija {
+    position: sticky !important;
+    right: 0;
+    background: #fff ;
+    z-index: 1; 
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    min-width: 30px;
+}
