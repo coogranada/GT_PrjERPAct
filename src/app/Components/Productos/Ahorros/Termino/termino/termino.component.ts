@@ -7440,8 +7440,8 @@ export class TerminoComponent implements OnInit {
     const IdLiquidacion = new FormControl('', [Validators.required]);
     const CuentaDestino = new FormControl('', []);
     const AdicionarPunto = new FormControl('', []);
-    const TasaEfectiva = new FormControl('', []);
-    const TasaNominal = new FormControl('', []);
+    const TasaEfectiva = new FormControl('', [Validators.required]);
+    const TasaNominal = new FormControl('', [Validators.required]);
     const TasaAdicional = new FormControl('', []);
     const Tasa = new FormControl('', []);
     const RetencionFuentePeriodo = new FormControl('', []);
