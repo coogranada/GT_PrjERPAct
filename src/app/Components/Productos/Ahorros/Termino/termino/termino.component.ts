@@ -4326,6 +4326,9 @@ export class TerminoComponent implements OnInit {
     }
   }
   ValidarPlazo() {
+    this.TerminoForm.get('TasaEfectiva')?.reset();
+    this.TerminoForm.get('TasaNominal')?.reset();
+    this.TerminoForm.get('TasaAdicional')?.reset();
     if (this.TerminoForm.get('PlazoDias')?.value !== undefined
       && this.TerminoForm.get('PlazoDias')?.value !== null) {
       if (JSON.parse(this.TerminoForm.get('PlazoDias')?.value) >= this.ArrayCondiciones.PlazoMinimo
