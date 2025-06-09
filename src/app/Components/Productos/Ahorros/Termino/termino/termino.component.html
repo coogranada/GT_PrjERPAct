@@ -361,9 +361,12 @@
                                     <div class="col-xs-12 col-md-4 col-lg-3">
                                         <label class="textNegrilla">Plazo dias:</label>
                                         <span class="grande"> *</span>
-                                        <input style="text-align:right" type="text" id="SelectPlazo" class="form-control" maxlength="4" formControlName="PlazoDias" [attr.disabled]="bloquearNegociacion"  (blur)="ValidarPlazo()">
+                                        <input style="text-align:right" type="text" id="SelectPlazo" class="form-control" maxlength="4"
+                                            formControlName="PlazoDias" [attr.disabled]="bloquearNegociacion" (blur)="ValidarPlazo()"
+                                            (input)="this.onInputNumberOnly($event)" pattern="\d*" inputmode="numeric" />
+                                        <!-- <input style="text-align:right" type="number" id="SelectPlazo" class="form-control" maxlength="4" formControlName="PlazoDias" [attr.disabled]="bloquearNegociacion"  (blur)="ValidarPlazo()"> -->
                                         <span class="help-block validationSpan" *ngIf="TerminoForm.controls['PlazoDias'].errors?.['pattern']">
-                                          El plazo solo acepta números.
+                                          El plazo dias solo acepta números.
                                       </span>
                                     </div>
                                     <!-- Fin Plazo-->

@@ -4276,6 +4276,9 @@ export class TerminoComponent implements OnInit {
           this.loading = false;
           if (result.TasaEfectiva === 0) {
             this.notif.onWarning('Advertencia', 'Tasa no valida.');
+            this.TerminoForm.get('TasaEfectiva')?.reset();
+            this.TerminoForm.get('TasaNominal')?.reset();
+            this.TerminoForm.get('TasaAdicional')?.reset();
           } else {
             this.MapearTasa(result);
           }
@@ -7400,6 +7403,10 @@ export class TerminoComponent implements OnInit {
         const errorMessage = <any>error;
         console.log(errorMessage);
       });
+  }
+  onInputNumberOnly(event: any) {
+    const input = event.target;
+    input.value = input.value.replace(/[^0-9]/g, '');
   }
   validateForm() {
     const Codigo = new FormControl('', [Validators.required]);
