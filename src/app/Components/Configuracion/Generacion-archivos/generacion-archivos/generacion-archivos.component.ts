@@ -2,13 +2,13 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators, ValidatorFn, AbstractControl, FormBuilder } from '@angular/forms';
 import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { GeneralesService } from '../../../../Services/Productos/generales.service';
-import { TransmisionArchivosService } from '../../../../Services/Configuracion/Transmision-archivos.service';
 import { ParametrosTransmisionData } from '../../../../Models/Configuracion/Transmision-archivos.model';
 import { ToastrService } from 'ngx-toastr';
 import { ConfiguracionNotificacion } from '../../../../../environments/config.noticaciones'
 import swal from 'sweetalert2';
 import { ParametrosArchivosData } from '../../../../Models/Configuracion/Generacion-archivos.model';
 import { GeneracionArchivosService } from '../../../../Services/Configuracion/Generacion-archivos.service';
+import { TransmisionArchivosService } from '../../../../Services/Configuracion/Transmision-archivos.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 
@@ -16,13 +16,12 @@ const ColorSecundario = 'rgb(13,165,80,0.7)';
   selector: 'app-generacion-archivos',
   templateUrl: './generacion-archivos.component.html',
   styleUrl: './generacion-archivos.component.css',
-  providers: [GeneralesService, TransmisionArchivosService, GeneracionArchivosService ],
+  providers: [GeneralesService, GeneracionArchivosService, TransmisionArchivosService ],
   standalone: false
 })
 export class GeneracionArchivosComponent implements OnInit {
 
   @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
-  @ViewChild('gpgRecipientInput') gpgRecipientInput: ElementRef | undefined;
 
   selectedRow: any = null;
   selectedRow1: any = null;
@@ -32,24 +31,20 @@ export class GeneracionArchivosComponent implements OnInit {
   public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
-  public parametrosTransmisionForm!: FormGroup;
+  public parametrosArchivosForm!: FormGroup;
   public showPassword: boolean = false;
   public vbleBtnactualizar: boolean = false;
   public vbleCifrado: boolean = false;
   public selectedProtocolo: string = '';
   public selectedTarea: string = '';
-  public historialTransm: any[] = [];
-  public tiposProtocolos: any[] = [
-    { value: 'SFTP', descripcion: 'SFTP' },
-    { value: 'GRAPH', descripcion: 'GRAPH' }
-  ];
+  public historialArchivos: any[] = [];
   public tiposCifrado: any[] = [
     { value: 'GPG', descripcion: 'GPG' }
   ];
 
   constructor(
-    private TransmisionArchivosServices: TransmisionArchivosService,
     private fb: FormBuilder,
+    private TransmisionArchivosServices: TransmisionArchivosService,
     private GeneracionArchivosServices: GeneracionArchivosService,
     private toastr: ToastrService
   ) { }
@@ -59,72 +54,54 @@ export class GeneracionArchivosComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.IrArriba()
-    this.selectedProtocolo = '-';
+    this.IrArriba();
     this.initForm();
-
     this.obtenerConfiguracion();
 
   }
 
   initForm() {
-    this.parametrosTransmisionForm = this.fb.group({
-      IdParametro: [''],
-      nombreSitio: ['', Validators.required],
-      servidor: ['', Validators.required],
-      rutaLocalEntrada: [''],
-      rutaLocalSalida: [''],
-      rutaRemotaEntrada: [''],
-      rutaRemotaSalida: [''],
-      protocolo: ['', Validators.required],
-      puerto: [''],
-      modoAcceso: [''],
-      usuario: ['', Validators.required],
-      contrasena: [''],
-      cifrado: [''],
-      correoResponsable: ['', Validators.email],
-      frecuencia: [1],
-      horaEntrada: ['', Validators.required],
-      horaSalida: ['', Validators.required],
-      gpgRecipient: [''],
-      rutaLlave: [''],
-      fechaCreacion: [''],
+    this.parametrosArchivosForm = this.fb.group({
+      idParametrosArchivos: [0],
+      nombreTarea: ['',  Validators.required],
+      nombreSP: ['', Validators.required],
+      diaInicial: ['', Validators.required],
+      diaFinal: ['', Validators.required],
+      nombreSalida: ['', Validators.required],
+      formatoFecha: ['', Validators.required],
+      tipoDeArchivo: ['', Validators.required],
+      separador: ['', Validators.required],
+      frecuencia: [0,Validators.required],
+      horaGenera: ['', Validators.required],
+      rutaLocalSalida: ['',Validators.required],
+      ultFechaGeneración: [''],
       estado: [1],
-      eliminaArchivo: [0]
+      fechaMatricula: [''],
+      fechaRetiro: ['']
     });
   }
 
   selectRow(parametro: any) {
     this.vbleBtnactualizar = true;
+    const estado1=false;
     this.selectedRow = parametro;
-    this.parametrosTransmisionForm.patchValue({
-      IdParametro: parametro.IdParametro,
-      nombreSitio: parametro.NombreSitio,
-      servidor: parametro.Servidor,
-      rutaLocalEntrada: parametro.RutaLocalEntrada,
-      rutaLocalSalida: parametro.RutaLocalSalida,
-      rutaRemotaEntrada: parametro.RutaRemotaEntrada,
-      rutaRemotaSalida: parametro.RutaRemotaSalida,
-      protocolo: parametro.Protocolo,
-      puerto: parametro.Puerto,
-      modoAcceso: parametro.ModoAcceso,
-      usuario: parametro.Usuario,
-      contrasena: parametro.Contrasena,
-      cifrado: parametro.Cifrado,
-      correoResponsable: parametro.CorreoResponsable,
+    this.parametrosArchivosForm.patchValue({
+      idParametrosArchivos: parametro.IdParametrosArchivos,
+      nombreTarea: parametro.NombreTarea,
+      nombreSP: parametro.NombreSP,
+      diaInicial: parametro.DiaInicial.split("T")[0],
+      diaFinal: parametro.DiaFinal.split("T")[0],
+      nombreSalida: parametro.NombreSalida,
+      formatoFecha: parametro.FormatoFecha,
+      tipoDeArchivo: parametro.TipoDeArchivo,
+      separador: parametro.Separador,
       frecuencia: parametro.Frecuencia,
-      horaEntrada: parametro.HoraEntrada,
-      horaSalida: parametro.HoraSalida,
-      gpgRecipient: parametro.GPGRecipient,
-      rutaLlave: parametro.RutaLlave,
-      fechaCreacion: parametro.FechaCreacion,
+      horaGenera: parametro.HoraGenera,
+      rutaLocalSalida: parametro.RutaLocalSalida,
       estado: parametro.Estado,
-      eliminaArchivo: parametro.EliminaArchivo,
-    });
-    this.cambiarEstado();
-    this.onChangeProtocol(2);
-    this.initialValues = JSON.parse(JSON.stringify(this.parametrosTransmisionForm.value));
-    this.selectedTarea = parametro.NombreSitio;
+      estado1:  parametro.Estado,
+    });;
+    this.initialValues = JSON.parse(JSON.stringify(this.parametrosArchivosForm.value));
   }
 
   selectRow1(parametro: any) {
@@ -132,7 +109,7 @@ export class GeneracionArchivosComponent implements OnInit {
   }
 
   ValidarCambios(): boolean {
-    const formValues = this.parametrosTransmisionForm.value;
+    const formValues = this.parametrosArchivosForm.value;
     if (JSON.stringify(this.initialValues) !== JSON.stringify(formValues)) {
       return true;
     } else {
@@ -162,15 +139,6 @@ export class GeneracionArchivosComponent implements OnInit {
     );
   }
 
-  cambiarEstado() {
-    const estadoActual = this.parametrosTransmisionForm.get('estado')?.value;
-
-    if (estadoActual === 5) {
-      this.parametrosTransmisionForm.patchValue({ estado: 1 });
-    } else {
-      this.parametrosTransmisionForm.patchValue({ estado: 0 });
-    }
-  }
 
   limpiarFormulario(): void {
 
@@ -181,71 +149,31 @@ export class GeneracionArchivosComponent implements OnInit {
 
   }
 
-  onProtocoloChange(): void {
-    this.selectedProtocolo = 'SFTP';
-    this.parametrosTransmisionForm.controls['protocolo'].setValue(this.selectedProtocolo);
-  }
-
-  onChangeProtocol(op: number): void {
-    if (this.parametrosTransmisionForm.get('protocolo')?.value == 'SFTP') {
-      this.vbleCifrado = true;
-    } else {
-      this.vbleCifrado = false;
-    }
-
-    if (op == 1) {
-      if (this.parametrosTransmisionForm.get('protocolo')?.value == 'SFTP') {
-        this.parametrosTransmisionForm.controls['cifrado'].setValue('');
-        this.parametrosTransmisionForm.controls['gpgRecipient'].setValue('');
-      } else {
-        this.parametrosTransmisionForm.controls['cifrado'].setValue('');
-        this.parametrosTransmisionForm.controls['gpgRecipient'].setValue('');
-      }
-    }
-
-  }
-
-  onChangeCifrado(): void {
-    if (this.parametrosTransmisionForm.get('cifrado')?.value !== 'GPG') {
-      this.parametrosTransmisionForm.controls['gpgRecipient'].setValue('');
-    }
-  }
-
   borrarSiEspacios(controlName: string): void {
-    const control = this.parametrosTransmisionForm.controls[controlName];
-
-    if (control.value.trim() === '') {
-      control.setValue('');
+    const control = this.parametrosArchivosForm.get(controlName);
+    const value = control?.value;
+  
+    if (typeof value === 'string') {
+      control?.setValue(value.trim());
     }
   }
+  
+  
 
-  guardarParametroTransmision() {
-    if (!this.parametrosTransmisionForm.valid) {
+  guardarParametroArchivos() {
+    if (!this.parametrosArchivosForm.valid) {
       this.toastr.warning('Advertencia', 'Error en el formulario, valide los campos', ConfiguracionNotificacion.configRightTop);
-    } else if (this.parametrosTransmisionForm.get('horaEntrada')?.value.startsWith('00:00') && this.parametrosTransmisionForm.get('horaSalida')?.value.startsWith('00:00')) {
-      this.toastr.warning('Advertencia', 'La hora de entrada y salida no puede ser ambas 12:00 a.m.', ConfiguracionNotificacion.configRightTop);
-    } else if (!this.parametrosTransmisionForm.get('horaEntrada')?.value.startsWith('00:00') && (this.parametrosTransmisionForm.get('rutaLocalEntrada')?.value.trim() == '' || this.parametrosTransmisionForm.get('rutaRemotaSalida')?.value.trim() == '')) {
-      this.toastr.warning('Advertencia', 'La ruta local entrada y ruta remota salida son obligatorias.', ConfiguracionNotificacion.configRightTop);
-    } else if (!this.parametrosTransmisionForm.get('horaSalida')?.value.startsWith('00:00') && (this.parametrosTransmisionForm.get('rutaLocalSalida')?.value.trim() == '' || this.parametrosTransmisionForm.get('rutaRemotaEntrada')?.value.trim() == '')) {
-      this.toastr.warning('Advertencia', 'La ruta local salida y ruta remota entrada son obligatorias.', ConfiguracionNotificacion.configRightTop);
-    }else if (this.vbleCifrado && this.parametrosTransmisionForm.get('cifrado')?.value == 'GPG' && this.parametrosTransmisionForm.get('gpgRecipient')?.value.trim() == '') {
-      this.toastr.warning('Advertencia', 'GPG recipient es obligatorio cuando el cifrado elegido es GPG.', ConfiguracionNotificacion.configRightTop);
-      this.gpgRecipientInput?.nativeElement.focus();
+    } else if (this.parametrosArchivosForm.get('nombreTarea')?.value.trim() == '' ||this.parametrosArchivosForm.get('nombreSP')?.value.trim() == '' ||this.parametrosArchivosForm.get('nombreSalida')?.value.trim() == '' ||this.parametrosArchivosForm.get('formatoFecha')?.value.trim() == '' ||this.parametrosArchivosForm.get('tipoDeArchivo')?.value.trim() == '' ||this.parametrosArchivosForm.get('separador')?.value.trim() == '' ||this.parametrosArchivosForm.get('frecuencia')?.value.trim() == '' ||this.parametrosArchivosForm.get('rutaLocalSalida')?.value.trim() == '' ) {
+      this.toastr.warning('Advertencia', 'Debe diligenciar los campos marcados como obligatorios.', ConfiguracionNotificacion.configRightTop);
     } else {
-      const estadoActual = this.parametrosTransmisionForm.get('estado')?.value;
+      const estadoActual = this.parametrosArchivosForm.get('estado')?.value;
       if (estadoActual == 1) {
-        this.parametrosTransmisionForm.get('estado')?.patchValue(5);
+        this.parametrosArchivosForm.get('estado')?.patchValue(1);
       } else {
-        this.parametrosTransmisionForm.get('estado')?.patchValue(20);
-      }
-      const eliminarSubir = this.parametrosTransmisionForm.get('eliminaArchivo')?.value;
-      if (eliminarSubir == 1 || eliminarSubir == true) {
-        this.parametrosTransmisionForm.get('eliminaArchivo')?.patchValue(1);
-      } else {
-        this.parametrosTransmisionForm.get('eliminaArchivo')?.patchValue(0);
+        this.parametrosArchivosForm.get('estado')?.patchValue(0);
       }
       this.loading = true;
-      this.TransmisionArchivosServices.GuardarParametrosTransmision(this.parametrosTransmisionForm.value).subscribe(
+      this.GeneracionArchivosServices.GuardarParametrosArchivos(this.parametrosArchivosForm.value).subscribe(
         (response) => {
           this.toastr.success('Exitoso', 'Configuración guardada correctamente.', ConfiguracionNotificacion.configRightTop);
           this.obtenerConfiguracion();
@@ -280,36 +208,22 @@ export class GeneracionArchivosComponent implements OnInit {
 
 
   actualizarParametroTransmision() {
-    if (!this.parametrosTransmisionForm.valid) {
+    if (!this.parametrosArchivosForm.valid) {
       this.toastr.warning('Advertencia', 'Error en el formulario, valide los campos', ConfiguracionNotificacion.configRightTop);
-    } else if (this.parametrosTransmisionForm.get('horaEntrada')?.value.startsWith('00:00') && this.parametrosTransmisionForm.get('horaSalida')?.value.startsWith('00:00')) {
-      this.toastr.warning('Advertencia', 'La hora de entrada y salida no puede ser ambas 12:00 a.m.', ConfiguracionNotificacion.configRightTop);
-    } else if (!this.parametrosTransmisionForm.get('horaEntrada')?.value.startsWith('00:00') && (this.parametrosTransmisionForm.get('rutaLocalEntrada')?.value.trim() == '' || this.parametrosTransmisionForm.get('rutaRemotaSalida')?.value.trim() == '')) {
-      this.toastr.warning('Advertencia', 'La ruta local entrada y ruta remota salida son obligatorias.', ConfiguracionNotificacion.configRightTop);
-    } else if (!this.parametrosTransmisionForm.get('horaSalida')?.value.startsWith('00:00') && (this.parametrosTransmisionForm.get('rutaLocalSalida')?.value.trim() == '' || this.parametrosTransmisionForm.get('rutaRemotaEntrada')?.value.trim() == '')) {
-      this.toastr.warning('Advertencia', 'La ruta local salida y ruta remota entrada son obligatorias.', ConfiguracionNotificacion.configRightTop);
-    } else if (this.vbleCifrado && this.parametrosTransmisionForm.get('cifrado')?.value == 'GPG' && this.parametrosTransmisionForm.get('gpgRecipient')?.value.trim() == '') {
-      this.toastr.warning('Advertencia', 'GPG recipient es obligatorio cuando el cifrado elegido es GPG.', ConfiguracionNotificacion.configRightTop);
-      this.gpgRecipientInput?.nativeElement.focus();
-    }
-    else {
+    } else if (this.parametrosArchivosForm.get('nombreTarea')?.value.trim() == '' ||this.parametrosArchivosForm.get('nombreSP')?.value.trim() == '' ||this.parametrosArchivosForm.get('nombreSalida')?.value.trim() == '' ||this.parametrosArchivosForm.get('formatoFecha')?.value.trim() == '' ||this.parametrosArchivosForm.get('tipoDeArchivo')?.value.trim() == '' ||this.parametrosArchivosForm.get('separador')?.value.trim() == '' ||this.parametrosArchivosForm.get('frecuencia')?.value.trim() == '' ||this.parametrosArchivosForm.get('rutaLocalSalida')?.value.trim() == '' ) {
+      this.toastr.warning('Advertencia', 'Debe diligenciar los campos marcados como obligatorios.', ConfiguracionNotificacion.configRightTop);
+    } else {
       const result = this.ValidarCambios()
-      const estadoActual = this.parametrosTransmisionForm.get('estado')?.value;
+      const estadoActual = this.parametrosArchivosForm.get('estado')?.value;
       if (estadoActual == 1) {
-        this.parametrosTransmisionForm.get('estado')?.patchValue(5);
+        this.parametrosArchivosForm.get('estado')?.patchValue(5);
       } else {
-        this.parametrosTransmisionForm.get('estado')?.patchValue(20);
-      }
-      const eliminarSubir = this.parametrosTransmisionForm.get('eliminaArchivo')?.value;
-      if (eliminarSubir == 1 || eliminarSubir == true) {
-        this.parametrosTransmisionForm.get('eliminaArchivo')?.patchValue(1);
-      } else {
-        this.parametrosTransmisionForm.get('eliminaArchivo')?.patchValue(0);
+        this.parametrosArchivosForm.get('estado')?.patchValue(20);
       }
 
       this.loading = true;
       if (result) {
-        this.TransmisionArchivosServices.ActualizarParametrosTransmision(this.parametrosTransmisionForm.value).subscribe(
+        this.GeneracionArchivosServices.ActualizarParametrosArchivos(this.parametrosArchivosForm.value).subscribe(
           (response) => {
             this.toastr.success('Exitoso', 'Configuración actualizada correctamente.', ConfiguracionNotificacion.configRightTop);
             this.obtenerConfiguracion();
@@ -372,15 +286,16 @@ export class GeneracionArchivosComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.parametrosTransmisionForm.valid) {
-      console.log(this.parametrosTransmisionForm.value);
+    if (this.parametrosArchivosForm.valid) {
+      console.log(this.parametrosArchivosForm.value);
     }
   }
 
-  obtenerHistorial(id: number) {
-    this.TransmisionArchivosServices.GetHistorialTransmision(id).subscribe(
+  obtenerHistorial(id: number, tarea: string) {
+    this.selectedTarea= tarea;
+    this.GeneracionArchivosServices.GetHistorialArchivos(id).subscribe(
       (result) => {
-        this.historialTransm = result;
+        this.historialArchivos = result;
       },
       error => {
         const errorMessage = <any>error;
@@ -392,113 +307,17 @@ export class GeneracionArchivosComponent implements OnInit {
   }
 
   reintentarEjecucion(parametro1: string) {
-    const parametro: ParametrosTransmisionData = JSON.parse(parametro1);
+    const parametro: ParametrosArchivosData = JSON.parse(parametro1);
 
-    switch (parametro.Protocolo.toUpperCase().trim()) {
-      case "SFTP":
-        if ((parametro.Cifrado ?? "").toUpperCase().trim() == "GPG" || (parametro.Cifrado ?? "").toUpperCase().trim() == "PGP") {
-          this.ejecutarSFTPGPG(parametro);
-          this.obtenerHistorial(parametro.IdParametro);
-        }
-        else {
-          this.ejecutarSFTP(parametro);
-          this.obtenerHistorial(parametro.IdParametro);
-        }
-        break;
-      case "GRAPH":
-        this.ejecutarGRAPH(parametro);
-        this.obtenerHistorial(parametro.IdParametro);
-        break;
-      case "FTP":
-        // trabajos relacionados con FTP
-        break;
-      default:
-        // lógica para otros protocolos
-        break;
-    }
-  }
-
-  ejecutarSFTP(parametro: ParametrosTransmisionData) {
-    try {
-      this.loading = true;
-      this.TransmisionArchivosServices.EjecutarSFTP(parametro).subscribe(
-        (response) => {
-          this.loading = false;
-          this.toastr.success('Exitoso', response, ConfiguracionNotificacion.configRightTop);
-        },
-        (error) => {
-          if (error.status === 400) {
-            this.loading = false;
-            const errorMessage = error.error;
-            this.toastr.warning('Advertencia', errorMessage, ConfiguracionNotificacion.configRightTop);
-          } else {
-            this.loading = false;
-            this.toastr.warning('Advertencia', error.message, ConfiguracionNotificacion.configRightTop);
-          }
-        }
-      );
-    } catch (error) {
-      this.loading = false;
-      this.toastr.error('Error', '' + error, ConfiguracionNotificacion.configRightTop);
-    }
-  }
-
-  ejecutarSFTPGPG(parametro: ParametrosTransmisionData) {
-    try {
-      this.loading = true;
-      this.TransmisionArchivosServices.EjecutarSFTPGPG(parametro).subscribe(
-        (response) => {
-          this.loading = false;
-          this.toastr.success('Exitoso', response, ConfiguracionNotificacion.configRightTop);
-        },
-        (error) => {
-          if (error.status === 400) {
-            this.loading = false;
-            const errorMessage = error.error;
-            this.toastr.warning('Advertencia', errorMessage, ConfiguracionNotificacion.configRightTop);
-          } else {
-            this.loading = false;
-            this.toastr.warning('Advertencia', error.message, ConfiguracionNotificacion.configRightTop);
-          }
-        }
-      );
-    } catch (error) {
-      this.loading = false;
-      this.toastr.error('Error', '' + error, ConfiguracionNotificacion.configRightTop);
-    }
 
   }
 
-  ejecutarGRAPH(parametro: ParametrosTransmisionData) {
-    try {
-      this.loading = true;
-      this.TransmisionArchivosServices.EjecutarGRAPH(parametro).subscribe(
-        (response) => {
-          this.loading = false;
-          this.toastr.success('Exitoso', response, ConfiguracionNotificacion.configRightTop);
-        },
-        (error) => {
-          if (error.status === 400) {
-            this.loading = false;
-            const errorMessage = error._body ? JSON.parse(error._body) : '.';
-            this.toastr.warning('Advertencia', errorMessage, ConfiguracionNotificacion.configRightTop);
-          } else {
-            this.loading = false;
-            this.toastr.warning('Error', error, ConfiguracionNotificacion.configRightTop);
-          }
-        }
-      );
-    } catch (error) {
-      this.loading = false;
-      this.toastr.error('Error', '' + error, ConfiguracionNotificacion.configRightTop);
-    }
-  }
 
-  obtenerTareas() {
+ obtenerTareas() {
     try {
-      this.TransmisionArchivosServices.GetTareas().subscribe(
+      this.GeneracionArchivosServices.GetTareas().subscribe(
         (response) => {
-          console.log("Tareas programadas: " + response)
+          // console.log("Tareas programadas: " + response)
         });
     } catch (error) {
       console.log("Error obteniendo tareas programadas: " + error)
