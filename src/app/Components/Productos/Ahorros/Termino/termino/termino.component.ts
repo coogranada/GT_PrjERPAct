@@ -7406,8 +7406,12 @@ export class TerminoComponent implements OnInit {
   }
   onInputNumberOnly(event: any) {
     const input = event.target;
-    input.value = input.value.replace(/[^0-9]/g, '');
-  }
+    let value = input.value.replace(/[^0-9]/g, '');
+    if (/^0+$/.test(value)) {
+      value = '0';
+    }
+    input.value = value;
+  } 
   validateForm() {
     const Codigo = new FormControl('', [Validators.required]);
     const IdDigito = new FormControl('', [Validators.pattern('[0-9]*')]);
