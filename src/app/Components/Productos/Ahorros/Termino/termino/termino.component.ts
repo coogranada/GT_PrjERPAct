@@ -4276,6 +4276,9 @@ export class TerminoComponent implements OnInit {
           this.loading = false;
           if (result.TasaEfectiva === 0) {
             this.notif.onWarning('Advertencia', 'Tasa no valida.');
+            this.TerminoForm.get('TasaEfectiva')?.reset();
+            this.TerminoForm.get('TasaNominal')?.reset();
+            this.TerminoForm.get('TasaAdicional')?.reset();
           } else {
             this.MapearTasa(result);
           }
@@ -7401,6 +7404,14 @@ export class TerminoComponent implements OnInit {
         console.log(errorMessage);
       });
   }
+  onInputNumberOnly(event: any) {
+    const input = event.target;
+    let value = input.value.replace(/[^0-9]/g, '');
+    if (/^0+$/.test(value)) {
+      value = '0';
+    }
+    input.value = value;
+  } 
   validateForm() {
     const Codigo = new FormControl('', [Validators.required]);
     const IdDigito = new FormControl('', [Validators.pattern('[0-9]*')]);
@@ -7440,8 +7451,8 @@ export class TerminoComponent implements OnInit {
     const IdLiquidacion = new FormControl('', [Validators.required]);
     const CuentaDestino = new FormControl('', []);
     const AdicionarPunto = new FormControl('', []);
-    const TasaEfectiva = new FormControl('', []);
-    const TasaNominal = new FormControl('', []);
+    const TasaEfectiva = new FormControl('', [Validators.required]);
+    const TasaNominal = new FormControl('', [Validators.required]);
     const TasaAdicional = new FormControl('', []);
     const Tasa = new FormControl('', []);
     const RetencionFuentePeriodo = new FormControl('', []);
