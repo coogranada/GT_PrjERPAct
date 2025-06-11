@@ -472,6 +472,7 @@ export class AsesoriaTerminoComponent implements OnInit {
         this.MostrasAlertaAsociado = false;
         this.btnActualizar = true;
         this.GenerarPdfAsesoria();
+        this.asesoriaterminoOperacionFrom.get('Codigo')?.reset();        
         setTimeout(() => {
           this.GetHistorial(this.asesoriaterminoForm.controls['NumeroAsesoria'].value);
         }, 500);
@@ -986,7 +987,7 @@ export class AsesoriaTerminoComponent implements OnInit {
       Retencion: this.asesoriaterminoForm.controls['Retencion'].value,
       Aportes: this.asesoriaterminoForm.controls['Aportes'].value,
       InteresNeto: this.asesoriaterminoForm.controls['InteresNeto'].value,
-      TotalInteresBruto: this.asesoriaterminoForm.controls['TotalInteresBruto'].value,
+      TotalInteresBruto: +this.asesoriaterminoForm.controls['TotalInteresBruto'].value,
       TotalRetencion: this.asesoriaterminoForm.controls['TotalRetencion'].value,
       TotalAportes: this.asesoriaterminoForm.controls['TotalAportes'].value,
       TotalInteresNeto: this.asesoriaterminoForm.controls['TotalInteresNeto'].value,
