@@ -2340,6 +2340,8 @@ export class TerminoComponent implements OnInit {
               this.TerminoForm.get('NumeroDocumento')?.reset(); 
               this.bloquearProducto = false;
             }else {
+              this.TerminoForm.get('IdLiquidacion')?.reset();
+              this.TerminoForm.get('IdCuentaDestino')?.reset();
               this.TerminoForm.get('NumeroDocumento')?.setValue(result[0].NumeroDocumento);
               this.TerminoForm.get('Nombre')?.setValue(result[0].PrimerApellido + ' ' +
               result[0].SegundoApellido + ' ' + result[0].PrimerNombre + ' ' + result[0].SegundoNombre);
@@ -4352,11 +4354,14 @@ export class TerminoComponent implements OnInit {
         this.ObtenerFrecuenciaPago();
         return
       }
-    } this.notif.onWarning('Advertencia', 'El plazo ingresado no valido.');
-    this.TerminoForm.get('ValorTotal')?.reset();
-    this.TerminoForm.get('PlazoDias')?.reset();
-    this.TerminoForm.get('IdFrecuenciaPago')?.setValue(-1);
-    this.ObtenerFrecuenciaPago();
+    } 
+    else {
+      this.notif.onWarning('Advertencia', 'El plazo ingresado no valido.');
+      this.TerminoForm.get('ValorTotal')?.reset();
+      this.TerminoForm.get('PlazoDias')?.reset();
+      this.TerminoForm.get('IdFrecuenciaPago')?.setValue(-1);
+      this.ObtenerFrecuenciaPago();
+    } 
   }
   ValidarValorTotal() {
     if (this.TerminoForm.get('PlazoDias')?.value !== undefined
