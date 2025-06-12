@@ -102,7 +102,8 @@
                     </div>
 
                     <div class="col-xs-12 col-md-2 col-lg-2">
-                        <label><strong>Tipo archivo:</strong></label><span class="text-danger ObligatorioGrande"> *</span>
+                        <label><strong>Tipo archivo:</strong></label><span class="text-danger ObligatorioGrande">
+                            *</span>
                         <select class="form-control" formControlName="tipoDeArchivo" name="tipoDeArchivo"
                             id="tipoDeArchivo">
                             <option value=".TXT">.TXT</option>
@@ -116,7 +117,7 @@
 
                 </div>
                 <div class="col-xs-12 col-md-12 col-lg-12">
-                    
+
                     <div class="col-xs-12 col-md-3 col-lg-3 div-espacio1">
                         <label><strong>Nombre salida:</strong></label><span class="text-danger ObligatorioGrande">
                             *</span>
@@ -128,7 +129,7 @@
                         </span>
                     </div>
 
-                    <div class="col-xs-12 col-md-6 col-lg-6 div-espacio1">
+                    <div class="col-xs-12 col-md-5 col-lg-5 div-espacio1">
                         <label><strong>Ruta local salida:</strong></label><span class="text-danger ObligatorioGrande">
                             *</span>
                         <input type="text" class="form-control" formControlName="rutaLocalSalida" maxlength="150"
@@ -138,6 +139,17 @@
                             Ruta local de salida obligatoria.
                         </span>
                     </div>
+
+                    <div class="col-xs-12 col-md-4 col-lg-4 div-espacio1">
+                        <label><strong>Correo responsable:</strong></label>
+                        <input type="email" class="form-control" placeholder="usuario@dominio.com.co" formControlName="correoResponsable" maxlength="200"
+                            (blur)="borrarSiEspacios('correoResponsable')" />
+                            <span class="help-block validationSpan"
+                            *ngIf="parametrosArchivosForm.controls['correoResponsable'].errors?.['email']">
+                            El correo no es válido
+                        </span>
+                    </div>
+
                 </div>
 
             </div>
@@ -195,7 +207,12 @@
                         (click)="actualizarParametroTransmision()" [disabled]="parametrosArchivosForm.invalid"
                         *ngIf="vbleBtnactualizar">
                         <i class=""></i>&nbsp; ACTUALIZAR
-                    </button>
+                    </button>&nbsp;&nbsp;
+
+                    <button class="btn Gt-btn-verde btn-icon legitRipple" type="submit" (click)="getIdsSeleccionados()"
+                        data-toggle="modal" data-target="#ModalMasivo" *ngIf="vbleBtnactualizarMasivo">
+                        <i class=""></i>&nbsp; ACTUALIZAR MASIVO
+                    </button>&nbsp;
 
                 </div>
             </div>
@@ -221,6 +238,7 @@
                         <th><strong>Nombre tarea</strong></th>
                         <th><strong>Nombre SP</strong></th>
                         <th><strong>Activo</strong></th>
+                        <th><strong>Hora genera</strong></th>
                         <th><strong>Día inicial</strong></th>
                         <th><strong>Día final</strong></th>
                         <th><strong>Nombre salida</strong></th>
@@ -228,12 +246,15 @@
                         <th><strong>Tipo archivo</strong></th>
                         <th><strong>Separador</strong></th>
                         <th><strong>Frec.</strong></th>
-                        <th><strong>Hora genera</strong></th>
                         <th><strong>Ruta local salida</strong></th>
                         <th><strong>Última generación</strong></th>
                         <th><strong>Matrícula</strong></th>
                         <th><strong>Retiro</strong></th>
-                        <th class="operacionFija"><strong>Opciones</strong></th>
+                        <th><strong>Responsable</strong></th>
+                        <th class="operacionFija">
+                            <strong>Opciones</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+                                class="check-ena" type="checkbox" [(ngModel)]="allSelected"
+                                (change)="toggleAllCheckboxes()"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -246,6 +267,7 @@
                             <input class="check-dis" type="checkbox" [checked]="parametro.Estado === true">
 
                         </td>
+                        <td class="text-center">{{parametro.HoraGenera}}</td>
                         <td class="text-center">{{parametro.DiaInicial | date:'yyyy/MM/dd'}}</td>
                         <td class="text-center">{{parametro.DiaFinal | date:'yyyy/MM/dd'}}</td>
                         <td>{{parametro.NombreSalida}}</td>
@@ -253,18 +275,21 @@
                         <td class="text-center">{{parametro.TipoDeArchivo}}</td>
                         <td class="text-center">{{parametro.Separador}}</td>
                         <td class="text-center">{{parametro.Frecuencia}}</td>
-                        <td class="text-center">{{parametro.HoraGenera}}</td>
                         <td>{{parametro.RutaLocalSalida}}</td>
                         <td>{{parametro.UltFechaGeneracion| date:'yyyy/MM/dd HH:mm:ss'}}</td>
                         <td>{{parametro.FechaMatricula | date:'yyyy/MM/dd'}}</td>
-                        <td>{{parametro.FechaRetiro}}</td>
+                        <td>{{parametro.FechaRetiro | date:'yyyy/MM/dd'}}</td>
+                        <td>{{parametro.CorreoResponsable}}</td>
                         <td class="operacionFija">
-                            <button class="btn Gt-btn-verde btn-icon legitRipple" (click)="selectRow(parametro)">
+                            <button class="btn Gt-btn-verde btn-icon legitRipple" (click)="selectRow(parametro)" (click)="IrArriba()">
                                 <i class="icon-pencil"></i></button> &nbsp;
                             <button class="btn Gt-btn-morado btn-icon legitRipple"
                                 (click)="obtenerHistorial(parametro.IdParametrosArchivos, parametro.NombreTarea)"
                                 data-toggle="modal" data-target="#ModalHistorial">
                                 <i class="glyphicon glyphicon-time"></i></button>
+                            &nbsp;
+                            <input class="check-ena" type="checkbox" [checked]="false" [(ngModel)]="parametro.selected"
+                                (change)="checkIfAllSelected()">
                         </td>
                     </tr>
 
@@ -297,9 +322,11 @@
                     <li>Si se crea una nueva configuración o se modifica alguna hora de ejecución, se debe confirmar la
                         <strong>programación de tareas</strong>.
                     </li>
-                    <li>Al momento de indicar formatos de fecha, tener en cuenta que la palabra reservada MM (en mayúscula), se refiere al mes, mientras que mm (en minúscula), se refiere a los minutos.
+                    <li>Al momento de indicar formatos de fecha, tener en cuenta que la palabra reservada MM (en
+                        mayúscula), se refiere al mes, mientras que mm (en minúscula), se refiere a los minutos.
                     </li>
-                    <li>Para este módulo, en <strong>nombre de salida</strong> la palabra <strong>FF</strong>, tiene el mismo efecto que escibir <strong>ddMMyyyy</strong>.
+                    <li>Para este módulo, en <strong>nombre de salida</strong> la palabra <strong>FF</strong>, tiene el
+                        mismo efecto que escibir <strong>ddMMyyyy</strong>.
                     </li>
 
                 </ul>
@@ -330,7 +357,6 @@
                                 <th><strong>Fecha ejecución</strong></th>
                                 <th><strong>Resultado</strong></th>
                                 <th><strong>Origen</strong></th>
-                                <th><strong>Tarea</strong></th>
                                 <th><strong>Equipo</strong></th>
                                 <th><strong>Detalle resultado</strong></th>
                                 <th class="operacionFija"><strong>Opciones</strong></th>
@@ -353,12 +379,23 @@
                                 </td>
 
                                 <td>{{historialT.Origen}}</td>
-                                <td>{{historialT.Tarea}}</td>
                                 <td>{{historialT.EquipoEjecucion}}</td>
                                 <td>{{historialT.DetalleResultado}}</td>
 
                                 <td class="operacionFija">
+                                    <button *ngIf="historialT.Resultado === 'Error'"
+                                        [disabled]="!estaEnUltimos5Dias(historialT.FechaEjecucion)"
+                                        class="btn Gt-btn-verde btn-icon legitRipple"
+                                        (click)="reintentarEjecucion(historialT.JsonParametro)">
+                                        <i class="glyphicon"
+                                            [ngClass]="estaEnUltimos5Dias(historialT.FechaEjecucion) ? 'glyphicon-repeat' : 'glyphicon-repeat'"></i>
+                                    </button>
 
+                                    <button *ngIf="historialT.Resultado !== 'Error'" disabled
+                                        class="btn Gt-btn-verde btn-icon legitRipple"
+                                        (click)="reintentarEjecucion(historialT.JsonParametro)">
+                                        <i class="glyphicon glyphicon-ok"></i>
+                                    </button>
 
                                 </td>
                             </tr>
@@ -368,6 +405,129 @@
                 </div>
 
             </div>
+        </div>
+    </div>
+</div>
+<!-- Fin modal Historial -->
+
+<!-- Modal Masivo -->
+<div id="ModalMasivo" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <!-- Botón para cerrar la modal -->
+                <button type="button" class="close" class="close" data-dismiss="modal" #ModalMasivoC aria-label="Close">&times;</button>
+                <h6 class="modal-title">Actualizar masivamente</h6>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-5 col-md-5 col-lg-5">
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <label><strong>Seleccione campo para actualizar:</strong></label><span class="text-danger ObligatorioGrande"> *</span>
+                            <select class="form-control"  name="campoActualiza" id="campoActualiza" (change)="changeCampoActualiza($event)">
+                                <option value="0">--Seleccione--</option>
+                                <option value="1">Hora genera</option>
+                                <option value="2">Frecuencia</option>
+                                <option value="3">Día inicial</option>
+                                <option value="4">Día final</option>
+                                <option value="5">Estado</option>
+                                <option value="6">Separador</option>
+                            </select>
+                            <span class="help-block validationSpan"
+                                *ngIf="parametrosArchivosForm.controls['separador'].errors?.['required'] && (parametrosArchivosForm.controls['separador'].dirty || parametrosArchivosForm.controls['separador'].touched)">
+                                separador es obligatorio.
+                            </span>
+                        </div>
+                        
+                        <div *ngIf="this.campoSelected === '1'" class="col-xs-12 col-md-12 col-lg-12">
+                            <br>
+                            <div class="col-xs-12 col-md-12 col-lg-12">
+                                <label><strong>Hora generación:</strong></label><span class="text-danger ObligatorioGrande">
+                                    *</span>
+                                <input type="time" class="form-control" id="time1"  />
+                            </div>
+                        </div>
+
+                        <div *ngIf="this.campoSelected === '2'" class="col-xs-12 col-md-12 col-lg-12">
+                           <br>
+                            <div class="col-xs-12 col-md-12 col-lg-12">
+                                <label><strong>Frecuencia:</strong></label><span class="text-danger ObligatorioGrande">
+                                    *</span>
+                                <select class="form-control" name="frecuencia1" id="frecuencia1">
+                                    <option value="">--Seleccione--</option>
+                                    <option value="1">1</option>
+                                    <option value="30">30</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div *ngIf="this.campoSelected === '3'" class="col-xs-12 col-md-12 col-lg-12">
+                           <br>
+                            <div class="col-xs-12 col-md-12 col-lg-12">
+                                <label><strong>Día inicial:</strong></label><span class="text-danger ObligatorioGrande">
+                                    *</span>
+                                <input type="date" class="form-control" id="diaInicial1" name="diaInicial1" #diaInicial1 />
+                            </div>
+                        </div>
+
+                        <div *ngIf="this.campoSelected === '4'" class="col-xs-12 col-md-12 col-lg-12">
+                           <br>
+                            <div class="col-xs-12 col-md-12 col-lg-12">
+                                <label><strong>Día Final:</strong></label><span class="text-danger ObligatorioGrande">
+                                    *</span>
+                                <input type="date" class="form-control" name="diaFinal1" id="diaFinal1" #diaFinal1  />
+                            </div>
+                        </div>
+
+                        <div *ngIf="this.campoSelected === '5'" class="col-xs-12 col-md-12 col-lg-12">
+                            <br>
+                            <label><strong>Estado:</strong></label><span class="text-danger ObligatorioGrande"> *</span>
+                            <div class="text-center" style="width: 80%; justify-content: center; text-align: center;">
+                                <input class="check-ena" id="checkEstado1" type="checkbox"  style="margin-top: 10px;">
+                            </div>
+                         </div>
+
+                         <div *ngIf="this.campoSelected === '6'" class="col-xs-12 col-md-12 col-lg-12">
+                            <br>
+                            <label><strong>Separador:</strong></label><span class="text-danger ObligatorioGrande"> *</span>
+                            <select class="form-control" name="separador1" id="separador1">
+                                <option value="">--Seleccione--</option>
+                                <option value=",">,</option>
+                                <option value=",">;</option>
+                                <option value="|">|</option>
+                            </select>
+                         </div>
+
+                        <div *ngIf="this.campoSelected !== '0'" class="col-xs-12 col-md-12 col-lg-12">
+                            <br>
+                            <button class="btn Gt-btn-verde btn-icon legitRipple" (click)="actualizarMasivo()"
+                             >
+                            <i class=""></i>&nbsp; ACTUALIZAR
+                        </button>&nbsp;
+                        </div>
+
+                    </div>
+                    <div class="col-7 col-md-7 col-lg-7">
+                        <div class="table-responsive">
+                            <table id="TablaHistorial" class="table table-sm table-bordered sticky-last-column">
+                                <thead>
+                                    <tr>
+                                        <th><strong>Tareas para actualizar</strong></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let parametroFil of parametrosArchivosF" class="table-row1"
+                                        [ngClass]="{'selected-row2': selectedRow2 === parametroFil}" class="table-row"
+                                        (click)="selectRow2(parametroFil)">
+                                        <td style="text-align: left;">{{parametroFil.IdParametrosArchivos}} - {{parametroFil.NombreTarea}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
         </div>
     </div>
 </div>

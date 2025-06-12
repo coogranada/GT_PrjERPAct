@@ -36,5 +36,14 @@ export class GeneracionArchivosService{
         return this._http.post<any>(this.url,parametrosArchivos);
     }
     
+    GenerarArchivos(parametrosArchivos: ParametrosArchivosData): Observable<any> {
+        this.url = `${this.environment.Url}/GenerarArchivos`;
+        return this._http.post<any>(this.url,parametrosArchivos);
+    }
+
+    ActualizarParametrosArchivosMasivo(parametrosArchivos: ParametrosArchivosData[]): Observable<any> {
+        this.url = `${this.environment.Url}/ActualizarParametrosArchivosMasivo`;
+        return this._http.post<any>(this.url,parametrosArchivos);
+    }
 
 }

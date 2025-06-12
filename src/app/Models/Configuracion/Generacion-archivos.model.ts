@@ -16,6 +16,8 @@ export class ParametrosArchivosData {
     Estado: boolean;
     FechaMatricula: Date;
     FechaRetiro?: Date;
+    CorreoResponsable: string;
+    selected: boolean;
   
     constructor(
       IdParametrosArchivos: number,
@@ -35,6 +37,8 @@ export class ParametrosArchivosData {
       Estado: boolean,
       FechaMatricula: Date,
       FechaRetiro: Date | undefined,
+      CorreoResponsable: string,
+      selected: boolean
     ) {
       this.IdParametrosArchivos = IdParametrosArchivos;
       this.NombreTarea = NombreTarea;
@@ -53,6 +57,8 @@ export class ParametrosArchivosData {
       this.Estado = Estado;
       this.FechaMatricula = FechaMatricula;
       this.FechaRetiro = FechaRetiro;
+      this.CorreoResponsable = CorreoResponsable;
+      this.selected = false;
     }
   }
   
