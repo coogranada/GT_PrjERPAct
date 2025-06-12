@@ -2340,6 +2340,8 @@ export class TerminoComponent implements OnInit {
               this.TerminoForm.get('NumeroDocumento')?.reset(); 
               this.bloquearProducto = false;
             }else {
+              this.TerminoForm.get('IdLiquidacion')?.reset();
+              this.TerminoForm.get('IdCuentaDestino')?.reset();
               this.TerminoForm.get('NumeroDocumento')?.setValue(result[0].NumeroDocumento);
               this.TerminoForm.get('Nombre')?.setValue(result[0].PrimerApellido + ' ' +
               result[0].SegundoApellido + ' ' + result[0].PrimerNombre + ' ' + result[0].SegundoNombre);
@@ -4332,8 +4334,9 @@ export class TerminoComponent implements OnInit {
     this.TerminoForm.get('TasaEfectiva')?.reset();
     this.TerminoForm.get('TasaNominal')?.reset();
     this.TerminoForm.get('TasaAdicional')?.reset();
-    if (this.TerminoForm.get('PlazoDias')?.value !== undefined
-      && this.TerminoForm.get('PlazoDias')?.value !== null) {
+    const plazoValue = this.TerminoForm.get('PlazoDias')?.value;
+    if (plazoValue !== undefined &&
+      plazoValue !== null && plazoValue !== '0' && plazoValue !== '00' && plazoValue !== '000' && plazoValue !== '0000') {
       if (JSON.parse(this.TerminoForm.get('PlazoDias')?.value) >= this.ArrayCondiciones.PlazoMinimo
         && JSON.parse(this.TerminoForm.get('PlazoDias')?.value) <= this.ArrayCondiciones.PlazoMaximo) {
         if ((Number(this.TerminoForm.get('PlazoDias')?.value) % 30) == 0){
@@ -4342,15 +4345,23 @@ export class TerminoComponent implements OnInit {
         }else{
           this.TerminoForm.get('IdFrecuenciaPago')?.setValue(-1);
           this.ObtenerFrecuenciaPago();
-        }
-         
+        }         
       } else {
         this.notif.onWarning('Advertencia', 'El plazo ingresado no es permitido para este producto.');
         this.TerminoForm.get('ValorTotal')?.reset();
         this.TerminoForm.get('PlazoDias')?.reset();
+        this.TerminoForm.get('IdFrecuenciaPago')?.setValue(-1);
+        this.ObtenerFrecuenciaPago();
         return
       }
-    }
+    } 
+    else {
+      this.notif.onWarning('Advertencia', 'El plazo ingresado no valido.');
+      this.TerminoForm.get('ValorTotal')?.reset();
+      this.TerminoForm.get('PlazoDias')?.reset();
+      this.TerminoForm.get('IdFrecuenciaPago')?.setValue(-1);
+      this.ObtenerFrecuenciaPago();
+    } 
   }
   ValidarValorTotal() {
     if (this.TerminoForm.get('PlazoDias')?.value !== undefined
