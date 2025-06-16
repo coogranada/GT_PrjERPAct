@@ -13,6 +13,7 @@ import { map, count } from 'rxjs/operators';
 import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { GeneralesService } from '../../../../../Services/Productos/generales.service';
 import moment from "moment";
+// import Tiff from 'tiff';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare const Tiff : any;
@@ -1190,7 +1191,7 @@ export class DisponiblesComponent implements OnInit {
           }, 300);
             
         } else {
-          this.notif.warning('Advertencia', 'Medio de pago no válido', ConfiguracionNotificacion.configRightTop);
+          this.notif.warning('Advertencia', 'Medio de pago no válido.', ConfiguracionNotificacion.configRightTop);
           this.DisponibleOperacionFrom.get('Codigo')?.reset();
         }
         
@@ -1288,7 +1289,7 @@ export class DisponiblesComponent implements OnInit {
                 this.DisponibleOperacionFrom.get('Codigo')?.reset();
              });
           } else {
-            this.notif.warning('Advertencia', 'Medio de pago no válido', ConfiguracionNotificacion.configRightTop);
+            this.notif.warning('Advertencia', 'Medio de pago no válido.', ConfiguracionNotificacion.configRightTop);
             this.DisponibleOperacionFrom.get('Codigo')?.reset();
           }
         } else {
@@ -1571,7 +1572,7 @@ export class DisponiblesComponent implements OnInit {
               },
             ) 
           } else {
-            this.notif.warning('Advertencia', 'Medio de pago no válido',
+            this.notif.warning('Advertencia', 'Medio de pago no válido.',
               ConfiguracionNotificacion.configRightTop);
             this.DisponibleOperacionFrom.get('Codigo')?.reset();
           }
@@ -3536,7 +3537,7 @@ export class DisponiblesComponent implements OnInit {
                       this.BloquearMedioPago = false;
                     }
                   } else {
-                    this.notif.warning('Advertencia', 'El número de producto ingresado no es para menores', ConfiguracionNotificacion.configRightTop);
+                    this.notif.warning('Advertencia', 'El número de producto ingresado no es para menores.', ConfiguracionNotificacion.configRightTop);
                     this.DisponibleForm.get('IdProducto')?.reset();
                   }
                 }
@@ -3561,7 +3562,7 @@ export class DisponiblesComponent implements OnInit {
                   }
                 } else {
 
-                  this.notif.warning('Advertencia', 'El número de producto ingresado no es para menores', ConfiguracionNotificacion.configRightTop);
+                  this.notif.warning('Advertencia', 'El número de producto ingresado no es para menores.', ConfiguracionNotificacion.configRightTop);
                   this.DisponibleForm.get('IdProducto')?.reset();
                 }
               }
@@ -3863,7 +3864,7 @@ export class DisponiblesComponent implements OnInit {
         },
         error => {
           this.loading = false;
-          this.notif.warning('Advertencia', 'El valor ingresado no tiene el formato correcto',
+          this.notif.warning('Advertencia', 'El valor ingresado no tiene el formato correcto.',
             ConfiguracionNotificacion.configRightTopNoClose);
           const errorMessage = <any>error;
           console.log(errorMessage);
@@ -3909,7 +3910,7 @@ export class DisponiblesComponent implements OnInit {
       },
       error => {
         this.loading = false;
-        this.notif.warning('Advertencia', 'El valor ingresado no tiene el formato correcto', ConfiguracionNotificacion.configRightTopNoClose);
+        this.notif.warning('Advertencia', 'El valor ingresado no tiene el formato correcto.', ConfiguracionNotificacion.configRightTopNoClose);
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -4217,41 +4218,43 @@ export class DisponiblesComponent implements OnInit {
               }
               // fin notificador  
               // liberar tarjeta o libreta
-              swal.fire({
-                title: '¿Desea liberar tarjeta y/o libreta de cuenta anulada?',
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Sí',
-                cancelButtonText: 'No',
-                confirmButtonColor: 'rgb(13,165,80)',
-                cancelButtonColor: 'rgb(160,0,87)',
-                allowOutsideClick: false,
-                allowEscapeKey: false
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  const medioPago = this.DisponibleForm.get('IdMedioPago')?.value;
-                  switch (medioPago) {
-                    case 50:
-                    case 10:
-                      this.LiberarTarjeta();
-                      this.notif.success( 'Exitoso','La liberación de tarjeta se realizó correctamente.',
-                        ConfiguracionNotificacion.configRightTop
-                      );
-                      break;
-                    case 0:
-                      this.LiberarLibreta();
-                      this.notif.success('Exitoso','La liberación de libreta se realizó correctamente.',
-                        ConfiguracionNotificacion.configRightTop
-                      );
-                      break;
-                    default:
-                      this.notif.warning('Atención','El tipo de medio de pago no es válido para liberar.',
-                        ConfiguracionNotificacion.configRightTop
-                      );
-                      break;
+              if (this.DisponibleForm.get('IdMedioPago')?.value !== 60 || this.DisponibleForm.get('IdMedioPago')?.value !== 70){
+                swal.fire({
+                  title: '¿Desea liberar tarjeta y/o libreta de cuenta anulada?',
+                  icon: 'question',
+                  showCancelButton: true,
+                  confirmButtonText: 'Sí',
+                  cancelButtonText: 'No',
+                  confirmButtonColor: 'rgb(13,165,80)',
+                  cancelButtonColor: 'rgb(160,0,87)',
+                  allowOutsideClick: false,
+                  allowEscapeKey: false
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    const medioPago = this.DisponibleForm.get('IdMedioPago')?.value;
+                    switch (medioPago) {
+                      case 50:
+                      case 10:
+                        this.LiberarTarjeta();
+                        this.notif.success('Exitoso', 'La liberación de tarjeta se realizó correctamente.',
+                          ConfiguracionNotificacion.configRightTop
+                        );
+                        break;
+                      case 0:
+                        this.LiberarLibreta();
+                        this.notif.success('Exitoso', 'La liberación de libreta se realizó correctamente.',
+                          ConfiguracionNotificacion.configRightTop
+                        );
+                        break;
+                      default:
+                        this.notif.warning('Atención', 'El tipo de medio de pago no es válido para liberar.',
+                          ConfiguracionNotificacion.configRightTop
+                        );
+                        break;
+                    }
                   }
-                }
-              });          
+                });
+              }                       
               this.CambioEstadoFrom.reset();
               this.DisponibleOperacionFrom.get('Codigo')?.reset();
               this.DisponibleForm.get('IdObseCambioEstado')?.reset();
@@ -4602,7 +4605,6 @@ export class DisponiblesComponent implements OnInit {
       html.data = "";
       html.name = "";
       html.type = "";
-      
       this.DisponiblesServices.GenerarPDFCertificado(itemsSendCertificado).subscribe(
         result => {
           pdfinBase64 = result.FileStream._buffer;
@@ -4615,6 +4617,7 @@ export class DisponiblesComponent implements OnInit {
           html.type =  "application/pdf";
           this.loading = false;
           this.Guardarlog({},"79")
+          this.ModalCertificadoCuentaPregunta.nativeElement.click();
         },
         error => {
           const errorMessage = <any>error;
@@ -4623,7 +4626,7 @@ export class DisponiblesComponent implements OnInit {
           this.loading = false;
         });
     } else
-      this.notif.warning('Advertencia', 'Debe seleccionar una opción', ConfiguracionNotificacion.configRightTop);
+      this.notif.warning('Advertencia', 'Debe seleccionar una opción.', ConfiguracionNotificacion.configRightTop);
   }
   generarCertificadoCuenta() {
     this.loading = true;
@@ -5607,7 +5610,7 @@ export class DisponiblesComponent implements OnInit {
             }
           );
         } else {
-          this.notif.warning('Advertencia', 'Debe cambiar operacion permitida', ConfiguracionNotificacion.configRightTop);
+          this.notif.warning('Advertencia', 'Debe cambiar operacion permitida.', ConfiguracionNotificacion.configRightTop);
           this.bloquearbtnActalizar = false;
         }
       } else if (this.DisponibleOperacionFrom.get('Codigo')?.value === '36') {  // Editar canales
@@ -6784,7 +6787,7 @@ export class DisponiblesComponent implements OnInit {
     }
 
     if (IdLinea === '*' && NombreLinea === '*') {
-      this.notif.warning('Alerta', 'Debe ingresar numero de linea o nombre de la linea', ConfiguracionNotificacion.configRightTop);
+      this.notif.warning('Alerta', 'Debe ingresar numero de linea o nombre de la linea.', ConfiguracionNotificacion.configRightTop);
     } else {
       this.DisponiblesServices.BuscarLinea(IdLinea, NombreLinea).subscribe(
         result => {
