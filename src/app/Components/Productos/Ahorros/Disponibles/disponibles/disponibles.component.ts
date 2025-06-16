@@ -4431,7 +4431,6 @@ export class DisponiblesComponent implements OnInit {
       }
     } else if (this.DisponibleForm.get('IdMedioPago')?.value == '10' || this.DisponibleForm.get('IdMedioPago')?.value == '60') { // sin cupo
       this.ValidacionMediopagoInputs();
-      this.enableBtnActualizar = false;
       this.MostrarLibreta = true;
       this.MostrarTarjeta = false;
       this.MostrarCupo = true;
@@ -4556,6 +4555,10 @@ export class DisponiblesComponent implements OnInit {
       }, 200);
     }   
   }
+  focusActualizar(){
+    this.generalesService.Autofocus('btnActualizarId');    
+    this.VolverArriba(300);
+  }
   ValidacionMediopagoInputs() {
     if (this.DisponibleOperacionFrom.get('Codigo')?.value == 10 || this.DisponibleOperacionFrom.get('Codigo')?.value == 40 || this.DisponibleOperacionFrom.get('Codigo')?.value == 38) {
       if (this.DisponibleForm.get('IdProducto')?.value === 109 || this.DisponibleForm.get('IdProducto')?.value === 110) {
@@ -4566,9 +4569,9 @@ export class DisponiblesComponent implements OnInit {
         (this.DisponibleForm.get('IdMedioPago')?.value == 50 && this.DisponibleForm.get('IdConvenio')?.value != 0 && this.DisponibleForm.get('NumeroTarjeta')?.value != "" && this.DisponibleForm.get('NumeroPagare')?.value != "" && this.DisponibleForm.get('IdDiaCorte')?.value != "0" && this.DisponibleForm.get('IdPlazo')?.value != "0") ||
         (this.DisponibleForm.get('IdMedioPago')?.value == 60 && this.DisponibleForm.get('IdConvenio')?.value != 0) ||
         (this.DisponibleForm.get('IdMedioPago')?.value == 70 && this.DisponibleForm.get('IdConvenio')?.value != 0 && this.DisponibleForm.get('NumeroPagare')?.value != "" && this.DisponibleForm.get('IdDiaCorte')?.value != "0" && this.DisponibleForm.get('IdPlazo')?.value != "0")) {
+  
         this.enableBtnActualizar = true;
-        this.BloquearNumeroTarjeta = false;
-      }     
+      } 
     }
     else {
       return false;

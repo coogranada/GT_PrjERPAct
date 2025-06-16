@@ -521,7 +521,7 @@
                                     <div class="col-xs-12 col-md-2 col-lg-2">
                                         <label class="textNegrilla">Número pagaré:</label>
                                         <span class="grande" *ngIf="PagareObligatorio">*</span>
-                                        <input type="text" id="txtNumeroPagare" class="form-control" (change)="ValidacionMediopagoInputs()" formControlName="NumeroPagare" [attr.disabled]="BloquearPagare">
+                                        <input type="text" id="txtNumeroPagare" class="form-control" (blur)="ValidacionMediopagoInputs()" (blur)="focusActualizar()" formControlName="NumeroPagare" [attr.disabled]="BloquearPagare">
                                         <span class="help-block validationSpan" *ngIf="DisponibleForm.controls['NumeroPagare'].errors?.['pattern']">
                                             El número pagare solo acepta números.
                                         </span>
