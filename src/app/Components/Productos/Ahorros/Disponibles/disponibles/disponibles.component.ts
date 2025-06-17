@@ -4533,7 +4533,7 @@ export class DisponiblesComponent implements OnInit {
       if (this.DisponibleForm.get('IdMedioPago')?.value == '70') {
         this.DisponibleForm.get('NumeroTarjeta')?.setValue("");
         this.BloquearNumeroTarjeta = false;
-        // this.ValidacionMediopagoInputs();
+        this.ValidacionMediopagoInputs();
       } 
       if(!(this.DisponibleForm.get('IdConvenio')?.value > 0))
         this.DisponibleForm.get('IdConvenio')?.setValue(0);
