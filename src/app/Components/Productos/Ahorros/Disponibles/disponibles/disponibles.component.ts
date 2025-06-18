@@ -4620,7 +4620,7 @@ export class DisponiblesComponent implements OnInit {
           html.type =  "application/pdf";
           this.loading = false;
           this.Guardarlog({},"79")
-          this.ModalCertificadoCuentaPregunta.nativeElement.click();
+          this.CertificadoFrom.get('SaldoCertificado')?.setValue(0);           
         },
         error => {
           const errorMessage = <any>error;
