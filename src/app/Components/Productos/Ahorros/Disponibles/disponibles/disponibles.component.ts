@@ -2762,6 +2762,13 @@ export class DisponiblesComponent implements OnInit {
           var RealP = this.dataObjet[0].Real;
           if(RealP !== null){
             this.dataObjetR = RealP;
+            this.dataObjetR.forEach(element => {
+              const Conbertura = element.ValorCobertura;
+              const Resapaldo = element.ValorRespaldado;             
+              const Disponible = (Conbertura - Resapaldo);
+              element.ValorDisponible = Disponible.toString();
+
+            });
           } else {
             this.dataObjetR.length = 0;
           }
