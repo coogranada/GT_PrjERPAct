@@ -3919,6 +3919,7 @@ export class DisponiblesComponent implements OnInit {
   MapearDatosAsesorExterno(datos : any) {
     this.AsesorFrom.get('strCodigo')?.setValue(datos.intIdAsesor);
     this.AsesorFrom.get('strNombre')?.setValue(datos.Nombre);
+    this.focusActualizar();
   }
   FormaPago() {
     this.DisponiblesServices.FormaPago().subscribe(
@@ -4470,8 +4471,8 @@ export class DisponiblesComponent implements OnInit {
 
       if(this.DisponibleOperacionFrom.get('Codigo')?.value === '38'){
         if ((medioPagoAnterior == '10'|| medioPagoAnterior == '50') && (this.DisponibleForm.get('IdMedioPago')?.value == '10' || this.DisponibleForm.get('IdMedioPago')?.value == '50') ) {
-          this.DisponibleForm.get('NumeroTarjeta')?.setValue(this.tarjetaOld);;
-        } 
+          this.DisponibleForm.get('NumeroTarjeta')?.setValue(this.tarjetaOld);
+        }
       }
 
       if(!(this.DisponibleForm.get('IdConvenio')?.value > 0))
@@ -4512,6 +4513,14 @@ export class DisponiblesComponent implements OnInit {
         this.ConvenioObligatorio = true;
         this.PagareObligatorio = true;
         this.PlazoCorteObligatoria = true;
+
+        if(this.DisponibleOperacionFrom.get('Codigo')?.value === '38'){
+          if (medioPagoAnterior == '50'){
+            this.DisponibleForm.get('NumeroTarjeta')?.setValue(this.tarjetaOld);
+          }
+        }
+        
+
       } else {
         this.TarjetaObligatoria = false;
         this.ConvenioObligatorio = true;
@@ -5771,7 +5780,7 @@ export class DisponiblesComponent implements OnInit {
             && ((this.DisponibleForm.get('NumeroTarjeta')?.value !== null
               && this.DisponibleForm.get('NumeroTarjeta')?.value !== ' '
               && this.DisponibleForm.get('NumeroTarjeta')?.value !== undefined && this.DisponibleForm.get('IdMedioPago')?.value === '10') || (this.DisponibleForm.get('IdMedioPago')?.value === '60'))) {
-            
+                           
             this.loading = true;
             payload.FechaCambioPlazo = 'NULL';
             payload.FechaRediferir = 'NULL';
