@@ -1710,6 +1710,7 @@
                                     </div>
                                     <div class="col-xs-12 col-md-9 col-lg-9">
                                         <select class="form-control"  id="SelectSaldoCertificado" formControlName="SaldoCertificado">
+                                            <option value=0 >-- Seleccion --</option>
                                             <option *ngFor="let item of Certificados"  [value]="item.id">{{item.opcion}}</option>
                                         </select>
                                     </div>
