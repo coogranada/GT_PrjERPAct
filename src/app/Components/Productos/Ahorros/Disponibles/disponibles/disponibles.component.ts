@@ -4219,7 +4219,7 @@ export class DisponiblesComponent implements OnInit {
               }
               // fin notificador  
               // liberar tarjeta o libreta
-              if (this.DisponibleForm.get('IdMedioPago')?.value !== 60 || this.DisponibleForm.get('IdMedioPago')?.value !== 70){
+              if (this.DisponibleForm.get('IdMedioPago')?.value !== 60 && this.DisponibleForm.get('IdMedioPago')?.value !== 70){
                 swal.fire({
                   title: '¿Desea liberar tarjeta y/o libreta de cuenta anulada?',
                   icon: 'question',
@@ -4629,7 +4629,7 @@ export class DisponiblesComponent implements OnInit {
           html.type =  "application/pdf";
           this.loading = false;
           this.Guardarlog({},"79")
-          this.ModalCertificadoCuentaPregunta.nativeElement.click();
+          this.CertificadoFrom.get('SaldoCertificado')?.setValue(0);           
         },
         error => {
           const errorMessage = <any>error;
