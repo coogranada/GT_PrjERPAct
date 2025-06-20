@@ -5947,6 +5947,50 @@ export class DisponiblesComponent implements OnInit {
               }
             );
           }
+            // liberar tarjeta o libreta
+              if ((this.DisponibleForm.get('IdEstado')?.value == 45) && MedioPagoAnterior !== 60 || MedioPagoAnterior !== 70){
+                swal.fire({
+                  title: '¿Desea liberar tarjeta y/o libreta de cuenta?',
+                  icon: 'question',
+                  showCancelButton: true,
+                  confirmButtonText: 'Sí',
+                  cancelButtonText: 'No',
+                  confirmButtonColor: 'rgb(13,165,80)',
+                  cancelButtonColor: 'rgb(160,0,87)',
+                  allowOutsideClick: false,
+                  allowEscapeKey: false
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    const medioPago = MedioPagoAnterior;
+                    switch (medioPago) {
+                      case 50:
+                        this.LiberarTarjeta();
+                        this.notif.success('Exitoso', 'La liberación de tarjeta se realizó correctamente.',
+                          ConfiguracionNotificacion.configRightTop
+                        );
+                        break;
+                      case 10:
+                        this.LiberarTarjeta();
+                        this.notif.success('Exitoso', 'La liberación de tarjeta se realizó correctamente.',
+                          ConfiguracionNotificacion.configRightTop
+                        );
+                        break;
+                      case 0:
+                        this.LiberarLibreta();
+                        this.notif.success('Exitoso', 'La liberación de libreta se realizó correctamente.',
+                          ConfiguracionNotificacion.configRightTop
+                        );
+                        break;
+                      default:
+                        this.notif.warning('Atención', 'El tipo de medio de pago no es válido para liberar.',
+                          ConfiguracionNotificacion.configRightTop
+                        );
+                        break;
+                    }
+                  }
+                });
+          }
+
           this.BuscarPorCuenta();
           this.ObtenerHistorial();
           this.NovedadesAhorrosPDF('Cambio medio de pago');
