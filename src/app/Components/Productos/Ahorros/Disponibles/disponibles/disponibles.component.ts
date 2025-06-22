@@ -3045,6 +3045,13 @@ export class DisponiblesComponent implements OnInit {
           this.dataObjetC = result;
           this.dataObjetCd = (this.dataObjet.Codeudor);
           this.dataObjetR = (this.dataObjet.Real);
+          if (this.dataObjetR.length != 0){           
+            const Conbertura = this.dataObjetR[0].ValorCobertura;
+            const Resapaldo = this.dataObjetR[0].ValorRespaldado;
+              const Disponible = (Conbertura - Resapaldo);
+            this.dataObjetR[0].ValorDisponible = Disponible.toString();
+          }
+
         } else {
           this.DisponibleForm.get('IdConvenio')?.reset()
           this.DisponibleForm.get('NumeroTarjeta')?.setValue("");
@@ -5955,7 +5962,12 @@ export class DisponiblesComponent implements OnInit {
             );
           }
             // liberar tarjeta o libreta
-              if ((this.DisponibleForm.get('IdEstado')?.value == 45) && MedioPagoAnterior !== 60 || MedioPagoAnterior !== 70){
+              if ((this.DisponibleForm.get('IdEstado')?.value == 45)){
+                const medioPago = MedioPagoAnterior;
+                switch (medioPago) {
+                  case 10: 
+                  case 50:
+                  case 0:                  
                 swal.fire({
                   title: '¿Desea liberar tarjeta y/o libreta de cuenta?',
                   icon: 'question',
@@ -5967,35 +5979,15 @@ export class DisponiblesComponent implements OnInit {
                   allowOutsideClick: false,
                   allowEscapeKey: false
                 }).then((result) => {
-                  if (result.isConfirmed) {
-                    const medioPago = MedioPagoAnterior;
-                    switch (medioPago) {
-                      case 50:
+                  if (result.isConfirmed) {                    
                         this.LiberarTarjeta();
                         this.notif.success('Exitoso', 'La liberación de tarjeta se realizó correctamente.',
                           ConfiguracionNotificacion.configRightTop
                         );
-                        break;
-                      case 10:
-                        this.LiberarTarjeta();
-                        this.notif.success('Exitoso', 'La liberación de tarjeta se realizó correctamente.',
-                          ConfiguracionNotificacion.configRightTop
-                        );
-                        break;
-                      case 0:
-                        this.LiberarLibreta();
-                        this.notif.success('Exitoso', 'La liberación de libreta se realizó correctamente.',
-                          ConfiguracionNotificacion.configRightTop
-                        );
-                        break;
-                      default:
-                        this.notif.warning('Atención', 'El tipo de medio de pago no es válido para liberar.',
-                          ConfiguracionNotificacion.configRightTop
-                        );
-                        break;
-                    }
-                  }
-                });
+                     }
+                });              
+                break;
+              }
           }
 
           this.BuscarPorCuenta();
