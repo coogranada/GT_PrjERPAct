@@ -4247,16 +4247,17 @@ export class DisponiblesComponent implements OnInit {
                 }).then((result) => {
                   if (result.isConfirmed) {
                     const medioPago = this.DisponibleForm.get('IdMedioPago')?.value;
+                    const NumeroTarjeta = this.DisponibleForm.get('NumeroTarjeta')?.value;
                     switch (medioPago) {
                       case 50:
                       case 10:
-                        this.LiberarTarjeta();
+                        this.LiberarTarjeta(NumeroTarjeta);
                         this.notif.success('Exitoso', 'La liberación de tarjeta se realizó correctamente.',
                           ConfiguracionNotificacion.configRightTop
                         );
                         break;
                       case 0:
-                        this.LiberarLibreta();
+                        this.LiberarLibreta(NumeroTarjeta);
                         this.notif.success('Exitoso', 'La liberación de libreta se realizó correctamente.',
                           ConfiguracionNotificacion.configRightTop
                         );
@@ -4330,11 +4331,11 @@ export class DisponiblesComponent implements OnInit {
     this.selectEstado = true;
     this.inputEstado = false;
   }
-  LiberarTarjeta() {
-    var NumeroTarjeta = this.DisponibleForm.get('NumeroTarjeta')?.value;
+  LiberarTarjeta(NumeroTarjeta: any) {
+    //var NumeroTarjeta = this.DisponibleForm.get('NumeroTarjeta')?.value;
     this.DisponiblesServices.LiberarTarjeta(+NumeroTarjeta).subscribe(
       result => {
-        this.DisponibleForm.get('NumeroTarjeta')?.setValue(0);
+        //this.DisponibleForm.get('NumeroTarjeta')?.setValue(0);
       },
       error => {
         const errorMessage = <any>error;
@@ -4342,12 +4343,12 @@ export class DisponiblesComponent implements OnInit {
       }
     );
   }
-  LiberarLibreta() {
-    var NumeroLibreta = this.DisponibleForm.get('Inicial')?.value;
+  LiberarLibreta(NumeroLibreta: any) {
+    //var NumeroLibreta = this.DisponibleForm.get('Inicial')?.value;
     this.DisponiblesServices.LiberarLibreta(+NumeroLibreta).subscribe(
       result => {
-        this.DisponibleForm.get('Inicial')?.setValue(0);
-        this.DisponibleForm.get('Final')?.setValue(0);
+        //this.DisponibleForm.get('Inicial')?.setValue(0);
+        //this.DisponibleForm.get('Final')?.setValue(0);
       },
       error => {
         const errorMessage = <any>error;
@@ -4529,7 +4530,7 @@ export class DisponiblesComponent implements OnInit {
         this.PlazoCorteObligatoria = true;
 
         if(this.DisponibleOperacionFrom.get('Codigo')?.value === '38'){
-          if (medioPagoAnterior == '50'){
+          if (medioPagoAnterior == '10' || medioPagoAnterior == '50'){
             this.DisponibleForm.get('NumeroTarjeta')?.setValue(this.tarjetaOld);
           }
         }
@@ -4582,7 +4583,7 @@ export class DisponiblesComponent implements OnInit {
     }   
   }
   focusActualizar(){
-    this.generalesService.Autofocus('btnActualizarId');    
+    this.generalesService.Autofocus('strNombre');    
     this.VolverArriba(300);
   }
   ValidacionMediopagoInputs() {
@@ -5920,6 +5921,7 @@ export class DisponiblesComponent implements OnInit {
           const tarjetaAhora = this.DisponibleForm.get('NumeroTarjeta')?.value;
           const MedioPagoAhora = this.DisponibleForm.get('IdMedioPago')?.value;
           if (MedioPagoAnterior === 0) {// Medio de pago anterior Libreta
+
             if (MedioPagoAhora !== 60 || MedioPagoAhora !== 70)
             this.DisponiblesServices.ActualizarLibretaTarjetaSinCobro(this.DisponibleForm.value).subscribe(
               result => {                
@@ -5929,8 +5931,19 @@ export class DisponiblesComponent implements OnInit {
                 console.log(errorMessage);
               }
             );
-          } else if (MedioPagoAnterior === 10 || MedioPagoAnterior === 50){ // Medio de pago anterior tarjeta sin cupo o con cupo
-            if (this.tarjetaOld !== tarjetaAhora){
+
+            // liberar libreta
+            if ((this.DisponibleForm.get('IdEstado')?.value == 45)) {
+              const libretaAhora = this.DisponibleForm.get('Inicial')?.value;
+              if (this.talonario.Inicial !== libretaAhora) {
+                this.validarLiberacion(true);
+              } else {
+                this.validarLiberacion(false);
+              }
+            }
+            
+          } else if (MedioPagoAnterior === 10 || MedioPagoAnterior === 50 ){ // Medio de pago anterior tarjeta sin cupo o con cupo
+            if (this.tarjetaOld !== tarjetaAhora) {
               this.DisponiblesServices.ActualizarLibretaTarjeta(this.DisponibleForm.value).subscribe(
                 result => {
                   swal.fire({
@@ -5943,15 +5956,16 @@ export class DisponiblesComponent implements OnInit {
                     allowEscapeKey: false,
                     confirmButtonText: 'Ok',
                     confirmButtonColor: 'rgb(160, 0, 87)'
-                  });
-                 },
+                  })
+                },
                 error => {
                   const errorMessage = <any>error;
                   console.log(errorMessage);
                 }
               );
             }
-          }else if (MedioPagoAnterior === 60 || MedioPagoAnterior === 70){ // Medio de pago anterior sin tarjeta sin cupo y con cupo
+            
+          }else if (MedioPagoAnterior === 60  || MedioPagoAnterior === 70 ){ // Medio de pago anterior sin tarjeta sin cupo y con cupo
             this.DisponiblesServices.ActualizarLibretaTarjetaSinCobro(this.DisponibleForm.value).subscribe(
               result => {
               },
@@ -5961,35 +5975,6 @@ export class DisponiblesComponent implements OnInit {
               }
             );
           }
-            // liberar tarjeta o libreta
-              if ((this.DisponibleForm.get('IdEstado')?.value == 45)){
-                const medioPago = MedioPagoAnterior;
-                switch (medioPago) {
-                  case 10: 
-                  case 50:
-                  case 0:                  
-                swal.fire({
-                  title: '¿Desea liberar tarjeta y/o libreta de cuenta?',
-                  icon: 'question',
-                  showCancelButton: true,
-                  confirmButtonText: 'Sí',
-                  cancelButtonText: 'No',
-                  confirmButtonColor: 'rgb(13,165,80)',
-                  cancelButtonColor: 'rgb(160,0,87)',
-                  allowOutsideClick: false,
-                  allowEscapeKey: false
-                }).then((result) => {
-                  if (result.isConfirmed) {                    
-                        this.LiberarTarjeta();
-                        this.notif.success('Exitoso', 'La liberación de tarjeta se realizó correctamente.',
-                          ConfiguracionNotificacion.configRightTop
-                        );
-                     }
-                });              
-                break;
-              }
-          }
-
           this.BuscarPorCuenta();
           this.ObtenerHistorial();
           this.NovedadesAhorrosPDF('Cambio medio de pago');
@@ -6130,7 +6115,7 @@ export class DisponiblesComponent implements OnInit {
         })
       } else if (this.DisponibleOperacionFrom.get('Codigo')?.value === '110') { // Exonera cuota de manejo  hasta
         if (this.ExoCobroHastaOld == this.DisponibleForm.get('ExoCobroHasta')?.value) {
-          this.notif.warning('Advertencia','Debe cambiar timbrar mensaje.', ConfiguracionNotificacion.configRightTop);
+          this.notif.warning('Advertencia','Debe cambiar fecha exonerada cuota manejo hasta.', ConfiguracionNotificacion.configRightTop);
           return;
         };
         console.log("ExoCobroHasta",this.DisponibleForm.get('ExoCobroHasta')?.value)
@@ -6202,6 +6187,43 @@ export class DisponiblesComponent implements OnInit {
     } else 
       this.notif.warning('Advertencia','Debe buscar una cuenta para realizar esta operación.', ConfiguracionNotificacion.configRightTop);
   }
+
+  validarLiberacion(cambios: boolean) {
+    if (cambios) {
+      const estado = this.DisponibleForm.get('IdEstado')?.value;
+      const medioPago = this.datoMedioPago; 
+
+      if (estado == 45) {
+        switch (medioPago) {
+          case 10:
+          case 50:
+          case 0:
+            swal.fire({
+              title: '¿Desea liberar libreta de cuenta?',
+              icon: 'question',
+              showCancelButton: true,
+              confirmButtonText: 'Sí',
+              cancelButtonText: 'No',
+              confirmButtonColor: 'rgb(13,165,80)',
+              cancelButtonColor: 'rgb(160,0,87)',
+              allowOutsideClick: false,
+              allowEscapeKey: false
+            }).then((result) => {
+              if (result.isConfirmed) {
+                this.LiberarLibreta(this.talonario.Inicial);
+                this.notif.success(
+                  'Exitoso',
+                  'La liberación de libreta se realizó correctamente.',
+                  ConfiguracionNotificacion.configRightTop
+                );
+              }
+            });
+            break;
+        }
+      }
+    }
+  }
+  
   NombreAsesor() {
     let NombreCompleto: string = "";
     let setNombres: string[] = this.dataUser.Nombre.split(" ");
@@ -6640,6 +6662,10 @@ export class DisponiblesComponent implements OnInit {
       && this.DisponibleForm.get('MontoMaximo')?.value !== undefined
       && this.DisponibleForm.get('MontoMaximo')?.value !== '') {
 
+      const MontoMaximo = this.DisponibleForm.get('MontoMaximo')?.value;
+      const nroOperaciones = this.DisponibleForm.get('NumeroOperaciones')?.value;
+
+
       if (this.dataObjetC.Canales.length !== 0)
         {
           if (this.editarCanal != null && this.indexCanales != null && this.editarCanal.Canal == this.DisponibleForm.get('Canal')?.value &&
@@ -6651,6 +6677,12 @@ export class DisponiblesComponent implements OnInit {
         if (this.indexCanales !== null) {
           this.dataObjetC.Canales.splice(this.indexCanales, 1);
       }
+
+      if(+nroOperaciones < 1){
+        this.notif.warning('Advertencia', 'El número de operaciones debe ser mayor a cero.', ConfiguracionNotificacion.configRightTop);
+      }else if(+MontoMaximo < 0.01){
+        this.notif.warning('Advertencia', 'El valor de cupo por canal debe ser mayor a cero.', ConfiguracionNotificacion.configRightTop);
+      }else{
       let tempFindExist: any = this.dataObjetC.Canales.filter(( x: any) => x.Canal == this.DisponibleForm.get('Canal')?.value)[0];
       if (tempFindExist != null) {
         this.notif.warning('Advertencia', 'El canal ya existe.', ConfiguracionNotificacion.configRightTop);
@@ -6659,6 +6691,7 @@ export class DisponiblesComponent implements OnInit {
         this.DisponibleForm.get('MontoMaximo')?.setValue("");
         return;
       }
+
       let canal: any = this.resultCanales.filter(( x: any) => x.Canal == this.DisponibleForm.get('Canal')?.value)[0];
    
       if (this.dataObjetC !== undefined) {
@@ -6687,6 +6720,7 @@ export class DisponiblesComponent implements OnInit {
         this.bloquearbtnActalizar = true;
         this.BloquearCanales = false;
       }
+    }
       this.clearCanales();
     } else {
       this.notif.warning('Advertencia', 'Los datos están incompletos.', ConfiguracionNotificacion.configRightTop);
@@ -8028,8 +8062,9 @@ export class DisponiblesComponent implements OnInit {
   ValidaFecha() {
     const selectedDate = this.DisponibleForm.get('ExoCobroHasta')?.value;
     if (selectedDate < this.FormatDateNow2) {
-      this.notif.warning('Advertencia', 'Fecha incorrecta.', ConfiguracionNotificacion.configRightTop);
+      this.notif.warning('Advertencia', 'Fecha no puede ser inferior a la fecha actual.', ConfiguracionNotificacion.configRightTop);
       this.DisponibleForm.get('ExoCobroHasta')?.reset();  // Limpiar la fecha seleccionada
+      this.generalesService.Autofocus('ExoCobroHasta');
     } else{
       this.enableBtnActualizar = true
     }
