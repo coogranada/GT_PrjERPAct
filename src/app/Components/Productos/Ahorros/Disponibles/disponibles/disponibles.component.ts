@@ -3666,7 +3666,9 @@ export class DisponiblesComponent implements OnInit {
                 this.resultMedioPago = this.resultMedioPago.filter(( x: any) => x.IdMedioPago == 0);
               else if (this.resultValidaciones.TipoMedioPago === 'Tarjeta')
                 this.resultMedioPago = this.resultMedioPago.filter(( x: any) => x.IdMedioPago != 0);
-              
+              else if (+this.DisponibleForm.get('IdMedioPago')?.value === 50 || +this.DisponibleForm.get('IdMedioPago')?.value === 70 )
+                this.resultMedioPago = this.resultMedioPago.filter((x: any) => x.IdMedioPago === 50 || x.IdMedioPago === 70 );
+
                 setTimeout(() => {
                  
                 }, 300);
@@ -4396,13 +4398,14 @@ export class DisponiblesComponent implements OnInit {
   this.ConvenioObligatorio = false;
   this.PlazoCorteObligatoria = false;
 
-  if((medioPagoAnterior === '50' || medioPagoAnterior  === '70') && (cupoAprobado !== '' )){
-    this.notif.warning('Advertencia', 'No se puede cambiar medio de pago, cuenta tiene cupo.', ConfiguracionNotificacion.configRightTop);
-    this.VolverArriba(400);
-    this.DisponibleForm.get('IdMedioPago')?.setValue(this.datoMedioPago);
-    this.enableBtnActualizar = false;
-    return;
-  }
+  //DFRAMIREZ 25-06-2025 se comenta validación, para permitir cambios MP sin importar que tenga cupo aprobado
+  //if((medioPagoAnterior === '50' || medioPagoAnterior  === '70') && (cupoAprobado !== '' )){
+  //  this.notif.warning('Advertencia', 'No se puede cambiar medio de pago, cuenta tiene cupo.', ConfiguracionNotificacion.configRightTop);
+  //  this.VolverArriba(400);
+  //  this.DisponibleForm.get('IdMedioPago')?.setValue(this.datoMedioPago);
+  //  this.enableBtnActualizar = false;
+  //  return;
+  //}
 
     if (this.DisponibleForm.get('IdMedioPago')?.value === '0') {         // libreta
       if (this.DisponibleOperacionFrom.get('Codigo')?.value === '10' || this.DisponibleOperacionFrom.get('Codigo')?.value === '40') {
@@ -7016,34 +7019,72 @@ export class DisponiblesComponent implements OnInit {
   }
   // FIN TAB CUPO
   // TAB GARANTIA
+  valorRespaldadoTotal: number = 0;
+  valoresRespaldoUnicos: Set<number> = new Set();
+  valorCoberturaTotal: number = 0;
+  valorDisponibleTotal: number = 0;
+
   ListGarantiasReales: any[] = [];
   ListGarantiasRealesAgregadas: any[] = [];
   GarantiaRealBajar(index: number) {
+    const garantia = this.ListGarantiasReales[index];
+    this.valorCoberturaTotal += Number(garantia.ValorCobertura);
+
+    if (!this.valoresRespaldoUnicos.has(garantia.ValorRespaldado)) {
+      this.valoresRespaldoUnicos.add(garantia.ValorRespaldado);
+      this.valorRespaldadoTotal += Number(garantia.ValorRespaldado);
+    }
+  
+    this.valorDisponibleTotal = (this.valorCoberturaTotal - this.valorRespaldadoTotal);
+
     this.ListGarantiasRealesAgregadas.push(this.ListGarantiasReales[index]);
     this.ListGarantiasReales = this.ListGarantiasReales.filter(( x: any) => x.NumeroMatricula != this.ListGarantiasReales[index].NumeroMatricula);
   }
   GarantiaRealSubir(index: number) {
+    const garantia = this.ListGarantiasRealesAgregadas[index];
+    this.valorCoberturaTotal -= Number(garantia.ValorCobertura);
+
+    const valorRespaldado = Number(garantia.ValorRespaldado);
+    const countValorRespaldado = this.ListGarantiasRealesAgregadas.filter(
+      (x) => Number(x.ValorRespaldado) === valorRespaldado
+    ).length;
+
+    if (countValorRespaldado === 1  && this.valoresRespaldoUnicos.has(valorRespaldado)) {
+      this.valoresRespaldoUnicos.delete(valorRespaldado);
+      this.valorRespaldadoTotal -= valorRespaldado;
+    }
+  
+    this.valorDisponibleTotal = (this.valorCoberturaTotal - this.valorRespaldadoTotal);
+
     this.ListGarantiasReales.push(this.ListGarantiasRealesAgregadas[index]);
     this.ListGarantiasRealesAgregadas = this.ListGarantiasRealesAgregadas.filter(( x: any) => x.NumeroMatricula != this.ListGarantiasRealesAgregadas[index].NumeroMatricula);
   }
+  limpiarvaloresGarantias(){
+    this.valorRespaldadoTotal = 0;
+    this.valorCoberturaTotal = 0;
+    this.valorDisponibleTotal = 0;
+
+    this.valoresRespaldoUnicos.clear();
+  
+    this.ListGarantiasReales = [];
+    this.ListGarantiasRealesAgregadas = [];
+  }
   GuardarGarantiasList() {
-    let suma: number = 0;
-    this.ListGarantiasRealesAgregadas.forEach(( x: any) => {
-      suma = suma + Number(x.ValorDisponible);
-    });
-    if (suma >= Number(this.DisponibleForm.get('CupoAprobado')?.value)) {
+    //let suma: number = 0;
+    //this.ListGarantiasRealesAgregadas.forEach(( x: any) => {
+    //  suma = suma + Number(x.ValorDisponible);
+    //});
+    if (this.valorDisponibleTotal >= Number(this.DisponibleForm.get('CupoAprobado')?.value)) {
       this.dataObjetR = this.ListGarantiasRealesAgregadas;
       $("#ModalGarantiasReales").modal("hide");
       this.enableBtnActualizar = true;
-    }
-    else {
+    }else {
       this.enableBtnActualizar = true;
-      this.notif.warning('Advertencia', 'Garantía no cubre saldo de cupo aprobado.', ConfiguracionNotificacion.configRightTop);
+      this.notif.warning('Advertencia', 'Garantía no cubre el valor del cupo aprobado.', ConfiguracionNotificacion.configRightTop);
     }
   }
   CargarGarantias(idGarantia: number) {
-    this.ListGarantiasReales = [];
-    this.resultGarantia = [];
+    this.limpiarvaloresGarantias();
     const newLocal = this;
     newLocal.DisponiblesServices.CargarGarantia(this.DisponibleForm.get('LngTercero')?.value, this.DisponibleForm.controls['Radicado'].value).subscribe(
       result => {
@@ -8064,7 +8105,7 @@ export class DisponiblesComponent implements OnInit {
     if (selectedDate < this.FormatDateNow2) {
       this.notif.warning('Advertencia', 'Fecha no puede ser inferior a la fecha actual.', ConfiguracionNotificacion.configRightTop);
       this.DisponibleForm.get('ExoCobroHasta')?.reset();  // Limpiar la fecha seleccionada
-      this.generalesService.Autofocus('ExoCobroHasta');
+      this.generalesService.Autofocus('ExoCobroHastaId');
     } else{
       this.enableBtnActualizar = true
     }
