@@ -13,10 +13,9 @@ import { map, count } from 'rxjs/operators';
 import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { GeneralesService } from '../../../../../Services/Productos/generales.service';
 import moment from "moment";
-// import Tiff from 'tiff';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
-declare const Tiff : any;
+declare var Tiff: any;
 declare var $: any;
 @Component({
   selector: 'app-disponibles',
@@ -3045,11 +3044,13 @@ export class DisponiblesComponent implements OnInit {
           this.dataObjetC = result;
           this.dataObjetCd = (this.dataObjet.Codeudor);
           this.dataObjetR = (this.dataObjet.Real);
-          if (this.dataObjetR.length != 0){           
-            const Conbertura = this.dataObjetR[0].ValorCobertura;
-            const Resapaldo = this.dataObjetR[0].ValorRespaldado;
+          if (this.dataObjetR.length != 0){  
+            this.dataObjetR.forEach(element => {
+              const Conbertura = element.ValorCobertura;
+              const Resapaldo = element.ValorRespaldado;
               const Disponible = (Conbertura - Resapaldo);
-            this.dataObjetR[0].ValorDisponible = Disponible.toString();
+              element.ValorDisponible = Disponible.toString();
+            });    
           }
 
         } else {
@@ -6282,6 +6283,22 @@ export class DisponiblesComponent implements OnInit {
   }
   linkPdf: any;
   showRegistroFirma: boolean = false;
+
+  loadTiffScript(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if ((window as any).Tiff) {
+        resolve();
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.src = 'https://unpkg.com/tiff@latest/tiff.min.js';
+      script.onload = () => resolve();
+      script.onerror = () => reject('No se pudo cargar tiff.min.js');
+      document.body.appendChild(script);
+    });
+  }
+
   showPdf() {
     this.loading = true;
     const NumeroDocumento = this.DisponibleForm.get('NumeroDocumento')?.value;
@@ -6296,6 +6313,7 @@ export class DisponiblesComponent implements OnInit {
     this.converted_image = "";
     this.DisponiblesServices.DescargarRegistroFirmas(NumeroDocumento, NumeroCuenta).subscribe(
       result => {
+        this.loading = false;        
         let base64: string[] = result.split("$$//");
         if (base64.length == 2) {
             this.base64Data = base64[1];
@@ -6304,13 +6322,20 @@ export class DisponiblesComponent implements OnInit {
             this.ImagenTiff = base64;
             this.showRegistroFirma = true;
             let base64Tiff: any = this.base64Data;
-            const bynaryData: any = Uint8Array.from(atob(base64Tiff), ( x: any) => x.charCodeAt(0));
-            const tiff: any = new Tiff({ buffer: bynaryData });
-            const canvas: any = tiff.toCanvas();
-            let jpgBase64Data: any = canvas.toDataURL("image/jpeg").replace(/^data:image\/jpeg;base64,/, "");
-            jpgBase64Data = "data:image/jpeg;base64," + jpgBase64Data;
-            this.converted_image = jpgBase64Data;
-            this.ModalImagenRegistroFirmas.nativeElement.click();
+            const bynaryData: any = Uint8Array.from(atob(base64Tiff), (x: any) => x.charCodeAt(0));
+
+            // Espera a que el script Tiff se cargue
+            this.loadTiffScript().then(() => {
+              const Tiff = (window as any).Tiff;
+              const tiff: any = new Tiff({ buffer: bynaryData });
+              const canvas: any = tiff.toCanvas();
+              let jpgBase64Data: any = canvas.toDataURL("image/jpeg").replace(/^data:image\/jpeg;base64,/, "");
+              jpgBase64Data = "data:image/jpeg;base64," + jpgBase64Data;
+              this.converted_image = jpgBase64Data;
+              this.ModalImagenRegistroFirmas.nativeElement.click();
+            }).catch((error) => {
+              console.error("Error cargando el script de Tiff.js:", error);
+            });
           } else if (base64[0] == "pdf") {
             $("#PdfRegistroFirma").show();
             this.ModalImagenRegistroFirmas.nativeElement.click();
