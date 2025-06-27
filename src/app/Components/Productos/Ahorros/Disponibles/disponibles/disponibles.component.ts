@@ -5528,6 +5528,20 @@ export class DisponiblesComponent implements OnInit {
                   CuponIncialActualiza: Number(this.DisponibleForm.get('Inicial')?.value),
                   CuponFinalActualiza: Number(this.DisponibleForm.get('Final')?.value)
                 }
+                // Notificador
+                var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
+                var IdCuenta = +result.IdCuenta;
+                if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 10) {
+                  this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 5, '00').subscribe( //ysalazar
+                    result => {
+                    },
+                    error => {
+                      const errorMessage = <any>error;
+                      console.log(errorMessage);
+                    }
+                  );
+                }
+                // fin notificador
                 this.Guardarlog(correccionLibretaTarjeta);
                 this.itemsDataObejct = [];
                 this.BuscarPorCuenta();
@@ -5622,6 +5636,20 @@ export class DisponiblesComponent implements OnInit {
                 OperaciónPermitidaAnterior: this.resultOperacionPermitada.filter(( x: any) => x.IdOperacion == this.datoOperacionPermitida)[0].DescripcionOperacion,
                 OperacionPermitidaActualiza: this.resultOperacionPermitada.filter(( x: any) => x.IdOperacion == Number(this.DisponibleForm.get('IdOperacion')?.value))[0].DescripcionOperacion,
               }
+              // Notificador
+              var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
+              var IdCuenta = +result.IdCuenta;
+              if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 10) {
+                this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 5, '00').subscribe( //ysalazar
+                  result => {
+                  },
+                  error => {
+                    const errorMessage = <any>error;
+                    console.log(errorMessage);
+                  }
+                );
+              }
+              // fin notificador
               this.Guardarlog(OperacionPremitidaLog);
               this.DisponibleOperacionFrom.get('Codigo')?.reset();
               this.itemsDataObejct = [];
@@ -6008,7 +6036,7 @@ export class DisponiblesComponent implements OnInit {
             this.bloquearbtnActalizar = false;
             this.enableBtnActualizar = false;
             this.GuardarGarantiasAndLog("guardar");
-            setTimeout(() => {
+                        setTimeout(() => {
               this.ObtenerHistorial();
               this.itemsDataObejct = [];
               this.BuscarPorCuenta();
@@ -6323,8 +6351,6 @@ export class DisponiblesComponent implements OnInit {
             this.showRegistroFirma = true;
             let base64Tiff: any = this.base64Data;
             const bynaryData: any = Uint8Array.from(atob(base64Tiff), (x: any) => x.charCodeAt(0));
-
-            // Espera a que el script Tiff se cargue
             this.loadTiffScript().then(() => {
               const Tiff = (window as any).Tiff;
               const tiff: any = new Tiff({ buffer: bynaryData });
@@ -6339,18 +6365,23 @@ export class DisponiblesComponent implements OnInit {
           } else if (base64[0] == "pdf") {
             $("#PdfRegistroFirma").show();
             this.ModalImagenRegistroFirmas.nativeElement.click();
-            let pdfinBase64 : string = base64[1];
-            let byteArray = new Uint8Array(
+           const pdfinBase64: string = base64[1];
+            const byteArray = new Uint8Array(
               atob(pdfinBase64)
                 .split("")
                 .map((char) => char.charCodeAt(0))
             );
-            let newBolb : any = new Blob([byteArray], { type: "application/pdf" });
-            this.linkPdf = URL.createObjectURL(newBolb);
-            let url : any  = window.URL.createObjectURL(newBolb);
-            document.querySelector("object")!.data = url;
-            document.querySelector("object")!.name = "Impresion";
-            document.querySelector("object")!.type = "application/pdf"; 
+            const newBlob = new Blob([byteArray], { type: "application/pdf" });            
+            const url = URL.createObjectURL(newBlob);
+            this.linkPdf = url; 
+            const pdfObject = document.querySelector("object");
+            if (pdfObject) {
+              pdfObject.data = url;
+              pdfObject.name = "Impresion";
+              pdfObject.type = "application/pdf";
+            } else {
+              console.error("No se encontró el elemento <object> para mostrar el PDF.");
+            }
           } else {
             this.showRegistroFirma = true;
             this.converted_image = "data:image/*;base64," + this.base64Data;
@@ -7033,6 +7064,20 @@ export class DisponiblesComponent implements OnInit {
       $('#libreta').removeClass('active');
       this.notif.success('Exitoso', 'La cancelación de cupo se guardó correctamente.', ConfiguracionNotificacion.configRightTop);
       this.Guardarlog(log);
+      // Notificador
+      var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
+      var IdCuenta = +this.DisponibleForm.get('IdCuenta')?.value;
+      if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 10) {
+        this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 5, '00').subscribe( //ysalazar
+          result => {
+          },
+          error => {
+            const errorMessage = <any>error;
+            console.log(errorMessage);
+          }
+        );
+      }
+      // fin notificador
       this.NovedadesAhorrosPDF("Cancelar cupo");
       this.DisponibleOperacionFrom.get('Codigo')?.reset();
       setTimeout(() => {
