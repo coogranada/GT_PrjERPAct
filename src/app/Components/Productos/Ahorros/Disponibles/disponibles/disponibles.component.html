@@ -249,7 +249,7 @@
                             </span>
                             </div>
                             <div class="col-xs-6 col-md-5 col-lg-4">
-                                <input type="text" class="form-control" tooltip="Nombre asesor" placement="top" show-delay="500" id="strNombre" formControlName="strNombre" [attr.disabled]="BloquearAsesorExterno" (keypress)="LimpiarCampos('strNombre')" />
+                                <input type="text" class="form-control" tooltip="Nombre asesor" placement="top" show-delay="500" formControlName="strNombre" [attr.disabled]="BloquearAsesorExterno" (keypress)="LimpiarCampos('strNombre')" />
                             </div>
                             <div class="col-xs-1 col-md-1 col-lg-1">
                                 <button type="button" class="btn Gt-btn-verde btn-icon legitRipple" (click)="BuscarAsesorExternoTodos()" [attr.disabled]="BloquearAsesorExterno">

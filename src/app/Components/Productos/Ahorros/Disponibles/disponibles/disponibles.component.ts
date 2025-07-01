@@ -80,6 +80,7 @@ export class DisponiblesComponent implements OnInit {
   public resultFormaPago : any;
   public resultProducto : any;
   public resultMedioPago : any;
+  public resultMedioPagoOriginal  : any
   public resultConvenioTarjetas : any;
   public resultCanales : any;
   public resultDiaCortePago : any;
@@ -2776,11 +2777,11 @@ export class DisponiblesComponent implements OnInit {
               const Disponible = (Conbertura - Resapaldo);
               element.ValorDisponible = Disponible.toString();
 
-              this.valorCoberturaTotalGar += Conbertura;
+              this.valorCoberturaTotalGar += Number(Conbertura);
 
               if (!respaldoUnicos.has(Resapaldo)) {
                 respaldoUnicos.add(Resapaldo);
-                this.valorRespaldadoTotalGar += Resapaldo;
+                this.valorRespaldadoTotalGar += Number(Resapaldo);
               }
 
               this.valorDisponibleTotalGar = this.valorCoberturaTotalGar - this.valorRespaldadoTotalGar;
@@ -3073,21 +3074,18 @@ export class DisponiblesComponent implements OnInit {
               const Resapaldo = element.ValorRespaldado;
               const Disponible = (Conbertura - Resapaldo);
               element.ValorDisponible = Disponible.toString();
-
-
+            });   
             this.dataObjetR.forEach(element => {
 
               this.valorCoberturaTotalGar += Number(element.ValorCobertura);
 
               if (!respaldoUnicos.has(element.ValorRespaldado)) {
                 respaldoUnicos.add(element.ValorRespaldado);
-                this.valorRespaldadoTotalGar += element.ValorRespaldado;
+                this.valorRespaldadoTotalGar += Number(element.ValorRespaldado);
               }
 
               this.valorDisponibleTotalGar = this.valorCoberturaTotalGar - this.valorRespaldadoTotalGar;
-            });
-
-            });    
+            }); 
           }
 
         } else {
@@ -3700,6 +3698,7 @@ export class DisponiblesComponent implements OnInit {
           this.DisponiblesServices.MedioPago().subscribe(
             result => {
               this.resultMedioPago = result;
+              this.resultMedioPagoOriginal = [...result]
               if (this.resultValidaciones.TipoMedioPago === 'Libreta') 
                 this.resultMedioPago = this.resultMedioPago.filter(( x: any) => x.IdMedioPago == 0);
               else if (this.resultValidaciones.TipoMedioPago === 'Tarjeta')
@@ -7057,6 +7056,7 @@ export class DisponiblesComponent implements OnInit {
   }
   CancelarCupo() {
     this.loading = true;
+    this.resultMedioPago = [...this.resultMedioPagoOriginal]; // reseteo el campo medios pago para que luego de guardar setee correctamente 
     this.DisponibleForm.get('IdPlazo')?.setValue("0");
     this.DisponibleForm.get('IdDiaCorte')?.setValue("0");
 
@@ -7166,9 +7166,10 @@ export class DisponiblesComponent implements OnInit {
     this.ListGarantiasReales.push(this.ListGarantiasRealesAgregadas[index]);
     this.ListGarantiasRealesAgregadas = this.ListGarantiasRealesAgregadas.filter(( x: any) => x.NumeroMatricula != this.ListGarantiasRealesAgregadas[index].NumeroMatricula);
     
-    if(this.ListGarantiasReales.length <= 0){
-      this.valoresRespaldoUnicos.delete(valorRespaldado);
+    if(this.ListGarantiasRealesAgregadas.length <= 0){
       this.valorRespaldadoTotal = 0;
+      this.valorDisponibleTotal = 0;
+      this.valoresRespaldoUnicos.clear(); 
     }
 
   }
@@ -7195,6 +7196,9 @@ export class DisponiblesComponent implements OnInit {
       this.enableBtnActualizar = true;
       this.notif.warning('Advertencia', 'Garantía no cubre el valor del cupo aprobado.', ConfiguracionNotificacion.configRightTop);
     }
+    this.valorCoberturaTotalGar = this.valorCoberturaTotal;
+    this.valorRespaldadoTotalGar = this.valorRespaldadoTotal;
+    this.valorDisponibleTotalGar = this.valorDisponibleTotal;
   }
   CargarGarantias(idGarantia: number) {
     this.limpiarvaloresGarantias();
