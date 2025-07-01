@@ -2570,6 +2570,9 @@ export class DisponiblesComponent implements OnInit {
         };
   }
   canalesListOld: any[] = [];
+  valorCoberturaTotalGar: number = 0;
+  valorRespaldadoTotalGar: number = 0;
+  valorDisponibleTotalGar: number = 0;
   MapearDatosCuenta(result : any) {
     this.bloquearConsultaCuenta = false;
     this.BloquearBuscar = false;
@@ -2761,6 +2764,12 @@ export class DisponiblesComponent implements OnInit {
           this.dataObjetCd = CodeudorP;
           var RealP = this.dataObjet[0].Real;
           if(RealP !== null){
+            this.valorCoberturaTotalGar = 0;
+            this.valorRespaldadoTotalGar = 0;
+            this.valorDisponibleTotalGar = 0;
+            const respaldoUnicos = new Set();
+            
+
             this.dataObjetR = RealP;
             this.dataObjetR.forEach(element => {
               const Conbertura = element.ValorCobertura;
@@ -2768,6 +2777,14 @@ export class DisponiblesComponent implements OnInit {
               const Disponible = (Conbertura - Resapaldo);
               element.ValorDisponible = Disponible.toString();
 
+              this.valorCoberturaTotalGar += Conbertura;
+
+              if (!respaldoUnicos.has(Resapaldo)) {
+                respaldoUnicos.add(Resapaldo);
+                this.valorRespaldadoTotalGar += Resapaldo;
+              }
+
+              this.valorDisponibleTotalGar = this.valorCoberturaTotalGar - this.valorRespaldadoTotalGar;
             });
           } else {
             this.dataObjetR.length = 0;
@@ -3042,6 +3059,12 @@ export class DisponiblesComponent implements OnInit {
 
           this.DisponibleForm.get('AliasCuenta')?.setValue(this.dataObjet.AliasCuenta);
          console.log("codeudor",this.dataObjet.Codeudor)
+
+         this.valorCoberturaTotalGar = 0;
+         this.valorRespaldadoTotalGar = 0;
+         this.valorDisponibleTotalGar = 0;
+         const respaldoUnicos = new Set();
+
           this.dataObjetC = result;
           this.dataObjetCd = (this.dataObjet.Codeudor);
           this.dataObjetR = (this.dataObjet.Real);
@@ -3050,6 +3073,20 @@ export class DisponiblesComponent implements OnInit {
             const Resapaldo = this.dataObjetR[0].ValorRespaldado;
               const Disponible = (Conbertura - Resapaldo);
             this.dataObjetR[0].ValorDisponible = Disponible.toString();
+
+
+            this.dataObjetR.forEach(element => {
+
+              this.valorCoberturaTotalGar += Number(element.ValorCobertura);
+
+              if (!respaldoUnicos.has(element.ValorRespaldado)) {
+                respaldoUnicos.add(element.ValorRespaldado);
+                this.valorRespaldadoTotalGar += element.ValorRespaldado;
+              }
+
+              this.valorDisponibleTotalGar = this.valorCoberturaTotalGar - this.valorRespaldadoTotalGar;
+            });
+
           }
 
         } else {
@@ -7058,6 +7095,12 @@ export class DisponiblesComponent implements OnInit {
 
     this.ListGarantiasReales.push(this.ListGarantiasRealesAgregadas[index]);
     this.ListGarantiasRealesAgregadas = this.ListGarantiasRealesAgregadas.filter(( x: any) => x.NumeroMatricula != this.ListGarantiasRealesAgregadas[index].NumeroMatricula);
+    
+    if(this.ListGarantiasReales.length <= 0){
+      this.valoresRespaldoUnicos.delete(valorRespaldado);
+      this.valorRespaldadoTotal = 0;
+    }
+
   }
   limpiarvaloresGarantias(){
     this.valorRespaldadoTotal = 0;
