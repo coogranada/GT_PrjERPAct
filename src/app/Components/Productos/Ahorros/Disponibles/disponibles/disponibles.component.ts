@@ -7130,7 +7130,10 @@ export class DisponiblesComponent implements OnInit {
   }
   CancelarCupo() {
     this.loading = true;
-    this.resultMedioPago = [...this.resultMedioPagoOriginal]; // reseteo el campo medios pago para que luego de guardar setee correctamente 
+    this.ValidarDisponibles();
+    setTimeout(() => {
+      this.resultMedioPago = [...this.resultMedioPagoOriginal]; // reseteo el campo medios pago para que luego de guardar setee correctamente 
+    }, 500); 
     this.DisponibleForm.get('IdPlazo')?.setValue("0");
     this.DisponibleForm.get('IdDiaCorte')?.setValue("0");
 
@@ -7138,6 +7141,7 @@ export class DisponiblesComponent implements OnInit {
     payload.Real = this.dataObjetR;
     payload.Codeudor = this.dataObjetCd;
     payload.Canales = this.dataObjetC.Canales;
+    payload.CupoAprobado = 0; // DFRAMIREZ, se envia cero para que permita cancelación 
     $("#ModalCancelarCupo").modal("hide");
     this.DisponiblesServices.CancelarCupo(payload).subscribe(( x: any) => {
       let log: any = {};
