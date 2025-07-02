@@ -814,108 +814,124 @@ export class DisponiblesComponent implements OnInit {
         && this.DisponibleForm.get('IdDigito')?.value !== undefined
         && this.DisponibleForm.get('IdDigito')?.value !== ''
       ) {
+        const idProducto = this.DisponibleForm.get('IdProducto')?.value;
 
-        if (this.DisponibleForm.get('IdEstado')?.value !== 25 && this.DisponibleForm.get('IdEstado')?.value !== 10) {
+        this.DisponiblesServices.ValidarDisponibles(idProducto).subscribe(
+          result => {
+            if (result !== null) {
+              this.resultValidaciones = result;
 
-          if (this.DisponibleForm.get('IdMedioPago')?.value == 60 || this.DisponibleForm.get('IdMedioPago')?.value == 70) {
-            this.notif.warning('Advertencia', 'Cuenta sin tarjeta.', ConfiguracionNotificacion.configRightTop);
-            this.DisponibleOperacionFrom.get('Codigo')?.reset();
-            return;
-          }
-          const IdTercero = this.DisponibleForm.get('LngTercero')?.value
-          this.DisponiblesServices.ValidaFechaActualiza(IdTercero).subscribe(
-            result => {
+              if (this.resultValidaciones.IdProductoConsecutivo !== null) {
 
-              const fechaHoyString = new DatePipe('en-CO').transform(new Date(), 'yyyy/MM/dd');
-              const fechaActualizaString = new DatePipe('en-CO').transform(result.FechaActualizacion, 'yyyy/MM/dd');
+                if (this.DisponibleForm.get('IdEstado')?.value !== 25 && this.DisponibleForm.get('IdEstado')?.value !== 10) {
 
-              const fechaHoy = new Date(fechaHoyString == null ? ""  : fechaHoyString);
-              const fechaActualiza = new Date(fechaActualizaString == null ? "" : fechaActualizaString);
+                  if (this.DisponibleForm.get('IdMedioPago')?.value == 60 || this.DisponibleForm.get('IdMedioPago')?.value == 70) {
+                    this.notif.warning('Advertencia', 'Cuenta sin tarjeta.', ConfiguracionNotificacion.configRightTop);
+                    this.DisponibleOperacionFrom.get('Codigo')?.reset();
+                    return;
+                  }
+                  const IdTercero = this.DisponibleForm.get('LngTercero')?.value
+                  this.DisponiblesServices.ValidaFechaActualiza(IdTercero).subscribe(
+                    result => {
 
-              const diferenciaEnDias = this.calcularDiferenciaEnDias(fechaHoy, fechaActualiza);
+                      const fechaHoyString = new DatePipe('en-CO').transform(new Date(), 'yyyy/MM/dd');
+                      const fechaActualizaString = new DatePipe('en-CO').transform(result.FechaActualizacion, 'yyyy/MM/dd');
 
-              if (diferenciaEnDias <= 180) { 
-          this.BloquearOperacionPermitida = false;
-          this.selectOperacionPermitada = true;
-          this.inputOperacionPermitada = false;
-          this.DescriTipoFirma = true;
-          this.operacionEscogida = '/Cambio de Libreta o Tarjeta';
-          this.BloquearAsociado = false;
-          this.BloquaerProducto = false;
-          this.BloquearEstado = false;
-          this.bloquearConsultaCuenta = false;
-          this.BloquearBuscar = false;
-          this.btnActualizar = false;
-          this.btnGuardar = true;
-          this.BloquearAsesorExterno = false;
-          this.BloquearMedioPago = false;
-          this.bloquearbtnActalizar = false;
-          this.BloquearRadicado = false;
-          this.inputEstado = false;
-          this.selectEstado = true;
-          this.btnActualizarCanales = true;
-          this.BloquearConvenio = false;
-          this.BloquearNumeroTarjeta = false;
-          this.BloquearCanales = false;
-          this.BloquearPagare = false;
-          this.BloquearDiaCortePlazo = false;
-          this.BloquearLinea = false;
-          this.BloquearPuntos = false;
-          this.BloquearGarantiaReal = false;
+                      const fechaHoy = new Date(fechaHoyString == null ? "" : fechaHoyString);
+                      const fechaActualiza = new Date(fechaActualizaString == null ? "" : fechaActualizaString);
 
-          if (this.DisponibleForm.get('IdMedioPago')?.value === 0) {
-            this.BloquearCuponInicial = null;
-            this.BloquearNumeroTarjeta = false;
-            this.devolverTab(1);
-            this.tab1.nativeElement.click();
-            this.VolverArriba(400);
-            $('#saldos').removeClass('activar');
-            $('#saldos').removeClass('active');
-            $('#historial').removeClass('activar');
-            $('#historial').removeClass('active');
-            $('#autorizados').removeClass('activar');
-            $('#autorizados').removeClass('active');
-            $('#cupo').removeClass('activar');
-            $('#cupo').removeClass('active');
-            $('#tarjeta').removeClass('activar');
-            $('#tarjeta').removeClass('active');
-            $('#libreta').addClass('activar');
-            $('#libreta').addClass('active');
-            this.generalesService.Autofocus('SelectLibreta');
-          } else {
-            this.BloquearNumeroTarjeta = null;
-            this.BloquearCuponInicial = null;
-            this.devolverTab(2);
-            this.tab2.nativeElement.click();
-            this.VolverArriba(600);
-            $('#saldos').removeClass('activar');
-            $('#saldos').removeClass('active');
-            $('#historial').removeClass('activar');
-            $('#historial').removeClass('active');
-            $('#autorizados').removeClass('activar');
-            $('#autorizados').removeClass('active');
-            $('#cupo').removeClass('activar');
-            $('#cupo').removeClass('active');
-            $('#tarjeta').addClass('activar');
-            $('#tarjeta').addClass('active');
-            $('#libreta').removeClass('activar');
-            $('#libreta').removeClass('active');
-            this.generalesService.Autofocus('SelectTarjeta');
+                      const diferenciaEnDias = this.calcularDiferenciaEnDias(fechaHoy, fechaActualiza);
+
+                      if (diferenciaEnDias <= 180) {
+                        this.BloquearOperacionPermitida = false;
+                        this.selectOperacionPermitada = true;
+                        this.inputOperacionPermitada = false;
+                        this.DescriTipoFirma = true;
+                        this.operacionEscogida = '/Cambio de Libreta o Tarjeta';
+                        this.BloquearAsociado = false;
+                        this.BloquaerProducto = false;
+                        this.BloquearEstado = false;
+                        this.bloquearConsultaCuenta = false;
+                        this.BloquearBuscar = false;
+                        this.btnActualizar = false;
+                        this.btnGuardar = true;
+                        this.BloquearAsesorExterno = false;
+                        this.BloquearMedioPago = false;
+                        this.bloquearbtnActalizar = false;
+                        this.BloquearRadicado = false;
+                        this.inputEstado = false;
+                        this.selectEstado = true;
+                        this.btnActualizarCanales = true;
+                        this.BloquearConvenio = false;
+                        this.BloquearNumeroTarjeta = false;
+                        this.BloquearCanales = false;
+                        this.BloquearPagare = false;
+                        this.BloquearDiaCortePlazo = false;
+                        this.BloquearLinea = false;
+                        this.BloquearPuntos = false;
+                        this.BloquearGarantiaReal = false;
+
+                        if (this.DisponibleForm.get('IdMedioPago')?.value === 0) {
+                          this.BloquearCuponInicial = null;
+                          this.BloquearNumeroTarjeta = false;
+                          this.devolverTab(1);
+                          this.tab1.nativeElement.click();
+                          this.VolverArriba(400);
+                          $('#saldos').removeClass('activar');
+                          $('#saldos').removeClass('active');
+                          $('#historial').removeClass('activar');
+                          $('#historial').removeClass('active');
+                          $('#autorizados').removeClass('activar');
+                          $('#autorizados').removeClass('active');
+                          $('#cupo').removeClass('activar');
+                          $('#cupo').removeClass('active');
+                          $('#tarjeta').removeClass('activar');
+                          $('#tarjeta').removeClass('active');
+                          $('#libreta').addClass('activar');
+                          $('#libreta').addClass('active');
+                          this.generalesService.Autofocus('SelectLibreta');
+                        } else {
+                          this.BloquearNumeroTarjeta = null;
+                          this.BloquearCuponInicial = null;
+                          this.devolverTab(2);
+                          this.tab2.nativeElement.click();
+                          this.VolverArriba(600);
+                          $('#saldos').removeClass('activar');
+                          $('#saldos').removeClass('active');
+                          $('#historial').removeClass('activar');
+                          $('#historial').removeClass('active');
+                          $('#autorizados').removeClass('activar');
+                          $('#autorizados').removeClass('active');
+                          $('#cupo').removeClass('activar');
+                          $('#cupo').removeClass('active');
+                          $('#tarjeta').addClass('activar');
+                          $('#tarjeta').addClass('active');
+                          $('#libreta').removeClass('activar');
+                          $('#libreta').removeClass('active');
+                          this.generalesService.Autofocus('SelectTarjeta');
+                        }
+                      } else {
+                        this.notif.warning('Advertencia', 'Asociado debe actualizar datos.', ConfiguracionNotificacion.configRightTop);
+                        this.DisponibleOperacionFrom.get('Codigo')?.reset();
+                      }
+                    },
+                  );
+                } else {
+                  this.notif.warning('Advertencia', 'Cuenta no se puede editar, estado no valido.', ConfiguracionNotificacion.configRightTop);
+                  this.DisponibleOperacionFrom.get('Codigo')?.reset();
                 }
+
               } else {
-                this.notif.warning('Advertencia', 'Asociado debe actualizar datos.', ConfiguracionNotificacion.configRightTop);
-                this.DisponibleOperacionFrom.get('Codigo')?.reset();
+                this.notif.warning('Advertencia', 'Producto no habilitado para cambio de libreta o tarjeta.', ConfiguracionNotificacion.configRightTop);
               }
-            },
-          );
-
-        } else {
-          this.notif.warning('Advertencia', 'Cuenta no se puede editar, estado no valido.', ConfiguracionNotificacion.configRightTop);
-          this.DisponibleOperacionFrom.get('Codigo')?.reset(); 
-        }       
-
+            }
+          },
+          error => {
+            console.error('Error al validar disponibles:', error);
+          }
+        );
       } else {
-        this.notif.warning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.',ConfiguracionNotificacion.configRightTop);
+        this.notif.warning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.', ConfiguracionNotificacion.configRightTop);
         this.DisponibleOperacionFrom.get('Codigo')?.reset();
       }
 
@@ -933,105 +949,122 @@ export class DisponiblesComponent implements OnInit {
         && this.DisponibleForm.get('IdDigito')?.value !== undefined
         && this.DisponibleForm.get('IdDigito')?.value !== ''
       ) {
-        if (this.DisponibleForm.get('IdEstado')?.value !== 25 && this.DisponibleForm.get('IdEstado')?.value !== 10) {
-          const IdTercero = this.DisponibleForm.get('LngTercero')?.value
-          this.DisponiblesServices.ValidaFechaActualiza(IdTercero).subscribe(
-            result => {
+        const idProducto = this.DisponibleForm.get('IdProducto')?.value;
 
-              const fechaHoyString = new DatePipe('en-CO').transform(new Date(), 'yyyy/MM/dd');
-              const fechaActualizaString = new DatePipe('en-CO').transform(result.FechaActualizacion, 'yyyy/MM/dd');
+        this.DisponiblesServices.ValidarDisponibles(idProducto).subscribe(
+          result => {
+            if (result !== null) {
+              this.resultValidaciones = result;
 
-              const fechaHoy = new Date(fechaHoyString == null ? "" : fechaHoyString);
-              const fechaActualiza = new Date(fechaActualizaString == null ? "" : fechaActualizaString);
+              if (this.resultValidaciones.IdProductoConsecutivo !== null) {
 
-              const diferenciaEnDias = this.calcularDiferenciaEnDias(fechaHoy, fechaActualiza);
+                if (this.DisponibleForm.get('IdEstado')?.value !== 25 && this.DisponibleForm.get('IdEstado')?.value !== 10) {
+                  const IdTercero = this.DisponibleForm.get('LngTercero')?.value
+                  this.DisponiblesServices.ValidaFechaActualiza(IdTercero).subscribe(
+                    result => {
 
-              if (diferenciaEnDias <= 180) { 
-          if (this.DisponibleForm.get('IdMedioPago')?.value == 60 || this.DisponibleForm.get('IdMedioPago')?.value == 70) {
-            this.notif.warning('Advertencia', 'Cuenta sin tarjeta.', ConfiguracionNotificacion.configRightTop);
-            this.DisponibleOperacionFrom.get('Codigo')?.reset();
-            return;
-          }
-          this.BloquearOperacionPermitida = false;
-          this.selectOperacionPermitada = true;
-          this.inputOperacionPermitada = false;
-          this.DescriTipoFirma = true;
-          this.operacionEscogida = '/Corrección de Libreta o Tarjeta';
-          this.BloquearAsociado = false;
-          this.BloquaerProducto = false;
-          this.BloquearEstado = false;
-          this.bloquearConsultaCuenta = false;
-          this.BloquearBuscar = false;
-          this.btnActualizar = false;
-          this.BloquearRadicado = false;
-          this.btnGuardar = true;
-          this.BloquearAsesorExterno = false;
-          this.BloquearMedioPago = false;
-          this.bloquearbtnActalizar = false;
-          this.inputEstado = false;
-          this.selectEstado = true;
-          this.btnActualizarCanales = true;
-          this.BloquearConvenio = false;
-          this.BloquearNumeroTarjeta = false;
-          this.BloquearCanales = false;
-          this.BloquearPagare = false;
-          this.BloquearDiaCortePlazo = false;
-          this.BloquearLinea = false;
-          this.BloquearPuntos = false;
-          this.BloquearGarantiaReal = false;
+                      const fechaHoyString = new DatePipe('en-CO').transform(new Date(), 'yyyy/MM/dd');
+                      const fechaActualizaString = new DatePipe('en-CO').transform(result.FechaActualizacion, 'yyyy/MM/dd');
 
-          if (this.DisponibleForm.get('IdMedioPago')?.value === 0) {
-            this.BloquearCuponInicial = null;
-            this.BloquearNumeroTarjeta = false;
-            this.devolverTab(1);
-            this.tab1.nativeElement.click();
-            this.VolverArriba(400);
-            $('#saldos').removeClass('activar');
-            $('#saldos').removeClass('active');
-            $('#historial').removeClass('activar');
-            $('#historial').removeClass('active');
-            $('#autorizados').removeClass('activar');
-            $('#autorizados').removeClass('active');
-            $('#cupo').removeClass('activar');
-            $('#cupo').removeClass('active');
-            $('#tarjeta').removeClass('activar');
-            $('#tarjeta').removeClass('active');
-            $('#libreta').addClass('activar');
-            $('#libreta').addClass('active');
-            this.generalesService.Autofocus('SelectLibreta');
-          } else {
-            this.BloquearNumeroTarjeta = null;
-            this.BloquearCuponInicial = null;
-            this.devolverTab(2);
-            this.tab2.nativeElement.click();
-            this.VolverArriba(600);
-            $('#saldos').removeClass('activar');
-            $('#saldos').removeClass('active');
-            $('#historial').removeClass('activar');
-            $('#historial').removeClass('active');
-            $('#autorizados').removeClass('activar');
-            $('#autorizados').removeClass('active');
-            $('#cupo').removeClass('activar');
-            $('#cupo').removeClass('active');
-            $('#tarjeta').addClass('activar');
-            $('#tarjeta').addClass('active');
-            $('#libreta').removeClass('activar');
-            $('#libreta').removeClass('active');
-            this.generalesService.Autofocus('SelectTarjeta');
+                      const fechaHoy = new Date(fechaHoyString == null ? "" : fechaHoyString);
+                      const fechaActualiza = new Date(fechaActualizaString == null ? "" : fechaActualizaString);
+
+                      const diferenciaEnDias = this.calcularDiferenciaEnDias(fechaHoy, fechaActualiza);
+
+                      if (diferenciaEnDias <= 180) {
+                        if (this.DisponibleForm.get('IdMedioPago')?.value == 60 || this.DisponibleForm.get('IdMedioPago')?.value == 70) {
+                          this.notif.warning('Advertencia', 'Cuenta sin tarjeta.', ConfiguracionNotificacion.configRightTop);
+                          this.DisponibleOperacionFrom.get('Codigo')?.reset();
+                          return;
+                        }
+                        this.BloquearOperacionPermitida = false;
+                        this.selectOperacionPermitada = true;
+                        this.inputOperacionPermitada = false;
+                        this.DescriTipoFirma = true;
+                        this.operacionEscogida = '/Corrección de Libreta o Tarjeta';
+                        this.BloquearAsociado = false;
+                        this.BloquaerProducto = false;
+                        this.BloquearEstado = false;
+                        this.bloquearConsultaCuenta = false;
+                        this.BloquearBuscar = false;
+                        this.btnActualizar = false;
+                        this.BloquearRadicado = false;
+                        this.btnGuardar = true;
+                        this.BloquearAsesorExterno = false;
+                        this.BloquearMedioPago = false;
+                        this.bloquearbtnActalizar = false;
+                        this.inputEstado = false;
+                        this.selectEstado = true;
+                        this.btnActualizarCanales = true;
+                        this.BloquearConvenio = false;
+                        this.BloquearNumeroTarjeta = false;
+                        this.BloquearCanales = false;
+                        this.BloquearPagare = false;
+                        this.BloquearDiaCortePlazo = false;
+                        this.BloquearLinea = false;
+                        this.BloquearPuntos = false;
+                        this.BloquearGarantiaReal = false;
+
+                        if (this.DisponibleForm.get('IdMedioPago')?.value === 0) {
+                          this.BloquearCuponInicial = null;
+                          this.BloquearNumeroTarjeta = false;
+                          this.devolverTab(1);
+                          this.tab1.nativeElement.click();
+                          this.VolverArriba(400);
+                          $('#saldos').removeClass('activar');
+                          $('#saldos').removeClass('active');
+                          $('#historial').removeClass('activar');
+                          $('#historial').removeClass('active');
+                          $('#autorizados').removeClass('activar');
+                          $('#autorizados').removeClass('active');
+                          $('#cupo').removeClass('activar');
+                          $('#cupo').removeClass('active');
+                          $('#tarjeta').removeClass('activar');
+                          $('#tarjeta').removeClass('active');
+                          $('#libreta').addClass('activar');
+                          $('#libreta').addClass('active');
+                          this.generalesService.Autofocus('SelectLibreta');
+                        } else {
+                          this.BloquearNumeroTarjeta = null;
+                          this.BloquearCuponInicial = null;
+                          this.devolverTab(2);
+                          this.tab2.nativeElement.click();
+                          this.VolverArriba(600);
+                          $('#saldos').removeClass('activar');
+                          $('#saldos').removeClass('active');
+                          $('#historial').removeClass('activar');
+                          $('#historial').removeClass('active');
+                          $('#autorizados').removeClass('activar');
+                          $('#autorizados').removeClass('active');
+                          $('#cupo').removeClass('activar');
+                          $('#cupo').removeClass('active');
+                          $('#tarjeta').addClass('activar');
+                          $('#tarjeta').addClass('active');
+                          $('#libreta').removeClass('activar');
+                          $('#libreta').removeClass('active');
+                          this.generalesService.Autofocus('SelectTarjeta');
+                        }
+                      } else {
+                        this.notif.warning('Advertencia', 'Asociado debe actualizar datos.', ConfiguracionNotificacion.configRightTop);
+                        this.DisponibleOperacionFrom.get('Codigo')?.reset();
+                      }
+                    },
+                  )
+                } else {
+                  this.notif.warning('Advertencia', 'Cuenta no se puede editar, estado no valido.', ConfiguracionNotificacion.configRightTop);
+                  this.DisponibleOperacionFrom.get('Codigo')?.reset();
                 }
               } else {
-                this.notif.warning('Advertencia', 'Asociado debe actualizar datos.', ConfiguracionNotificacion.configRightTop);
-                this.DisponibleOperacionFrom.get('Codigo')?.reset();
+                this.notif.warning('Advertencia', 'Producto no habilitado para corrección de libreta o tarjeta.', ConfiguracionNotificacion.configRightTop);
               }
-            },
-          )
-        } else {
-          this.notif.warning('Advertencia', 'Cuenta no se puede editar, estado no valido.', ConfiguracionNotificacion.configRightTop);
-          this.DisponibleOperacionFrom.get('Codigo')?.reset(); 
-        }    
-
+            }
+          },
+          error => {
+            console.error('Error al validar disponibles:', error);
+          }
+        );
       } else {
-        this.notif.warning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.',ConfiguracionNotificacion.configRightTop);
+        this.notif.warning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.', ConfiguracionNotificacion.configRightTop);
         this.DisponibleOperacionFrom.get('Codigo')?.reset();
       }
 
