@@ -4253,7 +4253,7 @@ export class DisponiblesComponent implements OnInit {
               this.BuscarPorCuenta();
               // Notificador
               if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 70 || this.DisponibleForm.get('IdMedioPago')?.value == 10 || this.DisponibleForm.get('IdMedioPago')?.value == 60) {
-                this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 8, '00').subscribe(
+                this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 7, '00').subscribe(
                   result => {
                   },
                   error => {
@@ -4374,7 +4374,7 @@ export class DisponiblesComponent implements OnInit {
               this.BuscarPorCuenta();
               // Notificador
               if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 70 || this.DisponibleForm.get('IdMedioPago')?.value == 10 || this.DisponibleForm.get('IdMedioPago')?.value == 60) {
-                this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 7, '00').subscribe(
+                this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 7, '10').subscribe(
                   result => {
                   },
                   error => {
