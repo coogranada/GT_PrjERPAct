@@ -6042,7 +6042,7 @@ export class DisponiblesComponent implements OnInit {
                 // Notificador
                 var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
                 var IdCuenta = +result.IdCuenta;
-                this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 5, '00').subscribe(
+                this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 8, '00').subscribe(
                   result => {
                   },
                   error => {
