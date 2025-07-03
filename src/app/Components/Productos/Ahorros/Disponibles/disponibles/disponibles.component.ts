@@ -4319,7 +4319,7 @@ export class DisponiblesComponent implements OnInit {
                 }).then((result) => {
                   if (result.isConfirmed) {
                     const medioPago = this.DisponibleForm.get('IdMedioPago')?.value;
-                    const NumeroTarjeta = this.DisponibleForm.get('NumeroTarjeta')?.value;
+                    const NumeroTarjeta = this.DisponibleForm.get('Inicial')?.value;
                     switch (medioPago) {
                       case 50:
                       case 10:
@@ -4416,7 +4416,7 @@ export class DisponiblesComponent implements OnInit {
     );
   }
   LiberarLibreta(NumeroLibreta: any) {
-    //var NumeroLibreta = this.DisponibleForm.get('Inicial')?.value;
+    var NumeroLibreta = this.DisponibleForm.get('Inicial')?.value;
     this.DisponiblesServices.LiberarLibreta(+NumeroLibreta).subscribe(
       result => {
         //this.DisponibleForm.get('Inicial')?.setValue(0);
@@ -7203,6 +7203,7 @@ export class DisponiblesComponent implements OnInit {
       // fin notificador
       this.NovedadesAhorrosPDF("Cancelar cupo");
       this.DisponibleOperacionFrom.get('Codigo')?.reset();
+      this.BloquearMedioPago = false;
       setTimeout(() => {
         this.BuscarPorCuenta();
         this.ObtenerHistorial();
