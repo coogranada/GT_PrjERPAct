@@ -5890,10 +5890,13 @@ export class DisponiblesComponent implements OnInit {
 
         if ((mediopago === '10' || mediopago === '50') && (!numeroTarjeta || numeroTarjeta.trim()==='')) {
           this.notif.warning('Advertencia', 'Debe ingresar el número de la tarjeta para el medio de pago seleccionado.', ConfiguracionNotificacion.configRightTop);
+          return;
         } else if((mediopago === '50') && (!numeroPagare || numeroPagare.trim()==='' || !plazo || plazo.trim()==='' || !diaCorte || diaCorte.trim()==='' )) {
           this.notif.warning('Advertencia', 'Debe ingresar los campos obligatorios para el medio de pago seleccionado.', ConfiguracionNotificacion.configRightTop);
+          return;
         } else if((mediopago === '70') && (!numeroPagare || numeroPagare.trim()==='' || !plazo || plazo.trim()==='' || !diaCorte || diaCorte.trim()==='' )) {
           this.notif.warning('Advertencia', 'Debe ingresar los campos obligatorios para el medio de pago seleccionado.', ConfiguracionNotificacion.configRightTop);
+          return;
         }else{
     
         if (this.DisponibleForm.get('IdMedioPago')?.value === '0') {
@@ -5986,8 +5989,10 @@ export class DisponiblesComponent implements OnInit {
               }
             );
             
-          } else
+          } else {
             this.notif.warning('Advertencia', 'Los datos están incompletos.', ConfiguracionNotificacion.configRightTop);
+            return;
+          }
         }
         else if (this.DisponibleForm.get('IdMedioPago')?.value === '50' || this.DisponibleForm.get('IdMedioPago')?.value === '70') {
           if (this.DisponibleForm.get('IdConvenio')?.value !== null
@@ -6054,8 +6059,10 @@ export class DisponiblesComponent implements OnInit {
               }
             );
             
-          } else
+          } else {
             this.notif.warning('Advertencia', 'Los datos están incompletos.', ConfiguracionNotificacion.configRightTop);
+            return;
+          }
         }
         setTimeout(() => {
           //cuando hay cambio de tarjetas ysalazar 30/05/2025
@@ -6893,6 +6900,7 @@ export class DisponiblesComponent implements OnInit {
       this.clearCanales();
     } else {
       this.notif.warning('Advertencia', 'Los datos están incompletos.', ConfiguracionNotificacion.configRightTop);
+      return;
     }
   }
   clearCanales() {
@@ -7999,6 +8007,7 @@ export class DisponiblesComponent implements OnInit {
       this.clearTitulares();
     } else {
       this.notif.warning('Advertencia', 'Los datos están incompletos.', ConfiguracionNotificacion.configRightTop);
+      return;
     }    
   }
   IndiceAEditar(index : number, datos : any) {
