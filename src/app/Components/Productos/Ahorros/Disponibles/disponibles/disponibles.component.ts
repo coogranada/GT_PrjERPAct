@@ -3878,6 +3878,7 @@ export class DisponiblesComponent implements OnInit {
           this.DisponibleForm.get('NombreOficinaAsociado')?.setValue(result[0].NombreOficina);
           this.DisponibleForm.get('Clase')?.setValue(result[0].IdRelacionTipo);
           this.DisponibleForm.get('Edad')?.setValue(result[0].Edad);
+          this.DisponibleForm.get('IdTipoDocumento')?.setValue(result[0].IdTipoDocumento);
         } else if (result.length > 1) {
           this.resultAsociados = result;
           this.ModalAsociados.nativeElement.click();
@@ -4896,7 +4897,11 @@ export class DisponiblesComponent implements OnInit {
     }
     this.dataAsesor = this.AsesorFrom.get('strCodigo')?.value;
     this.DisponibleForm.get('IdAsesorExterno')?.setValue(this.dataAsesor);
-
+      if (this.DisponibleForm.get('IdTipoDocumento')?.value === 3 && this.dataObjetTitulares.length === 0 ){
+        this.notif.warning('Advertencia', 'Debe ingresar al menos un autorizado cuando el titular es jurídico.', ConfiguracionNotificacion.configRightTop);
+        this.isSaving = false;
+        return;
+      }
     if (this.DisponibleForm.get('Clase')?.value === 10) {
       if (this.dataObjetTitulares.length !== 0) {
 
@@ -6168,7 +6173,7 @@ export class DisponiblesComponent implements OnInit {
             this.bloquearbtnActalizar = false;
             this.enableBtnActualizar = false;
             this.GuardarGarantiasAndLog("guardar");
-                        setTimeout(() => {
+              setTimeout(() => {
               this.ObtenerHistorial();
               this.itemsDataObejct = [];
               this.BuscarPorCuenta();
@@ -8459,6 +8464,7 @@ export class DisponiblesComponent implements OnInit {
     const PagoMinimo = new FormControl('', []);
     const DireccionDisponible = new FormControl('', []);
     const TipoDocumento = new FormControl('', []);
+    const IdTipoDocumento = new FormControl('', []);
     const SaldoPromedioMesAnterior = new FormControl('', []);
     const InteresMesAnterior = new FormControl('', []);
     const SaldoCertificado = new FormControl('', []);
@@ -8574,6 +8580,7 @@ export class DisponiblesComponent implements OnInit {
       PagoMinimo: PagoMinimo,
       PagoTotal: PagoTotal,
       TipoDocumento: TipoDocumento,
+      IdTipoDocumento: IdTipoDocumento,
       SaldoPromedioMesAnterior: SaldoPromedioMesAnterior,
       InteresMesAnterior: InteresMesAnterior,
       IdGarantia: IdGarantia,
