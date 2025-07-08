@@ -4617,10 +4617,22 @@ export class DisponiblesComponent implements OnInit {
       }
       this.Volver();
 
-      this.BloquearConvenio = null;
+      if(this.DisponibleOperacionFrom.get('Codigo')?.value === '38'){
+        if (medioPagoAnterior == '50'|| medioPagoAnterior == '70') {
+          this.BloquearConvenio = false;
+          this.BloquearDiaCortePlazo = false;
+          this.BloquearPagare = false;
+        }else{
+          this.BloquearConvenio = null;
+          this.BloquearDiaCortePlazo = null;
+          this.BloquearPagare = null;;
+        }
+      }else{
+        this.BloquearConvenio = null;
+        this.BloquearDiaCortePlazo = null;
+        this.BloquearPagare = null; 
+      }
       this.BloquearNumeroTarjeta = null;
-      this.BloquearDiaCortePlazo = null;
-      this.BloquearPagare = null;
       if (this.DisponibleOperacionFrom.get('Codigo')?.value == '10'|| this.DisponibleOperacionFrom.get('Codigo')?.value === '40' || this.datoMedioPago == 0) {
         this.resultCanales = [];
         this.dataObjetC = { Canales: []};
@@ -5886,7 +5898,7 @@ export class DisponiblesComponent implements OnInit {
         const numeroPagare: string = `${this.DisponibleForm.get('NumeroPagare')?.value ?? ''}`;
         const plazo: string = `${this.DisponibleForm.get('IdPlazo')?.value ?? ''}`;
         const diaCorte: string = `${this.DisponibleForm.get('IdDiaCorte')?.value ?? ''}`;
-        
+        const medioPagoAnterior : string = `${this.datoMedioPago ?? ''}`;
 
         if ((mediopago === '10' || mediopago === '50') && (!numeroTarjeta || numeroTarjeta.trim()==='')) {
           this.notif.warning('Advertencia', 'Debe ingresar el número de la tarjeta para el medio de pago seleccionado.', ConfiguracionNotificacion.configRightTop);
@@ -5897,7 +5909,10 @@ export class DisponiblesComponent implements OnInit {
         } else if((mediopago === '70') && (!numeroPagare || numeroPagare.trim()==='' || !plazo || plazo.trim()==='' || !diaCorte || diaCorte.trim()==='' )) {
           this.notif.warning('Advertencia', 'Debe ingresar los campos obligatorios para el medio de pago seleccionado.', ConfiguracionNotificacion.configRightTop);
           return;
-        }else{
+        } else if(medioPagoAnterior === this.DisponibleForm.get('IdMedioPago')?.value ){
+          this.notif.warning('Advertencia', 'Debe cambiar el medio de pago.', ConfiguracionNotificacion.configRightTop);
+          return;
+        } else{
     
         if (this.DisponibleForm.get('IdMedioPago')?.value === '0') {
           this.notif.warning('Advertencia', 'Cuando medio de pago es libreta no se puede cambiar.', ConfiguracionNotificacion.configRightTop);
