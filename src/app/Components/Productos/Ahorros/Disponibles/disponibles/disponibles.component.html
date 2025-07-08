@@ -867,8 +867,8 @@
                                                         <td>{{Real.TipoGarantia}}</td>
                                                         <td>{{Real.NumeroMatricula}}</td>
                                                         <td>{{Real.Descripcion}}</td>
-                                                        <td>{{Real.ValorRespaldado | currency:'':'' : '1.2-2'}}</td>
                                                         <td>{{Real.ValorCobertura | currency:'':'' : '1.2-2'}}</td>
+                                                        <td>{{Real.ValorRespaldado | currency:'':'' : '1.2-2'}}</td>                                                        
                                                         <td>{{ (dataObjetR.length === 1 ? Real.ValorDisponible : 0) | currency:'':'' : '1.2-2'}}</td>
                                                     </tr>
                                                 </tbody>
@@ -876,11 +876,11 @@
                                             <br>
                                             <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="dataObjetR.length > 1">
                                                 <div class="col-xs-1 col-md-3 col-lg-4">
-                                                    <label><strong>Total respaldado: </strong>{{valorRespaldadoTotalGar | currency: '$' }}</label>
-                                                </div>
-                                                <div class="col-xs-1 col-md-3 col-lg-4">
                                                     <label><strong>Total cobertura: </strong>{{valorCoberturaTotalGar | currency: '$' }}</label>
                                                 </div>
+                                                <div class="col-xs-1 col-md-3 col-lg-4">
+                                                    <label><strong>Total respaldado: </strong>{{valorRespaldadoTotalGar | currency: '$' }}</label>
+                                                </div>                                               
                                                 <div class="col-xs-1 col-md-3 col-lg-4">
                                                     <label><strong>Total disponible: </strong>{{valorDisponibleTotalGar | currency: '$' }}</label>
                                                 </div>
@@ -1835,9 +1835,9 @@
                                         <tr>
                                             <td>{{Real.TipoGarantia}}</td>
                                             <td>{{Real.NumeroMatricula}}</td>
-                                            <td>{{Real.Descripcion}}</td>
-                                            <td>{{Real.ValorRespaldado | currency:'':'' : '1.2-2'}}</td>
+                                            <td>{{Real.Descripcion}}</td>                                            
                                             <td>{{Real.ValorCobertura | currency:'':'' : '1.2-2'}}</td>
+                                            <td>{{Real.ValorRespaldado | currency:'':'' : '1.2-2'}}</td>
                                             <td>{{ (resultGarantia.length === 1 ? Real.ValorDisponible : 0) | currency:'':'' : '1.2-2' }}</td> 
                                             <td>
                                                 <button class="btn Gt-btn-verde btn-icon legitRipple" (click)="GarantiaRealBajar(i)" >
@@ -1872,8 +1872,8 @@
                                             <td>{{Real.TipoGarantia}}</td>
                                             <td>{{Real.NumeroMatricula}}</td>
                                             <td>{{Real.Descripcion}}</td>
-                                            <td>{{Real.ValorRespaldado |  currency:'':'' : '1.2-2'}}</td>
-                                            <td>{{Real.ValorCobertura  |  currency:'':'' : '1.2-2'}}</td>
+                                            <td>{{Real.ValorCobertura | currency:'':'' : '1.2-2'}}</td>
+                                            <td>{{Real.ValorRespaldado |  currency:'':'' : '1.2-2'}}</td>                                            
                                             <td>{{ (resultGarantia.length === 1 ? Real.ValorDisponible : 0) | currency:'':'' : '1.2-2'}}</td>
                                             <td>
                                                 <button class="btn Gt-btn-verde btn-icon legitRipple" (click)="GarantiaRealSubir(i)" >
@@ -1890,10 +1890,10 @@
                 <div class="modal-footer">
                     <div class="col-xs-12 col-md-12 col-lg-12">
                         <div class="col-xs-1 col-md-3 col-lg-3">
-                            <label><strong>Total respaldado: </strong>{{valorRespaldadoTotal | currency: '$' }}</label>
-                        </div>
-                        <div class="col-xs-1 col-md-3 col-lg-3">
                             <label><strong>Total cobertura: </strong>{{valorCoberturaTotal | currency: '$' }}</label>
+                        </div> 
+                        <div class="col-xs-1 col-md-3 col-lg-3">
+                            <label><strong>Total respaldado: </strong>{{valorRespaldadoTotal | currency: '$' }}</label>
                         </div>
                         <div class="col-xs-1 col-md-3 col-lg-3">
                             <label><strong>Total disponible: </strong>{{valorDisponibleTotal | currency: '$' }}</label>
