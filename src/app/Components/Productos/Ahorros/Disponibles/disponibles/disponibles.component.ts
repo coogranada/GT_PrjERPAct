@@ -4942,7 +4942,7 @@ export class DisponiblesComponent implements OnInit {
                 }, 1000);
               });
               // Notificador
-              var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
+              var IdTercero = +result.lngTercero;
               var IdCuenta = +result.IdCuenta;
               if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 70 || this.DisponibleForm.get('IdMedioPago')?.value == 10 || this.DisponibleForm.get('IdMedioPago')?.value == 60) {
                 this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 5, '00').subscribe( //ysalazar
@@ -5036,7 +5036,7 @@ export class DisponiblesComponent implements OnInit {
                     }, 1000);
                   });
                   // Notificador
-                  var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
+                  var IdTercero = +result.lngTercero;
                   var IdCuenta = +result.IdCuenta;
                   if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 70 || this.DisponibleForm.get('IdMedioPago')?.value == 10 || this.DisponibleForm.get('IdMedioPago')?.value == 60) {
                     this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 5, '00').subscribe( //ysalazar
@@ -5121,7 +5121,7 @@ export class DisponiblesComponent implements OnInit {
               });
 
             // Notificador
-            var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
+            var IdTercero = +result.lngTercero;
             var IdCuenta = +result.IdCuenta;
             if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 70 || this.DisponibleForm.get('IdMedioPago')?.value == 10 || this.DisponibleForm.get('IdMedioPago')?.value == 60) {
               this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 5, '00').subscribe( //ysalazar
@@ -5215,7 +5215,7 @@ export class DisponiblesComponent implements OnInit {
                   }, 1000);
                 });
                 // Notificador
-                var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
+                var IdTercero = +result.lngTercero;
                 var IdCuenta = +result.IdCuenta;
                 if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 70 || this.DisponibleForm.get('IdMedioPago')?.value == 10 || this.DisponibleForm.get('IdMedioPago')?.value == 60) {
                   this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 5, '00').subscribe( //ysalazar
