@@ -4944,7 +4944,7 @@ export class DisponiblesComponent implements OnInit {
               // Notificador
               var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
               var IdCuenta = +result.IdCuenta;
-              if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 10) {
+              if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 70 || this.DisponibleForm.get('IdMedioPago')?.value == 10 || this.DisponibleForm.get('IdMedioPago')?.value == 60) {
                 this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 5, '00').subscribe( //ysalazar
                   result => {
                   },
@@ -5038,7 +5038,7 @@ export class DisponiblesComponent implements OnInit {
                   // Notificador
                   var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
                   var IdCuenta = +result.IdCuenta;
-                  if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 10) {
+                  if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 70 || this.DisponibleForm.get('IdMedioPago')?.value == 10 || this.DisponibleForm.get('IdMedioPago')?.value == 60) {
                     this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 5, '00').subscribe( //ysalazar
                       result => {
                       },
@@ -5119,6 +5119,21 @@ export class DisponiblesComponent implements OnInit {
                   }
                 }, 1000);
               });
+
+            // Notificador
+            var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
+            var IdCuenta = +result.IdCuenta;
+            if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 70 || this.DisponibleForm.get('IdMedioPago')?.value == 10 || this.DisponibleForm.get('IdMedioPago')?.value == 60) {
+              this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 5, '00').subscribe( //ysalazar
+                result => {
+                },
+                error => {
+                  const errorMessage = <any>error;
+                  console.log(errorMessage);
+                }
+              );
+            }
+            // fin notificador
             this.Guardarlog(aperturaCuentaLog);
             this.DisponibleOperacionFrom.get('Codigo')?.reset();
             this.itemsDataObejct = [];
@@ -5199,6 +5214,20 @@ export class DisponiblesComponent implements OnInit {
                     }
                   }, 1000);
                 });
+                // Notificador
+                var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
+                var IdCuenta = +result.IdCuenta;
+                if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 70 || this.DisponibleForm.get('IdMedioPago')?.value == 10 || this.DisponibleForm.get('IdMedioPago')?.value == 60) {
+                  this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 5, '00').subscribe( //ysalazar
+                    result => {
+                    },
+                    error => {
+                      const errorMessage = <any>error;
+                      console.log(errorMessage);
+                    }
+                  );
+                }
+                // fin notificador
                 this.Guardarlog(aperturaCuentaLog);
                 this.DisponibleOperacionFrom.get('Codigo')?.reset();
                 this.itemsDataObejct = [];
@@ -5558,7 +5587,7 @@ export class DisponiblesComponent implements OnInit {
                 // Notificador
                 var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
                 var IdCuenta = +result.IdCuenta;
-                if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 10) {
+                if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 70 || this.DisponibleForm.get('IdMedioPago')?.value == 10 || this.DisponibleForm.get('IdMedioPago')?.value == 60) {
                   this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 6, '00').subscribe( //ysalazar
                     result => {
                     },
@@ -5658,7 +5687,7 @@ export class DisponiblesComponent implements OnInit {
                 // Notificador
                 var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
                 var IdCuenta = +result.IdCuenta;
-                if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 10) {
+                if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 70 || this.DisponibleForm.get('IdMedioPago')?.value == 10 || this.DisponibleForm.get('IdMedioPago')?.value == 60) {
                   this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 6, '00').subscribe( //ysalazar
                     result => {
                     },
@@ -5766,7 +5795,7 @@ export class DisponiblesComponent implements OnInit {
               // Notificador
               var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
               var IdCuenta = +result.IdCuenta;
-              if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 10) {
+              if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 70 || this.DisponibleForm.get('IdMedioPago')?.value == 10 || this.DisponibleForm.get('IdMedioPago')?.value == 60) {
                 this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 5, '00').subscribe( //ysalazar
                   result => {
                   },
@@ -7210,7 +7239,7 @@ export class DisponiblesComponent implements OnInit {
       // Notificador
       var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
       var IdCuenta = +this.DisponibleForm.get('IdCuenta')?.value;
-      if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 10) {
+      if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 70 || this.DisponibleForm.get('IdMedioPago')?.value == 10 || this.DisponibleForm.get('IdMedioPago')?.value == 60) {
         this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 11, '00').subscribe( //ysalazar
           result => {
           },
