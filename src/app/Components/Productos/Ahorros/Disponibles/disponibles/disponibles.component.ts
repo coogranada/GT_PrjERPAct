@@ -5592,7 +5592,7 @@ export class DisponiblesComponent implements OnInit {
                 var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
                 var IdCuenta = +result.IdCuenta;
                 if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 70 || this.DisponibleForm.get('IdMedioPago')?.value == 10 || this.DisponibleForm.get('IdMedioPago')?.value == 60) {
-                  this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 6, '00').subscribe( //ysalazar
+                  this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 6, '00').subscribe( //ysalazar mal 
                     result => {
                     },
                     error => {
@@ -5692,7 +5692,7 @@ export class DisponiblesComponent implements OnInit {
                 var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
                 var IdCuenta = +result.IdCuenta;
                 if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 70 || this.DisponibleForm.get('IdMedioPago')?.value == 10 || this.DisponibleForm.get('IdMedioPago')?.value == 60) {
-                  this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 6, '00').subscribe( //ysalazar
+                  this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 6, '00').subscribe( //ysalazar mal 
                     result => {
                     },
                     error => {
@@ -7242,9 +7242,9 @@ export class DisponiblesComponent implements OnInit {
       this.Guardarlog(log);
       // Notificador
       var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
-      var IdCuenta = +this.DisponibleForm.get('IdCuenta')?.value;
+      var IdCuenta = +this.DisponibleForm.get('IdCuentaCupo')?.value;
       if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 70 || this.DisponibleForm.get('IdMedioPago')?.value == 10 || this.DisponibleForm.get('IdMedioPago')?.value == 60) {
-        this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 11, '00').subscribe( //ysalazar
+        this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 11, '00').subscribe( //ysalazar mal 
           result => {
           },
           error => {
