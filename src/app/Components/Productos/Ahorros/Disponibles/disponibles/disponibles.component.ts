@@ -4928,6 +4928,7 @@ export class DisponiblesComponent implements OnInit {
               this.notif.success('Exitoso', 'La cuenta se guardó correctamente.', ConfiguracionNotificacion.configRightTop);
               this.isSaving = false;
               this.btnGuardar = true;
+              this.BloquearAutorizadoTituloInput(1);
               this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito)
               .then(() => {
                 setTimeout(() => {
@@ -5022,6 +5023,7 @@ export class DisponiblesComponent implements OnInit {
                   this.notif.success('Exitoso', 'La cuenta se guardó correctamente.', ConfiguracionNotificacion.configRightTop);
                   this.isSaving = false;
                   this.btnGuardar = true;
+                  this.BloquearAutorizadoTituloInput(1);
                   this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito)
                   .then(() => {
                     setTimeout(() => {
@@ -5106,6 +5108,7 @@ export class DisponiblesComponent implements OnInit {
             this.notif.success('Exitoso', 'La cuenta se guardó correctamente.', ConfiguracionNotificacion.configRightTop);
             this.isSaving = false;
             this.btnGuardar = true;
+            this.BloquearAutorizadoTituloInput(1);
             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito)
               .then(() => {
                 setTimeout(() => {
@@ -5119,7 +5122,7 @@ export class DisponiblesComponent implements OnInit {
                   }
                 }, 1000);
               });
-
+              
             // Notificador
             var IdTercero = +result.LngTercero;
             var IdCuenta = +result.IdCuenta;
@@ -5201,6 +5204,7 @@ export class DisponiblesComponent implements OnInit {
                 this.notif.success('Exitoso', 'La cuenta se guardó correctamente.', ConfiguracionNotificacion.configRightTop);
                 this.isSaving = false;
                 this.btnGuardar = true;
+                this.BloquearAutorizadoTituloInput(1);
                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito)
                 .then(() => {
                   setTimeout(() => {
