@@ -5554,7 +5554,6 @@ export class DisponiblesComponent implements OnInit {
           this.bloquearbtnActalizar = false;
         }
       } else if (this.DisponibleOperacionFrom.get('Codigo')?.value === '32') {  // Cambio de libreta o tarjeta
-
         if (this.DisponibleForm.get('IdMedioPago')?.value === '0' || this.DisponibleForm.get('IdMedioPago')?.value === 0) {
           if (this.DisponibleForm.get('Inicial')?.value !== null
             && this.DisponibleForm.get('Inicial')?.value !== undefined
@@ -5587,21 +5586,7 @@ export class DisponiblesComponent implements OnInit {
                     this.ObtenerHistorial();
                     this.NovedadesAhorrosPDF('Cambio de libreta', "", true);
                   }, 1000);
-              }
-                // Notificador
-                var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
-                var IdCuenta = +result.IdCuenta;
-                if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 70 || this.DisponibleForm.get('IdMedioPago')?.value == 10 || this.DisponibleForm.get('IdMedioPago')?.value == 60) {
-                  this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 6, '00').subscribe( //ysalazar mal 
-                    result => {
-                    },
-                    error => {
-                      const errorMessage = <any>error;
-                      console.log(errorMessage);
-                    }
-                  );
-                }
-                // fin notificador                
+              }                              
                 this.itemsDataObejct = [];
                 this.BuscarPorCuenta();
                 this.BloquearCuponInicial = false;
@@ -5620,6 +5605,20 @@ export class DisponiblesComponent implements OnInit {
             && this.DisponibleForm.get('NumeroTarjeta')?.value !== undefined
             && this.DisponibleForm.get('NumeroTarjeta')?.value !== '') {
             this.loading = true;
+            // Notificador
+            var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
+            var IdCuenta = +this.DisponibleForm.get('IdCuenta')?.value;
+            if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 70 || this.DisponibleForm.get('IdMedioPago')?.value == 10 || this.DisponibleForm.get('IdMedioPago')?.value == 60) {
+              this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 6, '00').subscribe( //ysalazar mal 
+                result => {
+                },
+                error => {
+                  const errorMessage = <any>error;
+                  console.log(errorMessage);
+                }
+              );
+            }
+            // fin notificador 
             this.DisponiblesServices.ActualizarLibretaTarjeta(this.DisponibleForm.value).subscribe(
               result => {
                 this.loading = false;
@@ -5646,9 +5645,9 @@ export class DisponiblesComponent implements OnInit {
                 if (this.DisponibleForm.get('IdMedioPago')?.value !== 0){ // no se genera para libretas
                   setTimeout(() => {
                     this.NovedadesAhorrosPDF('Cambio de tarjeta', "", true);
-                    this.ObtenerHistorial();
+                    this.ObtenerHistorial();                   
                   }, 1000);
-              }
+              }             
                 this.DisponibleOperacionFrom.get('Codigo')?.reset();
               },
               error => {
@@ -5688,20 +5687,6 @@ export class DisponiblesComponent implements OnInit {
                   CuponIncialActualiza: Number(this.DisponibleForm.get('Inicial')?.value),
                   CuponFinalActualiza: Number(this.DisponibleForm.get('Final')?.value)
                 }
-                // Notificador
-                var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
-                var IdCuenta = +result.IdCuenta;
-                if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 70 || this.DisponibleForm.get('IdMedioPago')?.value == 10 || this.DisponibleForm.get('IdMedioPago')?.value == 60) {
-                  this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 6, '00').subscribe( //ysalazar mal 
-                    result => {
-                    },
-                    error => {
-                      const errorMessage = <any>error;
-                      console.log(errorMessage);
-                    }
-                  );
-                }
-                // fin notificador
                 this.Guardarlog(correccionLibretaTarjeta);
                 this.itemsDataObejct = [];
                 this.BuscarPorCuenta();
@@ -5723,8 +5708,22 @@ export class DisponiblesComponent implements OnInit {
         } else {
           if (this.DisponibleForm.get('NumeroTarjeta')?.value !== null
             && this.DisponibleForm.get('NumeroTarjeta')?.value !== undefined
-            && this.DisponibleForm.get('NumeroTarjeta')?.value !== '' || this.TipoNovedad != "") {
+            && this.DisponibleForm.get('NumeroTarjeta')?.value !== '' || this.TipoNovedad != "") {              
             this.loading = true;
+            // Notificador
+            var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
+            var IdCuenta = +this.DisponibleForm.get('IdCuenta')?.value;
+            if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 70 || this.DisponibleForm.get('IdMedioPago')?.value == 10 || this.DisponibleForm.get('IdMedioPago')?.value == 60) {
+              this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 6, '00').subscribe( //ysalazar mal 
+                result => {
+                },
+                error => {
+                  const errorMessage = <any>error;
+                  console.log(errorMessage);
+                }
+              );
+            }
+            // fin notificador 
             this.DisponiblesServices.ActualizarLibretaTarjetaSinCobro(this.DisponibleForm.value).subscribe(
               result => {
                 this.loading = false;
@@ -5752,7 +5751,7 @@ export class DisponiblesComponent implements OnInit {
                 setTimeout(() => {
                   this.ObtenerHistorial();
                   this.NovedadesAhorrosPDF(this.TipoNovedad == "" ? 'Corrección de tarjeta' : this.TipoNovedad, "", true);
-                }, 3000);
+                }, 3000);               
                 this.DisponibleOperacionFrom.get('Codigo')?.reset();
               },
               error => {
@@ -7244,7 +7243,7 @@ export class DisponiblesComponent implements OnInit {
       var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
       var IdCuenta = +this.DisponibleForm.get('IdCuentaCupo')?.value;
       if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 70 || this.DisponibleForm.get('IdMedioPago')?.value == 10 || this.DisponibleForm.get('IdMedioPago')?.value == 60) {
-        this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 11, '00').subscribe( //ysalazar mal 
+        this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 11, '00').subscribe(  
           result => {
           },
           error => {
