@@ -319,13 +319,16 @@ export class GeneracionArchivosComponent implements OnInit {
   }
 
   reintentarEjecucion(parametro1: string) {
+    this.loading = true;
     const parametro: ParametrosArchivosData = JSON.parse(parametro1);
     try {
       this.GeneracionArchivosServices.GenerarArchivos(parametro).subscribe(
         (response) => {
+          this.loading = false;
           this.toastr.success('Exitoso', 'Ejecución realizada, valide el resultado del proceso.', ConfiguracionNotificacion.configRightTop);
         });
     } catch (error) {
+      this.loading = false;
       this.toastr.error('Error', 'Error ejecutando la tarea: '+error, ConfiguracionNotificacion.configRightTop);
     }
 

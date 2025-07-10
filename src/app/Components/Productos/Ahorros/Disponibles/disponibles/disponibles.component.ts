@@ -4567,7 +4567,7 @@ export class DisponiblesComponent implements OnInit {
       if(!(this.DisponibleForm.get('IdConvenio')?.value > 0))
         this.DisponibleForm.get('IdConvenio')?.setValue(0);
       setTimeout(() => {
-        this.generalesService.Autofocus('selectIdConvenio');
+        this.generalesService.Autofocus('IdConvenio');
       }, 300);
 
       setTimeout(() => {
@@ -4648,7 +4648,7 @@ export class DisponiblesComponent implements OnInit {
       if(!(this.DisponibleForm.get('IdConvenio')?.value > 0))
         this.DisponibleForm.get('IdConvenio')?.setValue(0);
       setTimeout(() => {
-      this.generalesService.Autofocus('selectIdConvenio');
+      this.generalesService.Autofocus('IdConvenio');
       }, 300);
       setTimeout(() => {
         this.devolverTab(2);
