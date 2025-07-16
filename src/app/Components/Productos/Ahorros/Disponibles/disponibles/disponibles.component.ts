@@ -2284,7 +2284,7 @@ export class DisponiblesComponent implements OnInit {
             this.itemsSendRegistro.TelefoinoAutorizado2 = null;
             this.itemsSendRegistro.CodicionesAutorizado2 = null;
           }
-
+          this.btnRegistroFirma = true;
         } else {
           this.notif.warning('Advertencia', 'La cuenta no existe.', ConfiguracionNotificacion.configRightTop);
           this.clearTitulares();
@@ -4703,7 +4703,7 @@ export class DisponiblesComponent implements OnInit {
       itemsSendCertificado.NroCuenta = this.DisponibleForm.get('Cuenta')?.value;
       itemsSendCertificado.FechaApertura = this.DisponibleForm.get('FechaApertura')?.value;
       itemsSendCertificado.Estado = this.DisponibleForm.get('DescripcionEstado')?.value;
-      itemsSendCertificado.Codigo = this.DisponibleForm.get('AliasCuenta')?.value == null ? "" : this.DisponibleForm.get('AliasCuenta')?.value == null;
+      itemsSendCertificado.Codigo = this.DisponibleForm.get('AliasCuenta')?.value ?? "";
       itemsSendCertificado.FormatoId = this.CertificadoFrom.get('SaldoCertificado')?.value;
       itemsSendCertificado.SaldoTotal = this.DisponibleForm.get('Efectivo')?.value;
       itemsSendCertificado.TerceroId = Number(this.DisponibleForm.get('LngTercero')?.value);
