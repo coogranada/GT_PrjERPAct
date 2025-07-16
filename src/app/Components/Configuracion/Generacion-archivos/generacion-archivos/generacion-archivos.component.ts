@@ -228,9 +228,9 @@ export class GeneracionArchivosComponent implements OnInit {
       const result = this.ValidarCambios()
       const estadoActual = this.parametrosArchivosForm.get('estado')?.value;
       if (estadoActual == 1) {
-        this.parametrosArchivosForm.get('estado')?.patchValue(5);
+        this.parametrosArchivosForm.get('estado')?.patchValue(1);
       } else {
-        this.parametrosArchivosForm.get('estado')?.patchValue(20);
+        this.parametrosArchivosForm.get('estado')?.patchValue(0);
       }
 
       this.loading = true;
