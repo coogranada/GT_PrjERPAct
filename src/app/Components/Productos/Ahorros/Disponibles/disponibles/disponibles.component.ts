@@ -6022,16 +6022,28 @@ export class DisponiblesComponent implements OnInit {
                 this.BloquearNumeroTarjeta = false;
                 this.BloquearPagare = false;
                 // Notificador
+                var MedioPagoAnterior = this.datoMedioPago;
                 var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
                 var IdCuenta = +result.IdCuenta;
-                this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 5, '00').subscribe(
-                  result => {
-                  },
-                  error => {
-                    const errorMessage = <any>error;
-                    console.log(errorMessage);
-                  }
-                );
+                if(MedioPagoAnterior = 0){
+                  this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 5, '00').subscribe(
+                    result => {
+                    },
+                    error => {
+                      const errorMessage = <any>error;
+                      console.log(errorMessage);
+                    }
+                  );
+                } else {
+                  this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 8, '00').subscribe(
+                    result => {
+                    },
+                    error => {
+                      const errorMessage = <any>error;
+                      console.log(errorMessage);
+                    }
+                  );
+                }   
             // fin notificador
               },
               error => {
@@ -6092,17 +6104,29 @@ export class DisponiblesComponent implements OnInit {
                 this.BloquearNumeroTarjeta = false;
                 this.BloquearPagare = false;
                 // Notificador
+                var MedioPagoAnterior = this.datoMedioPago;
                 var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
                 var IdCuenta = +result.IdCuenta;
-                this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 8, '00').subscribe(
-                  result => {
-                  },
-                  error => {
-                    const errorMessage = <any>error;
-                    console.log(errorMessage);
-                  }
-                );
-            // fin notificador
+                if (MedioPagoAnterior = 0) {
+                  this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 5, '00').subscribe(
+                    result => {
+                    },
+                    error => {
+                      const errorMessage = <any>error;
+                      console.log(errorMessage);
+                    }
+                  );
+                } else {
+                  this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 8, '00').subscribe(
+                    result => {
+                    },
+                    error => {
+                      const errorMessage = <any>error;
+                      console.log(errorMessage);
+                    }
+                  );
+                }
+                // fin notificador
               },
               error => {
                 this.loading = false;
