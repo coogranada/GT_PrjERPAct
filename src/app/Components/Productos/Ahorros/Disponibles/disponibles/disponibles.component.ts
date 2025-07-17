@@ -6588,7 +6588,7 @@ export class DisponiblesComponent implements OnInit {
     itemsSendNovedad.TipoDocumento = this.DisponibleForm.get('TipoDocumento')?.value;
     itemsSendNovedad.Telefono = this.DisponibleForm.get('TelefonoDisponible')?.value;
     itemsSendNovedad.Direccion = this.DisponibleForm.get('DireccionDisponible')?.value;
-    itemsSendNovedad.Oficina = this.DisponibleForm.get('NombreOficina')?.value;
+    itemsSendNovedad.Oficina = this.dataUser.Oficina; //DFRAMIREZ: Cambia a oficina donde esté el usuario
     itemsSendNovedad.TipoProducto = this.DisponibleForm.get('DescripcionProducto')?.value;
     itemsSendNovedad.NumeroCuenta = this.DisponibleForm.get('Cuenta')?.value;
     itemsSendNovedad.TipoNovedad = TipoNovedad;
