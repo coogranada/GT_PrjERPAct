@@ -590,6 +590,7 @@
                                                         <label class="textNegrilla">Canales:</label>
                                                         <span class="grande"> *</span>
                                                         <select class="form-control" name="select" id="SelectCanales" formControlName="Canal" (change)="selectCanalChange()">
+                                                           <option value="">--Seleccione--</option>
                                                             <option *ngFor="let canal of resultCanales" [ngValue]="canal.Canal">
                                                                 {{canal.DescripcionCanal}}</option>
                                                         </select>
