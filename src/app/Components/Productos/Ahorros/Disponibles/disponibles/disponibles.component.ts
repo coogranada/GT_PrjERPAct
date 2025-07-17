@@ -6025,7 +6025,7 @@ export class DisponiblesComponent implements OnInit {
                 var MedioPagoAnterior = this.datoMedioPago;
                 var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
                 var IdCuenta = +result.IdCuenta;
-                if(MedioPagoAnterior = 0){
+                if(MedioPagoAnterior == 0){
                   this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 5, '00').subscribe(
                     result => {
                     },
@@ -6107,7 +6107,7 @@ export class DisponiblesComponent implements OnInit {
                 var MedioPagoAnterior = this.datoMedioPago;
                 var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
                 var IdCuenta = +result.IdCuenta;
-                if (MedioPagoAnterior = 0) {
+                if (MedioPagoAnterior == 0) {
                   this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 5, '00').subscribe(
                     result => {
                     },
