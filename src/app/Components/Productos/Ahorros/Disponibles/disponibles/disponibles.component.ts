@@ -44,6 +44,7 @@ export class DisponiblesComponent implements OnInit {
   @ViewChild('ModalCancelarCupo', { static: true }) private ModalCancelarCupo!: ElementRef;
   @ViewChild('ModalLibretas', { static: true }) private ModalLibretas!: ElementRef;
   @ViewChild('ModalReglamentoVivienda', { static: true }) private ModalReglamentoVivienda!: ElementRef;
+  @ViewChild('ModalReglamentoTarjeta', { static: true }) private ModalReglamentoTarjeta!: ElementRef;
 
 
   @ViewChild('tab1', { static: true }) private tab1!: ElementRef;
@@ -8714,6 +8715,53 @@ export class DisponiblesComponent implements OnInit {
     const linkSource = `data:application/pdf;base64,${this.linkPdf}`;
     const downloadLink = document.createElement("a");
     let fileName: string ="REGLAMENTO AHORRO PROGRAMADO PARA VIVIENDA.pdf";
+    downloadLink.href = linkSource;
+    downloadLink.download = fileName;
+    downloadLink.click();
+    this.loading = false;
+  }
+  GenerarReglamentoTarjeta() {
+    $("#ImpresionReglamentoTarjetaDisponible").show();
+    this.ModalReglamentoTarjeta.nativeElement.click();
+    let html: HTMLObjectElement = document.getElementById("ImpresionReglamentoTarjetaDisponible") as HTMLObjectElement;
+    this.linkPdf = "";
+    let pdfinBase64 = null;
+    let byteArray = null;
+    let newBolb = null;
+    let url = null;
+    html.data = "";
+    html.name = "";
+    html.type = "";
+    let nombreAsociado =  this.DisponibleForm.get('Nombre')?.value;
+    let documentoAsociado = this.DisponibleForm.get('NumeroDocumento')?.value;
+    let numeroTarjeta = this.DisponibleForm.get('NumeroTarjeta')?.value;
+    let fechaEntrega = moment(new Date()).format("YYYY-MM-DD");
+
+    this.DisponiblesServices.GenerarReglamentoTarjeta(nombreAsociado, documentoAsociado, numeroTarjeta, fechaEntrega).subscribe(
+      result => {
+        pdfinBase64 = result.FileStream._buffer;
+        byteArray = new Uint8Array(atob(pdfinBase64).split("").map((char) => char.charCodeAt(0)));
+        newBolb = new Blob([byteArray], { type: "application/pdf" });
+        this.linkPdf = pdfinBase64;
+        url = window.URL.createObjectURL(newBolb);
+        html.data = url;
+        html.name = "Reglamento Tarjeta Débito";
+        html.type = "application/pdf";
+        this.loading = false;
+      },
+      error => {
+        const errorMessage = <any>error;
+        this.notif.error('Error', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
+        console.error(errorMessage);
+        this.loading = false;
+      });
+  }
+
+  generarReglamentoTarjeta() {
+    this.loading = true;
+    const linkSource = `data:application/pdf;base64,${this.linkPdf}`;
+    const downloadLink = document.createElement("a");
+    let fileName: string ="REGLAMENTO TARJETA DEBITO.pdf";
     downloadLink.href = linkSource;
     downloadLink.download = fileName;
     downloadLink.click();

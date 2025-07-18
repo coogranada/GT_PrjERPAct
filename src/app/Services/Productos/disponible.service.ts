@@ -329,7 +329,17 @@ export class DisponiblesService {
     
         return this._http.post<any>(url, null, { params });
     }
+    GenerarReglamentoTarjeta(nombreAsociado: any, documentoAsociado: any, numeroTarjeta: any, fechaEntrega: any): Observable<any> {
+        const url = `${this.environment.Url}/GenerarReglamentoTarjeta`;
+        
+        const params = new HttpParams()
+            .set('nombreAsociado', nombreAsociado)
+            .set('documentoAsociado', documentoAsociado)
+            .set('numeroTarjeta', numeroTarjeta)
+            .set('fechaEntrega', fechaEntrega);
     
+        return this._http.post<any>(url, null, { params });
+    }
     
 }
 
