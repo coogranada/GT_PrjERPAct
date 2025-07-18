@@ -315,9 +315,8 @@
                     <div class="col-xs-12 col-md-12 col-lg-12 text-right">
 
                         <!-- anexo del boton buscarsin visibilidad -->
-                        <button type="button" style="visibility:hidden" #ModalBuscarAsociados class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#ModalBuscarAsociados" [attr.disabled]="BloquearBuscar"><i class="icon-search4"></i></button>
-                        <input type="button" class="btn Gt-btn-morado" value="asd" (click)="GenerarReglamentoTarjeta()" />&nbsp; &nbsp;
-
+                        <button type="button" style="visibility:hidden" #ModalBuscarAsociados class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#ModalBuscarAsociados" [attr.disabled]="BloquearBuscar"><i class="icon-search4"></i></button>  
+                       
                         <input type="button" class="btn Gt-btn-morado" value="Limpiar" (click)="clearFromDisponibles()" />&nbsp; &nbsp;
 
                         <input type="button" *ngIf="!btnGuardar" class="btn Gt-btn-verde" value="Guardar" (click)="GuardarDisponible()" [disabled]="!enableBtnActualizar || isSaving" />
