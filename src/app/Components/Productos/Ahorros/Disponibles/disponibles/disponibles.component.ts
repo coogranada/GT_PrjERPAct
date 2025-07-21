@@ -4933,7 +4933,9 @@ export class DisponiblesComponent implements OnInit {
     this.BloquearNumeroTarjeta = false;
     this.BloquearDiaCortePlazo = false;
     this.BloquearPagare = false;
-
+      if (this.DisponibleForm.get('IdProducto')?.value == 110 || this.DisponibleForm.get('IdProducto')?.value == 109){
+        this.DisponibleForm.get('DescripcionOperacion')?.setValue('Consignar')
+      }      
     let aperturaCuentaLog: any = {
       IdOficinaAsociado: this.DisponibleForm.controls['NumeroOficinaAsociado'].value,
       OficinaAsociado: this.DisponibleForm.controls['NombreOficinaAsociado'].value,
