@@ -158,7 +158,7 @@ export class GeneracionArchivosComponent implements OnInit {
     this.vbleBtnactualizar = false;
     this.allSelected = false;
     this.vbleBtnactualizarMasivo = false
-
+    this.toggleAllCheckboxes();
   }
 
   borrarSiEspacios(controlName: string): void {
@@ -478,7 +478,20 @@ export class GeneracionArchivosComponent implements OnInit {
         }
 
         break;
-    }
+      case "7": //Ruta local salida
+        const rutalocalSalidaMasivo = document.getElementById('rutaLocalSalidaMasivo') as HTMLInputElement;
+
+        if (rutalocalSalidaMasivo.value.trim() == "" || rutalocalSalidaMasivo.value.trim() == undefined) {
+          this.toastr.warning('Advertencia', 'Debe ingresar una ruta válida.', ConfiguracionNotificacion.configRightTop);
+        } else {
+          this.parametrosArchivosF.forEach(parametro => {
+            parametro.RutaLocalSalida = rutalocalSalidaMasivo.value.trim();
+          });
+          this.actualizarMasivo1();
+        }
+
+        break;
+      }
   }
 
   actualizarMasivo1() {

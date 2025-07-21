@@ -9,7 +9,6 @@ export class ParametrosArchivosData {
     TipoDeArchivo: string;
     Separador: string;
     Frecuencia: string;
-    DiaGenera: string;
     HoraGenera: string;
     RutaLocalSalida: string;
     UltFechaGeneracion?: Date;
@@ -30,7 +29,6 @@ export class ParametrosArchivosData {
       TipoDeArchivo: string,
       Separador: string,
       Frecuencia: string,
-      DiaGenera: string,
       HoraGenera: string,
       RutaLocalSalida: string,
       UltFechaGeneracion: Date | undefined,
@@ -50,7 +48,6 @@ export class ParametrosArchivosData {
       this.TipoDeArchivo = TipoDeArchivo;
       this.Separador = Separador;
       this.Frecuencia = Frecuencia;
-      this.DiaGenera = DiaGenera;
       this.HoraGenera = HoraGenera;
       this.RutaLocalSalida = RutaLocalSalida;
       this.UltFechaGeneracion = UltFechaGeneracion;

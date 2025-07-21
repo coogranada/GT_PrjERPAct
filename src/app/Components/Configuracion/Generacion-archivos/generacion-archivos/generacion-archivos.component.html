@@ -432,6 +432,7 @@
                                 <option value="4">Día final</option>
                                 <option value="5">Estado</option>
                                 <option value="6">Separador</option>
+                                <option value="7">Ruta local salida</option>
                             </select>
                             <span class="help-block validationSpan"
                                 *ngIf="parametrosArchivosForm.controls['separador'].errors?.['required'] && (parametrosArchivosForm.controls['separador'].dirty || parametrosArchivosForm.controls['separador'].touched)">
@@ -497,6 +498,15 @@
                                 <option value="|">|</option>
                             </select>
                          </div>
+
+                         <div *ngIf="this.campoSelected === '7'" class="col-xs-12 col-md-12 col-lg-12">
+                            <br>
+                            <div class="col-xs-12 col-md-12 col-lg-12">
+                                <label><strong>Ruta local salida:</strong></label><span class="text-danger ObligatorioGrande">
+                                    *</span>
+                                <input type="text" class="form-control" id="rutaLocalSalidaMasivo"  />
+                            </div>
+                        </div>
 
                         <div *ngIf="this.campoSelected !== '0'" class="col-xs-12 col-md-12 col-lg-12">
                             <br>
