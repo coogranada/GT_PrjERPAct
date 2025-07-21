@@ -325,7 +325,7 @@
 
                         <input type="button" *ngIf="btnCambiarEstado" class="btn Gt-btn-verde" value="Cambiar Estado" (click)="EstadoSeleccionado()" [disabled]="!bloquearbtnCambioEstado" /> &nbsp; &nbsp;
 
-                        <input type="button" *ngIf="btnRegistroFirma" class="btn Gt-btn-verde" value="Registro firma" (click)="showPdf()" [disabled]="!BloquearBtnRegistroFirma" />
+                        <input type="button" *ngIf="btnActualizar && !btnCambiarEstado && btnGuardar" class="btn Gt-btn-verde" value="Registro firma" (click)="showPdf()" [disabled]="!BloquearBtnRegistroFirma" />
                     </div>
 
 

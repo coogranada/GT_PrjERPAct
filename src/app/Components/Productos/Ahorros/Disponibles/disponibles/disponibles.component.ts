@@ -2104,7 +2104,6 @@ export class DisponiblesComponent implements OnInit {
                   this.selectOperacionPermitada = true;
                   this.inputOperacionPermitada = false;
                   this.DescriTipoFirma = true;
-                  this.ModalImpresionRegistroFirmas.nativeElement.click();
                   this.operacionEscogida = '/Imprimir reglamento tarjeta';
                   this.BloquearAsociado = false;
                   this.BloquaerProducto = false;
@@ -2377,7 +2376,6 @@ export class DisponiblesComponent implements OnInit {
             this.itemsSendRegistro.TelefoinoAutorizado2 = null;
             this.itemsSendRegistro.CodicionesAutorizado2 = null;
           }
-          this.btnRegistroFirma = true;
         } else {
           this.notif.warning('Advertencia', 'La cuenta no existe.', ConfiguracionNotificacion.configRightTop);
           this.clearTitulares();
@@ -8397,6 +8395,7 @@ export class DisponiblesComponent implements OnInit {
     this.bloquearConsultaCuenta = false;
     this.Bloquear = false;
     this.BloquearOperacionPermitida = false;
+    this.BloquearBtnRegistroFirma = false;
     this.dataHistorial = [];
     this.dataObjetCd = [];
     this.dataObjetR = [];
