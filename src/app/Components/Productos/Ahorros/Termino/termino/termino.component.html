@@ -315,7 +315,9 @@
                 <input type="hidden" #ModalAsociados data-toggle="modal" data-target="#ModalAsociados" data-popup="tooltip" data-trigger="hover" data-placement="top">
                 <input type="hidden" #ModalCalcularAsesoria data-toggle="modal" data-target="#ModalCalcularAsesoria" data-popup="tooltip" data-trigger="hover" data-placement="top">                
                 <input type="hidden" #ModalAsesoresExterno data-toggle="modal" data-target="#ModalAsesoresExterno" data-popup="tooltip" data-trigger="hover" data-placement="top">
-                <input type="hidden" #ModalImpresion data-toggle="modal" data-target="#ModalImpresion" data-popup="tooltip" data-trigger="hover" data-placement="top">
+                <input type="hidden" #ModalImpresionTitulo data-toggle="modal" data-target="#ModalImpresionTitulo" data-popup="tooltip" data-trigger="hover" data-placement="top">
+                <input type="hidden" #ModalImpresionCapitalizacion data-toggle="modal" data-target="#ModalImpresionCapitalizacion" data-popup="tooltip" data-trigger="hover" data-placement="top">
+                <input type="hidden" #ModalImpresionCuentaDestino data-toggle="modal" data-target="#ModalImpresionCuentaDestino" data-popup="tooltip" data-trigger="hover" data-placement="top">
                 <input type="hidden" #ModalCambioEstado data-toggle="modal" data-target="#ModalCambioEstado" data-popup="tooltip" data-trigger="hover" data-placement="top">
                 <input type="hidden" #ModalBuscarPersonasCesionTitulo data-toggle="modal" data-target="#ModalBuscarPersonasCesionTitulo" data-popup="tooltip" data-trigger="hover" data-placement="top">
                 <input type="hidden" #ModalTitulares data-toggle="modal" data-target="#ModalTitulares" data-popup="tooltip"
@@ -1639,23 +1641,60 @@
  </div>
   <!--/ Fin Modal AsesoresExterno -->
 
- <!--/ formato  de impresion nuevo-->
- <div id="ModalImpresion" class="modal fade" data-backdrop="static">
+ <!--/ formato  de impresion título nuevo-->
+ <div id="ModalImpresionTitulo" class="modal fade" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content modal-lg">
             <div class="modal-header bg-morado">
-                <button type="button" class="close" (click)="CloseImpresion()" >&times;</button>
+                <button type="button" class="close" (click)="CloseImpresion(1)" >&times;</button>
                 <h6 class="modal-title">Formato</h6>
             </div>
             <div class="modal-body">
                 <div>
-                    <object id="ImpresionTermino"></object>
+                    <object id="ImpresionTerminoTitulo"></object>
                 </div>
             </div>
         </div>
     </div>
  </div>
- <!--/ Fin formato de impresion nuevo -->
+ <!--/ Fin formato de impresion título nuevo -->
+
+  <!--/ formato  de impresion capitalizacion nuevo-->
+  <div id="ModalImpresionCapitalizacion" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" (click)="CloseImpresion(2)" >&times;</button>
+                <h6 class="modal-title">Formato</h6>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <object id="ImpresionTerminoCapitalizacion"></object>
+                </div>
+            </div>
+        </div>
+    </div>
+ </div>
+ <!--/ Fin formato de impresion capitalizacion nuevo -->
+
+ 
+  <!--/ formato  de impresion cuenta destino nuevo-->
+  <div id="ModalImpresionCuentaDestino" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" (click)="CloseImpresion(3)" >&times;</button>
+                <h6 class="modal-title">Formato</h6>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <object id="ImpresionTerminoCuentaDestino"></object>
+                </div>
+            </div>
+        </div>
+    </div>
+ </div>
+ <!--/ Fin formato de impresion cuenta destino nuevo -->
 
 <!-- Modal Ayuda -->
 <div id="ModalAyuda" class="modal fade">

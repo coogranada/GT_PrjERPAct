@@ -42,7 +42,9 @@ export class TerminoComponent implements OnInit {
   @ViewChild('ModalCalcularAsesoria', { static: true }) private ModalCalcularAsesoria!: ElementRef;
   @ViewChild('ModalTitulares', { static: true }) private ModalTitulares!: ElementRef;
   @ViewChild('ModalAsesoresExterno', { static: true }) private ModalAsesoresExterno!: ElementRef;
-  @ViewChild('ModalImpresion', { static: true }) private ModalImpresion!: ElementRef;
+  @ViewChild('ModalImpresionTitulo', { static: true }) private ModalImpresionTitulo!: ElementRef;
+  @ViewChild('ModalImpresionCapitalizacion', { static: true }) private ModalImpresionCapitalizacion!: ElementRef;
+  @ViewChild('ModalImpresionCuentaDestino', { static: true }) private ModalImpresionCuentaDestino!: ElementRef;
   @ViewChild('Cerrar', { static: true }) private Cerrar!: ElementRef;
   @ViewChild('ModalCambioEstado', { static: true }) private ModalCambioEstado!: ElementRef;
   @ViewChild('tab1', { static: true }) private tab1!: ElementRef;
@@ -798,8 +800,8 @@ export class TerminoComponent implements OnInit {
           
           this.DescriTipoFirma = true;
           this.GenerarImpresion();
-          $("#ImpresionTermino").show();
-          this.ModalImpresion.nativeElement.click();
+          $("#ImpresionTerminoTitulo").show();
+          this.ModalImpresionTitulo.nativeElement.click();
           this.MostrasAlertaAsociado = false;
           this.MostrasAlertaProducto = false;
           this.selectEstado = true;
@@ -4196,8 +4198,8 @@ export class TerminoComponent implements OnInit {
   }
   ImpresionCuentaDestinoPDF() {
     this.CuentaDestinoPdf();
-    $("#ImpresionTermino").show();
-    this.ModalImpresion.nativeElement.click();
+    $("#ImpresionTerminoCuentaDestino").show();
+    this.ModalImpresionCuentaDestino.nativeElement.click();
   }
   CuentaDestinoPdf() {
     let payload: any = {
@@ -4212,32 +4214,29 @@ export class TerminoComponent implements OnInit {
       CiudadPdf: "",
       OficinaPdf: this.dataUser.Oficina
     }
+    let html: HTMLObjectElement = document.getElementById("ImpresionTerminoCuentaDestino") as HTMLObjectElement;
     this.linkPdf = "";
     let pdfinBase64 = null;
     let byteArray = null;
     let newBolb = null;
     let url = null;
-    document.querySelector("object")!.data = "";
-    document.querySelector("object")!.name = "";
-    document.querySelector("object")!.type = "";
+    html.data = "";
+    html.name = "";
+    html.type = "";
     this.loading = true;
     this.TerminoService.CuentaDestinoPDF(payload).subscribe(result => {
       pdfinBase64 = result.FileStream._buffer;
-      byteArray = new Uint8Array(
-        atob(pdfinBase64)
-          .split("")
-          .map((char) => char.charCodeAt(0))
-      );
+      byteArray = new Uint8Array(atob(pdfinBase64).split("").map((char) => char.charCodeAt(0)));
       newBolb = new Blob([byteArray], { type: "application/pdf" });
-      this.linkPdf = URL.createObjectURL(newBolb);
+      this.linkPdf = pdfinBase64;
       url = window.URL.createObjectURL(newBolb);
-      document.querySelector("object")!.data = url;
-      document.querySelector("object")!.name = "Impresion";
-      document.querySelector("object")!.type = "application/pdf";
-      this.loading = false
+      html.data = url;
+      html.name = "FORMATO MODIFICACIÓN PRODUCTO TÉRMINO CUENTA DESTINO";
+      html.type = "application/pdf";
+      this.loading = false;
     },
       error => {
-        this.loading = false
+        this.loading = false;
         const errorMessage = <any>error;
         console.log(errorMessage);
       });
@@ -6655,31 +6654,28 @@ export class TerminoComponent implements OnInit {
     return false;
   }
   GenerarImpresion() {
+    let html: HTMLObjectElement = document.getElementById("ImpresionTerminoTitulo") as HTMLObjectElement;
     this.linkPdf = "";
     let pdfinBase64 = null;
     let byteArray = null;
     let newBolb = null;
     let url = null;
+    html.data = "";
+    html.name = "";
+    html.type = "";
     this.loading = true;
-    document.querySelector("object")!.data = "";
-    document.querySelector("object")!.name = "";
-    document.querySelector("object")!.type = "";
     this.itemsSend.Ciudad = this.itemsSend.Ciudad == null ? "" : this.itemsSend.Ciudad;
     this.itemsSend.Telefono = this.itemsSend.Telefono == null ? "" : this.itemsSend.Telefono;
     this.TerminoService.GenerarImpresionTermino(this.itemsSend).subscribe(
       result => {
         pdfinBase64 = result.FileStream._buffer;
-        byteArray = new Uint8Array(
-          atob(pdfinBase64)
-            .split("")
-            .map((char) => char.charCodeAt(0))
-        );
+        byteArray = new Uint8Array(atob(pdfinBase64).split("").map((char) => char.charCodeAt(0)));
         newBolb = new Blob([byteArray], { type: "application/pdf" });
-        this.linkPdf = URL.createObjectURL(newBolb);
+        this.linkPdf = pdfinBase64;
         url = window.URL.createObjectURL(newBolb);
-        document.querySelector("object")!.data = url;
-        document.querySelector("object")!.name = "Impresion";
-        document.querySelector("object")!.type = "application/pdf";
+        html.data = url;
+        html.name = "IMPRESIÓN TÍTULO";
+        html.type = "application/pdf";
         this.loading = false;
       },
       error => {
@@ -6690,15 +6686,43 @@ export class TerminoComponent implements OnInit {
       }
     );
   }
-  CloseImpresion(){
+  CloseImpresion(i : number){
     console.log("close")
-    document.querySelector("object")!.data = "";
-    document.querySelector("object")!.name = "";
-    document.querySelector("object")!.type = "";
-    setTimeout(() => {
-      $("#ImpresionTermino").hide();
-      $('#ModalImpresion').modal('hide');  
-    },1000);
+    const ids = [
+    "ImpresionTerminoTitulo",
+    "ImpresionTerminoCapitalizacion",
+    "ImpresionTerminoCuentaDestino"
+    ];
+    ids.forEach(id => {
+      const obj = document.getElementById(id) as HTMLObjectElement;
+      if (obj) {
+        obj.data = "";
+        obj.name = "";
+        obj.type = "";
+      }
+    });
+
+    switch(i){
+      case 1:
+        setTimeout(() => {
+          $("#ImpresionTerminoTitulo").hide();
+          $('#ModalImpresionTitulo').modal('hide');  
+        },500);
+      break;
+      case 2:
+        setTimeout(() => {
+          $("#ImpresionTerminoCapitalizacion").hide();
+          $('#ModalImpresionCapitalizacion').modal('hide');  
+        },500);
+      break;
+      case 3:
+        setTimeout(() => {
+          $("#ImpresionTerminoCuentaDestino").hide();
+          $('#ModalImpresionCuentaDestino').modal('hide');  
+        },500);
+      break;
+    }
+
   }
   LimpiaOperacion() {
     this.TerminoOperacionForm.get('Codigo')?.reset();
@@ -7352,8 +7376,8 @@ export class TerminoComponent implements OnInit {
 
   ImpresionCapitalizacionPDF(ReimprimirBool: boolean = false) {
     this.CapitalizacionPdf(ReimprimirBool);
-    $("#ImpresionTermino").show();
-    this.ModalImpresion.nativeElement.click();
+    $("#ImpresionTerminoCapitalizacion").show();
+    this.ModalImpresionCapitalizacion.nativeElement.click();
   }
   CapitalizacionPdf(ReimprimirBool: boolean = false) {
     let payload: any = {
@@ -7371,26 +7395,25 @@ export class TerminoComponent implements OnInit {
       FechaApertura: this.TerminoForm.controls["FechaApertura"].value,
       ReimprimirBool: ReimprimirBool
     }
+    let html: HTMLObjectElement = document.getElementById("ImpresionTerminoCapitalizacion") as HTMLObjectElement;
     this.linkPdf = "";
     let pdfinBase64 = null;
     let byteArray = null;
     let newBolb = null;
     let url = null;
-    document.querySelector("object")!.data = "";
-    document.querySelector("object")!.name = "";
-    document.querySelector("object")!.type = "";
+    html.data = "";
+    html.name = "";
+    html.type = "";
     this.loading = true;
     this.TerminoService.GenerarPDFCapitalizacionTermino(payload).subscribe(result => {
       pdfinBase64 = result.FileStream._buffer;
-      byteArray = new Uint8Array(
-        atob(pdfinBase64).split("").map((char) => char.charCodeAt(0))
-      );
+      byteArray = new Uint8Array(atob(pdfinBase64).split("").map((char) => char.charCodeAt(0)));
       newBolb = new Blob([byteArray], { type: "application/pdf" });
-      this.linkPdf = URL.createObjectURL(newBolb);
+      this.linkPdf = pdfinBase64;
       url = window.URL.createObjectURL(newBolb);
-      document.querySelector("object")!.data = url;
-      document.querySelector("object")!.name = "Impresion";
-      document.querySelector("object")!.type = "application/pdf";
+      html.data = url;
+      html.name = "IMPRESIÓN FORMATO CAPITALIZACIÓN";
+      html.type = "application/pdf";
       this.loading = false;
 
       delete payload.CuentaDesembolso;
