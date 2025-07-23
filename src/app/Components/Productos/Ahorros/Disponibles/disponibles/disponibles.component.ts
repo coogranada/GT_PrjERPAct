@@ -3673,7 +3673,7 @@ export class DisponiblesComponent implements OnInit {
             } else {
               if (result[0].IdProducto === 101 || result[0].IdProducto === 112) {
                 const Edad = this.DisponibleForm.get('Edad')?.value;
-                if (+Edad <= 14) {
+                if (+Edad >= 14) {
                   const fechaHoy = new DatePipe('en-CO').transform(new Date(), 'yyyy/MM/dd');
                   const fechaVigencia = new DatePipe('en-CO').transform(this.ArrayCondiciones.FechaVigencia, 'yyyy/MM/dd');
                   if (fechaHoy != null && fechaVigencia != null && fechaHoy <= fechaVigencia) {
@@ -3694,7 +3694,7 @@ export class DisponiblesComponent implements OnInit {
                 } else {
                   if (this.DisponibleForm.get('Clase')?.value === 5) {
                     const fechaHoy = new DatePipe('en-CO').transform(new Date(), 'yyyy/MM/dd');
-                    const fechaVigencia = new DatePipe('en-CO').transform(this.ArrayCondiciones.FechaVigencia, 'yyyy/MM/dd');
+                    const fechaVigencia = new DatePipe('en-CO').transform(this.ArrayCondiciones.FechaVigencia, 'yyyy/MM/dd');                
                     if (fechaHoy != null && fechaVigencia != null && fechaHoy <= fechaVigencia) {
                       this.DisponibleForm.get('IdProducto')?.setValue(result[0].IdProducto);
                       this.DisponibleForm.get('DescripcionProducto')?.setValue(result[0].DescripcionProducto);
@@ -3711,7 +3711,7 @@ export class DisponiblesComponent implements OnInit {
                       this.BloquearMedioPago = false;
                     }
                   } else {
-                    this.notif.warning('Advertencia', 'El número de producto ingresado no es para menores.', ConfiguracionNotificacion.configRightTop);
+                    this.notif.warning('Advertencia', 'El número de producto ingresado no es para menores de 14.', ConfiguracionNotificacion.configRightTop);
                     this.DisponibleForm.get('IdProducto')?.reset();
                   }
                 }
@@ -3970,6 +3970,7 @@ export class DisponiblesComponent implements OnInit {
           this.DisponibleForm.get('Clase')?.setValue(result[0].IdRelacionTipo);
           this.DisponibleForm.get('Edad')?.setValue(result[0].Edad);
           this.DisponibleForm.get('IdTipoDocumento')?.setValue(result[0].IdTipoDocumento);
+          this.DisponibleForm.get('LngTercero')?.setValue(result[0].lngTercero);
         } else if (result.length > 1) {
           this.resultAsociados = result;
           this.ModalAsociados.nativeElement.click();
