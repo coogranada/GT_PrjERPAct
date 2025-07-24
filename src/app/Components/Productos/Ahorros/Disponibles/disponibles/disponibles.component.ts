@@ -2231,6 +2231,7 @@ export class DisponiblesComponent implements OnInit {
     itemsSendCertificado.Nombre = this.DisponibleForm.get('Nombre')?.value;
     itemsSendCertificado.Documento = this.DisponibleForm.get('NumeroDocumento')?.value;
     itemsSendCertificado.FechaApertura = this.DisponibleForm.get('FechaApertura')?.value;
+    itemsSendCertificado.Telefono = this.DisponibleForm.get('TelefonoDisponible')?.value;
     // validacion para enviar mensaje firma unica 
     if (autorizados.length === 0) {
       itemsSendCertificado.TipoFirma = 'Firma unica';
