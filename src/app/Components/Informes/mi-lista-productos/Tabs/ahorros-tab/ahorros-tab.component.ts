@@ -1838,9 +1838,9 @@ export class AhorrosTabComponent implements OnInit {
           //   this.saldosDisponibles.moraCuotaManejo = "0";
           // }
 
-        } else if (result.IdMedioPago == 10 || result.IdMedioPago == 50) {
+        } else if (result.IdMedioPago == 10 || result.IdMedioPago == 50 || result.IdMedioPago == 60 || result.IdMedioPago == 70) {
           this.LibretaBoolean = false;
-          if (result.IdMedioPago == 50 || result.IdMedioPago == '50') {
+          if (result.IdMedioPago == 50 || result.IdMedioPago == '50' || result.IdMedioPago == 70 || result.IdMedioPago == '70') {
             this.validaCupo = true;
           } else {
             this.validaCupo = false;
@@ -1979,6 +1979,10 @@ export class AhorrosTabComponent implements OnInit {
           this.DetalleDispoModel.MedioPago = "Sin Cupo";
         } else if (medioPago == 50) {
           this.DetalleDispoModel.MedioPago = "Con Cupo";
+        } else if (medioPago == 60) {
+          this.DetalleDispoModel.MedioPago = "Sin Tarjeta Sin Cupo";
+        } else if (medioPago == 70) {
+          this.DetalleDispoModel.MedioPago = "Sin Tarjeta Con Cupo";
         } else {
           this.DetalleDispoModel.MedioPago = "";
         }

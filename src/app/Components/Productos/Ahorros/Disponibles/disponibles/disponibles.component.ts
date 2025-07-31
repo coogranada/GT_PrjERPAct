@@ -8862,4 +8862,29 @@ export class DisponiblesComponent implements OnInit {
     this.loading = false;
   }
 
+  mostrarBotonPDF(historial: any): boolean {
+    if (!historial || !this.DisponibleForm) return false;
+
+    const medio = this.DisponibleForm.get('IdMedioPago')?.value;
+  
+    const esHoy = this.esMismoDia(historial.FechaHistorial);
+  
+    return (
+      (historial.Operacion === 10 || historial.Operacion === 40) &&
+      esHoy && medio !== 0 && medio !== '0'
+    );
+  }
+
+esMismoDia(fechaStr: string): boolean {
+  const fechaHistorial = new Date(fechaStr);
+  const hoy = new Date();
+
+  return (
+    fechaHistorial.getFullYear() === hoy.getFullYear() &&
+    fechaHistorial.getMonth() === hoy.getMonth() &&
+    fechaHistorial.getDate() === hoy.getDate()
+  );
+}
+
+  
 }

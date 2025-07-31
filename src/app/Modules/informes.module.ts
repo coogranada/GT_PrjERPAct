@@ -37,6 +37,7 @@ import { LogLogGeneralesComponent } from '../Components/Informes/log-auditoria/l
 import { LogGestionClientesComponent } from '../Components/Informes/log-auditoria/log-gestion-clientes/log-gestion-clientes.component';
 import { LogMisProductosComponent } from '../Components/Informes/log-auditoria/log-mis-productos/log-mis-productos.component';
 import { LogProductosVirtualesComponent } from '../Components/Informes/log-auditoria/log-productos-virtuales/log-productos-virtuales.component';
+import { InformeAhorrosComponent } from '../Components/Informes/Informe-ahorros/informe-ahorros/informe-ahorros.component';
 
 
 @NgModule({
@@ -62,6 +63,7 @@ import { LogProductosVirtualesComponent } from '../Components/Informes/log-audit
     SegurosTabComponent,
     UtilidadesTabComponent,
     InformeClientesComponent,
+    InformeAhorrosComponent,
     InformeClientesNaturalesComponent,
     InformeJuridicosComponent,
     LogAuditoriaComponent,

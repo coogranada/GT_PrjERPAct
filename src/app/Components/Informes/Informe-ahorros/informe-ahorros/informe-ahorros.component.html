@@ -1,0 +1,224 @@
+<div class="panel panel-white">
+    <div class="panel-heading doNotPrint">
+        <h6 class="panel-title">Informes {{OperacionSelect}}</h6>
+        <div class="heading-elements">
+            <ul class="icons-list">
+                <li>
+                    <a data-toggle="modal" data-target="#ModalAyuda">
+                        <i class="icon-question6 " title="Ayuda" data-popup="tooltip" data-trigger="hover"
+                            data-placement="top"></i>
+                    </a>
+                </li>
+                <li>
+                    <a data-action="collapse"></a>
+
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="panel-body doNotPrint">
+        <form method="get">
+            <div class="col-xs-12 col-md-12 col-lg-12" id="Operacion">
+                <div class="row">
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="textNegrilla">Operación:</label>
+                            <span class="grande"> *</span>
+                            <select class="form-control" (change)="opcionSelected($event)">
+                                <option value="0">--Seleccione--</option>
+                                <option *ngFor="let item of Operaciones" [value]="item.ERP_tblOperacion.IdOperacion">
+                                    {{item.ERP_tblOperacion.Descripcion}}
+                                </option>
+                            </select>
+                            <span class="help-block validationSpan" *ngIf="!validaOperacion ">
+                                La operación es obligatoria.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div *ngIf="selectedId == 119">
+    <div class="panel panel-white">
+        <div class="panel-body" id="contenidoDisponibles">
+            <div class="row">
+                <div class="col-xs-12 col-md-3 col-lg-3">
+
+                    <div class="container">
+                        <ul class="nav nav-tabs">
+                            <li [class.active]="selectedTab === 'predeterminados'"
+                                (click)="selectTab('predeterminados')">
+                                <a>Informes predeterminados</a>
+                            </li>
+                            <li [class.active]="selectedTab === 'dinamicos'" (click)="selectTab('dinamicos')">
+                                <a>Informes dinámicos</a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div *ngIf="selectedTab === 'predeterminados'">
+                                <div>
+                                    <div class="row">
+                                        <div class="col-md-8 col-lg-8 col-sm-8  panel-default" id="PanelDatos">
+                                            <div class="panel-body ">
+
+                                                <div class="row" id="SelectInforme">
+                                                    <div class="col-md-4 col-lg-4 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label class="textNegrilla">Informe:</label>
+                                                            <span class="grande"> *</span>
+                                                            <select class="form-control form-control-lg" id="select"
+                                                                name="select" (change)="informeSelected($event)">
+                                                                <option value="0">--Seleccione--</option>
+                                                                <option *ngFor="let item of configuracionInformesFiltro"
+                                                                    [value]="item.IdConfiguracion">
+                                                                    {{item.NombreInforme}}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1 col-lg-1 col-sm-1"></div>
+                                                    <div class="col-md-6 col-lg-6 col-sm-6">
+                                                        <form [formGroup]="formulario">
+                                                            <div class="form-group"
+                                                                *ngFor="let param of parametrosConfiguracionInf">
+                                                                <label>{{ param.AliasCampo }}:</label>
+                                                                <span *ngIf="param.Requerido === true" class="grande">
+                                                                    *</span>
+                                                                <input *ngIf="param.TipoDato === 'varchar'" type="text"
+                                                                    class="form-control"
+                                                                    [attr.maxLength]="param.TamanoCampo"
+                                                                    [formControlName]="param.NombreParametro" />
+                                                                <input *ngIf="param.TipoDato === 'number'" type="number"
+                                                                    class="form-control form-control-lg"
+                                                                    [attr.maxLength]="param.TamanoCampo"
+                                                                    [formControlName]="param.NombreParametro" />
+                                                                <input *ngIf="param.TipoDato === 'datetime'" type="date"
+                                                                    class="form-control"
+                                                                    [formControlName]="param.NombreParametro" />
+                                                                <select *ngIf="param.TipoDato === 'selectn' && param.IdTipo === 999"
+                                                                    class="form-control" 
+                                                                    [formControlName]="param.NombreParametro">
+                                                                    <option value="">--Seleccione--</option>
+                                                                    <option *ngFor="let ListGenOf of ListGenericoFiltroOficina"
+                                                                        [value]="ListGenOf.IdClase">
+                                                                        {{ListGenOf.Descripcion}}</option>
+                                                                </select>
+                                                                <select *ngIf="param.TipoDato === 'selectn' && param.IdTipo !== 999"
+                                                                    class="form-control"
+                                                                    [formControlName]="param.NombreParametro">
+                                                                    <option value="">--Seleccione--</option>
+                                                                    <option *ngFor="let ListGen of ListGenericoFiltro"
+                                                                        [value]="ListGen.IdClase">
+                                                                        {{ListGen.Descripcion}}</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="text-center">
+                                                                <button type="submit" [disabled]="formulario.invalid"
+                                                                    class="btn Gt-btn-verde"
+                                                                    (click)="ejecutarSP()">Generar Informe</button>
+                                                            </div>
+                                                        </form>
+                                                        <br>
+                                                    </div>
+                                                    <div class="col-md-1 col-lg-1 col-sm-1"></div>
+                                                    <div class="col-md-2 col-lg-2 col-sm-2 text-right">
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="row" id="SelectFiltro">
+                                                    <div class="col-md-4 col-lg-4 col-sm-4">
+
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="selectedTab === 'dinamicos'">
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ngx-loading [show]="loading"
+        [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+    </ngx-loading>
+
+    <input type="hidden" #ModalProgressBar data-toggle="modal" data-target="#ModalProgressBar" data-popup="tooltip"
+        data-trigger="hover" data-placement="top">
+
+    <div class="modal fade" id="ModalProgressBar" tabindex="-1" role="dialog" aria-labelledby="ModalProgressBarTitle"
+        data-backdrop="static">
+        <div class="modal-dialog modal-lg" style="margin-top: 10%;">
+            <br>
+            <div class="panel panel-body">
+                <div class="text-center">
+                    <h5 class="no-margin text-semibold">Generando Informe . . . </h5>
+                    <br>
+                </div>
+
+                <div class="progress progress-rounded" style="height: 25px;">
+                    <div class="progress-bar " style="background-color: #852662;">
+                        <span style="font-size: 18px; margin-top: 5px;">% Completado </span>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" #ShowModalList data-toggle="modal" data-target="#ShowModalList" data-popup="tooltip"
+    data-trigger="hover" data-placement="top">
+<div id="ShowModalList" class="modal fade" data-backdrop="static">
+    <div style="width: 88%; margin: 30px auto; height: 90%;">
+        <div class="modal-content modal-xl">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Informe</h6>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive scrollTabla">
+                    <table class="table table-hover table-row">
+                        <thead>
+                            <tr>
+                                <th *ngFor="let col of encabezados" (click)="ordenarPor(col)" style="cursor: pointer">
+                                    {{ col }}
+                                    <span *ngIf="col === columnaOrden">
+                                        {{ ordenAscendente ? '↑' : '↓' }}
+                                    </span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let fila of resultadoInforme">
+                                <td *ngFor="let col of encabezados">
+                                    {{ formatearValor(fila[col]) }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn Gt-btn-verde" (click)="exportarExcel2()" id="xlsx">
+                    <i class="icon-download4"></i>&nbsp; EXCEL
+                </button>
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

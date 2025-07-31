@@ -10,6 +10,7 @@ import { IndicadoresGerencialesComponent } from '../Components/Informes/estadist
 import { MiListaProductosComponent } from '../Components/Informes/mi-lista-productos/mi-lista-productos.component';
 import { InformeClientesComponent } from '../Components/Informes/informe-clientes/informe-clientes.component';
 import { LogAuditoriaComponent } from '../Components/Informes/log-auditoria/log-auditoria.component';
+import { InformeAhorrosComponent } from '../Components/Informes/Informe-ahorros/informe-ahorros/informe-ahorros.component';
 
 const routes: Routes = [
   { path: "DebitosAutomaticos", component: DebitosAutomaticosComponent },
@@ -22,6 +23,7 @@ const routes: Routes = [
   { path: "ListaProductos", component: MiListaProductosComponent },
   { path: "InformeClientes", component: InformeClientesComponent },
   { path: "LogAuditoria", component: LogAuditoriaComponent },
+  { path: "InformeAhorros", component: InformeAhorrosComponent },
 ];
 
 @NgModule({

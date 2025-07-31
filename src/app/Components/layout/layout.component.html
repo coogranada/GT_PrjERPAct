@@ -600,6 +600,11 @@
                                                 (click)="setModuloLocalStorage(GestionOperacionesModel.IdModuloPermiso)">Informe
                                                 clientes</a>
                                         </li>
+                                        <li id="informeahorros" *ngIf="InformeAhorros">
+                                            <a [routerLink]="['/Informes/InformeAhorros']"
+                                                (click)="setModuloLocalStorage(GestionOperacionesModel.IdModuloPermiso)">Informe
+                                                ahorros</a>
+                                        </li>
                                         <li id="logauditoria" *ngIf="LogAuditoria">
                                             <a [routerLink]="['/Informes/LogAuditoria']"
                                                 (click)="setModuloLocalStorage(GestionOperacionesModel.IdModuloPermiso)">Log

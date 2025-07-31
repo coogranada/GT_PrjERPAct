@@ -1186,7 +1186,7 @@ export class AsesoriaTerminoComponent implements OnInit {
       console.log(x);
       this.inputFrecuencia = false;
       this.selectFrecuencia = true;
-      this.notif.success('Exitoso', 'La asesoria se guardo correctamente.', ConfiguracionNotificacion.configRightTop);
+      this.notif.success('Exitoso', 'La asesoría se guardó correctamente.', ConfiguracionNotificacion.configRightTop);
       if (x != null && x.NumeroAsesoria != null && x.NumeroAsesoria != 0) {
         this.asesoriaterminoForm.controls['NumeroAsesoria'].setValue(x.NumeroAsesoria);
         await this.BotonBuscarAsesoriaTermino();    
@@ -1349,7 +1349,7 @@ export class AsesoriaTerminoComponent implements OnInit {
       || !this.asesoriaterminoForm.get('IdProducto')?.value
       || !this.asesoriaterminoForm.get('ValorTotal')?.value
       || !this.asesoriaterminoForm.get('Plazo')?.value) {
-      this.notif.warning('Advertencia', 'Datos incompletos para calcular asesoria.', ConfiguracionNotificacion.configRightTop);
+      this.notif.warning('Advertencia', 'Datos incompletos para calcular asesoría.', ConfiguracionNotificacion.configRightTop);
       return;
     }
 
@@ -1358,7 +1358,7 @@ export class AsesoriaTerminoComponent implements OnInit {
       && this.asesoriaterminoForm.get('ValorTotal')?.value == this.valorTituloAnterior
       && this.asesoriaterminoForm.get('DescripcionFrecuenciaPago')?.value == this.frecuenciaPagoAnterior
       && this.getCurrentPuntosAdicionales() == this.puntosAdicionalesAnterior) {
-        this.notif.warning('Advertencia', 'Debe cambiar datos para calcular asesoria.', ConfiguracionNotificacion.configRightTop);
+        this.notif.warning('Advertencia', 'Debe cambiar datos para calcular asesoría.', ConfiguracionNotificacion.configRightTop);
         return;
       }
 
@@ -1383,6 +1383,7 @@ export class AsesoriaTerminoComponent implements OnInit {
               this.disableBtnGuardar = true;
               this.BloquearbtnActalizar = true;
             }
+            this.VolverAbajo();
           },
           error => {
             const errorMessage = <any>error;
@@ -1390,7 +1391,7 @@ export class AsesoriaTerminoComponent implements OnInit {
           });
 
       } else { 
-        this.notif.warning('Advertencia', 'Datos incompletos para calcular asesoria.', ConfiguracionNotificacion.configRightTop);
+        this.notif.warning('Advertencia', 'Datos incompletos para calcular asesoría.', ConfiguracionNotificacion.configRightTop);
       }
 
   }

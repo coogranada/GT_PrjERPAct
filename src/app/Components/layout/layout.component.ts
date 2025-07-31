@@ -149,6 +149,7 @@ export class LayoutComponent implements OnInit,OnDestroy {
   public IndicadoresGerenciales = false;
   public ListaProductos = false;
   public InformeClientes = false;
+  public InformeAhorros = false;
   public LogAuditoria = false;
   /* Fin informes */
 
@@ -265,6 +266,7 @@ export class LayoutComponent implements OnInit,OnDestroy {
   public IndicadoresGerencialesModel: any;
   public ListaMisProductosModel: any;
   public InformeClientesModel: any;
+  public InformeAhorrosModel: any;
   public LogAuditoriaModel: any;
   /* Fin informes */
 
@@ -871,6 +873,9 @@ export class LayoutComponent implements OnInit,OnDestroy {
             } else if (element.IdModulo === 76) {
               this.InformeClientes = true;
               this.InformeClientesModel = element;
+            } else if (element.IdModulo === 82) {
+              this.InformeAhorros = true;
+              this.InformeAhorrosModel = element;
             } else if (element.IdModulo === 79) {
               this.LogAuditoria = true;
               this.LogAuditoriaModel = element;

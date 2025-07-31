@@ -1,4 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+  --color-verde-institucional: rgb(38, 144, 81);
+}
 /* Estilo para notificaciones de éxito */
 .success {
     background-color: #4caf50;

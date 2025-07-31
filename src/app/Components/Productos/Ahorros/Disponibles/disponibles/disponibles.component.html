@@ -1321,6 +1321,8 @@
                                                                 <i class="icon-file-text3"></i></button>
                                                             <button type="button" *ngIf="historial.Operacion == 75 && historial.FormatDate == formatDateNow" class="btn Gt-btn-verde btn-icon legitRipple" (click)="NovedadesAhorrosPDF('Activación Cuenta')">
                                                                 <i class="icon-file-text3"></i></button>
+                                                            <button type="button" *ngIf="mostrarBotonPDF(historial)" class="btn Gt-btn-verde btn-icon legitRipple" (click)="NovedadesAhorrosPDF('Apertura cuenta')">
+                                                                    <i class="icon-file-text3"></i></button>
                                                         </td>
                                                         <td class="column_descripcion columnProductoX3_disponibles : historial.NombreCompleto.length = 40">{{historial.TiposObservaciones}}</td>
                                                         <td class="column_descripcion columnDetalles_disponible : historial.NombreCompleto.length = 40">{{historial.Detalles}}</td>

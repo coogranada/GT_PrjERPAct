@@ -393,78 +393,102 @@ export class GMFDisponibleComponent implements OnInit {
   }
 
   MarcarGMF() {
-    this.loading = true;
-    const datosTipoDocumento = this.GMFForm.get('IdTipoDocumento')?.value;
-    let _nit;
-    if (datosTipoDocumento.CodListProveedor === '2') {
-      _nit = this.GMFForm.get('strNumeroDocumento')?.value;
-      _nit = _nit.substr(0, (_nit.length - 1));
-      this.GMFForm.get('strNit')?.setValue(_nit);
-    }
-    this.GMFForm.get('strValor')?.setValue(datosTipoDocumento.CodListProveedor);
-    this.gmfDisponibleService.MarcacionGMF(JSON.stringify(this.GMFForm.value)).subscribe(
-      result => {
-        this.dataConsultaGMF = result;
-        if (result.strCodigoExencion === '04' || result.strCodigoExencion === '07') {
-          let dataUserG = localStorage.getItem('DataUserGMF');
-          this.dataUserGMF = JSON.parse(dataUserG == null ? "" : dataUserG);
-          this.dataGMFReport = result;
-          this.notificacion.onSuccess('Exitoso', result.strMensajeExencion);
-          this.ReportModal.nativeElement.click();
-        } else {
-          this.InfoCuenta.nativeElement.click();
-          this.notificacion.onDanger('Advertencia',
-            'No se puedo marcar la cuenta. Por favor reportar por GLPI al área de operaciones.');
-        }
-        this.marcarDesmarcar = false;
-        this.panelDatos = false;
-        this.disableBusquedaForm = false;
-        this.limpiarForm(); this.loading = false;
-      },
-      error => {
-        const errorJson = JSON.parse(error._body);
-        this.notificacion.onDanger('Error', errorJson);
-        console.log(error); this.loading = false;
+    try {
+      this.loading = true;
+      const datosTipoDocumento = this.GMFForm.get('IdTipoDocumento')?.value;
+      let _nit;
+      if (datosTipoDocumento.CodListProveedor === '2') {
+        _nit = this.GMFForm.get('strNumeroDocumento')?.value;
+        _nit = _nit.substr(0, (_nit.length - 1));
+        this.GMFForm.get('strNit')?.setValue(_nit);
       }
-    );
+      this.GMFForm.get('strValor')?.setValue(datosTipoDocumento.CodListProveedor);
+      this.gmfDisponibleService.MarcacionGMF(JSON.stringify(this.GMFForm.value)).subscribe(
+        result => {
+          this.dataConsultaGMF = result;
+          if (result.strCodigoExencion === '04' || result.strCodigoExencion === '07') {
+            let dataUserG = localStorage.getItem('DataUserGMF');
+            this.dataUserGMF = JSON.parse(dataUserG == null ? "" : dataUserG);
+            this.dataGMFReport = result;
+            this.notificacion.onSuccess('Exitoso', result.strMensajeExencion);
+            this.ReportModal.nativeElement.click();
+          } else {
+            this.InfoCuenta.nativeElement.click();
+            this.notificacion.onDanger('Advertencia',
+              'No se pudo marcar la cuenta. Por favor reportar por GLPI al área de operaciones.');
+          }
+          this.marcarDesmarcar = false;
+          this.panelDatos = false;
+          this.disableBusquedaForm = false;
+          this.limpiarForm(); this.loading = false;
+        },
+        error => {
+          const errorJson = JSON.parse(error._body);
+          this.notificacion.onDanger('Error', errorJson);
+          console.log(error); this.loading = false;
+        }
+      );
+    } catch (error) {
+      console.log(error)
+      this.notificacion.onDanger('Advertencia',
+        'No se pudo marcar la cuenta. Por favor reportar por GLPI al área de operaciones.');
+      this.marcarDesmarcar = false;
+      this.panelDatos = false;
+      this.disableBusquedaForm = false;
+      this.limpiarForm();
+    } finally {
+      this.loading = false;
+    }
   }
 
   DesmacarGMF() {
-    this.loading = true;
-    const datosTipoDocumento = this.GMFForm.get('IdTipoDocumento')?.value;
-    let _nit;
-    if (datosTipoDocumento.CodListProveedor === '2') {
-      _nit = this.GMFForm.get('strNumeroDocumento')?.value;
-      _nit = _nit.substr(0, (_nit.length - 1));
-      this.GMFForm.get('strNit')?.setValue(_nit);
-    }
-    this.GMFForm.get('strValor')?.setValue(datosTipoDocumento.CodListProveedor);
-    this.gmfDisponibleService.DesmarcacionGMF(JSON.stringify(this.GMFForm.value)).subscribe(
-      result => {
-        this.dataConsultaGMF = result;
-        if (result.strCodigoExencion === '04' || result.strCodigoExencion === '07') {
-          let dataUserG = localStorage.getItem('DataUserGMF');
-          this.dataUserGMF = JSON.parse(dataUserG == null ? "" : dataUserG);
-          this.dataGMFReport = result;
-          this.notificacion.onSuccess('Exitoso', result.strMensajeExencion);
-          this.ReportModal.nativeElement.click();
-        } else if (result.strCodigoExencion === '02') {
-          this.notificacion.onDanger('Advertencia','El asociado no tiene ninguna cuenta exonerada en CIFIN. Por favor reportar por GLPI al área de operaciones.');
-        } else {
-          this.InfoCuenta.nativeElement.click();
-          this.notificacion.onDanger('Advertencia', 'No se puedo desmarcar la cuenta. Por favor reportar por GLPI al área de operaciones.');
-        }
-        this.marcarDesmarcar = false;
-        this.panelDatos = false;
-        this.disableBusquedaForm = false;
-        this.limpiarForm(); this.loading = false;
-      },
-      error => {
-        const errorJson = JSON.parse(error._body);
-        this.notificacion.onDanger('Error', errorJson);
-        console.log(error); this.loading = false;
+    try {
+      this.loading = true;
+      const datosTipoDocumento = this.GMFForm.get('IdTipoDocumento')?.value;
+      let _nit;
+      if (datosTipoDocumento.CodListProveedor === '2') {
+        _nit = this.GMFForm.get('strNumeroDocumento')?.value;
+        _nit = _nit.substr(0, (_nit.length - 1));
+        this.GMFForm.get('strNit')?.setValue(_nit);
       }
-    );
+      this.GMFForm.get('strValor')?.setValue(datosTipoDocumento.CodListProveedor);
+      this.gmfDisponibleService.DesmarcacionGMF(JSON.stringify(this.GMFForm.value)).subscribe(
+        result => {
+          this.dataConsultaGMF = result;
+          if (result.strCodigoExencion === '04' || result.strCodigoExencion === '07') {
+            let dataUserG = localStorage.getItem('DataUserGMF');
+            this.dataUserGMF = JSON.parse(dataUserG == null ? "" : dataUserG);
+            this.dataGMFReport = result;
+            this.notificacion.onSuccess('Exitoso', result.strMensajeExencion);
+            this.ReportModal.nativeElement.click();
+          } else if (result.strCodigoExencion === '02') {
+            this.notificacion.onDanger('Advertencia', 'El asociado no tiene ninguna cuenta exonerada en CIFIN. Por favor reportar por GLPI al área de operaciones.');
+          } else {
+            this.InfoCuenta.nativeElement.click();
+            this.notificacion.onDanger('Advertencia', 'No se pudo desmarcar la cuenta. Por favor reportar por GLPI al área de operaciones.');
+          }
+          this.marcarDesmarcar = false;
+          this.panelDatos = false;
+          this.disableBusquedaForm = false;
+          this.limpiarForm(); this.loading = false;
+        },
+        error => {
+          const errorJson = JSON.parse(error._body);
+          this.notificacion.onDanger('Error', errorJson);
+          console.log(error); this.loading = false;
+        }
+      );
+    } catch (error) {
+      console.log(error)
+      this.notificacion.onDanger('Advertencia', 
+        'No se pudo desmarcar la cuenta. Por favor reportar por GLPI al área de operaciones.');
+      this.marcarDesmarcar = false;
+      this.panelDatos = false;
+      this.disableBusquedaForm = false;
+      this.limpiarForm();
+    } finally {
+      this.loading = false;
+    }
   }
 
   MapearDatos(data : any) {

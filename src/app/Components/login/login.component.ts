@@ -190,7 +190,26 @@ export class LoginComponent implements OnInit {
                 }
               });
 
-            } else {
+            } else if(this.dataUser.admEstado === 55){
+                Swal.fire({
+                  title: 'Advertencia',
+                  text: '',
+                  html: 'Ingreso no permitido. ',
+                  icon: 'warning',
+                  showCancelButton: false,
+                  confirmButtonText: '<i class="glyphicon glyphicon-log-out"></i>  Cerrar',
+                  cancelButtonText: 'No',
+                  confirmButtonColor: 'rgb(13,165,80)',
+                  cancelButtonColor: 'rgb(160,0,87)',
+                  allowOutsideClick: false,
+                  allowEscapeKey: false
+                }).then((results : any) => {
+                  if (results.value) {
+                    localStorage.removeItem('Data');
+                    this.dataUser = null;
+                  }
+                });
+            }else {
               this.loading = false;
               localStorage.setItem('userName', window.btoa(JSON.stringify(this.dataUser.Usuario)));
               this.isLoginError = false;
