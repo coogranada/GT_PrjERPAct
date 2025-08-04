@@ -37,6 +37,10 @@ export class AsesoriaTerminoService {
         this.url = `${this.environment.Url}/BuscarXNombreTermino?strNombre=${Nombre}`;
         return this._http.get<any>(this.url);
     } 
+    BuscarNombreXNombre_(Nombre: string): Observable<any> {
+        this.url = `${this.environment.Url}/BuscarXNombreT?strNombre=${Nombre}`;
+        return this._http.get<any>(this.url);
+    } 
     ObtenerRelacion(): Observable<any> {
         this.url = `${this.environment.Url}/ObtenerRelacionTerminoAsesoria`;
         return this._http.get<any>(this.url);

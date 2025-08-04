@@ -1460,7 +1460,7 @@ export class AsesoriaTerminoComponent implements OnInit {
       }
     );
   }
-  BuscarAsociadoXNombre() {
+  BuscarAsociadoXNombre1() {
     if (!this.asesoriaterminoForm.get('NumeroDocumento')?.value) {
       this.TerminoService.BuscarAsesor(this.asesoriaterminoForm.get('IdAsesor')?.value, '*').subscribe(
         result => {          
@@ -1471,6 +1471,36 @@ export class AsesoriaTerminoComponent implements OnInit {
           }
         });
     }    
+  }
+
+  BuscarAsociadoXNombre() {
+    let Nombre = '*';
+      if (this.asesoriaterminoForm.get('Nombre')?.value !== null
+        && this.asesoriaterminoForm.get('Nombre')?.value !== undefined
+        && this.asesoriaterminoForm.get('Nombre')?.value !== '') {
+          Nombre = this.asesoriaterminoForm.get('Nombre')?.value;
+          this.loading = true;
+          this.AsesoriaTerminoServices.BuscarNombreXNombre_(Nombre).subscribe(
+            result => {
+              this.loading = false;
+              if (result.length === 0) {
+                this.notif.warning('Advertencia', 'No se encontró el nombre.');
+              } else if (result.length === 1) {
+                this.MapearDatosAsesor(result);
+                this.Asociado();
+              } else if (result.length > 1) {
+                this.resultNombre = result;
+                this.ModalNombre.nativeElement.click();
+                //this.BloquaerProducto = null;
+              }
+            },
+            error => {
+              this.loading = false;
+              const errorMessage = <any>error;
+              console.log(errorMessage);
+            }
+          );
+      }
   }
 
   onChangeTipoDocumento() {

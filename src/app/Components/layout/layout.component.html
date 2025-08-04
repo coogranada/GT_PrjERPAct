@@ -233,6 +233,12 @@
                                                         Gestión email
                                                     </a>
                                                 </li>
+                                                <li id="ConfiguracionInformes" *ngIf="ConfiguracionInformes">
+                                                    <a [routerLink]="['/Configuracion/Maestros/ConfiguracionInformes']"
+                                                        (click)="setModuloLocalStorage(ConfiguracionInformesModel.IdModuloPermiso)">
+                                                        Configuración Informes
+                                                    </a>
+                                                </li>
                                                 <li id="llaves" *ngIf="Llaves">
                                                     <a [routerLink]="['/Configuracion/Maestros/llaves']"
                                                         (click)="setModuloLocalStorage(LlavesModel.IdModuloPermiso)">

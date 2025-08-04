@@ -1871,37 +1871,40 @@ export class AhorrosTabComponent implements OnInit {
 
             this.Canales = result.Canales;
 
-            this.Cupo.CupoAprobado = result.Cupo.CupoAprobado;
-            this.Cupo.CupoUtilizado = result.Cupo.CupoUtilizado;
-            this.Cupo.Fecha = result.Cupo.Fecha;
-            this.Cupo.IdCartera = result.Cupo.IdCartera;
-            this.Cupo.IdLinea = result.Cupo.IdLinea;
-            this.Cupo.NombreLinea = result.Cupo.NombreLinea;
-            this.Cupo.NumeroPagare = result.Cupo.NumeroPagare;
-            this.Cupo.Radicado = result.Cupo.Radicado;
-            this.Cupo.intCodigo = result.Cupo.intCodigo;
-            this.Cupo.PagoMinimo = result.PagoMinimo;
-            this.Cupo.PagoTotal = result.PagoTotal;
-            if (
-              result.Cupo.IdOficina != null &&
-              result.Cupo.IdOficina != "" &&
-              result.Cupo.IdProducto != null &&
-              result.Cupo.IdProducto != "" &&
-              result.Cupo.IdConsecutivo != null &&
-              result.Cupo.IdConsecutivo != "" &&
-              result.Cupo.IdDigito != null &&
-              result.Cupo.IdDigito != ""
-            ) {
-              this.GenerarCuentaCupo(
-                result.Cupo.IdOficina,
-                result.Cupo.IdProducto,
-                result.Cupo.IdConsecutivo,
-                result.Cupo.IdDigito
-              );
+            if(result?.Cupo){
+              this.Cupo.CupoAprobado = result?.Cupo?.CupoAprobado ?? 0;
+              this.Cupo.CupoUtilizado = result.Cupo.CupoUtilizado;
+              this.Cupo.Fecha = result.Cupo.Fecha;
+              this.Cupo.IdCartera = result.Cupo.IdCartera;
+              this.Cupo.IdLinea = result.Cupo.IdLinea;
+              this.Cupo.NombreLinea = result.Cupo.NombreLinea;
+              this.Cupo.NumeroPagare = result.Cupo.NumeroPagare;
+              this.Cupo.Radicado = result.Cupo.Radicado;
+              this.Cupo.intCodigo = result.Cupo.intCodigo;
+              this.Cupo.PagoMinimo = result.PagoMinimo;
+              this.Cupo.PagoTotal = result.PagoTotal;
+              if (
+                result.Cupo.IdOficina != null &&
+                result.Cupo.IdOficina != "" &&
+                result.Cupo.IdProducto != null &&
+                result.Cupo.IdProducto != "" &&
+                result.Cupo.IdConsecutivo != null &&
+                result.Cupo.IdConsecutivo != "" &&
+                result.Cupo.IdDigito != null &&
+                result.Cupo.IdDigito != ""
+              ) {
+                this.GenerarCuentaCupo(
+                  result.Cupo.IdOficina,
+                  result.Cupo.IdProducto,
+                  result.Cupo.IdConsecutivo,
+                  result.Cupo.IdDigito
+                );
+              }
+  
+              this.lstCodeudores = result.Codeudor;
+              this.lstGarantias = result.Real;
+  
             }
-
-            this.lstCodeudores = result.Codeudor;
-            this.lstGarantias = result.Real;
 
             if (
               this.dataObjet.Tarjetas.CobroTarjeta == null ||
@@ -1972,7 +1975,7 @@ export class AhorrosTabComponent implements OnInit {
           this.DetalleDispoModel.FormaPago = "";
         }
 
-        var medioPago = result.IdMedioPago;
+        var medioPago = +result.IdMedioPago;
         if (medioPago == 0) {
           this.DetalleDispoModel.MedioPago = "Libretas";
         } else if (medioPago == 10) {

@@ -26,12 +26,13 @@ import { ConsecutivoTituloComponent } from '../Components/Configuracion/Maestros
 import { InformeConsecutivoTituloComponent } from '../Components/Configuracion/Informes/Maestros-ahorros/Consecutivo-titulo/informe-consecutivo-titulo/informe-consecutivo-titulo.component';
 import { TransmisionArchivosComponent } from '../Components/Configuracion/Transmision-archivos/transmision-archivos/transmision-archivos.component';
 import { GeneracionArchivosComponent } from '../Components/Configuracion/Generacion-archivos/generacion-archivos/generacion-archivos.component';
+import { ConfiguracionInformesComponent } from '../Components/Configuracion/Maestros/configuracion-informes/configuracion-informes/configuracion-informes.component';
 @NgModule({
   declarations: [
     AreasComponent,CargosComponent,OficinasComponent,PerfilesComponent,TipoUsuariosComponent,
     ModulosComponent ,PermisosComponent, OperacionesModulosComponent,OperacionesComponent,EstadosOperacionesComponent,
     UsuariosComponent, UsuariosProveedoresComponent, ControlSesionesComponent,GestionBannerComponent, PermisosEspecialesComponent,
-    GestionEmail, LlavesComponent, ConsecutivoTituloComponent, InformeConsecutivoTituloComponent, TransmisionArchivosComponent, GeneracionArchivosComponent
+    GestionEmail, LlavesComponent, ConsecutivoTituloComponent, InformeConsecutivoTituloComponent, TransmisionArchivosComponent, GeneracionArchivosComponent, ConfiguracionInformesComponent
   ],
   imports: [
     CommonModule,

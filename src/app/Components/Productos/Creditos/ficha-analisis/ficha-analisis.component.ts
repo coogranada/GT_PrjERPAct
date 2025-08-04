@@ -1815,9 +1815,9 @@ export class FichaAnalisisComponent implements OnInit {
         this.dataAttachFiles.usuario = this.dataUser.Usuario
         this.FichaAnalisisService.EnvioFichaAnalisisWorkManager(this.dataAttachFiles).subscribe(
           (result) => {
-            let resultado = result;
-            if (this.isString(resultado["_body"])) {
-              let jsonResponse = JSON.parse(resultado["_body"]);
+            let jsonResponse = result;
+
+            if (jsonResponse && jsonResponse.Success) {
               if (jsonResponse.Success) {
                 this.FichaAnalisisService.actualizarColEnvioAlWM(this.radicadoActual, 1).pipe(
                   retry(2),

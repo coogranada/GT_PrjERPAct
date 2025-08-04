@@ -209,7 +209,7 @@ export class InformeLogService {
     this.AddCampo(Campos,3, "Operación", "ISNULL(DBO.ERP_FN_NombreOperacion(Ase.IdOperacion),'') As nombreOperacion","nombreOperacion");
     this.AddCampo(Campos,4, "Numero asesoria", "ISNULL(Ase.NumeroAsesoria,'') As nombreModulo", "numAsesoria");
     this.AddCampo(Campos,5, "Documento", "ISNULL(Contra.strDocumento,'') AS Doc", "Doc");
-    this.AddCampo(Campos,6, "Nombre", "ISNULL(Per.PrimerNombre + ' ' + Per.SegundoNombre + ' ' + Per.PrimerApellido + ' ' +Per.SegundoApellido , '') AS nombre ", "nombreOperacion");
+    this.AddCampo(Campos,6, "Nombre", "ISNULL(Per.PrimerNombre, '') + ' ' + ISNULL(Per.SegundoNombre, '') + ' ' + ISNULL(Per.PrimerApellido, '') + ' ' + ISNULL(Per.SegundoApellido, '') AS nombre ", "nombreOperacion");
     this.AddCampo(Campos,7, "Usuario", "ISNULL(REPLACE(U.Nombre,',',' '),'') AS usuario", "usuario");
     this.AddCampo(Campos,8, "Fecha", "ISNULL(Ase.FechaModificacion,'') As FechaModificacion","FechaModificacion");
     this.AddCampo(Campos,9, "JSON", "ISNULL(Ase.JsonDto,'') As JSONDTO","JSONDTO");

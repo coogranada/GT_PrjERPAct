@@ -56,6 +56,7 @@ export class LayoutComponent implements OnInit,OnDestroy {
   public Permisos = false;
   public Usuarios = false;
   public GestionEmail = false;
+  public ConfiguracionInformes = false;
   public UsuarioProveedores = false;
   public OperacionesPerfiles = false;
   public OperacionesEstado = false;
@@ -185,6 +186,7 @@ export class LayoutComponent implements OnInit,OnDestroy {
   public PermisosModel: any;
   public UsuariosModel: any;
   public GestionEmailModel: any;
+  public ConfiguracionInformesModel: any;
   public OperacionesModulosModel: any;
   public OperacionesPerfilesModel: any;
   public OperacionesEstadoModel: any;
@@ -621,6 +623,10 @@ export class LayoutComponent implements OnInit,OnDestroy {
             else if (element.IdModulo === 78) {
               this.GestionEmail = true;
               this.GestionEmailModel = element;
+            }
+            else if (element.IdModulo === 83) {
+              this.ConfiguracionInformes = true;
+              this.ConfiguracionInformesModel = element;
             }
             else if (element.IdModulo === 71) {
               this.UsuarioProveedores = true;

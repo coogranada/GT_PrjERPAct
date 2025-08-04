@@ -12,6 +12,7 @@ const UrlDeclaradas = [
   { Descripcion: "/Configuracion/Maestros/Permisos" },
   { Descripcion: "/Configuracion/Maestros/PermisosEspeciales" },
   { Descripcion: "/Configuracion/Maestros/GestionEmail" },
+  { Descripcion: "/Configuracion/Maestros/ConfiguracionInformes" },
   { Descripcion: "/Configuracion/Maestros/AutorizacionesUsuarios" },
   { Descripcion: "/Configuracion/Maestros/Usuarios" },
   { Descripcion: "/Configuracion/Maestros/UsuariosProveederes" },
