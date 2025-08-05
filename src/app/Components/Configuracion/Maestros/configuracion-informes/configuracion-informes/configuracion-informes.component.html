@@ -17,20 +17,126 @@
         </div>
     </div>
     <div class="panel-body doNotPrint">
-        <form method="get">
-            <div class="col-xs-12 col-md-12 col-lg-12" id="Operacion">
-                <div class="row">
-                    <div class="col-xs-12 col-md-3 col-lg-3">
-                        <div class="form-group">
-                            <label class="textNegrilla">Operación:</label>
-                            <span class="grande"> *</span>
-                            <span class="help-block validationSpan"  >
-                                La operación es obligatoria.
-                            </span>
-                        </div>
+
+            <div class="row mb-3">
+                <div class="col-md-2">
+                    <label for="idConfiguracion" class="form-label">ID</label>
+                    <input type="text" id="idConfiguracion" class="form-control" disabled>
+                </div>
+                <div class="col-md-5">
+                    <label for="nombreInforme" class="form-label">Nombre Informe</label>
+                    <input type="text" id="nombreInforme" class="form-control" name="nombreInforme">
+                </div>
+                <div class="col-md-5">
+                    <label for="nombreSP" class="form-label">Nombre SP</label>
+                    <input type="text" id="nombreSP" class="form-control" name="nombreSP">
+                </div>
+
+                <div class="col-md-2 mt-3 div-espacio">
+                </div>
+                <div class="col-md-5 mt-3 div-espacio">
+                    <label for="accion" class="form-label">Acción</label>
+                    <input type="text" id="accion" class="form-control" name="accion">
+                </div>
+                <div class="col-md-5 mt-3 div-espacio">
+                    <label for="idModulo" class="form-label">Módulo</label>
+                    <select id="idModulo" class="form-control" name="idModulo">
+                        <option *ngFor="let modulo of modulos" [value]="modulo.id">{{ modulo.nombre }}</option>
+                    </select>
+                </div>
+            </div>
+            <br>
+        <!-- Tabla de configuraciones existentes -->
+        <div class="row mt-4">
+            <table class="table table-bordered table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre Informe</th>
+                        <th>Nombre SP</th>
+                        <th>Acción</th>
+                        <th>Módulo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of configuraciones">
+                        <td>{{ item.idConfiguracion }}</td>
+                        <td>{{ item.nombreInforme }}</td>
+                        <td>{{ item.nombreSP }}</td>
+                        <td>{{ item.accion }}</td>
+                        <td>{{ item.moduloNombre }}</td>
+                        <td>
+                            <button class="btn btn-primary btn-sm">Parámetros</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Modal de parámetros -->
+        <div class="modal fade" id="parametrosModal" tabindex="-1" aria-labelledby="parametrosModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="parametrosModalLabel">Configurar Parámetros</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Nombre Parámetro</th>
+                                    <th>Tipo Dato</th>
+                                    <th>Tamaño</th>
+                                    <th>Requerido</th>
+                                    <th>Alias Campo</th>
+                                    <th>Tipo</th>
+                                    <th>Orden</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let parametro of parametros">
+                                    <td>
+                                        <input type="text" class="form-control">
+                                    </td>
+                                    <td>
+                                        <select class="form-select">
+                                            <option value="varchar">varchar</option>
+                                            <option value="number">number</option>
+                                            <option value="datetime">datetime</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox" class="form-check-input">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control">
+                                    </td>
+                                    <td>
+                                        <select class="form-select">
+                                            <option *ngFor="let tipo of tipos" [value]="tipo.id">{{ tipo.nombre }}
+                                            </option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-success">Guardar</button>
                     </div>
                 </div>
             </div>
-        </form>
+        </div>
+
+
     </div>
 </div>

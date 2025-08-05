@@ -37,6 +37,7 @@ export class AportesComponent implements OnInit {
   @ViewChild('tab2', { static: true }) private tab2!: ElementRef;
   @ViewChild('AsesorExterno', { static: true }) private AsesorExterno!: ElementRef;
   @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
+  public codModulo = 16;
   public loading = false;
   public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = ColorPrimario;
@@ -689,13 +690,14 @@ export class AportesComponent implements OnInit {
     );
   }
   ObtenerEstado() {
-    let data = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
-    let idmoduloActivo = localStorage.getItem('IdModuloActivo');
+    //DFRAMIREZ:  comenta codigo si usuario abre otro módulo carga estados incorrectos
+    //let data = localStorage.getItem('Data');
+    //this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    //let idmoduloActivo = localStorage.getItem('IdModuloActivo');
     const arrayExample = {
       'IdOperacion': +this.aportesOperacionFrom.get('Codigo')?.value ,
       'IdPerfil': this.dataUser.idPerfilUsuario,
-      'IdModulo': JSON.parse(window.atob(idmoduloActivo == null ? "" : idmoduloActivo))
+      'IdModulo': this.codModulo  //JSON.parse(window.atob(idmoduloActivo == null ? "" : idmoduloActivo))
     };
     this.loading = true;
     this.operacionesService.ObtenerEstadosXOperacionesData(arrayExample).subscribe(

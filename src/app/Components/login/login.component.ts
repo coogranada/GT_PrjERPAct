@@ -190,7 +190,7 @@ export class LoginComponent implements OnInit {
                 }
               });
 
-            } else if(this.dataUser.admEstado === 55){
+            } else if(this.dataUser.admEstado === 35){
                 Swal.fire({
                   title: 'Advertencia',
                   text: '',

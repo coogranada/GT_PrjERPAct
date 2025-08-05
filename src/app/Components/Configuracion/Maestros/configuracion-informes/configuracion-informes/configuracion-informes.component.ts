@@ -12,6 +12,12 @@ export class ConfiguracionInformesComponent implements OnInit  {
   primaryColour = 'rgb(13,165,80)';
   secondaryColour = 'rgb(13,165,80,0.7)';
 
+  tipos: any = [];
+  configuraciones: any = [];
+  parametros: any = [];
+  modulos: any = [];
+
+
 
 
   ngOnInit() {
