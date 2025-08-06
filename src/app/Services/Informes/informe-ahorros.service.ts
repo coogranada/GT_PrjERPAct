@@ -9,33 +9,8 @@ import { Filtro } from '../../Models/Informes/informe-ahorros/informe-ahorros.mo
 })
 export class InformeAhorrosService {
     private url: string = "";
-    constructor(private _http: HttpClient,private environment: EnvironmentService) { }
+    constructor(private _http: HttpClient, private environment: EnvironmentService) { }
 
-    ObtenerConfiguracionInformes(): Observable<any> {
-        this.url = `${this.environment.Url}/ObtenerConfiguracionInformes`;
-        return this._http.get<any>(this.url);
-    }
-    
-    ObtenerParametrosConfiguracionInfTbl(idParametroInforme : number): Observable<any> {
-        this.url = `${this.environment.Url}/ObtenerParametrosConfiguracionInfTbl?idConfiguracionInformes=`+idParametroInforme;
-        return this._http.get<any>(this.url);
-    }
-
-    ObtenerListas(): Observable<any> {
-        this.url = `${this.environment.Url}/ObtenerListas`;
-        return this._http.get<any>(this.url);
-    }
-
-    EjecutarInforme(nombreSP: string, accionEjecuta: string, parametros: { [key: string]: any }): Observable<any> {
-        this.url = `${this.environment.Url}/EjecutarSP`;
-        const body = {
-            nombreSP: nombreSP,
-            accionEjecuta: accionEjecuta,
-            parametros: parametros
-          };
-
-        return this._http.post<any>(this.url, body);
-    }
 
     GetFiltros(oficinaOrAdmin: number, isOficina: boolean) {
         let Filtros: Filtro[] = [];

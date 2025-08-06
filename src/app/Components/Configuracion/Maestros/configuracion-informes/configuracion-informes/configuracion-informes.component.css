@@ -5,3 +5,57 @@
 .div-espacio1 {
     margin-top: 13px
 }
+
+.table th {
+    font-weight: bold;
+}
+
+.table tbody tr {
+    height: 40px !important;
+}
+
+.table td {
+    vertical-align: middle;
+    /* Alinea el contenido verticalmente en el centro */
+    padding: 1px 5px 0;
+    white-space: nowrap;
+}
+
+
+.selected-row {
+    background-color: rgb(229, 229, 229);
+    /* Color de fondo gris para la fila seleccionada */
+}
+
+.selected-row1 {
+    background-color: rgb(229, 229, 229);
+    /* Color de fondo gris para la fila seleccionada */
+}
+
+.labelSucces {
+    color: #269051;
+    border-color: #269051;
+}
+
+.labelDanger {
+    color: #F44336;
+    border-color: #F44336;
+}
+
+.sticky-last-column td:last-child {
+    position: sticky;
+    right: 0;
+    z-index: 1;
+    text-align: center;
+}
+
+
+
+.operacionFija {
+    position: sticky !important;
+    right: 0;
+    background: #fff ;
+    z-index: 1; 
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    min-width: 30px;
+}

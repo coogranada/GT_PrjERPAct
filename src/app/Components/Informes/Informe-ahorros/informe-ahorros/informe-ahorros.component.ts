@@ -11,7 +11,7 @@ import { Filtro } from '../../../../Models/Informes/informe-ahorros/informe-ahor
 import { InformeAhorrosService } from '../../../../Services/Informes/informe-ahorros.service';
 import { SPParametros } from '../../../../Models/Informes/configuracion-informes/parametros-informes.model';
 import { ExcelService } from '../../../../Services/General/excel.service';
-
+import { ConfiguracionInformesService } from '../../../../Services/Informes/configuracion-informes.service';
 @Component({
   selector: 'app-informe-ahorros',
   templateUrl: './informe-ahorros.component.html',
@@ -39,6 +39,8 @@ export class InformeAhorrosComponent implements OnInit {
   public nombreOficina: string = "";
   public nombreSP: string = "";
   public accionEjecuta: string = "";
+  public fechaMax: any = null;
+  public fechaMinima: any = null;
 
   public configuracionInformes: any[] = [];
   public configuracionInformesFiltro: any[] = [];
@@ -54,7 +56,7 @@ export class InformeAhorrosComponent implements OnInit {
 
   CodModulo: number = 82
 
-  constructor(private excelReportService: ExcelService,  private fb: FormBuilder, private informeAhorrosService: InformeAhorrosService, private operacionesService: OperacionesService, private el: ElementRef, private moduleValidationService: ModuleValidationService, private notif: ToastrService) {
+  constructor(private excelReportService: ExcelService,  private fb: FormBuilder,private configuracionInformesS: ConfiguracionInformesService,  private informeAhorrosService: InformeAhorrosService, private operacionesService: OperacionesService, private el: ElementRef, private moduleValidationService: ModuleValidationService, private notif: ToastrService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -71,6 +73,7 @@ export class InformeAhorrosComponent implements OnInit {
     $('#select').focus().select();
     this.getOficina();
     this.obtenerConfiguracionInformes();
+    this.InitVariables()
     this.InitFiltros(this.idOficina);
     this.getListas();
   }
@@ -95,7 +98,7 @@ export class InformeAhorrosComponent implements OnInit {
   }
 
   obtenerConfiguracionInformes() {
-    this.informeAhorrosService.ObtenerConfiguracionInformes().subscribe({
+    this.configuracionInformesS.ObtenerConfiguracionInformes().subscribe({
       next: (respuesta) => {
         this.configuracionInformes = respuesta;
       },
@@ -145,7 +148,7 @@ export class InformeAhorrosComponent implements OnInit {
     this.nombreSP = informeSel?.NombreSP || '';
     this.accionEjecuta = informeSel?.AccionEjecuta || '';
 
-    this.informeAhorrosService.ObtenerParametrosConfiguracionInfTbl(selectedId).subscribe({
+    this.configuracionInformesS.ObtenerParametrosConfiguracionInfTbl(selectedId).subscribe({
       next: (respuesta: SPParametros[]) => {
         this.parametrosConfiguracionInf = respuesta.filter(
           (param) => param.AliasCampo.toLowerCase() !== 'reservado'
@@ -228,7 +231,7 @@ export class InformeAhorrosComponent implements OnInit {
     this.loading = true;
     const parametros = this.formulario.getRawValue();
     try {
-      this.informeAhorrosService
+      this.configuracionInformesS
         .EjecutarInforme(this.nombreSP, this.accionEjecuta, parametros)
         .subscribe(respuesta => {
           if (respuesta.length <= 0) {
@@ -317,7 +320,7 @@ export class InformeAhorrosComponent implements OnInit {
   }
 
   getListas() {
-    this.informeAhorrosService.ObtenerListas().subscribe({
+    this.configuracionInformesS.ObtenerListas().subscribe({
       next: (respuesta) => {
         this.ListGenerico = respuesta
       },
@@ -339,4 +342,12 @@ export class InformeAhorrosComponent implements OnInit {
       (listGen: any) => listGen.IdTipo === i
     );
   }
+
+
+  InitVariables() {
+    const hoy = new Date();
+    this.fechaMax = hoy.toISOString().split('T')[0]; // 'YYYY-MM-DD'
+    console.log("fecha calculada: "+ this.fechaMax )
+  }
+
 }

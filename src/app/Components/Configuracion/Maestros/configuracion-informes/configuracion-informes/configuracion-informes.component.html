@@ -18,125 +18,89 @@
     </div>
     <div class="panel-body doNotPrint">
 
-            <div class="row mb-3">
-                <div class="col-md-2">
-                    <label for="idConfiguracion" class="form-label">ID</label>
-                    <input type="text" id="idConfiguracion" class="form-control" disabled>
-                </div>
-                <div class="col-md-5">
-                    <label for="nombreInforme" class="form-label">Nombre Informe</label>
-                    <input type="text" id="nombreInforme" class="form-control" name="nombreInforme">
-                </div>
-                <div class="col-md-5">
-                    <label for="nombreSP" class="form-label">Nombre SP</label>
-                    <input type="text" id="nombreSP" class="form-control" name="nombreSP">
-                </div>
-
-                <div class="col-md-2 mt-3 div-espacio">
-                </div>
-                <div class="col-md-5 mt-3 div-espacio">
-                    <label for="accion" class="form-label">Acción</label>
-                    <input type="text" id="accion" class="form-control" name="accion">
-                </div>
-                <div class="col-md-5 mt-3 div-espacio">
-                    <label for="idModulo" class="form-label">Módulo</label>
-                    <select id="idModulo" class="form-control" name="idModulo">
-                        <option *ngFor="let modulo of modulos" [value]="modulo.id">{{ modulo.nombre }}</option>
-                    </select>
-                </div>
+        <div class="row mb-3">
+            <div class="col-md-2">
+                <label for="idConfiguracion" class="form-label">ID</label>
+                <input type="text" id="idConfiguracion" class="form-control" disabled>
             </div>
-            <br>
-        <!-- Tabla de configuraciones existentes -->
-        <div class="row mt-4">
-            <table class="table table-bordered table-hover">
-                <thead class="table-light">
+            <div class="col-md-5">
+                <label for="nombreInforme" class="form-label">Nombre Informe</label>
+                <input type="text" id="nombreInforme" class="form-control" name="nombreInforme">
+            </div>
+            <div class="col-md-5">
+                <label for="nombreSP" class="form-label">Nombre SP</label>
+                <input type="text" id="nombreSP" class="form-control" name="nombreSP">
+            </div>
+
+            <div class="col-md-2 mt-3 div-espacio">
+            </div>
+            <div class="col-md-5 mt-3 div-espacio">
+                <label for="accion" class="form-label">Acción</label>
+                <input type="text" id="accion" class="form-control" name="accion">
+            </div>
+            <div class="col-md-5 mt-3 div-espacio">
+                <label for="idModulo" class="form-label">Módulo</label>
+                <select id="idModulo" class="form-control" name="idModulo">
+                    <option *ngFor="let modulo of modulos" [value]="modulo.id">{{ modulo.nombre }}</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-md-12 col-lg-12" style="justify-items: end; padding: 1em;">
+            <div class="actions clearfix">
+                <button class="btn Gt-btn-morado btn-icon legitRipple" type="button">
+                    LIMPIAR
+                </button>&nbsp;
+
+                <button class="btn Gt-btn-verde btn-icon legitRipple" type="submit"
+                    
+                    >
+                    <i class=""></i>&nbsp; GUARDAR
+                </button>&nbsp;
+
+                <button class="btn Gt-btn-verde btn-icon legitRipple" type="submit"
+                    
+                    >
+                    <i class=""></i>&nbsp; ACTUALIZAR
+                </button>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatos">
+    <div class="panel-body ">
+
+        <div class="table-responsive scrollTabla">
+            <table id="TablaParametros" class="table table-sm sticky-last-column ">
+                <thead class="text-center">
                     <tr>
                         <th>ID</th>
                         <th>Nombre Informe</th>
                         <th>Nombre SP</th>
                         <th>Acción</th>
                         <th>Módulo</th>
-                        <th>Acciones</th>
+                        <th>Opciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let item of configuraciones">
-                        <td>{{ item.idConfiguracion }}</td>
-                        <td>{{ item.nombreInforme }}</td>
-                        <td>{{ item.nombreSP }}</td>
-                        <td>{{ item.accion }}</td>
-                        <td>{{ item.moduloNombre }}</td>
-                        <td>
-                            <button class="btn btn-primary btn-sm">Parámetros</button>
+                    <tr *ngFor="let item of configuracionInformes">
+                        <td>{{ item.IdConfiguracion }}</td>
+                        <td>{{ item.NombreInforme }}</td>
+                        <td>{{ item.NombreSP }}</td>
+                        <td>{{ item.AccionEjecuta }}</td>
+                        <td>{{ item.IdModulo }}</td>
+                        <td class="operacionFija">
+                            <button class="btn Gt-btn-verde btn-icon legitRipple" (click)="selectRow(item)">
+                                <i class="icon-pencil"></i></button> &nbsp;
+                            <button class="btn Gt-btn-morado btn-icon legitRipple">
+                                <i class="glyphicon glyphicon-cog"></i></button>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        <!-- Modal de parámetros -->
-        <div class="modal fade" id="parametrosModal" tabindex="-1" aria-labelledby="parametrosModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-xl modal-dialog-scrollable">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="parametrosModalLabel">Configurar Parámetros</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-                    <div class="modal-body">
-                        <table class="table table-bordered">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Nombre Parámetro</th>
-                                    <th>Tipo Dato</th>
-                                    <th>Tamaño</th>
-                                    <th>Requerido</th>
-                                    <th>Alias Campo</th>
-                                    <th>Tipo</th>
-                                    <th>Orden</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let parametro of parametros">
-                                    <td>
-                                        <input type="text" class="form-control">
-                                    </td>
-                                    <td>
-                                        <select class="form-select">
-                                            <option value="varchar">varchar</option>
-                                            <option value="number">number</option>
-                                            <option value="datetime">datetime</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="number" class="form-control">
-                                    </td>
-                                    <td class="text-center">
-                                        <input type="checkbox" class="form-check-input">
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control">
-                                    </td>
-                                    <td>
-                                        <select class="form-select">
-                                            <option *ngFor="let tipo of tipos" [value]="tipo.id">{{ tipo.nombre }}
-                                            </option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="number" class="form-control">
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-success">Guardar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
     </div>
 </div>

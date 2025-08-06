@@ -95,7 +95,7 @@
                                                                     class="form-control form-control-lg"
                                                                     [attr.maxLength]="param.TamanoCampo"
                                                                     [formControlName]="param.NombreParametro" />
-                                                                <input *ngIf="param.TipoDato === 'datetime'" type="date"
+                                                                <input *ngIf="param.TipoDato === 'datetime'" type="date" [attr.max]="fechaMax" 
                                                                     class="form-control"
                                                                     [formControlName]="param.NombreParametro" />
                                                                 <select *ngIf="param.TipoDato === 'selectn' && param.IdTipo === 999"
