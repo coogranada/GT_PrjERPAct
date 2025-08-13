@@ -23408,6 +23408,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
               this.cambioRelacionModel.idRelacion = +this.basicosFrom.get('tipoCliente')?.value;
               this.cambioRelacionModel.idTercero = Number(localStorage.getItem('TerceroNatura'));
               this.cambioRelacionModel.userWork = resultPerfil.Usuario;
+              this.cambioRelacionModel.IdOficina = resultPerfil.NumeroOficina;
               if (this.dataAsociados !== null && this.dataAsociados !== undefined) {
                 this.cambioRelacionModel.idTutor = this.dataAsociados[0].LngTercero;
               } else {
@@ -23469,6 +23470,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
               this.cambioRelacionModel.idRelacion = +this.basicosFrom.get('tipoCliente')?.value;
               this.cambioRelacionModel.idTercero = Number(localStorage.getItem('TerceroNatura'));
               this.cambioRelacionModel.userWork = resultPerfil.Usuario;
+              this.cambioRelacionModel.IdOficina = resultPerfil.NumeroOficina;
               if (this.dataAsociados !== null && this.dataAsociados !== undefined) {
                 this.cambioRelacionModel.idTutor = this.dataAsociados[0].LngTercero;
               } else {
@@ -23529,6 +23531,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           this.cambioRelacionModel.idRelacion = +this.basicosFrom.get('tipoCliente')?.value;
           this.cambioRelacionModel.idTercero = Number(localStorage.getItem('TerceroNatura'));
           this.cambioRelacionModel.userWork = resultPerfil.Usuario;
+          this.cambioRelacionModel.IdOficina = resultPerfil.NumeroOficina;
           if (this.dataAsociados !== null && this.dataAsociados !== undefined) {
             this.cambioRelacionModel.idTutor = this.dataAsociados[0].LngTercero;
           } else {
@@ -23600,6 +23603,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             this.cambioRelacionModel.idRelacion = +this.basicosFrom.get('tipoCliente')?.value;
             this.cambioRelacionModel.idTercero = Number(localStorage.getItem('TerceroNatura'));
             this.cambioRelacionModel.userWork = resultPerfil.Usuario;
+            this.cambioRelacionModel.IdOficina = resultPerfil.NumeroOficina;
             if (this.dataAsociados !== null && this.dataAsociados !== undefined) {
               this.cambioRelacionModel.idTutor = this.dataAsociados[0].LngTercero;
             } else {

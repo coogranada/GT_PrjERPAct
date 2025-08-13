@@ -4,6 +4,7 @@ export class CambioRelacionModel {
     idTipoDocumento: number = 0;
     idTutor: number | null = 0;
     userWork: string = "";
+    IdOficina: string = "";
 }
 export class CambioTipoDocumentoModel {
     idTercero: number = 0;
