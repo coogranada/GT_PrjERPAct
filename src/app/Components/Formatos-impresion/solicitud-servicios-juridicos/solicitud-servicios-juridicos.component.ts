@@ -9,6 +9,9 @@ import { ClientesGetListService } from '../../../Services/Clientes/clientesGetLi
 import { AlertService } from '../../../Services/Alert/alert.service';
 import { HtmlToService } from '../../../Services/Utilidades/html-to.service';
 import { PrintService } from '../../../Services/General/print.service';
+import Swal from 'sweetalert2';
+import { ClientesService } from '../../../Services/Clientes/clientes.service';
+import { GeneralesService } from '../../../Services/Productos/generales.service';
 
 @Component({
   selector: 'app-solicitud-servicios-juridicos',
@@ -25,8 +28,17 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
   @Input() dataDivisas: any;
   @Input() dataPaises: any;
   @Input() EsReImpresion : any;
+  @Input() serviciosForm : any;
+  @ViewChild('openModalHojaVidaJuridico', { static: true }) private openModalHojaVida!: ElementRef;
+  @ViewChild('hojaVidaAfiliadoJuridico', { static: true }) private hojaVidaAfiliado!: ElementRef;
   //#endregion
   //#region Variables de carga y otras
+  blobUrl = '';
+  servicios: {id: number; name: string }[] = [
+    { id: 1, name: 'Vinculación' },
+    { id: 2, name: 'Actualización de datos' },
+    { id: 3, name: 'Crédito' }
+  ]
   public mostrarImporta = true;
   public mostrarExporta = true;
   public mostrarGiros = true;
@@ -61,13 +73,20 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
     { Value: '8', Descripcion: 'Otro' },
     { Value: '9', Descripcion: 'Pasaporte' }
   ];
+  public Correspondencia = [
+    { Value: '3', Descripcion: 'Correo electrónico' },
+    { Value: '8', Descripcion: 'Dirección' }
+  ];
   esReimpresa: any;
   fechaImpresion: any;
+  showLoader = false;
+  currentHdvBase64 = '';
 
-//#endregion
+  //#endregion
 
   constructor(private juridicosService: JuridicosService, private notif: AlertService,
-    private clientesGetListService: ClientesGetListService,private printService: PrintService) { }
+    private clientesService: ClientesService,
+    private clientesGetListService: ClientesGetListService,private printService: PrintService, private generalesService: GeneralesService) { }
 
   ngOnInit() {
     console.log('esto se muestra desde el formato de impresion');
@@ -75,7 +94,7 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
       // Restaurar el padding-right y el overflow
       document.body.style.paddingRight = '';  // Quitar padding extra
       document.body.style.overflow = '';      // Restaurar el overflow
-    }); 
+    });
   }
 
   AbrirSolicitud(documento : string) {
@@ -93,50 +112,67 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
         console.log(result);
         this.CargarServicio(this.GetServiceSolicited);
         this.CargarSecciones(result);
-        // this.JuridicoSeleccionado = result.JuridicoDto.IdJuridico;
-        // this.entrevistaComponent.idJuridicoSearch = result.JuridicoDto.IdJuridico;
-        // this.entrevistaComponent.fechaMatricula = result.JuridicoDto.FechaMatricula;
+
+        const juridicoInfoAll = {
+          ...this.servicioSolicitado,
+          ...this.infoPersonal,
+          UbicacionEmpresa: this.ubicacionEmpresa,
+          Representante: this.infoRepresentate,
+          Financiera: this.infoFinanciera,
+          Entrevista: this.entrevista,
+          EsReimpresa: this.esReimpresa,
+          Accionistas: this.LstinfoAccionista,
+          ReferenciasComerciales: this.LstinfoReferenciaComercial,
+          ReferenciasFinancieras: this.LstinfoReferenciaFinanciera
+        } as any;
+        Object.keys(juridicoInfoAll).forEach(key => {
+          if(juridicoInfoAll[key] === null) juridicoInfoAll[key] = "";
+        });
+        this.juridicosService.GenerarPDFHojaVida(juridicoInfoAll).subscribe(
+          async (blob) => {
+            this.blobUrl = window.URL.createObjectURL(blob);
+            this.hojaVidaAfiliado.nativeElement.setAttribute('src', this.blobUrl);
+            this.openModalHojaVida.nativeElement.click();
+            const dataUrl = await this.clientesService.blobToBase64(blob);
+            this.currentHdvBase64 = dataUrl.split(',')[1];
+          },
+          (err) => {
+            console.error(err);
+          }
+        );
+
       },
       error => {
         this.notif.onDanger('Error', 'Los datos no se cargaron correctamente - ' + error);
       }
     );
-    this.openSolicitud.nativeElement.click();
   }
 
-  CargarServicio(dataService : any) {
-    this.servicioSolicitado = new ServicioSolicitadoModel();
-    let cred = localStorage.getItem('Credito')
-    this.Servcredito = JSON.parse(cred == null ? "" : cred);
-    let vincula = localStorage.getItem('Vinculacion');
-    this.servVinculacion = JSON.parse(vincula == null ? "" : vincula);
-    let actualizaci = localStorage.getItem('Actualizacion');
-    this.ServActualiza = JSON.parse(actualizaci == null ? "" : actualizaci);
+  downloadPDF() { 
+    const {  Oficina, idProceso } = this.GetServiceSolicited;
+    const fileNames = {
+      2: `ACTUALIZACION DATOS ASOCIADO ${this.infoPersonal.Nit}`,
+      3: `CREDITO DEUDOR ${Oficina.toUpperCase()}`
+    };
+    const fileName = fileNames[idProceso as keyof typeof fileNames];
+    const a = document.createElement('a');
+    a.href = this.blobUrl;
+    a.download = fileName;  
+    a.click();
+    window.URL.revokeObjectURL(this.blobUrl);
 
+  }
+
+  CargarServicio(dataService : any) {    
+    this.servicioSolicitado = new ServicioSolicitadoModel();
     this.servicioSolicitado.Asesor = dataService.Asesor;
     this.servicioSolicitado.Oficina = dataService.Oficina;
-    this.servicioSolicitado.ConocioCoogranada = dataService.ConocioCoogranada;
     this.servicioSolicitado.DocumentoDeudor = dataService.DocumentoDeudor;
     this.servicioSolicitado.NombreDeudor = dataService.NombreDeudor;
-    this.GetData.ListTipoDocumento.forEach((elementDoc : any) => {
-      if (elementDoc.Clase === +dataService.TipoDoc) {
-        this.servicioSolicitado.TipoDocumento = elementDoc.Descripcion;
-      }
-    });
-    // this.tiposDocumento.forEach(elementTipoDocu => {
-    //   console.log(dataCredito.TipoDocumento);
-    //   if (+elementTipoDocu.Value === dataCredito.TipoDocumento) {
-    //     this.naturalesServicio.TipoIdentificacion = elementTipoDocu.Descripcion;
-    //   }
-    // });
-
-
-    if (dataService.Destino !== null && dataService.Destino !== undefined && dataService.Destino !== '') {
-      this.servicioSolicitado.Destino = dataService.Destino;
-    }
-    if (dataService.Destino !== null && dataService.Destino !== undefined && dataService.Destino !== '') {
-      this.servicioSolicitado.Destino = dataService.Destino;
-    }
+    const idServicioSeleccionado = dataService.idProceso;
+    this.servicioSolicitado.ServicioSolicitado = this.servicios.find(item => item.id == idServicioSeleccionado)?.name || '';
+    this.servicioSolicitado.Destino = dataService.Destino?.StrNombre || dataService.Destino || '';
+    
     if (dataService.Monto !== null && dataService.Monto !== undefined &&
       dataService.Monto !== '') {
       this.servicioSolicitado.MontoSolicitado = dataService.Monto;
@@ -145,25 +181,25 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
       && dataService.Plazo !== '') {
       this.servicioSolicitado.PlazoDeseado = dataService.Plazo;
     }
-    if (dataService.EsVinculacion !== null && dataService.EsVinculacion !== undefined && dataService.EsVinculacion !== '') {
-      this.servicioSolicitado.EsVinculacion = dataService.EsVinculazcion;
-    }
-    this.servicioSolicitado.FechaSolicitud = '';
+    this.servicioSolicitado.RadicadoCredito = dataService.radicado;
   }
 
   CargarSecciones(dataPrint : any) {
     this.loading = false;
-
+    
+    this.infoPersonal.IdRelacion = dataPrint.BasicosDto.IdRelacion;
+    this.infoPersonal.IdEstado = dataPrint.BasicosDto.IdEstado;
+    this.infoPersonal.FechaActualizacion = dataPrint.BasicosDto.FechaModificacion;
     this.GetData.ListRelaciones.forEach((elementRela : any) => {
       if (elementRela.Clase === dataPrint.BasicosDto.IdRelacion) {
         this.infoPersonal.tipoUsuarioRelacion = elementRela.Descripcion;
-        }
+      }
     });
     const fechaSolicitudFormat = formatDate(new Date, 'MM-dd-yyyy', 'en');
     const fechaSolicitud = new Date(fechaSolicitudFormat);
-    this.infoPersonal.DiaSolicitud = fechaSolicitud.getDate().toString();
-    this.infoPersonal.MesSolicitud = (fechaSolicitud.getMonth() + 1).toString();
-    this.infoPersonal.YearSolicitud = fechaSolicitud.getFullYear().toString();
+    this.infoPersonal.DiaSolicitud = fechaSolicitud.getDate().toString().padStart(2, '0');
+    this.infoPersonal.MesSolicitud = (fechaSolicitud.getMonth() + 1).toString().padStart(2, '0');
+    this.infoPersonal.YearSolicitud = fechaSolicitud.getFullYear().toString().padStart(2, '0');
 
     this.GetData.ListConocioCoogra.forEach((elementConocio : any) => {
       if (dataPrint.BasicosDto.ConocioCoogranada === +elementConocio.Value) {
@@ -174,19 +210,20 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
     //#region Carga la zona princpal de informacion basica hasta fecha
     this.infoPersonal.RazonSocial = dataPrint.JuridicoDto.RazonSocial;
     this.infoPersonal.Nit = dataPrint.JuridicoDto.Nit;
+    this.infoPersonal.IdJuridico = dataPrint.JuridicoDto.IdJuridico;
 
     const fechaConstitucionFormat = formatDate(dataPrint.BasicosDto.FechaConstitucion, 'MM-dd-yyyy', 'en');
     const fechaConstitucion = new Date(fechaConstitucionFormat);
-    this.infoPersonal.DiaConstitucion = fechaConstitucion.getDate().toString();
-    this.infoPersonal.MesConstitucion = (fechaConstitucion.getMonth() + 1).toString();
-    this.infoPersonal.YearConstitucion = fechaConstitucion.getFullYear().toString();
+    this.infoPersonal.DiaConstitucion = fechaConstitucion.getDate().toString().padStart(2, '0');
+    this.infoPersonal.MesConstitucion = (fechaConstitucion.getMonth() + 1).toString().padStart(2, '0');
+    this.infoPersonal.YearConstitucion = fechaConstitucion.getFullYear().toString().padStart(2, '0');
 
     this.GetData.ListTipoLocal.forEach((elementLocal : any) => {
       if (elementLocal.id === dataPrint.BasicosDto.IdTipoLocal) {
         this.infoPersonal.TipoLocal = elementLocal.value;
       }
     });
-    this.ubicacionEmpresa.Estrato = dataPrint.BasicosDto.Estrato;
+    this.ubicacionEmpresa.Estrato = dataPrint.BasicosDto.Estrato || '';
     //#endregion
 
     //#region Carga departamento pais y ciudad de la informacion principal
@@ -225,25 +262,25 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
         if (elementContacto.IdBarrio !== null && elementContacto.IdBarrio !== undefined
           && elementContacto.IdBarrio !== 0) {
             this.GetData.ListBarrios.forEach((elementBarrio : any) => {
-              if (elementContacto.IdBarrio === elementBarrio.IdBarrio) {
-                this.ubicacionEmpresa.Barrio = elementBarrio.Descripcion;
+            if (elementContacto.IdBarrio === elementBarrio.IdBarrio) {
+              this.ubicacionEmpresa.Barrio = elementBarrio.Descripcion;
                 this.GetData.ListCiudad.forEach((elementCiudad : any) => {
-                  if (elementBarrio.IdCiudad === elementCiudad.IdCiudad) {
-                    this.ubicacionEmpresa.Municipio = elementCiudad.Descripcion;
+                if (elementBarrio.IdCiudad === elementCiudad.IdCiudad) {
+                  this.ubicacionEmpresa.Municipio = elementCiudad.Descripcion;
                     this.GetData.ListDepartamento.forEach((elementDepart : any) => {
-                      if (elementDepart.IdDepartamento === elementCiudad.IdDepartamento) {
-                        this.ubicacionEmpresa.Departamento = elementDepart.Descripcion;
+                    if (elementDepart.IdDepartamento === elementCiudad.IdDepartamento) {
+                      this.ubicacionEmpresa.Departamento = elementDepart.Descripcion;
                         this.GetData.ListPais.forEach((elementPais : any)=> {
-                          if (elementPais.IdPais === elementDepart.IdPais) {
-                            this.ubicacionEmpresa.Pais = elementPais.Descripcion;
-                          }
-                        });
-                      }
-                    });
-                  }
-                });
-              }
-            });
+                        if (elementPais.IdPais === elementDepart.IdPais) {
+                          this.ubicacionEmpresa.Pais = elementPais.Descripcion;
+                        }
+                      });
+                    }
+                  });
+                }
+              });
+            }
+          });
         } else {
           if (elementContacto.IdCiudad !== null && elementContacto.IdCiudad !== undefined && elementContacto.IdCiudad !== 0) {
             this.GetData.ListCiudad.forEach((elementCiudad : any) => {
@@ -271,7 +308,7 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
             }
           }
         }
-       
+
 
       }
       if (elementContacto.ContactoPrincipal && elementContacto.IdTipoContacto === 6) { // Celular
@@ -285,7 +322,7 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
         this.ubicacionEmpresa.Email = elementContacto.Descripcion;
       }
       if (elementContacto.Correspondecia) {
-        this.infoPersonal.DireccionCorrespondencia = elementContacto.Descripcion;
+        this.infoPersonal.DireccionCorrespondencia = this.Correspondencia.find(corr => corr.Value == elementContacto.IdTipoContacto)?.Descripcion ?? '';
       }
 
     });
@@ -329,15 +366,15 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
 
       const fechaCExpeFormat = formatDate(dataPrint.RepresentanteDto.FechaExpedicion, 'MM-dd-yyyy', 'en');
       const fechaExpedicion = new Date(fechaCExpeFormat);
-      this.infoRepresentate.DiaExpedicion = fechaExpedicion.getDate().toString();
-      this.infoRepresentate.MesExpedicion = (fechaExpedicion.getMonth() + 1).toString();
-      this.infoRepresentate.YearExpedicion = fechaExpedicion.getFullYear().toString();
+      this.infoRepresentate.DiaExpedicion = fechaExpedicion.getDate().toString().padStart(2, '0');
+      this.infoRepresentate.MesExpedicion = (fechaExpedicion.getMonth() + 1).toString().padStart(2, '0');
+      this.infoRepresentate.YearExpedicion = fechaExpedicion.getFullYear().toString().padStart(2, '0');
 
       const fechaNaciFormat = formatDate(dataPrint.RepresentanteDto.FechaNacimiento, 'MM-dd-yyyy', 'en');
       const fechaNacimiento = new Date(fechaNaciFormat);
-      this.infoRepresentate.DiaNacimiento = fechaNacimiento.getDate().toString();
-      this.infoRepresentate.MesNacimiento = (fechaNacimiento.getMonth() + 1).toString();
-      this.infoRepresentate.YearNacimiento = fechaNacimiento.getFullYear().toString();
+      this.infoRepresentate.DiaNacimiento = fechaNacimiento.getDate().toString().padStart(2, '0');
+      this.infoRepresentate.MesNacimiento = (fechaNacimiento.getMonth() + 1).toString().padStart(2, '0');
+      this.infoRepresentate.YearNacimiento = fechaNacimiento.getFullYear().toString().padStart(2, '0');
 
       this.GetData.ListTipoDocumento.forEach((elementDoc : any) => {
         if (elementDoc.Clase === dataPrint.RepresentanteDto.IdTipoIdentificacion) {
@@ -375,42 +412,42 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
       }
       this.CargarCiudades(dataPrint.RepresentanteDto);
     }
-   
-   
-    
+
+
+
     //#endregion
 
     //#region Carga la informacion Financiera
     if (dataPrint.FinancieroDto !== null && dataPrint.FinancieroDto !== undefined) {
       dataPrint.FinancieroDto.forEach((elementFinan : any) => {
-          if (elementFinan.IdCategoria === 1) { // Ingresos
-              if (elementFinan.IdJuridicoConcepto === 1) {
-                this.infoFinanciera.IngresosOperativos = this.infoFinanciera.IngresosOperativos + elementFinan.Valor;
-              } else if (elementFinan.IdJuridicoConcepto === 2) {
-                this.infoFinanciera.Otros = this.infoFinanciera.Otros + elementFinan.Valor;
-              }
-            
-            this.infoFinanciera.TotalIngresos = this.infoFinanciera.IngresosOperativos + this.infoFinanciera.Otros;
+        if (elementFinan.IdCategoria === 1) { // Ingresos
+          if (elementFinan.IdJuridicoConcepto === 1) {
+            this.infoFinanciera.IngresosOperativos = this.infoFinanciera.IngresosOperativos + elementFinan.Valor;
+          } else if (elementFinan.IdJuridicoConcepto === 2) {
+            this.infoFinanciera.Otros = this.infoFinanciera.Otros + elementFinan.Valor;
+          }
 
-          } else { // Egresos
-              if (elementFinan.IdJuridicoConcepto === 3) {
-                this.infoFinanciera.CostosAdministracion = this.infoFinanciera.CostosAdministracion + elementFinan.Valor;
-              } else if (elementFinan.IdJuridicoConcepto === 4) {
-                this.infoFinanciera.Gastosfinancieros = this.infoFinanciera.Gastosfinancieros + elementFinan.Valor;
-              } else if (elementFinan.IdJuridicoConcepto === 5) {
-                this.infoFinanciera.OtrosGastos = this.infoFinanciera.OtrosGastos + elementFinan.Valor;
-              }
-            
-            this.infoFinanciera.TotalEgresos = this.infoFinanciera.CostosAdministracion + this.infoFinanciera.Gastosfinancieros +
-              this.infoFinanciera.OtrosGastos;
-          } 
+          this.infoFinanciera.TotalIngresos = this.infoFinanciera.IngresosOperativos + this.infoFinanciera.Otros;
+
+        } else { // Egresos
+          if (elementFinan.IdJuridicoConcepto === 3) {
+            this.infoFinanciera.CostosAdministracion = this.infoFinanciera.CostosAdministracion + elementFinan.Valor;
+          } else if (elementFinan.IdJuridicoConcepto === 4) {
+            this.infoFinanciera.Gastosfinancieros = this.infoFinanciera.Gastosfinancieros + elementFinan.Valor;
+          } else if (elementFinan.IdJuridicoConcepto === 5) {
+            this.infoFinanciera.OtrosGastos = this.infoFinanciera.OtrosGastos + elementFinan.Valor;
+          }
+
+          this.infoFinanciera.TotalEgresos = this.infoFinanciera.CostosAdministracion + this.infoFinanciera.Gastosfinancieros +
+            this.infoFinanciera.OtrosGastos;
+        }
       });
     }
     //#endregion
 
     //#region Carga la informacion de Patromonio
     if (dataPrint.PatrimonioDto !== null) {
-    
+
       this.infoFinanciera.ActivoCorrientes = dataPrint.PatrimonioDto.ActivosCorrientes;
       this.infoFinanciera.ActivosNoCorrientes = dataPrint.PatrimonioDto.ActivosNoCorrientes;
       this.infoFinanciera.CuentasPorPagar = dataPrint.PatrimonioDto.CuentasPorPagar;
@@ -420,12 +457,12 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
 
       this.infoFinanciera.TotalActivos = this.infoFinanciera.ActivoCorrientes +
         this.infoFinanciera.ActivosNoCorrientes + this.infoFinanciera.OtrosActivos;
-      
+
       this.totalPasivos = this.infoFinanciera.ObligacionesFinancieras + this.infoFinanciera.CuentasPorPagar +
         this.infoFinanciera.OtrosPasivos;
-        // this.SumaPasivos = +this.patrimonioFrom.controls.ObligacionesFinancieras.value +
-        // +this.patrimonioFrom.controls.CuentaPorPagar.value +
-        // +this.patrimonioFrom.controls.OtrosPasivos.value;
+      // this.SumaPasivos = +this.patrimonioFrom.controls.ObligacionesFinancieras.value +
+      // +this.patrimonioFrom.controls.CuentaPorPagar.value +
+      // +this.patrimonioFrom.controls.OtrosPasivos.value;
 
       this.infoFinanciera.TotalPatrimonio = this.infoFinanciera.TotalActivos - this.totalPasivos;
     }
@@ -434,29 +471,29 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
     //#region Carga la informacion de Accionistas
     if (dataPrint.AccionistaDto !== null && dataPrint.AccionistaDto !== undefined) {
       dataPrint.AccionistaDto.forEach((elementAccionistas : any) => {
-      let infoAccionista = new InformacionAccionistas();
-      infoAccionista.Numero = elementAccionistas.NumeroDocumento;
-      infoAccionista.RazonSocialNombreCompleto = elementAccionistas.RazonSocial;
-      infoAccionista.VinculadoPEP = (elementAccionistas.VinculoPeps) ? 'Si' : 'No';
-      this.tiposDocumento.forEach(element => {
-        if (+element.Value === elementAccionistas.IdTipoIdentificacion) {
-          infoAccionista.TipoIdentificacion = element.Descripcion;
-        }
-      }); 
-      infoAccionista.Participacion = elementAccionistas.Participacion;
+        let infoAccionista = new InformacionAccionistas();
+        infoAccionista.Numero = elementAccionistas.NumeroDocumento;
+        infoAccionista.RazonSocialNombreCompleto = elementAccionistas.RazonSocial;
+        infoAccionista.VinculadoPEP = (elementAccionistas.VinculoPeps) ? 'Si' : 'No';
+        this.tiposDocumento.forEach(element => {
+          if (+element.Value === elementAccionistas.IdTipoIdentificacion) {
+            infoAccionista.TipoIdentificacion = element.Descripcion;
+          }
+        });
+        infoAccionista.Participacion = elementAccionistas.Participacion;
         this.LstinfoAccionista.push(infoAccionista);
-        
-    });
+
+      });
     }
     //#endregion
-  
+
     //#region Carga la informacion de la entrevista
     if (dataPrint.EntrevistaDto !== null && dataPrint.EntrevistaDto !== undefined ) {
       dataPrint.EntrevistaDto.forEach((element : any) => {
- 
+
         if (element.NumeroPregunta === 6) {
           this.entrevista.RealizaMonedaExtrangera =(element.Respuesta !== null && element.Respuesta === 'true') ? 'Si' : 'No';
-        } 
+        }
         if (element.NumeroPregunta === 7) {
           this.entrevista.Entidad = (element.Respuesta === null || element.Respuesta === '') ? '' : element.Respuesta;
         }
@@ -479,7 +516,7 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
         }
         if (element.NumeroPregunta === 25) {
           this.dataDivisas.forEach((elementDivsa : any) => {
-            if (elementDivsa.Id === +element.Respuesta) { this.entrevista.Moneda = elementDivsa.Nombre; }      
+            if (elementDivsa.Id === +element.Respuesta) { this.entrevista.Moneda = elementDivsa.Nombre; }
           });
         }
         if (element.NumeroPregunta === 13) {
@@ -530,7 +567,7 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
       });
     }
     //#endregion
-  
+
     //#region Carga la informacion de las referencias
     if (dataPrint.ReferenciasDto !== null && dataPrint.ReferenciasDto !== undefined) {
       dataPrint.ReferenciasDto.forEach((element : any) => {
@@ -568,7 +605,76 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
 
     }
     //#endregion
-  
+
+  }
+
+  EnviarHojaVidaWorkManager() {
+    const now = new Date();
+    const targetDate = new Date(this.infoPersonal.FechaActualizacion);
+
+    const yearDiff = now.getFullYear() - targetDate.getFullYear();
+    const monthDiff = now.getMonth() - targetDate.getMonth();
+
+    let totalMonths = yearDiff * 12 + monthDiff;
+
+    if (now.getDate() < targetDate.getDate()) totalMonths -= 1;
+    
+    if(totalMonths > 6 && this.GetServiceSolicited.idProceso == 2) {
+      this.notif.onWarning('Advertencia', 'Asociado no se ha actualizado en los últimos 6 meses.');
+      return;
+    }
+
+    Swal.fire({
+      title: 'Advertencia',
+      text: '',
+      html: '¿Desea enviar hoja de vida a workmanager? ',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Si',
+      cancelButtonText: 'No',
+      confirmButtonColor: 'rgb(13,165,80)',
+      cancelButtonColor: 'rgb(160,0,87)',
+      allowOutsideClick: false,
+      allowEscapeKey: false
+      // tslint:disable-next-line:no-shadowed-variable
+    }).then(result => {
+      if(result.value) {
+        this.showLoader = true;
+        const globalData = JSON.parse(window.atob( localStorage.getItem('Data') ?? '' ));
+        
+        const formInsertData = {
+          base64: this.currentHdvBase64,
+          documento: this.infoPersonal.Nit,
+          usuario: globalData?.Usuario,
+          idOficina: globalData?.NumeroOficina,
+          idProceso: this.GetServiceSolicited.idProceso,
+          RadicadoCredito: this.GetServiceSolicited.radicado
+        }; 
+           
+        this.clientesService.EnviarSolicitudServiciosWorkManager(formInsertData).subscribe(
+          result => {
+            this.showLoader = false;
+            this.notif.onSuccess('Exitoso', 'Se envió al workmangaer correctamente.');
+            this.openModalHojaVida.nativeElement.click();
+            const idServicioSeleccionado = this.GetServiceSolicited.idProceso;
+            const servicioName = this.servicios.find(item => item.id == idServicioSeleccionado)?.name || '';
+            this.generalesService.Guardarlog(`Se envió al workmanager por ${servicioName}`, 3, 0, +this.infoPersonal.IdJuridico, 12).subscribe(
+              result => {
+                
+              }
+            );
+          },
+          error => {
+            this.showLoader = false;
+            if(error.detalle?.includes('No existe un registro')) {
+              this.notif.onWarning('Advertencia', 'Afiliado no encontrado en el workmanager.');
+              return;
+            }
+            this.notif.onWarning('Advertencia', 'No se envió al workmanager.');
+          }
+        );
+      }
+    })
   }
 
   private LimpiarDataImpresion() {

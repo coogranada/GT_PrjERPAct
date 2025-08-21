@@ -22,8 +22,13 @@ export class AuthHttpClientInterceptorService implements HttpInterceptor {
       });
     else
       authRequest = req.clone({});
+
+    const skipError = req.url.includes('skipErrorHandling=true');
     return next.handle(authRequest).pipe(
       catchError((err: any) => {
+        if (skipError) {
+          return throwError(() => err.error);
+        }
         if (err.status == 401) {
           localStorage.clear();
           window.location.reload();

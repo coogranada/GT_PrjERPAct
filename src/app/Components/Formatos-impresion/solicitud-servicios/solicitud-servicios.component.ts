@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, EventEmitter, Output } from '@angular/core';
 import { ClientesService } from '../../../Services/Clientes/clientes.service';
 import { ClientesGetListService } from '../../../Services/Clientes/clientesGetList.service';
 import { OperacionesService } from '../../../Services/Maestros/operaciones.service';
@@ -154,8 +154,10 @@ export class SolicitudServiciosComponent implements OnInit {
     { Value: '5', Descripcion: 'Otros' }];
 
   public naturalesServicio = new NaturalesServicio();
-  public naturalesAllModel = new NaturalesAllModel();
+  public naturalesAllModel: NaturalesAllModel = new NaturalesAllModel();
   public naturalesMenorModel = new NaturalesMenorModel();
+  @Output() emittedNatural = new EventEmitter<NaturalesAllModel>();
+
   public metodosConocio = [
     { Value: '1', Descripcion: 'Radio' },
     { Value: '2', Descripcion: 'Televisión' },
@@ -274,6 +276,14 @@ export class SolicitudServiciosComponent implements OnInit {
 
   }
 
+  emitNatural() {
+    const naturalToEmitt = { ...this.naturalesAllModel, ...this.naturalesServicio } as any;
+    Object.keys(naturalToEmitt).forEach(key => {
+      if(naturalToEmitt[key] === null) naturalToEmitt[key] = "";
+    });
+    this.emittedNatural.emit(naturalToEmitt);
+  }
+
   GetParentescos() {
         let parentesco : string | null = localStorage.getItem('parentesco');
         this.dataParentescosSol1 = JSON.parse(window.atob(parentesco == null ? "" : parentesco));
@@ -324,1203 +334,1244 @@ export class SolicitudServiciosComponent implements OnInit {
     // );
   }
   abrirSolicitud(documentoConsultar : string) {
-    if (this.EsReImpresion) {
-      this.esReimpresa = 'Reimpresión';
-    } else {
-      this.esReimpresa = '';
-    }
-    this.fechaImpresion = new Date();
-    this.loading = true;
-    this.CargarAppComponet = true;
-    this.ArrayPropiedad = [];
-    this.ArrayVehiculo = [];
-    this.ArrayFamiliar = [];
-    this.ArrayPersonal = [];
-    this.ArrayComercial = [];
-    this.ArrayFinanciaria = [];
-    this.ArrayPeps = [];
-    this.ArrayOtros = [];
-    let fechaAntiLab;
-    let fechaNacimiento;
-    let fechaExpedicion;
-    let fechaModificacion;
-    let fechaNacimientoFormat;
-    let fechaExpedicionFormat;
-    let fechaViveDesde;
-    this.mostrarImporta = null;
-    this.mostrarCobertura = null;
-    this.mostrarGiros = null;
-    this.naturalesServicio = new NaturalesServicio();
-    this.naturalesAllModel = new NaturalesAllModel();
-    console.log("eee",documentoConsultar)
-    this.clientesService.BuscarNaturalesAll(documentoConsultar).subscribe((result : any) => {
-        console.log(result);
-        if (result !== null) {
-          let credito : string | null = localStorage.getItem('Credito');
-          let vinculacion : string | null = localStorage.getItem('Vinculacion');
-          let actualizacion : string | null = localStorage.getItem('Actualizacion');
-          let dataServicie : string | null = localStorage.getItem('DataService');
-
-          this.Servcredito = JSON.parse(credito == null ? "" : credito);
-          this.servVinculacion = JSON.parse(vinculacion == null ? "" : vinculacion);
-          this.ServActualiza = JSON.parse(actualizacion == null ? "" : actualizacion);
-          const dataCredito = JSON.parse(dataServicie == null ? "" : dataServicie);
-          // mapea la informacion si la impresion es para credito
-          if (dataCredito !== null) {
-            this.naturalesServicio.Asesor = dataCredito.Asesor;
-            if (dataCredito.Destino !== null && dataCredito.Destino !== undefined && dataCredito.Destino !== null) {
-              this.naturalesServicio.Destino = this.MaysPrimera(dataCredito.Destino.toLowerCase());
-            } else {
-              this.naturalesServicio.Destino = dataCredito.Destino;
-            }
-            this.naturalesServicio.Oficina = dataCredito.Oficina;
-            this.naturalesServicio.MontoSolicitado = dataCredito.montoSolicitado;
-            this.naturalesServicio.PlazoDeseado = dataCredito.plazoDeseado;
-            this.naturalesServicio.NombreDeudor = dataCredito.NombreDeudor;
-            this.naturalesServicio.NumeroDocDeudor = dataCredito.NumeroDocumento;
-            if (dataCredito.TipoDocumento !== null && dataCredito.TipoDocumento !== undefined
-              && dataCredito.TipoDocumento !== '') {
-              this.tiposDocumento.forEach(elementTipoDocu => {
-                console.log(dataCredito.TipoDocumento);
-                if (+elementTipoDocu.Value === dataCredito.TipoDocumento) {
-                  this.naturalesServicio.TipoIdentificacion = elementTipoDocu.Descripcion;
-                }
-              });
-            } else {
-              this.naturalesServicio.TipoIdentificacion = null;
-            }
-          }
-
-          // mapea el metodo como conocio a coogranada
-          this.metodosConocio.forEach((elementMetodo : any) => {
-            if (+elementMetodo.Value === result.asociadosNaturalesDto.MetodoConocio) {
-              this.naturalesAllModel.ConocioCoogranada = elementMetodo.Descripcion;
-            }
-          });
-
-
-          if (result.asociadosNaturalesDto.OtroPor !== null && result.asociadosNaturalesDto.OtroPor !== undefined) {
-            this.naturalesAllModel.Cual = this.MaysPrimera(result.asociadosNaturalesDto.OtroPor.toLowerCase());
-          } else {
-            this.naturalesAllModel.Cual = '';
-          }
-
-          // formatDate(this.basicosFrom.value.viveDesde, 'yyyy-MM-dd', 'en')
-          // fechaModificacionFormat = formatDate(new Date(), 'dd-MM-yyyy', 'en');
-
-          fechaModificacion = new Date();
-          this.naturalesAllModel.DiaFechaSoli = fechaModificacion.getDate();
-          this.naturalesAllModel.MesFechaSoli = fechaModificacion.getMonth() + 1;
-          this.naturalesAllModel.AnoFechaSoli = fechaModificacion.getFullYear();
-
-          //#region INFORMACION PERSONAL
-          console.log('#region INFORMACION PERSONAL - ' + this.dataTipoCliente);
-          this.dataTipoCliente.forEach((tipoCliente : any) => {
-            if (tipoCliente.Clase === result.asociadosNaturalesDto.IdRelacion) {
-              this.naturalesAllModel.TipoDeCliente = tipoCliente.Descripcion;
-            }
-           });
-
-          // mapea el tipo de documento
-          console.log('mapea el tipo de documento - ' + this.tiposDocumento);
-          if (result.tercerosDto.IdTipoDocumento !== null && result.tercerosDto.IdTipoDocumento !== undefined
-            && result.tercerosDto.IdTipoDocumento !== '') {
-            this.tiposDocumento.forEach(elementTipoDocu => {
-              if (+elementTipoDocu.Value === result.tercerosDto.IdTipoDocumento) {
-                this.naturalesAllModel.TipoDocumento = elementTipoDocu.Descripcion;
-              }
-            });
-          } else {
-            this.naturalesAllModel.TipoDocumento = null;
-          }
-       // mapea la nacionalidad 
-      if (result.asociadosNaturalesDto.IdNacionalidad !== 0
-      && result.asociadosNaturalesDto.IdNacionalidad !== undefined
-      && result.asociadosNaturalesDto.IdNacionalidad !== null) {
-          this.clientesGetListService.getNacionalidad().subscribe(
-          resultN => {
-            resultN.forEach((elementN : any) => {
-              if (elementN.IdNacionalidad === result.asociadosNaturalesDto.IdNacionalidad) {
-              this.naturalesAllModel.Nacionalidad = elementN.Descripcion;
-              }
-           });
-         },);
+    return new Promise((resolve) => {
+      if (this.EsReImpresion) {
+        this.esReimpresa = 'Reimpresión';
+      } else {
+        this.esReimpresa = '';
       }
-          // mapea fecha de expedicion
-          // fechaExpedicion = new Date(result.tercerosDto.FechaExpDocumento).toLocaleDateString();
-          fechaExpedicionFormat = formatDate(result.tercerosDto.FechaExpDocumento, 'MM-dd-yyyy', 'en');
-          fechaExpedicion = new Date(fechaExpedicionFormat);
+      this.fechaImpresion = new Date();
+      this.CargarAppComponet = true;
+      this.ArrayPropiedad = [];
+      this.ArrayVehiculo = [];
+      this.ArrayFamiliar = [];
+      this.ArrayPersonal = [];
+      this.ArrayComercial = [];
+      this.ArrayFinanciaria = [];
+      this.ArrayPeps = [];
+      this.ArrayOtros = [];
+      let fechaAntiLab;
+      let fechaNacimiento;
+      let fechaExpedicion;
+      let fechaModificacion;
+      let fechaNacimientoFormat;
+      let fechaExpedicionFormat;
+      let fechaViveDesde;
+      this.mostrarImporta = null;
+      this.mostrarCobertura = null;
+      this.mostrarGiros = null;
+      this.naturalesServicio = new NaturalesServicio();
+      this.naturalesAllModel = new NaturalesAllModel();
+      this.naturalesAllModel.esReimpresa = this.esReimpresa;
+      this.clientesService.BuscarNaturalesAll(documentoConsultar).subscribe((result : any) => {
+          console.log(result);
 
-          const dateCompare1 = new Date('01-01-1901');
-          const newDateStringExpi = new Date(fechaExpedicionFormat);
-          if (newDateStringExpi > dateCompare1) {
-            this.naturalesAllModel.DiaFechaExpe = fechaExpedicion.getDate();
-            this.naturalesAllModel.MesFechaExpe = fechaExpedicion.getMonth() + 1 ;
-            this.naturalesAllModel.AnofechaExpe = fechaExpedicion.getFullYear();
-          } else {
-            this.naturalesAllModel.DiaFechaExpe = '';
-            this.naturalesAllModel.MesFechaExpe = '';
-            this.naturalesAllModel.AnofechaExpe = '';
-          }
+          let totalSuscripciones = 0;
+          let finalizadas = 0;
+          
+          const checkFinish = () => {
+            finalizadas++;            
+            if (finalizadas === totalSuscripciones) {
+              resolve('');
+              this.emitNatural();
+            }
+          };
+          
 
-          // mapea documento y nombres
-          this.naturalesAllModel.NumeroDocumento = result.tercerosDto.NumeroDocumento;
-          this.naturalesAllModel.PrimerNombre = result.tercerosDto.PrimerNombre;
-          this.naturalesAllModel.SegundoNombre = result.tercerosDto.SegundoNombre;
-          this.naturalesAllModel.PrimerApellido = result.tercerosDto.PrimerApellido;
-          this.naturalesAllModel.SegundoApellido = result.tercerosDto.SegundoApellido;
-          // mapea fecha de nacimiento
+          if (result !== null) {
+            let credito : string | null = localStorage.getItem('Credito');
+            let vinculacion : string | null = localStorage.getItem('Vinculacion');
+            let actualizacion : string | null = localStorage.getItem('Actualizacion');
+            let dataServicie : string | null = localStorage.getItem('DataService');
 
-          // fechaNacimiento = new Date(result.tercerosDto.FechaNacimiento).toLocaleDateString();
-          fechaNacimientoFormat = formatDate(result.tercerosDto.FechaNacimiento, 'MM-dd-yyyy', 'en');
-          fechaNacimiento = new Date(fechaNacimientoFormat);
-          const dateCompare2 = new Date('01-01-1901');
-          const newDateStringExp = new Date(fechaExpedicionFormat);
-          if (newDateStringExp > dateCompare2) {
-          this.naturalesAllModel.DiaFechaNaci = fechaNacimiento.getDate();
-          this.naturalesAllModel.MesFechaNaci = fechaNacimiento.getMonth() + 1;
-          this.naturalesAllModel.AnoFechaNaci = fechaNacimiento.getFullYear();
-          } else {
-            this.naturalesAllModel.DiaFechaNaci = '';
-            this.naturalesAllModel.MesFechaNaci = '';
-            this.naturalesAllModel.AnoFechaNaci = '';
-          }
-          // mapea la ciudad de expedicion
-          console.log('mapea la ciudad de expedicion - ' + this.dataCiudad);
-          if (result.tercerosDto.IdCiudadExpeDto !== null && result.tercerosDto.IdCiudadExpeDto !== undefined) {
-           if(result.tercerosDto.IdCiudadExpeDto !== 0 ){
-            this.dataCiudadesAllSol.forEach((elementCiu : any) => {
-              if (elementCiu.IdCiudad === result.tercerosDto.IdCiudadExpeDto) {
-                this.naturalesAllModel.LugarExpedicon = elementCiu.Descripcion;
+            this.Servcredito = JSON.parse(credito == null ? "" : credito);
+            this.servVinculacion = JSON.parse(vinculacion == null ? "" : vinculacion);
+            this.ServActualiza = JSON.parse(actualizacion == null ? "" : actualizacion);
+            if(this.servVinculacion) {
+              this.naturalesAllModel.ServicioSolicitado = "Vinculación";
+              if(this.Servcredito) this.naturalesAllModel.ServicioSolicitado += " - Credito";
+            }
+            else if(this.Servcredito) this.naturalesAllModel.ServicioSolicitado = "Credito";
+            else if(this.ServActualiza) this.naturalesAllModel.ServicioSolicitado = "Actualización de datos";
+            const dataCredito = JSON.parse(dataServicie!);
+            console.log({dataCredito});
+            
+            // mapea la informacion si la impresion es para credito
+            if (dataCredito !== null) {
+              this.naturalesServicio.Asesor = dataCredito.Asesor;
+              if (dataCredito.Destino?.StrNombre !== null && dataCredito.Destino?.StrNombre !== undefined && dataCredito.Destino?.StrNombre !== null) {
+                this.naturalesServicio.Destino = this.MaysPrimera(dataCredito.Destino.StrNombre?.toLowerCase());
+              } else {
+                this.naturalesServicio.Destino = dataCredito.Destino?.StrNombre;
+              }
+              this.naturalesServicio.Oficina = dataCredito.Oficina;
+              this.naturalesServicio.MontoSolicitado = dataCredito.montoSolicitado;
+              this.naturalesServicio.PlazoDeseado = dataCredito.plazoDeseado;
+              this.naturalesServicio.NombreDeudor = dataCredito.NombreDeudor;
+              this.naturalesServicio.NumeroDocDeudor = dataCredito.NumeroDocumento;
+              if (dataCredito.TipoDocumento !== null && dataCredito.TipoDocumento !== undefined
+                && dataCredito.TipoDocumento !== '') {
+                this.tiposDocumento.forEach(elementTipoDocu => {
+                  console.log(dataCredito.TipoDocumento);
+                  if (+elementTipoDocu.Value === dataCredito.TipoDocumento) {
+                    this.naturalesServicio.TipoIdentificacion = elementTipoDocu.Descripcion;
+                  }
+                });
+              } else {
+                this.naturalesServicio.TipoIdentificacion = null;
+              }
+            }
+
+            // mapea el metodo como conocio a coogranada
+            this.metodosConocio.forEach((elementMetodo : any) => {
+              if (+elementMetodo.Value === result.asociadosNaturalesDto.MetodoConocio) {
+                this.naturalesAllModel.ConocioCoogranada = elementMetodo.Descripcion;
               }
             });
-           }else{
-            if (result.tercerosDto.IdPaisExpe !== null && result.tercerosDto.IdPaisExpe !== undefined) {
-              this.dataPaisesAllSol.forEach((elementPais : any) => {
-                if (elementPais.IdPais === result.tercerosDto.IdPaisExpe) {
-                  this.naturalesAllModel.LugarExpedicon = elementPais.Descripcion;
+
+
+            if (result.asociadosNaturalesDto.OtroPor !== null && result.asociadosNaturalesDto.OtroPor !== undefined) {
+              this.naturalesAllModel.Cual = this.MaysPrimera(result.asociadosNaturalesDto.OtroPor.toLowerCase());
+            } else {
+              this.naturalesAllModel.Cual = '';
+            }
+
+            // formatDate(this.basicosFrom.value.viveDesde, 'yyyy-MM-dd', 'en')
+            // fechaModificacionFormat = formatDate(new Date(), 'dd-MM-yyyy', 'en');
+            fechaModificacion = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }).split('/');
+            this.naturalesAllModel.DiaFechaSoli = fechaModificacion[0];
+            this.naturalesAllModel.MesFechaSoli = fechaModificacion[1];
+            this.naturalesAllModel.AnoFechaSoli = fechaModificacion[2];
+
+            //#region INFORMACION PERSONAL
+            console.log('#region INFORMACION PERSONAL - ' + this.dataTipoCliente);
+            this.dataTipoCliente.forEach((tipoCliente : any) => {
+              if (tipoCliente.Clase === result.asociadosNaturalesDto.IdRelacion) {
+                this.naturalesAllModel.TipoDeCliente = tipoCliente.Descripcion;
+              }
+            });
+
+            // mapea el tipo de documento
+            console.log('mapea el tipo de documento - ' + this.tiposDocumento);
+            if (result.tercerosDto.IdTipoDocumento !== null && result.tercerosDto.IdTipoDocumento !== undefined
+              && result.tercerosDto.IdTipoDocumento !== '') {
+              this.tiposDocumento.forEach(elementTipoDocu => {
+                if (+elementTipoDocu.Value === result.tercerosDto.IdTipoDocumento) {
+                  this.naturalesAllModel.TipoDocumento = elementTipoDocu.Descripcion;
                 }
               });
+            } else {
+              this.naturalesAllModel.TipoDocumento = null;
             }
-           }
+        // mapea la nacionalidad 
+        if (result.asociadosNaturalesDto.IdNacionalidad !== 0
+        && result.asociadosNaturalesDto.IdNacionalidad !== undefined
+        && result.asociadosNaturalesDto.IdNacionalidad !== null) {
+          totalSuscripciones++;
+            this.clientesGetListService.getNacionalidad().subscribe(
+            resultN => {
+              resultN.forEach((elementN : any) => {
+                if (elementN.IdNacionalidad === result.asociadosNaturalesDto.IdNacionalidad) {
+                this.naturalesAllModel.Nacionalidad = elementN.Descripcion;
+                }
+              });
+              checkFinish();
+          },);
+        }
+            // mapea fecha de expedicion
+            // fechaExpedicion = new Date(result.tercerosDto.FechaExpDocumento).toLocaleDateString();
+            fechaExpedicionFormat = formatDate(result.tercerosDto.FechaExpDocumento, 'MM-dd-yyyy', 'en');
+            fechaExpedicion = new Date(fechaExpedicionFormat);
 
-          } 
-          // mapea el genero
-          this.generos.forEach(elementTipoDocu => {
-            if (+elementTipoDocu.Value === result.tercerosDto.IdGenero) {
-              this.naturalesAllModel.Genero = elementTipoDocu.Descripcion;
+            const dateCompare1 = new Date('01-01-1901');
+            const newDateStringExpi = new Date(fechaExpedicionFormat);
+            if (newDateStringExpi > dateCompare1) {
+              this.naturalesAllModel.DiaFechaExpe = String(fechaExpedicion.getDate()).padStart(2, '0');
+              this.naturalesAllModel.MesFechaExpe = String(fechaExpedicion.getMonth() + 1).padStart(2, '0');
+              this.naturalesAllModel.AnofechaExpe = fechaExpedicion.getFullYear();
+            } else {
+              this.naturalesAllModel.DiaFechaExpe = '';
+              this.naturalesAllModel.MesFechaExpe = '';
+              this.naturalesAllModel.AnofechaExpe = '';
             }
-          });
-          // mapeo ciudad, departamento pais de nacimiento
-          if (result.tercerosDto.IdCiudadNto !== null && result.tercerosDto.IdCiudadNto !== undefined
-            && result.tercerosDto.IdCiudadNto !== '' && result.tercerosDto.IdCiudadNto !== 0 ) {
-            this.dataCiudadesAllSol.forEach((elementCiu : any) => {
-              if (elementCiu.IdCiudad === result.tercerosDto.IdCiudadNto) {
-                 this.naturalesAllModel.CiudadNto = elementCiu.Descripcion;
-                this.dataDepartamentosAllSol.forEach((elementDep : any) => {
-                  if (elementDep.IdDepartamento === elementCiu.IdDepartamento) {
-                    this.naturalesAllModel.Departamento =  elementDep.Descripcion;
-                    this.dataPaisesAllSol.forEach((elementPais : any) => {
-                      if (elementPais.IdPais === elementDep.IdPais) {
-                        this.naturalesAllModel.Pais = elementPais.Descripcion;
-                      }
-                    });
+
+            // mapea documento y nombres
+            this.naturalesAllModel.NumeroDocumento = result.tercerosDto.NumeroDocumento;
+            this.naturalesAllModel.PrimerNombre = result.tercerosDto.PrimerNombre;
+            this.naturalesAllModel.SegundoNombre = result.tercerosDto.SegundoNombre;
+            this.naturalesAllModel.PrimerApellido = result.tercerosDto.PrimerApellido;
+            this.naturalesAllModel.SegundoApellido = result.tercerosDto.SegundoApellido;
+            // mapea fecha de nacimiento
+
+            // fechaNacimiento = new Date(result.tercerosDto.FechaNacimiento).toLocaleDateString();
+            fechaNacimientoFormat = formatDate(result.tercerosDto.FechaNacimiento, 'MM-dd-yyyy', 'en');
+            fechaNacimiento = new Date(fechaNacimientoFormat);
+            const dateCompare2 = new Date('01-01-1901');
+            const newDateStringExp = new Date(fechaExpedicionFormat);
+            if (newDateStringExp > dateCompare2) {
+            this.naturalesAllModel.DiaFechaNaci = String(fechaNacimiento.getDate()).padStart(2, '0');
+            this.naturalesAllModel.MesFechaNaci = String(fechaNacimiento.getMonth() + 1).padStart(2, '0');
+            this.naturalesAllModel.AnoFechaNaci = fechaNacimiento.getFullYear();
+            } else {
+              this.naturalesAllModel.DiaFechaNaci = '';
+              this.naturalesAllModel.MesFechaNaci = '';
+              this.naturalesAllModel.AnoFechaNaci = '';
+            }
+            // mapea la ciudad de expedicion
+            console.log('mapea la ciudad de expedicion - ' + this.dataCiudad);
+            if (result.tercerosDto.IdCiudadExpeDto !== null && result.tercerosDto.IdCiudadExpeDto !== undefined) {
+            if(result.tercerosDto.IdCiudadExpeDto !== 0 ){
+              this.dataCiudadesAllSol.forEach((elementCiu : any) => {
+                if (elementCiu.IdCiudad === result.tercerosDto.IdCiudadExpeDto) {
+                  this.naturalesAllModel.LugarExpedicon = elementCiu.Descripcion;
+                }
+              });
+            }else{
+              if (result.tercerosDto.IdPaisExpe !== null && result.tercerosDto.IdPaisExpe !== undefined) {
+                this.dataPaisesAllSol.forEach((elementPais : any) => {
+                  if (elementPais.IdPais === result.tercerosDto.IdPaisExpe) {
+                    this.naturalesAllModel.LugarExpedicon = elementPais.Descripcion;
                   }
                 });
               }
+            }
+
+            } 
+            // mapea el genero
+            this.generos.forEach(elementTipoDocu => {
+              if (+elementTipoDocu.Value === result.tercerosDto.IdGenero) {
+                this.naturalesAllModel.Genero = elementTipoDocu.Descripcion;
+              }
             });
-          } else {
-            if (result.tercerosDto.IdPaisNto !== null && result.tercerosDto.IdPaisNto !== undefined) {
-              this.dataPaisesAllSol.forEach((elementPais : any) => {
-                if (elementPais.IdPais === result.tercerosDto.IdPaisNto) {
-                  this.naturalesAllModel.Pais = elementPais.Descripcion;
+            // mapeo ciudad, departamento pais de nacimiento
+            if (result.tercerosDto.IdCiudadNto !== null && result.tercerosDto.IdCiudadNto !== undefined
+              && result.tercerosDto.IdCiudadNto !== '' && result.tercerosDto.IdCiudadNto !== 0 ) {
+              this.dataCiudadesAllSol.forEach((elementCiu : any) => {
+                if (elementCiu.IdCiudad === result.tercerosDto.IdCiudadNto) {
+                  this.naturalesAllModel.CiudadNto = elementCiu.Descripcion;
+                  this.dataDepartamentosAllSol.forEach((elementDep : any) => {
+                    if (elementDep.IdDepartamento === elementCiu.IdDepartamento) {
+                      this.naturalesAllModel.Departamento =  elementDep.Descripcion;
+                      this.dataPaisesAllSol.forEach((elementPais : any) => {
+                        if (elementPais.IdPais === elementDep.IdPais) {
+                          this.naturalesAllModel.Pais = elementPais.Descripcion;
+                        }
+                      });
+                    }
+                  });
                 }
               });
-            }
-          }
-          // mapea el estado civil
-          this.estadoCivil.forEach(elementEstadoCivil => {
-            if (+elementEstadoCivil.Value === result.asociadosNaturalesDto.IdEstadoCivil) {
-              this.naturalesAllModel.EstadoCivil = elementEstadoCivil.Descripcion;
-            }
-          });
-          // mapea personas a cargo
-          if (result.asociadosNaturalesDto.NumPersCargo === null || result.asociadosNaturalesDto.NumPersCargo === undefined
-            || result.asociadosNaturalesDto.NumPersCargo === '') {
-            this.naturalesAllModel.NumeroPersonasCargo = '0';
-          } else {
-            this.naturalesAllModel.NumeroPersonasCargo = result.asociadosNaturalesDto.NumPersCargo;
-          }
-          this.naturalesAllModel.RegimenTributario = result.asociadosNaturalesDto.RegimenTributario ? 'No responsable' : 'Simple';
-
-          // mapea el nivel de estudio
-          this.nivelesEstudio.forEach(elementNivelEstudio => {
-            if (+elementNivelEstudio.Value === result.asociadosNaturalesDto.IdNivelEstudio) {
-              this.naturalesAllModel.NivelEstudio = elementNivelEstudio.Descripcion;
+            } else {
+              if (result.tercerosDto.IdPaisNto !== null && result.tercerosDto.IdPaisNto !== undefined) {
+                this.dataPaisesAllSol.forEach((elementPais : any) => {
+                  if (elementPais.IdPais === result.tercerosDto.IdPaisNto) {
+                    this.naturalesAllModel.Pais = elementPais.Descripcion;
+                  }
+                });
               }
-          });
-
-           
-          // mapea la profesion
-          // console.log('mapea la profesion - ' + this.dataCiudad);
-          this.dataProfesionSol.forEach((elementProfesion : any) => {
-            if (elementProfesion.Clase === result.asociadosNaturalesDto.IdTituloProfesional) {
-              this.naturalesAllModel.tituloProfesional = elementProfesion.Descripcion;
             }
-          });
-          // mapea la informacion del Arrendador
-          this.naturalesAllModel.NombreArrendador = this.capitalizarLetra(result.asociadosNaturalesDto.NombreArrendador);
-          this.naturalesAllModel.TelefonoArrendador = result.asociadosNaturalesDto.TelefonoArrendador;
-          // mapea celular y  correo
-          console.log(' // mapea celular y  correo');
-          console.log('mapea contactoDto solo console llego hasta aqui');
-          console.log('mapea contactoDto' + result.contactoDto);
-          if (result.contactoDto !== null && result.contactoDto.length >= 0) {
-            console.log('Entro al if - if (result.contactoDto !== null && result.contactoDto.length >= 0) {');
+            // mapea el estado civil
+            this.estadoCivil.forEach(elementEstadoCivil => {
+              if (+elementEstadoCivil.Value === result.asociadosNaturalesDto.IdEstadoCivil) {
+                this.naturalesAllModel.EstadoCivil = elementEstadoCivil.Descripcion;
+              }
+            });
+            // mapea personas a cargo
+            if (result.asociadosNaturalesDto.NumPersCargo === null || result.asociadosNaturalesDto.NumPersCargo === undefined
+              || result.asociadosNaturalesDto.NumPersCargo === '') {
+              this.naturalesAllModel.NumeroPersonasCargo = '0';
+            } else {
+              this.naturalesAllModel.NumeroPersonasCargo = result.asociadosNaturalesDto.NumPersCargo;
+            }
+            this.naturalesAllModel.RegimenTributario = result.asociadosNaturalesDto.RegimenTributario ? 'No responsable' : 'Simple';
+
+            // mapea el nivel de estudio
+            this.nivelesEstudio.forEach(elementNivelEstudio => {
+              if (+elementNivelEstudio.Value === result.asociadosNaturalesDto.IdNivelEstudio) {
+                this.naturalesAllModel.NivelEstudio = elementNivelEstudio.Descripcion;
+                }
+            });
+
+            
+            // mapea la profesion
+            // console.log('mapea la profesion - ' + this.dataCiudad);
+            this.dataProfesionSol.forEach((elementProfesion : any) => {
+              if (elementProfesion.Clase === result.asociadosNaturalesDto.IdTituloProfesional) {
+                this.naturalesAllModel.tituloProfesional = elementProfesion.Descripcion;
+              }
+            });
+            // mapea la informacion del Arrendador
+            this.naturalesAllModel.NombreArrendador = this.capitalizarLetra(result.asociadosNaturalesDto.NombreArrendador);
+            this.naturalesAllModel.TelefonoArrendador = result.asociadosNaturalesDto.TelefonoArrendador;
+            // mapea celular y  correo
+            console.log(' // mapea celular y  correo');
+            console.log('mapea contactoDto solo console llego hasta aqui');
+            console.log('mapea contactoDto' + result.contactoDto);
+            if (result.contactoDto !== null && result.contactoDto.length >= 0) {
+              console.log('Entro al if - if (result.contactoDto !== null && result.contactoDto.length >= 0) {');
+              result.contactoDto.forEach((elementCont : any) => {
+                if (elementCont.IdTipoContacto === 6) {
+                  if (elementCont.ContactoPrincipal) {
+                    this.tienePpal = true;
+                  }
+                }
+              });
+
+              if (this.tienePpal) {
+                result.contactoDto.forEach((elementCont : any) => {
+                  if (elementCont.IdTipoContacto === 6) {
+                    if (elementCont.ContactoPrincipal) {
+                      this.naturalesAllModel.NumeroCelular = elementCont.Descripcion;
+                    }
+                  } else if (elementCont.IdTipoContacto === 3) {
+                    if (elementCont.ContactoPrincipal) {
+                      if (elementCont.Descripcion !== null && elementCont.Descripcion !== undefined && elementCont.Descripcion !== '') {
+                        this.naturalesAllModel.CorreoElectronico = elementCont.Descripcion.toLowerCase();
+                      } else {
+                        this.naturalesAllModel.CorreoElectronico = elementCont.Descripcion;
+                      }
+                    }
+
+                  }
+                });
+              } else {
+                result.contactoDto.forEach((elementCont : any) => {
+                  if (elementCont.IdTipoContacto === 6) {
+                      this.naturalesAllModel.NumeroCelular = elementCont.Descripcion;
+                  } else if (elementCont.IdTipoContacto === 3) {
+                    if (elementCont.ContactoPrincipal) {
+                      if (elementCont.Descripcion !== null && elementCont.Descripcion !== undefined && elementCont.Descripcion !== '') {
+                        this.naturalesAllModel.CorreoElectronico = elementCont.Descripcion.toLowerCase();
+                      } else {
+                        this.naturalesAllModel.CorreoElectronico = elementCont.Descripcion;
+                      }
+                    }
+                  }
+                });
+              }
+            }
+            console.log('Salio del contactoDto y sigue con Ubicacion de la recidencia');
+            //#endregion
+
+            //#region UBICACION DE LA RECIDENCIA
+
+            // mapea direccion recidencia
+            console.log('mapea direccion recidencia');
+            result.contactoDto.forEach((elementRec : any) => {
+              // let complementoContato = '';
+              if (elementRec.IdTipoContacto === 1) {
+                if (elementRec.Descripcion) {
+                  this.naturalesAllModel.Direccion = this.MaysPrimera(elementRec.Descripcion.toLowerCase());
+                } else {
+                  this.naturalesAllModel.Direccion = elementRec.Descripcion.toLowerCase();
+                }
+                if (elementRec.IdBarrio !== null && elementRec.IdBarrio !== undefined) {
+                  this.dataBarriosAllSol.forEach((elementBarr : any) => {
+                    if (elementBarr.IdBarrio === elementRec.IdBarrio) {
+                      this.naturalesAllModel.BarrioReside = elementBarr.Descripcion;
+                    }
+                  });
+                }
+                if (elementRec.IdCiudad !== null && elementRec.IdCiudad !== undefined && elementRec.IdCiudad !== '' &&
+                  elementRec.IdCiudad !== 0 ) {
+                  this.dataCiudadesAllSol.forEach((elementCiu : any) => {
+                    if (elementCiu.IdCiudad === elementRec.IdCiudad) {
+                      this.naturalesAllModel.CiudadReside = elementCiu.Descripcion;
+                      this.dataDepartamentosAllSol.forEach((elementDep : any) => {
+                        if (elementDep.IdDepartamento === elementCiu.IdDepartamento) {
+                          this.naturalesAllModel.DepartamentoReside = elementDep.Descripcion;
+                          this.dataPaisesAllSol.forEach((elementPais : any) => {
+                            if (elementPais.IdPais === elementDep.IdPais) {
+                              this.naturalesAllModel.PaisReside = elementPais.Descripcion;
+                            }
+                          });
+                        }
+                      });
+                    }
+                  });
+                } else {
+                  this.dataPaisesAllSol.forEach((elementPais : any) => {
+                    if (elementPais.IdPais === elementRec.IdPais) {
+                      this.naturalesAllModel.PaisReside = elementPais.Descripcion;
+                    }
+                  });
+                }
+              }
+            });
+            // mapea telefono recidencia
+            console.log('mapea telefono recidencia');
+            result.contactoDto.forEach((elementTel : any)=> {
+              if (elementTel.IdTipoContacto === 4) {
+                this.naturalesAllModel.Telefono = elementTel.Descripcion;
+              }
+            });
+            // mapea el tipo de vivienda
+            console.log('mapea el tipo de vivienda');
+            this.tiposVivienda.forEach(elementTipoVivienda => {
+              if (+elementTipoVivienda.Value === result.asociadosNaturalesDto.IdTipoVivienda) {
+                this.naturalesAllModel.TipoVivienda = elementTipoVivienda.Descripcion;
+              }
+            });
+            // mapea la fecha antiguedad de vivienda
+
+            if (result.asociadosNaturalesDto.Fecha_Vive !== null) {
+              const dateCompare3 = new Date('01-01-1901');
+              const newDateStringVive = new Date(result.asociadosNaturalesDto.Fecha_Vive);
+              if (newDateStringVive > dateCompare3) {
+                fechaViveDesde = new Date(result.asociadosNaturalesDto.Fecha_Vive);
+                this.naturalesAllModel.MesFechaAnti = String(fechaViveDesde.getMonth() + 1).padStart(2, '0');
+                this.naturalesAllModel.AnoFechaAnti = String(fechaViveDesde.getFullYear()).padStart(2, '0');
+              } else {
+                this.naturalesAllModel.MesFechaAnti = '';
+                this.naturalesAllModel.AnoFechaAnti = '';
+              }
+            }
+
+            //#endregion
+
+            //#region INFORMACION LABORAL
+            console.log('mapea INFORMACION LABORAL');
+            // mapea la actividad economica
+            console.log('mapea la actividad economica - ');
+            totalSuscripciones++;
+            this.clientesGetListService.GetActividadEconomica(result.asociadosNaturalesDto.IdTipoOcupacion).subscribe(
+              resultActividad => {
+                  resultActividad.forEach((elementActivdad : any) => {
+                    if (elementActivdad.Id === result.asociadosNaturalesDto.IdActividadEconomica) {
+                      this.naturalesAllModel.CodigoCiiu = elementActivdad.CodigoCiiu;
+                      this.naturalesAllModel.ActividadEconomica = elementActivdad.Descripcion;
+                    }
+                  });
+                  checkFinish();
+              });
+            // mapea el tipo de ocupacion o empleo
+            totalSuscripciones++;
+            this.clientesGetListService.GetTipoOcupacion(result.asociadosNaturalesDto.IdTipoEmpleo).subscribe(
+              resultOcupacion => {
+                console.log('mapea el tipo de ocupacion o empleo - ' + resultOcupacion);
+                  resultOcupacion.forEach((elementOcupacion : any) => {
+                    if (elementOcupacion.IdTipoOcupacion === result.asociadosNaturalesDto.IdTipoOcupacion) {
+                      this.naturalesAllModel.TipoOcupacion = elementOcupacion.Nombre;
+                    }
+                  });
+                  checkFinish();
+              });
+            // mapea direccion laboral
+            console.log('mapea contactoDto - ' + result.contactoDto);
+            result.contactoDto.forEach((elementlab : any) => {
+              if (elementlab.IdTipoContacto === 2) {
+
+                this.naturalesAllModel.DireccionLaboral = elementlab.Descripcion;
+                if (elementlab.IdBarrio !== null && elementlab.IdBarrio !== undefined) {
+                  this.dataBarriosAllSol.forEach((elementBarr : any ) => {
+                    if (elementBarr.IdBarrio === elementlab.IdBarrio) {
+                      this.naturalesAllModel.BarrioLaboral = elementBarr.Descripcion;
+                    }
+                  });
+                }
+                if (elementlab.IdCiudad !== null && elementlab.IdCiudad !== undefined) {
+                  this.dataCiudadesAllSol.forEach((elementCiu : any) => {
+                    if (elementCiu.IdCiudad === elementlab.IdCiudad) {
+                      this.naturalesAllModel.CiudadLaboral = elementCiu.Descripcion;
+                      this.dataDepartamentosAllSol.forEach((elementDep : any) => {
+                        if (elementDep.IdDepartamento === elementCiu.IdDepartamento) {
+                          this.naturalesAllModel.DepartamentoLaboral = elementDep.Descripcion;
+                          this.dataPaisesAllSol.forEach((elementPais : any)=> {
+                            if (elementPais.IdPais === elementDep.IdPais) {
+                              this.naturalesAllModel.PaisLaboral = elementPais.Descripcion;
+                            }
+                          });
+                        }
+                      });
+                    }
+                  });
+                } else {
+                  this.dataPaisesAllSol.forEach((elementPais : any) => {
+                    if (elementPais.IdPais === elementlab.IdPais) {
+                      this.naturalesAllModel.PaisLaboral = elementPais.Descripcion;
+                    }
+                  });
+                }
+              }
+            });
+            // mapea telefono laboral
+            result.contactoDto.forEach((elementTel : any) => {
+              if (elementTel.IdTipoContacto === 5) {
+                this.naturalesAllModel.TelefonoLaboral = elementTel.Descripcion;
+              }
+            });
+            // mapea la empresa donde labora y nit
+            result.laboralDto.forEach((elementLaboral : any) => {
+              const objClients = new ClientesModel();
+              objClients.Nombre = '*';
+              objClients.Nit = '*';
+              objClients.Codigo = elementLaboral.IdEmpresa;
+              if (elementLaboral.IdEmpresa !== 0 && elementLaboral.IdEmpresa !== null &&
+                (elementLaboral.IdNatural === null || elementLaboral.IdNatural === 0 || elementLaboral.IdNatural === undefined)) {
+                totalSuscripciones++;
+                this.clientesGetListService.GetEmpresas(objClients).subscribe(
+                  resultEmpresa => {
+                    this.naturalesAllModel.EmpresaLabora = resultEmpresa[0].Nombre;
+                    this.naturalesAllModel.NitLabora = resultEmpresa[0].Nit;
+                    checkFinish();
+                  },
+                  error => {
+                    const errorMessage = <any>error;
+                    this.notif.onDanger('Error', errorMessage);
+                    console.error(errorMessage);
+                  }
+                );
+              } else if (elementLaboral.IdEmpresa !== 0 && elementLaboral.IdEmpresa !== null &&
+                (elementLaboral.IdNatural !== null && elementLaboral.IdNatural !== 0 )) {
+                totalSuscripciones++;
+                this.clientesService.BuscarNaturalLaboral(elementLaboral.IdEmpresa).subscribe(
+                  resulNatural => {
+                    this.naturalesAllModel.EmpresaLabora = resulNatural.PrimerNombre + ' ' + resulNatural.SegundoNombre + ' '
+                      + resulNatural.PrimerApellido + ' ' + resulNatural.SegundoApellido;
+                      checkFinish();
+                  },
+                  error => {
+                    const errorMessage = <any>error;
+                    this.notif.onDanger('Error', errorMessage);
+                    console.error(errorMessage);
+                  });
+              } else {
+                if (elementLaboral.EmpresaDescripcion !== null && elementLaboral.EmpresaDescripcion !== undefined ) {
+                  this.naturalesAllModel.EmpresaLabora = this.MaysPrimera(elementLaboral.EmpresaDescripcion.toLowerCase());
+                } else {
+                  this.naturalesAllModel.EmpresaLabora = elementLaboral.EmpresaDescripcion.toLowerCase();
+                }
+              }
+
+            });
+            // mapea el cargo
+            result.laboralDto.forEach((elementLaboral : any) => {
+              this.dataCargosSol.forEach((elementCargos : any)=> {
+                  if (elementCargos.Clase === elementLaboral.IdCargo) {
+                    this.naturalesAllModel.CargoOficio = elementCargos.Descripcion;
+                  }
+                });
+            });
+            // mapea la EPS
+            this.dataEmpresasEps.forEach((elementEps : any) => {
+                if (elementEps.IdEPS === result.asociadosNaturalesDto.IdEPS) {
+                  this.naturalesAllModel.Eps = elementEps.Nombre;
+                }
+            });
+            // mapea fecha de antiguedad laboral
+            console.log('mapea LaboralDto - ' + result.laboralDto);
+            result.laboralDto.forEach((elementlab : any)=> {
+            fechaAntiLab = new Date(this.naturalesAllModel.AnosAntiguedadEmpresa = elementlab.FechaLabora);
+            this.naturalesAllModel.MesesAntiguedadEmpresa = String(fechaAntiLab.getMonth() + 1).padStart(2, '0');
+            this.naturalesAllModel.AnosAntiguedadEmpresa = String(fechaAntiLab.getFullYear()).padStart(2, '0');
+            });
+            //  mapea nro empleados a cargo
+            result.laboralDto.forEach((elementlab : any) => {
+            this.naturalesAllModel.NEmpleados = elementlab.NumPersonasCargo;
+            });
+            // mapea datos arrendador 
+            result.laboralDto.forEach((elementLab : any) => {
+              this.naturalesAllModel.NomArrendadorLaboral = this.capitalizarLetra(elementLab.NombreArrendador);
+              this.naturalesAllModel.TeleArrendadorLaboral = elementLab.TelefonoArrendador;
+              if (elementLab.IdTipoLocal === 1) {
+                this.naturalesAllModel.TipoLocalLaboral = 'Arrendado';
+              } else {
+                this.naturalesAllModel.TipoLocalLaboral = 'Propio';
+              }
+            });
+            //#endregion
+
+            //#region ENVIO DE CORRESPONDENCIA
+
+            // mapeo envio informacion correspondecia
             result.contactoDto.forEach((elementCont : any) => {
-              if (elementCont.IdTipoContacto === 6) {
-                if (elementCont.ContactoPrincipal) {
-                  this.tienePpal = true;
-                }
-              }
-            });
-
-            if (this.tienePpal) {
-              result.contactoDto.forEach((elementCont : any) => {
-                if (elementCont.IdTipoContacto === 6) {
-                  if (elementCont.ContactoPrincipal) {
-                    this.naturalesAllModel.NumeroCelular = elementCont.Descripcion;
-                  }
-                } else if (elementCont.IdTipoContacto === 3) {
-                  if (elementCont.ContactoPrincipal) {
-                    if (elementCont.Descripcion !== null && elementCont.Descripcion !== undefined && elementCont.Descripcion !== '') {
-                      this.naturalesAllModel.CorreoElectronico = elementCont.Descripcion.toLowerCase();
+              if (elementCont.Correspondecia === true) {
+                this.Correspondencia.forEach(elementCor => {
+                  if (+elementCor.Value === elementCont.IdTipoContacto) {
+                    if (elementCor.Descripcion !== null && elementCor.Descripcion !== undefined && elementCor.Descripcion !== '') {
+                      this.naturalesAllModel.Correspondencia = this.MaysPrimera(elementCor.Descripcion.toLowerCase());
                     } else {
-                      this.naturalesAllModel.CorreoElectronico = elementCont.Descripcion;
+                      this.naturalesAllModel.Correspondencia = elementCor.Descripcion.toLowerCase();
                     }
                   }
+                });
+              }
+            });
+            //#endregion
 
-                }
-              });
-            } else {
-              result.contactoDto.forEach((elementCont : any) => {
-                if (elementCont.IdTipoContacto === 6) {
-                    this.naturalesAllModel.NumeroCelular = elementCont.Descripcion;
-                } else if (elementCont.IdTipoContacto === 3) {
-                  if (elementCont.ContactoPrincipal) {
-                    if (elementCont.Descripcion !== null && elementCont.Descripcion !== undefined && elementCont.Descripcion !== '') {
-                      this.naturalesAllModel.CorreoElectronico = elementCont.Descripcion.toLowerCase();
-                    } else {
-                      this.naturalesAllModel.CorreoElectronico = elementCont.Descripcion;
+            //#region INFORMACION FINANCIERA
+
+            this.naturalesAllModel.Salario = 0;
+            this.naturalesAllModel.Comisiones = 0;
+            this.naturalesAllModel.Arriendos = 0;
+            this.naturalesAllModel.OtrosIngresos.Valor = 0;
+            this.naturalesAllModel.OtrosIngresos.Observacion = "";
+            this.naturalesAllModel.CostosGastos = 0;
+            this.naturalesAllModel.ValorArriendo = 0;
+            this.naturalesAllModel.ObligacionesFinancieras = 0;
+            this.naturalesAllModel.OtrasObligaciones = 0;
+            this.naturalesAllModel.GastosFamiliares = 0;
+            this.naturalesAllModel.OtrosEgresos = 0;
+            console.log('INFORMACION FINANCIERA - ' + result.financieroDto);
+            result.financieroDto.forEach((elementFin : any) => {
+              // salario
+              if (elementFin.IdConceptoFinan === 10 || elementFin.IdConceptoFinan === 11) {
+                this.naturalesAllModel.Salario = this.naturalesAllModel.Salario + elementFin.Valor;
+                // comisiones
+              } if (elementFin.IdConceptoFinan === 3) {
+                this.naturalesAllModel.Comisiones = this.naturalesAllModel.Comisiones + elementFin.Valor;
+                // Arriendos
+              } if (elementFin.IdConceptoFinan === 1) {
+                this.naturalesAllModel.Arriendos = this.naturalesAllModel.Arriendos + elementFin.Valor;
+                // otros ingresos
+              } if (elementFin.IdConceptoFinan === 9) {        
+                this.naturalesAllModel.OtrosIngresos.Valor += elementFin.Valor;
+                this.naturalesAllModel.OtrosIngresos.Observacion = elementFin.Descripcion;
+              }
+                // total Ingresos
+                this.naturalesAllModel.TotalIngresos = (+this.naturalesAllModel.Salario +
+                +this.naturalesAllModel.Comisiones + +this.naturalesAllModel.Arriendos + +this.naturalesAllModel.OtrosIngresos.Valor);
+                // costos y gastos
+              if (elementFin.IdConceptoFinan === 12) {
+                this.naturalesAllModel.CostosGastos = this.naturalesAllModel.CostosGastos + elementFin.Valor;
+              }
+                // total ingresos operacionales
+              this.naturalesAllModel.TotalIngresosOperacionales = (this.naturalesAllModel.TotalIngresos -
+                this.naturalesAllModel.CostosGastos);
+
+
+                // valor arriendo
+              if (elementFin.IdConceptoFinan === 2) {
+                this.naturalesAllModel.ValorArriendo = this.naturalesAllModel.ValorArriendo + elementFin.Valor;
+                // obligaciones financieras
+              } if (elementFin.IdConceptoFinan === 6) {
+                this.naturalesAllModel.ObligacionesFinancieras = this.naturalesAllModel.ObligacionesFinancieras + elementFin.Valor;
+                // Otras obligaciones
+              }  if (elementFin.IdConceptoFinan === 7) {
+                this.naturalesAllModel.OtrasObligaciones = this.naturalesAllModel.OtrasObligaciones + elementFin.Valor;
+                // gastos familiares
+              } if (elementFin.IdConceptoFinan === 5) {
+                this.naturalesAllModel.GastosFamiliares = this.naturalesAllModel.GastosFamiliares + elementFin.Valor;
+                // otros egresos
+              }  if (elementFin.IdConceptoFinan === 8) {
+                this.naturalesAllModel.OtrosEgresos =  this.naturalesAllModel.OtrosEgresos + elementFin.Valor;
+              }
+                // total egresos
+              this.naturalesAllModel.TotalEgresos = (this.naturalesAllModel.ValorArriendo + this.naturalesAllModel.ObligacionesFinancieras
+                + this.naturalesAllModel.OtrasObligaciones + this.naturalesAllModel.GastosFamiliares + this.naturalesAllModel.OtrosEgresos);
+            });
+
+
+
+            // total activos
+            this.naturalesAllModel.TotalActivos = 0;
+            console.log('INFORMACION FINANCIERA - ' + result.activoDto);
+            result.activoDto.forEach((elementAct : any) => {
+              this.naturalesAllModel.TotalActivos = this.naturalesAllModel.TotalActivos + elementAct.AvaluoComercial;
+            });
+            // total pasivos
+            this.naturalesAllModel.TotalPasivos = result.asociadosNaturalesDto.TotalPasivos;
+            // total patrimonio
+            this.naturalesAllModel.TotalPatrimonio = this.naturalesAllModel.TotalActivos - this.naturalesAllModel.TotalPasivos;
+
+            //#endregion
+
+            //#region ACTIVOS
+            let PlacaUpper = '';
+            result.activoDto.forEach((elementActivos : any) => {
+              if (elementActivos.IdActivo === 1) {
+                if (elementActivos.IdCiudad !== undefined && elementActivos.IdCiudad !== null && elementActivos.IdCiudad !== '' && 
+                  elementActivos.IdCiudad !== 0) {
+                  this.dataCiudadesAllSol.forEach((elementCiu : any) => {
+                    if (elementCiu.IdCiudad === elementActivos.IdCiudad) {
+                      this.naturalesAllModel.CiudadActivo = elementCiu.Descripcion;
                     }
-                  }
+                  });
+                } else {
+                  this.dataPaisesAllSol.forEach((elementPais : any) => {
+                    if (elementPais.IdPais === elementActivos.IdPais) {
+                      this.naturalesAllModel.CiudadActivo = elementPais.Descripcion;
+                    }
+                  });
                 }
-              });
-            }
-          }
-          console.log('Salio del contactoDto y sigue con Ubicacion de la recidencia');
-          //#endregion
-
-          //#region UBICACION DE LA RECIDENCIA
-
-          // mapea direccion recidencia
-          console.log('mapea direccion recidencia');
-          result.contactoDto.forEach((elementRec : any) => {
-            // let complementoContato = '';
-            if (elementRec.IdTipoContacto === 1) {
-              if (elementRec.Descripcion) {
-                this.naturalesAllModel.Direccion = this.MaysPrimera(elementRec.Descripcion.toLowerCase());
-              } else {
-                this.naturalesAllModel.Direccion = elementRec.Descripcion.toLowerCase();
-              }
-              if (elementRec.IdBarrio !== null && elementRec.IdBarrio !== undefined) {
-                this.dataBarriosAllSol.forEach((elementBarr : any) => {
-                  if (elementBarr.IdBarrio === elementRec.IdBarrio) {
-                    this.naturalesAllModel.BarrioReside = elementBarr.Descripcion;
+                this.dataActivosAllSol.forEach((elementPat : any) => {
+                  if (elementPat.Id === elementActivos.IdTipoPatrimonio) {
+                    this.naturalesAllModel.TipoPropiedad = elementPat.Descripcion;
                   }
                 });
-              }
-              if (elementRec.IdCiudad !== null && elementRec.IdCiudad !== undefined && elementRec.IdCiudad !== '' &&
-                elementRec.IdCiudad !== 0 ) {
-                this.dataCiudadesAllSol.forEach((elementCiu : any) => {
-                  if (elementCiu.IdCiudad === elementRec.IdCiudad) {
-                    this.naturalesAllModel.CiudadReside = elementCiu.Descripcion;
-                    this.dataDepartamentosAllSol.forEach((elementDep : any) => {
-                      if (elementDep.IdDepartamento === elementCiu.IdDepartamento) {
-                        this.naturalesAllModel.DepartamentoReside = elementDep.Descripcion;
-                        this.dataPaisesAllSol.forEach((elementPais : any) => {
-                          if (elementPais.IdPais === elementDep.IdPais) {
-                            this.naturalesAllModel.PaisReside = elementPais.Descripcion;
-                          }
-                        });
-                      }
-                    });
-                  }
-                });
-              } else {
-                this.dataPaisesAllSol.forEach((elementPais : any) => {
-                  if (elementPais.IdPais === elementRec.IdPais) {
-                    this.naturalesAllModel.PaisReside = elementPais.Descripcion;
-                  }
-                });
-              }
-            }
-          });
-          // mapea telefono recidencia
-          console.log('mapea telefono recidencia');
-          result.contactoDto.forEach((elementTel : any)=> {
-            if (elementTel.IdTipoContacto === 4) {
-              this.naturalesAllModel.Telefono = elementTel.Descripcion;
-            }
-          });
-          // mapea el tipo de vivienda
-          console.log('mapea el tipo de vivienda');
-           this.tiposVivienda.forEach(elementTipoVivienda => {
-            if (+elementTipoVivienda.Value === result.asociadosNaturalesDto.IdTipoVivienda) {
-              this.naturalesAllModel.TipoVivienda = elementTipoVivienda.Descripcion;
-            }
-           });
-          // mapea la fecha antiguedad de vivienda
-
-           if (result.asociadosNaturalesDto.Fecha_Vive !== null) {
-             const dateCompare3 = new Date('01-01-1901');
-            const newDateStringVive = new Date(result.asociadosNaturalesDto.Fecha_Vive);
-            if (newDateStringVive > dateCompare3) {
-              fechaViveDesde = new Date(result.asociadosNaturalesDto.Fecha_Vive);
-              this.naturalesAllModel.MesFechaAnti = fechaViveDesde.getMonth() + 1;
-              this.naturalesAllModel.AnoFechaAnti = fechaViveDesde.getFullYear();
-            } else {
-              this.naturalesAllModel.MesFechaAnti = '';
-              this.naturalesAllModel.AnoFechaAnti = '';
-            }
-          }
-
-          //#endregion
-
-          //#region INFORMACION LABORAL
-          console.log('mapea INFORMACION LABORAL');
-          // mapea la actividad economica
-          console.log('mapea la actividad economica - ');
-          this.clientesGetListService.GetActividadEconomica(result.asociadosNaturalesDto.IdTipoOcupacion).subscribe(
-            resultActividad => {
-                resultActividad.forEach((elementActivdad : any) => {
-                  if (elementActivdad.Id === result.asociadosNaturalesDto.IdActividadEconomica) {
-                    this.naturalesAllModel.CodigoCiiu = elementActivdad.CodigoCiiu;
-                    this.naturalesAllModel.ActividadEconomica = elementActivdad.Descripcion;
-                  }
-                });
-            });
-          // mapea el tipo de ocupacion o empleo
-          this.clientesGetListService.GetTipoOcupacion(result.asociadosNaturalesDto.IdTipoEmpleo).subscribe(
-            resultOcupacion => {
-              console.log('mapea el tipo de ocupacion o empleo - ' + resultOcupacion);
-                resultOcupacion.forEach((elementOcupacion : any) => {
-                  if (elementOcupacion.IdTipoOcupacion === result.asociadosNaturalesDto.IdTipoOcupacion) {
-                    this.naturalesAllModel.TipoOcupacion = elementOcupacion.Nombre;
-                  }
-                });
-            });
-          // mapea direccion laboral
-          console.log('mapea contactoDto - ' + result.contactoDto);
-          result.contactoDto.forEach((elementlab : any) => {
-            if (elementlab.IdTipoContacto === 2) {
-
-              this.naturalesAllModel.DireccionLaboral = elementlab.Descripcion;
-              if (elementlab.IdBarrio !== null && elementlab.IdBarrio !== undefined) {
-                this.dataBarriosAllSol.forEach((elementBarr : any ) => {
-                  if (elementBarr.IdBarrio === elementlab.IdBarrio) {
-                    this.naturalesAllModel.BarrioLaboral = elementBarr.Descripcion;
-                  }
-                });
-              }
-              if (elementlab.IdCiudad !== null && elementlab.IdCiudad !== undefined) {
-                this.dataCiudadesAllSol.forEach((elementCiu : any) => {
-                  if (elementCiu.IdCiudad === elementlab.IdCiudad) {
-                    this.naturalesAllModel.CiudadLaboral = elementCiu.Descripcion;
-                    this.dataDepartamentosAllSol.forEach((elementDep : any) => {
-                      if (elementDep.IdDepartamento === elementCiu.IdDepartamento) {
-                        this.naturalesAllModel.DepartamentoLaboral = elementDep.Descripcion;
-                        this.dataPaisesAllSol.forEach((elementPais : any)=> {
-                          if (elementPais.IdPais === elementDep.IdPais) {
-                            this.naturalesAllModel.PaisLaboral = elementPais.Descripcion;
-                          }
-                        });
-                      }
-                    });
-                  }
-                });
-              } else {
-                this.dataPaisesAllSol.forEach((elementPais : any) => {
-                  if (elementPais.IdPais === elementlab.IdPais) {
-                    this.naturalesAllModel.PaisLaboral = elementPais.Descripcion;
-                  }
-                });
-              }
-            }
-          });
-          // mapea telefono laboral
-          result.contactoDto.forEach((elementTel : any) => {
-            if (elementTel.IdTipoContacto === 5) {
-              this.naturalesAllModel.TelefonoLaboral = elementTel.Descripcion;
-            }
-          });
-          // mapea la empresa donde labora y nit
-          result.laboralDto.forEach((elementLaboral : any) => {
-            const objClients = new ClientesModel();
-            objClients.Nombre = '*';
-            objClients.Nit = '*';
-            objClients.Codigo = elementLaboral.IdEmpresa;
-            if (elementLaboral.IdEmpresa !== 0 && elementLaboral.IdEmpresa !== null &&
-              (elementLaboral.IdNatural === null || elementLaboral.IdNatural === 0 || elementLaboral.IdNatural === undefined)) {
-              this.clientesGetListService.GetEmpresas(objClients).subscribe(
-                resultEmpresa => {
-                  this.naturalesAllModel.EmpresaLabora = resultEmpresa[0].Nombre;
-                  this.naturalesAllModel.NitLabora = resultEmpresa[0].Nit;
-                },
-                error => {
-                  const errorMessage = <any>error;
-                  this.notif.onDanger('Error', errorMessage);
-                  console.error(errorMessage);
+                if (elementActivos.EntidadHipoPignora === 'false' || elementActivos.EntidadHipoPignora === false ||
+                  elementActivos.EntidadHipoPignora === null || elementActivos.EntidadHipoPignora === undefined  ) {
+                  elementActivos.aFavor = 'No';
                 }
-              );
-            } else if (elementLaboral.IdEmpresa !== 0 && elementLaboral.IdEmpresa !== null &&
-              (elementLaboral.IdNatural !== null && elementLaboral.IdNatural !== 0 )) {
-              this.clientesService.BuscarNaturalLaboral(elementLaboral.IdEmpresa).subscribe(
-                resulNatural => {
-                  this.naturalesAllModel.EmpresaLabora = resulNatural.PrimerNombre + ' ' + resulNatural.SegundoNombre + ' '
-                    + resulNatural.PrimerApellido + ' ' + resulNatural.SegundoApellido;
-                },
-                error => {
-                  const errorMessage = <any>error;
-                  this.notif.onDanger('Error', errorMessage);
-                  console.error(errorMessage);
-                });
-            } else {
-              if (elementLaboral.EmpresaDescripcion !== null && elementLaboral.EmpresaDescripcion !== undefined ) {
-                this.naturalesAllModel.EmpresaLabora = this.MaysPrimera(elementLaboral.EmpresaDescripcion.toLowerCase());
-              } else {
-                this.naturalesAllModel.EmpresaLabora = elementLaboral.EmpresaDescripcion.toLowerCase();
-              }
-            }
 
-          });
-          // mapea el cargo
-          result.laboralDto.forEach((elementLaboral : any) => {
-            this.dataCargosSol.forEach((elementCargos : any)=> {
-                if (elementCargos.Clase === elementLaboral.IdCargo) {
-                  this.naturalesAllModel.CargoOficio = elementCargos.Descripcion;
+                this.ArrayPropiedad.push(
+                  {
+                  'TipoActivo': this.naturalesAllModel.TipoPropiedad,
+                  'Direccion': this.MaysPrimera(elementActivos.Direccion.toLowerCase()),
+                  'Ciudad':  this.naturalesAllModel.CiudadActivo,
+                  'Valor': elementActivos.AvaluoComercial,
+                  'ValorDeuda': elementActivos.ValorAdeudado,
+                  'Afavor': this.MaysPrimera(elementActivos.aFavor.toLowerCase()),
                 }
-              });
-          });
-          // mapea la EPS
-          this.dataEmpresasEps.forEach((elementEps : any) => {
-              if (elementEps.IdEPS === result.asociadosNaturalesDto.IdEPS) {
-                this.naturalesAllModel.Eps = elementEps.Nombre;
-              }
-          });
-          // mapea fecha de antiguedad laboral
-          console.log('mapea LaboralDto - ' + result.laboralDto);
-          result.laboralDto.forEach((elementlab : any)=> {
-          fechaAntiLab = new Date(this.naturalesAllModel.AnosAntiguedadEmpresa = elementlab.FechaLabora);
-          this.naturalesAllModel.MesesAntiguedadEmpresa = fechaAntiLab.getMonth() + 1;
-          this.naturalesAllModel.AnosAntiguedadEmpresa = fechaAntiLab.getFullYear();
-          });
-          //  mapea nro empleados a cargo
-          result.laboralDto.forEach((elementlab : any) => {
-          this.naturalesAllModel.NEmpleados = elementlab.NumPersonasCargo;
-          });
-          // mapea datos arrendador 
-          result.laboralDto.forEach((elementLab : any) => {
-            this.naturalesAllModel.NomArrendadorLaboral = this.capitalizarLetra(elementLab.NombreArrendador);
-            this.naturalesAllModel.TeleArrendadorLaboral = elementLab.TelefonoArrendador;
-            if (elementLab.IdTipoLocal === 1) {
-              this.naturalesAllModel.TipoLocalLaboral = 'Arrendado';
-            } else {
-              this.naturalesAllModel.TipoLocalLaboral = 'Propio';
-            }
-          });
-          //#endregion
-
-          //#region ENVIO DE CORRESPONDENCIA
-
-          // mapeo envio informacion correspondecia
-           result.contactoDto.forEach((elementCont : any) => {
-             if (elementCont.Correspondecia === true) {
-              this.Correspondencia.forEach(elementCor => {
-                if (+elementCor.Value === elementCont.IdTipoContacto) {
-                  if (elementCor.Descripcion !== null && elementCor.Descripcion !== undefined && elementCor.Descripcion !== '') {
-                    this.naturalesAllModel.Correspondencia = this.MaysPrimera(elementCor.Descripcion.toLowerCase());
-                  } else {
-                    this.naturalesAllModel.Correspondencia = elementCor.Descripcion.toLowerCase();
+                );
+              } else if (elementActivos.IdActivo === 2) {
+                this.dataActivosAllSol.forEach((elementPat : any ) => {
+                  if (elementPat.Id === elementActivos.IdTipoPatrimonio) {
+                    this.naturalesAllModel.TipoVehiculo = elementPat.Descripcion;
                   }
+                });
+                if (elementActivos.IdMarca !== null && elementActivos.IdMarca !== undefined &&
+                  elementActivos.IdMarca !== '' && elementActivos.IdMarca !== 0) {
+                  this.dataMarcasSol.forEach((elementMarc : any) => {
+                    if (elementMarc.Clase === elementActivos.IdMarca) {
+                        this.naturalesAllModel.Marca = elementMarc.Descripcion;
+                    }
+                  });
+                } else {
+                  this.naturalesAllModel.Marca = 'N/A';
                 }
-              });
-            }
-          });
-          //#endregion
 
-          //#region INFORMACION FINANCIERA
-
-          this.naturalesAllModel.Salario = 0;
-          this.naturalesAllModel.Comisiones = 0;
-          this.naturalesAllModel.Arriendos = 0;
-          this.naturalesAllModel.OtrosIngresos = 0;
-          this.naturalesAllModel.CostosGastos = 0;
-          this.naturalesAllModel.ValorArriendo = 0;
-          this.naturalesAllModel.ObligacionesFinancieras = 0;
-          this.naturalesAllModel.OtrasObligaciones = 0;
-          this.naturalesAllModel.GastosFamiliares = 0;
-          this.naturalesAllModel.OtrosEgresos = 0;
-          console.log('INFORMACION FINANCIERA - ' + result.financieroDto);
-          result.financieroDto.forEach((elementFin : any) => {
-            // salario
-            if (elementFin.IdConceptoFinan === 10 || elementFin.IdConceptoFinan === 11) {
-              this.naturalesAllModel.Salario = this.naturalesAllModel.Salario + elementFin.Valor;
-              // comisiones
-            } if (elementFin.IdConceptoFinan === 3) {
-              this.naturalesAllModel.Comisiones = this.naturalesAllModel.Comisiones + elementFin.Valor;
-              // Arriendos
-            } if (elementFin.IdConceptoFinan === 1) {
-              this.naturalesAllModel.Arriendos = this.naturalesAllModel.Arriendos + elementFin.Valor;
-              // otros ingresos
-            } if (elementFin.IdConceptoFinan === 9) {
-              this.naturalesAllModel.OtrosIngresos = this.naturalesAllModel.OtrosIngresos + elementFin.Valor;
-            }
-              // total Ingresos
-              this.naturalesAllModel.TotalIngresos = (+this.naturalesAllModel.Salario +
-              +this.naturalesAllModel.Comisiones + +this.naturalesAllModel.Arriendos + +this.naturalesAllModel.OtrosIngresos);
-              // costos y gastos
-            if (elementFin.IdConceptoFinan === 12) {
-              this.naturalesAllModel.CostosGastos = this.naturalesAllModel.CostosGastos + elementFin.Valor;
-            }
-              // total ingresos operacionales
-            this.naturalesAllModel.TotalIngresosOperacionales = (this.naturalesAllModel.TotalIngresos -
-              this.naturalesAllModel.CostosGastos);
-
-
-              // valor arriendo
-             if (elementFin.IdConceptoFinan === 2) {
-              this.naturalesAllModel.ValorArriendo = this.naturalesAllModel.ValorArriendo + elementFin.Valor;
-              // obligaciones financieras
-            } if (elementFin.IdConceptoFinan === 6) {
-              this.naturalesAllModel.ObligacionesFinancieras = this.naturalesAllModel.ObligacionesFinancieras + elementFin.Valor;
-              // Otras obligaciones
-            }  if (elementFin.IdConceptoFinan === 7) {
-              this.naturalesAllModel.OtrasObligaciones = this.naturalesAllModel.OtrasObligaciones + elementFin.Valor;
-              // gastos familiares
-            } if (elementFin.IdConceptoFinan === 5) {
-              this.naturalesAllModel.GastosFamiliares = this.naturalesAllModel.GastosFamiliares + elementFin.Valor;
-              // otros egresos
-            }  if (elementFin.IdConceptoFinan === 8) {
-              this.naturalesAllModel.OtrosEgresos =  this.naturalesAllModel.OtrosEgresos + elementFin.Valor;
-            }
-              // total egresos
-            this.naturalesAllModel.TotalEgresos = (this.naturalesAllModel.ValorArriendo + this.naturalesAllModel.ObligacionesFinancieras
-              + this.naturalesAllModel.OtrasObligaciones + this.naturalesAllModel.GastosFamiliares + this.naturalesAllModel.OtrosEgresos);
-          });
-
-
-
-          // total activos
-          this.naturalesAllModel.TotalActivos = 0;
-          console.log('INFORMACION FINANCIERA - ' + result.activoDto);
-          result.activoDto.forEach((elementAct : any) => {
-            this.naturalesAllModel.TotalActivos = this.naturalesAllModel.TotalActivos + elementAct.AvaluoComercial;
-          });
-          // total pasivos
-          this.naturalesAllModel.TotalPasivos = result.asociadosNaturalesDto.TotalPasivos;
-          // total patrimonio
-          this.naturalesAllModel.TotalPatrimonio = this.naturalesAllModel.TotalActivos - this.naturalesAllModel.TotalPasivos;
-
-          //#endregion
-
-          //#region ACTIVOS
-          let PlacaUpper = '';
-          result.activoDto.forEach((elementActivos : any) => {
-            if (elementActivos.IdActivo === 1) {
-              if (elementActivos.IdCiudad !== undefined && elementActivos.IdCiudad !== null && elementActivos.IdCiudad !== '' && 
-                elementActivos.IdCiudad !== 0) {
-                this.dataCiudadesAllSol.forEach((elementCiu : any) => {
-                  if (elementCiu.IdCiudad === elementActivos.IdCiudad) {
-                    this.naturalesAllModel.CiudadActivo = elementCiu.Descripcion;
-                  }
-                });
-              } else {
-                this.dataPaisesAllSol.forEach((elementPais : any) => {
-                  if (elementPais.IdPais === elementActivos.IdPais) {
-                    this.naturalesAllModel.CiudadActivo = elementPais.Descripcion;
-                  }
-                });
-              }
-              this.dataActivosAllSol.forEach((elementPat : any) => {
-                if (elementPat.Id === elementActivos.IdTipoPatrimonio) {
-                  this.naturalesAllModel.TipoPropiedad = elementPat.Descripcion;
+                if (elementActivos.EntidadHipoPignora === 'false' || elementActivos.EntidadHipoPignora === false ||
+                  elementActivos.EntidadHipoPignora === null || elementActivos.EntidadHipoPignora === undefined) {
+                  elementActivos.aFavor = 'No';
                 }
-              });
-              if (elementActivos.EntidadHipoPignora === 'false' || elementActivos.EntidadHipoPignora === false ||
-                elementActivos.EntidadHipoPignora === null || elementActivos.EntidadHipoPignora === undefined  ) {
-                elementActivos.aFavor = 'No';
-              }
-
-              this.ArrayPropiedad.push(
-                {
-                'TipoActivo': this.naturalesAllModel.TipoPropiedad,
-                'Direccion': this.MaysPrimera(elementActivos.Direccion.toLowerCase()),
-                'Ciudad':  this.naturalesAllModel.CiudadActivo,
-                'Valor': elementActivos.AvaluoComercial,
-                'ValorDeuda': elementActivos.ValorAdeudado,
-                'Afavor': this.MaysPrimera(elementActivos.aFavor.toLowerCase()),
-              }
-              );
-            } else if (elementActivos.IdActivo === 2) {
-              this.dataActivosAllSol.forEach((elementPat : any ) => {
-                if (elementPat.Id === elementActivos.IdTipoPatrimonio) {
-                  this.naturalesAllModel.TipoVehiculo = elementPat.Descripcion;
+                if (elementActivos.Placa !== null && elementActivos.Placa !== undefined && elementActivos.Placa !== '') {
+                  PlacaUpper = elementActivos.Placa.toUpperCase();
+                } else {
+                  PlacaUpper = elementActivos.Placa;
                 }
-              });
-              if (elementActivos.IdMarca !== null && elementActivos.IdMarca !== undefined &&
-                elementActivos.IdMarca !== '' && elementActivos.IdMarca !== 0) {
-                this.dataMarcasSol.forEach((elementMarc : any) => {
-                  if (elementMarc.Clase === elementActivos.IdMarca) {
-                      this.naturalesAllModel.Marca = elementMarc.Descripcion;
-                  }
-                });
-              } else {
-                this.naturalesAllModel.Marca = 'N/A';
-              }
-
-              if (elementActivos.EntidadHipoPignora === 'false' || elementActivos.EntidadHipoPignora === false ||
-                elementActivos.EntidadHipoPignora === null || elementActivos.EntidadHipoPignora === undefined) {
-                elementActivos.aFavor = 'No';
-              }
-              if (elementActivos.Placa !== null && elementActivos.Placa !== undefined && elementActivos.Placa !== '') {
-                 PlacaUpper = elementActivos.Placa.toUpperCase();
-              } else {
-                 PlacaUpper = elementActivos.Placa;
-              }
-              this.ArrayVehiculo.push( {
-               'TipoActivo': this.naturalesAllModel.TipoVehiculo,
-                'Marca': this.naturalesAllModel.Marca.toLowerCase(),
-                'Modelo': elementActivos.Modelo,
-                'Placa': PlacaUpper,
-                'Valor': elementActivos.AvaluoComercial,
-                'ValorPignorado': elementActivos.ValorHipoteca,
-                'Afavor': this.MaysPrimera(elementActivos.aFavor.toLowerCase()),
-              }
-              );
-            } else {
-              this.dataActivosAllSol.forEach((elementPat : any) => {
-                if (elementPat.Id === elementActivos.IdTipoPatrimonio) {
-                  this.naturalesAllModel.TipoVehiculo = elementPat.Descripcion;
-                }
-              });
-              if (elementActivos.IdCiudad !== null && elementActivos.IdCiudad !== undefined && elementActivos.IdCiudad !== ''
-                && elementActivos.IdCiudad !== 0) {
-                this.dataCiudadesAllSol.forEach((elementC : any) => {
-                  if (elementC.IdCiudad === elementActivos.IdCiudad) {
-                    this.naturalesAllModel.CiudadActivo = elementC.Descripcion;
-                  }
-                });
-              } else if (elementActivos.IdPais !== null && elementActivos.IdPais !== undefined) {
-                this.dataPaisesAllSol.forEach((elementPais : any)=> {
-                  if (elementPais.IdPais === elementActivos.IdPais) {
-                    this.naturalesAllModel.CiudadActivo = elementPais.Descripcion;
-                  }
-                });
-              }
-
-              if (elementActivos.DescripcionOtro === null || elementActivos.DescripcionOtro === undefined) {
-                elementActivos.DescripcionOtro = '';
-              }
-              this.ArrayOtros.push({
+                this.ArrayVehiculo.push( {
                 'TipoActivo': this.naturalesAllModel.TipoVehiculo,
-                'Ciudad': this.naturalesAllModel.CiudadActivo,
-                'Descripcion': this.MaysPrimera(elementActivos.DescripcionOtro.toLowerCase()),
-                'Valor': elementActivos.AvaluoComercial,
-              });
-            }
-
-          });
-          //#endregion
-
-          //#region INFORMACION CONYUGUE
-
-          if (result.conyugueDto !== null) {
-
-            // mapea tipo de documento
-            this.tiposDocumentoConyugue.forEach(elementTipoDocuC => {
-              if (+elementTipoDocuC.Value === result.conyugueDto.IdTipoDocumento) {
-                this.naturalesAllModel.TipoDocConyugue = elementTipoDocuC.Descripcion;
-              }
-            });
-
-            // mapea datos conyugue
-            this.naturalesAllModel.DocumentoConyugue = result.conyugueDto.Documento;
-            this.naturalesAllModel.PrimerApellidoConyugue = result.conyugueDto.PrimerApellido;
-            this.naturalesAllModel.SegundoApellidoConyugue = result.conyugueDto.SegundoApellido;
-            this.naturalesAllModel.PrimerNombreConyugue = result.conyugueDto.PrimerNombre;
-            this.naturalesAllModel.SegundoNombreConyugue = result.conyugueDto.SegundoNombre;
-            this.naturalesAllModel.TelefonoRConyugue = result.conyugueDto.TelefonoResidencia;
-            this.naturalesAllModel.CelularConyugue = result.conyugueDto.NumeroCelular;
-            if (result.conyugueDto.NombreEmpresa !== null && result.conyugueDto.NombreEmpresa !== ''
-              && result.conyugueDto.NombreEmpresa !== undefined) {
-              this.naturalesAllModel.EmpresaLaboraConyugue = (result.conyugueDto.NombreEmpresa);
-            } else {
-              this.naturalesAllModel.EmpresaLaboraConyugue = '';
-            }
-            this.clientesGetListService.GetTipoOcupacion('0').subscribe(
-              resultOcupacionConyugue => {
-                resultOcupacionConyugue.forEach((elementOcuC : any) => {
-                  if (elementOcuC.IdOcupacion === result.conyugueDto.IdOcupacion) {
-                    this.naturalesAllModel.OcupacionConyugue = elementOcuC.Nombre;
+                  'Marca': this.naturalesAllModel.Marca.toLowerCase(),
+                  'Modelo': elementActivos.Modelo,
+                  'Placa': PlacaUpper,
+                  'Valor': elementActivos.AvaluoComercial,
+                  'ValorPignorado': elementActivos.ValorHipoteca,
+                  'Afavor': this.MaysPrimera(elementActivos.aFavor.toLowerCase()),
+                }
+                );
+              } else {
+                this.dataActivosAllSol.forEach((elementPat : any) => {
+                  if (elementPat.Id === elementActivos.IdTipoPatrimonio) {
+                    this.naturalesAllModel.TipoVehiculo = elementPat.Descripcion;
                   }
                 });
+                if (elementActivos.IdCiudad !== null && elementActivos.IdCiudad !== undefined && elementActivos.IdCiudad !== ''
+                  && elementActivos.IdCiudad !== 0) {
+                  this.dataCiudadesAllSol.forEach((elementC : any) => {
+                    if (elementC.IdCiudad === elementActivos.IdCiudad) {
+                      this.naturalesAllModel.CiudadActivo = elementC.Descripcion;
+                    }
+                  });
+                } else if (elementActivos.IdPais !== null && elementActivos.IdPais !== undefined) {
+                  this.dataPaisesAllSol.forEach((elementPais : any)=> {
+                    if (elementPais.IdPais === elementActivos.IdPais) {
+                      this.naturalesAllModel.CiudadActivo = elementPais.Descripcion;
+                    }
+                  });
+                }
+
+                if (elementActivos.DescripcionOtro === null || elementActivos.DescripcionOtro === undefined) {
+                  elementActivos.DescripcionOtro = '';
+                }
+                this.ArrayOtros.push({
+                  'TipoActivo': this.naturalesAllModel.TipoVehiculo,
+                  'Ciudad': this.naturalesAllModel.CiudadActivo,
+                  'Descripcion': this.MaysPrimera(elementActivos.DescripcionOtro.toLowerCase()),
+                  'Valor': elementActivos.AvaluoComercial,
+                });
+              }
+            });
+            this.naturalesAllModel.Propiedades = this.ArrayPropiedad;
+            this.naturalesAllModel.Vehiculos = this.ArrayVehiculo;
+            this.naturalesAllModel.OtrosActivos = this.ArrayOtros;
+            //#endregion
+
+            //#region INFORMACION CONYUGUE
+
+            if (result.conyugueDto !== null) {
+
+              // mapea tipo de documento
+              this.tiposDocumentoConyugue.forEach(elementTipoDocuC => {
+                if (+elementTipoDocuC.Value === result.conyugueDto.IdTipoDocumento) {
+                  this.naturalesAllModel.TipoDocConyugue = elementTipoDocuC.Descripcion;
+                }
               });
 
-            this.naturalesAllModel.IngresosConyugue = result.conyugueDto.Ingresos;
-            this.naturalesAllModel.EgresosConyugue = result.conyugueDto.Egresos;
-            this.naturalesAllModel.NitEmpresaConyugue = result.conyugueDto.NitEmpresa;
-            this.naturalesAllModel.AntiguedadEmpConyugue = result.conyugueDto.Antiguedad;
-            if (this.naturalesAllModel.AntiguedadEmpConyugue !== null && this.naturalesAllModel.AntiguedadEmpConyugue !== undefined
-              && this.naturalesAllModel.AntiguedadEmpConyugue !== '') {
-              const antiguedad = this.naturalesAllModel.AntiguedadEmpConyugue.split('|');
-              if (antiguedad[0] !== 'null' && antiguedad[1] !== 'null') {
-                this.naturalesAllModel.MesesAntiguedadEmpresaConyugue = antiguedad[0];
-                this.naturalesAllModel.AnosAntiguedadEmpresaConyugue = antiguedad[1];
-              }
-            }
-
-            this.naturalesAllModel.TelefonoEmpresaConyugue = result.conyugueDto.TelEmpresa;
-            if (result.conyugueDto.DetalleOcupacion !== null && result.conyugueDto.DetalleOcupacion !== undefined
-              && result.conyugueDto.DetalleOcupacion !== '') {
-              this.naturalesAllModel.DetallesOcupacionConyugue = this.MaysPrimera(result.conyugueDto.DetalleOcupacion.toLowerCase());
-            } else {
-              this.naturalesAllModel.DetallesOcupacionConyugue = result.conyugueDto.DetalleOcupacion;
-            }
-
-          }
-          //#endregion
-
-          //#region INFORMACION ENTREVISTA
-            result.entrevistaDto.forEach((element : any) => {
-
-              if (result.asociadosNaturalesDto.PersPEP) { // peronsa PEPS
-                this.naturalesAllModel.PersonaPEPS = 'Si';
+              // mapea datos conyugue
+              this.naturalesAllModel.DocumentoConyugue = result.conyugueDto.Documento;
+              this.naturalesAllModel.PrimerApellidoConyugue = result.conyugueDto.PrimerApellido;
+              this.naturalesAllModel.SegundoApellidoConyugue = result.conyugueDto.SegundoApellido;
+              this.naturalesAllModel.PrimerNombreConyugue = result.conyugueDto.PrimerNombre;
+              this.naturalesAllModel.SegundoNombreConyugue = result.conyugueDto.SegundoNombre;
+              this.naturalesAllModel.TelefonoRConyugue = result.conyugueDto.TelefonoResidencia;
+              this.naturalesAllModel.CelularConyugue = result.conyugueDto.NumeroCelular;
+              if (result.conyugueDto.NombreEmpresa !== null && result.conyugueDto.NombreEmpresa !== ''
+                && result.conyugueDto.NombreEmpresa !== undefined) {
+                this.naturalesAllModel.EmpresaLaboraConyugue = (result.conyugueDto.NombreEmpresa);
               } else {
-                this.naturalesAllModel.PersonaPEPS = 'No';
+                this.naturalesAllModel.EmpresaLaboraConyugue = '';
               }
-              if (element.NumeroPregunta === 1) {
-                if (element.Respuesta === 'true') {
-                  this.naturalesAllModel.Administradineros = 'Si';
-                } else {
-                  this.naturalesAllModel.Administradineros = 'No';
+              totalSuscripciones++;
+              
+              this.clientesGetListService.GetTipoOcupacion(result.conyugueDto.IdEmpleo).subscribe(
+                resultOcupacionConyugue => {
+                  if(resultOcupacionConyugue.length && resultOcupacionConyugue[0]) {
+                    this.naturalesAllModel.OcupacionConyugue = resultOcupacionConyugue[0]?.Nombre;
+                  }
+                  checkFinish();
+                });
+
+              this.naturalesAllModel.IngresosConyugue = result.conyugueDto.Ingresos;
+              this.naturalesAllModel.EgresosConyugue = result.conyugueDto.Egresos;
+              this.naturalesAllModel.NitEmpresaConyugue = result.conyugueDto.NitEmpresa;
+              this.naturalesAllModel.AntiguedadEmpConyugue = result.conyugueDto.Antiguedad;
+              if (this.naturalesAllModel.AntiguedadEmpConyugue !== null && this.naturalesAllModel.AntiguedadEmpConyugue !== undefined
+                && this.naturalesAllModel.AntiguedadEmpConyugue !== '') {
+                const antiguedad = this.naturalesAllModel.AntiguedadEmpConyugue.split('|');
+                if (antiguedad[0] !== 'null' && antiguedad[1] !== 'null') {
+                  this.naturalesAllModel.MesesAntiguedadEmpresaConyugue = antiguedad[0]?.padStart(2, '0');
+                  this.naturalesAllModel.AnosAntiguedadEmpresaConyugue = antiguedad[1];
                 }
               }
-              if (element.NumeroPregunta === 2) {
-                if (element.Respuesta === 'true') {
-                  this.naturalesAllModel.OtraActividad = 'Si';
-                } else {
-                  this.naturalesAllModel.OtraActividad = 'No';
-                }
+
+              this.naturalesAllModel.TelefonoEmpresaConyugue = result.conyugueDto.EmpresaLabora;
+              if (result.conyugueDto.DetalleOcupacion !== null && result.conyugueDto.DetalleOcupacion !== undefined
+                && result.conyugueDto.DetalleOcupacion !== '') {
+                this.naturalesAllModel.DetallesOcupacionConyugue = this.MaysPrimera(result.conyugueDto.DetalleOcupacion.toLowerCase());
+              } else {
+                this.naturalesAllModel.DetallesOcupacionConyugue = result.conyugueDto.DetalleOcupacion;
               }
-              if (element.NumeroPregunta === 3) {
-                if (element.Respuesta !== null && element.Respuesta !== undefined && element.Respuesta !== '') {
-                  this.naturalesAllModel.CualActivdad = this.MaysPrimera(element.Respuesta.toLowerCase());
-                } else {
-                  this.naturalesAllModel.CualActivdad = element.Respuesta;
-                }
-              }
-              if (element.NumeroPregunta === 4) {
-                this.naturalesAllModel.GanaActividad = element.Respuesta;
-              }
-              if (element.NumeroPregunta === 5) {
-                this.naturalesAllModel.ValorPromedio = element.Respuesta;
-              }
-              if (element.NumeroPregunta === 6) {
-                if (element.Respuesta === 'true') {
-                  this.naturalesAllModel.OperacionMonedaExtrangera = 'Si';
-                } else {
-                  this.naturalesAllModel.OperacionMonedaExtrangera = 'No';
-                }
-              }
-              if (element.NumeroPregunta === 7) { // Entidad
-                this.naturalesAllModel.Entidad = this.capitalizarLetra(element.Respuesta);
-              }
-              if (element.NumeroPregunta === 8) { // importa
-                this.mostrarImporta = (element.Respuesta === 'true');
-              }
-              if (element.NumeroPregunta === 9) { // exporta
-                this.mostrarExporta = (element.Respuesta === 'true');
-              }
-              if (element.NumeroPregunta === 10) { // giros
-                this.mostrarGiros = (element.Respuesta === 'true');
-              }
-              if (element.NumeroPregunta === 11) { // tipoProducto
-                this.naturalesAllModel.TipoProducto = this.capitalizarLetra(element.Respuesta);
-              }
-              if (element.NumeroPregunta === 12) { // Pais
-                if (element.Respuesta !== '' && element.Respuesta !== null) {
-                  this.dataPaisesAllSol.forEach((elementPaises : any ) => {
-                    if (elementPaises.IdPais === +element.Respuesta) {
-                      this.naturalesAllModel.PaiseEntrevista = elementPaises.Descripcion.replace('Pais', '');
-                    }
-                  });
-                } else {
-                  this.naturalesAllModel.PaiseEntrevista = '';
-                }
-              }
-              if (element.NumeroPregunta === 13) { // ciudad operacion
-                this.naturalesAllModel.Ciudadoperacion = this.capitalizarLetra(element.Respuesta);
-              }
-              if (element.NumeroPregunta === 24) { // Monto promedio
-                this.naturalesAllModel.MontoPromedio = element.Respuesta;
-              }
-              if (element.NumeroPregunta === 25) { // Moneda operacion
-                if (element.Respuesta !== '' && element.Respuesta !== null) {
-                  this.dataDivisasSol.forEach((elementDivisas : any) => {
-                    if (elementDivisas.Id === +element.Respuesta) {
-                      this.naturalesAllModel.Moneda = elementDivisas.Nombre;
-                    }
-                  });
-                } else {
-                  this.naturalesAllModel.Moneda = '';
-                }
-              }
-              if (element.NumeroPregunta === 14) {
-                if (element.Respuesta === 'true') {
-                  this.naturalesAllModel.TieneInversionMonedaExtrangera = 'Si';
-                } else {
-                  this.naturalesAllModel.TieneInversionMonedaExtrangera = 'No';
-                }
-              }
-              if (element.NumeroPregunta === 15) {
-                if (element.Respuesta !== '' && element.Respuesta !== null) {
-                  this.dataPaisesAllSol.forEach((elementPaises : any) => {
-                    if (elementPaises.IdPais === +element.Respuesta) {
-                      this.naturalesAllModel.PaisTiene = elementPaises.Descripcion;
-                    }
-                  });
-                } else {
-                  this.naturalesAllModel.PaisTiene = '';
-                }
-              }
-              if (element.NumeroPregunta === 16) {
-                if (element.Respuesta !== '' && element.Respuesta !== null) {
-                  this.dataDivisasSol.forEach((elementDivisas : any) => {
-                    if (elementDivisas.Id === +element.Respuesta) {
-                      this.naturalesAllModel.MonedaTiene = elementDivisas.Nombre;
-                    }
-                  });
-                } else {
-                  this.naturalesAllModel.MonedaTiene = '';
-                }
-              }
-              if (element.NumeroPregunta === 17) {
-                if (element.Respuesta === 'true') {
-                  this.naturalesAllModel.PoseeCuentaMonedaExtrangera = 'Si';;
-                } else {
-                  this.naturalesAllModel.PoseeCuentaMonedaExtrangera = 'No';
-                }
-              }
-              if (element.NumeroPregunta === 29) {
-                  this.naturalesAllModel.CuentaMonedaExtrangera = element.Respuesta;                
-              }
-              if (element.NumeroPregunta === 18) {
-                if (element.Respuesta !== '' && element.Respuesta !== null) {
-                  this.dataPaisesAllSol.forEach((elementPaises : any) => {
-                    if (elementPaises.IdPais === +element.Respuesta) {
-                      this.naturalesAllModel.PaisPosee = elementPaises.Descripcion;
-                    }
-                  });
-                } else {
-                  this.naturalesAllModel.PaisPosee = '';
-                }
-              }
-              if (element.NumeroPregunta === 19) {
-                if (element.Respuesta !== '' && element.Respuesta !== null) {
-                  this.dataDivisasSol.forEach((elementDivisas : any) => {
-                    if (elementDivisas.Id === +element.Respuesta) {
-                      this.naturalesAllModel.MonedaPosee = elementDivisas.Nombre;
-                    }
-                  });
-                } else {
-                  this.naturalesAllModel.MonedaPosee = '';
-                }
-              }
-              if (element.NumeroPregunta === 20) {
-                if (element.Respuesta === 'true') {
+
+            }
+            //#endregion
+
+            //#region INFORMACION ENTREVISTA
+              result.entrevistaDto.forEach((element : any) => {
+
+                if (result.asociadosNaturalesDto.PersPEP) { // peronsa PEPS
                   this.naturalesAllModel.PersonaPEPS = 'Si';
                 } else {
                   this.naturalesAllModel.PersonaPEPS = 'No';
                 }
-              }
-              if (element.NumeroPregunta === 21) {
-                if (element.Respuesta === 'true') {
-                  this.naturalesAllModel.ManejaRecursosPublicos = 'Si';
-                } else {
-                  this.naturalesAllModel.ManejaRecursosPublicos = 'No';
-                }
-              }
-              if (element.NumeroPregunta === 22) {
-                if (element.Respuesta === 'true') {
-                  this.naturalesAllModel.PorCargoPoderPublico = 'Si';
-                } else {
-                  this.naturalesAllModel.PorCargoPoderPublico = 'No';
-                }
-              }
-              if (element.NumeroPregunta === 23) {
-                if (element.Respuesta === 'true') {
-                  this.naturalesAllModel.VinculoEntreUnPeps = 'Si';
-                } else {
-                  this.naturalesAllModel.VinculoEntreUnPeps = 'No';
-                }
-              }
-              if (element.NumeroPregunta === 26) {
-                if (element.Respuesta === 'true') {
-                  this.naturalesAllModel.PorActividadPoderPublico = 'Si';
-                } else {
-                  this.naturalesAllModel.PorActividadPoderPublico = 'No';
-                }
-              }
-              if (element.NumeroPregunta === 28) {
-                if (element.Respuesta === 'true') {
-                  this.naturalesAllModel.DeclaroQueNoTransacciones = 'Si';
-                } else {
-                  this.naturalesAllModel.DeclaroQueNoTransacciones = 'No';
-                }
-              }
-
-            });
-          //#endregion
-
-          //#region LISTA PEPS
-          if (result.listaDePeps !== null) {
-            if (result.listaDePeps.length > 0) {
-              result.listaDePeps.forEach((element : any) => {
-                if (element.NombreCompleto !== null && element.NombreCompleto !== undefined && element.NombreCompleto !== '') {
-                  this.naturalesAllModel.NombreCompleto = this.MaysPrimera(element.NombreCompleto.toLowerCase());
-                } else {
-                  this.naturalesAllModel.NombreCompleto = element.NombreCompleto;
-                }
-                this.naturalesAllModel.IdentitificacionPeps = element.Identificacion;
-                this.naturalesAllModel.Periodo = element.PeriodoDesde;
-                this.dataCargosSol.forEach((elementCargos : any) => {
-                  if (elementCargos.Clase === +element.Cargo) {
-                    this.naturalesAllModel.Cargo = elementCargos.Descripcion;
+                if (element.NumeroPregunta === 1) {
+                  if (element.Respuesta === 'true') {
+                    this.naturalesAllModel.Administradineros = 'Si';
+                  } else {
+                    this.naturalesAllModel.Administradineros = 'No';
                   }
-                });
-                this.dataParentescosSol.forEach((elementParent : any ) => {
-                  if (elementParent.IdParentesco === +element.IdParentesco) {
-                    this.naturalesAllModel.Parentesco = elementParent.Descripcion;
+                }
+                if (element.NumeroPregunta === 2) {
+                  if (element.Respuesta === 'true') {
+                    this.naturalesAllModel.OtraActividad = 'Si';
+                  } else {
+                    this.naturalesAllModel.OtraActividad = 'No';
                   }
-                });
-                this.ArrayPeps.push(
-                  {
-                    'NombrePeps': this.naturalesAllModel.NombreCompleto,
-                    'DocumentoPeps': this.naturalesAllModel.IdentitificacionPeps,
-                    'Periodo': this.naturalesAllModel.Periodo,
-                    'Cargo': this.naturalesAllModel.Cargo,
-                    'Parentesco': this.naturalesAllModel.Parentesco
+                }
+                if (element.NumeroPregunta === 3) {
+                  if (element.Respuesta !== null && element.Respuesta !== undefined && element.Respuesta !== '') {
+                    this.naturalesAllModel.CualActivdad = this.MaysPrimera(element.Respuesta.toLowerCase());
+                  } else {
+                    this.naturalesAllModel.CualActivdad = element.Respuesta;
                   }
-                );
-              });
-            }
-          }
-          
-          //#endregion
-
-          //#region REFERENCIAS
-          console.log('INFORMACION REFERENCIAS - ' + result.referenciaDto);
-          result.referenciaDto.forEach((elementDatoRef : any) => {
-            if (elementDatoRef.IdTipoReferencia === 2) {
-              console.log('informacion dataParentesco - ' + this.dataParentescosSol);
-              this.dataParentescosSol.forEach((elementParent : any) => {
-                if (elementParent.Clase === elementDatoRef.IdParentesco) {
-                  this.naturalesAllModel.ParentescoFamiliar = elementParent.Descripcion;
                 }
-              });
-
-              if (elementDatoRef.PrimerNombre === null || elementDatoRef.PrimerNombre === 'null') {
-                elementDatoRef.PrimerNombre = '';
-              }
-              if (elementDatoRef.PrimerApellido === null || elementDatoRef.PrimerApellido === 'null') {
-                elementDatoRef.PrimerApellido = '';
-              }
-              if (elementDatoRef.SegundoNombre === null || elementDatoRef.SegundoNombre === 'null') {
-                elementDatoRef.SegundoNombre = '';
-              }
-              if (elementDatoRef.SegundoApellido === null || elementDatoRef.SegundoApellido === 'null') {
-                elementDatoRef.SegundoApellido = '';
-              }
-
-              const PrimerNombreMayu = this.MaysPrimera(elementDatoRef.PrimerNombre.toLowerCase());
-              const PrimerApellidoMayu = this.MaysPrimera(elementDatoRef.PrimerApellido.toLowerCase());
-              const SegundoNombreMayu = this.MaysPrimera(elementDatoRef.SegundoNombre.toLowerCase());
-              const SegundoApellidoMayu = this.MaysPrimera(elementDatoRef.SegundoApellido.toLowerCase());
-
-              if (this.ArrayFamiliar.length <= 2) {
-                  this.ArrayFamiliar.push({
-                    'Nombre': PrimerNombreMayu + ' ' + SegundoNombreMayu  + ' '
-                      + PrimerApellidoMayu + ' ' + SegundoApellidoMayu,
-                    'parentesco': this.naturalesAllModel.ParentescoFamiliar,
-                    'Telefono1': elementDatoRef.TelefonoContacto,
-                    'Telefono2': elementDatoRef.Celular,
-                    'Telefono3': elementDatoRef.TelefonoEmpresa,
-                  });
-              }
-            }
-            if (elementDatoRef.IdTipoReferencia === 4) {
-              console.log('informacion dataParentesco - ' + this.dataParentescosSol1);
-              this.dataParentescosSol1.forEach((elementParent : any) => {
-                if (elementParent.Clase === elementDatoRef.IdParentesco) {
-                  this.naturalesAllModel.parentescoPersonal = elementParent.Descripcion;
+                if (element.NumeroPregunta === 4) {
+                  this.naturalesAllModel.GanaActividad = element.Respuesta;
                 }
-              });
-
-              if (elementDatoRef.PrimerNombre === null || elementDatoRef.PrimerNombre === 'null') {
-                elementDatoRef.PrimerNombre = '';
-              }
-              if (elementDatoRef.PrimerApellido === null || elementDatoRef.PrimerApellido === 'null') {
-                elementDatoRef.PrimerApellido = '';
-              }
-              if (elementDatoRef.SegundoNombre === null || elementDatoRef.SegundoNombre === 'null') {
-                elementDatoRef.SegundoNombre = '';
-              }
-              if (elementDatoRef.SegundoApellido === null || elementDatoRef.SegundoApellido === 'null') {
-                elementDatoRef.SegundoApellido = '';
-              }
-              const PrimerNombreMayu = this.MaysPrimera(elementDatoRef.PrimerNombre.toLowerCase());
-              const PrimerApellidoMayu = this.MaysPrimera(elementDatoRef.PrimerApellido.toLowerCase());
-              const SegundoNombreMayu = this.MaysPrimera(elementDatoRef.SegundoNombre.toLowerCase());
-              const SegundoApellidoMayu = this.MaysPrimera(elementDatoRef.SegundoApellido.toLowerCase());
-
-              if (this.ArrayPersonal.length <= 2) {
-                  this.ArrayPersonal.push({
-                    'Nombre': PrimerNombreMayu + ' ' + SegundoNombreMayu  + ' '
-                      + PrimerApellidoMayu + ' ' + SegundoApellidoMayu,
-                    'parentesco': this.naturalesAllModel.parentescoPersonal,
-                    'Telefono1': elementDatoRef.TelefonoContacto,
-                    'Telefono2': elementDatoRef.Celular,
-                    'Telefono3': elementDatoRef.TelefonoEmpresa,
-                  });
-              }
-            }
-            if (elementDatoRef.IdTipoReferencia === 1) {
-
-              if (elementDatoRef.IdCiudad !== 0 && elementDatoRef.IdCiudad !== null) {
-                let serPro = '';
-                let descripcionEmpresa = '';
-                if (elementDatoRef.ServicioProducto !== null && elementDatoRef.ServicioProducto !== undefined) {
-                  serPro = elementDatoRef.ServicioProducto.toLowerCase();
+                if (element.NumeroPregunta === 5) {
+                  this.naturalesAllModel.ValorPromedio = element.Respuesta;
                 }
-                // console.log('informacion dataCiudad - ' + this.dataCiudad);
-                this.dataCiudadesAllSol.forEach((elementCiudad : any) => {
-                  if (elementCiudad.IdCiudad === elementDatoRef.IdCiudad) {
-                    if (this.ArrayComercial.length <= 2) {
-                      if (elementDatoRef.DescripcionEmpresa !== null && elementDatoRef.DescripcionEmpresa !== undefined) {
-                        descripcionEmpresa = this.MaysPrimera(elementDatoRef.DescripcionEmpresa.toLowerCase());
-                      } else {
-                        descripcionEmpresa = '';
+                if (element.NumeroPregunta === 6) {
+                  if (element.Respuesta === 'true') {
+                    this.naturalesAllModel.OperacionMonedaExtrangera = 'Si';
+                  } else {
+                    this.naturalesAllModel.OperacionMonedaExtrangera = 'No';
+                  }
+                }
+                if (element.NumeroPregunta === 7) { // Entidad
+                  this.naturalesAllModel.Entidad = this.capitalizarLetra(element.Respuesta);
+                }
+                if (element.NumeroPregunta === 8) { // importa
+                  this.mostrarImporta = (element.Respuesta === 'true');
+                  this.naturalesAllModel.Importa = this.mostrarImporta ? 'Si' : 'No';
+                }
+                if (element.NumeroPregunta === 9) { // exporta
+                  this.mostrarExporta = (element.Respuesta === 'true');
+                  this.naturalesAllModel.Exporta = this.mostrarExporta ? 'Si' : 'No';
+                }
+                if (element.NumeroPregunta === 10) { // giros
+                  this.mostrarGiros = (element.Respuesta === 'true');
+                  this.naturalesAllModel.Giros = this.mostrarGiros ? 'Si' : 'No';
+                }
+                if (element.NumeroPregunta === 11) { // tipoProducto
+                  this.naturalesAllModel.TipoProducto = this.capitalizarLetra(element.Respuesta);
+                }
+                if (element.NumeroPregunta === 12) { // Pais
+                  if (element.Respuesta !== '' && element.Respuesta !== null) {
+                    this.dataPaisesAllSol.forEach((elementPaises : any ) => {
+                      if (elementPaises.IdPais === +element.Respuesta) {
+                        this.naturalesAllModel.PaiseEntrevista = elementPaises.Descripcion.replace('Pais', '');
                       }
-                      this.ArrayComercial.push({
-                        'Nombre': descripcionEmpresa,
-                        'Telefono': elementDatoRef.TelefonoEmpresa,
-                        'Ciudad': elementCiudad.Descripcion,
-                        'Servicio': this.MaysPrimera(serPro),
-                      });
-                    }
+                    });
+                  } else {
+                    this.naturalesAllModel.PaiseEntrevista = '';
                   }
-                });
-              } else if (elementDatoRef.IdPais !== 0 && elementDatoRef.IdPais !== null) {
-                let serPro = '';
-                let descripcionEmpresa = '';
-                if (elementDatoRef.ServicioProducto !== null && elementDatoRef.ServicioProducto !== undefined) {
-                  serPro = elementDatoRef.ServicioProducto.toLowerCase();
                 }
-                // console.log('informacion dataCiudad - ' + this.dataCiudad);
-                this.dataPaisesAllSol.forEach((elementPais : any) => {
-                  if (elementPais.IdPais === elementDatoRef.IdPais) {
-                    if (this.ArrayComercial.length <= 2) {
-                      if (elementDatoRef.DescripcionEmpresa !== null && elementDatoRef.DescripcionEmpresa !== undefined) {
-                        descripcionEmpresa = this.MaysPrimera(elementDatoRef.DescripcionEmpresa.toLowerCase());
-                      } else {
-                        descripcionEmpresa = '';
+                if (element.NumeroPregunta === 13) { // ciudad operacion
+                  this.naturalesAllModel.Ciudadoperacion = this.capitalizarLetra(element.Respuesta);
+                }
+                if (element.NumeroPregunta === 24) { // Monto promedio
+                  this.naturalesAllModel.MontoPromedio = element.Respuesta;
+                }
+                if (element.NumeroPregunta === 25) { // Moneda operacion
+                  if (element.Respuesta !== '' && element.Respuesta !== null) {
+                    this.dataDivisasSol.forEach((elementDivisas : any) => {
+                      if (elementDivisas.Id === +element.Respuesta) {
+                        this.naturalesAllModel.Moneda = elementDivisas.Nombre;
                       }
-                      this.ArrayComercial.push({
-                        'Nombre': descripcionEmpresa,
-                        'Telefono': elementDatoRef.TelefonoEmpresa,
-                        'Ciudad': elementPais.Descripcion,
-                        'Servicio': this.MaysPrimera(serPro),
-                      });
+                    });
+                  } else {
+                    this.naturalesAllModel.Moneda = '';
+                  }
+                }
+                if (element.NumeroPregunta === 14) {
+                  if (element.Respuesta === 'true') {
+                    this.naturalesAllModel.TieneInversionMonedaExtrangera = 'Si';
+                  } else {
+                    this.naturalesAllModel.TieneInversionMonedaExtrangera = 'No';
+                  }
+                }
+                if (element.NumeroPregunta === 15) {
+                  if (element.Respuesta !== '' && element.Respuesta !== null) {
+                    this.dataPaisesAllSol.forEach((elementPaises : any) => {
+                      if (elementPaises.IdPais === +element.Respuesta) {
+                        this.naturalesAllModel.PaisTiene = elementPaises.Descripcion;
+                      }
+                    });
+                  } else {
+                    this.naturalesAllModel.PaisTiene = '';
+                  }
+                }
+                if (element.NumeroPregunta === 16) {
+                  if (element.Respuesta !== '' && element.Respuesta !== null) {
+                    this.dataDivisasSol.forEach((elementDivisas : any) => {
+                      if (elementDivisas.Id === +element.Respuesta) {
+                        this.naturalesAllModel.MonedaTiene = elementDivisas.Nombre;
+                      }
+                    });
+                  } else {
+                    this.naturalesAllModel.MonedaTiene = '';
+                  }
+                }
+                if (element.NumeroPregunta === 17) {
+                  if (element.Respuesta === 'true') {
+                    this.naturalesAllModel.PoseeCuentaMonedaExtrangera = 'Si';;
+                  } else {
+                    this.naturalesAllModel.PoseeCuentaMonedaExtrangera = 'No';
+                  }
+                }
+                if (element.NumeroPregunta === 29) {
+                    this.naturalesAllModel.CuentaMonedaExtrangera = element.Respuesta;                
+                }
+                if (element.NumeroPregunta === 18) {
+                  if (element.Respuesta !== '' && element.Respuesta !== null) {
+                    this.dataPaisesAllSol.forEach((elementPaises : any) => {
+                      if (elementPaises.IdPais === +element.Respuesta) {
+                        this.naturalesAllModel.PaisPosee = elementPaises.Descripcion;
+                      }
+                    });
+                  } else {
+                    this.naturalesAllModel.PaisPosee = '';
+                  }
+                }
+                if (element.NumeroPregunta === 19) {
+                  if (element.Respuesta !== '' && element.Respuesta !== null) {
+                    this.dataDivisasSol.forEach((elementDivisas : any) => {
+                      if (elementDivisas.Id === +element.Respuesta) {
+                        this.naturalesAllModel.MonedaPosee = elementDivisas.Nombre;
+                      }
+                    });
+                  } else {
+                    this.naturalesAllModel.MonedaPosee = '';
+                  }
+                }
+                if (element.NumeroPregunta === 20) {
+                  if (element.Respuesta === 'true') {
+                    this.naturalesAllModel.PersonaPEPS = 'Si';
+                  } else {
+                    this.naturalesAllModel.PersonaPEPS = 'No';
+                  }
+                }
+                if (element.NumeroPregunta === 21) {
+                  if (element.Respuesta === 'true') {
+                    this.naturalesAllModel.ManejaRecursosPublicos = 'Si';
+                  } else {
+                    this.naturalesAllModel.ManejaRecursosPublicos = 'No';
+                  }
+                }
+                if (element.NumeroPregunta === 22) {
+                  if (element.Respuesta === 'true') {
+                    this.naturalesAllModel.PorCargoPoderPublico = 'Si';
+                  } else {
+                    this.naturalesAllModel.PorCargoPoderPublico = 'No';
+                  }
+                }
+                if (element.NumeroPregunta === 23) {
+                  if (element.Respuesta === 'true') {
+                    this.naturalesAllModel.VinculoEntreUnPeps = 'Si';
+                  } else {
+                    this.naturalesAllModel.VinculoEntreUnPeps = 'No';
+                  }
+                }
+                if (element.NumeroPregunta === 26) {
+                  if (element.Respuesta === 'true') {
+                    this.naturalesAllModel.PorActividadPoderPublico = 'Si';
+                  } else {
+                    this.naturalesAllModel.PorActividadPoderPublico = 'No';
+                  }
+                }
+                if (element.NumeroPregunta === 28) {
+                  if (element.Respuesta === 'true') {
+                    this.naturalesAllModel.DeclaroQueNoTransacciones = 'Si';
+                  } else {
+                    this.naturalesAllModel.DeclaroQueNoTransacciones = 'No';
+                  }
+                }
+
+              });
+            //#endregion
+
+            //#region LISTA PEPS
+            if (result.listaDePeps !== null) {
+              if (result.listaDePeps.length > 0) {
+                result.listaDePeps.forEach((element : any) => {
+                  if (element.NombreCompleto !== null && element.NombreCompleto !== undefined && element.NombreCompleto !== '') {
+                    this.naturalesAllModel.NombreCompleto = this.MaysPrimera(element.NombreCompleto.toLowerCase());
+                  } else {
+                    this.naturalesAllModel.NombreCompleto = element.NombreCompleto;
+                  }
+                  this.naturalesAllModel.IdentitificacionPeps = element.Identificacion;
+                  this.naturalesAllModel.Periodo = element.PeriodoDesde;
+                  this.dataCargosSol.forEach((elementCargos : any) => {
+                    if (elementCargos.Clase === +element.Cargo) {
+                      this.naturalesAllModel.Cargo = elementCargos.Descripcion;
                     }
+                  });
+                  this.dataParentescosSol.forEach((elementParent : any ) => {
+                    if (elementParent.IdParentesco === +element.IdParentesco) {
+                      this.naturalesAllModel.Parentesco = elementParent.Descripcion;
+                    }
+                  });
+                  this.ArrayPeps.push(
+                    {
+                      'NombrePeps': this.naturalesAllModel.NombreCompleto,
+                      'DocumentoPeps': this.naturalesAllModel.IdentitificacionPeps,
+                      'Periodo': this.naturalesAllModel.Periodo,
+                      'Cargo': this.naturalesAllModel.Cargo,
+                      'Parentesco': this.naturalesAllModel.Parentesco
+                    }
+                  );
+                });
+              }
+            }
+            
+            //#endregion
+
+            //#region REFERENCIAS
+            console.log('INFORMACION REFERENCIAS - ' + result.referenciaDto);
+            result.referenciaDto.forEach((elementDatoRef : any) => {
+              if (elementDatoRef.IdTipoReferencia === 2) {
+                console.log('informacion dataParentesco - ' + this.dataParentescosSol);
+                this.dataParentescosSol.forEach((elementParent : any) => {
+                  if (elementParent.Clase === elementDatoRef.IdParentesco) {
+                    this.naturalesAllModel.ParentescoFamiliar = elementParent.Descripcion;
                   }
                 });
-              } else {
-                let serPro = '';
-                if (elementDatoRef.ServicioProducto !== null && elementDatoRef.ServicioProducto !== undefined) {
-                  serPro = elementDatoRef.ServicioProducto.toLowerCase();
+
+                if (elementDatoRef.PrimerNombre === null || elementDatoRef.PrimerNombre === 'null') {
+                  elementDatoRef.PrimerNombre = '';
                 }
-                if (this.ArrayComercial.length <= 2) {
-                    this.ArrayComercial.push({
-                      'Nombre': elementDatoRef.DescripcionEmpresa,
-                      'Telefono': elementDatoRef.TelefonoEmpresa,
-                      'Ciudad': elementDatoRef.IdCiudad,
-                      'Servicio': this.MaysPrimera(serPro),
+                if (elementDatoRef.PrimerApellido === null || elementDatoRef.PrimerApellido === 'null') {
+                  elementDatoRef.PrimerApellido = '';
+                }
+                if (elementDatoRef.SegundoNombre === null || elementDatoRef.SegundoNombre === 'null') {
+                  elementDatoRef.SegundoNombre = '';
+                }
+                if (elementDatoRef.SegundoApellido === null || elementDatoRef.SegundoApellido === 'null') {
+                  elementDatoRef.SegundoApellido = '';
+                }
+
+                const PrimerNombreMayu = this.MaysPrimera(elementDatoRef.PrimerNombre.toLowerCase());
+                const PrimerApellidoMayu = this.MaysPrimera(elementDatoRef.PrimerApellido.toLowerCase());
+                const SegundoNombreMayu = this.MaysPrimera(elementDatoRef.SegundoNombre.toLowerCase());
+                const SegundoApellidoMayu = this.MaysPrimera(elementDatoRef.SegundoApellido.toLowerCase());
+
+                if (this.ArrayFamiliar.length <= 2) {
+                    this.ArrayFamiliar.push({
+                      'Nombre': PrimerNombreMayu + ' ' + SegundoNombreMayu  + ' '
+                        + PrimerApellidoMayu + ' ' + SegundoApellidoMayu,
+                      'parentesco': this.naturalesAllModel.ParentescoFamiliar,
+                      'Telefono1': elementDatoRef.TelefonoContacto,
+                      'Telefono2': elementDatoRef.Celular,
+                      'Telefono3': elementDatoRef.TelefonoEmpresa,
                     });
                 }
               }
-
-            }
-            if (elementDatoRef.IdTipoReferencia === 3) {
-              let serPro = '';
-              if (elementDatoRef.IdCiudad !== 0 && elementDatoRef.IdCiudad !== null) {
-                // console.log('informacion dataCiudad - ' + this.dataCiudad);
-                this.dataCiudadesAllSol.forEach((elementCiudad : any) => {
-                  if (elementCiudad.IdCiudad === elementDatoRef.IdCiudad) {
-                    if (this.ArrayFinanciaria.length <= 2) {
-                      if (elementDatoRef.ServicioProducto !== null && elementDatoRef.ServicioProducto !== undefined) {
-                        serPro = elementDatoRef.ServicioProducto.toLowerCase();
-                      }
-                      this.ArrayFinanciaria.push({
-                        'Nombre': this.MaysPrimera(elementDatoRef.DescripcionEmpresa.toLowerCase()),
-                        'Telefono': elementDatoRef.TelefonoEmpresa,
-                        'Oficina': elementCiudad.Descripcion,
-                        'Servicio': this.MaysPrimera(serPro),
-                        'NroServicio': elementDatoRef.NumeroProducto,
-                      });
-
-                    }
+              if (elementDatoRef.IdTipoReferencia === 4) {
+                console.log('informacion dataParentesco - ' + this.dataParentescosSol1);
+                this.dataParentescosSol1.forEach((elementParent : any) => {
+                  if (elementParent.Clase === elementDatoRef.IdParentesco) {
+                    this.naturalesAllModel.parentescoPersonal = elementParent.Descripcion;
                   }
                 });
 
-              } else {
-                if (this.ArrayFinanciaria.length <= 1) {
+                if (elementDatoRef.PrimerNombre === null || elementDatoRef.PrimerNombre === 'null') {
+                  elementDatoRef.PrimerNombre = '';
+                }
+                if (elementDatoRef.PrimerApellido === null || elementDatoRef.PrimerApellido === 'null') {
+                  elementDatoRef.PrimerApellido = '';
+                }
+                if (elementDatoRef.SegundoNombre === null || elementDatoRef.SegundoNombre === 'null') {
+                  elementDatoRef.SegundoNombre = '';
+                }
+                if (elementDatoRef.SegundoApellido === null || elementDatoRef.SegundoApellido === 'null') {
+                  elementDatoRef.SegundoApellido = '';
+                }
+                const PrimerNombreMayu = this.MaysPrimera(elementDatoRef.PrimerNombre.toLowerCase());
+                const PrimerApellidoMayu = this.MaysPrimera(elementDatoRef.PrimerApellido.toLowerCase());
+                const SegundoNombreMayu = this.MaysPrimera(elementDatoRef.SegundoNombre.toLowerCase());
+                const SegundoApellidoMayu = this.MaysPrimera(elementDatoRef.SegundoApellido.toLowerCase());
+
+                if (this.ArrayPersonal.length <= 2) {
+                    this.ArrayPersonal.push({
+                      'Nombre': PrimerNombreMayu + ' ' + SegundoNombreMayu  + ' '
+                        + PrimerApellidoMayu + ' ' + SegundoApellidoMayu,
+                      'parentesco': this.naturalesAllModel.parentescoPersonal,
+                      'Telefono1': elementDatoRef.TelefonoContacto,
+                      'Telefono2': elementDatoRef.Celular,
+                      'Telefono3': elementDatoRef.TelefonoEmpresa,
+                    });
+                }
+              }
+              if (elementDatoRef.IdTipoReferencia === 1) {
+
+                if (elementDatoRef.IdCiudad !== 0 && elementDatoRef.IdCiudad !== null) {
+                  let serPro = '';
+                  let descripcionEmpresa = '';
                   if (elementDatoRef.ServicioProducto !== null && elementDatoRef.ServicioProducto !== undefined) {
                     serPro = elementDatoRef.ServicioProducto.toLowerCase();
                   }
-                    this.ArrayFinanciaria.push({
-                      'Nombre': this.MaysPrimera(elementDatoRef.DescripcionEmpresa.toLowerCase()),
-                      'Telefono': elementDatoRef.TelefonoEmpresa,
-                      'Oficina': elementDatoRef.IdOficina,
-                      'Servicio': serPro,
-                      'NroServicio': elementDatoRef.NumeroProducto,
-                    });
+                  // console.log('informacion dataCiudad - ' + this.dataCiudad);
+                  this.dataCiudadesAllSol.forEach((elementCiudad : any) => {
+                    if (elementCiudad.IdCiudad === elementDatoRef.IdCiudad) {
+                      if (this.ArrayComercial.length <= 2) {
+                        if (elementDatoRef.DescripcionEmpresa !== null && elementDatoRef.DescripcionEmpresa !== undefined) {
+                          descripcionEmpresa = this.MaysPrimera(elementDatoRef.DescripcionEmpresa.toLowerCase());
+                        } else {
+                          descripcionEmpresa = '';
+                        }
+                        this.ArrayComercial.push({
+                          'Nombre': descripcionEmpresa,
+                          'Telefono': elementDatoRef.TelefonoEmpresa,
+                          'Ciudad': elementCiudad.Descripcion,
+                          'Servicio': this.MaysPrimera(serPro),
+                        });
+                      }
+                    }
+                  });
+                } else if (elementDatoRef.IdPais !== 0 && elementDatoRef.IdPais !== null) {
+                  let serPro = '';
+                  let descripcionEmpresa = '';
+                  if (elementDatoRef.ServicioProducto !== null && elementDatoRef.ServicioProducto !== undefined) {
+                    serPro = elementDatoRef.ServicioProducto.toLowerCase();
+                  }
+                  // console.log('informacion dataCiudad - ' + this.dataCiudad);
+                  this.dataPaisesAllSol.forEach((elementPais : any) => {
+                    if (elementPais.IdPais === elementDatoRef.IdPais) {
+                      if (this.ArrayComercial.length <= 2) {
+                        if (elementDatoRef.DescripcionEmpresa !== null && elementDatoRef.DescripcionEmpresa !== undefined) {
+                          descripcionEmpresa = this.MaysPrimera(elementDatoRef.DescripcionEmpresa.toLowerCase());
+                        } else {
+                          descripcionEmpresa = '';
+                        }
+                        this.ArrayComercial.push({
+                          'Nombre': descripcionEmpresa,
+                          'Telefono': elementDatoRef.TelefonoEmpresa,
+                          'Ciudad': elementPais.Descripcion,
+                          'Servicio': this.MaysPrimera(serPro),
+                        });
+                      }
+                    }
+                  });
+                } else {
+                  let serPro = '';
+                  if (elementDatoRef.ServicioProducto !== null && elementDatoRef.ServicioProducto !== undefined) {
+                    serPro = elementDatoRef.ServicioProducto.toLowerCase();
+                  }
+                  if (this.ArrayComercial.length <= 2) {
+                      this.ArrayComercial.push({
+                        'Nombre': elementDatoRef.DescripcionEmpresa,
+                        'Telefono': elementDatoRef.TelefonoEmpresa,
+                        'Ciudad': elementDatoRef.IdCiudad,
+                        'Servicio': this.MaysPrimera(serPro),
+                      });
+                  }
+                }
+
+              }
+              if (elementDatoRef.IdTipoReferencia === 3) {
+                let serPro = '';
+                if (elementDatoRef.IdCiudad !== 0 && elementDatoRef.IdCiudad !== null) {
+                  // console.log('informacion dataCiudad - ' + this.dataCiudad);
+                  this.dataCiudadesAllSol.forEach((elementCiudad : any) => {
+                    if (elementCiudad.IdCiudad === elementDatoRef.IdCiudad) {
+                      if (this.ArrayFinanciaria.length <= 2) {
+                        if (elementDatoRef.ServicioProducto !== null && elementDatoRef.ServicioProducto !== undefined) {
+                          serPro = elementDatoRef.ServicioProducto.toLowerCase();
+                        }
+                        this.ArrayFinanciaria.push({
+                          'Nombre': this.MaysPrimera(elementDatoRef.DescripcionEmpresa.toLowerCase()),
+                          'Telefono': elementDatoRef.TelefonoEmpresa,
+                          'Oficina': elementCiudad.Descripcion,
+                          'Servicio': this.MaysPrimera(serPro),
+                          'NroServicio': elementDatoRef.NumeroProducto,
+                        });
+
+                      }
+                    }
+                  });
+
+                } else {
+                  if (this.ArrayFinanciaria.length <= 1) {
+                    if (elementDatoRef.ServicioProducto !== null && elementDatoRef.ServicioProducto !== undefined) {
+                      serPro = elementDatoRef.ServicioProducto.toLowerCase();
+                    }
+                      this.ArrayFinanciaria.push({
+                        'Nombre': this.MaysPrimera(elementDatoRef.DescripcionEmpresa.toLowerCase()),
+                        'Telefono': elementDatoRef.TelefonoEmpresa,
+                        'Oficina': elementDatoRef.IdOficina,
+                        'Servicio': serPro,
+                        'NroServicio': elementDatoRef.NumeroProducto,
+                      });
+                  }
                 }
               }
-            }
 
 
-            });
-          // #endregion
-
-          this.openSolicitudModal.nativeElement.click();
-          this.loading = false;
-        }
-      },
-      error => {
-        console.error('BuscarNaturalesAllSolicitudImpresion - ' + error);
-      });
-  }
+              });
+              this.naturalesAllModel.ReferenciasFamiliares = this.ArrayFamiliar;
+              this.naturalesAllModel.ReferenciasComerciales = this.ArrayComercial;
+              this.naturalesAllModel.ReferenciasPersonales = this.ArrayPersonal;
+              this.naturalesAllModel.ReferenciasFinancieras = this.ArrayFinanciaria;
+              this.naturalesAllModel.Peps = this.ArrayPeps;
+            // #endregion
+          }
+        },
+        error => {
+          console.error('BuscarNaturalesAllSolicitudImpresion - ' + error);
+        });
+    });
+  } 
 
   MonthDiff = function (d1 : Date, d2 : Date) {
     if (d2 < d1) {

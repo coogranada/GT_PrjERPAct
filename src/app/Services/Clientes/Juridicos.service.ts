@@ -202,4 +202,9 @@ export class JuridicosService {
         this.url = `${this.environment.Url}/TieneCuentas?idTercero=${tercero}`;
         return this._http.get<any>(this.url);
     } 
+
+    GenerarPDFHojaVida(juridicoInfo: any): Observable<any> {
+        this.url = `${this.environment.Url}/GenerarPDFHojaVidaJuridico`;
+        return this._http.post<any>(this.url, juridicoInfo, { responseType: 'blob' as 'json' });
+      }
 }
