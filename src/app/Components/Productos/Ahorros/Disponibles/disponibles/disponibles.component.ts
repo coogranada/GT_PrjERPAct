@@ -4307,7 +4307,34 @@ export class DisponiblesComponent implements OnInit {
                 }, 1000);
               }
               this.BuscarPorCuenta();
-              // Notificador
+              // Notificador ysalazar (ajustar para tambien bloquear las libretas si el usuario tiene ya tarjeta)
+              if (this.DisponibleForm.get('IdMedioPago')?.value == 0){
+                let IdTercero = Number(this.DisponibleForm.get('LngTercero')?.value);
+                this.DisponiblesServices.CuentaDisponible(IdTercero).subscribe(
+                  result => {
+                    if (result !== null){
+                      result.forEach(( x: any) => {
+                        if (x.IdMedioPago != 0){
+                          this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 7, '16').subscribe(
+                            result => {
+                            },
+                            error => {
+                              const errorMessage = <any>error;
+                              console.log(errorMessage);
+                            }
+                          );
+                        }
+                      });
+                    }                 
+                   
+                  },
+                  error => {
+                    const errorMessage = <any>error;
+                    console.log(errorMessage);
+                  }
+                );
+
+              }              
               if (this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 70 || this.DisponibleForm.get('IdMedioPago')?.value == 10 || this.DisponibleForm.get('IdMedioPago')?.value == 60) {
                 this.DisponiblesServices.CreaNotificacion(IdTercero, IdCuenta, 7, '16').subscribe(
                   result => {
@@ -5700,6 +5727,9 @@ export class DisponiblesComponent implements OnInit {
             && this.DisponibleForm.get('NumeroTarjeta')?.value !== undefined
             && this.DisponibleForm.get('NumeroTarjeta')?.value !== '') {
             this.loading = true;
+            let data: string | null = localStorage.getItem('Data');
+            this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+            this.DisponibleForm.get('IdUsuarioERP')?.setValue(this.dataUser.IdUsuario);
             // Notificador
             var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
             var IdCuenta = +this.DisponibleForm.get('IdCuenta')?.value;
@@ -5805,6 +5835,9 @@ export class DisponiblesComponent implements OnInit {
             && this.DisponibleForm.get('NumeroTarjeta')?.value !== undefined
             && this.DisponibleForm.get('NumeroTarjeta')?.value !== '' || this.TipoNovedad != "") {              
             this.loading = true;
+            let data: string | null = localStorage.getItem('Data');
+            this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+            this.DisponibleForm.get('IdUsuarioERP')?.setValue(this.dataUser.IdUsuario);
             // Notificador
             var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
             var IdCuenta = +this.DisponibleForm.get('IdCuenta')?.value;
@@ -8563,6 +8596,7 @@ export class DisponiblesComponent implements OnInit {
     const IdConvenio = new FormControl('', []);
     const IdCuenta = new FormControl('', []);
     const IdUsuarioSGF = new FormControl('', []);
+    const IdUsuarioERP = new FormControl('', []);
     const ActivaMovimiento = new FormControl('', []);
     const Exenta = new FormControl('', []);
     const ExoneradaGmf = new FormControl('', []);
@@ -8683,6 +8717,7 @@ export class DisponiblesComponent implements OnInit {
       IdConvenio: IdConvenio,
       IdCuenta: IdCuenta,
       IdUsuarioSGF: IdUsuarioSGF,
+      IdUsuarioERP: IdUsuarioERP,
       ActivaMovimiento: ActivaMovimiento,
       Exenta: Exenta,
       ExoneradaGmf: ExoneradaGmf,

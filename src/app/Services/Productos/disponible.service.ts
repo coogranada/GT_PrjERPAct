@@ -340,6 +340,10 @@ export class DisponiblesService {
     
         return this._http.post<any>(url, null, { params });
     }
+    CuentaDisponible(IdTercero: Number): Observable<any> {
+        this.url = `${this.environment.Url}/CuentaDisponible?PintIdTercero=${IdTercero}`;
+        return this._http.get<any>(this.url);
+    }
     
 }
 
