@@ -92,7 +92,7 @@
                         <label><strong>Separador:</strong></label><span class="text-danger ObligatorioGrande"> *</span>
                         <select class="form-control" formControlName="separador" name="separador" id="separador">
                             <option value=",">,</option>
-                            <option value=",">;</option>
+                            <option value=";">;</option>
                             <option value="|">|</option>
                         </select>
                         <span class="help-block validationSpan"
@@ -433,6 +433,7 @@
                                 <option value="5">Estado</option>
                                 <option value="6">Separador</option>
                                 <option value="7">Ruta local salida</option>
+                                <option value="8">Formato fecha</option>
                             </select>
                             <span class="help-block validationSpan"
                                 *ngIf="parametrosArchivosForm.controls['separador'].errors?.['required'] && (parametrosArchivosForm.controls['separador'].dirty || parametrosArchivosForm.controls['separador'].touched)">
@@ -494,7 +495,7 @@
                             <select class="form-control" name="separador1" id="separador1">
                                 <option value="">--Seleccione--</option>
                                 <option value=",">,</option>
-                                <option value=",">;</option>
+                                <option value=";">;</option>
                                 <option value="|">|</option>
                             </select>
                          </div>
@@ -505,6 +506,15 @@
                                 <label><strong>Ruta local salida:</strong></label><span class="text-danger ObligatorioGrande">
                                     *</span>
                                 <input type="text" class="form-control" id="rutaLocalSalidaMasivo"  />
+                            </div>
+                        </div>
+
+                        <div *ngIf="this.campoSelected === '8'" class="col-xs-12 col-md-12 col-lg-12">
+                            <br>
+                            <div class="col-xs-12 col-md-12 col-lg-12">
+                                <label><strong>Formato fecha:</strong></label><span class="text-danger ObligatorioGrande">
+                                    *</span>
+                                <input type="text" class="form-control" id="formatoFechaMasivo"  />
                             </div>
                         </div>
 

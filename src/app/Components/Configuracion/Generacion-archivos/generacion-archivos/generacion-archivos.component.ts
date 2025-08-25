@@ -431,6 +431,7 @@ export class GeneracionArchivosComponent implements OnInit {
         } else {
           this.parametrosArchivosF.forEach(parametro => {
             parametro.DiaInicial = fechaIni;
+            parametro.DiaFinal = fechaIni;
           });
           this.actualizarMasivo1();
         }
@@ -448,6 +449,7 @@ export class GeneracionArchivosComponent implements OnInit {
         } else {
           this.parametrosArchivosF.forEach(parametro => {
             parametro.DiaFinal = fechaFin;
+            parametro.DiaInicial = fechaFin;
           });
           this.actualizarMasivo1();
         }
@@ -486,6 +488,19 @@ export class GeneracionArchivosComponent implements OnInit {
         } else {
           this.parametrosArchivosF.forEach(parametro => {
             parametro.RutaLocalSalida = rutalocalSalidaMasivo.value.trim();
+          });
+          this.actualizarMasivo1();
+        }
+
+        break;
+        case "8": //Formato fecha masivo
+        const formatoFechaMasivo = document.getElementById('formatoFechaMasivo') as HTMLInputElement;
+
+        if (formatoFechaMasivo.value.trim() == "" || formatoFechaMasivo.value.trim() == undefined) {
+          this.toastr.warning('Advertencia', 'Debe ingresar una formato de fecha válido.', ConfiguracionNotificacion.configRightTop);
+        } else {
+          this.parametrosArchivosF.forEach(parametro => {
+            parametro.FormatoFecha = formatoFechaMasivo.value.trim();
           });
           this.actualizarMasivo1();
         }
