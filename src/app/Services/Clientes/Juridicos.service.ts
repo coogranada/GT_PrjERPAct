@@ -198,6 +198,10 @@ export class JuridicosService {
         .set('marca', marcado);
         return this._http.get<any>(this.url,{params: params });
     }
+    GetRegimenTributariosJuridicos(): Observable<any> {
+        this.url = `${this.environment.Url}/GetRegimenTributariosJuridicos`;
+        return this._http.get<any>(this.url);
+    } 
     TieneCuentas(tercero: string): Observable<any> {
         this.url = `${this.environment.Url}/TieneCuentas?idTercero=${tercero}`;
         return this._http.get<any>(this.url);

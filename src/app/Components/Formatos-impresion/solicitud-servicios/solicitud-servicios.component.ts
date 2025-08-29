@@ -379,48 +379,6 @@ export class SolicitudServiciosComponent implements OnInit {
           
 
           if (result !== null) {
-            let credito : string | null = localStorage.getItem('Credito');
-            let vinculacion : string | null = localStorage.getItem('Vinculacion');
-            let actualizacion : string | null = localStorage.getItem('Actualizacion');
-            let dataServicie : string | null = localStorage.getItem('DataService');
-
-            this.Servcredito = JSON.parse(credito == null ? "" : credito);
-            this.servVinculacion = JSON.parse(vinculacion == null ? "" : vinculacion);
-            this.ServActualiza = JSON.parse(actualizacion == null ? "" : actualizacion);
-            if(this.servVinculacion) {
-              this.naturalesAllModel.ServicioSolicitado = "Vinculación";
-              if(this.Servcredito) this.naturalesAllModel.ServicioSolicitado += " - Credito";
-            }
-            else if(this.Servcredito) this.naturalesAllModel.ServicioSolicitado = "Credito";
-            else if(this.ServActualiza) this.naturalesAllModel.ServicioSolicitado = "Actualización de datos";
-            const dataCredito = JSON.parse(dataServicie!);
-            console.log({dataCredito});
-            
-            // mapea la informacion si la impresion es para credito
-            if (dataCredito !== null) {
-              this.naturalesServicio.Asesor = dataCredito.Asesor;
-              if (dataCredito.Destino?.StrNombre !== null && dataCredito.Destino?.StrNombre !== undefined && dataCredito.Destino?.StrNombre !== null) {
-                this.naturalesServicio.Destino = this.MaysPrimera(dataCredito.Destino.StrNombre?.toLowerCase());
-              } else {
-                this.naturalesServicio.Destino = dataCredito.Destino?.StrNombre;
-              }
-              this.naturalesServicio.Oficina = dataCredito.Oficina;
-              this.naturalesServicio.MontoSolicitado = dataCredito.montoSolicitado;
-              this.naturalesServicio.PlazoDeseado = dataCredito.plazoDeseado;
-              this.naturalesServicio.NombreDeudor = dataCredito.NombreDeudor;
-              this.naturalesServicio.NumeroDocDeudor = dataCredito.NumeroDocumento;
-              if (dataCredito.TipoDocumento !== null && dataCredito.TipoDocumento !== undefined
-                && dataCredito.TipoDocumento !== '') {
-                this.tiposDocumento.forEach(elementTipoDocu => {
-                  console.log(dataCredito.TipoDocumento);
-                  if (+elementTipoDocu.Value === dataCredito.TipoDocumento) {
-                    this.naturalesServicio.TipoIdentificacion = elementTipoDocu.Descripcion;
-                  }
-                });
-              } else {
-                this.naturalesServicio.TipoIdentificacion = null;
-              }
-            }
 
             // mapea el metodo como conocio a coogranada
             this.metodosConocio.forEach((elementMetodo : any) => {
@@ -436,8 +394,6 @@ export class SolicitudServiciosComponent implements OnInit {
               this.naturalesAllModel.Cual = '';
             }
 
-            // formatDate(this.basicosFrom.value.viveDesde, 'yyyy-MM-dd', 'en')
-            // fechaModificacionFormat = formatDate(new Date(), 'dd-MM-yyyy', 'en');
             fechaModificacion = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }).split('/');
             this.naturalesAllModel.DiaFechaSoli = fechaModificacion[0];
             this.naturalesAllModel.MesFechaSoli = fechaModificacion[1];

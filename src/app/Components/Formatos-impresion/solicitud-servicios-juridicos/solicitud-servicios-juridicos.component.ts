@@ -647,6 +647,7 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
           documento: this.infoPersonal.Nit,
           usuario: globalData?.Usuario,
           idOficina: globalData?.NumeroOficina,
+          nombreOficina: globalData?.Oficina,
           idProceso: this.GetServiceSolicited.idProceso,
           RadicadoCredito: this.GetServiceSolicited.radicado
         }; 
@@ -654,7 +655,7 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
         this.clientesService.EnviarSolicitudServiciosWorkManager(formInsertData).subscribe(
           result => {
             this.showLoader = false;
-            this.notif.onSuccess('Exitoso', 'Se envió al workmangaer correctamente.');
+            this.notif.onSuccess('Exitoso', 'Se envió al workmanager correctamente.');
             this.openModalHojaVida.nativeElement.click();
             const idServicioSeleccionado = this.GetServiceSolicited.idProceso;
             const servicioName = this.servicios.find(item => item.id == idServicioSeleccionado)?.name || '';

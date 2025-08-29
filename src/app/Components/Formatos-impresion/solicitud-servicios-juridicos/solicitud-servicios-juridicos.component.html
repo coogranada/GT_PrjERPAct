@@ -3,7 +3,7 @@
 <body class="navbar-bottom login-container" id="Contenido">
 
 
-  <div id="modalHojaVidaJuridico" class="modal">
+  <div id="modalHojaVidaJuridico" class="modal" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content modal-lg" style="width: 1400px; left: -390px;">
             <div class="modal-header bg-morado">
@@ -17,8 +17,9 @@
                     </div>
                 </div>
             </div>
-            <div class="panel-body modal-pdf-footer">
+            <div class="panel-body modal-footer modal-pdf-footer">
                 <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                    <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
                     <button class="btn Gt-btn-verde" (click)="EnviarHojaVidaWorkManager()" *ngIf="infoPersonal.IdRelacion == 5 && infoPersonal.IdEstado == 5 && (GetServiceSolicited.idProceso == 1 || GetServiceSolicited.idProceso == 2 || (GetServiceSolicited.idProceso == 3 && GetServiceSolicited?.radicado))">
                         ENVIAR A WORKMANAGER
                     </button>

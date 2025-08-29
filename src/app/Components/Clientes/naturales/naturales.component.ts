@@ -2707,32 +2707,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                   this.DesbloquearRespuesta14 = true;
                   this.DesbloquearRespuesta17 = true;
                   this.mostrarFemiliaresPeps = false;
-                  if(!this.lineasDestino.length) {
-                    this.clientesService.GetLineas().subscribe(
-                      result => {
-                        this.lineasDestino = result;
-                      }
-                    );
-                  }
-
-                  this.recursosGeneralesService.GetProcesosWorkManager().subscribe(
-                    result => {
-                      if(this.basicosFrom.get('tipoCliente')?.value == 5) {
-                        this.procesosWorkManager = result;
-                        if(this.basicosFrom.get('estado')?.value != 5) this.procesosWorkManager = result.filter((proceso: any) => proceso.TerceroHabilita);
-
-                      } else if(this.basicosFrom.get('tipoCliente')?.value == 15) {  
-                        this.procesosWorkManager = result.filter((proceso: any) => proceso.TerceroHabilita);
-                        
-                      } else if(this.basicosFrom.get('tipoCliente')?.value == 10) {
-                        this.procesosWorkManager = result.filter((proceso: any) => proceso.MenorHabilita);
-                        if(this.basicosFrom.get('estado')?.value != 5) this.procesosWorkManager = result.filter((proceso: any) => proceso.IdProcesoworkmanager === 2);
-                      }
-                      this.serviciosFrom.get('proceso')?.setValue('');
-                      this.resetSolicitudServiciosForm();
-                      this.abrirServicios.nativeElement.click();
-                    }
-                  );
+                  this.OpenSolicitudServicios();
                 }
               });
           }
@@ -5032,6 +5007,36 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       this.operacionEscogida = '';
     }
   }
+
+  OpenSolicitudServicios() {
+    if(!this.lineasDestino.length) {
+      this.clientesService.GetLineas().subscribe(
+        result => {
+          this.lineasDestino = result;
+        }
+      );
+    }
+
+    this.recursosGeneralesService.GetProcesosWorkManager().subscribe(
+      result => {
+        if(this.basicosFrom.get('tipoCliente')?.value == 5) {
+          this.procesosWorkManager = result;
+          if(this.basicosFrom.get('estado')?.value != 5) this.procesosWorkManager = result.filter((proceso: any) => proceso.TerceroHabilita);
+
+        } else if(this.basicosFrom.get('tipoCliente')?.value == 15) {  
+          this.procesosWorkManager = result.filter((proceso: any) => proceso.TerceroHabilita);
+          
+        } else if(this.basicosFrom.get('tipoCliente')?.value == 10) {
+          this.procesosWorkManager = result.filter((proceso: any) => proceso.MenorHabilita);
+          if(this.basicosFrom.get('estado')?.value != 5) this.procesosWorkManager = result.filter((proceso: any) => proceso.IdProcesoworkmanager === 2);
+        }
+        this.serviciosFrom.get('proceso')?.setValue('');
+        this.resetSolicitudServiciosForm();
+        this.abrirServicios.nativeElement.click();
+      }
+    );
+  }
+
   LimpiaVariablesAlerta() {
     this.ProIdTutor = '0';
     this.ProNomTutor = '0';
@@ -10851,14 +10856,14 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           documento: this.basicosFrom.get('numeroDocumento')?.value,
           usuario: globalData?.Usuario,
           idOficina: globalData?.NumeroOficina,
-          nombreOficina: this.serviciosFrom.value?.Oficina,
+          nombreOficina: globalData?.Oficina,
           idProceso: this.serviciosFrom.get('proceso')?.value,
           radicadoCredito: this.serviciosFrom.get('radicado')?.value || ''
         };    
         this.clientesService.EnviarSolicitudServiciosWorkManager(formInsertData).subscribe(
           result => {
             this.showLoader = false;
-            this.notif.onSuccess('Exitoso', 'Se envió al workmangaer correctamente.');
+            this.notif.onSuccess('Exitoso', 'Se envió al workmanager correctamente.');
             this.openModalHojaVida.nativeElement.click();
             const idServicioSeleccionado = this.serviciosFrom.get('proceso')?.value;
             const servicioName = this.servicios.find(item => item.id == idServicioSeleccionado)?.name || '';
@@ -21270,7 +21275,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         this.clientesService.EditarCorrespondecia(tercero == null ? "" : tercero,  this.Correspondenciasform.value.SeleccionCorrespondencia).subscribe(
           result => {
           });
-          this.abrirServicios.nativeElement.click();
+          this.OpenSolicitudServicios();
       }
     }
   }
@@ -25974,7 +25979,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                 result.Persona.PrimerNombre + ' ' + result.Persona.SegundoNombre + ' ' +
                 result.Persona.PrimerApellido + ' ' + result.Persona.SegundoApellido);
               this.serviciosFrom.get('TipoDocumento')?.setValue(result.Persona.IdTipoDocumento);
-              this.esDeudorAsociado = result.IdRelacion == 5 ? 'Si' : 'No';
+              this.esDeudorAsociado = result.IdRelacion == 5 || result.IdRelacion == 10 ? 'Si' : 'No';
             } else {
               this.notif.onWarning('Advertencia', 'No encontrado.');
               this.serviciosFrom.get('NombreDeudor')?.reset();
@@ -26007,7 +26012,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             resolve([]);
             return;
           }
-          resolve( result.filter((radicado: any) => ![10, 43, 46].includes( radicado.IdEstado ) ));
+          resolve( result.filter((radicado: any) => ![10, 43, 46, 42].includes( radicado.IdEstado ) ));
         },
         (error) => {
           reject(error);

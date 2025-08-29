@@ -107,8 +107,6 @@ export class AppComponent implements OnInit {
   }
 
   handleOffline() {
-    // localStorage.removeItem('token'); 
-    // localStorage.clear();
     location.reload();
   }
   validacionUsuarios() {

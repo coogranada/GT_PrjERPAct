@@ -1553,25 +1553,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           this.BloquearCamposFormularios();
           this.BloquearFormulariosNoLimpia();
           this.BloquearCamposInfoJuridico();
-          this.clientesService.GetLineas().subscribe(
-            result => {
-              this.lineasDestino = result;
-            }
-          );
-
-          this.recursosGeneralesService.GetProcesosWorkManager().subscribe(
-            result => {
-                this.procesosWorkManager = result.filter((proceso: any) => proceso.MenorHabilita);
-                                
-                if(this.infoJuridicoComponent.infoJuridicoFrom.get('Relacion')?.value == 15 || this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.value?.IdEstado != 5) { // Si es tercero o no es activo, solo muestra Actualizacion Datos
-                  this.procesosWorkManager = result.filter((proceso: any) => proceso.IdProcesoworkmanager === 2) 
-                }
-                
-                this.serviciosFrom.get('proceso')?.setValue('');
-                this.resetSolicitudServiciosForm();
-                this.AbrirModalServicios.nativeElement.click();
-            }
-          );
+          this.OpenSolicitudServicios();
         }
       } else {
         this.MostrarMensajeAlerta(valueState);
@@ -1599,6 +1581,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         this.serviciosFrom.get('Oficina')?.setValue(resultPerfil.Oficina);
         this.serviciosFrom.get('Asesor')?.setValue(resultPerfil.Nombre);
         this.AbrirModalServicios.nativeElement.click();
+        this.OpenSolicitudServicios();
         this.BloquearCamposFormularios();
         this.BloquearFormulariosNoLimpia();
         this.BloquearCamposInfoJuridico();
@@ -1606,6 +1589,27 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     }
   }
 
+  OpenSolicitudServicios() {
+    this.clientesService.GetLineas().subscribe(
+      result => {
+        this.lineasDestino = result;
+      }
+    );
+
+    this.recursosGeneralesService.GetProcesosWorkManager().subscribe(
+      result => {
+          this.procesosWorkManager = result.filter((proceso: any) => proceso.MenorHabilita);
+                          
+          if(this.infoJuridicoComponent.infoJuridicoFrom.get('Relacion')?.value == 15 || this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.value?.IdEstado != 5) { // Si es tercero o no es activo, solo muestra Actualizacion Datos
+            this.procesosWorkManager = result.filter((proceso: any) => proceso.IdProcesoworkmanager === 2) 
+          }
+          
+          this.serviciosFrom.get('proceso')?.setValue('');
+          this.resetSolicitudServiciosForm();
+          this.AbrirModalServicios.nativeElement.click();
+      }
+    );
+  }
   async onChangeProceso(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
     const currentValue = selectElement.value;
@@ -5041,7 +5045,8 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         } else {
           this.serviciosFrom.get('Oficina')?.setValue(resultPerfil.Oficina);
           this.serviciosFrom.get('Asesor')?.setValue(resultPerfil.Nombre);
-          this.AbrirModalServicios.nativeElement.click();
+          this.OpenSolicitudServicios();
+
         }
       } else if (operaSeleccionada === 23) {  // Gestion operaciones
         const strNit = this.infoJuridicoComponent.infoJuridicoFrom.get('Nit')?.value;
@@ -6735,6 +6740,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     } else {
       
     }
+    this.infoJuridicoComponent.infoJuridicoFrom.get('RegimenTributario')?.setValue(dataBasico.IdRegimenTributario);
 
     this.infoJuridicoComponent.dataEstados.forEach((elementEstado : any) => {
       if (elementEstado.IdEstado === dataBasico.IdEstado) {
@@ -7765,7 +7771,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
               // abrir el modal de servicio solicitado
               this.serviciosFrom.get('Oficina')?.setValue(resultPerfil.Oficina);
               this.serviciosFrom.get('Asesor')?.setValue(resultPerfil.Nombre);
-              this.AbrirModalServicios.nativeElement.click();
+              this.OpenSolicitudServicios();
             });
         } else {
           this.mostrarErrorCorrespondencia = true;
@@ -7840,7 +7846,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
             resolve([]);
             return;
           }
-          resolve( result.filter((radicado: any) => ![10, 43, 46].includes( radicado.IdEstado ) ));
+          resolve( result.filter((radicado: any) => ![10, 43, 46, 42].includes( radicado.IdEstado ) ));
         },
         (error) => {
           reject(error);
