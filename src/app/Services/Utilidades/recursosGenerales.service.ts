@@ -41,4 +41,8 @@ export class RecursosGeneralesService {
         this.url = `${this.environment.Url}/GetBarrios?id=${depar}`;
         return this._http.get<any>(this.url);
     }
+    GetProcesosWorkManager(): Observable<any> {
+        this.url = `${this.environment.Url}/GetProcesosWorkManager`;
+        return this._http.get<any>(this.url);
+    }
 }

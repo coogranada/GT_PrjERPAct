@@ -14,15 +14,16 @@
                     <th><strong>Oficina</strong></th>
                     <th><strong>Usuario responsable</strong></th>
                     <th><strong>Operación</strong></th>
+                    <th><strong>Detalle</strong></th>
                 </tr>
             </thead>
             <tbody *ngFor="let resultTrasa of dataTrasabilidad let i = index">
-                <tr class="filTras_{{i}}" (click)="CambiarColor(i,1)">
+                <tr class="filTras_{{i}} nowrap" (click)="CambiarColor(i,1)">
                     <td> {{resultTrasa.FechaModifica | date: "yyyy/MM/dd HH:mm:ss"}} </td>
                     <td> {{resultTrasa.Oficina}} </td>
                     <td> {{resultTrasa.NombreUsuario}} </td>
                     <td> {{resultTrasa.Operacion}} </td>
-
+                    <td> {{resultTrasa.Operacion.includes('Imprimir') && resultTrasa.Detalle.includes('workmanager') ? resultTrasa.Detalle.replaceAll('"', '') : '' }} </td>
                 </tr>
             </tbody>
         </table>

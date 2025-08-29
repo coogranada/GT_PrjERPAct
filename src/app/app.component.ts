@@ -1,5 +1,5 @@
 import { LoginService } from './Services/Login/login.service';
-import {  Component, OnInit, ElementRef, Output, EventEmitter, ViewChild} from '@angular/core';
+import {  Component, OnInit, ElementRef, Output, EventEmitter, ViewChild, HostListener} from '@angular/core';
 import { Router } from '@angular/router';
 import { PlatformLocation } from '@angular/common';
 import { ClientesGetListService } from './Services/Clientes/clientesGetList.service';
@@ -63,6 +63,11 @@ export class AppComponent implements OnInit {
     }
   }
   ngOnInit() {
+
+    if (!navigator.onLine) {
+      this.handleOffline();
+    }
+
     this.GetCargos();
     this.GetEstadosSeguro();
     this.GetLetra();
@@ -95,6 +100,15 @@ export class AppComponent implements OnInit {
       e.preventDefault();
     });
    }
+
+  @HostListener('window:offline', [])
+  onOffline() {
+    this.handleOffline();
+  }
+
+  handleOffline() {
+    location.reload();
+  }
   validacionUsuarios() {
     if (localStorage.getItem('Data') !== null && localStorage.getItem('Data') !== undefined) {
       let data : string | null = localStorage.getItem('Data');

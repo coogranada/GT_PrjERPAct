@@ -819,7 +819,7 @@
                             <label> <label class="text-bold">4.</label> Otros ingresos</label>
                         </div>
                         <div class="col-xs-2 col-md-2 col-lg-2 FormatoNaturalesRight">
-                            <label class="letraGrande">${{naturalesAllModel.OtrosIngresos | currency:'':'' :
+                            <label class="letraGrande">${{naturalesAllModel.OtrosIngresos.Valor | currency:'':'' :
                                 '1.0'}}</label>
                         </div>
                         <div class="col-xs-4 col-md-4 col-lg-4">
@@ -1961,9 +1961,9 @@
     </div>
     <!--/ Fin ModalAyudaPanelDatos -->
 </body>
-<ngx-loading [show]="loading"
+<!-- <ngx-loading [show]="loading"
     [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
-</ngx-loading>
+</ngx-loading> -->
 <!-- *ngIf="CargarAppComponet" -->
 <!-- (viasEmit)="recibirInfoAppVias($event)"
 (profesionEmit)="recibirInfoAppProfe($event)"

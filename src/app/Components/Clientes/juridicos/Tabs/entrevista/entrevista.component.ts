@@ -619,7 +619,8 @@ export class EntrevistaComponent implements OnInit {
         this.loading = true;
         localStorage.setItem('IdModuloActivo', window.btoa(JSON.stringify(12)));
         const dataJuridico = result;
-        this.GuardarLog(result, this.OperacionSeleccionada, 0, dataJuridico.BasicosDto.IdTercero,12);
+        const AnimoLucro = infoTotal.BasicosDto.AnimoLucro ? 'Si' : 'No';
+        this.GuardarLog({...infoTotal, BasicosDto: { ...infoTotal.BasicosDto, AnimoLucro }}, this.OperacionSeleccionada, 0, dataJuridico.BasicosDto.IdTercero,12);
         // this.notif.onSuccess('Exitoso', 'El registro se realizó correctamente.');
         this.emitEventGuardado.emit({
           cargar: '1', consultar: infoTotal.JuridicoDto.Nit, consultarTercero: dataJuridico.BasicosDto.IdTercero,

@@ -218,6 +218,24 @@
                 </span>
                         </div>
                     </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group" id="4">
+                            <label class="textBlod"> Régimen tributario:</label>
+                            <span class="textBigRed">*</span>
+                            <select class="form-control" name="select" formControlName="RegimenTributario" [attr.disabled]="bloquearForm">
+                                <option value="0" disabled selected>-- Seleccione --</option>
+                                <option *ngFor="let regimen of regimenTributarios" [value]="regimen.Id">
+                                    {{ regimen.Nombre }}
+                                </option>
+                            </select>
+                            <span class="help-block validationSpan"
+                                *ngIf="infoJuridicoFrom.controls['RegimenTributario'].errors?.['required'] && (infoJuridicoFrom.controls['RegimenTributario'].dirty || infoJuridicoFrom.controls['RegimenTributario'].touched)">
+                                El Régimen tributario es obligatorio.
+                            </span>
+                        </div>
+                    </div>
+
                     <div class="col-md-3">
                         <div class="form-group" id="4">
                             <label class="textBlod"> Tipo sociedad:</label>

@@ -37,6 +37,7 @@ import { ClientesService } from '../../../Services/Clientes/clientes.service';
 import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { Cardinales, Divisas, Inmueble, Vias }  from '../../../../environments/Maestros.Naturales';
 import { AlertService } from '../../../Services/Alert/alert.service';
+import { MiListaProductosService } from '../../../Services/Informes/mi-lista-productos.service';
 
 declare var $: any;
 const PrimaryWhite = 'rgb(13,165,80)';
@@ -244,6 +245,10 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
   aceptaTratamientoDatos : boolean = false;
   esReimpresion = false;
   idTipoRelacion: number = 0;
+  lineasDestino: any[] = [];
+  resultRadicados: any[] = [];
+  procesosWorkManager: any[] = [];
+
 
   updateTipoRelacion(id: number) {
     this.idTipoRelacion = id;
@@ -253,7 +258,9 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     private clientesGetListService: ClientesGetListService, private recursosGeneralesService: RecursosGeneralesService,
     private juridicosService: JuridicosService, private generalesService: GeneralesService,
     private gestionServiceOperacion: GestioOperacionesService, private loginService: LoginService, private router: Router,
-    private clientesService: ClientesService) {
+    private clientesService: ClientesService,
+    private MiListaProductosService: MiListaProductosService
+  ) {
       let data : string | null = localStorage.getItem('Data');
       this.resultDataStore  = JSON.parse(window.atob(data == null ? "" : data));
     this.moduloLocal = 12;
@@ -1543,10 +1550,10 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           this.ActivarBtnOpciones = false;
           this.serviciosFrom.get('Oficina')?.setValue(resultPerfil.Oficina);
           this.serviciosFrom.get('Asesor')?.setValue(resultPerfil.Nombre);
-          this.AbrirModalServicios.nativeElement.click();
           this.BloquearCamposFormularios();
           this.BloquearFormulariosNoLimpia();
           this.BloquearCamposInfoJuridico();
+          this.OpenSolicitudServicios();
         }
       } else {
         this.MostrarMensajeAlerta(valueState);
@@ -1574,12 +1581,75 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         this.serviciosFrom.get('Oficina')?.setValue(resultPerfil.Oficina);
         this.serviciosFrom.get('Asesor')?.setValue(resultPerfil.Nombre);
         this.AbrirModalServicios.nativeElement.click();
+        this.OpenSolicitudServicios();
         this.BloquearCamposFormularios();
         this.BloquearFormulariosNoLimpia();
         this.BloquearCamposInfoJuridico();
       }
     }
   }
+
+  OpenSolicitudServicios() {
+    this.clientesService.GetLineas().subscribe(
+      result => {
+        this.lineasDestino = result;
+      }
+    );
+
+    this.recursosGeneralesService.GetProcesosWorkManager().subscribe(
+      result => {
+          this.procesosWorkManager = result.filter((proceso: any) => proceso.MenorHabilita);
+                          
+          if(this.infoJuridicoComponent.infoJuridicoFrom.get('Relacion')?.value == 15 || this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.value?.IdEstado != 5) { // Si es tercero o no es activo, solo muestra Actualizacion Datos
+            this.procesosWorkManager = result.filter((proceso: any) => proceso.IdProcesoworkmanager === 2) 
+          }
+          
+          this.serviciosFrom.get('proceso')?.setValue('');
+          this.resetSolicitudServiciosForm();
+          this.AbrirModalServicios.nativeElement.click();
+      }
+    );
+  }
+  async onChangeProceso(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const currentValue = selectElement.value;
+    this.resetSolicitudServiciosForm();
+    
+    if(currentValue == '3') {
+      this.serviciosFrom.get('montoSolicitado')?.enable();
+      this.serviciosFrom.get('plazoDeseado')?.enable();
+      this.serviciosFrom.get('Destino')?.enable();
+      this.resultRadicados = await this.GetRadicados(this.infoJuridicoComponent.infoJuridicoFrom.get('IdJuridico')?.value);
+      this.serviciosFrom.get('radicado')?.enable();
+    } 
+  }
+
+  onChangeRadicado() {
+    const radicadoNumber = this.serviciosFrom.get('radicado')?.value;
+    this.serviciosFrom.get('montoSolicitado')?.reset();
+    this.serviciosFrom.get('plazoDeseado')?.reset();
+    this.serviciosFrom.get('Destino')?.reset();
+    const currentRadicadoInfo = this.resultRadicados.find(rad => rad.Radicado == radicadoNumber);
+    if(currentRadicadoInfo) {
+      const { Monto, Plazo, IdLinea } = currentRadicadoInfo;
+      this.serviciosFrom.get('montoSolicitado')?.setValue(Monto);
+      this.serviciosFrom.get('plazoDeseado')?.setValue(Plazo);
+      const { StrNombre } = this.lineasDestino.find(linea => linea.IntCodigo === IdLinea) || {};
+      this.serviciosFrom.get('Destino')?.setValue(StrNombre);
+    }
+  }
+
+  resetSolicitudServiciosForm() {
+    this.serviciosFrom.get('radicado')?.reset({ value: '', disabled: true });
+    this.serviciosFrom.get('montoSolicitado')?.reset();
+    this.serviciosFrom.get('montoSolicitado')?.disable();
+    this.serviciosFrom.get('plazoDeseado')?.reset({ value: '', disabled: true });
+    this.serviciosFrom.get('Destino')?.reset({ value: '', disabled: true });
+    this.serviciosFrom.get('NumeroDocumento')?.reset({ value: '', disabled: true });
+    this.serviciosFrom.get('NombreDeudor')?.reset({ value: '', disabled: true });
+    this.motrarErrorCredito = false;
+  }
+
   CambiarNit(operaSeleccionada : any) {
     const valueState = this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.value;
     if (valueState !== null) {
@@ -4975,7 +5045,8 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         } else {
           this.serviciosFrom.get('Oficina')?.setValue(resultPerfil.Oficina);
           this.serviciosFrom.get('Asesor')?.setValue(resultPerfil.Nombre);
-          this.AbrirModalServicios.nativeElement.click();
+          this.OpenSolicitudServicios();
+
         }
       } else if (operaSeleccionada === 23) {  // Gestion operaciones
         const strNit = this.infoJuridicoComponent.infoJuridicoFrom.get('Nit')?.value;
@@ -6669,6 +6740,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     } else {
       
     }
+    this.infoJuridicoComponent.infoJuridicoFrom.get('RegimenTributario')?.setValue(dataBasico.IdRegimenTributario);
 
     this.infoJuridicoComponent.dataEstados.forEach((elementEstado : any) => {
       if (elementEstado.IdEstado === dataBasico.IdEstado) {
@@ -7496,65 +7568,82 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     });
   }
 
-  AbrirImpresionJuridicos() {
-    // this.CargarServicios = 1;
-    const esVinculacion = this.serviciosFrom.get('esVinculacion')?.value;
-    this.EnvioDataImpresion();
-    // aqui valiar si los campos vienen llenos es para credito
+  onClickSolicitarServicio() {    
+    if(!this.serviciosFrom.get('proceso')?.value) return;
 
-    if (esVinculacion) {
-      this.GuardarLog('Imprimir afiliación - Asociado Juridico - ' + + this.documentoConsultar, 3, 0, this.JuridicoSeleccionado,12);
-      
-      } else {
-       this.GuardarLog('Imprimir afiliación - Asociado Juridico - ' + this.documentoConsultar, 3, 0, this.JuridicoSeleccionado,12);
-      }
- 
-    if ((this.serviciosFrom.value.montoSolicitado !== '' && this.serviciosFrom.value.montoSolicitado !== null && 
-    this.serviciosFrom.value.montoSolicitado !== undefined) &&
-      (this.serviciosFrom.value.plazoDeseado !== '' && this.serviciosFrom.value.plazoDeseado !== null && this.serviciosFrom.value.plazoDeseado !== undefined) &&
-      (this.serviciosFrom.value.Destino !== '' && this.serviciosFrom.value.Destino !== null && this.serviciosFrom.value.Destino !== undefined)) {
-      this.motrarErrorCredito = false;
-       localStorage.setItem('Credito', 'true');
-
-      if (esVinculacion && esVinculacion !== null) {
-        localStorage.setItem('Vinculacion', 'true');
-        localStorage.setItem('Actualizacion', 'false');
-      } else {
-        localStorage.setItem('Vinculacion', 'false');
-        localStorage.setItem('Actualizacion', 'true');
-      }
-      localStorage.setItem('DataService', JSON.stringify(this.serviciosFrom.value));
-      this.SetDataServicioSolicitado(this.serviciosFrom.value);
-
-      this.AbrirSolicituJuridico.nativeElement.click();
-      this.juridicosFrom.get('operacion')?.reset();
-      this.BlockServiciosInput = null;
-      this.serviciosFrom?.reset();
-
-    } else if ((this.serviciosFrom.value.montoSolicitado === '' || this.serviciosFrom.value.montoSolicitado === null || 
-    this.serviciosFrom.value.montoSolicitado === undefined) &&
-      (this.serviciosFrom.value.plazoDeseado === '' || this.serviciosFrom.value.plazoDeseado === null || this.serviciosFrom.value.plazoDeseado === undefined) &&
-      (this.serviciosFrom.value.Destino === '' || this.serviciosFrom.value.Destino === null || this.serviciosFrom.value.Destino === undefined)) {
-      this.motrarErrorCredito = false;
-      localStorage.setItem('Credito', 'false');
-      if (esVinculacion && esVinculacion !== null) {
-        localStorage.setItem('Vinculacion', 'true');
-        localStorage.setItem('Actualizacion', 'false');
-      } else {
-        localStorage.setItem('Vinculacion', 'false');
-        localStorage.setItem('Actualizacion', 'true');
-      }
-      localStorage.setItem('DataService', JSON.stringify(this.serviciosFrom.value));
-      this.SetDataServicioSolicitado(this.serviciosFrom.value);
-
-      this.AbrirSolicituJuridico.nativeElement.click();
-      this.juridicosFrom.get('operacion')?.reset();
-      this.BlockServiciosInput = null;
-      this.serviciosFrom?.reset();
-    } else {
+    if( this.serviciosFrom.get('proceso')?.value == 3
+    && ( !this.serviciosFrom.get('montoSolicitado')?.value 
+    || !this.serviciosFrom.get('plazoDeseado')?.value 
+    || !this.serviciosFrom.get('Destino')?.value )) {
       this.motrarErrorCredito = true;
+      return;
     }
+    this.EnvioDataImpresion();
+    this.SetDataServicioSolicitado(this.serviciosFrom.value);
+    this.GuardarLog('Imprimir afiliación - Asociado Juridico', 3, 0, this.JuridicoSeleccionado, 12);
+    this.AbrirSolicituJuridico.nativeElement.click();
+    this.juridicosFrom.get('operacion')?.reset();
   }
+
+  // AbrirImpresionJuridicos() {
+  //   // this.CargarServicios = 1;
+  //   const esVinculacion = this.serviciosFrom.get('esVinculacion')?.value;
+  //   this.EnvioDataImpresion();
+  //   // aqui valiar si los campos vienen llenos es para credito
+
+  //   if (esVinculacion) {
+  //     this.GuardarLog('Imprimir afiliación - Asociado Juridico - ' + + this.documentoConsultar, 3, 0, this.JuridicoSeleccionado,12);
+      
+  //     } else {
+  //      this.GuardarLog('Imprimir afiliación - Asociado Juridico - ' + this.documentoConsultar, 3, 0, this.JuridicoSeleccionado,12);
+  //     }
+ 
+  //   if ((this.serviciosFrom.value.montoSolicitado !== '' && this.serviciosFrom.value.montoSolicitado !== null && 
+  //   this.serviciosFrom.value.montoSolicitado !== undefined) &&
+  //     (this.serviciosFrom.value.plazoDeseado !== '' && this.serviciosFrom.value.plazoDeseado !== null && this.serviciosFrom.value.plazoDeseado !== undefined) &&
+  //     (this.serviciosFrom.value.Destino !== '' && this.serviciosFrom.value.Destino !== null && this.serviciosFrom.value.Destino !== undefined)) {
+  //     this.motrarErrorCredito = false;
+  //      localStorage.setItem('Credito', 'true');
+
+  //     if (esVinculacion && esVinculacion !== null) {
+  //       localStorage.setItem('Vinculacion', 'true');
+  //       localStorage.setItem('Actualizacion', 'false');
+  //     } else {
+  //       localStorage.setItem('Vinculacion', 'false');
+  //       localStorage.setItem('Actualizacion', 'true');
+  //     }
+  //     localStorage.setItem('DataService', JSON.stringify(this.serviciosFrom.value));
+  //     this.SetDataServicioSolicitado(this.serviciosFrom.value);
+
+  //     this.AbrirSolicituJuridico.nativeElement.click();
+  //     this.juridicosFrom.get('operacion')?.reset();
+  //     this.BlockServiciosInput = null;
+  //     this.serviciosFrom?.reset();
+
+  //   } else if ((this.serviciosFrom.value.montoSolicitado === '' || this.serviciosFrom.value.montoSolicitado === null || 
+  //   this.serviciosFrom.value.montoSolicitado === undefined) &&
+  //     (this.serviciosFrom.value.plazoDeseado === '' || this.serviciosFrom.value.plazoDeseado === null || this.serviciosFrom.value.plazoDeseado === undefined) &&
+  //     (this.serviciosFrom.value.Destino === '' || this.serviciosFrom.value.Destino === null || this.serviciosFrom.value.Destino === undefined)) {
+  //     this.motrarErrorCredito = false;
+  //     localStorage.setItem('Credito', 'false');
+  //     if (esVinculacion && esVinculacion !== null) {
+  //       localStorage.setItem('Vinculacion', 'true');
+  //       localStorage.setItem('Actualizacion', 'false');
+  //     } else {
+  //       localStorage.setItem('Vinculacion', 'false');
+  //       localStorage.setItem('Actualizacion', 'true');
+  //     }
+  //     localStorage.setItem('DataService', JSON.stringify(this.serviciosFrom.value));
+  //     this.SetDataServicioSolicitado(this.serviciosFrom.value);
+
+  //     this.AbrirSolicituJuridico.nativeElement.click();
+  //     this.juridicosFrom.get('operacion')?.reset();
+  //     this.BlockServiciosInput = null;
+  //     this.serviciosFrom?.reset();
+  //   } else {
+  //     this.motrarErrorCredito = true;
+  //   }
+  // }
 
   EnvioDataImpresion() {
     this.dataSendPrint.ListObjetoSocial = this.infoJuridicoComponent.dataObjetoSocial;
@@ -7616,6 +7705,8 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     this.dataServiceSolicited.DocumentoDeudor = data.NumeroDocumento;
     this.dataServiceSolicited.NombreDeudor = data.NombreDeudor;
     this.dataServiceSolicited.TipoDoc = data.TipoDocumento;
+    this.dataServiceSolicited.idProceso = data.proceso;
+    this.dataServiceSolicited.radicado= data.radicado;
   }
 
   AbrirCorrespondenciaImpresion() {
@@ -7680,7 +7771,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
               // abrir el modal de servicio solicitado
               this.serviciosFrom.get('Oficina')?.setValue(resultPerfil.Oficina);
               this.serviciosFrom.get('Asesor')?.setValue(resultPerfil.Nombre);
-              this.AbrirModalServicios.nativeElement.click();
+              this.OpenSolicitudServicios();
             });
         } else {
           this.mostrarErrorCorrespondencia = true;
@@ -7708,25 +7799,31 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         this.motrarErrorDeudor = false;
         this.BlockServiciosInput = true;
         this.clientesService.GetPersonsXDocument(documento).subscribe(
-          result => {
+          async result => {
+            this.serviciosFrom.get('radicado')?.disable();
+            this.resultRadicados = [];
             if (result !== null) {
-              if (result.PrimerNombre === null || result.PrimerNombre === undefined) {
-                result.PrimerNombre = '';
+              this.resultRadicados = await this.GetRadicados(result.IdTercero);
+              this.serviciosFrom.get('radicado')?.enable();
+              
+              if (result.Persona.PrimerNombre === null || result.Persona.PrimerNombre === undefined) {
+                result.Persona.PrimerNombre = '';
               }
-              if (result.SegundoNombre === null || result.SegundoNombre === undefined) {
-                result.SegundoNombre = '';
+              if (result.Persona.SegundoNombre === null || result.Persona.SegundoNombre === undefined) {
+                result.Persona.SegundoNombre = '';
               }
-              if (result.PrimerApellido === null || result.PrimerApellido === undefined) {
-                result.PrimerApellido = '';
+              if (result.Persona.PrimerApellido === null || result.Persona.PrimerApellido === undefined) {
+                result.Persona.PrimerApellido = '';
               }
-              if (result.SegundoApellido === null || result.SegundoApellido === undefined) {
-                result.SegundoApellido = '';
+              if (result.Persona.SegundoApellido === null || result.Persona.SegundoApellido === undefined) {
+                result.Persona.SegundoApellido = '';
               }
               this.serviciosFrom.get('NombreDeudor')?.setValue(
-                result.PrimerNombre + ' ' + result.SegundoNombre + ' ' +
-                result.PrimerApellido + ' ' + result.SegundoApellido);
-              this.serviciosFrom.get('TipoDocumento')?.setValue(result.IdTipoDocumento);
+                result.Persona.PrimerNombre + ' ' + result.Persona.SegundoNombre + ' ' +
+                result.Persona.PrimerApellido + ' ' + result.Persona.SegundoApellido);
+              this.serviciosFrom.get('TipoDocumento')?.setValue(result.Persona.IdTipoDocumento);
             } else {
+              this.notif.onWarning('Advertencia', 'No encontrado.');
               this.serviciosFrom.get('NombreDeudor')?.reset();
               this.serviciosFrom.get('NumeroDocumento')?.reset();
             }
@@ -7739,6 +7836,27 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         this.serviciosFrom.get('NombreDeudor')?.reset();
       }
     }
+  }
+
+  GetRadicados(idTercero: number): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.MiListaProductosService.GetRadicados(idTercero).subscribe(
+        (result) => {
+          if(!result) {
+            resolve([]);
+            return;
+          }
+          resolve( result.filter((radicado: any) => ![10, 43, 46, 42].includes( radicado.IdEstado ) ));
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    })
+  }
+
+  cancelServicio() {
+    this.juridicosFrom.get('operacion')?.reset();
   }
 
   bloquearServicios(documento : string) {
@@ -7784,9 +7902,11 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
 
   validateServicios() {
     const servicioSolicitado = new FormControl('', []);
-    const montoSolicitado = new FormControl('', [Validators.pattern('^[0-9]*')]);
-    const plazoDeseado = new FormControl('', [Validators.pattern('^[0-9]*')]);
-    const Destino = new FormControl('', []);
+    const montoSolicitado = new FormControl({ value: '', disabled: true }, [Validators.pattern('^[0-9]*')]);
+    const plazoDeseado = new FormControl({ value: '', disabled: true }, [Validators.pattern('^[1-9][0-9]*$')]);
+    const radicado = new FormControl({ value: '', disabled: true }, []);
+    const Destino = new FormControl({ value: '', disabled: true }, []);
+    const proceso = new FormControl('', []);
     const Oficina = new FormControl('', []);
     const Asesor = new FormControl('', []);
     const EsAsociado = new FormControl('', []);
@@ -7803,6 +7923,8 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       servicioSolicitado: servicioSolicitado,
       montoSolicitado: montoSolicitado,
       plazoDeseado: plazoDeseado,
+      radicado,
+      proceso,
       Destino: Destino,
       Oficina: Oficina,
       Asesor: Asesor,

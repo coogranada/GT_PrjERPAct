@@ -1,6 +1,8 @@
 import { DecimalPipe } from '@angular/common';
 
 export class NaturalesAllModel {
+    esReimpresa: string = '';
+    ServicioSolicitado: string = "";
     TipoDeCliente: string = "";
     DiaFechaSoli: string | number = "";
     MesFechaSoli: string | number = "";
@@ -71,7 +73,7 @@ export class NaturalesAllModel {
     Salario: number = 0;
     Comisiones: number = 0;
     Arriendos: number = 0;
-    OtrosIngresos: number = 0;
+    OtrosIngresos: OtrosIngresos = { Valor: 0, Observacion: ""};
     TotalIngresos: number = 0;
     CostosGastos: number = 0;
     TotalIngresosOperacionales: number = 0;
@@ -147,6 +149,17 @@ export class NaturalesAllModel {
     // Referencias
     ParentescoFamiliar: string = "";
     parentescoPersonal: string = "";
+    Propiedades: Propiedad[] = [];
+    Vehiculos: Vehiculo[] = [];
+    OtrosActivos: OtrosActivos[] = [];
+    ReferenciasFamiliares: ReferenciaFamiliar[] = [];
+    ReferenciasPersonales: ReferenciaFamiliar[] = [];
+    ReferenciasComerciales: ReferenciaComercial[] = [];
+    ReferenciasFinancieras: ReferenciaFinanciera[] = [];
+    Peps: Peps[] = [];
+    Importa: string = "";
+    Exporta: string = "";
+    Giros: string = "";
 }
 export class NaturalesServicio {
     MontoSolicitado: string = "";
@@ -157,6 +170,9 @@ export class NaturalesServicio {
     NombreDeudor: string = "";
     NumeroDocDeudor: string = "";
     TipoIdentificacion: string | null = "";
+    esDeudorAsociado?: string;
+    RadicadoCredito?: string = "";
+
 }
 export class NaturalesMenorModel {
     TipoIdentificacion: string = "";
@@ -174,3 +190,67 @@ export class NaturalesMenorModel {
     DepartamentoNacimiento: string = "";
     PaisNacimiento: string = "";
 }
+
+class Propiedad {
+    TipoActivo: string = "";
+    Direccion: string = "";
+    Ciudad: string = "";
+    Valor: string = "";
+    ValorDeuda: string = "";
+    Afavor: string = "";
+}
+
+class Vehiculo {
+    TipoActivo: string = "";
+    Marca: string = "";
+    Modelo: string = "";
+    Placa: string = "";
+    Valor: string = "";
+    ValorPignorado: string = "";
+    Afavor: string = "";
+}
+
+class OtrosActivos {
+    TipoActivo: string = "";
+    Ciudad: string = "";
+    Descripcion: string = "";
+    Valor: string = "";
+}
+
+class ReferenciaFamiliar {
+    Nombre: string = "";
+    parentesco: string = "";
+    Telefono1: string = "";
+    Telefono2: string = "";
+    Telefono3: string = "";
+}
+
+class ReferenciaComercial {
+    Nombre: string = "";
+    Ciudad: string = "";
+    Telefono: string = "";
+    Servicio: string = "";
+}
+
+class ReferenciaFinanciera {
+    Nombre: string = "";
+    Telefono: string = "";
+    Oficina: string = "";
+    Servicio: string = "";
+    NroServicio: string | number = "";
+}
+
+class Peps {
+    NombrePeps: string = "";
+    DocumentoPeps: string = "";
+    Periodo: string = "";
+    Cargo: string = "";
+    Parentesco: string = "";
+}
+
+class OtrosIngresos {
+    Valor: number = 0;
+    Observacion: string = "";
+}
+
+
