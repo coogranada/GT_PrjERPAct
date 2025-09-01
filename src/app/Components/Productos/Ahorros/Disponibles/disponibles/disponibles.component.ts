@@ -5392,6 +5392,10 @@ export class DisponiblesComponent implements OnInit {
   TipoNovedad: string = "";
   AsignarCupo: boolean = false;
   ActualizarDisponible() {
+    let data: string | null = localStorage.getItem('Data');
+    const dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.DisponibleForm.get('OficinaCambio')?.setValue(+dataUser.NumeroOficina);
+
     if (this.DisponibleForm.get('IdOficina')?.value !== null
       && this.DisponibleForm.get('IdOficina')?.value !== undefined
       && this.DisponibleForm.get('IdOficina')?.value !== ''
@@ -8540,6 +8544,7 @@ export class DisponiblesComponent implements OnInit {
     }
   }
   validateForm() {
+    const OficinaCambio = new FormControl('', []);
     const IdAsesor = new FormControl('', [Validators.required]);
     const NombreAsesor = new FormControl('', [Validators.required]);
     const IdProducto = new FormControl('', []);
@@ -8665,6 +8670,7 @@ export class DisponiblesComponent implements OnInit {
     const Edad = new FormControl('', []);
 
     this.DisponibleForm = new FormGroup({
+      OficinaCambio: OficinaCambio,
       IdAsesor: IdAsesor,
       NombreAsesor: NombreAsesor,
       IdProducto: IdProducto,

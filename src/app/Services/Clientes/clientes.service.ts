@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { EnvironmentService } from '../Enviroment/enviroment.service';
 import { Observable } from 'rxjs';
+import { NaturalesAllModel } from '../../Models/Clientes/naturalesAll.model';
 @Injectable()
 export class ClientesService {
     private url: string = "";
@@ -287,7 +288,7 @@ export class ClientesService {
         return this._http.get<any>(this.url,{params: params });
     }
     GetPersonsXDocument(document: string): Observable<any> {
-        this.url = `${this.environment.Url}/GetPersonXDocumento?document=${document}`;
+        this.url = `${this.environment.Url}/GetPersonXDocumento?document=${document}&skipErrorHandling=true`;
         return this._http.get<any>(this.url);
     }
     BuscarConyugeAll(data: string): Observable<any> {
@@ -307,4 +308,30 @@ export class ClientesService {
             .set('terceroId', terceroId);
         return this._http.get<any>(this.url, { params });
     }
+    GenerarPDFHojaVida(natural: NaturalesAllModel): Observable<any> {
+        this.url = `${this.environment.Url}/GenerarPDFHojaVida`;
+        return this._http.post<any>(this.url, natural, { responseType: 'blob' as 'json' });
+    }
+    EnviarSolicitudServiciosWorkManager(Datos: any): Observable<any> {
+        this.url = `${this.environment.Url}/EnviarSolicitudServiciosWorkManager?skipErrorHandling=true`;
+        return this._http.post<any>(this.url, Datos);
+    }
+    GetLineas(): Observable<any> {
+        this.url = `${this.environment.Url}/GetLineas`;
+        return this._http.get<any>(this.url);
+    }
+    blobToBase64(blob: Blob): Promise<string> {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+    
+          reader.onloadend = () => {
+            resolve(reader.result as string); 
+          };
+    
+          reader.onerror = reject;
+    
+          reader.readAsDataURL(blob);  
+        });
+    }
+    
 }

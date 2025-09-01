@@ -1,6 +1,44 @@
 
 
 <body class="navbar-bottom login-container" id="Contenido">
+
+
+  <div id="modalHojaVidaJuridico" class="modal" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg" style="width: 1400px; left: -390px;">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Solicitud de servicios</h6>
+            </div>
+            <div class="modal-body">
+                <div class="panel-body">
+                    <div>
+                        <embed #hojaVidaAfiliadoJuridico class="objectHojaVida" />
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body modal-footer modal-pdf-footer">
+                <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                    <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+                    <button class="btn Gt-btn-verde" (click)="EnviarHojaVidaWorkManager()" *ngIf="infoPersonal.IdRelacion == 5 && infoPersonal.IdEstado == 5 && (GetServiceSolicited.idProceso == 1 || GetServiceSolicited.idProceso == 2 || (GetServiceSolicited.idProceso == 3 && GetServiceSolicited?.radicado))">
+                        ENVIAR A WORKMANAGER
+                    </button>
+                    <button class="btn Gt-btn-verde " (click)="downloadPDF()" *ngIf="infoPersonal.IdRelacion == 15 || infoPersonal.IdEstado != 5 || (GetServiceSolicited.idProceso == 3 && !GetServiceSolicited?.radicado)">
+                        <i class="icon-download4"></i>&nbsp; PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<button type="button" style="visibility:hidden" #openModalHojaVidaJuridico class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#modalHojaVidaJuridico">
+    <i class="icon-search4"></i>
+</button>
+
+<div class="loader-overlay" *ngIf="showLoader"></div>
+
+
+
   <!-- -->
   <button type="button" class="btn Gt-btn-morado" style="visibility:hidden"  data-toggle="modal"
     data-target="#ModalJuridicos" #openSolicitud>

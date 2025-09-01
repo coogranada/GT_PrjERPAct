@@ -32,4 +32,6 @@ export class ServiceSolictedModel {
     DocumentoDeudor: string = "";
     NombreDeudor: string = "";
     TipoDoc: number = 0;
+    idProceso: number | undefined = undefined;
+    radicado?: string = '';
 }

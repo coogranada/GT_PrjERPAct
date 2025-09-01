@@ -14,6 +14,7 @@ import { OperacionesModel } from '../../../../../Models/Maestros/operaciones.mod
 import { OperacionesService } from '../../../../../Services/Maestros/operaciones.service';
 import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { AlertService } from '../../../../../Services/Alert/alert.service';
+import { RegimenTributario } from '../../../../../Models/Clientes/Juridicos/RegimenTributario';
 
 declare var $: any;
 const PrimaryWhite = 'rgb(13,165,80)';
@@ -73,6 +74,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
  
 
   public dataDepartamentos : any[] = [];
+  regimenTributarios: RegimenTributario[] = [];
   public dataCiudades : any[] = [];
   public dataRelacion: any[] = [];
   public metodosConocio = [
@@ -177,6 +179,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
    
     this.GetRelacion();
     this.GetTipoSociedad();
+    this.GetRegimenTributarios();
     this.GetObjetoSocial();
     this.GetCiiuList();
     localStorage.setItem('IdModuloActivo', window.btoa(JSON.stringify(this.CodModulo)));
@@ -271,6 +274,16 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
       }
     });
     this.infoJuridicoFrom.get('ObjetoSocial')?.valueChanges.subscribe(val => {
+      if (this.OperacionActual === 1) {
+        if (val !== null) {
+          this.EditarFrom = true;
+        }
+        else {
+          this.EditarFrom = false;
+        }
+      }
+    });
+    this.infoJuridicoFrom.get('RegimenTributario')?.valueChanges.subscribe(val => {
       if (this.OperacionActual === 1) {
         if (val !== null) {
           this.EditarFrom = true;
@@ -548,6 +561,21 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
     this.clientesGetListService.GetTipoSociedad().subscribe(
       result => {
         this.dataTiposociedad = result;
+      },
+      error => {
+        const errorMessage = <any>error;
+        this.notif.onDanger('Error', errorMessage);
+        console.error(errorMessage);
+      }
+    );
+  }
+
+  GetRegimenTributarios() {
+    this.juridicoService.GetRegimenTributariosJuridicos().subscribe(
+      result => {
+        console.log({result});
+        
+        this.regimenTributarios = result;
       },
       error => {
         const errorMessage = <any>error;
@@ -895,6 +923,10 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
     this.basicosModel.IdJuridico = 0;
     this.basicosModel.IdJuridicoInfo = 0;
     this.basicosModel.IdObjetoSocial = this.infoJuridicoFrom.value.ObjetoSocial;
+    this.basicosModel.IdRegimenTributario = this.infoJuridicoFrom.value.RegimenTributario;
+    const regimenTributario = this.regimenTributarios.find(reg => reg.Id == this.infoJuridicoFrom.value.RegimenTributario);
+    this.basicosModel.RegimenTributario = regimenTributario?.Nombre;
+    this.basicosModel.AnimoLucro = regimenTributario?.GeneraRendimientos; 
     this.basicosModel.IdOficina = +this.OficinaSeleccionada.Valor;
     this.basicosModel.IdRelacion = this.infoJuridicoFrom.value.Relacion;
     this.basicosModel.IdTipoLocal = this.infoJuridicoFrom.value.TipoLocal;
@@ -966,6 +998,10 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
       this.basicosModel.IdJuridico = this.infoJuridicoFrom.value.IdJuridico;
       this.basicosModel.IdJuridicoInfo = this.infoJuridicoFrom.value.IdJuridicoInfo;
       this.basicosModel.IdObjetoSocial = this.infoJuridicoFrom.value.ObjetoSocial;
+      this.basicosModel.IdRegimenTributario = this.infoJuridicoFrom.value.RegimenTributario;
+      const regimenTributario = this.regimenTributarios.find(reg => reg.Id == this.infoJuridicoFrom.value.RegimenTributario);
+      this.basicosModel.RegimenTributario = regimenTributario?.Nombre;
+      this.basicosModel.AnimoLucro = regimenTributario?.GeneraRendimientos;
       this.basicosModel.IdOficina = this.OficinaSeleccionada.IdLista;
       this.basicosModel.IdRelacion = this.infoJuridicoFrom.value.Relacion;
       this.basicosModel.IdTipoLocal = this.infoJuridicoFrom.value.TipoLocal;
@@ -973,7 +1009,8 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
       this.basicosModel.OtroPor = this.infoJuridicoFrom.value.OtroPor;
       this.infoTabAll.JuridicoDto = this.juridicoModel;
       this.infoTabAll.BasicoDto = this.basicosModel;
-      this.GuardarLog(this.infoTabAll, this.OperacionActual, 0, this.juridicoModel.IdJuridico,12);
+      const AnimoLucro = this.basicosModel.AnimoLucro ? 'Si' : 'No';
+      this.GuardarLog({...this.infoTabAll, BasicoDto: { ...this.infoTabAll.BasicoDto, AnimoLucro }}, this.OperacionActual, 0, this.juridicoModel.IdJuridico,12);
       this.juridicoService.EditarInfoJuridico(this.infoTabAll).subscribe(
         result => {
           if (result) {
@@ -1941,6 +1978,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
     const Estado = new FormControl('', []);
     const Estrato = new FormControl('', []);
     const ObjetoSocial = new FormControl('', []);
+    const RegimenTributario = new FormControl('', [Validators.required]);
     const TipoSociedad = new FormControl('', [Validators.required]);
     const Nit = new FormControl('', [Validators.required, Validators.pattern('^[0-9]*')]);
     const RazonSocial = new FormControl('', [Validators.required, Validators.pattern('[A-Za-zñÑ0-9&+ .]+')]);
@@ -1983,6 +2021,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
       Estado: Estado,
       Estrato: Estrato,
       ObjetoSocial: ObjetoSocial,
+      RegimenTributario,
       TipoSociedad: TipoSociedad,
       Nit: Nit,
       RazonSocial: RazonSocial,

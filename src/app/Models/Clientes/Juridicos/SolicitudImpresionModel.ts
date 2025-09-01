@@ -1,4 +1,5 @@
 export class ServicioSolicitadoModel {
+    ServicioSolicitado: string = "";
     MontoSolicitado: string = "";
     PlazoDeseado: string = "";
     Destino: string = "";
@@ -11,6 +12,7 @@ export class ServicioSolicitadoModel {
     DocumentoDeudor: string = "";
     NombreDeudor: string = "";
     TipoDocumento: string = "";
+    RadicadoCredito: string = "";
 }
 export class InformacionPersonal {
     DiaSolicitud: string = "";
@@ -34,7 +36,11 @@ export class InformacionPersonal {
     TipoLocal: string = "";
     ObjetoSocial: string = "";
     DireccionCorrespondencia: string = "";
+    IdRelacion?: number;
     tipoUsuarioRelacion: string = "";
+    IdJuridico: string = "";
+    FechaActualizacion: string = "";
+    IdEstado?: number;
 }
 export class UbicacionEmpresa {
     DireccionOficinaPpal: string = "";

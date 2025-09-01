@@ -11,6 +11,9 @@ export class BasicosModel {
     ConocioCoogranada: number = 0;
     Estrato: number = 0;
     IdObjetoSocial: number = 0;
+    IdRegimenTributario?: number;
+    RegimenTributario?: string;
+    AnimoLucro?: boolean = false;
     IdTipoLocal: number = 0;
     IdTipoSociedad: number = 0;
     DebitoAutomatico: Boolean = false;
