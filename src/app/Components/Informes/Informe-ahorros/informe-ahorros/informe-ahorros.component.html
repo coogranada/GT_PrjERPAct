@@ -116,7 +116,7 @@
                                                                 </select>
                                                             </div>
                                                             <div class="text-center">
-                                                                <button type="submit" [disabled]="formulario.invalid"
+                                                                <button type="submit" [disabled]="formulario.invalid || nombreInformeSelect == '--Seleccione--' || nombreInformeSelect == '' "
                                                                     class="btn Gt-btn-verde"
                                                                     (click)="ejecutarSP()">Generar Informe</button>
                                                             </div>
@@ -182,6 +182,7 @@
 
 <input type="hidden" #ShowModalList data-toggle="modal" data-target="#ShowModalList" data-popup="tooltip"
     data-trigger="hover" data-placement="top">
+    
 <div id="ShowModalList" class="modal fade" data-backdrop="static">
     <div style="width: 88%; margin: 30px auto; height: 90%;">
         <div class="modal-content modal-xl">

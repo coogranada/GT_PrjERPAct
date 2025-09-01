@@ -1,6 +1,6 @@
 <div class="panel panel-white">
     <div class="panel-heading doNotPrint">
-        <h6 class="panel-title">Informes</h6>
+        <h6 class="panel-title">Configuración Informes</h6>
         <div class="heading-elements">
             <ul class="icons-list">
                 <li>
@@ -16,61 +16,99 @@
             </ul>
         </div>
     </div>
+
     <div class="panel-body doNotPrint">
 
-        <div class="row mb-3">
-            <div class="col-md-2">
-                <label for="idConfiguracion" class="form-label">ID</label>
-                <input type="text" id="idConfiguracion" class="form-control" disabled>
-            </div>
-            <div class="col-md-5">
-                <label for="nombreInforme" class="form-label">Nombre Informe</label>
-                <input type="text" id="nombreInforme" class="form-control" name="nombreInforme">
-            </div>
-            <div class="col-md-5">
-                <label for="nombreSP" class="form-label">Nombre SP</label>
-                <input type="text" id="nombreSP" class="form-control" name="nombreSP">
-            </div>
-
-            <div class="col-md-2 mt-3 div-espacio">
-            </div>
-            <div class="col-md-5 mt-3 div-espacio">
-                <label for="accion" class="form-label">Acción</label>
-                <input type="text" id="accion" class="form-control" name="accion">
-            </div>
-            <div class="col-md-5 mt-3 div-espacio">
-                <label for="idModulo" class="form-label">Módulo</label>
-                <select id="idModulo" class="form-control" name="idModulo">
-                    <option *ngFor="let modulo of modulos" [value]="modulo.id">{{ modulo.nombre }}</option>
-                </select>
+        <div class="col-xs-12 col-md-6 col-lg-6" id="Operacion">
+            <div class="row">
+                <div class="col-xs-12 col-md-3 col-lg-3 align-items-center">
+                    <br>
+                    <label class="textNegrilla mb-0">Tipo informe:</label>
+                    <span class="text-danger ObligatorioGrande"> *</span>
+                </div>
+                <div class="col-xs-12 col-md-6 col-lg-6">
+                    <div class="form-group d-flex align-items-center">
+                        <select class="form-control ml-2" id="select" (change)="opcionInfSelected($event)">
+                            <option value=1>Predeterminados</option>
+                            <option value=2>Dinámicos</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <div class="col-xs-12 col-md-12 col-lg-12" style="justify-items: end; padding: 1em;">
-            <div class="actions clearfix">
-                <button class="btn Gt-btn-morado btn-icon legitRipple" type="button">
-                    LIMPIAR
-                </button>&nbsp;
-
-                <button class="btn Gt-btn-verde btn-icon legitRipple" type="submit"
-                    
-                    >
-                    <i class=""></i>&nbsp; GUARDAR
-                </button>&nbsp;
-
-                <button class="btn Gt-btn-verde btn-icon legitRipple" type="submit"
-                    
-                    >
-                    <i class=""></i>&nbsp; ACTUALIZAR
-                </button>
-
-            </div>
-        </div>
-
     </div>
+
+
 </div>
 
-<div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatos">
+<div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatosPre" *ngIf="valueInfSelected == 1">
+    <div class="panel-body ">
+        <form [formGroup]="configuracionInfomesForm" autocomplete="off">
+            <div class="panel-body doNotPrint">
+    
+                <div class="row mb-3">
+                    <div class="col-md-2">
+                        <label for="idConfiguracion" class="form-label">ID</label>
+                        <input type="text" id="idConfiguracion" class="form-control" formControlName="idConfiguracion">
+                    </div>
+                    <div class="col-md-5">
+                        <label for="nombreInforme" class="form-label">Nombre Informe</label><span
+                            class="text-danger ObligatorioGrande"> *</span>
+                        <input type="text" id="nombreInforme" class="form-control" formControlName="nombreInforme"
+                            name="nombreInforme" maxlength="50">
+                    </div>
+                    <div class="col-md-5">
+                        <label for="nombreSP" class="form-label">Nombre SP</label><span
+                            class="text-danger ObligatorioGrande"> *</span>
+                        <input type="text" id="nombreSP" class="form-control" formControlName="nombreSP" name="nombreSP"
+                            maxlength="50">
+                    </div>
+    
+                    <div class="col-md-2 mt-3 div-espacio">
+                    </div>
+                    <div class="col-md-5 mt-3 div-espacio">
+                        <label for="accion" class="form-label">Acción</label><span class="text-danger ObligatorioGrande">
+                            *</span>
+                        <input type="text" id="accionEjecuta" class="form-control" formControlName="accionEjecuta"
+                            name="accionEjecuta" maxlength="20">
+                    </div>
+                    <div class="col-md-5 mt-3 div-espacio">
+                        <label for="idModulo" class="form-label">Módulo</label><span class="text-danger ObligatorioGrande">
+                            *</span>
+                        <select id="idModulo" class="form-control" name="idModulo" formControlName="idModulo">
+                            <option value="0">--Seleccione--</option>
+                            <option *ngFor="let item of Operaciones" [value]="item.IdOperacion">
+                                {{item.Descripcion}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+    
+                <div class="col-xs-12 col-md-12 col-lg-12" style="justify-items: end; padding: 1em;">
+                    <div class="actions clearfix">
+                        <button class="btn Gt-btn-morado btn-icon legitRipple" type="reset">
+                            LIMPIAR
+                        </button>&nbsp;
+    
+                        <button class="btn Gt-btn-verde btn-icon legitRipple" type="button"
+                            (click)="guardarConfiguracionInformes()">
+                            <i class=""></i>&nbsp; GUARDAR
+                        </button>&nbsp;
+    
+                        <button class="btn Gt-btn-verde btn-icon legitRipple" type="button"
+                            (click)="actualizarConfiguracionInformes()">
+                            <i class=""></i>&nbsp; ACTUALIZAR
+                        </button>
+    
+                    </div>
+                </div>
+    
+            </div>
+        </form>
+    </div>
+</div> 
+
+<div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatosPre" *ngIf="valueInfSelected == 1">
     <div class="panel-body ">
 
         <div class="table-responsive scrollTabla">
@@ -91,11 +129,12 @@
                         <td>{{ item.NombreInforme }}</td>
                         <td>{{ item.NombreSP }}</td>
                         <td>{{ item.AccionEjecuta }}</td>
-                        <td>{{ item.IdModulo }}</td>
+                        <td>{{ item.IdModulo }} - {{item.DescripcionOperacion}}</td>
                         <td class="operacionFija">
-                            <button class="btn Gt-btn-verde btn-icon legitRipple" (click)="selectRow(item)">
+                            <button class="btn Gt-btn-verde btn-icon legitRipple" (click)="selectRow(item)"
+                                (click)="IrArriba()">
                                 <i class="icon-pencil"></i></button> &nbsp;
-                            <button class="btn Gt-btn-morado btn-icon legitRipple">
+                            <button class="btn Gt-btn-morado btn-icon legitRipple" (click)="configurarParametros(item)">
                                 <i class="glyphicon glyphicon-cog"></i></button>
                         </td>
                     </tr>
@@ -104,3 +143,307 @@
         </div>
     </div>
 </div>
+
+<div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatosPre" *ngIf="valueInfSelected == 2">
+    <div class="panel-body ">
+        <form [formGroup]="configuracionInfomesForm" autocomplete="off">
+            <div class="panel-body doNotPrint">
+            <label >Informes Dinámicos</label>
+                <div class="row mb-3">
+                    <div class="col-md-2">
+                        <label for="idConfiguracion" class="form-label">ID</label>
+                        <input type="text" id="idConfiguracion" class="form-control" formControlName="idConfiguracion">
+                    </div>
+                    <div class="col-md-5">
+                        <label for="nombreInforme" class="form-label">Nombre Informe</label><span
+                            class="text-danger ObligatorioGrande"> *</span>
+                        <input type="text" id="nombreInforme" class="form-control" formControlName="nombreInforme"
+                            name="nombreInforme" maxlength="50">
+                    </div>
+                    <div class="col-md-5">
+                        <label for="nombreSP" class="form-label">Nombre SP</label><span
+                            class="text-danger ObligatorioGrande"> *</span>
+                        <input type="text" id="nombreSP" class="form-control" formControlName="nombreSP" name="nombreSP"
+                            maxlength="50">
+                    </div>
+    
+                    <div class="col-md-2 mt-3 div-espacio">
+                    </div>
+                    <div class="col-md-5 mt-3 div-espacio">
+                        <label for="accion" class="form-label">Acción</label><span class="text-danger ObligatorioGrande">
+                            *</span>
+                        <input type="text" id="accionEjecuta" class="form-control" formControlName="accionEjecuta"
+                            name="accionEjecuta" maxlength="20">
+                    </div>
+                    <div class="col-md-5 mt-3 div-espacio">
+                        <label for="idModulo" class="form-label">Módulo</label><span class="text-danger ObligatorioGrande">
+                            *</span>
+                        <select id="idModulo" class="form-control" name="idModulo" formControlName="idModulo">
+                            <option value="0">--Seleccione--</option>
+                            <option *ngFor="let item of Operaciones" [value]="item.IdOperacion">
+                                {{item.Descripcion}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+    
+                <div class="col-xs-12 col-md-12 col-lg-12" style="justify-items: end; padding: 1em;">
+                    <div class="actions clearfix">
+                        <button class="btn Gt-btn-morado btn-icon legitRipple" type="reset">
+                            LIMPIAR
+                        </button>&nbsp;
+    
+                        <button class="btn Gt-btn-verde btn-icon legitRipple" type="button"
+                            (click)="guardarConfiguracionInformes()">
+                            <i class=""></i>&nbsp; GUARDAR
+                        </button>&nbsp;
+    
+                        <button class="btn Gt-btn-verde btn-icon legitRipple" type="button"
+                            (click)="actualizarConfiguracionInformes()">
+                            <i class=""></i>&nbsp; ACTUALIZAR
+                        </button>
+    
+                    </div>
+                </div>
+    
+            </div>
+        </form>
+    </div>
+</div> 
+
+
+
+<input type="hidden" #ShowModalList data-toggle="modal" data-target="#ShowModalList" data-popup="tooltip"
+    data-trigger="hover" data-placement="top">
+<div id="ShowModalList" class="modal fade" data-backdrop="static">
+    <div style="width: 88%; margin: 30px auto; height: 90%;">
+        <div class="modal-content modal-xl">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal" (click)="cerrarListas()">&times;</button>
+                <h6 class="modal-title">Parámetros: {{selectedIdConfig}} - {{selectedInfConfig}}</h6>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-12">
+                    <div class="alert alert-secondary d-flex align-items-center" role="alert"
+                        style="text-align: justify; margin-bottom: 10px; padding-bottom: 1px; ">
+                        <div>
+                            <p>
+                                Recuerde utilizar la palabra <strong>Reservado</strong> en el nombre del campo, para que
+                                éste quede oculto al usuario final. El campo de acción debe llevar requerido en
+                                <strong>false</strong>. <a (click)="mostrarListas()">Haciendo
+                                    click en esta área</a> puede revisar las listas para identificar el código de
+                                filtro de los campos tipo <strong>selectn</strong>.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row mb-12">
+                    <div class="col-md-4">
+                        <label style="white-space: nowrap">Información del procedimiento {{selectedSpConfig}}:</label>
+                        <div class="table-responsive scrollTabla">
+                            <table id="TablaParametrosSP" class="table table-sm table-hover sticky-last-column">
+                                <thead>
+                                    <tr>
+                                        <th>Parámetro</th>
+                                        <th>Tipo</th>
+                                        <th>Tamaño</th>
+                                        <th>Configurar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of configuracionParametrosInformesNoCoi">
+                                        <td>{{item.NombreParametro}}</td>
+                                        <td>{{item.TipoDato}}</td>
+                                        <td>{{item.TamanoCampo}}</td>
+                                        <td> <button class="btn Gt-btn-morado btn-icon legitRipple"
+                                                (click)="selectRowParam(item)">
+                                                <i class="glyphicon glyphicon-chevron-right"></i></button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="col-md-8">
+                        <div class="col-md-12 border">
+                            <form [formGroup]="parametroConfiguracionInfForm" autocomplete="off">
+                                <div class="row div-espacio">
+                                    <div class="col-md-3">
+                                        <label for="nombreParametro" class="form-label">Parámetro:</label><span
+                                            class="text-danger ObligatorioGrande"> *</span>
+                                        <input type="text" id="nombreParametro" class="form-control" maxlength="70"
+                                            formControlName="nombreParametro">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="orden" class="form-label">Orden:</label><span
+                                            class="text-danger ObligatorioGrande"> *</span>
+                                        <input type="number" id="orden" class="form-control" max="50" min="0"
+                                            maxlength="2" formControlName="orden">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="nombreCampo" class="form-label">Nombre campo:</label><span
+                                            class="text-danger ObligatorioGrande"> *</span>
+                                        <input type="text" id="nombreCampo" class="form-control" maxlength="70"
+                                            formControlName="nombreCampo">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="tipoDato" class="form-label">Tipo dato:</label><span
+                                            class="text-danger ObligatorioGrande"> *</span>
+                                        <select class="form-control" name="tipoDato" formControlName="tipoDato"
+                                            id="tipoDato" (change)="selectTipoDato($event)">
+                                            <option value="">--Seleccione--</option>
+                                            <option value="varchar">varchar</option>
+                                            <option value="number">number</option>
+                                            <option value="datetime">datetime</option>
+                                            <option value="selectn">selectn</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row div-espacio">
+                                    <div class="col-md-3">
+                                        <label for="tamanoCampo" class="form-label">Tamaño:</label><span
+                                            class="text-danger ObligatorioGrande"> *</span>
+                                        <input type="text" id="tamanoCampo" class="form-control" name="tamanoCampo"
+                                            formControlName="tamanoCampo" maxlength="10">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label>Requerido:</label><span class="text-danger ObligatorioGrande">
+                                            *</span>
+                                        <div class="text-center"
+                                            style="width: 60%; justify-content: center; text-align: center;">
+                                            <input class="check-ena" type="checkbox" style="margin-top: 10px;"
+                                                formControlName="requerido">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3" *ngIf="VbleCodigoFiltro">
+                                        <label for="IdTipo" class="form-label">Código filtro:</label><span
+                                            class="text-danger ObligatorioGrande"> *</span>
+                                        <select class="form-control" name="idTipo" id="idTipo" formControlName="idTipo">
+                                            <option value=0>--Seleccione--</option>
+                                            <option *ngFor="let item of unicosPorIdClase" [value]="item.IdTipo">
+                                                {{item.IdTipo}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="col-xs-12 col-md-12 col-lg-12" style="justify-items: end; padding: 1em;">
+                            <div class="actions clearfix">
+                                <button class="btn Gt-btn-morado btn-icon legitRipple" type="button"
+                                    (click)="limpiarFormModal(2)">
+                                    LIMPIAR
+                                </button>&nbsp;
+
+                                <button class="btn Gt-btn-verde btn-icon legitRipple" type="button"
+                                    (click)="agregarParametro()">
+                                    <i class=""></i>&nbsp; AGREGAR
+                                </button>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="row mb-12">
+                    <div class="col-md-12">
+                        <hr>
+                        <label>Configuración actual:</label>
+                        <div class="table-responsive scrollTabla">
+                            <table id="TablaParametrosConf" class="table table-sm table-hover sticky-last-column">
+                                <thead>
+                                    <tr>
+                                        <th>Id configuración</th>
+                                        <th>Orden</th>
+                                        <th>Parámetro</th>
+                                        <th>Nombre del campo</th>
+                                        <th>Tipo dato</th>
+                                        <th>Tamaño</th>
+                                        <th>Requerido</th>
+                                        <th>Código filtro</th>
+                                        <th>Opciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of configuracionParametrosInformesTbl">
+                                        <td>{{selectedIdConfig}}</td>
+                                        <td>{{item.Orden}}</td>
+                                        <td>{{item.NombreParametro}}</td>
+                                        <td>{{item.AliasCampo}}</td>
+                                        <td>{{item.TipoDato}}</td>
+                                        <td>{{item.TamanoCampo}}</td>
+                                        <td>{{item.Requerido}}</td>
+                                        <td>{{item.IdTipo}}</td>
+                                        <td> <button class="btn Gt-btn-verde btn-icon legitRipple"
+                                                (click)="selectRowParamTbl(item)">
+                                                <i class="glyphicon glyphicon-pencil"></i></button> &nbsp;
+                                            <button class="btn Gt-btn-morado btn-icon legitRipple"
+                                                (click)="deleteRowParamTbl(item)">
+                                                <i class="glyphicon glyphicon-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn Gt-btn-verde btn-icon legitRipple" type="button"
+                    (click)="guardarParametrosConfiguracion()">
+                    <i class=""></i>&nbsp; GUARDAR
+                </button>
+
+                <!--<button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button> -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="fake-modal-container" *ngIf="mostrarModal">
+    <div class="modal-content" style="width: 88%; height: auto; margin: 20px auto;">
+        <div class="modal-header bg-morado">
+            <button type="button" class="close" (click)="cerrarListas()">&times;</button>
+            <h6 class="modal-title">Listas disponibles</h6>
+        </div>
+        <div class="modal-body">
+            <div class="row mb-12">
+                <div class="row">
+                  <!--  <input type="text" (blur)="filtrarPorIdTipo()" id="filtroCodigo" class="form-control"
+                        formControlName="filtroCodigo" #filtroCodigo>-->
+                </div>
+                <div class="table-responsive scrollTabla">
+                    <table id="TablaListaCod" class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Código filtro</th>
+                                <th>Id</th>
+                                <th>Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of listasCodigos">
+                                <td>{{item.IdTipo}}</td>
+                                <td>{{item.IdClase}}</td>
+                                <td>{{item.Descripcion}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<ngx-loading [show]="loading"
+    [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+</ngx-loading>

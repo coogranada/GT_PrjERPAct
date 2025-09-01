@@ -16,6 +16,12 @@ export class ConfiguracionInformesService {
         return this._http.get<any>(this.url);
     }
     
+    
+    ObtenerParametrosConfiguracionInformesSP(nombreSp : string): Observable<any> {
+        this.url = `${this.environment.Url}/ObtenerParametrosConfiguracionInf?nombreSP=`+nombreSp;
+        return this._http.get<any>(this.url);
+    }
+
     ObtenerParametrosConfiguracionInfTbl(idParametroInforme : number): Observable<any> {
         this.url = `${this.environment.Url}/ObtenerParametrosConfiguracionInfTbl?idConfiguracionInformes=`+idParametroInforme;
         return this._http.get<any>(this.url);
@@ -25,6 +31,7 @@ export class ConfiguracionInformesService {
         this.url = `${this.environment.Url}/ObtenerListas`;
         return this._http.get<any>(this.url);
     }
+
 
     EjecutarInforme(nombreSP: string, accionEjecuta: string, parametros: { [key: string]: any }): Observable<any> {
         this.url = `${this.environment.Url}/EjecutarSP`;
@@ -36,5 +43,27 @@ export class ConfiguracionInformesService {
 
         return this._http.post<any>(this.url, body);
     }
+
+    GuardarConfiguracion(configuracionInformes:any): Observable<any> {
+        this.url = `${this.environment.Url}/GuardarConfiguracion`;
+        const body = configuracionInformes;
+
+        return this._http.post<any>(this.url, body);
+    }
+
+    ActualizarConfiguracion(configuracionInformes:any): Observable<any> {
+        this.url = `${this.environment.Url}/ActualizarConfiguracion`;
+        const body = configuracionInformes;
+
+        return this._http.post<any>(this.url, body);
+    }
+
+    GuardarParametrosConfiguracion(idParametro: number, parametros: any): Observable<any> {
+        this.url = `${this.environment.Url}/GuardarParametrosConfiguracion?IdParametro=`+idParametro;
+        const body = parametros
+
+        return this._http.post<any>(this.url, body);
+    }
+
 
 }

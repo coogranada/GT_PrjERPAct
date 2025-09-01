@@ -12,6 +12,7 @@ import { InformeAhorrosService } from '../../../../Services/Informes/informe-aho
 import { SPParametros } from '../../../../Models/Informes/configuracion-informes/parametros-informes.model';
 import { ExcelService } from '../../../../Services/General/excel.service';
 import { ConfiguracionInformesService } from '../../../../Services/Informes/configuracion-informes.service';
+import Swal from "sweetalert2";
 @Component({
   selector: 'app-informe-ahorros',
   templateUrl: './informe-ahorros.component.html',
@@ -22,6 +23,8 @@ import { ConfiguracionInformesService } from '../../../../Services/Informes/conf
 
 export class InformeAhorrosComponent implements OnInit {
   @ViewChild('ShowModalList', { static: true }) private ShowModalList!: ElementRef;
+  
+  ngxLoadingComponent!: NgxLoadingComponent;
   primaryColour = 'rgb(13,165,80)';
   secondaryColour = 'rgb(13,165,80,0.7)';
   loading: boolean = false;
@@ -39,6 +42,7 @@ export class InformeAhorrosComponent implements OnInit {
   public nombreOficina: string = "";
   public nombreSP: string = "";
   public accionEjecuta: string = "";
+  public nombreInformeSelect: string ='';
   public fechaMax: any = null;
   public fechaMinima: any = null;
 
@@ -139,7 +143,9 @@ export class InformeAhorrosComponent implements OnInit {
 
   informeSelected(event: Event) {
     this.loading = true;
-    const selectedId = +(event.target as HTMLSelectElement).value;
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedId = +selectElement.value;
+    this.nombreInformeSelect = selectElement.options[selectElement.selectedIndex].text;
 
     const informeSel = this.configuracionInformesFiltro.find(
       item => item.IdConfiguracion === selectedId
@@ -188,6 +194,8 @@ export class InformeAhorrosComponent implements OnInit {
 
   crearFormularioDinamico(): void {
 
+    this.formulario = new FormGroup({});
+
     for (let param of this.parametrosConfiguracionInf) {
       const validators = [];
 
@@ -231,11 +239,13 @@ export class InformeAhorrosComponent implements OnInit {
     this.loading = true;
     const parametros = this.formulario.getRawValue();
     try {
+      this.loading = true;
       this.configuracionInformesS
         .EjecutarInforme(this.nombreSP, this.accionEjecuta, parametros)
         .subscribe(respuesta => {
           if (respuesta.length <= 0) {
             this.notif.warning('Advertencia', 'No se encontraron datos para mostrar, verifique los filtros.', ConfiguracionNotificacion.configRightTop);
+            this.loading = false;
             return;
           }
           if (respuesta && respuesta.length > 0) {
@@ -245,7 +255,8 @@ export class InformeAhorrosComponent implements OnInit {
             } else {
               this.encabezados = Object.keys(respuesta[0]).slice(1);
             }
-            this.ShowModalList.nativeElement.click();
+            this.loading = false;
+            this.ModalCantidadRegistros(respuesta.length,false)
           }
           this.loading = false;
           return;
@@ -290,7 +301,7 @@ export class InformeAhorrosComponent implements OnInit {
                 return obj;
               }, {});
           });
-          this.excelReportService.exportAsExcelFile(data, 'INFORME ACIVACIÓN DE CUENTAS')
+          this.excelReportService.exportAsExcelFile(data, this.nombreInformeSelect.toUpperCase())
         }
   }
 
@@ -349,5 +360,35 @@ export class InformeAhorrosComponent implements OnInit {
     this.fechaMax = hoy.toISOString().split('T')[0]; // 'YYYY-MM-DD'
     console.log("fecha calculada: "+ this.fechaMax )
   }
+
+  ModalCantidadRegistros(Cant: number, idDowload: boolean) {
+    if (Cant == 0) { 
+      this.notif.warning('Advertencia', 'No se encuentran registros', ConfiguracionNotificacion.configRightTop);   
+      return;
+    }
+  Swal.fire({
+    imageUrl: 'https://www.pgro.org/images/shop/more/493x500_700_121fd5db7d62d33519e2e6bf96d156a3_1618820954excel.png',
+    imageWidth: 50,
+    imageHeight: 50,
+    imageAlt: 'Custom image',
+    title: 'El número de registros es: ' + Cant,
+    showCancelButton: true,
+    cancelButtonColor: "#852662",
+    confirmButtonColor: "#269051",
+    cancelButtonText: "Cerrar",
+    confirmButtonText: idDowload == true ? "Descargar" : "Ver Lista"
+  }).then((result) => {
+    if (result.value) {
+      
+      setTimeout(() => {
+        if (idDowload){
+          this.exportarExcel2()
+        }else{
+          this.ShowModalList.nativeElement.click();
+        }
+      }, 300);
+    }
+  });
+}
 
 }

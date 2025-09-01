@@ -59,3 +59,51 @@
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
     min-width: 30px;
 }
+
+
+#TablaParametrosSP{
+    transform: scale(0.9);
+    transform-origin: top left;
+}
+
+.check-dis {
+    transform: scale(1.5);
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 1;
+}
+
+.check-ena {
+    transform: scale(1.5);
+    opacity: 1;
+}
+
+.div-espacio {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.border{
+    border: 2px rgb(227, 227, 227);
+    border-style: dashed;
+    border-radius: 10px;
+}
+
+.fake-modal-container {
+    position: fixed;  
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    padding: 10px;
+    max-width: 800px;
+    margin: 0 auto;
+    z-index: 1050; 
+}
+
+.modal-content {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    border-radius: 6px;
+    background-color: #fff;
+    position: relative;
+}
+
