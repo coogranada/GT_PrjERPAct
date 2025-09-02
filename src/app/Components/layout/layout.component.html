@@ -483,6 +483,27 @@
                                                 </li>
                                             </ul>
                                         </li>
+
+                                        <li id="cartera" *ngIf="Cartera">
+                                            <a [routerLink]="" (click)="toggleProductosCarteraMenu()">Cartera</a>
+                                            <i class="icon-arrow-right13"
+                                                style="left: 225px; margin-top: 15px; position: absolute;"
+                                                *ngIf="!isProductosCarteraMenuOpen"></i>
+                                            <i class="icon-arrow-down12"
+                                                style="left: 225px; margin-top: 15px; position: absolute;"
+                                                *ngIf="isProductosCarteraMenuOpen"></i>
+                                            <ul *ngIf="isProductosCarteraMenuOpen">
+                                                <!-- <li id="simuladorCartera" *ngIf="SimuladorCartera">
+                                                    <a [routerLink]="['/Productos/Carteras/Simulador']"
+                                                        (click)="setModuloLocalStorage(SimuladorCarteraModel.IdModuloPermiso)">Simulador</a>
+                                                </li> -->
+                                                <li id="gestionCredito" *ngIf="GestionCredito">
+                                                    <a [routerLink]="['/Productos/Cartera/GestionCredito']"
+                                                        (click)="setModuloLocalStorage(GestionCreditoModel.IdModuloPermiso)">Gestión de crédito</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+
                                         <li id="seguros" *ngIf="Seguros">
                                             <a [routerLink]="" (click)="toggleProductosSeguroMenu()">Seguros</a>
                                             <i class="icon-arrow-right13"
@@ -504,35 +525,6 @@
                                         </li>
                                     </ul>
                                 </li>
-                            <!--   
-                                <li id="transaccionesFinancieras">
-                                    <a>
-                                        <-- (click)="setModuloLocalStorage(TransaccionesFinancierasModel.IdModuloPermiso)"
-                                        <i class="icon-file-text2"></i>
-                                        <span>Transacciones financieras</span>
-                                    </a>
-                                    <ul>
-                                        <li id="transaccionesFinancierasInterno">
-                                            <a [routerLink]=""
-                                                (click)="setModuloLocalStorage(TransaccionesFinancierasInternoModel.IdModuloPermiso)">Transacciones
-                                                financieras</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li id="cartera">
-                                    <a>
-                                        <-- (click)="setModuloLocalStorage(CarteraModel.IdModuloPermiso)"
-                                        <i class=" icon-coins"></i>
-                                        <span>Cartera</span>
-                                    </a>
-                                    <ul>
-                                        <li id="carteraInterno">
-                                            <a [routerLink]=""
-                                                (click)="setModuloLocalStorage(CarteraInternoModel.IdModuloPermiso)">Cartera</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            -->
                                 <li id="informes" *ngIf="Informes">
                                     <a (click)="toggleInformeMenu()">
                                         <i class=" icon-stack"></i>
