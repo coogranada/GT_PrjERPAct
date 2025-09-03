@@ -63,6 +63,8 @@ export class GestionCreditoComponent {
     const IdDigito = new FormControl({ value: '', disabled: true }, [Validators.pattern('[0-9]*')]);
     const IdConsecutivo = new FormControl({ value: '', disabled: true }, [Validators.pattern('[0-9]*')]);
     const IdProductoCuenta = new FormControl({ value: '', disabled: true }, [Validators.pattern('[0-9]*')]);
+    const lineaId = new FormControl({ value: '', disabled: true }, [Validators.pattern('[0-9]*')]);
+    const lineaName = new FormControl({ value: '', disabled: true }, []);
     const IdOficina = new FormControl({ value: '', disabled: true }, [Validators.pattern('[0-9]*')]);
     const NumeroOficinaAsociado = new FormControl({ value: '', disabled: true }, [Validators.required]);
     const NombreOficinaAsociado = new FormControl({ value: '', disabled: true }, [Validators.required]);
@@ -127,6 +129,8 @@ export class GestionCreditoComponent {
     const FechaProximoCobro = new FormControl({ value: '', disabled: true }, []);
     const LibretaPlastico = new FormControl({ value: '', disabled: true }, []);
     const MoraCuotaManejo = new FormControl({ value: '', disabled: true }, []);
+    const radicado = new FormControl({ value: '', disabled: true }, []);
+    const pagare = new FormControl({ value: '', disabled: true }, []);
     const IdRelacionTipo = new FormControl({ value: '', disabled: true }, []);
     const Cuenta = new FormControl({ value: '', disabled: true }, []);
     const TelefonoDisponible = new FormControl({ value: '', disabled: true }, []);
@@ -188,6 +192,8 @@ export class GestionCreditoComponent {
       IdDigito: IdDigito,
       IdConsecutivo: IdConsecutivo,
       IdProductoCuenta: IdProductoCuenta,
+      lineaId,
+      lineaName,
       IdOficina: IdOficina,
       NumeroOficinaAsociado: NumeroOficinaAsociado,
       NombreOficinaAsociado: NombreOficinaAsociado,
@@ -249,6 +255,8 @@ export class GestionCreditoComponent {
       FechaProximoCobro: FechaProximoCobro,
       LibretaPlastico: LibretaPlastico,
       MoraCuotaManejo: MoraCuotaManejo,
+      radicado,
+      pagare,
       IdRelacionTipo: IdRelacionTipo,
       Cuenta: Cuenta,
       TelefonoDisponible: TelefonoDisponible,
@@ -339,13 +347,28 @@ export class GestionCreditoComponent {
   }
 
   onChangeOperacion() {
-    if (this.gestionCreditoOperacionForm.get('Codigo')?.value !== '2' && this.gestionCreditoOperacionForm.get('Codigo')?.value !== '10' &&
-      this.gestionCreditoOperacionForm.get('Codigo')?.value !== '40')
+    // if (this.gestionCreditoOperacionForm.get('Codigo')?.value !== '2' && this.gestionCreditoOperacionForm.get('Codigo')?.value !== '10' &&
+    //   this.gestionCreditoOperacionForm.get('Codigo')?.value !== '40')
       // this.BuscarPorCuenta();
     if (this.gestionCreditoOperacionForm.get('Codigo')?.value === '2') { // Buscar
-    
+      this.gestionCreditoForm.get('IdOficina')?.enable();
+      this.gestionCreditoForm.get('IdProductoCuenta')?.enable();
+      this.gestionCreditoForm.get('IdConsecutivo')?.enable();
+      this.gestionCreditoForm.get('IdDigito')?.enable();
+      this.gestionCreditoForm.get('BuscarDocumento')?.enable();
+      this.gestionCreditoForm.get('BuscarNombre')?.enable();
+      this.gestionCreditoForm.get('pagare')?.enable();
 
     }
+  }
+
+  onClickBuscarCuenta() {
+    if(this.gestionCreditoForm.get('BuscarDocumento')?.value?.trim()) this.buscarCuenta();
+    else if(this.gestionCreditoForm.get('BuscarNombre')?.value?.trim()) this.buscarCuenta();
+  }
+
+  buscarCuenta() {
+
   }
 
   LimpiarCampos(campo: string) {

@@ -24,6 +24,7 @@
                             </div>
                             <div class="col-xs-10 col-md-8 col-lg-4">
                                 <select class="form-control" formControlName="Codigo" id="select" (change)="onChangeOperacion()">
+                                    <option value="">test</option>
                                     <option *ngFor="let operacionDisponible of resultOperaciones"
                                         [value]="operacionDisponible.ERP_tblOperacion.IdOperacion">
                                         {{operacionDisponible.ERP_tblOperacion.Descripcion}}</option>
@@ -48,25 +49,25 @@
                             <input type="text" class="form-control" formControlName="IdOficina" maxlength="3">
                             <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['IdOficina'].errors?.['pattern']">
                                     La cuenta solo acepta números.
-                                    </span>
+                            </span>
                         </div>
                         <div class="col-xs-4 col-md-3 col-lg-1">
                             <input type="text" class="form-control" formControlName="IdProductoCuenta" maxlength="3">
                             <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['IdProductoCuenta'].errors?.['pattern']">
                                     La cuenta solo acepta números.
-                                    </span>
+                            </span>
                         </div>
                         <div class="col-xs-4 col-md-3 col-lg-1">
                             <input type="text" class="form-control" formControlName="IdConsecutivo" maxlength="7">
                             <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['IdConsecutivo'].errors?.['pattern']">
                                     La cuenta solo acepta números.
-                                    </span>
+                            </span>
                         </div>
                         <div class="col-xs-4 col-md-3 col-lg-1">
                             <input type="text" class="form-control" formControlName="IdDigito" maxlength="1">
                             <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['IdDigito'].errors?.['pattern']">
                                     La cuenta solo acepta números.
-                                    </span>
+                            </span>
                         </div>
                         <!-- Fin Cuenta -->
 
@@ -78,15 +79,15 @@
                             <label class="textNegrilla">Buscar:</label>
                         </div>
                         <div class="col-xs-4 col-md-3 col-lg-1">
-                            <input type="text" class="form-control" tooltip="Documento" id="SelectBuscar" placement="top" show-delay="500" formControlName="BuscarDocumento" (keypress)="LimpiarCampos('BuscarDocumento')" />
+                            <input type="text" class="form-control" tooltip="Documento" id="SelectBuscar" placement="top" show-delay="500" formControlName="BuscarDocumento" (input)="gestionCreditoForm.get('BuscarNombre')?.reset()" maxlength="20" />
                             <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['BuscarDocumento'].errors?.['pattern']">
                                     El documento solo acepta números.
-                                    </span>
+                            </span>
                         </div>
                         <div class="col-xs-6 col-md-5 col-lg-2">
-                            <input type="text" class="form-control" tooltip="Nombre" placement="top" show-delay="500" formControlName="BuscarNombre" (keypress)="LimpiarCampos('BuscarNombre')" />
+                            <input type="text" class="form-control" tooltip="Nombre" placement="top" show-delay="500" formControlName="BuscarNombre" (input)="gestionCreditoForm.get('BuscarDocumento')?.reset()" />
                         </div>
-                        <button type="button" class="btn Gt-btn-verde btn-icon" [disabled]="gestionCreditoForm.get('BuscarDocumento')?.disabled">
+                        <button type="button" class="btn Gt-btn-verde btn-icon" [disabled]="gestionCreditoForm.get('BuscarDocumento')?.disabled" (click)="onClickBuscarCuenta()">
                             <i class="icon-search4"></i>
                         </button>
                         <!-- Fin Buscar -->
@@ -117,7 +118,7 @@
                             <!-- <span class="grande"> *</span> -->
                         </div>
                         <div class="col-xs-6 col-md-2 col-lg-1">
-                            <input type="text" class="form-control" tooltip="Nombre" placement="top" show-delay="500" formControlName="BuscarNombre" (keypress)="LimpiarCampos('BuscarNombre')" />
+                            <input type="text" class="form-control" tooltip="Nombre" placement="top" show-delay="500" formControlName="radicado" (keypress)="LimpiarCampos('radicado')" />
                         </div>
                         <!-- Fin Radicado -->
 
@@ -127,9 +128,9 @@
                             <!-- <span class="grande"> *</span> -->
                         </div>
                         <div class="col-xs-6 col-md-2 col-lg-1">
-                            <input type="text" class="form-control" tooltip="Nombre" placement="top" show-delay="500" formControlName="BuscarNombre" (keypress)="LimpiarCampos('BuscarNombre')" />
+                            <input type="text" class="form-control" tooltip="Nombre" placement="top" show-delay="500" formControlName="pagare" (keypress)="LimpiarCampos('pagare')" />
                         </div>
-                        <button type="button" class="btn Gt-btn-verde btn-icon" [disabled]="gestionCreditoForm.get('BuscarNombre')?.disabled">
+                        <button type="button" class="btn Gt-btn-verde btn-icon" [disabled]="gestionCreditoForm.get('pagare')?.disabled">
                             <i class="icon-search4"></i>
                         </button>
                         <!-- Fin Pagare -->
@@ -217,13 +218,13 @@
                             <span class="grande">*</span>
                         </div>
                         <div class="col-xs-4 col-md-3 col-lg-1">
-                            <input type="text" class="form-control" id="SelectProducto" formControlName="IdProducto" (keypress)="LimpiarCampos('IdProducto')" (change)="Producto()" maxlength="3">
+                            <input type="text" class="form-control" id="SelectProducto" formControlName="lineaId" (keypress)="LimpiarCampos('lineaId')" (change)="Producto()" maxlength="3">
                         </div>
                         <div class="col-xs-6 col-md-5 col-lg-4">
-                            <input type="text" class="form-control" formControlName="DescripcionProducto" (keypress)="LimpiarCampos('DescripcionProducto')">
+                            <input type="text" class="form-control" formControlName="lineaName" (keypress)="LimpiarCampos('DescripcionProducto')">
                         </div>
                         <div class="col-xs-1 col-md-1 col-lg-1">
-                            <button type="button" class="btn Gt-btn-verde btn-icon legitRipple" (click)="BuscarProducto()" [disabled]="gestionCreditoForm.get('IdProducto')?.disabled">
+                            <button type="button" class="btn Gt-btn-verde btn-icon legitRipple" (click)="BuscarProducto()" [disabled]="gestionCreditoForm.get('lineaId')?.disabled">
                             <i class="icon-search4"></i></button>
                         </div>
                         <!-- Fin Linea -->
