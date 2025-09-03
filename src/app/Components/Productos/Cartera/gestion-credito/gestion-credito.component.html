@@ -425,7 +425,220 @@
 <!--/ Fin Modal Ayuda -->
 
 
+
 <!-- TABS -->
+<div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelTab">
+    <div class="panel-body">
+        <div class="col-xs-12 col-md-12 col-lg-12">
+            <div class="tabbable">
+                <ul class="nav nav-tabs">
+
+                    <li id="Datos" (click)="devolverTab(1)" [ngClass]="{'activar': activaDatos === true }"                       >
+                        <a href="#tab1" data-toggle="tab">Datos</a>
+                    </li>    
+                </ul>
+                <div class="tab-content">
+                    <!-- Inicio tab1 -->
+                    <div class="tab-pane" id="tab1">
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                    <div class="form-group">
+                                        <label>Sistema:</label>
+                                        <span class="text-danger"></span>
+                                        <input type="text" class="form-control" [attr.disabled]="true" formControlName="Sistema" />
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-1 col-lg-1">
+                                </div>
+                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                    <div class="form-group">
+                                        <label>Periodo capital:</label>
+                                        <span class="text-danger"></span>
+                                        <input type="text" class="form-control" [attr.disabled]="true" formControlName="PeriodoCapital" />
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-1 col-lg-1">
+                                </div>
+                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                    <div class="form-group">
+                                        <label>Periodo interés:</label>
+                                        <span class="text-danger"></span>
+                                        <input type="text" class="form-control" [attr.disabled]="true" formControlName="PeriodoInteres" />
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-1 col-lg-1">
+                                </div>
+                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                    <div class="form-group">
+                                        <label>Plazo:</label>
+                                        <span class="text-danger"></span>
+                                        <input type="text" class="form-control" style="text-align: left;" [attr.disabled]="true"
+                                            formControlName="Plazo" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                    <div class="form-group">
+                                        <label>Garantia:</label>
+                                        <span class="text-danger"></span>
+                                        <input type="text" class="form-control" [attr.disabled]="true" formControlName="Garantia" />
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-1 col-lg-1">
+                                </div>
+                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                    <div class="form-group">
+                                        <label>Tipo garantia:</label>
+                                        <span class="text-danger"></span>
+                                        <input type="text" class="form-control" [attr.disabled]="true" formControlName="TipoGarantia" />
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-1 col-lg-1">
+                                </div>
+                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                    <div class="form-group">
+                                        <label>Monto:</label>
+                                        <span class="text-danger"></span>
+                                        <!-- <input type="text" currencyMask value=" {{carteraInfo.Monto | currency}}" class="form-control"
+                                            style="text-align: right;" [attr.disabled]="true" /> -->
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-1 col-lg-1">
+                                </div>
+                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                    <div class="form-group">
+                                        <label>Cuota:</label>
+                                        <span class="text-danger"></span>
+                                        <!-- <input type="text" currencyMask value=" {{carteraInfo.Cuota |  currency}}" class="form-control"
+                                            style="text-align: right;" [attr.disabled]="true" /> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                    <div class="form-group">
+                                        <label>Modalidad:</label>
+                                        <span class="text-danger"></span>
+                                        <input type="text" class="form-control" [attr.disabled]="true" value="Vencida" />
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-1 col-lg-1">
+                                </div>
+                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                    <div class="form-group">
+                                        <label>Periodo de gracia:</label>
+                                        <span class="text-danger"></span>
+                                        <input type="text" class="form-control" style="text-align: left;" [attr.disabled]="true"
+                                            formControlName="PeriodoGracia" />
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-1 col-lg-1">
+                                </div>
+                                   <div class="col-xs-12 col-md-2 col-lg-2">
+                                    <div class="form-group">
+                                        <label>Cuota libranza:</label>
+                                        <span class="text-danger"></span>
+                                        <!-- <input type="text" currencyMask value=" {{carteraInfo.CuotaLibranza |  currency}}" class="form-control"
+                                            style="text-align: right;" [attr.disabled]="true" /> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                         <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <div class="row" id="borde">
+                                        <div>
+                                            <div *ngIf="!ValidaPactado">
+                                                <div>
+                                                    <label>&nbsp;&nbsp;&nbsp;<strong>Tasas</strong></label>
+                                                    <span class="text-danger"></span>
+                                                </div>
+                                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                                    <div class="form-group">
+                                                        <label><strong>Tasa periódica:</strong></label>
+                                                        <span class="text-danger"></span>
+                                                        <input type="text" currencyMask [options]="{ prefix: '', suffix: ' %', thousands: '.', precision: 4 } " class="form-control" style="text-align: right;" [attr.disabled]="true" formControlName="TasaPeriodicaL" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-md-1 col-lg-1">
+                                                </div>
+                                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                                    <div class="form-group">
+                                                        <label><strong>Tasas nominal:</strong></label>
+                                                        <span class="text-danger"></span>
+                                                        <input type="text" currencyMask [options]="{ prefix: '', suffix: ' %', thousands: '.', precision: 4 }" class="form-control" style="text-align: right;" [attr.disabled]="true" formControlName="TasaLiquidada" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-md-1 col-lg-1">
+                                                </div>
+                                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                                    <div class="form-group">
+                                                        <label><strong>Tasa efectiva:</strong></label>
+                                                        <span class="text-danger "></span>
+                                                        <input type="text " currencyMask [options]="{ prefix: '', suffix: ' %', thousands: '.', precision: 4 }" class="form-control" style="text-align: right;" [attr.disabled]="true" formControlName="EfectivaLiquidada" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-md-1 col-lg-1">
+                                                </div>
+                                            </div>
+                                            <div *ngIf="ValidaPactado">
+                                                <div>
+                                                    <label>&nbsp;&nbsp;<strong>Tasas pactadas</strong></label>
+                                                    <span class="text-danger"></span>
+                                                </div>
+                                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                                    <div class="form-group ">
+                                                        <label><strong>Tasa periódica:</strong></label>
+                                                        <span class="text-danger "></span>
+                                                        <input type="text " currencyMask [options]="{ prefix: '', suffix: ' %', thousands: '.', precision: 4 } " class="form-control " style="text-align: right;" [attr.disabled]="true" formControlName="TasaPeriodicaP" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-md-1 col-lg-1">
+                                                </div>
+                                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                                    <div class="form-group">
+                                                        <label><strong>Tasas nominal:</strong></label>
+                                                        <span class="text-danger"></span>
+                                                        <input type="text" currencyMask [options]="{ prefix: '', suffix: ' %', thousands: '.', precision: 4 } " class="form-control " style="text-align: right; " [attr.disabled]="true" formControlName="TasaPactada" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-md-1 col-lg-1">
+                                                </div>
+                                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                                    <div class="form-group">
+                                                        <label><strong>Tasa efectiva:</strong></label>
+                                                        <span class="text-danger "></span>
+                                                        <input type="text " currencyMask [options]="{ prefix: '', suffix: ' %', thousands: '.', precision: 4 } " class="form-control " style="text-align: right; " [attr.disabled]="true" formControlName="EfectivaPactada" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-md-1 col-lg-1">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-2 col-lg-2" style="text-align: right;">
+                                            <br>
+                                            <button type="button" id="marginbuton" class="btn Gt-btn-morado doNotPrint " (click)="Cambiavistatasas()">Pactado</button>
+                                        </div>
+                                    </div>
+                                </div>
+                    </div>
+                    <!-- Fin tab1 -->                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-xs-3 col-md-12 col-lg-3 text-right">
+    <input type="button" style="visibility:hidden" data-toggle="tab" href="#tab1" #tab1 />
+</div>
+
+
+
 
     </form>
 </form>

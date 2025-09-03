@@ -431,3 +431,12 @@ h3 {
     text-align: center !important;
     align-items: center;
 }
+
+/* TABS */
+#borde {
+    border: 3px rgb(227, 227, 227);
+    border-style: dashed;
+    border-radius: 22px;
+    padding: 9px;
+    width: 101%;
+}

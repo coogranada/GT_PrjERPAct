@@ -29,6 +29,13 @@ export class GestionCreditoComponent {
   public bloqtemp = false;
   public booltemp = true;
 
+
+  // TABS
+  activaDatos = false;
+
+  public ValidaPactado: boolean = true;
+  // FIN TABS 
+
   constructor( private operacionesService: OperacionesService ) {}
 
   ngOnInit() {
@@ -380,4 +387,25 @@ export class GestionCreditoComponent {
   BuscarProducto() {
     
   }
+
+// TABS 
+  devolverTab(tab: number) {
+    switch (tab) {
+      case 1:
+        this.activaDatos = true;
+        break;
+    }
+  }
+//DATOS 
+  Cambiavistatasas() {
+    if (this.ValidaPactado) {
+      this.ValidaPactado = false;
+    } else {
+      this.ValidaPactado = true;
+    }
+  }
+
+// FIN DATOS 
+// FIN TABS
+
 }
