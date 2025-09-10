@@ -251,4 +251,8 @@ export class TerminoAhorrosService {
         this.url = `${this.environment.Url}/GuardarAsesoriaTermino`;
         return this._http.post<any>(this.url, Datos);
     } 
+    CuentaAportes(IdTercero: number): Observable<any> {
+        this.url = `${this.environment.Url}/CuentaAportesTermino/${IdTercero}`;
+        return this._http.get<any>(this.url);
+    }
 }
