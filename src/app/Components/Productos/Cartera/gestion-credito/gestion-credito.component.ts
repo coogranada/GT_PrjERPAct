@@ -23,6 +23,7 @@ export class GestionCreditoComponent {
   public gestionCreditoForm!: FormGroup;
   public gestionCreditoOperacionForm!: FormGroup;
   public AsesorExternoForm!: FormGroup;
+  public DatosForm!: FormGroup;
   public resultOperaciones : any;
   public bloquearConsultaCuenta : boolean = false;
   public BloquearBuscar = false;
@@ -333,6 +334,42 @@ export class GestionCreditoComponent {
     //     SaldoCertificado: SaldoCertificado,
     // });
 
+
+    // TABS
+
+
+    const Sistema = new FormControl({ value: '', disabled: true }, []);
+    const PeriodoCapital = new FormControl({ value: '', disabled: true }, []);
+    const PeriodoInteres = new FormControl({ value: '', disabled: true }, []);
+    const Plazo = new FormControl({ value: '', disabled: true }, []);
+    const Garantia = new FormControl({ value: '', disabled: true }, []);
+    const TipoGarantia = new FormControl({ value: '', disabled: true }, []);
+    const PeriodoGracia = new FormControl({ value: '', disabled: true }, []);
+    const TasaPeriodicaL = new FormControl({ value: '', disabled: true }, []);
+    const TasaLiquidada = new FormControl({ value: '', disabled: true }, []);
+    const EfectivaLiquidada = new FormControl({ value: '', disabled: true }, []);;
+    const TasaPeriodicaP = new FormControl({ value: '', disabled: true }, []);
+    const TasaPactada = new FormControl({ value: '', disabled: true }, []);
+    const EfectivaPactada = new FormControl({ value: '', disabled: true }, []);
+
+    this.DatosForm = new FormGroup({
+      Sistema: Sistema,
+      PeriodoCapital: PeriodoCapital,
+      PeriodoInteres: PeriodoInteres,
+      Plazo: Plazo,
+      Garantia: Garantia,
+      TipoGarantia:TipoGarantia,
+      PeriodoGracia: PeriodoGracia,
+      TasaPeriodicaL: TasaPeriodicaL,
+      TasaLiquidada: TasaLiquidada,
+      EfectivaLiquidada: EfectivaLiquidada,
+      TasaPeriodicaP: TasaPeriodicaP,
+      TasaPactada: TasaPactada,
+      EfectivaPactada: EfectivaPactada
+    });
+
+    // FIN TABS
+
   }
 
   loadOperaciones() {
@@ -599,6 +636,18 @@ export class GestionCreditoComponent {
       this.ValidaPactado = true;
     }
   }
+  ObtenerDatosCartera(){
+    // const lngCuenta = '' // remplazar
+    // this.ContractualServices.getDatosCartera(lngCuenta).subscribe(
+    //   result => {
+    //     this.resultPuntosAdicionales = result;
+    //   },
+    //   error => {
+    //     const errorMessage = <any>error;
+    //     console.log(errorMessage);
+    //   }
+    // );
+  }   
 
 // FIN DATOS 
 // FIN TABS
