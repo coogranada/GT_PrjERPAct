@@ -29,10 +29,12 @@ export interface CuentaCarteraDetalle {
   AsesorExterno?: string | null;
   IdTipoAlivio?: number | null;
   IdRelacionCliente: number;
+  NombreRelacionCliente: string;
   IdOperacionPermitida: number;
-  IdEstadoCuenta: number;
+  NombreOperacionPermitida: string;
   IdFormaPago: number;
   OficinaCuenta: string;
+  EstaSinCobertura: boolean;
 }
 
 export interface CuentaFormateada {
