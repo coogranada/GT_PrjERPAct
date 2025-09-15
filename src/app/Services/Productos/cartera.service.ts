@@ -28,6 +28,13 @@ export class CarteraService {
         return this._http.get<CuentaCarteraDetalle>(this.url);
     }
 
+    // TABS 
+    getDatosCartera(IdCuenta: number): Observable<any> {
+        this.url = `${this.environment.Url}/BuscarDatosCartera?IdCuenta=${IdCuenta}`;
+        return this._http.get<any>(this.url);
+    }
+
+
 }
 
 

@@ -3405,6 +3405,9 @@ export class DisponiblesComponent implements OnInit {
                         if (element.IdEstado === 5) {
                           this.BuscarAsociadoModal(result[0].NumeroDocumento);
                           this.generalesService.Autofocus('SelectProducto');
+                        }else {
+                          this.notif.warning('Advertencia', 'Asociado sin aportes activos.');
+                          this.DisponibleForm.get('NumeroDocumento')?.reset();
                         }
                       });
                     });                  
@@ -3985,6 +3988,9 @@ export class DisponiblesComponent implements OnInit {
                   this.DisponibleForm.get('Edad')?.setValue(result[0].Edad);
                   this.DisponibleForm.get('IdTipoDocumento')?.setValue(result[0].IdTipoDocumento);
                   this.DisponibleForm.get('LngTercero')?.setValue(result[0].lngTercero);
+                } else{
+                  this.notif.warning('Advertencia', 'Asociado sin aportes activos.');
+                  this.DisponibleForm.get('NumeroDocumento')?.reset();
                 }
               });
             });          

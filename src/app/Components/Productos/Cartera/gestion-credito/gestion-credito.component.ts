@@ -567,6 +567,8 @@ export class GestionCreditoComponent {
         this.reestablecerCamposEncabezado('BuscarDocumento', 'BuscarNombre');
         this.gestionCreditoOperacionForm.reset();
         this.deshabilitarCamposBusqueda();
+          // TABS
+          this.BuscarDatosCartera(+cuentaResumen.IdCuenta)
       }
 
       if (checkCartera) {
@@ -634,17 +636,15 @@ export class GestionCreditoComponent {
       this.ValidaPactado = true;
     }
   }
-  ObtenerDatosCartera(){
-    // const lngCuenta = '' // remplazar
-    // this.ContractualServices.getDatosCartera(lngCuenta).subscribe(
-    //   result => {
-    //     this.resultPuntosAdicionales = result;
-    //   },
-    //   error => {
-    //     const errorMessage = <any>error;
-    //     console.log(errorMessage);
-    //   }
-    // );
+  BuscarDatosCartera(IdCuenta : number){
+    this.carteraService.getDatosCartera(IdCuenta).subscribe(
+      result => {
+      },
+      error => {
+        const errorMessage = <any>error;
+        console.log(errorMessage);
+      }
+    );
   }   
 
 // FIN DATOS 
