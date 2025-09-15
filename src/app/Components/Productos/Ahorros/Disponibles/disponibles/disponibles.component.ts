@@ -3398,8 +3398,16 @@ export class DisponiblesComponent implements OnInit {
                 const diferenciaEnDias = this.calcularDiferenciaEnDias(fechaHoy, fechaActualiza);
 
                 if (diferenciaEnDias <= 180) {
-                  this.BuscarAsociadoModal(result[0].NumeroDocumento);
-                  this.generalesService.Autofocus('SelectProducto');
+                  // Validar  aportes ysalazar
+                  this.DisponiblesServices.CuentaAportes(result[0].lngTercero).subscribe(
+                    resultA => {
+                      resultA.forEach((element: any) => {
+                        if (element.IdEstado === 5) {
+                          this.BuscarAsociadoModal(result[0].NumeroDocumento);
+                          this.generalesService.Autofocus('SelectProducto');
+                        }
+                      });
+                    });                  
                 } else {
                   this.notif.warning('Advertencia', 'Asociado debe actualizar datos.', ConfiguracionNotificacion.configRightTop);
                   this.DisponibleForm.get('NumeroDocumento')?.reset();
@@ -3963,15 +3971,23 @@ export class DisponiblesComponent implements OnInit {
           this.notif.warning('Advertencia', 'No se encontró el asociado.', ConfiguracionNotificacion.configRightTop);
           this.btnGuardar = false;
         } else if (result.length === 1) {
-          this.DisponibleForm.get('NumeroDocumento')?.setValue(result[0].NumeroDocumento);
-          this.DisponibleForm.get('Nombre')?.setValue(result[0].PrimerApellido + ' ' +
-            result[0].SegundoApellido + ' ' + result[0].PrimerNombre + ' ' + result[0].SegundoNombre);
-          this.DisponibleForm.get('NumeroOficinaAsociado')?.setValue(result[0].IdOficina);
-          this.DisponibleForm.get('NombreOficinaAsociado')?.setValue(result[0].NombreOficina);
-          this.DisponibleForm.get('Clase')?.setValue(result[0].IdRelacionTipo);
-          this.DisponibleForm.get('Edad')?.setValue(result[0].Edad);
-          this.DisponibleForm.get('IdTipoDocumento')?.setValue(result[0].IdTipoDocumento);
-          this.DisponibleForm.get('LngTercero')?.setValue(result[0].lngTercero);
+          // Validar  aportes ysalazar
+          this.DisponiblesServices.CuentaAportes(result[0].lngTercero).subscribe(
+            resultA => {
+              resultA.forEach((element: any) => {
+                if (element.IdEstado === 5) {
+                  this.DisponibleForm.get('NumeroDocumento')?.setValue(result[0].NumeroDocumento);
+                  this.DisponibleForm.get('Nombre')?.setValue(result[0].PrimerApellido + ' ' +
+                    result[0].SegundoApellido + ' ' + result[0].PrimerNombre + ' ' + result[0].SegundoNombre);
+                  this.DisponibleForm.get('NumeroOficinaAsociado')?.setValue(result[0].IdOficina);
+                  this.DisponibleForm.get('NombreOficinaAsociado')?.setValue(result[0].NombreOficina);
+                  this.DisponibleForm.get('Clase')?.setValue(result[0].IdRelacionTipo);
+                  this.DisponibleForm.get('Edad')?.setValue(result[0].Edad);
+                  this.DisponibleForm.get('IdTipoDocumento')?.setValue(result[0].IdTipoDocumento);
+                  this.DisponibleForm.get('LngTercero')?.setValue(result[0].lngTercero);
+                }
+              });
+            });          
         } else if (result.length > 1) {
           this.resultAsociados = result;
           this.ModalAsociados.nativeElement.click();

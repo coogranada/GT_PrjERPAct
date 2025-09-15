@@ -1593,12 +1593,20 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
               if (result.length === 0) {
                 this.notif.onWarning('Advertencia', 'No se encontró el asociado.');
               } else if (result.length === 1) {
-                this.BuscarAsociadoModal(result[0].NumeroDocumento);
-                this.BloquearDatoTitular = null;
-                this.BloquaerProducto = null;
-                this.BloquearFormaPago = null;
-                this.MostrasAlertaAsociado = false;
-                this.generalesService.Autofocus('SelectProducto');
+                // Validar  aportes ysalazar
+                this.ContractualServices.CuentaAportes(result[0].lngTercero).subscribe(
+                  resultA => {
+                    resultA.forEach((element: any) => {
+                      if(element.IdEstado === 5){
+                        this.BuscarAsociadoModal(result[0].NumeroDocumento);
+                        this.BloquearDatoTitular = null;
+                        this.BloquaerProducto = null;
+                        this.BloquearFormaPago = null;
+                        this.MostrasAlertaAsociado = false;
+                        this.generalesService.Autofocus('SelectProducto');
+                      }
+                    });                  
+                  });
               } else if (result.length > 1) {
                 this.resultAsociados = result;
                 this.ModalAsociados.nativeElement.click();
@@ -1803,14 +1811,22 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           this.notif.onWarning('Advertencia', 'No se encontró el asociado.');
           this.btnGuardar = false;
         } else if (result.length === 1) {
-          this.contractualFrom.get('NumeroDocumento')?.setValue(result[0].NumeroDocumento);
-          this.contractualFrom.get('Nombre')?.setValue(result[0].PrimerApellido + ' ' + result[0].SegundoApellido + ' ' + result[0].PrimerNombre + ' ' + result[0].SegundoNombre);
-          this.contractualFrom.get('NumeroOficinaAsociado')?.setValue(result[0].IdOficina);
-          this.contractualFrom.get('NombreOficinaAsociado')?.setValue(result[0].NombreOficina);
-          this.contractualFrom.get('Clase')?.setValue(result[0].IdRelacionTipo); 
-          this.contractualFrom.get('LngTercero')?.setValue(result[0].lngTercero);
-          this.contractualFrom.get('IdTipoDocumento')?.setValue(result[0].IdTipoDocumento);
-          this.MostrasAlertaAsociado = false;
+          // Validar  aportes ysalazar
+          this.ContractualServices.CuentaAportes(result[0].lngTercero).subscribe(
+            resultA => {
+              resultA.forEach((element: any) => {
+                if (element.IdEstado === 5) {
+                  this.contractualFrom.get('NumeroDocumento')?.setValue(result[0].NumeroDocumento);
+                  this.contractualFrom.get('Nombre')?.setValue(result[0].PrimerApellido + ' ' + result[0].SegundoApellido + ' ' + result[0].PrimerNombre + ' ' + result[0].SegundoNombre);
+                  this.contractualFrom.get('NumeroOficinaAsociado')?.setValue(result[0].IdOficina);
+                  this.contractualFrom.get('NombreOficinaAsociado')?.setValue(result[0].NombreOficina);
+                  this.contractualFrom.get('Clase')?.setValue(result[0].IdRelacionTipo);
+                  this.contractualFrom.get('LngTercero')?.setValue(result[0].lngTercero);
+                  this.contractualFrom.get('IdTipoDocumento')?.setValue(result[0].IdTipoDocumento);
+                  this.MostrasAlertaAsociado = false;
+                }
+              });
+            });
         } else if (result.length > 1) {
           this.resultAsociados = result;
           this.ModalAsociados.nativeElement.click();

@@ -133,7 +133,7 @@ export class LayoutComponent implements OnInit,OnDestroy {
 
   /* Cartera */
   public Cartera = false;
-  public CarteraInterno = false;
+  public GestionCredito = false;
   /* Fin cartera */
 
   /* Informes */
@@ -252,7 +252,7 @@ export class LayoutComponent implements OnInit,OnDestroy {
 
   /* Cartera */
   public CarteraModel: any;
-  public CarteraInternoModel: any;
+  public GestionCreditoModel: any;
   /* Fin cartera */
 
   /* Informes */
@@ -331,6 +331,7 @@ export class LayoutComponent implements OnInit,OnDestroy {
   isProductosAhorrosDisponiblesMenuOpen: boolean = false;
   isProductosAhorrosTerminoMenuOpen: boolean = false;
   isProductosCreditoMenuOpen : boolean = false;
+  isProductosCarteraMenuOpen : boolean = false;
   isProductosSeguroMenuOpen : boolean = false;
   isInformeMenuOpen : boolean = false;
   isInformeEstadisticosMenuOpen : boolean = false;
@@ -407,6 +408,10 @@ export class LayoutComponent implements OnInit,OnDestroy {
   }
   toggleProductosCreditoMenu(){
     this.isProductosCreditoMenuOpen = !this.isProductosCreditoMenuOpen;
+    this.toggleCloseMenu(4,5);
+  }
+  toggleProductosCarteraMenu(){
+    this.isProductosCarteraMenuOpen = !this.isProductosCarteraMenuOpen;
     this.toggleCloseMenu(4,5);
   }
   toggleProductosSeguroMenu(){
@@ -825,8 +830,8 @@ export class LayoutComponent implements OnInit,OnDestroy {
               this.Cartera = true;
               this.CarteraModel = element;
             } else if (element.IdModulo === 45) {
-              this.CarteraInterno = true;
-              this.CarteraInternoModel = element;
+              this.GestionCredito = true;
+              this.GestionCreditoModel = element;
             }
             /* Fin cartera */
 

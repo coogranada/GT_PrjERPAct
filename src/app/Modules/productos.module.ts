@@ -15,6 +15,8 @@ import { FichaAnalisisComponent } from '../Components/Productos/Creditos/ficha-a
 import { ShareComponentModule } from './share-component.module';
 import { DisponiblesComponent } from '../Components/Productos/Ahorros/Disponibles/disponibles/disponibles.component';
 import { AsesoriaTerminoComponent } from '../Components/Productos/Ahorros/Termino/asesoria-termino/asesoria-termino.component';
+import { GestionCreditoComponent } from '../Components/Productos/Cartera/gestion-credito/gestion-credito.component';
+import { ConcatWithSpacePipe } from '../Pipes/utilidades/concatWithSpace.pipe';
 
 @NgModule({
   declarations: [
@@ -27,6 +29,7 @@ import { AsesoriaTerminoComponent } from '../Components/Productos/Ahorros/Termin
     GMFDisponibleComponent,
     FichaAnalisisComponent,
     DisponiblesComponent,
+    GestionCreditoComponent,
     AsesoriaTerminoComponent
   ],
   imports: [
@@ -38,7 +41,8 @@ import { AsesoriaTerminoComponent } from '../Components/Productos/Ahorros/Termin
     NgxLoadingModule.forRoot({
       backdropBackgroundColour: 'rgba(255,255,255,0.8)'
     }),
-    ReactiveFormsModule.withConfig({callSetDisabledState: 'whenDisabledForLegacyCode'})
+    ReactiveFormsModule.withConfig({callSetDisabledState: 'whenDisabledForLegacyCode'}),
+    ConcatWithSpacePipe,
   ]
 })
 export class ProductosModule { }

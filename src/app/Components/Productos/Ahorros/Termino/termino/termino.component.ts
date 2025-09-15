@@ -2122,13 +2122,21 @@ export class TerminoComponent implements OnInit {
                 this.notif.onWarning('Advertencia', 'No se encontró el asociado.');
                 this.TerminoForm.get('NumeroDocumento')?.reset();
                 this.TerminoForm.get('Nombre')?.reset();
-              } else if (result.length === 1) {
+              } else if (result.length === 1) {                
                 if (this.TerminoForm.get('DocumentoAsesor')?.value !== result[0].NumeroDocumento) {
-                  this.BuscarAsociadoModal(result[0].NumeroDocumento);
-                  this.bloquearDatosTitulares = null;
-                  this.bloquearProducto = null;
-                  this.MostrasAlertaAsociado = false;
-                  this.generalesService.Autofocus('SelectProducto');
+                  // Validar  aportes ysalazar
+                  this.TerminoService.CuentaAportes(result[0].lngTercero).subscribe(
+                    resultA => {
+                      resultA.forEach((element: any) => {
+                        if (element.IdEstado === 5) {
+                          this.BuscarAsociadoModal(result[0].NumeroDocumento);
+                          this.bloquearDatosTitulares = null;
+                          this.bloquearProducto = null;
+                          this.MostrasAlertaAsociado = false;
+                          this.generalesService.Autofocus('SelectProducto');
+                        }
+                      });
+                    });                  
                 } else {
                   this.notif.onWarning('Advertencia', 'La apertura debe ser de diferente titular.');
                   this.TerminoForm.get('NumeroDocumento')?.reset();
@@ -2342,18 +2350,26 @@ export class TerminoComponent implements OnInit {
               this.TerminoForm.get('NumeroDocumento')?.reset(); 
               this.bloquearProducto = false;
             }else {
-              this.TerminoForm.get('IdLiquidacion')?.reset();
-              this.TerminoForm.get('IdCuentaDestino')?.reset();
-              this.TerminoForm.get('NumeroDocumento')?.setValue(result[0].NumeroDocumento);
-              this.TerminoForm.get('Nombre')?.setValue(result[0].PrimerApellido + ' ' +
-              result[0].SegundoApellido + ' ' + result[0].PrimerNombre + ' ' + result[0].SegundoNombre);
-              this.TerminoForm.get('NumeroOficinaAsociado')?.setValue(result[0].IdOficina);
-              this.TerminoForm.get('NombreOficinaAsociado')?.setValue(result[0].NombreOficina);
-              this.TerminoForm.get('Clase')?.setValue(result[0].IdRelacionTipo);
-              this.TerminoForm.get('LngTercero')?.setValue(result[0].lngTercero);
-              this.TerminoForm.get('Edad')?.setValue(result[0].Edad);
-              this.TerminoForm.get('IdTipoDocumento')?.setValue(result[0].TipoDocumento);
-              this.MostrasAlertaAsociado = false;
+              // Validar  aportes ysalazar
+              this.TerminoService.CuentaAportes(result[0].lngTercero).subscribe(
+                resultA => {
+                  resultA.forEach((element: any) => {
+                    if (element.IdEstado === 5) {
+                      this.TerminoForm.get('IdLiquidacion')?.reset();
+                      this.TerminoForm.get('IdCuentaDestino')?.reset();
+                      this.TerminoForm.get('NumeroDocumento')?.setValue(result[0].NumeroDocumento);
+                      this.TerminoForm.get('Nombre')?.setValue(result[0].PrimerApellido + ' ' +
+                        result[0].SegundoApellido + ' ' + result[0].PrimerNombre + ' ' + result[0].SegundoNombre);
+                      this.TerminoForm.get('NumeroOficinaAsociado')?.setValue(result[0].IdOficina);
+                      this.TerminoForm.get('NombreOficinaAsociado')?.setValue(result[0].NombreOficina);
+                      this.TerminoForm.get('Clase')?.setValue(result[0].IdRelacionTipo);
+                      this.TerminoForm.get('LngTercero')?.setValue(result[0].lngTercero);
+                      this.TerminoForm.get('Edad')?.setValue(result[0].Edad);
+                      this.TerminoForm.get('IdTipoDocumento')?.setValue(result[0].TipoDocumento);
+                      this.MostrasAlertaAsociado = false;
+                    }
+                  });
+                });               
             }        
           } else if (this.TerminoOperacionForm.get('Codigo')?.value === '40') {
             if (this.TerminoForm.get('DocumentoAsesor')?.value === result[0].NumeroDocumento) {
