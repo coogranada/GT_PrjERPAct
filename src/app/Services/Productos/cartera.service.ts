@@ -5,7 +5,9 @@ import { Observable } from 'rxjs';
 import { TipoBusquedaResumen } from '../../Models/Productos/cartera/gestion-credito.enum';
 import { CuentaCarteraDetalle, CuentaCarteraResumen, CuentaFormateada } from '../../Models/Productos/cartera/gestion-credito.model';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class CarteraService {
     private url: string = "";
 
