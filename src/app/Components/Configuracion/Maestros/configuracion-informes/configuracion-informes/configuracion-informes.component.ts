@@ -8,7 +8,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfiguracionNotificacion } from '../../../../../../environments/config.noticaciones';
 import { OperacionesModulosService } from '../../../../../Services/Maestros/operaciones-modulos.service';
 import { NgxLoadingComponent } from 'ngx-loading';
-
+import swal from 'sweetalert2';
 
 
 @Component({
@@ -33,7 +33,7 @@ export class ConfiguracionInformesComponent implements OnInit {
   public selectedId: number = 0;
   public selectedIdConfig: number = 0;
   public valEditar: number = 0; //0- agregar 1- editar
-  public valueInfSelected = 1;
+  public valueInfSelected = 0;
   public selectedSpConfig: string = "";
   public selectedInfConfig: string = "";
   public OperacionSelect: string = "";
@@ -44,7 +44,8 @@ export class ConfiguracionInformesComponent implements OnInit {
   public mostrarModal: boolean = false;
   public configuracionInfomesForm!: FormGroup;
   public parametroConfiguracionInfForm!: FormGroup;
-  public configuracionInformes: any = [];
+  public configuracionInformesDina: any = [];
+  public configuracionInformesPred: any = [];
   public configuracionParametrosInformes: any = [];
   public configuracionParametrosInformesNoCoi: any = [];
   public configuracionParametrosInformesTbl: any = [];
@@ -81,8 +82,9 @@ export class ConfiguracionInformesComponent implements OnInit {
       idConfiguracion: [{ value: '', disabled: true }],
       nombreInforme: ['', Validators.required],
       nombreSP: ['', Validators.required],
-      accionEjecuta: ['', Validators.required],
-      idModulo: [0, Validators.required]
+      accionEjecuta: [''],
+      idModulo: [0, Validators.required], 
+      idTipo: [0]
     });
 
     this.parametroConfiguracionInfForm = this.fb.group({
@@ -93,7 +95,7 @@ export class ConfiguracionInformesComponent implements OnInit {
       tamanoCampo: ['', Validators.required],
       requerido: [false],
       idTipo: [null],
-
+      nombreFiltro: [''],
     })
   }
 
@@ -127,7 +129,8 @@ export class ConfiguracionInformesComponent implements OnInit {
       tamanoCampo: parametro.TamanoCampo,
       orden: parametro.Orden,
       requerido: parametro.Requerido,
-      idTipo: parametro.IdTipo
+      idTipo: parametro.IdTipo,
+      nombreFiltro: parametro.NombreFiltro
     });
 
     setTimeout(() => {
@@ -199,7 +202,8 @@ export class ConfiguracionInformesComponent implements OnInit {
         TipoDato: formValue.tipoDato,
         TamanoCampo: formValue.tamanoCampo,
         Requerido: formValue.requerido,
-        IdTipo: formValue.idTipo
+        IdTipo: formValue.idTipo,
+        NombreFiltro: formValue.nombreFiltro
       }
 
       //Evitar que en el arreglo se puedan duplicar el orden de campos
@@ -281,7 +285,17 @@ export class ConfiguracionInformesComponent implements OnInit {
       next: (respuesta) => {
 
         setTimeout(() => {
-          this.configuracionInformes = respuesta.map((config: any) => {
+          this.configuracionInformesPred = respuesta.filter((config: any) => config.IdTipo === false)
+          .map((config: any) => {
+            const operacion = this.Operaciones.find(op => op.IdOperacion === config.IdModulo);
+            return {
+              ...config,
+              DescripcionOperacion: operacion ? operacion.Descripcion : 'No encontrada'
+            };
+          });
+
+          this.configuracionInformesDina = respuesta.filter((config: any) => config.IdTipo === true)
+          .map((config: any) => {
             const operacion = this.Operaciones.find(op => op.IdOperacion === config.IdModulo);
             return {
               ...config,
@@ -298,6 +312,12 @@ export class ConfiguracionInformesComponent implements OnInit {
 
 
   guardarConfiguracionInformes() {
+    if(this.valueInfSelected === 1){
+      this.configuracionInfomesForm.patchValue({idTipo: true});
+    }else{
+      this.configuracionInfomesForm.patchValue({idTipo: false});
+    }
+
     this.configuracionInformesS.GuardarConfiguracion(this.configuracionInfomesForm.value).subscribe(
       (respuesta) => {
         this.notif.success('Exitoso', 'Información guardada correctamente', ConfiguracionNotificacion.configRightTopNoClose);
@@ -318,6 +338,12 @@ export class ConfiguracionInformesComponent implements OnInit {
   }
 
   actualizarConfiguracionInformes() {
+    if(this.valueInfSelected === 1){
+      this.configuracionInfomesForm.patchValue({idTipo: true});
+    }else{
+      this.configuracionInfomesForm.patchValue({idTipo: false});
+    }
+    
     this.configuracionInformesS.ActualizarConfiguracion(this.configuracionInfomesForm.getRawValue()).subscribe(
       (respuesta) => {
         this.notif.success('Exitoso', 'Información actualizada correctamente', ConfiguracionNotificacion.configRightTopNoClose);
@@ -439,6 +465,53 @@ export class ConfiguracionInformesComponent implements OnInit {
   opcionInfSelected(e: Event): void {
       const selectElement = e.target as HTMLSelectElement;
       this.valueInfSelected = + selectElement.value;
+      this.configuracionInfomesForm.reset();
+  }
+
+  deleteConfig(parametro: any){
+    swal.fire({
+      title: '<strong> ¿Desea eliminar esta configuración? </strong>',
+      text: '',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Si',
+      cancelButtonText: 'No',
+      confirmButtonColor: 'rgb(13,165,80)',
+      cancelButtonColor: 'rgb(160,0,87)',
+      allowOutsideClick: false,
+      allowEscapeKey: false
+    }).then((results) => {
+      if (results.value) {
+        this.eliminarConfiguracionInformes(parametro);
+      }
+    });
+  }
+
+
+
+  eliminarConfiguracionInformes(parametro : any) {
+    this.selectRow(parametro);
+    this.configuracionInformesS.EliminarConfiguracion(this.configuracionInfomesForm.getRawValue()).subscribe(
+      (respuesta) => {
+        this.notif.success('Exitoso', 'Configuración eliminada correctamente.', ConfiguracionNotificacion.configRightTopNoClose);
+        this.obtenerConfiguracionInformes();
+      },
+      error => {
+        let mensaje = 'Ha ocurrido un error inesperado.';
+        try {
+          if (error && error.Mensaje) {
+            mensaje = error.Mensaje;
+          }
+        } catch (e) {
+          console.error('Error al parsear el mensaje del backend:', e);
+        }
+        this.notif.warning("Advertencia", mensaje, ConfiguracionNotificacion.configRightTop);
+
+      });
+  }
+
+  get configuracionInformesFiltrado(){
+    return this.valueInfSelected === 0 ? this.configuracionInformesPred : this.configuracionInformesDina;
   }
 
 }

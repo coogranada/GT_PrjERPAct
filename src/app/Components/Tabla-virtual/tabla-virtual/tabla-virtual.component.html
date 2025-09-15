@@ -1,0 +1,31 @@
+<div class="scroll-container table-responsive scrollTabla" (scroll)="onScroll($event)">
+    
+    <table class="table table-hover" id="tablaDatos">
+      <thead>
+        <tr>
+          <th *ngFor="let col of columnas" (click)="ordenarPor(col)" style="cursor: pointer;">
+            {{ col.endsWith('_M') ? col.slice(0, -2) : col }}
+            <span *ngIf="columnaOrden === col">
+                {{ ordenAscendente ? '↑' : '↓' }}
+              </span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let fila of filasVisibles">
+          <td *ngFor="let col of columnas" [ngClass]="{'alinear-derecha': col?.endsWith('_M')}">
+            {{ getValor(fila, col) }}
+          </td>
+        </tr>
+        <tr *ngIf="filasVisibles.length < datos.length">
+            <td [attr.colspan]="columnas.length" class="text-center">
+              Cargando más registros...
+            </td>
+          </tr>
+      </tbody>
+    </table>
+    <div class="col-md-12 col-lg-12 col-sm-12 text-right">
+      <button class="btn btn-secondary btn-sm" (click)="copiarTabla()">copiar</button>
+  </div>
+  </div>
+  

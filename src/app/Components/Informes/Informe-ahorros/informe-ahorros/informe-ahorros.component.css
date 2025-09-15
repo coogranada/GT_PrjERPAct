@@ -84,4 +84,35 @@
     /* Color de fondo gris para la fila seleccionada */
 }
 
+.scrollTabla {
+    max-height: 500px !important;   
+    overflow-y: auto;  
+    overflow-x: auto;  
+    width: 100%;       
+    position: relative;   
+}
+
+.scrollTablaFiltros {
+    max-height: 265px;
+    overflow-y: scroll;
+}
+
+.scrollTablaCampos {
+    max-height: 479px;
+    overflow-y: scroll;
+}
   
+
+.centrarContenido {
+    color: #333333;
+    text-align: center;      
+    vertical-align: middle; 
+    padding: 10px;
+}
+  
+.encabezadoTablas {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #ffffff;
+}

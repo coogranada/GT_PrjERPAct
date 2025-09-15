@@ -5,5 +5,6 @@ export interface SPParametros{
     TipoDato : string,
     TamanoCampo : string,
     Requerido : Boolean,
-    IdTipo : number
+    IdTipo : number,
+    NombreFiltro : string
 }

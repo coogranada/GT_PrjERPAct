@@ -1,0 +1,31 @@
+.scroll-container {
+    max-height: 480px !important;
+    overflow-y: auto;
+    position: relative;
+ }
+ .table {
+    width: 100%;
+    border-collapse: collapse;
+ }
+ .table thead {
+    position: sticky;
+    top: 0;
+    background-color: #fff;  
+    z-index: 10; 
+ }
+ .table th {
+    font-weight: bold;
+    padding: 10px; 
+ }
+ .table tbody tr {
+    height: 40px !important;
+ }
+ .table td {
+    vertical-align: middle;
+    padding: 1px 5px 0;
+    white-space: nowrap;
+ }
+
+ .alinear-derecha{
+   text-align: right !important;
+}

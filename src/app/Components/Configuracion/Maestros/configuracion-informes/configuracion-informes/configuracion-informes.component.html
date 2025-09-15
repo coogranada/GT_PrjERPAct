@@ -29,8 +29,8 @@
                 <div class="col-xs-12 col-md-6 col-lg-6">
                     <div class="form-group d-flex align-items-center">
                         <select class="form-control ml-2" id="select" (change)="opcionInfSelected($event)">
-                            <option value=1>Predeterminados</option>
-                            <option value=2>Dinámicos</option>
+                            <option value=0>Predeterminados</option>
+                            <option value=1>Dinámicos</option>
                         </select>
                     </div>
                 </div>
@@ -41,7 +41,8 @@
 
 </div>
 
-<div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatosPre" *ngIf="valueInfSelected == 1">
+<div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatosPre" 
+>
     <div class="panel-body ">
         <form [formGroup]="configuracionInfomesForm" autocomplete="off">
             <div class="panel-body doNotPrint">
@@ -66,9 +67,9 @@
     
                     <div class="col-md-2 mt-3 div-espacio">
                     </div>
+
                     <div class="col-md-5 mt-3 div-espacio">
-                        <label for="accion" class="form-label">Acción</label><span class="text-danger ObligatorioGrande">
-                            *</span>
+                        <label for="accion" class="form-label">Acción</label>
                         <input type="text" id="accionEjecuta" class="form-control" formControlName="accionEjecuta"
                             name="accionEjecuta" maxlength="20">
                     </div>
@@ -108,7 +109,7 @@
     </div>
 </div> 
 
-<div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatosPre" *ngIf="valueInfSelected == 1">
+<div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatosPre" >
     <div class="panel-body ">
 
         <div class="table-responsive scrollTabla">
@@ -124,7 +125,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let item of configuracionInformes">
+                    <tr *ngFor="let item of configuracionInformesFiltrado">
                         <td>{{ item.IdConfiguracion }}</td>
                         <td>{{ item.NombreInforme }}</td>
                         <td>{{ item.NombreSP }}</td>
@@ -135,7 +136,10 @@
                                 (click)="IrArriba()">
                                 <i class="icon-pencil"></i></button> &nbsp;
                             <button class="btn Gt-btn-morado btn-icon legitRipple" (click)="configurarParametros(item)">
-                                <i class="glyphicon glyphicon-cog"></i></button>
+                                <i class="glyphicon glyphicon-cog"></i></button>   &nbsp;
+                                <button class="btn Gt-btn-morado btn-icon legitRipple"
+                                    (click)="deleteConfig(item)">
+                                    <i class="glyphicon glyphicon-trash"></i></button>
                         </td>
                     </tr>
                 </tbody>
@@ -143,73 +147,6 @@
         </div>
     </div>
 </div>
-
-<div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatosPre" *ngIf="valueInfSelected == 2">
-    <div class="panel-body ">
-        <form [formGroup]="configuracionInfomesForm" autocomplete="off">
-            <div class="panel-body doNotPrint">
-            <label >Informes Dinámicos</label>
-                <div class="row mb-3">
-                    <div class="col-md-2">
-                        <label for="idConfiguracion" class="form-label">ID</label>
-                        <input type="text" id="idConfiguracion" class="form-control" formControlName="idConfiguracion">
-                    </div>
-                    <div class="col-md-5">
-                        <label for="nombreInforme" class="form-label">Nombre Informe</label><span
-                            class="text-danger ObligatorioGrande"> *</span>
-                        <input type="text" id="nombreInforme" class="form-control" formControlName="nombreInforme"
-                            name="nombreInforme" maxlength="50">
-                    </div>
-                    <div class="col-md-5">
-                        <label for="nombreSP" class="form-label">Nombre SP</label><span
-                            class="text-danger ObligatorioGrande"> *</span>
-                        <input type="text" id="nombreSP" class="form-control" formControlName="nombreSP" name="nombreSP"
-                            maxlength="50">
-                    </div>
-    
-                    <div class="col-md-2 mt-3 div-espacio">
-                    </div>
-                    <div class="col-md-5 mt-3 div-espacio">
-                        <label for="accion" class="form-label">Acción</label><span class="text-danger ObligatorioGrande">
-                            *</span>
-                        <input type="text" id="accionEjecuta" class="form-control" formControlName="accionEjecuta"
-                            name="accionEjecuta" maxlength="20">
-                    </div>
-                    <div class="col-md-5 mt-3 div-espacio">
-                        <label for="idModulo" class="form-label">Módulo</label><span class="text-danger ObligatorioGrande">
-                            *</span>
-                        <select id="idModulo" class="form-control" name="idModulo" formControlName="idModulo">
-                            <option value="0">--Seleccione--</option>
-                            <option *ngFor="let item of Operaciones" [value]="item.IdOperacion">
-                                {{item.Descripcion}}
-                            </option>
-                        </select>
-                    </div>
-                </div>
-    
-                <div class="col-xs-12 col-md-12 col-lg-12" style="justify-items: end; padding: 1em;">
-                    <div class="actions clearfix">
-                        <button class="btn Gt-btn-morado btn-icon legitRipple" type="reset">
-                            LIMPIAR
-                        </button>&nbsp;
-    
-                        <button class="btn Gt-btn-verde btn-icon legitRipple" type="button"
-                            (click)="guardarConfiguracionInformes()">
-                            <i class=""></i>&nbsp; GUARDAR
-                        </button>&nbsp;
-    
-                        <button class="btn Gt-btn-verde btn-icon legitRipple" type="button"
-                            (click)="actualizarConfiguracionInformes()">
-                            <i class=""></i>&nbsp; ACTUALIZAR
-                        </button>
-    
-                    </div>
-                </div>
-    
-            </div>
-        </form>
-    </div>
-</div> 
 
 
 
@@ -228,8 +165,8 @@
                         style="text-align: justify; margin-bottom: 10px; padding-bottom: 1px; ">
                         <div>
                             <p>
-                                Recuerde utilizar la palabra <strong>Reservado</strong> en el nombre del campo, para que
-                                éste quede oculto al usuario final. El campo de acción debe llevar requerido en
+                                La palabra <strong>Reservado</strong> en el parámetro <strong>Accion</strong> ocultará el campo al usuario final. 
+                                El campo de acción debe llevar requerido en
                                 <strong>false</strong>. <a (click)="mostrarListas()">Haciendo
                                     click en esta área</a> puede revisar las listas para identificar el código de
                                 filtro de los campos tipo <strong>selectn</strong>.
@@ -297,6 +234,7 @@
                                             <option value="number">number</option>
                                             <option value="datetime">datetime</option>
                                             <option value="selectn">selectn</option>
+                                            <option value="money">money</option>
                                         </select>
                                     </div>
                                 </div>
@@ -326,6 +264,11 @@
                                             </option>
                                         </select>
                                     </div>
+                                    <div class="col-md-3">
+                                        <label for="nombreFiltro" class="form-label">Nombre filtro:</label>
+                                        <input type="text" id="nombreFiltro" class="form-control" maxlength="70"
+                                            formControlName="nombreFiltro">
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -352,7 +295,7 @@
                     <div class="col-md-12">
                         <hr>
                         <label>Configuración actual:</label>
-                        <div class="table-responsive scrollTabla">
+                        <div class="table-responsive scrollTabla alto-personalizado">
                             <table id="TablaParametrosConf" class="table table-sm table-hover sticky-last-column">
                                 <thead>
                                     <tr>
@@ -364,6 +307,7 @@
                                         <th>Tamaño</th>
                                         <th>Requerido</th>
                                         <th>Código filtro</th>
+                                        <th>Nombre filtro</th>
                                         <th>Opciones</th>
                                     </tr>
                                 </thead>
@@ -377,6 +321,7 @@
                                         <td>{{item.TamanoCampo}}</td>
                                         <td>{{item.Requerido}}</td>
                                         <td>{{item.IdTipo}}</td>
+                                        <td>{{item.NombreFiltro}}</td>
                                         <td> <button class="btn Gt-btn-verde btn-icon legitRipple"
                                                 (click)="selectRowParamTbl(item)">
                                                 <i class="glyphicon glyphicon-pencil"></i></button> &nbsp;
@@ -395,12 +340,11 @@
 
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal" (click)="cerrarListas()">Cerrar</button>
                 <button class="btn Gt-btn-verde btn-icon legitRipple" type="button"
                     (click)="guardarParametrosConfiguracion()">
                     <i class=""></i>&nbsp; GUARDAR
                 </button>
-
-                <!--<button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button> -->
             </div>
         </div>
     </div>

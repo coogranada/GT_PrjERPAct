@@ -38,6 +38,7 @@ import { LogGestionClientesComponent } from '../Components/Informes/log-auditori
 import { LogMisProductosComponent } from '../Components/Informes/log-auditoria/log-mis-productos/log-mis-productos.component';
 import { LogProductosVirtualesComponent } from '../Components/Informes/log-auditoria/log-productos-virtuales/log-productos-virtuales.component';
 import { InformeAhorrosComponent } from '../Components/Informes/Informe-ahorros/informe-ahorros/informe-ahorros.component';
+import { TablaVirtualComponent } from '../Components/Tabla-virtual/tabla-virtual/tabla-virtual.component';
 
 
 @NgModule({
@@ -74,7 +75,8 @@ import { InformeAhorrosComponent } from '../Components/Informes/Informe-ahorros/
     LogLogGeneralesComponent,
     LogGestionClientesComponent,
     LogMisProductosComponent,
-    LogProductosVirtualesComponent
+    LogProductosVirtualesComponent,
+    TablaVirtualComponent
   ],
   imports: [
     CommonModule,
