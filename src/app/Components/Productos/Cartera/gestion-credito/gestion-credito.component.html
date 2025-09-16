@@ -85,9 +85,12 @@
                             </span>
                         </div>
                         <div class="col-xs-6 col-md-5 col-lg-2">
-                            <input type="text" class="form-control" tooltip="Nombre" placement="top" show-delay="500" formControlName="BuscarNombre" (input)="gestionCreditoForm.get('BuscarDocumento')?.reset()" />
+                            <input type="text" class="form-control" tooltip="Nombre" placement="top" show-delay="500" formControlName="BuscarNombre" (input)="gestionCreditoForm.get('BuscarDocumento')?.reset()" maxlength="100"/>
                             <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['BuscarNombre'].errors?.['pattern']">
-                                El nombre no es valido.
+                                Caracteres no válidos.
+                            </span>
+                            <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['BuscarNombre'].errors?.['minlength']">
+                                Debe tener al menos 6 caracteres.
                             </span>
                         </div>
                         <button type="button" class="btn Gt-btn-verde btn-icon" [disabled]="gestionCreditoForm.get('BuscarDocumento')?.disabled || gestionCreditoForm.controls['BuscarNombre'].invalid" (click)="onClickBuscarCuentaPorCliente()">
