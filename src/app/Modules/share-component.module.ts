@@ -5,10 +5,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxLoadingModule } from 'ngx-loading';
 import { NguiAutoCompleteModule } from '@ngui/auto-complete';
 import { TagInputModule } from 'ngx-chips';
+import { TablaVirtualComponent } from '../Components/Tabla-virtual/tabla-virtual/tabla-virtual.component';
 
 
 @NgModule({
-  declarations: [SolicitudesGestionesComponent],
+  declarations: [SolicitudesGestionesComponent, TablaVirtualComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -19,7 +20,8 @@ import { TagInputModule } from 'ngx-chips';
     TagInputModule ,
     ReactiveFormsModule.withConfig({callSetDisabledState: 'whenDisabledForLegacyCode'})
   ],exports:[
-    SolicitudesGestionesComponent
+    SolicitudesGestionesComponent,
+    TablaVirtualComponent
   ]
 })
 export class ShareComponentModule { }

@@ -38,7 +38,7 @@ import { LogGestionClientesComponent } from '../Components/Informes/log-auditori
 import { LogMisProductosComponent } from '../Components/Informes/log-auditoria/log-mis-productos/log-mis-productos.component';
 import { LogProductosVirtualesComponent } from '../Components/Informes/log-auditoria/log-productos-virtuales/log-productos-virtuales.component';
 import { InformeAhorrosComponent } from '../Components/Informes/Informe-ahorros/informe-ahorros/informe-ahorros.component';
-import { TablaVirtualComponent } from '../Components/Tabla-virtual/tabla-virtual/tabla-virtual.component';
+import { ShareComponentModule } from './share-component.module';
 
 
 @NgModule({
@@ -76,7 +76,6 @@ import { TablaVirtualComponent } from '../Components/Tabla-virtual/tabla-virtual
     LogGestionClientesComponent,
     LogMisProductosComponent,
     LogProductosVirtualesComponent,
-    TablaVirtualComponent
   ],
   imports: [
     CommonModule,
@@ -87,7 +86,8 @@ import { TablaVirtualComponent } from '../Components/Tabla-virtual/tabla-virtual
     NgxLoadingModule.forRoot({
       backdropBackgroundColour: 'rgba(255,255,255,0.8)'
     }),
-    ReactiveFormsModule.withConfig({callSetDisabledState: 'whenDisabledForLegacyCode'})
+    ReactiveFormsModule.withConfig({callSetDisabledState: 'whenDisabledForLegacyCode'}),
+    ShareComponentModule
   ]
 })
 export class InformesModule { }
