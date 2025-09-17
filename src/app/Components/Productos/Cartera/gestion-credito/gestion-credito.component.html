@@ -467,39 +467,17 @@
     <div class="panel-body">
         <div class="col-xs-12 col-md-12 col-lg-12">
             <div class="tabbable">
-                <ul class="nav nav-tabs">
-
-                    <li id="Datos" (click)="devolverTab(1)" [ngClass]="{'activar': activaDatos === true }">
+                <ul class="nav nav-tabs">      
+                    <li  class="nav-item" id="Datos" (click)="devolverTab(1)" [ngClass]="{'activar': activaDatos === true }">
                         <a href="#tab1" data-toggle="tab">Datos</a>
                     </li>
-                    <li id="Saldo" (click)="devolverTab(2)" [ngClass]="{'activar': activaSaldos === true }">
+                    <li  class="nav-item"id="Saldo" (click)="devolverTab(2)" [ngClass]="{'activar': activaSaldos === true }">
                         <a href="#tab2" data-toggle="tab">Saldos</a>
-                    </li>
-                    <!-- <li id="cupo" (click)="devolverTab(3)" [ngClass]="{'activar': activaCupo === true }"
-                        *ngIf="!MostrarCupo">
-                        <a href="#tab3" data-toggle="tab">Cupo</a>
-                    </li>
-                    <li id="garantia" (click)="devolverTab(4)" [ngClass]="{'activar': activaGarantia === true }"
-                        *ngIf="!MostrarGarantias">
-                        <a href="#tab4" data-toggle="tab">Garantías</a>
-                    </li>
-                    <li id="saldos" (click)="devolverTab(5)" [ngClass]="{'activar': activaSaldos === true }"
-                        *ngIf="!MostrarDemas">
-                        <a href="#tab5" data-toggle="tab">Saldos</a>
-                    </li>
-                    <li id="autorizados" (click)="devolverTab(6)" [ngClass]="{'activar': activaAutorizados === true }"
-                        *ngIf="!MostrarDemas">
-                        <a href="#tab6" data-toggle="tab">Autorizados</a>
-                    </li>
-                    <li id="historial" (click)="devolverTab(7)" [ngClass]="{'activar': activaHistorial === true }"
-                        *ngIf="!MostrarDemas">
-                        <a href="#tab7" data-toggle="tab">Historial</a>
-                    </li> -->
-
+                    </li>   
                 </ul>
                 <div class="tab-content">
                     <!-- Inicio tab1 -->
-                    <div class="tab-pane" id="tab1">
+                    <div class="tab-pane active" id="tab1">
                         <form method="get" [formGroup]="DatosForm">
                             <div class="col-xs-12 col-md-12 col-lg-12">
                                 <div class="row">
@@ -847,111 +825,7 @@
                          </div>
                         </form>
                     </div>
-                    <!-- Fin tab2 -->
-                    <!-- Inicio tab3 -->
-                    <div class="tab-pane" id="tab3">
-
-                    </div>
-                    <!-- Fin tab3 -->
-                    <!-- Inicio tab4-->
-                    <!-- <div class="tab-pane " id="tab4">
-                        <div class="col-xs-12 col-md-12 col-lg-12">
-                            <label class="textNegrilla">Codeudor</label>
-                        </div>
-                        <div class="col-xs-12 col-md-12 col-lg-12" id="GarantiaCodeudor">
-                            <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="dataObjetCd.length == 0">
-                                <br>
-                                <div class="alert alert-secondary" role="alert">
-                                    No hay registros
-                                </div>
-                            </div>
-
-                            <div class="col-xs-12 col-md-12 col-lg-12">
-                                <div class="table-responsive scrollTabla panel panel-default"
-                                    *ngIf="dataObjetCd.length > 0">
-                                    <table id="TablaDatosCodeudor" class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-bold">Documento</th>
-                                                <th class="text-bold">Nombre</th>
-                                                <th class="text-bold">Celular</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody *ngFor="let Codeudor of dataObjetCd; let i=index">
-                                            <tr>
-                                                <td>{{Codeudor.NumeroDocumento}}</td>
-                                                <td>{{Codeudor.PrimerApellido}} {{Codeudor.SegundoApellido}}
-                                                    {{Codeudor.PrimerNombre}} {{Codeudor.SegundoNombre}}</td>
-                                                <td>{{Codeudor.Celular}}</td>
-
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="col-xs-12 col-md-12 col-lg-12">
-                            <label class="textNegrilla">Real</label>
-                        </div>
-                        <div class="col-xs-12 col-md-12 col-lg-12" id="GarantiaReal">
-                            <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="dataObjetR.length == 0">
-                                <br>
-                                <div class="alert alert-secondary" role="alert">
-                                    No hay registros
-                                </div>
-                            </div>
-
-                            <div class="col-xs-12 col-md-12 col-lg-12">
-                                <div class="table-responsive scrollTabla panel panel-default"
-                                    *ngIf="dataObjetR.length > 0">
-                                    <table id="TablaDatosReal" class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-bold">Tipo garantía</th>
-                                                <th class="text-bold">Garantía</th>
-                                                <th class="text-bold">Descripción</th>
-                                                <th class="text-bold">Valor cobertura</th>
-                                                <th class="text-bold">Valor respaldado</th>
-                                                <th class="text-bold">Valor disponible</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody *ngFor="let Real of dataObjetR; let i=index">
-                                            <tr>
-                                                <td>{{Real.TipoGarantia}}</td>
-                                                <td>{{Real.NumeroMatricula}}</td>
-                                                <td>{{Real.Descripcion}}</td>
-                                                <td>{{Real.ValorCobertura | currency:'':'' : '1.2-2'}}</td>
-                                                <td>{{Real.ValorRespaldado | currency:'':'' : '1.2-2'}}</td>
-                                                <td>{{ (dataObjetR.length === 1 ? Real.ValorDisponible : 0) |
-                                                    currency:'':'' : '1.2-2'}}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <br>
-                                    <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="dataObjetR.length > 1">
-                                        <div class="col-xs-1 col-md-3 col-lg-4">
-                                            <label><strong>Total cobertura: </strong>{{valorCoberturaTotalGar |
-                                                currency: '$' }}</label>
-                                        </div>
-                                        <div class="col-xs-1 col-md-3 col-lg-4">
-                                            <label><strong>Total respaldado: </strong>{{valorRespaldadoTotalGar |
-                                                currency: '$' }}</label>
-                                        </div>
-                                        <div class="col-xs-1 col-md-3 col-lg-4">
-                                            <label><strong>Total disponible: </strong>{{valorDisponibleTotalGar |
-                                                currency: '$' }}</label>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </div> -->
-                    <!-- Fin tab4 -->                    
+                    <!-- Fin tab2 -->                     
                 </div>
             </div>
         </div>

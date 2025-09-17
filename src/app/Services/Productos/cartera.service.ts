@@ -33,8 +33,8 @@ export class CarteraService {
         this.url = `${this.environment.Url}/BuscarDatosCartera?IdCuenta=${IdCuenta}`;
         return this._http.get<any>(this.url);
     }
-     getSaldosCartera(lngcuenta: number): Observable<any> {
-         this.url = `${this.environment.Url}/BuscarSaldosCartera?IdCuenta=${lngcuenta}`;
+     getSaldosCartera(IdCuenta: number): Observable<any> {
+         this.url = `${this.environment.Url}/BuscarSaldosCartera?IdCuenta=${IdCuenta}`;
         return this._http.get<any>(this.url);
       }
 

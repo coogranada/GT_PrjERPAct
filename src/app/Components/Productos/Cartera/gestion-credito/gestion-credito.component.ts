@@ -72,6 +72,8 @@ export class GestionCreditoComponent {
     this.ObtenerFormasPago();
     // Activa tab datos  
     this.devolverTab(1);
+    $('#Datos').addClass('activar');
+    $('#Datos').addClass('active');
   }
 
   validateForm() {
