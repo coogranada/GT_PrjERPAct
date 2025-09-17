@@ -23,7 +23,7 @@
             <div class="row">
                 <div class="col-xs-12 col-md-3 col-lg-3 align-items-center">
                     <br>
-                    <label class="textNegrilla mb-0">Tipo informe:</label>
+                    <label class="textNegrilla mb-0">Operación:</label>
                     <span class="text-danger ObligatorioGrande"> *</span>
                 </div>
                 <div class="col-xs-12 col-md-6 col-lg-6">
@@ -31,6 +31,7 @@
                         <select class="form-control ml-2" id="select" (change)="opcionInfSelected($event)">
                             <option value=0>Predeterminados</option>
                             <option value=1>Dinámicos</option>
+                            <option value=2>Permisos</option>
                         </select>
                     </div>
                 </div>
@@ -41,12 +42,11 @@
 
 </div>
 
-<div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatosPre" 
->
+<div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatosPre" *ngIf="valueInfSelected !== 2">
     <div class="panel-body ">
         <form [formGroup]="configuracionInfomesForm" autocomplete="off">
             <div class="panel-body doNotPrint">
-    
+
                 <div class="row mb-3">
                     <div class="col-md-2">
                         <label for="idConfiguracion" class="form-label">ID</label>
@@ -64,7 +64,7 @@
                         <input type="text" id="nombreSP" class="form-control" formControlName="nombreSP" name="nombreSP"
                             maxlength="50">
                     </div>
-    
+
                     <div class="col-md-2 mt-3 div-espacio">
                     </div>
 
@@ -74,7 +74,8 @@
                             name="accionEjecuta" maxlength="20">
                     </div>
                     <div class="col-md-5 mt-3 div-espacio">
-                        <label for="idModulo" class="form-label">Módulo</label><span class="text-danger ObligatorioGrande">
+                        <label for="idModulo" class="form-label">Módulo</label><span
+                            class="text-danger ObligatorioGrande">
                             *</span>
                         <select id="idModulo" class="form-control" name="idModulo" formControlName="idModulo">
                             <option value="0">--Seleccione--</option>
@@ -84,32 +85,32 @@
                         </select>
                     </div>
                 </div>
-    
+
                 <div class="col-xs-12 col-md-12 col-lg-12" style="justify-items: end; padding: 1em;">
                     <div class="actions clearfix">
                         <button class="btn Gt-btn-morado btn-icon legitRipple" type="reset">
                             LIMPIAR
                         </button>&nbsp;
-    
+
                         <button class="btn Gt-btn-verde btn-icon legitRipple" type="button"
                             (click)="guardarConfiguracionInformes()">
                             <i class=""></i>&nbsp; GUARDAR
                         </button>&nbsp;
-    
+
                         <button class="btn Gt-btn-verde btn-icon legitRipple" type="button"
                             (click)="actualizarConfiguracionInformes()">
                             <i class=""></i>&nbsp; ACTUALIZAR
                         </button>
-    
+
                     </div>
                 </div>
-    
+
             </div>
         </form>
     </div>
-</div> 
+</div>
 
-<div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatosPre" >
+<div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatosPre" *ngIf="valueInfSelected !== 2">
     <div class="panel-body ">
 
         <div class="table-responsive scrollTabla">
@@ -136,10 +137,9 @@
                                 (click)="IrArriba()">
                                 <i class="icon-pencil"></i></button> &nbsp;
                             <button class="btn Gt-btn-morado btn-icon legitRipple" (click)="configurarParametros(item)">
-                                <i class="glyphicon glyphicon-cog"></i></button>   &nbsp;
-                                <button class="btn Gt-btn-morado btn-icon legitRipple"
-                                    (click)="deleteConfig(item)">
-                                    <i class="glyphicon glyphicon-trash"></i></button>
+                                <i class="glyphicon glyphicon-cog"></i></button> &nbsp;
+                            <button class="btn Gt-btn-morado btn-icon legitRipple" (click)="deleteConfig(item)">
+                                <i class="glyphicon glyphicon-trash"></i></button>
                         </td>
                     </tr>
                 </tbody>
@@ -148,6 +148,10 @@
     </div>
 </div>
 
+
+<div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatosPerm" *ngIf="valueInfSelected == 2">
+    <app-permisos-informes></app-permisos-informes>
+</div>
 
 
 <input type="hidden" #ShowModalList data-toggle="modal" data-target="#ShowModalList" data-popup="tooltip"
@@ -164,10 +168,7 @@
                     <div class="alert alert-secondary d-flex align-items-center" role="alert"
                         style="text-align: justify; margin-bottom: 10px; padding-bottom: 1px; ">
                         <div>
-                            <p>
-                                La palabra <strong>Reservado</strong> en el parámetro <strong>Accion</strong> ocultará el campo al usuario final. 
-                                El campo de acción debe llevar requerido en
-                                <strong>false</strong>. <a (click)="mostrarListas()">Haciendo
+                            <p> <a (click)="mostrarListas()">Haciendo
                                     click en esta área</a> puede revisar las listas para identificar el código de
                                 filtro de los campos tipo <strong>selectn</strong>.
                             </p>
@@ -264,8 +265,10 @@
                                             </option>
                                         </select>
                                     </div>
-                                    <div class="col-md-3">
-                                        <label for="nombreFiltro" class="form-label">Nombre filtro:</label>
+                                    <div class="col-md-3" *ngIf="valueInfSelected == 1">
+                                        <label for="nombreFiltro" class="form-label">Nombre filtro:</label><span
+                                            class="text-danger ObligatorioGrande">
+                                            *</span>
                                         <input type="text" id="nombreFiltro" class="form-control" maxlength="70"
                                             formControlName="nombreFiltro">
                                     </div>
@@ -307,7 +310,7 @@
                                         <th>Tamaño</th>
                                         <th>Requerido</th>
                                         <th>Código filtro</th>
-                                        <th>Nombre filtro</th>
+                                        <th *ngIf="valueInfSelected == 1">Nombre filtro</th>
                                         <th>Opciones</th>
                                     </tr>
                                 </thead>
@@ -321,7 +324,7 @@
                                         <td>{{item.TamanoCampo}}</td>
                                         <td>{{item.Requerido}}</td>
                                         <td>{{item.IdTipo}}</td>
-                                        <td>{{item.NombreFiltro}}</td>
+                                        <td *ngIf="valueInfSelected == 1">{{item.NombreFiltro}}</td>
                                         <td> <button class="btn Gt-btn-verde btn-icon legitRipple"
                                                 (click)="selectRowParamTbl(item)">
                                                 <i class="glyphicon glyphicon-pencil"></i></button> &nbsp;
@@ -340,7 +343,8 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal" (click)="cerrarListas()">Cerrar</button>
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal"
+                    (click)="cerrarListas()">Cerrar</button>
                 <button class="btn Gt-btn-verde btn-icon legitRipple" type="button"
                     (click)="guardarParametrosConfiguracion()">
                     <i class=""></i>&nbsp; GUARDAR
@@ -353,35 +357,39 @@
 
 
 <div class="fake-modal-container" *ngIf="mostrarModal">
-    <div class="modal-content" style="width: 88%; height: auto; margin: 20px auto;">
+    <div class="modal-content1" style="width: 88%; height: auto; margin: 20px auto;">
         <div class="modal-header bg-morado">
             <button type="button" class="close" (click)="cerrarListas()">&times;</button>
             <h6 class="modal-title">Listas disponibles</h6>
         </div>
         <div class="modal-body">
-            <div class="row mb-12">
-                <div class="row">
-                  <!--  <input type="text" (blur)="filtrarPorIdTipo()" id="filtroCodigo" class="form-control"
-                        formControlName="filtroCodigo" #filtroCodigo>-->
+            <div class="row mb-6">
+                <div class="col-6">
+                    <select class="form-control" [(ngModel)]="filtroBusqueda">
+                        <option value=0>--Seleccione--</option>
+                        <option *ngFor="let item of unicosPorIdClase" [value]="item.IdTipo">
+                            {{item.IdTipo}}
+                        </option>
+                    </select>
                 </div>
-                <div class="table-responsive scrollTabla">
-                    <table id="TablaListaCod" class="table table-sm table-hover">
-                        <thead>
-                            <tr>
-                                <th>Código filtro</th>
-                                <th>Id</th>
-                                <th>Descripción</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let item of listasCodigos">
-                                <td>{{item.IdTipo}}</td>
-                                <td>{{item.IdClase}}</td>
-                                <td>{{item.Descripcion}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            </div>
+            <div class="table-responsive scrollTabla">
+                <table id="TablaListaCod" class="table table-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th>Código filtro</th>
+                            <th>Id</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of listasFiltradas">
+                            <td>{{ item.IdTipo }}</td>
+                            <td>{{ item.IdClase }}</td>
+                            <td>{{ item.Descripcion }}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

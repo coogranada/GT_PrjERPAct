@@ -9,6 +9,7 @@ import { ConfiguracionNotificacion } from '../../../../../../environments/config
 import { OperacionesModulosService } from '../../../../../Services/Maestros/operaciones-modulos.service';
 import { NgxLoadingComponent } from 'ngx-loading';
 import swal from 'sweetalert2';
+import { PermisosInformesComponent } from '../permisos-informes/permisos-informes/permisos-informes.component';
 
 
 @Component({
@@ -21,6 +22,7 @@ import swal from 'sweetalert2';
 export class ConfiguracionInformesComponent implements OnInit {
   @ViewChild('ShowModalList', { static: true }) private ShowModalList!: ElementRef;
   @ViewChild('filtroCodigo') private filtroCodigoInput!: ElementRef;
+  @ViewChild(PermisosInformesComponent) permisosInformes!: PermisosInformesComponent;
 
   ngxLoadingComponent!: NgxLoadingComponent;
 
@@ -29,7 +31,7 @@ export class ConfiguracionInformesComponent implements OnInit {
   secondaryColour = 'rgb(13,165,80,0.7)';
 
   CodModuloAdmitidos = [82] //Aqui se debe adicionar los nuevos módulos asignados a los informes 
-
+  public filtroBusqueda = '';
   public selectedId: number = 0;
   public selectedIdConfig: number = 0;
   public valEditar: number = 0; //0- agregar 1- editar
@@ -113,12 +115,31 @@ export class ConfiguracionInformesComponent implements OnInit {
 
   selectRowParam(parametro: any) {
     this.valEditar = 0;
+
     this.parametroConfiguracionInfForm.patchValue({
       nombreParametro: parametro.NombreParametro,
       tipoDato: parametro.TipoDato,
-      tamanoCampo: parametro.TamanoCampo
+      tamanoCampo: parametro.TamanoCampo,
+      orden: this.calcularOrdenMaximo()+1
     });
+
+    if(parametro.NombreParametro.trim().toLowerCase().includes('@accion')){
+      this.parametroConfiguracionInfForm.patchValue({
+        nombreCampo: 'Reservado'
+      });
+    }
+
   }
+
+  calcularOrdenMaximo(): number {
+    const ordenes = this.configuracionParametrosInformesTbl.map((item : any)=> item.Orden);
+    let maximo = Math.max(...ordenes);
+    if(ordenes.length <= 0){
+      maximo = -1;
+    }
+    return maximo;
+  }
+  
 
   selectRowParamTbl(parametro: any) {
     this.valEditar = 1;
@@ -191,8 +212,9 @@ export class ConfiguracionInformesComponent implements OnInit {
         formValue.requerido = false;
       }
 
-      if (formValue.nombreCampo.trim().toLowerCase() == "reservado") {
+      if (formValue.nombreParametro.trim().toLowerCase().includes('@accion')) {
         formValue.requerido = false;
+        formValue.nombreCampo = 'Reservado';
       }
 
       const mappedValues = {
@@ -429,6 +451,22 @@ export class ConfiguracionInformesComponent implements OnInit {
     this.mostrarModal = true;
   }
 
+  get listasFiltradas() {
+    if (!this.filtroBusqueda) {
+      return this.listasCodigos;
+    }
+    //return this.listasCodigos.filter(item =>
+    //  Object.values(item).some((value : any) =>
+    //    value.toString().toLowerCase().includes(this.filtroBusqueda.toLowerCase())
+    //  )
+    //);
+
+    return this.listasCodigos.filter(item =>
+      item.IdTipo?.toString().toLowerCase()=== this.filtroBusqueda.toLowerCase()
+    );
+    
+  }
+
   cerrarListas(){
     this.mostrarModal = false;
   }
@@ -466,11 +504,25 @@ export class ConfiguracionInformesComponent implements OnInit {
       const selectElement = e.target as HTMLSelectElement;
       this.valueInfSelected = + selectElement.value;
       this.configuracionInfomesForm.reset();
+      this.actualizarValidacionNombreFiltro();
   }
 
+  actualizarValidacionNombreFiltro() {
+    const nombreFiltroControl = this.parametroConfiguracionInfForm.get('nombreFiltro');
+  
+    if (this.valueInfSelected === 1) {
+      nombreFiltroControl?.setValidators([Validators.required]);
+    } else {
+      nombreFiltroControl?.clearValidators();
+    }
+  
+    nombreFiltroControl?.updateValueAndValidity();
+  }
+
+  
   deleteConfig(parametro: any){
     swal.fire({
-      title: '<strong> ¿Desea eliminar esta configuración? </strong>',
+      title: '<strong> ¿Desea eliminar esta configuración y los permisos asociados a este? </strong>',
       text: '',
       icon: 'question',
       showCancelButton: true,

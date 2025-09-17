@@ -50,10 +50,11 @@
                     <div class="container">
                         <ul class="nav nav-tabs">
                             <li [class.active]="selectedTab === 'predeterminados'"
-                                (click)="selectTab('predeterminados')">
+                                (click)="selectTab('predeterminados')" *ngIf="configuracionInformesFiltro.length >= 1">
                                 <a>Informes predeterminados</a>
                             </li>
-                            <li [class.active]="selectedTab === 'dinamicos'" (click)="selectTab('dinamicos')">
+                            <li [class.active]="selectedTab === 'dinamicos'" 
+                             (click)="selectTab('dinamicos')" *ngIf="configuracionInformesFiltroDina.length >= 1" >
                                 <a>Informes dinámicos</a>
                             </li>
                         </ul>

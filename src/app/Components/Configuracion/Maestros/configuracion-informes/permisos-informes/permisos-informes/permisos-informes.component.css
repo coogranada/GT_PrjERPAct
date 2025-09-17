@@ -1,0 +1,17 @@
+.table tbody tr {
+    height: 40px !important;
+}
+
+.table td {
+    vertical-align: middle;
+    /* Alinea el contenido verticalmente en el centro */
+    padding: 1px 5px 0;
+    white-space: nowrap;
+}
+
+
+.selected-row {
+    background-color:rgba(160, 0, 87, 0.60) !important;
+    color: rgb(226, 226, 226);
+}
+

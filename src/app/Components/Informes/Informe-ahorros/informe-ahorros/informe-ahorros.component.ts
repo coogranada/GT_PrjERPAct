@@ -14,13 +14,14 @@ import { ExcelService } from '../../../../Services/General/excel.service';
 import { ConfiguracionInformesService } from '../../../../Services/Informes/configuracion-informes.service';
 import Swal from "sweetalert2";
 import { TablaVirtualComponent } from '../../../Tabla-virtual/tabla-virtual/tabla-virtual.component';
+import { InformePerfilService } from '../../../../Services/Maestros/informes-perfiles';
 
 
 @Component({
   selector: 'app-informe-ahorros',
   templateUrl: './informe-ahorros.component.html',
   styleUrl: './informe-ahorros.component.css',
-  providers: [OperacionesService, ModuleValidationService],
+  providers: [OperacionesService, ModuleValidationService, InformePerfilService],
   standalone: false
 })
 
@@ -34,7 +35,7 @@ export class InformeAhorrosComponent implements OnInit {
 
   primaryColour = 'rgb(13,165,80)';
   secondaryColour = 'rgb(13,165,80,0.7)';
-  selectedTab: string = 'predeterminados';
+  selectedTab: string = '';
   columnaOrden: string = '';
   ordenAscendente: boolean = true;
   listasPorParametro: { [nombreParametro: string]: any[] } = {};
@@ -43,6 +44,7 @@ export class InformeAhorrosComponent implements OnInit {
   public intervaloProgreso: any;
   public selectedId: number = 0;
   public idOficina: number = 0;
+  public idPerfil: number = 0;
   public OpcionSelected: Boolean = true;
   public validaOperacion: Boolean = true;
   public deshabilitarOficina: boolean = true;
@@ -74,12 +76,13 @@ export class InformeAhorrosComponent implements OnInit {
   public ListGenericoFiltro: any[] = [];
   public ListColumnasInf: any[] = [];
   public ListfilteredColumnasInf: any[] = [];
+  public permitidosResult: any [] = [];
   public formulario: FormGroup;
   public formularioD: FormGroup;
 
   CodModulo: number = 82
 
-  constructor(private excelReportService: ExcelService, private fb: FormBuilder, private configuracionInformesS: ConfiguracionInformesService, private informeAhorrosService: InformeAhorrosService, private operacionesService: OperacionesService, private el: ElementRef, private moduleValidationService: ModuleValidationService, private notif: ToastrService) {
+  constructor(private excelReportService: ExcelService, private fb: FormBuilder, private configuracionInformesS: ConfiguracionInformesService, private informeAhorrosService: InformeAhorrosService, private operacionesService: OperacionesService, private el: ElementRef, private moduleValidationService: ModuleValidationService, private notif: ToastrService, private InformePerfilS:InformePerfilService ) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -96,11 +99,25 @@ export class InformeAhorrosComponent implements OnInit {
     this.getOperaciones();
     $('#select').focus().select();
     this.getOficina();
+    this.obtenerInformesPermitidos();
     this.obtenerConfiguracionInformes();
     this.InitVariables()
     this.InitFiltros(this.idOficina);
     this.getListas();
   }
+
+  obtenerInformesPermitidos() {
+
+    this.InformePerfilS.ObtenerInformesPermitidosP(this.idPerfil).subscribe({
+      next: (respuesta) => {
+        this.permitidosResult = respuesta;
+      },
+      error: (err) => {
+        console.error('Error al cargar configuración informes:', err);
+      }
+    });
+  }
+
 
   getOperaciones() {
     let datas = localStorage.getItem("Data")
@@ -142,6 +159,7 @@ export class InformeAhorrosComponent implements OnInit {
     var resultDataStore = JSON.parse(window.atob(datas == null ? "" : datas));
     this.idOficina = Number(resultDataStore.NumeroOficina);
     this.nombreOficina = resultDataStore.Oficina;
+    this.idPerfil = Number(resultDataStore.idPerfilUsuario);
   }
 
   operacionBlur() {
@@ -157,13 +175,15 @@ export class InformeAhorrosComponent implements OnInit {
 
     this.OperacionSelect = operacion?.ERP_tblOperacion.Descripcion.toLowerCase();
 
-    this.configuracionInformesFiltro = this.configuracionInformes.filter(
-      (informe: any) => informe.IdModulo === this.selectedId && informe.IdTipo === false
-    );
+    this.configuracionInformesFiltro = this.configuracionInformes.filter((informe: any) =>{
+      return informe.IdModulo === this.selectedId && informe.IdTipo === false &&
+      this.permitidosResult.some((permiso) => permiso.IdInforme === informe.IdConfiguracion);
+    });
 
-    this.configuracionInformesFiltroDina = this.configuracionInformes.filter(
-      (informe: any) => informe.IdModulo === this.selectedId && informe.IdTipo === true
-    );
+    this.configuracionInformesFiltroDina = this.configuracionInformes.filter((informe: any) => {
+      return informe.IdModulo === this.selectedId && informe.IdTipo === true &&
+      this.permitidosResult.some((permiso) => permiso.IdInforme === informe.IdConfiguracion);
+    });
   }
 
   informeSelected(event: Event) {
@@ -303,6 +323,7 @@ export class InformeAhorrosComponent implements OnInit {
   }
 
   exportarExcel2() {
+    this.loading = true;
     let nombreInfrome;
 
     if(this.selectedTab == 'dinamicos'){
@@ -313,6 +334,7 @@ export class InformeAhorrosComponent implements OnInit {
 
     var data = null;
     if (!this.resultadoInforme || this.resultadoInforme.length === 0) {
+    this.loading = false ;
       this.notif.warning('Advertencia', 'No hay información para exportar.', ConfiguracionNotificacion.configRightTop);
     } else {
       data = this.resultadoInforme.map(row => {
@@ -329,6 +351,7 @@ export class InformeAhorrosComponent implements OnInit {
           }, {});
       });
       this.excelReportService.exportAsExcelFile(data, nombreInfrome)
+      this.loading = false ;
     }
   }
 
@@ -418,7 +441,6 @@ export class InformeAhorrosComponent implements OnInit {
   InitVariables() {
     const hoy = new Date();
     this.fechaMax = hoy.toISOString().split('T')[0]; // 'YYYY-MM-DD'
-    console.log("fecha calculada: " + this.fechaMax)
   }
 
   ModalCantidadRegistros(Cant: number, idDowload: boolean) {

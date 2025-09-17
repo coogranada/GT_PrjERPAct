@@ -1,0 +1,140 @@
+<form method="get" [formGroup]="permisosForm">
+    <div class="panel-body">
+        <div class="col-xs-12 col-md-12 col-lg-12">
+            <br>
+            <div class="col-xs-12 col-md-6 col-lg-6" id="Operacion">
+                <div class="row">
+                    <div class="col-xs-12 col-md-3 col-lg-3 align-items-center">
+                        <br>
+                        <label class="textNegrilla mb-0">Perfil:</label>
+                        <span class="text-danger ObligatorioGrande"> *</span>
+                    </div>
+                    <div class="col-xs-12 col-md-6 col-lg-6">
+                        <div class="form-group d-flex align-items-center">
+                            <select class="form-control" formControlName="selectPerfil" name="select"
+                                (change)="onPerfilChange($event)">
+                                <option value=0>--Seleccione--</option>
+                                <option *ngFor="let perfil of dataPerfil" [value]="perfil.IdPerfil">
+                                    {{perfil.Nombre}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--
+            <div class="col-xs-12 col-md-6 col-lg-6" id="Modulo">
+                <div class="row">
+                    <div class="col-xs-12 col-md-3 col-lg-3 align-items-center">
+                        <br>
+                        <label class="textNegrilla mb-0">Módulo:</label>
+                        <span class="text-danger ObligatorioGrande"> *</span>
+                    </div>
+                    <div class="col-xs-12 col-md-6 col-lg-6">
+                        <div class="form-group d-flex align-items-center">
+                            <select class="form-control" name="selectModulo">
+                               <option value="0">--Seleccione--</option>
+                                <option *ngFor="let modulo of dataModulo" [value]="modulo.IdOperacion">
+                                    {{modulo.Descripcion}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            -->
+        </div>
+        <br />
+    </div>
+
+    <div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatos" *ngIf="selectedPerfil > 0">
+        <div class="panel-body ">
+            <div class="row">
+                <div class="col-xs-10 col-md-5">
+                    <div class="table-responsive scrollTabla">
+                        <table id="TablaAreas" class="table table-hover tablaBorder table-fixed">
+                            <thead>
+                                <tr colspan="2">
+                                    <th><strong>Denegados</strong></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let denegados of denegadosResult; let i = index"
+                                    [ngClass]="{'selected-row': selectedRow === denegados}">
+                                    <td style="cursor: pointer" (click)="selectRow(denegados, 1)">
+                                        {{denegados.NombreInforme}}
+                                    </td>
+                                    <td style="cursor: pointer" (click)="selectRow(denegados, 1)">
+                                        {{denegados.NombreModulo}}
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-xs-10 col-md-2 text-center  d-flex flex-column align-items-center">
+                    <p><button class="btn btn-default Gt-btn-verde btn-icon legitRipple" style="width: 40px;"
+                        (click)="AdicionarInfInd()">
+                            <i class="glyphicon glyphicon-chevron-right" style="font-size: 10px;"></i></button></p>
+
+                    <p><button class="btn btn-default btn-icon legitRipple Gt-btn-verde" style="width: 40px;"
+                        (click)="modificarMasivo('adicionar')">
+                            <i class="glyphicon glyphicon-chevron-right" style="font-size: 10px;"></i>
+                            <i class="glyphicon glyphicon-chevron-right"
+                                style="font-size: 10px; margin-left: -4px;"></i>
+                        </button></p>
+
+                    <p><button class="btn btn-default btn-icon legitRipple Gt-btn-morado"  style="width: 40px;"
+                        (click)="EliminarInfInd()">
+                            <i class="glyphicon glyphicon-chevron-left" style="font-size: 10px;" ></i></button></p>
+
+                    <p><button class="btn btn-default btn-icon legitRipple Gt-btn-morado"  style="width: 40px;"
+                        (click)="modificarMasivo('eliminar')">
+                            <i class="glyphicon glyphicon-chevron-left" style="font-size: 10px;"></i>
+                            <i class="glyphicon glyphicon-chevron-left" style="font-size: 10px; margin-left: -4px;"></i>
+                        </button></p>
+
+                </div>
+
+                <div class="col-xs-10 col-md-5">
+                    <div class="table-responsive scrollTabla">
+                        <table id="TablaAreas" class="table table-hover tablaBorder table-fixed">
+                            <thead>
+                                <tr colspan="2">
+                                    <th><strong>Permitidos</strong></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let permitidos of permitidosResult; let a = index"
+                                    [ngClass]="{'selected-row': selectedRow === permitidos}">
+                                    <td style="cursor: pointer" (click)="selectRow(permitidos, 2)">
+                                        {{permitidos.NombreInforme}}
+                                    </td>
+                                    <td style="cursor: pointer" (click)="selectRow(permitidos, 2)">
+                                        {{permitidos.NombreModulo}}
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12 col-lg-12 col-sm-12 panel panel-default"
+        *ngIf="selectedPerfil == 0 || selectedPerfil == null">
+        <div class="panel-body ">
+            <div class="row">
+                <div class="col-xs-6 col-md-4">
+                    Debe seleccionar un Perfil
+                </div>
+            </div>
+        </div>
+    </div>
+    <ngx-loading [show]="loading"
+        [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}"></ngx-loading>
+</form>
