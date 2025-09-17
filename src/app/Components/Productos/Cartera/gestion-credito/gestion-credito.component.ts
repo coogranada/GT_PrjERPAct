@@ -10,6 +10,7 @@ import { MiListaProductosService } from '../../../../Services/Informes/mi-lista-
 import { ToastrService } from 'ngx-toastr';
 import { ConfiguracionNotificacion } from '../../../../../environments/config.noticaciones';
 import Swal from 'sweetalert2';
+import { DetalleCartera } from '../../../../Models/Informes/MisProductos/mis-producto.model';
 
 @Component({
   selector: 'app-gestion-credito',
@@ -28,6 +29,7 @@ export class GestionCreditoComponent {
   public gestionCreditoOperacionForm!: FormGroup;
   public AsesorExternoForm!: FormGroup;
   public DatosForm!: FormGroup;
+  public SaldosForm!: FormGroup;
   public resultOperaciones : any;
   public bloquearConsultaCuenta : boolean = false;
   public BloquearBuscar = false;
@@ -49,7 +51,9 @@ export class GestionCreditoComponent {
   public resultEstadosCuenta: any[] = [];
   public loading = false;
   // TABS
-  activaDatos = false;
+  activaDatos: boolean = true;
+  activaSaldos: boolean = false;
+  public carteraInfo = new DetalleCartera();
 
   public ValidaPactado: boolean = true;
   // FIN TABS 
@@ -66,6 +70,8 @@ export class GestionCreditoComponent {
     this.validateForm();
     this.loadOperaciones();
     this.ObtenerFormasPago();
+    // Activa tab datos  
+    this.devolverTab(1);
   }
 
   validateForm() {
@@ -394,6 +400,16 @@ export class GestionCreditoComponent {
       EfectivaPactada: EfectivaPactada
     });
 
+    const CoutasPagas = new FormControl({ value: '', disabled: true }, []);
+    const CoutasPendientes = new FormControl({ value: '', disabled: true }, []);
+    const CoutasMora = new FormControl({ value: '', disabled: true }, []);
+
+    this.SaldosForm = new FormGroup({
+      CoutasPagas: CoutasPagas,
+      CoutasPendientes: CoutasPendientes,
+      CoutasMora: CoutasMora,      
+    });
+
     // FIN TABS
 
   }
@@ -591,7 +607,8 @@ export class GestionCreditoComponent {
           });
         }
           // TABS
-          this.BuscarDatosCartera(+cuentaResumen.IdCuenta)
+        this.BuscarDatosCartera(+cuentaResumen.IdCuenta);
+        this.BuscarSaldosCartera(+cuentaResumen.IdCuenta)
       }
 
       if (checkCartera) {
@@ -645,10 +662,12 @@ export class GestionCreditoComponent {
 
 // TABS 
   devolverTab(tab: number) {
-    switch (tab) {
-      case 1:
-        this.activaDatos = true;
-        break;
+    if (tab === 1) {
+      this.activaDatos = true;
+      this.activaSaldos = false;
+    } else if (tab === 2) {
+      this.activaDatos = false;
+      this.activaSaldos = true;
     }
   }
 //DATOS 
@@ -662,6 +681,53 @@ export class GestionCreditoComponent {
   BuscarDatosCartera(IdCuenta : number){
     this.carteraService.getDatosCartera(IdCuenta).subscribe(
       result => {
+        this.DatosForm.get('Sistema')?.setValue(result.Sistema);
+        this.DatosForm.get('PeriodoCapital')?.setValue(result.PeriodoCapital);
+        this.DatosForm.get('PeriodoInteres')?.setValue(result.PeriodoInteres);
+        this.DatosForm.get('Plazo')?.setValue(result.Plazo);
+        this.DatosForm.get('Garantia')?.setValue(result.Garantia);
+        this.DatosForm.get('TipoGarantia')?.setValue(result.TipoGarantia);
+
+        this.carteraInfo.Monto = result.Monto;
+        this.carteraInfo.Cuota = result.Cuota;
+        this.carteraInfo.CuotaLibranza = result.CuotaLibranza;
+
+        this.DatosForm.get('PeriodoGracia')?.setValue(result.PeriodoGracia);
+        this.DatosForm.get('FormaPago')?.setValue(result.FormaPago);
+        this.DatosForm.get('EstadoDatos')?.setValue(result.Estado);     
+
+        this.DatosForm.get('TasaPeriodicaL')?.setValue(result.TasaPeriodicaL);
+        this.DatosForm.get('TasaLiquidada')?.setValue(result.TasaLiquidada);
+        this.DatosForm.get('EfectivaLiquidada')?.setValue(result.TasaEfectivaL);
+        this.DatosForm.get('TasaPeriodicaP')?.setValue(result.TasaPeriodicaP);
+        this.DatosForm.get('TasaPactada')?.setValue(result.TasaPactada);
+        this.DatosForm.get('EfectivaPactada')?.setValue(result.TasaEfectivaP);
+      },
+      error => {
+        const errorMessage = <any>error;
+        console.log(errorMessage);
+      }
+    );
+  }  
+  BuscarSaldosCartera(IdCuenta: number) {
+    this.carteraService.getSaldosCartera(IdCuenta).subscribe(
+      result => {
+        this.carteraInfo.AbonoCanje = result.AbonoCanje;
+        this.carteraInfo.InteresAnticipado = result.InteresAnticipado;
+        this.carteraInfo.InteresContingente = result.InteresContingente;
+        this.carteraInfo.SaldoProyectado = result.SaldoProyectado;
+        this.carteraInfo.InteresCorriente = result.InteresCorriente;
+        this.carteraInfo.CapitalMora = result.CapitalMora;
+        this.carteraInfo.SaldoCapital = result.SaldoCapital;
+        this.carteraInfo.InteresCorrienteMora = result.InteresCorrienteMora;
+        this.carteraInfo.TotalInteres = result.TotalInteres;
+        this.carteraInfo.SaldoDeuda = result.SaldoDeuda;
+        this.carteraInfo.InteresMora = result.InteresMora;
+
+        this.SaldosForm.get('CoutasPagas')?.setValue(result.CuotasPagas);       
+        this.SaldosForm.get('CoutasPendientes')?.setValue(result.CuotasPendientes); 
+        this.SaldosForm.get('CoutasMora')?.setValue(result.CuotasMora);
+       
       },
       error => {
         const errorMessage = <any>error;

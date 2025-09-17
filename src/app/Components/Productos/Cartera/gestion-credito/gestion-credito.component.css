@@ -440,3 +440,14 @@ h3 {
     padding: 9px;
     width: 101%;
 }
+#bordeSaldosCartera {
+    border: 3px rgb(227, 227, 227);
+    border-style: dashed;
+    border-radius: 22px;
+    padding: 15px;
+    width: 12%;
+    height: 20%;
+    margin-top: -1%;
+    margin-left: 59%;
+    position: fixed;
+}
