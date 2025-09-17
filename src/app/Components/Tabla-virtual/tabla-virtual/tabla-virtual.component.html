@@ -12,7 +12,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let fila of filasVisibles">
+        <tr *ngFor="let fila of filasVisibles" (click)="onClickFila(fila)" [class.selected-row]="getRowId(fila) === filaSeleccionadaData">
           <td *ngFor="let col of columnas" [ngClass]="{'alinear-derecha': col?.endsWith('_M')}">
             {{ getValor(fila, col) }}
           </td>

@@ -29,3 +29,8 @@
  .alinear-derecha{
    text-align: right !important;
 }
+
+.selected-row {
+   background-color: rgb(229, 229, 229);
+   /* Color de fondo gris para la fila seleccionada */
+}
