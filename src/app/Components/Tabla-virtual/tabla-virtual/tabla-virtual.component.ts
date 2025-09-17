@@ -10,12 +10,15 @@ export class TablaVirtualComponent implements OnChanges {
   @Input() datos: any[] = [];
   @Input() columnas: string[] = [];
   @Input() formatear?: (valor: any, columna?: string) => string;
+  @Output() filaSeleccionada = new EventEmitter<any>();
+
 
   filasVisibles: any[] = [];
   currentIndex: number = 0;
   pageSize: number = 20;
   buffer: number = 10;
   idsCargados = new Set<any>();
+  filaSeleccionadaData: any = null;
 
   columnaOrden: string | null = null;
   ordenAscendente: boolean = true;
@@ -32,6 +35,11 @@ export class TablaVirtualComponent implements OnChanges {
       this.filasVisibles = [...inicial];
       this.currentIndex = this.filasVisibles.length;
     }
+  }
+
+  onClickFila(fila: any) {
+    this.filaSeleccionadaData = this.getRowId(fila);
+    this.filaSeleccionada.emit(fila);    
   }
 
   loadMore(): void {

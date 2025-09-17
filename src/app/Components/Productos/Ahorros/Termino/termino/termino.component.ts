@@ -2134,6 +2134,9 @@ export class TerminoComponent implements OnInit {
                           this.bloquearProducto = null;
                           this.MostrasAlertaAsociado = false;
                           this.generalesService.Autofocus('SelectProducto');
+                        }else{
+                          this.notif.onWarning('Advertencia', 'Asociado sin aportes activos.');
+                          this.TerminoForm.get('NumeroDocumento')?.reset();
                         }
                       });
                     });                  
@@ -2367,6 +2370,9 @@ export class TerminoComponent implements OnInit {
                       this.TerminoForm.get('Edad')?.setValue(result[0].Edad);
                       this.TerminoForm.get('IdTipoDocumento')?.setValue(result[0].TipoDocumento);
                       this.MostrasAlertaAsociado = false;
+                    } else{
+                      this.notif.onWarning('Advertencia', 'Asociado sin aportes activos.');
+                      this.TerminoForm.get('NumeroDocumento')?.reset();
                     }
                   });
                 });               

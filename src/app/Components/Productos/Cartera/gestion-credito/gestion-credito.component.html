@@ -46,28 +46,28 @@
                             <label class="textNegrilla">Cuenta:</label>
                         </div>
                         <div class="col-xs-4 col-md-3 col-lg-1">
-                            <input type="text" class="form-control" formControlName="IdOficinaCuenta" maxlength="3" (blur)="onBlurCampoNumeroCuenta()">
-                            <!-- <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['IdOficinaCuenta'].errors?.['pattern']">
-                                    La cuenta solo acepta números.
-                            </span> -->
+                            <input type="text" class="form-control" formControlName="IdOficinaCuenta" maxlength="3">
+                            <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['IdOficinaCuenta']?.errors?.['pattern']">
+                                La cuenta solo acepta números.
+                            </span>
                         </div>
                         <div class="col-xs-4 col-md-3 col-lg-1">
-                            <input type="text" class="form-control" formControlName="IdProductoCuenta" maxlength="3" (blur)="onBlurCampoNumeroCuenta()">
-                            <!-- <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['IdProductoCuenta'].errors?.['pattern']">
-                                    La cuenta solo acepta números.
-                            </span> -->
+                            <input type="text" class="form-control" formControlName="IdProductoCuenta" maxlength="3">
+                            <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['IdProductoCuenta']?.errors?.['pattern']">
+                                La cuenta solo acepta números.
+                            </span>
                         </div>
                         <div class="col-xs-4 col-md-3 col-lg-1">
-                            <input type="text" class="form-control" formControlName="IdConsecutivo" maxlength="7" (blur)="onBlurCampoNumeroCuenta()">
-                            <!-- <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['IdConsecutivo'].errors?.['pattern']">
-                                    La cuenta solo acepta números.
-                            </span> -->
+                            <input type="text" class="form-control" formControlName="IdConsecutivo" maxlength="7">
+                            <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['IdConsecutivo']?.errors?.['pattern']">
+                                La cuenta solo acepta números.
+                            </span>
                         </div>
                         <div class="col-xs-4 col-md-3 col-lg-1">
                             <input type="text" class="form-control" formControlName="IdDigito" maxlength="1" (blur)="onBlurCampoNumeroCuenta()">
-                            <!-- <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['IdDigito'].errors?.['pattern']">
-                                    La cuenta solo acepta números.
-                            </span> -->
+                            <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['IdDigito']?.errors?.['pattern']">
+                                La cuenta solo acepta números.
+                            </span>
                         </div>
                         <!-- Fin Cuenta -->
 
@@ -80,14 +80,20 @@
                         </div>
                         <div class="col-xs-4 col-md-3 col-lg-1">
                             <input type="text" class="form-control" tooltip="Documento" id="SelectBuscar" placement="top" show-delay="500" formControlName="BuscarDocumento" (input)="gestionCreditoForm.get('BuscarNombre')?.reset()" maxlength="20" />
-                            <!-- <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['BuscarDocumento'].errors?.['pattern']">
-                                    El documento solo acepta números.
-                            </span> -->
+                            <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['BuscarDocumento'].errors?.['pattern']">
+                                El documento solo acepta números.
+                            </span>
                         </div>
                         <div class="col-xs-6 col-md-5 col-lg-2">
-                            <input type="text" class="form-control" tooltip="Nombre" placement="top" show-delay="500" formControlName="BuscarNombre" (input)="gestionCreditoForm.get('BuscarDocumento')?.reset()" />
+                            <input type="text" class="form-control" tooltip="Nombre" placement="top" show-delay="500" formControlName="BuscarNombre" (input)="gestionCreditoForm.get('BuscarDocumento')?.reset()" maxlength="100"/>
+                            <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['BuscarNombre'].errors?.['pattern']">
+                                Caracteres no válidos.
+                            </span>
+                            <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['BuscarNombre'].errors?.['minlength']">
+                                Debe tener al menos 6 caracteres.
+                            </span>
                         </div>
-                        <button type="button" class="btn Gt-btn-verde btn-icon" [disabled]="gestionCreditoForm.get('BuscarDocumento')?.disabled" (click)="onClickBuscarCuentaPorCliente()">
+                        <button type="button" class="btn Gt-btn-verde btn-icon" [disabled]="gestionCreditoForm.get('BuscarDocumento')?.disabled || gestionCreditoForm.controls['BuscarNombre'].invalid" (click)="onClickBuscarCuentaPorCliente()">
                             <i class="icon-search4"></i>
                         </button>
                         <!-- Fin Buscar -->
@@ -129,8 +135,11 @@
                         </div>
                         <div class="col-xs-6 col-md-2 col-lg-1">
                             <input type="text" class="form-control" tooltip="Nombre" placement="top" show-delay="500" formControlName="pagare" (keypress)="LimpiarCampos('pagare')" />
+                            <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['pagare'].errors?.['pattern']">
+                                El pagaré solo acepta números.
+                            </span>
                         </div>
-                        <button type="button" class="btn Gt-btn-verde btn-icon" [disabled]="gestionCreditoForm.get('pagare')?.disabled" (click)="onClickBuscarPorPagare()">
+                        <button type="button" class="btn Gt-btn-verde btn-icon" [disabled]="gestionCreditoForm.get('pagare')?.disabled || gestionCreditoForm.get('pagare')?.invalid" (click)="onClickBuscarPorPagare()">
                             <i class="icon-search4"></i>
                         </button>
                         <!-- Fin Pagare -->
@@ -164,10 +173,11 @@
                             <span class="grande"> *</span>
                         </div>
                         <div class="col-xs-10 col-md-8 col-lg-3">
-                            <select class="form-control" name="select" formControlName="IdRelacionCliente">
+                            <!-- <select class="form-control" name="select" formControlName="IdRelacionCliente">
                                 <option *ngFor="let relacion of tiposRelacion" [value]="relacion.Clase">
                                     {{relacion.Descripcion}}</option>
-                            </select>
+                            </select> -->
+                            <input type="text" class="form-control" formControlName="NombreRelacionCliente">
                         </div>
                         <!-- Fin Relacion -->
                     </div>
@@ -231,12 +241,10 @@
                             <span class="grande"> *</span>
                         </div>
                         <div class="col-xs-10 col-md-8 col-lg-2">
-                            <select class="form-control" id="SelectOperacionPermitida" formControlName="IdOperacionPermitida">
-                                <!-- <option selected="selected" value="" disabled>-- Seleccione --</option> -->
+                            <!-- <select class="form-control" id="SelectOperacionPermitida" formControlName="IdOperacionPermitida">
                                 <option *ngFor="let operacionPermitida of resultOperacionesPermitadas" [value]="operacionPermitida.IdOperacion">{{operacionPermitida.DescripcionOperacion}}</option>
-                            </select>
-                            <!-- <input type="text" class="form-control" formControlName="DescripcionOperacion" *ngIf="!inputOperacionPermitada"> -->
-                            <!-- <input type="text" class="form-control" formControlName="DescripcionOperacion"> -->
+                            </select> -->
+                            <input type="text" class="form-control" formControlName="NombreOperacionPermitida">
                         </div>
                         <div class="col-xs-2 col-md-1 col-lg-1">
                         </div>
@@ -269,13 +277,12 @@
                             <span class="grande"> *</span>
                         </div>
                         <div class="col-xs-10 col-md-8 col-lg-2">
-                            <select class="form-control" id="SelectEstadoCuenta" formControlName="IdEstado">
-                                <!-- <option selected="selected" value="0">-- Seleccione --</option> -->
+                            <!-- <select class="form-control" id="SelectEstadoCuenta" formControlName="IdEstado">
                                 <option *ngFor="let estado of resultEstadosCuenta" [value]="estado.IdEstado">
                                     {{ estado.Descripcion }}
                                 </option>
-                                </select>
-                            <!-- <input type="text" class="form-control" formControlName="DescripcionEstado" *ngIf="booltemp" /> -->
+                            </select> -->
+                            <input type="text" class="form-control" formControlName="NombreEstadoCuenta"/>
                         </div>
                         <!-- Fin EstadoCuenta -->
                     </div>
@@ -321,15 +328,15 @@
                         <br />
 
                         <div class="col-xs-12 col-md-12 col-lg-12">
-                            <input type="checkbox" id="estadoReestructurado" class="switchery" formControlName="ActivaMovimiento" />
+                            <input type="checkbox" id="estadoReestructurado" class="switchery" formControlName="estaReestructurado" />
                             <label for="estadoReestructurado">Reestructurado</label>
-                            <input type="checkbox" id="estadoReliquidado" class="switchery" formControlName="ActivaMovimiento" />
+                            <input type="checkbox" id="estadoReliquidado" class="switchery" formControlName="estaReliquidado" />
                             <label for="estadoReliquidado">Reliquidado</label>
-                            <input type="checkbox" id="estadoPagoAbogado" class="switchery" formControlName="ActivaMovimiento" />
+                            <input type="checkbox" id="estadoPagoAbogado" class="switchery" formControlName="estaPagoAbogado" />
                             <label for="estadoPagoAbogado">Pago Abogado</label>
-                            <input type="checkbox" id="estadoCastigado" class="switchery" formControlName="ActivaMovimiento" />
+                            <input type="checkbox" id="estadoCastigado" class="switchery" formControlName="estaCastigado" />
                             <label for="estadoCastigado">Castigado</label>
-                            <input type="checkbox" id="estadoSinCobertura" class="switchery" formControlName="ActivaMovimiento" />
+                            <input type="checkbox" id="estadoSinCobertura" class="switchery" formControlName="estaSinCobertura" />
                             <label for="estadoSinCobertura">Sin Cobertura</label>
                         </div>
                         <div class="col-xs-12 col-md-12 col-lg-12">
@@ -342,6 +349,8 @@
 
                         <button type="button" style="visibility:hidden" #ModalBuscarAsociados class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#ModalBuscarAsociados"><i class="icon-search4"></i></button> 
                         <!-- anexo del boton buscarsin visibilidad -->
+
+                        <input type="button" class="btn Gt-btn-morado" value="Prueba" (click)="BuscarDatosCartera(1440727)" />
                         <!--  
                        
                         <input type="button" class="btn Gt-btn-morado" value="Limpiar" (click)="clearFromDisponibles()" />&nbsp; &nbsp;
@@ -449,7 +458,10 @@
     </div>
 </div>
 <!--/ Fin Modal BuscarAsociados -->
-
+<!-- loader -->
+<ngx-loading [show]="loading" [config]="{primaryColour: 'rgb(13,165,80)', secondaryColour: 'rgb(13,165,80,0.7)', tertiaryColour: 'rgb(13,165,80)', backdropBorderRadius: '3px'}">
+</ngx-loading>
+<!-- loader -->
 
 <!-- TABS -->
 <div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelTab">

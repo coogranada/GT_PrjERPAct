@@ -1604,6 +1604,9 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                         this.BloquearFormaPago = null;
                         this.MostrasAlertaAsociado = false;
                         this.generalesService.Autofocus('SelectProducto');
+                      } else{
+                        this.notif.onWarning('Advertencia', 'Asociado sin aportes activos.');
+                        this.contractualFrom.get('NumeroDocumento')?.reset();
                       }
                     });                  
                   });
@@ -1824,6 +1827,9 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                   this.contractualFrom.get('LngTercero')?.setValue(result[0].lngTercero);
                   this.contractualFrom.get('IdTipoDocumento')?.setValue(result[0].IdTipoDocumento);
                   this.MostrasAlertaAsociado = false;
+                } else{
+                  this.notif.onWarning('Advertencia', 'Asociado sin aportes activos.');
+                  this.contractualFrom.get('NumeroDocumento')?.reset();
                 }
               });
             });

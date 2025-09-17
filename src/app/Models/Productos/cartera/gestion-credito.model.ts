@@ -17,6 +17,11 @@ export interface CuentaCarteraResumen {
 }
 
 export interface CuentaCarteraDetalle {
+  Encabezado: GestionCreditoEncabezado;
+  SaldoSeguroHipotecario: SeguroHipotecario;
+}
+
+export interface GestionCreditoEncabezado {
   IdOficinaCliente: number;
   OficinaCliente: string;
   NumeroDocumento: string;
@@ -29,10 +34,18 @@ export interface CuentaCarteraDetalle {
   AsesorExterno?: string | null;
   IdTipoAlivio?: number | null;
   IdRelacionCliente: number;
+  NombreRelacionCliente: string;
   IdOperacionPermitida: number;
-  IdEstadoCuenta: number;
+  NombreOperacionPermitida: string;
   IdFormaPago: number;
   OficinaCuenta: string;
+  EstaSinCobertura: boolean;
+}
+
+export interface SeguroHipotecario {
+  Codigo: string;
+  Nombre: string;
+  Saldo: number;
 }
 
 export interface CuentaFormateada {

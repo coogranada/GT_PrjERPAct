@@ -5,7 +5,9 @@ import { Observable } from 'rxjs';
 import { TipoBusquedaResumen } from '../../Models/Productos/cartera/gestion-credito.enum';
 import { CuentaCarteraDetalle, CuentaCarteraResumen, CuentaFormateada } from '../../Models/Productos/cartera/gestion-credito.model';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class CarteraService {
     private url: string = "";
 
@@ -25,6 +27,13 @@ export class CarteraService {
         this.url = `${this.environment.Url}/buscarCuentaDetalle?idCuenta=${idCuenta}`;
         return this._http.get<CuentaCarteraDetalle>(this.url);
     }
+
+    // TABS 
+    getDatosCartera(IdCuenta: number): Observable<any> {
+        this.url = `${this.environment.Url}/BuscarDatosCartera?IdCuenta=${IdCuenta}`;
+        return this._http.get<any>(this.url);
+    }
+
 
 }
 
