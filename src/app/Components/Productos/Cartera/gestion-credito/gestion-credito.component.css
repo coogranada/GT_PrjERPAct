@@ -451,3 +451,12 @@ h3 {
     margin-left: 59%;
     position: fixed;
 }
+
+.pagare {
+    display: flex;
+
+    div:nth-child(2) {
+        margin-left: 15px;
+        margin-right: 7px;
+    }
+}
