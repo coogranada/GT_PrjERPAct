@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { OperacionesService } from '../../../../Services/Maestros/operaciones.service';
 import { TipoBusquedaResumen } from '../../../../Models/Productos/cartera/gestion-credito.enum';
@@ -11,6 +11,9 @@ import { ToastrService } from 'ngx-toastr';
 import { ConfiguracionNotificacion } from '../../../../../environments/config.noticaciones';
 import Swal from 'sweetalert2';
 import { DetalleCartera } from '../../../../Models/Informes/MisProductos/mis-producto.model';
+import { TablaVirtualComponent } from '../../../Tabla-virtual/tabla-virtual/tabla-virtual.component';
+import { MapeoColumna, transformarDatosParaTabla } from '../../../../utils/tabla-utils';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-gestion-credito',
@@ -22,6 +25,8 @@ import { DetalleCartera } from '../../../../Models/Informes/MisProductos/mis-pro
 export class GestionCreditoComponent {
 
   @ViewChild('ModalBuscarAsociados', { static: true }) private ModalBuscarAsociados!: ElementRef;
+  @ViewChild('cerrarModal', { static: true }) private cerrarModal!: ElementRef;
+  @ViewChild(TablaVirtualComponent) tablaVirtual!: TablaVirtualComponent
 
   private codModulo = 45;
   public dataUser : any;
@@ -50,6 +55,9 @@ export class GestionCreditoComponent {
   public resultFormasPago: any[] = [];
   public resultEstadosCuenta: any[] = [];
   public loading = false;
+  public datosTransformados: any[] = [];
+  public encabezadosTablaModalAlBuscar: string[] = [];
+
   // TABS
   activaDatos: boolean = true;
   activaSaldos: boolean = false;
@@ -416,6 +424,48 @@ export class GestionCreditoComponent {
 
   }
 
+  onFilaSeleccionada(data: any) {
+    console.log({data});
+    
+    this.buscarCuentaDetalle(data);
+    this.cerrarModal.nativeElement.click();
+  }
+
+  esFechaISO(valor: string): boolean {
+    return /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(valor);
+  }
+ 
+  pad(numero: number): string {
+    return numero < 10 ? '0' + numero : numero.toString();
+  }
+
+  formatearValor = (valor: any, columna?: string): string => {
+    // if (columna && columna.endsWith('_M')) {
+    //   const numero = Number(valor);
+    //   if (!isNaN(numero)) {
+    //     return numero.toLocaleString('es-CL', {
+    //       style: 'currency',
+    //       currency: 'CLP'
+    //     });
+    //   }
+    //   return valor;
+    // }
+ 
+    // if (typeof valor === 'string' && this.esFechaISO(valor)) {
+    //   const fecha = new Date(valor);
+    //   return `${fecha.getFullYear()}/${this.pad(fecha.getMonth() + 1)}/${this.pad(fecha.getDate())} ${this.pad(fecha.getHours())}:${this.pad(fecha.getMinutes())}:${this.pad(fecha.getSeconds())}`;
+    // }
+ 
+    return valor !== null && valor !== undefined ? String(valor) : '';
+  };
+  onScroll(event: Event) {
+    const el = event.target as HTMLElement;
+    const nearBottom = el.scrollHeight - el.scrollTop <= el.clientHeight + 10;
+    if (nearBottom) {
+      this.tablaVirtual.loadMore();
+    }
+  }
+
   loadOperaciones() {
     let datas = localStorage.getItem('Data');
     this.dataUser = JSON.parse(window.atob(datas == null ? "" : datas));
@@ -532,6 +582,30 @@ export class GestionCreditoComponent {
           this.buscarCuentaDetalle(result[0]);
         } else if(result.length > 1) {
           this.cuentasResumenData = result;
+
+          const columnasConfiguradas: MapeoColumna[] = [
+            { encabezado: 'Cuenta', campos: ['CodigoCuentaFormateado'] },
+            { encabezado: 'Nombre Asociado', campos: ['PrimerApellido', 'SegundoApellido', 'PrimerNombre', 'SegundoNombre'] },
+            { encabezado: 'Pagaré', campos: ['Pagare'] },
+            { encabezado: 'Pagare', campos: ['Pagare'] },
+            { encabezado: 'Estado', campos: ['Estado'] },
+            { encabezado: 'Fecha', campos: ['FechaMatricula'], obtenerValor: i => formatDate(i.FechaMatricula, 'yyyy/MM/dd', 'es-CO') },
+            { encabezado: 'Linea', campos: ['IdLinea'] },
+            { encabezado: 'IdLinea', campos: ['IdLinea'] },
+            { encabezado: 'IdCuenta', campos: ['IdCuenta'] },
+            { encabezado: 'IdDigito', campos: ['IdDigito'] },
+            { encabezado: 'IdEstado', campos: ['IdEstado'] },
+            { encabezado: 'IdConsecutivo', campos: ['IdConsecutivo'] },
+            { encabezado: 'IdOficinaCuenta', campos: ['IdOficinaCuenta'] },
+            { encabezado: 'IdProducto', campos: ['IdProducto'] },
+            { encabezado: 'PrimerApellido', campos: ['PrimerApellido'] },
+            { encabezado: 'PrimerNombre', campos: ['PrimerNombre'] },
+            { encabezado: 'SegundoApellido', campos: ['SegundoApellido'] },
+            { encabezado: 'SegundoNombre', campos: ['SegundoNombre'] },
+
+          ];
+          this.datosTransformados = transformarDatosParaTabla(result, columnasConfiguradas);
+          this.encabezadosTablaModalAlBuscar = ['Cuenta', 'Nombre Asociado', 'Pagaré', 'Estado', 'Fecha', 'Linea'];
           this.ModalBuscarAsociados.nativeElement.click();
         }
       }
