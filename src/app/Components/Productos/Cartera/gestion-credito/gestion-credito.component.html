@@ -423,42 +423,6 @@
                     [formatear]="formatearValor" 
                     (filaSeleccionada)="onFilaSeleccionada($event)" 
                 />
-                <!-- <div class="table-responsive scrollTabla" (scroll)="onScroll($event)">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th class="column_CuentaA"><strong>Cuenta</strong></th>
-                                <th class="column_NombreA"><strong>Nombre Asociado</strong></th>
-                                <th class="column_NombreA"><strong>Pagaré</strong></th>
-                                <th class="column_EstadoCuentaA"><strong>Estado</strong></th>
-                                <th class="column_NombreA"><strong>Fecha</strong></th>
-                                <th class="column_NombreA"><strong>Linea</strong></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr data-dismiss="modal"  *ngFor="let cuentaResumen of cuentasResumenData" (click)="onClickCuentaInfo(cuentaResumen)">
-                                <td class="column_CuentaA columnCuentaA_disponibles">
-                                    {{ cuentaResumen.CodigoCuentaFormateado }}
-                                </td>
-                                <td class="column_NombreA columnNombreA_disponibles">
-                                    {{ cuentaResumen.PrimerApellido | concatWithSpace:cuentaResumen.SegundoApellido:cuentaResumen.PrimerNombre:cuentaResumen.SegundoNombre }}
-                                </td>
-                                <td class="column_EstadoCuentaA columnEstadoCuentaA_disponibles">
-                                    {{cuentaResumen.Pagare }}
-                                </td>
-                                <td class="column_MedioPagoA columnMedioPagoA_disponibles">
-                                    {{ cuentaResumen.Estado }}
-                                </td>
-                                <td class="column_MedioPagoA columnMedioPagoA_disponibles">
-                                    {{ cuentaResumen.FechaMatricula | date:'yyyy/MM/dd' }}
-                                </td>
-                                <td class="column_MedioPagoA columnMedioPagoA_disponibles">
-                                    {{ cuentaResumen.IdLinea }}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div> -->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn Gt-btn-morado" data-dismiss="modal" #cerrarModal>Cerrar</button>

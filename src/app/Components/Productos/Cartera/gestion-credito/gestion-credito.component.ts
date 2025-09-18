@@ -424,9 +424,7 @@ export class GestionCreditoComponent {
 
   }
 
-  onFilaSeleccionada(data: any) {
-    console.log({data});
-    
+  onFilaSeleccionada(data: any) {    
     this.buscarCuentaDetalle(data);
     this.cerrarModal.nativeElement.click();
   }
@@ -440,22 +438,6 @@ export class GestionCreditoComponent {
   }
 
   formatearValor = (valor: any, columna?: string): string => {
-    // if (columna && columna.endsWith('_M')) {
-    //   const numero = Number(valor);
-    //   if (!isNaN(numero)) {
-    //     return numero.toLocaleString('es-CL', {
-    //       style: 'currency',
-    //       currency: 'CLP'
-    //     });
-    //   }
-    //   return valor;
-    // }
- 
-    // if (typeof valor === 'string' && this.esFechaISO(valor)) {
-    //   const fecha = new Date(valor);
-    //   return `${fecha.getFullYear()}/${this.pad(fecha.getMonth() + 1)}/${this.pad(fecha.getDate())} ${this.pad(fecha.getHours())}:${this.pad(fecha.getMinutes())}:${this.pad(fecha.getSeconds())}`;
-    // }
- 
     return valor !== null && valor !== undefined ? String(valor) : '';
   };
   onScroll(event: Event) {
