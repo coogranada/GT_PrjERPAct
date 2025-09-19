@@ -63,7 +63,7 @@ export class GestionCreditoComponent {
   activaSaldos: boolean = false;
   public carteraInfo = new DetalleCartera();
 
-  public ValidaPactado: boolean = true;
+  public ValidaPactado: boolean = false;
   // FIN TABS 
 
   constructor( 
@@ -745,15 +745,12 @@ export class GestionCreditoComponent {
         this.DatosForm.get('Plazo')?.setValue(result.Plazo);
         this.DatosForm.get('Garantia')?.setValue(result.Garantia);
         this.DatosForm.get('TipoGarantia')?.setValue(result.TipoGarantia);
-
         this.carteraInfo.Monto = result.Monto;
         this.carteraInfo.Cuota = result.Cuota;
         this.carteraInfo.CuotaLibranza = result.CuotaLibranza;
-
         this.DatosForm.get('PeriodoGracia')?.setValue(result.PeriodoGracia);
         this.DatosForm.get('FormaPago')?.setValue(result.FormaPago);
-        this.DatosForm.get('EstadoDatos')?.setValue(result.Estado);     
-
+        this.DatosForm.get('EstadoDatos')?.setValue(result.Estado);  
         this.DatosForm.get('TasaPeriodicaL')?.setValue(result.TasaPeriodicaL);
         this.DatosForm.get('TasaLiquidada')?.setValue(result.TasaLiquidada);
         this.DatosForm.get('EfectivaLiquidada')?.setValue(result.TasaEfectivaL);
@@ -766,7 +763,8 @@ export class GestionCreditoComponent {
         console.log(errorMessage);
       }
     );
-  }  
+  }
+
   BuscarSaldosCartera(IdCuenta: number) {
     this.carteraService.getSaldosCartera(IdCuenta).subscribe(
       result => {
@@ -781,7 +779,6 @@ export class GestionCreditoComponent {
         this.carteraInfo.TotalInteres = result.TotalInteres;
         this.carteraInfo.SaldoDeuda = result.SaldoDeuda;
         this.carteraInfo.InteresMora = result.InteresMora;
-
         this.SaldosForm.get('CoutasPagas')?.setValue(result.CuotasPagas);       
         this.SaldosForm.get('CoutasPendientes')?.setValue(result.CuotasPendientes); 
         this.SaldosForm.get('CoutasMora')?.setValue(result.CuotasMora);
