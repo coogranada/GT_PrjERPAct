@@ -5,7 +5,8 @@
                 <h6 class="panel-title">Búsqueda</h6>
                 <div class="heading-elements">
                     <ul class="icons-list">
-                        <li><a data-toggle="modal" data-target="#ModalAyuda"><i class=" icon-question6" title="Ayuda" data-popup="tooltip" data-trigger="hover" data-placement="top"></i></a></li>
+                        <li><a data-toggle="modal" data-target="#ModalAyuda"><i class=" icon-question6" title="Ayuda"
+                                    data-popup="tooltip" data-trigger="hover" data-placement="top"></i></a></li>
                         <li>
                             <a data-action="collapse"></a>
                         </li>
@@ -23,7 +24,8 @@
                                 <span class="grande"> *</span>
                             </div>
                             <div class="col-xs-10 col-md-8 col-lg-4">
-                                <select class="form-control" formControlName="Codigo" id="select" (change)="onChangeOperacion()">
+                                <select class="form-control" formControlName="Codigo" id="select"
+                                    (change)="onChangeOperacion()">
                                     <option value="">test</option>
                                     <option *ngFor="let operacionDisponible of resultOperaciones"
                                         [value]="operacionDisponible.ERP_tblOperacion.IdOperacion">
@@ -47,25 +49,30 @@
                         </div>
                         <div class="col-xs-4 col-md-3 col-lg-1">
                             <input type="text" class="form-control" formControlName="IdOficinaCuenta" maxlength="3">
-                            <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['IdOficinaCuenta']?.errors?.['pattern']">
+                            <span class="help-block validationSpan"
+                                *ngIf="gestionCreditoForm.controls['IdOficinaCuenta']?.errors?.['pattern']">
                                 La cuenta solo acepta números.
                             </span>
                         </div>
                         <div class="col-xs-4 col-md-3 col-lg-1">
                             <input type="text" class="form-control" formControlName="IdProductoCuenta" maxlength="3">
-                            <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['IdProductoCuenta']?.errors?.['pattern']">
+                            <span class="help-block validationSpan"
+                                *ngIf="gestionCreditoForm.controls['IdProductoCuenta']?.errors?.['pattern']">
                                 La cuenta solo acepta números.
                             </span>
                         </div>
                         <div class="col-xs-4 col-md-3 col-lg-1">
                             <input type="text" class="form-control" formControlName="IdConsecutivo" maxlength="7">
-                            <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['IdConsecutivo']?.errors?.['pattern']">
+                            <span class="help-block validationSpan"
+                                *ngIf="gestionCreditoForm.controls['IdConsecutivo']?.errors?.['pattern']">
                                 La cuenta solo acepta números.
                             </span>
                         </div>
                         <div class="col-xs-4 col-md-3 col-lg-1">
-                            <input type="text" class="form-control" formControlName="IdDigito" maxlength="1" (blur)="onBlurCampoNumeroCuenta()">
-                            <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['IdDigito']?.errors?.['pattern']">
+                            <input type="text" class="form-control" formControlName="IdDigito" maxlength="1"
+                                (blur)="onBlurCampoNumeroCuenta()">
+                            <span class="help-block validationSpan"
+                                *ngIf="gestionCreditoForm.controls['IdDigito']?.errors?.['pattern']">
                                 La cuenta solo acepta números.
                             </span>
                         </div>
@@ -79,21 +86,30 @@
                             <label class="textNegrilla">Buscar:</label>
                         </div>
                         <div class="col-xs-4 col-md-3 col-lg-1">
-                            <input type="text" class="form-control" tooltip="Documento" id="SelectBuscar" placement="top" show-delay="500" formControlName="BuscarDocumento" (input)="gestionCreditoForm.get('BuscarNombre')?.reset()" maxlength="20" />
-                            <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['BuscarDocumento'].errors?.['pattern']">
+                            <input type="text" class="form-control" tooltip="Documento" id="SelectBuscar"
+                                placement="top" show-delay="500" formControlName="BuscarDocumento"
+                                (input)="gestionCreditoForm.get('BuscarNombre')?.reset()" maxlength="20" />
+                            <span class="help-block validationSpan"
+                                *ngIf="gestionCreditoForm.controls['BuscarDocumento'].errors?.['pattern']">
                                 El documento solo acepta números.
                             </span>
                         </div>
                         <div class="col-xs-6 col-md-5 col-lg-2">
-                            <input type="text" class="form-control" tooltip="Nombre" placement="top" show-delay="500" formControlName="BuscarNombre" (input)="gestionCreditoForm.get('BuscarDocumento')?.reset()" maxlength="100"/>
-                            <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['BuscarNombre'].errors?.['pattern']">
+                            <input type="text" class="form-control" tooltip="Nombre" placement="top" show-delay="500"
+                                formControlName="BuscarNombre"
+                                (input)="gestionCreditoForm.get('BuscarDocumento')?.reset()" maxlength="100" />
+                            <span class="help-block validationSpan"
+                                *ngIf="gestionCreditoForm.controls['BuscarNombre'].errors?.['pattern']">
                                 Caracteres no válidos.
                             </span>
-                            <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['BuscarNombre'].errors?.['minlength']">
+                            <span class="help-block validationSpan"
+                                *ngIf="gestionCreditoForm.controls['BuscarNombre'].errors?.['minlength']">
                                 Debe tener al menos 6 caracteres.
                             </span>
                         </div>
-                        <button type="button" class="btn Gt-btn-verde btn-icon" [disabled]="gestionCreditoForm.get('BuscarDocumento')?.disabled || gestionCreditoForm.controls['BuscarNombre'].invalid" (click)="onClickBuscarCuentaPorCliente()">
+                        <button type="button" class="btn Gt-btn-verde btn-icon"
+                            [disabled]="gestionCreditoForm.get('BuscarDocumento')?.disabled || gestionCreditoForm.controls['BuscarNombre'].invalid"
+                            (click)="onClickBuscarCuentaPorCliente()">
                             <i class="icon-search4"></i>
                         </button>
                         <!-- Fin Buscar -->
@@ -124,28 +140,29 @@
                             <!-- <span class="grande"> *</span> -->
                         </div>
                         <div class="col-xs-6 col-md-2 col-lg-1">
-                            <input type="text" class="form-control" tooltip="Nombre" placement="top" show-delay="500" formControlName="Radicado" (keypress)="LimpiarCampos('Radicado')" />
+                            <input type="text" class="form-control" tooltip="Nombre" placement="top" show-delay="500"
+                                formControlName="Radicado" (keypress)="LimpiarCampos('Radicado')" />
                         </div>
                         <!-- Fin Radicado -->
 
                         <!-- Inicio Pagare -->
-                         
-                        <div class="col-xs-6 col-md-3 col-lg-3 pagare">
-                            <div>
-                                <label class="textNegrilla">Pagaré:</label>
-                                <!-- <span class="grande"> *</span> -->
-                            </div>
-                            <div>
-                                <input type="text" class="form-control" tooltip="Nombre" placement="top" show-delay="500" formControlName="pagare" (keypress)="LimpiarCampos('pagare')" />
-                                <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['pagare'].errors?.['pattern']">
-                                    El pagaré solo acepta números.
-                                </span>
-                            </div>
-                            <button type="button" class="btn Gt-btn-verde btn-icon" [disabled]="gestionCreditoForm.get('pagare')?.disabled || gestionCreditoForm.get('pagare')?.invalid" (click)="onClickBuscarPorPagare()">
-                                <i class="icon-search4"></i>
-                            </button>
+                        <div class="col-xs-12 col-md-1 col-lg-1">
+                            <label class="textNegrilla">Pagaré:</label>
+                            <!-- <span class="grande"> *</span> -->
                         </div>
-
+                        <div class="col-xs-6 col-md-2 col-lg-1">
+                            <input type="text" class="form-control" tooltip="Nombre" placement="top" show-delay="500"
+                                formControlName="pagare" (keypress)="LimpiarCampos('pagare')" />
+                            <span class="help-block validationSpan"
+                                *ngIf="gestionCreditoForm.controls['pagare'].errors?.['pattern']">
+                                El pagaré solo acepta números.
+                            </span>
+                        </div>
+                        <button type="button" class="btn Gt-btn-verde btn-icon"
+                            [disabled]="gestionCreditoForm.get('pagare')?.disabled || gestionCreditoForm.get('pagare')?.invalid"
+                            (click)="onClickBuscarPorPagare()">
+                            <i class="icon-search4"></i>
+                        </button>
                         <!-- Fin Pagare -->
                     </div>
 
@@ -157,17 +174,22 @@
                             <span class="grande"> *</span>
                         </div>
                         <div class="col-xs-4 col-md-3 col-lg-2">
-                            <input type="text" class="form-control" id="SelectDocumento" formControlName="NumeroDocumento" (keypress)="LimpiarCampos('NumeroDocumento')" (blur)="BuscarAsociado()" maxlength="15">
+                            <input type="text" class="form-control" id="SelectDocumento"
+                                formControlName="NumeroDocumento" (keypress)="LimpiarCampos('NumeroDocumento')"
+                                (blur)="BuscarAsociado()" maxlength="15">
                             <!-- <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['NumeroDocumento'].errors?.['pattern']">
                                 El documento solo acepta números.
                             </span> -->
                         </div>
                         <div class="col-xs-6 col-md-5 col-lg-3">
-                            <input type="text" class="form-control pmayuscula" formControlName="Nombre" (keypress)="LimpiarCampos('Nombre')">
+                            <input type="text" class="form-control pmayuscula" formControlName="Nombre"
+                                (keypress)="LimpiarCampos('Nombre')">
                         </div>
                         <div class="col-xs-1 col-md-1 col-lg-1">
-                            <button type="button" class="btn Gt-btn-verde btn-icon legitRipple" (click)="BuscarAsociado()" [disabled]="gestionCreditoForm.get('NumeroDocumento')?.disabled">
-                            <i class="icon-search4"></i></button>
+                            <button type="button" class="btn Gt-btn-verde btn-icon legitRipple"
+                                (click)="BuscarAsociado()"
+                                [disabled]="gestionCreditoForm.get('NumeroDocumento')?.disabled">
+                                <i class="icon-search4"></i></button>
                         </div>
                         <!-- Fin Asociado -->
 
@@ -194,14 +216,17 @@
                             <span class="grande">*</span>
                         </div>
                         <div class="col-xs-4 col-md-3 col-lg-1">
-                            <input type="text" class="form-control" id="SelectProducto" formControlName="IdProducto" (keypress)="LimpiarCampos('IdProducto')" (change)="Producto()" maxlength="3">
+                            <input type="text" class="form-control" id="SelectProducto" formControlName="IdProducto"
+                                (keypress)="LimpiarCampos('IdProducto')" (change)="Producto()" maxlength="3">
                         </div>
                         <div class="col-xs-6 col-md-5 col-lg-4">
-                            <input type="text" class="form-control" formControlName="DescripcionProducto" (keypress)="LimpiarCampos('DescripcionProducto')">
+                            <input type="text" class="form-control" formControlName="DescripcionProducto"
+                                (keypress)="LimpiarCampos('DescripcionProducto')">
                         </div>
                         <div class="col-xs-1 col-md-1 col-lg-1">
-                            <button type="button" class="btn Gt-btn-verde btn-icon legitRipple" (click)="BuscarProducto()" [disabled]="gestionCreditoForm.get('IdProducto')?.disabled">
-                            <i class="icon-search4"></i></button>
+                            <button type="button" class="btn Gt-btn-verde btn-icon legitRipple"
+                                (click)="BuscarProducto()" [disabled]="gestionCreditoForm.get('IdProducto')?.disabled">
+                                <i class="icon-search4"></i></button>
                         </div>
                         <!-- Fin Producto -->
 
@@ -217,7 +242,7 @@
                             <input type="text" class="form-control" formControlName="NombreOficina">
                         </div>
                         <!-- Fin Oficina -->
-                       
+
                     </div>
 
                     <div class="col-xs-12 col-md-12 col-lg-12">
@@ -228,19 +253,22 @@
                             <span class="grande">*</span>
                         </div>
                         <div class="col-xs-4 col-md-3 col-lg-1">
-                            <input type="text" class="form-control" id="SelectProducto" formControlName="IdLinea" (keypress)="LimpiarCampos('IdLinea')" (change)="Producto()" maxlength="3">
+                            <input type="text" class="form-control" id="SelectProducto" formControlName="IdLinea"
+                                (keypress)="LimpiarCampos('IdLinea')" (change)="Producto()" maxlength="3">
                         </div>
                         <div class="col-xs-6 col-md-5 col-lg-4">
-                            <input type="text" class="form-control" formControlName="Linea" (keypress)="LimpiarCampos('DescripcionProducto')">
+                            <input type="text" class="form-control" formControlName="Linea"
+                                (keypress)="LimpiarCampos('DescripcionProducto')">
                         </div>
                         <div class="col-xs-1 col-md-1 col-lg-1">
-                            <button type="button" class="btn Gt-btn-verde btn-icon legitRipple" (click)="BuscarProducto()" [disabled]="gestionCreditoForm.get('IdLinea')?.disabled">
-                            <i class="icon-search4"></i></button>
+                            <button type="button" class="btn Gt-btn-verde btn-icon legitRipple"
+                                (click)="BuscarProducto()" [disabled]="gestionCreditoForm.get('IdLinea')?.disabled">
+                                <i class="icon-search4"></i></button>
                         </div>
                         <!-- Fin Linea -->
 
-                         <!-- Inicio OperacionPermitida -->
-                         <div class="col-xs-12 col-md-3 col-lg-2">
+                        <!-- Inicio OperacionPermitida -->
+                        <div class="col-xs-12 col-md-3 col-lg-2">
                             <label class="textNegrilla">Operación permitida:</label>
                             <span class="grande"> *</span>
                         </div>
@@ -253,7 +281,7 @@
                         <div class="col-xs-2 col-md-1 col-lg-1">
                         </div>
                         <!-- Fin OperacionPermitida -->
-                       
+
                     </div>
 
                     <div class="col-xs-12 col-md-12 col-lg-12">
@@ -264,14 +292,17 @@
                             <span class="grande"> *</span>
                         </div>
                         <div class="col-xs-4 col-md-3 col-lg-1">
-                            <input type="text" class="form-control" formControlName="IdAsesor" (keypress)="LimpiarCampos('IdAsesor')">
+                            <input type="text" class="form-control" formControlName="IdAsesor"
+                                (keypress)="LimpiarCampos('IdAsesor')">
                         </div>
                         <div class="col-xs-6 col-md-5 col-lg-4">
-                            <input type="text" class="form-control" formControlName="NombreAsesor" (keypress)="LimpiarCampos('NombreAsesor')">
+                            <input type="text" class="form-control" formControlName="NombreAsesor"
+                                (keypress)="LimpiarCampos('NombreAsesor')">
                         </div>
                         <div class="col-xs-1 col-md-1 col-lg-1">
-                            <button type="button" class="btn Gt-btn-verde btn-icon legitRipple" [disabled]="gestionCreditoForm.get('IdAsesor')?.disabled">
-                            <i class="icon-search4"></i></button>
+                            <button type="button" class="btn Gt-btn-verde btn-icon legitRipple"
+                                [disabled]="gestionCreditoForm.get('IdAsesor')?.disabled">
+                                <i class="icon-search4"></i></button>
                         </div>
                         <!-- Fin Asesor -->
 
@@ -286,7 +317,7 @@
                                     {{ estado.Descripcion }}
                                 </option>
                             </select> -->
-                            <input type="text" class="form-control" formControlName="NombreEstadoCuenta"/>
+                            <input type="text" class="form-control" formControlName="NombreEstadoCuenta" />
                         </div>
                         <!-- Fin EstadoCuenta -->
                     </div>
@@ -299,18 +330,24 @@
                                 <label class="textNegrilla">Asesor externo:</label>
                             </div>
                             <div class="col-xs-4 col-md-3 col-lg-1">
-                                <input type="text" class="form-control" tooltip="Id asesor" id="SelectAsesorExterno" placement="top" show-delay="500" formControlName="IdAsesorExterno" (blur)="BuscarAsesorExternoCodigo()" (keypress)="LimpiarCampos('IdAsesorExterno')"
+                                <input type="text" class="form-control" tooltip="Id asesor" id="SelectAsesorExterno"
+                                    placement="top" show-delay="500" formControlName="IdAsesorExterno"
+                                    (blur)="BuscarAsesorExternoCodigo()" (keypress)="LimpiarCampos('IdAsesorExterno')"
                                     maxlength="4" />
                                 <!-- <span class="help-block validationSpan" *ngIf="AsesorExternoForm.controls['IdAsesorExterno'].errors?.['pattern']">
                                     El Id asesor solo acepta números.
                                 </span> -->
                             </div>
                             <div class="col-xs-6 col-md-5 col-lg-4">
-                                <input type="text" class="form-control" tooltip="Nombre asesor" placement="top" show-delay="500" formControlName="NombreAsesorExterno" (keypress)="LimpiarCampos('NombreAsesorExterno')" />
+                                <input type="text" class="form-control" tooltip="Nombre asesor" placement="top"
+                                    show-delay="500" formControlName="NombreAsesorExterno"
+                                    (keypress)="LimpiarCampos('NombreAsesorExterno')" />
                             </div>
                             <div class="col-xs-1 col-md-1 col-lg-1">
-                                <button type="button" class="btn Gt-btn-verde btn-icon legitRipple" (click)="BuscarAsesorExternoTodos()" [disabled]="AsesorExternoForm.get('IdAsesorExterno')?.disabled">
-                                <i class="icon-search4"></i></button>
+                                <button type="button" class="btn Gt-btn-verde btn-icon legitRipple"
+                                    (click)="BuscarAsesorExternoTodos()"
+                                    [disabled]="AsesorExternoForm.get('IdAsesorExterno')?.disabled">
+                                    <i class="icon-search4"></i></button>
                             </div>
                         </form>
                         <!-- Fin Asesor Externo -->
@@ -322,7 +359,8 @@
                         </div>
                         <div class="col-xs-10 col-md-8 col-lg-2">
                             <select class="form-control" id="SelectFormaPago" formControlName="IdFormaPago">
-                                <option *ngFor="let formapago of resultFormasPago" [value]="formapago.IdFormaPago">{{ formapago.DescripcionFormaPago }}</option>
+                                <option *ngFor="let formapago of resultFormasPago" [value]="formapago.IdFormaPago">{{
+                                    formapago.DescripcionFormaPago }}</option>
                             </select>
                         </div>
                         <!-- Fin FormaPago -->
@@ -332,15 +370,20 @@
                         <br />
 
                         <div class="col-xs-12 col-md-12 col-lg-12">
-                            <input type="checkbox" id="estadoReestructurado" class="switchery" formControlName="estaReestructurado" />
+                            <input type="checkbox" id="estadoReestructurado" class="switchery"
+                                formControlName="estaReestructurado" />
                             <label for="estadoReestructurado">Reestructurado</label>
-                            <input type="checkbox" id="estadoReliquidado" class="switchery" formControlName="estaReliquidado" />
+                            <input type="checkbox" id="estadoReliquidado" class="switchery"
+                                formControlName="estaReliquidado" />
                             <label for="estadoReliquidado">Reliquidado</label>
-                            <input type="checkbox" id="estadoPagoAbogado" class="switchery" formControlName="estaPagoAbogado" />
+                            <input type="checkbox" id="estadoPagoAbogado" class="switchery"
+                                formControlName="estaPagoAbogado" />
                             <label for="estadoPagoAbogado">Pago Abogado</label>
-                            <input type="checkbox" id="estadoCastigado" class="switchery" formControlName="estaCastigado" />
+                            <input type="checkbox" id="estadoCastigado" class="switchery"
+                                formControlName="estaCastigado" />
                             <label for="estadoCastigado">Castigado</label>
-                            <input type="checkbox" id="estadoSinCobertura" class="switchery" formControlName="estaSinCobertura" />
+                            <input type="checkbox" id="estadoSinCobertura" class="switchery"
+                                formControlName="estaSinCobertura" />
                             <label for="estadoSinCobertura">Sin Cobertura</label>
                         </div>
                         <div class="col-xs-12 col-md-12 col-lg-12">
@@ -351,10 +394,13 @@
                     </div>
                     <div class="col-xs-12 col-md-12 col-lg-12 text-right">
 
-                        <button type="button" style="visibility:hidden" #ModalBuscarAsociados class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#ModalBuscarAsociados"><i class="icon-search4"></i></button> 
+                        <button type="button" style="visibility:hidden" #ModalBuscarAsociados
+                            class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal"
+                            data-target="#ModalBuscarAsociados"><i class="icon-search4"></i></button>
                         <!-- anexo del boton buscarsin visibilidad -->
 
-                        <!-- <input type="button" class="btn Gt-btn-morado" value="Limpiar" (click)="" /> -->                        <!--  
+                        <!-- <input type="button" class="btn Gt-btn-morado" value="Limpiar" (click)="" /> -->
+                        <!--  
                        
                         <input type="button" class="btn Gt-btn-morado" value="Limpiar" (click)="clearFromDisponibles()" />&nbsp; &nbsp;
 
@@ -388,422 +434,482 @@
                 <input type="hidden" #ModalReglamentoTarjeta data-toggle="modal" data-target="#ModalReglamentoTarjeta" data-popup="tooltip" data-trigger="hover" data-placement="top"> -->
             </div>
         </div>
-<!-- Modal Ayuda -->
-<div id="ModalAyuda" class="modal fade" data-backdrop="static">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-morado">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h6 class="modal-title"><i class="icon-question6"></i> Ayuda</h6>
-            </div>
-            <div class="modal-body">
-                <ul>
-                    <li>Todos los campos marcados con <span class="text-danger">*</span> son obligatorios.</li>
-                </ul>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!--/ Fin Modal Ayuda -->
-<!--/ Modal BuscarAsociados -->
-<div id="ModalBuscarAsociados" class="modal fade" data-backdrop="static">
-    <div class="modal-dialog">
-        <div class="modal-content modal-lg">
-            <div class="modal-header bg-morado">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h6 class="modal-title">Asociados</h6>
-            </div>
-            <div class="modal-body">
-                <app-tabla-virtual 
-                    [datos]="datosTransformados" 
-                    [columnas]="encabezadosTablaModalAlBuscar"
-                    [formatear]="formatearValor" 
-                    (filaSeleccionada)="onFilaSeleccionada($event)" 
-                />
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal" #cerrarModal>Cerrar</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!--/ Fin Modal BuscarAsociados -->
-<!-- loader -->
-<ngx-loading [show]="loading" [config]="{primaryColour: 'rgb(13,165,80)', secondaryColour: 'rgb(13,165,80,0.7)', tertiaryColour: 'rgb(13,165,80)', backdropBorderRadius: '3px'}">
-</ngx-loading>
-<!-- loader -->
-
-<!-- TABS -->
-<div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelTab">
-    <div class="panel-body">
-        <div class="col-xs-12 col-md-12 col-lg-12">
-            <div class="tabbable">
-                <ul class="nav nav-tabs">      
-                    <li  class="nav-item" id="Datos" (click)="devolverTab(1)" [ngClass]="{'activar': activaDatos === true }">
-                        <a href="#tab1" data-toggle="tab">Datos</a>
-                    </li>
-                    <li  class="nav-item"id="Saldo" (click)="devolverTab(2)" [ngClass]="{'activar': activaSaldos === true }">
-                        <a href="#tab2" data-toggle="tab">Saldos</a>
-                    </li>   
-                </ul>
-                <div class="tab-content">
-                    <!-- Inicio tab1 -->
-                    <div class="tab-pane active" id="tab1">
-                        <form method="get" [formGroup]="DatosForm">
-                            <div class="col-xs-12 col-md-12 col-lg-12">
-                                <div class="row">
-                                    <div class="col-xs-12 col-md-2 col-lg-2">
-                                        <div class="form-group">
-                                            <label>Sistema:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" class="form-control" [attr.disabled]="true" formControlName="Sistema" />
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-md-1 col-lg-1">
-                                    </div>
-                                    <div class="col-xs-12 col-md-2 col-lg-2">
-                                        <div class="form-group">
-                                            <label>Periodo capital:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" class="form-control" [attr.disabled]="true" formControlName="PeriodoCapital" />
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-md-1 col-lg-1">
-                                    </div>
-                                    <div class="col-xs-12 col-md-2 col-lg-2">
-                                        <div class="form-group">
-                                            <label>Periodo interés:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" class="form-control" [attr.disabled]="true" formControlName="PeriodoInteres" />
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-md-1 col-lg-1">
-                                    </div>
-                                    <div class="col-xs-12 col-md-2 col-lg-2">
-                                        <div class="form-group">
-                                            <label>Plazo:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" class="form-control" style="text-align: left;" [attr.disabled]="true"
-                                                formControlName="Plazo" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-md-12 col-lg-12">
-                                <div class="row">
-                                    <div class="col-xs-12 col-md-2 col-lg-2">
-                                        <div class="form-group">
-                                            <label>Garantia:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" class="form-control" [attr.disabled]="true" formControlName="Garantia" />
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-md-1 col-lg-1">
-                                    </div>
-                                    <div class="col-xs-12 col-md-2 col-lg-2">
-                                        <div class="form-group">
-                                            <label>Tipo garantia:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" class="form-control" [attr.disabled]="true" formControlName="TipoGarantia" />
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-md-1 col-lg-1">
-                                    </div>
-                                    <div class="col-xs-12 col-md-2 col-lg-2">
-                                        <div class="form-group">
-                                            <label>Monto:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" currencyMask value=" {{carteraInfo.Monto | currency}}" class="form-control"
-                                                                        style="text-align: right;" [attr.disabled]="true" />
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-md-1 col-lg-1">
-                                    </div>
-                                    <div class="col-xs-12 col-md-2 col-lg-2">
-                                        <div class="form-group">
-                                            <label>Cuota:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" currencyMask value=" {{carteraInfo.Cuota |  currency}}" class="form-control"
-                                                                        style="text-align: right;" [attr.disabled]="true" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-md-12 col-lg-12">
-                                <div class="row">
-                                    <div class="col-xs-12 col-md-2 col-lg-2">
-                                        <div class="form-group">
-                                            <label>Modalidad:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" class="form-control" [attr.disabled]="true" value="Vencida" />
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-md-1 col-lg-1">
-                                    </div>
-                                    <div class="col-xs-12 col-md-2 col-lg-2">
-                                        <div class="form-group">
-                                            <label>Periodo de gracia:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" class="form-control" style="text-align: left;" [attr.disabled]="true"
-                                                formControlName="PeriodoGracia" />
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-md-1 col-lg-1">
-                                    </div>
-                                    <div class="col-xs-12 col-md-2 col-lg-2">
-                                        <div class="form-group">
-                                            <label>Cuota libranza:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" currencyMask value=" {{carteraInfo.CuotaLibranza |  currency}}" class="form-control"
-                                                                        style="text-align: right;" [attr.disabled]="true" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-md-12 col-lg-12">
-                                <div class="row" id="borde">
-                                    <div>
-                                        <div *ngIf="!ValidaPactado">
-                                            <div>
-                                                <label>&nbsp;&nbsp;&nbsp;<strong>Tasas</strong></label>
-                                                <span class="text-danger"></span>
-                                            </div>
-                                            <div class="col-xs-12 col-md-2 col-lg-2">
-                                                <div class="form-group">
-                                                    <label><strong>Tasa periódica:</strong></label>
-                                                    <span class="text-danger"></span>
-                                                    <input type="text" currencyMask
-                                                        [options]="{ prefix: '', suffix: ' %', thousands: '.', precision: 4 } " class="form-control"
-                                                        style="text-align: right;" [attr.disabled]="true" formControlName="TasaPeriodicaL" />
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-12 col-md-1 col-lg-1">
-                                            </div>
-                                            <div class="col-xs-12 col-md-2 col-lg-2">
-                                                <div class="form-group">
-                                                    <label><strong>Tasas nominal:</strong></label>
-                                                    <span class="text-danger"></span>
-                                                    <input type="text" currencyMask
-                                                        [options]="{ prefix: '', suffix: ' %', thousands: '.', precision: 4 }" class="form-control"
-                                                        style="text-align: right;" [attr.disabled]="true" formControlName="TasaLiquidada" />
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-12 col-md-1 col-lg-1">
-                                            </div>
-                                            <div class="col-xs-12 col-md-2 col-lg-2">
-                                                <div class="form-group">
-                                                    <label><strong>Tasa efectiva:</strong></label>
-                                                    <span class="text-danger "></span>
-                                                    <input type="text " currencyMask
-                                                        [options]="{ prefix: '', suffix: ' %', thousands: '.', precision: 4 }" class="form-control"
-                                                        style="text-align: right;" [attr.disabled]="true" formControlName="EfectivaLiquidada" />
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-12 col-md-1 col-lg-1">
-                                            </div>
-                                        </div>
-                                        <div *ngIf="ValidaPactado">
-                                            <div>
-                                                <label>&nbsp;&nbsp;<strong>Tasas pactadas</strong></label>
-                                                <span class="text-danger"></span>
-                                            </div>
-                                            <div class="col-xs-12 col-md-2 col-lg-2">
-                                                <div class="form-group ">
-                                                    <label><strong>Tasa periódica:</strong></label>
-                                                    <span class="text-danger "></span>
-                                                    <input type="text " currencyMask
-                                                        [options]="{ prefix: '', suffix: ' %', thousands: '.', precision: 4 } "
-                                                        class="form-control " style="text-align: right;" [attr.disabled]="true"
-                                                        formControlName="TasaPeriodicaP" />
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-12 col-md-1 col-lg-1">
-                                            </div>
-                                            <div class="col-xs-12 col-md-2 col-lg-2">
-                                                <div class="form-group">
-                                                    <label><strong>Tasas nominal:</strong></label>
-                                                    <span class="text-danger"></span>
-                                                    <input type="text" currencyMask
-                                                        [options]="{ prefix: '', suffix: ' %', thousands: '.', precision: 4 } "
-                                                        class="form-control " style="text-align: right; " [attr.disabled]="true"
-                                                        formControlName="TasaPactada" />
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-12 col-md-1 col-lg-1">
-                                            </div>
-                                            <div class="col-xs-12 col-md-2 col-lg-2">
-                                                <div class="form-group">
-                                                    <label><strong>Tasa efectiva:</strong></label>
-                                                    <span class="text-danger "></span>
-                                                    <input type="text " currencyMask
-                                                        [options]="{ prefix: '', suffix: ' %', thousands: '.', precision: 4 } "
-                                                        class="form-control " style="text-align: right; " [attr.disabled]="true"
-                                                        formControlName="EfectivaPactada" />
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-12 col-md-1 col-lg-1">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-md-2 col-lg-2" style="text-align: right;">
-                                        <br>
-                                        <button type="button" id="marginbuton" class="btn Gt-btn-morado doNotPrint "
-                                            (click)="Cambiavistatasas()">Pactado</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>  
+        <!-- Modal Ayuda -->
+        <div id="ModalAyuda" class="modal fade" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-morado">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h6 class="modal-title"><i class="icon-question6"></i> Ayuda</h6>
                     </div>
-                    <!-- Fin tab1 -->
-                    <!-- Inicio tab2 -->
-                    <div class="tab-pane" id="tab2">
-                        <form method="get" [formGroup]="SaldosForm">
-                        <div class="col-xs-12 col-md-12 col-lg-12">
-                            <div class="col-xs-12 col-md-12 col-lg-10">
-                            <div class="row">
-                                <div class="col-xs-12 col-md-3 col-lg-3">
-                                    <div class="form-group">
-                                        <label>Abono en canje:</label>
-                                        <span class="text-danger"></span>
-                                        <input type="text" currencyMask value=" {{carteraInfo.AbonoCanje |  currency}}" class="form-control "
-                                            style="text-align: right; " [attr.disabled]="true " />
-                                    </div>
-                                </div>
-                                <div class="col-xs-12 col-md-1 col-lg-1"></div>
-                                <div class="col-xs-12 col-md-3 col-lg-3">
-                                    <div class="form-group">
-                                        <label>Interés contingente:</label>
-                                        <span class="text-danger"></span>
-                                        <input type="text" currencyMask value=" {{carteraInfo.InteresContingente |  currency}}" class="form-control"
-                                            style="text-align: right;" [attr.disabled]="true" />
-                                    </div>
-                                </div>
-                                <div class="col-xs-12 col-md-1 col-lg-1"></div>
-                            
-                                <div class="col-xs-12 col-md-3 col-lg-3">
-                                    <div class="form-group">
-                                        <label>Capital mora:</label>
-                                        <span class="text-danger"></span>
-                                        <input type="text" currencyMask value=" {{carteraInfo.CapitalMora |  currency }}" class="form-control"
-                                            style="text-align: right;" [attr.disabled]="true" />
-                                    </div>
-                                </div>
-                            </div>
-                            </div>
-                            <div class="col-xs-12 col-md-12 col-lg-10">
-                                <div class="row">
-                                    <div class="col-xs-12 col-md-3 col-lg-3">
-                                        <div class="form-group">
-                                            <label>Interés anticipado:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" currencyMask value=" {{carteraInfo.InteresAnticipado |  currency }}"
-                                                class="form-control" style="text-align: right;" [attr.disabled]="true" />
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-md-1 col-lg-1"></div>
-                                    <div class="col-xs-12 col-md-3 col-lg-3">
-                                        <div class="form-group">
-                                            <label>Interés corriente:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" currencyMask value=" {{carteraInfo.InteresCorriente |  currency }}"
-                                                class="form-control" style="text-align: right;" [attr.disabled]="true" />
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-md-1 col-lg-1"></div>
-                                    <div class="col-xs-12 col-md-3 col-lg-3">
-                                        <div class="form-group">
-                                            <label>Saldo proyectado:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" currencyMask value=" {{carteraInfo.SaldoProyectado |  currency }}"
-                                                class="form-control" style="text-align: right;" [attr.disabled]="true">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-md-12 col-lg-10">
-                                <div class="row">
-                                    <div class="col-xs-12 col-md-3 col-lg-3">
-                                        <div class="form-group">
-                                            <label>Interés mora:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" currencyMask value=" {{carteraInfo.InteresMora |  currency }}" class="form-control"
-                                                style="text-align: right;" [attr.disabled]="true" />
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-md-1 col-lg-1"></div>
-                                    <div class="col-xs-12 col-md-3 col-lg-3">
-                                        <div class="form-group">
-                                            <label>Total interés:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" currencyMask value=" {{carteraInfo.TotalInteres |  currency }}" class="form-control"
-                                                style="text-align: right;" [attr.disabled]="true" />
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-md-1 col-lg-1"></div>
-                                    <div class="col-xs-12 col-md-3 col-lg-3">
-                                        <div class="form-group">
-                                            <label>Saldo capital:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" currencyMask value=" {{carteraInfo.SaldoCapital |  currency }}" class="form-control"
-                                                style="text-align: right;" [attr.disabled]="true" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-md-12 col-lg-4" id="bordeSaldosCartera">
-                                <div class="row">
-                                    <div class="col-xs-12 col-md-12 col-lg-12">
-                                        <div class="form-group">
-                                            <label>Cuotas pagas:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" class="form-control" [attr.disabled]="true" formControlName="CoutasPagas" />
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-md-12 col-lg-12">
-                                        <div class="form-group">
-                                            <label>Cuotas pendientes:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" class="form-control" [attr.disabled]="true" formControlName="CoutasPendientes" />
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-md-12 col-lg-12">
-                                        <div class="form-group">
-                                            <label>Cuotas en mora:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" class="form-control" [attr.disabled]="true" formControlName="CoutasMora" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-md-12 col-lg-10">
-                                <div class="row">
-                                    <div class="col-xs-12 col-md-3 col-lg-3">
-                                    </div>
-                                    <div class="col-xs-12 col-md-1 col-lg-1"></div>
-                                    <div class="col-xs-12 col-md-3 col-lg-3">
-                                    </div>
-                                    <div class="col-xs-12 col-md-1 col-lg-1"></div>
-                                    <div class="col-xs-12 col-md-3 col-lg-3">
-                                        <div class="form-group">
-                                            <label>Saldo deuda:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" currencyMask value=" {{carteraInfo.SaldoDeuda |  currency }}" class="form-control"
-                                                style="text-align: right;" [attr.disabled]="true" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                         </div>
-                        </form>
+                    <div class="modal-body">
+                        <ul>
+                            <li>Todos los campos marcados con <span class="text-danger">*</span> son obligatorios.</li>
+                        </ul>
                     </div>
-                    <!-- Fin tab2 -->                     
+                    <div class="modal-footer">
+                        <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+        <!--/ Fin Modal Ayuda -->
+        <!--/ Modal BuscarAsociados -->
+        <div id="ModalBuscarAsociados" class="modal fade" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content modal-lg">
+                    <div class="modal-header bg-morado">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h6 class="modal-title">Asociados</h6>
+                    </div>
+                    <div class="modal-body">
+                        <div class="table-responsive scrollTabla">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="column_CuentaA"><strong>Cuenta</strong></th>
+                                        <th class="column_NombreA"><strong>Nombre Asociado</strong></th>
+                                        <th class="column_NombreA"><strong>Pagaré</strong></th>
+                                        <th class="column_EstadoCuentaA"><strong>Estado</strong></th>
+                                        <th class="column_NombreA"><strong>Fecha</strong></th>
+                                        <th class="column_NombreA"><strong>Linea</strong></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-dismiss="modal" *ngFor="let cuentaResumen of cuentasResumenData"
+                                        (click)="onClickCuentaInfo(cuentaResumen)">
+                                        <td class="column_CuentaA columnCuentaA_disponibles">
+                                            {{ cuentaResumen.CodigoCuentaFormateado }}
+                                        </td>
+                                        <td class="column_NombreA columnNombreA_disponibles">
+                                            {{ cuentaResumen.PrimerApellido |
+                                            concatWithSpace:cuentaResumen.SegundoApellido:cuentaResumen.PrimerNombre:cuentaResumen.SegundoNombre
+                                            }}
+                                        </td>
+                                        <td class="column_EstadoCuentaA columnEstadoCuentaA_disponibles">
+                                            {{cuentaResumen.Pagare }}
+                                        </td>
+                                        <td class="column_MedioPagoA columnMedioPagoA_disponibles">
+                                            {{ cuentaResumen.Estado }}
+                                        </td>
+                                        <td class="column_MedioPagoA columnMedioPagoA_disponibles">
+                                            {{ cuentaResumen.FechaMatricula | date:'yyyy/MM/dd' }}
+                                        </td>
+                                        <td class="column_MedioPagoA columnMedioPagoA_disponibles">
+                                            {{ cuentaResumen.IdLinea }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ Fin Modal BuscarAsociados -->
+        <!-- loader -->
+        <ngx-loading [show]="loading"
+            [config]="{primaryColour: 'rgb(13,165,80)', secondaryColour: 'rgb(13,165,80,0.7)', tertiaryColour: 'rgb(13,165,80)', backdropBorderRadius: '3px'}">
+        </ngx-loading>
+        <!-- loader -->
+
+        <!-- TABS -->
+        <div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelTab">
+            <div class="panel-body">
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <div class="tabbable">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item" id="Datos" (click)="devolverTab(1)"
+                                [ngClass]="{'activar': activaDatos === true }">
+                                <a href="#tab1" data-toggle="tab">Datos</a>
+                            </li>
+                            <li class="nav-item" id="Saldo" (click)="devolverTab(2)"
+                                [ngClass]="{'activar': activaSaldos === true }">
+                                <a href="#tab2" data-toggle="tab">Saldos</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <!-- Inicio tab1 -->
+                            <div class="tab-pane active" id="tab1">
+                                <form method="get" [formGroup]="DatosForm">
+                                    <div class="col-xs-12 col-md-12 col-lg-12">
+                                        <div class="row">
+                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                <div class="form-group">
+                                                    <label>Sistema:</label>
+                                                    <span class="text-danger"></span>
+                                                    <input type="text" class="form-control" [attr.disabled]="true"
+                                                        formControlName="Sistema" />
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-md-1 col-lg-1">
+                                            </div>
+                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                <div class="form-group">
+                                                    <label>Periodo capital:</label>
+                                                    <span class="text-danger"></span>
+                                                    <input type="text" class="form-control" [attr.disabled]="true"
+                                                        formControlName="PeriodoCapital" />
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-md-1 col-lg-1">
+                                            </div>
+                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                <div class="form-group">
+                                                    <label>Periodo interés:</label>
+                                                    <span class="text-danger"></span>
+                                                    <input type="text" class="form-control" [attr.disabled]="true"
+                                                        formControlName="PeriodoInteres" />
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-md-1 col-lg-1">
+                                            </div>
+                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                <div class="form-group">
+                                                    <label>Plazo:</label>
+                                                    <span class="text-danger"></span>
+                                                    <input type="text" class="form-control" style="text-align: left;"
+                                                        [attr.disabled]="true" formControlName="Plazo" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-md-12 col-lg-12">
+                                        <div class="row">
+                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                <div class="form-group">
+                                                    <label>Garantia:</label>
+                                                    <span class="text-danger"></span>
+                                                    <input type="text" class="form-control" [attr.disabled]="true"
+                                                        formControlName="Garantia" />
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-md-1 col-lg-1">
+                                            </div>
+                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                <div class="form-group">
+                                                    <label>Tipo garantia:</label>
+                                                    <span class="text-danger"></span>
+                                                    <input type="text" class="form-control" [attr.disabled]="true"
+                                                        formControlName="TipoGarantia" />
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-md-1 col-lg-1">
+                                            </div>
+                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                <div class="form-group">
+                                                    <label>Monto:</label>
+                                                    <span class="text-danger"></span>
+                                                    <input type="text" currencyMask
+                                                        value=" {{carteraInfo.Monto | currency}}" class="form-control"
+                                                        style="text-align: right;" [attr.disabled]="true" />
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-md-1 col-lg-1">
+                                            </div>
+                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                <div class="form-group">
+                                                    <label>Cuota:</label>
+                                                    <span class="text-danger"></span>
+                                                    <input type="text" currencyMask
+                                                        value=" {{carteraInfo.Cuota |  currency}}" class="form-control"
+                                                        style="text-align: right;" [attr.disabled]="true" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-md-12 col-lg-12">
+                                        <div class="row">
+                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                <div class="form-group">
+                                                    <label>Modalidad:</label>
+                                                    <span class="text-danger"></span>
+                                                    <input type="text" class="form-control" [attr.disabled]="true"
+                                                        value="Vencida" />
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-md-1 col-lg-1">
+                                            </div>
+                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                <div class="form-group">
+                                                    <label>Periodo de gracia:</label>
+                                                    <span class="text-danger"></span>
+                                                    <input type="text" class="form-control" style="text-align: left;"
+                                                        [attr.disabled]="true" formControlName="PeriodoGracia" />
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-md-1 col-lg-1">
+                                            </div>
+                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                <div class="form-group">
+                                                    <label>Cuota libranza:</label>
+                                                    <span class="text-danger"></span>
+                                                    <input type="text" currencyMask
+                                                        value=" {{carteraInfo.CuotaLibranza |  currency}}"
+                                                        class="form-control" style="text-align: right;"
+                                                        [attr.disabled]="true" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-md-12 col-lg-12">
+                                        <div class="row" id="borde">
+                                            <div>
+                                                <div *ngIf="!ValidaPactado">
+                                                    <div>
+                                                        <label>&nbsp;&nbsp;&nbsp;<strong>Tasas</strong></label>
+                                                        <span class="text-danger"></span>
+                                                    </div>
+                                                    <div class="col-xs-12 col-md-2 col-lg-2">
+                                                        <div class="form-group">
+                                                            <label><strong>Tasa periódica:</strong></label>
+                                                            <span class="text-danger"></span>
+                                                            <input type="text" currencyMask
+                                                                [options]="{ prefix: '', suffix: ' %', thousands: '.', precision: 4 } "
+                                                                class="form-control" style="text-align: right;"
+                                                                [attr.disabled]="true"
+                                                                formControlName="TasaPeriodicaL" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-md-1 col-lg-1">
+                                                    </div>
+                                                    <div class="col-xs-12 col-md-2 col-lg-2">
+                                                        <div class="form-group">
+                                                            <label><strong>Tasas nominal:</strong></label>
+                                                            <span class="text-danger"></span>
+                                                            <input type="text" currencyMask
+                                                                [options]="{ prefix: '', suffix: ' %', thousands: '.', precision: 4 }"
+                                                                class="form-control" style="text-align: right;"
+                                                                [attr.disabled]="true"
+                                                                formControlName="TasaLiquidada" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-md-1 col-lg-1">
+                                                    </div>
+                                                    <div class="col-xs-12 col-md-2 col-lg-2">
+                                                        <div class="form-group">
+                                                            <label><strong>Tasa efectiva:</strong></label>
+                                                            <span class="text-danger "></span>
+                                                            <input type="text " currencyMask
+                                                                [options]="{ prefix: '', suffix: ' %', thousands: '.', precision: 4 }"
+                                                                class="form-control" style="text-align: right;"
+                                                                [attr.disabled]="true"
+                                                                formControlName="EfectivaLiquidada" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-md-1 col-lg-1">
+                                                    </div>
+                                                </div>
+                                                <div *ngIf="ValidaPactado">
+                                                    <div>
+                                                        <label>&nbsp;&nbsp;<strong>Tasas pactadas</strong></label>
+                                                        <span class="text-danger"></span>
+                                                    </div>
+                                                    <div class="col-xs-12 col-md-2 col-lg-2">
+                                                        <div class="form-group ">
+                                                            <label><strong>Tasa periódica:</strong></label>
+                                                            <span class="text-danger "></span>
+                                                            <input type="text " currencyMask
+                                                                [options]="{ prefix: '', suffix: ' %', thousands: '.', precision: 4 } "
+                                                                class="form-control " style="text-align: right;"
+                                                                [attr.disabled]="true"
+                                                                formControlName="TasaPeriodicaP" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-md-1 col-lg-1">
+                                                    </div>
+                                                    <div class="col-xs-12 col-md-2 col-lg-2">
+                                                        <div class="form-group">
+                                                            <label><strong>Tasas nominal:</strong></label>
+                                                            <span class="text-danger"></span>
+                                                            <input type="text" currencyMask
+                                                                [options]="{ prefix: '', suffix: ' %', thousands: '.', precision: 4 } "
+                                                                class="form-control " style="text-align: right; "
+                                                                [attr.disabled]="true" formControlName="TasaPactada" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-md-1 col-lg-1">
+                                                    </div>
+                                                    <div class="col-xs-12 col-md-2 col-lg-2">
+                                                        <div class="form-group">
+                                                            <label><strong>Tasa efectiva:</strong></label>
+                                                            <span class="text-danger "></span>
+                                                            <input type="text " currencyMask
+                                                                [options]="{ prefix: '', suffix: ' %', thousands: '.', precision: 4 } "
+                                                                class="form-control " style="text-align: right; "
+                                                                [attr.disabled]="true"
+                                                                formControlName="EfectivaPactada" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-md-1 col-lg-1">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-md-2 col-lg-2" style="text-align: right;">
+                                                <br>
+                                                <button type="button" id="marginbuton"
+                                                    class="btn Gt-btn-morado doNotPrint "
+                                                    (click)="Cambiavistatasas()">Pactado</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- Fin tab1 -->
+                            <!-- Inicio tab2 -->
+                            <div class="tab-pane" id="tab2">
+                                <form method="get" [formGroup]="SaldosForm">
+                                    <div class="col-xs-12 col-md-12 col-lg-12">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-9">
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-md-3 col-lg-3">
+                                                            <div class="form-group">
+                                                                <label>Abono en canje:</label>
+                                                                <span class="text-danger"></span>
+                                                                <input type="text" currencyMask
+                                                                    value=" {{carteraInfo.AbonoCanje |  currency}}"
+                                                                    class="form-control " style="text-align: right; "
+                                                                    [attr.disabled]="true " />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                                        <div class="col-xs-12 col-md-3 col-lg-3">
+                                                            <div class="form-group">
+                                                                <label>Interés contingente:</label>
+                                                                <span class="text-danger"></span>
+                                                                <input type="text" currencyMask
+                                                                    value=" {{carteraInfo.InteresContingente |  currency}}"
+                                                                    class="form-control" style="text-align: right;"
+                                                                    [attr.disabled]="true" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                                        <div class="col-xs-12 col-md-3 col-lg-3">
+                                                            <div class="form-group">
+                                                                <label>Capital mora:</label>
+                                                                <span class="text-danger"></span>
+                                                                <input type="text" currencyMask
+                                                                    value=" {{carteraInfo.CapitalMora |  currency }}"
+                                                                    class="form-control" style="text-align: right;"
+                                                                    [attr.disabled]="true" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-md-3 col-lg-3">
+                                                            <div class="form-group">
+                                                                <label>Interés anticipado:</label>
+                                                                <span class="text-danger"></span>
+                                                                <input type="text" currencyMask value=" {{carteraInfo.InteresAnticipado |  currency }}" class="form-control"
+                                                                    style="text-align: right;" [attr.disabled]="true" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                                        <div class="col-xs-12 col-md-3 col-lg-3">
+                                                            <div class="form-group">
+                                                                <label>Interés corriente:</label>
+                                                                <span class="text-danger"></span>
+                                                                <input type="text" currencyMask value=" {{carteraInfo.InteresCorriente |  currency }}" class="form-control"
+                                                                    style="text-align: right;" [attr.disabled]="true" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                                        <div class="col-xs-12 col-md-3 col-lg-3">
+                                                            <div class="form-group">
+                                                                <label>Saldo proyectado:</label>
+                                                                <span class="text-danger"></span>
+                                                                <input type="text" currencyMask value=" {{carteraInfo.SaldoProyectado |  currency }}" class="form-control"
+                                                                    style="text-align: right;" [attr.disabled]="true">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-md-3 col-lg-3">
+                                                            <div class="form-group">
+                                                                <label>Interés mora:</label>
+                                                                <span class="text-danger"></span>
+                                                                <input type="text" currencyMask value=" {{carteraInfo.InteresMora |  currency }}" class="form-control"
+                                                                    style="text-align: right;" [attr.disabled]="true" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                                        <div class="col-xs-12 col-md-3 col-lg-3">
+                                                            <div class="form-group">
+                                                                <label>Total interés:</label>
+                                                                <span class="text-danger"></span>
+                                                                <input type="text" currencyMask value=" {{carteraInfo.TotalInteres |  currency }}" class="form-control"
+                                                                    style="text-align: right;" [attr.disabled]="true" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                                        <div class="col-xs-12 col-md-3 col-lg-3">
+                                                            <div class="form-group">
+                                                                <label>Saldo capital:</label>
+                                                                <span class="text-danger"></span>
+                                                                <input type="text" currencyMask value=" {{carteraInfo.SaldoCapital |  currency }}" class="form-control"
+                                                                    style="text-align: right; background-color: rgba(200, 100, 150, 0.4); font-weight: bold"
+                                                                    [attr.disabled]="true" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-md-3 col-lg-3">
+                                                        </div>
+                                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                                        <div class="col-xs-12 col-md-3 col-lg-3">
+                                                        </div>
+                                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                                        <div class="col-xs-12 col-md-3 col-lg-3">
+                                                            <div class="form-group">
+                                                                <label>Saldo deuda:</label>
+                                                                <span class="text-danger"></span>
+                                                                <input type="text" currencyMask value=" {{carteraInfo.SaldoDeuda |  currency }}" class="form-control"
+                                                                    style="text-align: right; background-color: rgba(200, 100, 150, 0.4); font-weight: bold"
+                                                                    [attr.disabled]="true" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>                                                
+                                                <div class="col-md-1 border borderCuotas linea">
+                                                    <div class="row" >
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Cuotas pagas:</label>
+                                                                <span class="text-danger"></span>
+                                                                <input type="text" class="form-control" [attr.disabled]="true" formControlName="CoutasPagas" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Cuotas pendientes:</label>
+                                                                <span class="text-danger"></span>
+                                                                <input type="text" class="form-control" [attr.disabled]="true" formControlName="CoutasPendientes" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <div class="form-group">
+                                                                <label>Cuotas en mora:</label>
+                                                                <span class="text-danger"></span>
+                                                                <input type="text" class="form-control" [attr.disabled]="true" formControlName="CoutasMora" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>                                   
+                                </form>
+                            </div>
+                            <!-- Fin tab2 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
 </form>
