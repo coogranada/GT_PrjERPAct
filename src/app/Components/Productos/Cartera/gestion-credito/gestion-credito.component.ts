@@ -647,9 +647,9 @@ export class GestionCreditoComponent {
         this.deshabilitarCamposBusqueda();
         
         const saldo = cuentaDetalle.SaldoSeguroHipotecario?.Saldo;
-        const formatoCOP = new Intl.NumberFormat('es-CO', {
+        const formatoCOP = new Intl.NumberFormat('en-US', {
           style: 'currency',
-          currency: 'COP',
+          currency: 'USD',
           minimumFractionDigits: 2
         });
         if(saldo && saldo > 0) {
