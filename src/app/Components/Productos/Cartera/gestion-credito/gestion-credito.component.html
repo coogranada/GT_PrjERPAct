@@ -146,23 +146,21 @@
                         <!-- Fin Radicado -->
 
                         <!-- Inicio Pagare -->
-                        <div class="col-xs-12 col-md-1 col-lg-1">
-                            <label class="textNegrilla">Pagaré:</label>
-                            <!-- <span class="grande"> *</span> -->
+                        <div class="col-xs-6 col-md-3 col-lg-3 pagare">
+                            <div>
+                                <label class="textNegrilla">Pagaré:</label>
+                                <!-- <span class="grande"> *</span> -->
+                            </div>
+                            <div>
+                                <input type="text" class="form-control" tooltip="Nombre" placement="top" show-delay="500" formControlName="pagare" (keypress)="LimpiarCampos('pagare')" />
+                                <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['pagare'].errors?.['pattern']">
+                                    El pagaré solo acepta números.
+                                </span>
+                            </div>
+                            <button type="button" class="btn Gt-btn-verde btn-icon" [disabled]="gestionCreditoForm.get('pagare')?.disabled || gestionCreditoForm.get('pagare')?.invalid" (click)="onClickBuscarPorPagare()">
+                                <i class="icon-search4"></i>
+                            </button>
                         </div>
-                        <div class="col-xs-6 col-md-2 col-lg-1">
-                            <input type="text" class="form-control" tooltip="Nombre" placement="top" show-delay="500"
-                                formControlName="pagare" (keypress)="LimpiarCampos('pagare')" />
-                            <span class="help-block validationSpan"
-                                *ngIf="gestionCreditoForm.controls['pagare'].errors?.['pattern']">
-                                El pagaré solo acepta números.
-                            </span>
-                        </div>
-                        <button type="button" class="btn Gt-btn-verde btn-icon"
-                            [disabled]="gestionCreditoForm.get('pagare')?.disabled || gestionCreditoForm.get('pagare')?.invalid"
-                            (click)="onClickBuscarPorPagare()">
-                            <i class="icon-search4"></i>
-                        </button>
                         <!-- Fin Pagare -->
                     </div>
 
