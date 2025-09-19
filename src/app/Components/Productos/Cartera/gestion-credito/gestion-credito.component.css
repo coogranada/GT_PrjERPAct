@@ -436,6 +436,15 @@ h3 {
     align-items: center;
 }
 
+.pagare {
+    display: flex;
+
+    div:nth-child(2) {
+        margin-left: 15px;
+        margin-right: 7px;
+    }
+}
+
 /* TABS */
 #borde {
     border: 3px rgb(227, 227, 227);
