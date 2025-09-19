@@ -455,13 +455,29 @@ h3 {
 }
 
 .border {
-    border: 3px rgb(227, 227, 227);
+    border: 2px rgb(227, 227, 227);
     border-style: dashed;
-    border-radius: 22px;
-    padding: 15px;
-    width: 12%;
-    height: 20%;
-    margin-top: -1%;
-    margin-left: 59%;
-    position: fixed;
+    border-radius: 10px;
+}
+.borderCuotas {
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    width: 250px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    box-sizing: border-box;
+    text-align: left;
+}
+.linea {
+    font-size: 14px;
+    color: #333;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed #ddd;
+    width: auto;
+    max-width: 100%;
 }
