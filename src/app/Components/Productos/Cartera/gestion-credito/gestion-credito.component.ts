@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { OperacionesService } from '../../../../Services/Maestros/operaciones.service';
-import { TipoBusquedaResumen } from '../../../../Models/Productos/cartera/gestion-credito.enum';
+import { Tabs, TipoBusquedaResumen } from '../../../../Models/Productos/cartera/gestion-credito.enum';
 import { CarteraService } from '../../../../Services/Productos/cartera.service';
 import { CuentaCarteraResumen, CuentaFormateada } from '../../../../Models/Productos/cartera/gestion-credito.model';
 import { DisponiblesService } from '../../../../Services/Productos/disponible.service';
@@ -59,8 +59,13 @@ export class GestionCreditoComponent {
   public encabezadosTablaModalAlBuscar: string[] = [];
 
   // TABS
+  Tabs = Tabs;
+  tabActivo: Tabs = Tabs.Datos;
   activaDatos: boolean = true;
   activaSaldos: boolean = false;
+  estaTabValorCuotaActivo: boolean = false;
+  estaTabGarantiasActivo: boolean = false;
+  estaTabDiferidosActivo: boolean = false;
   public carteraInfo = new DetalleCartera();
 
   public ValidaPactado: boolean = false;
@@ -79,9 +84,9 @@ export class GestionCreditoComponent {
     this.loadOperaciones();
     this.ObtenerFormasPago();
     // Activa tab datos  
-    this.devolverTab(1);
-    $('#Datos').addClass('activar');
-    $('#Datos').addClass('active');
+    // this.devolverTab(Tabs.Datos);
+    // $('#Datos').addClass('activar');
+    // $('#Datos').addClass('active');
   }
 
   validateForm() {
@@ -719,14 +724,8 @@ export class GestionCreditoComponent {
   }
 
 // TABS 
-  devolverTab(tab: number) {
-    if (tab === 1) {
-      this.activaDatos = true;
-      this.activaSaldos = false;
-    } else if (tab === 2) {
-      this.activaDatos = false;
-      this.activaSaldos = true;
-    }
+  devolverTab(tab: Tabs): void {
+    this.tabActivo = tab;    
   }
 //DATOS 
   Cambiavistatasas() {
