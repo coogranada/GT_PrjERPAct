@@ -5,3 +5,11 @@ export enum TipoBusquedaResumen {
     IdCuenta = 4,
     NumeroCuenta = 5
 }
+
+export enum Tabs {
+    Datos = 1,
+    Saldos,
+    ValorCuota,
+    Garantias,
+    Diferidos
+  }

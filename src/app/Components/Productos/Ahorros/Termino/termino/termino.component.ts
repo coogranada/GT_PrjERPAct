@@ -2506,16 +2506,22 @@ export class TerminoComponent implements OnInit {
 
 
             } else {
-              if (edad >= 75) {
-                this.notif.onWarning('Advertencia', 'Edad del asociado no valida para este producto.');
-                this.TerminoForm.get('IdProducto')?.reset();
-                this.TerminoForm.get('DescripcionProducto')?.reset();
-                return;
-              } else {
+              if (this.TerminoForm.get('IdTipoDocumento')?.value === 3) {
                 this.TerminoForm.get('IdProducto')?.setValue(result[0].IdProducto);
                 this.TerminoForm.get('DescripcionProducto')?.setValue(result[0].DescripcionProducto);
                 this.MostrasAlertaProducto = false;
-              }
+              } else {
+                if (edad >= 75) {
+                  this.notif.onWarning('Advertencia', 'Edad del asociado no valida para este producto.');
+                  this.TerminoForm.get('IdProducto')?.reset();
+                  this.TerminoForm.get('DescripcionProducto')?.reset();
+                  return;
+                } else {
+                  this.TerminoForm.get('IdProducto')?.setValue(result[0].IdProducto);
+                  this.TerminoForm.get('DescripcionProducto')?.setValue(result[0].DescripcionProducto);
+                  this.MostrasAlertaProducto = false;
+                }
+              }             
             }
             const fechaHoy = new DatePipe('en-CO').transform(new Date(), 'yyyy/MM/dd');
             const fechaVigencia = new DatePipe('en-CO').transform(this.ArrayCondiciones.FechaVigencia, 'yyyy/MM/dd');
