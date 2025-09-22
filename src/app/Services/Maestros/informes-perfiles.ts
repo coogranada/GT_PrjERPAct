@@ -39,4 +39,9 @@ export class InformePerfilService {
         return this._http.post<any>(this.url, Datos);
     }
 
+    CopiarPermisosInformes(Datos: any, idPerfilMuestra : number): Observable<any> {
+        this.url = `${this.environment.Url}/CopiarPermisosInformes?idPerfilMuestra=`+idPerfilMuestra;
+        return this._http.post<any>(this.url, Datos);
+    }
+
 }

@@ -75,25 +75,30 @@
 
                 <div class="col-xs-10 col-md-2 text-center  d-flex flex-column align-items-center">
                     <p><button class="btn btn-default Gt-btn-verde btn-icon legitRipple" style="width: 40px;"
-                        (click)="AdicionarInfInd()">
+                            (click)="AdicionarInfInd()">
                             <i class="glyphicon glyphicon-chevron-right" style="font-size: 10px;"></i></button></p>
 
                     <p><button class="btn btn-default btn-icon legitRipple Gt-btn-verde" style="width: 40px;"
-                        (click)="modificarMasivo('adicionar')">
+                            (click)="modificarMasivo('adicionar')">
                             <i class="glyphicon glyphicon-chevron-right" style="font-size: 10px;"></i>
                             <i class="glyphicon glyphicon-chevron-right"
                                 style="font-size: 10px; margin-left: -4px;"></i>
                         </button></p>
 
-                    <p><button class="btn btn-default btn-icon legitRipple Gt-btn-morado"  style="width: 40px;"
-                        (click)="EliminarInfInd()">
-                            <i class="glyphicon glyphicon-chevron-left" style="font-size: 10px;" ></i></button></p>
+                    <p><button class="btn btn-default btn-icon legitRipple Gt-btn-morado" style="width: 40px;"
+                            (click)="EliminarInfInd()">
+                            <i class="glyphicon glyphicon-chevron-left" style="font-size: 10px;"></i></button></p>
 
-                    <p><button class="btn btn-default btn-icon legitRipple Gt-btn-morado"  style="width: 40px;"
-                        (click)="modificarMasivo('eliminar')">
+                    <p><button class="btn btn-default btn-icon legitRipple Gt-btn-morado" style="width: 40px;"
+                            (click)="modificarMasivo('eliminar')">
                             <i class="glyphicon glyphicon-chevron-left" style="font-size: 10px;"></i>
                             <i class="glyphicon glyphicon-chevron-left" style="font-size: 10px; margin-left: -4px;"></i>
                         </button></p>
+
+                    <p><button class="btn btn-default btn-icon legitRipple Gt-btn-gris" style="width: 40px;"
+                            (click)="CopiarInfInd()">
+                            <i class="glyphicon glyphicon-copy" style="font-size: 20px;"></i></button></p>
+
 
                 </div>
 
@@ -138,3 +143,74 @@
     <ngx-loading [show]="loading"
         [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}"></ngx-loading>
 </form>
+
+<input type="hidden" #ModalMasivoC data-toggle="modal" data-target="#ModalMasivo" data-popup="tooltip"
+    data-trigger="hover" data-placement="top">
+
+<!-- Modal Masivo -->
+<div id="ModalMasivo" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-md">
+            <div class="modal-header bg-morado">
+                <!-- Botón para cerrar la modal -->
+                <button type="button" class="close" class="close" data-dismiss="modal" #ModalMasivoCerrar 
+                    aria-label="Close">&times;</button>
+                <h6 class="modal-title">Copiar configuración</h6>
+            </div>
+            <div class="modal-body">
+
+                <p>Seleccione los perfiles a los que desea aplicar la configuración de <strong>{{selectedPerfilTex}}</strong></p>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group" id="buscarPerfil">
+                            <input type="text" class="form-control"  placeholder="Buscar perfil" [(ngModel)]="filtro"
+                                (input)="filtrarLista()" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive scrollTablaCampos">
+                    <table class="table table-hover tablaBorder table-fixed">
+                        <thead>
+                            <tr>
+                                <th>Perfil</th>
+                                <th>Seleccionar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="color: #333333;">
+                                    Seleccionar todos
+                                </td>
+                                <td class="centrarContenido">
+                                    <input type="checkbox" class="switchery selectedAll" [(ngModel)]="allSelected"
+                                        (change)="toggleAllCheckboxes()">
+                                </td>
+                            </tr>
+                            <tr *ngFor="let perfil of ListfilteredPerfiles">
+                                <td style="color: #333333;">
+                                    {{perfil.Nombre}}
+                                </td>
+                                <td class="centrarContenido">
+                                    <input type="checkbox" class="switchery" [(ngModel)]="perfil.selected"
+                                        (change)="checkIfAllSelected()">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+                <button class="btn Gt-btn-verde btn-icon legitRipple" type="button"
+                    (click)="actualizarPerfiles()">
+                    <i class=""></i>&nbsp; GUARDAR
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Modal Masivo -->

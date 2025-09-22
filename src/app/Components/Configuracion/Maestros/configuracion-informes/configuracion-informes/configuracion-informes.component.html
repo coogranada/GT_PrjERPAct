@@ -126,7 +126,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let item of configuracionInformesFiltrado">
+                    <tr *ngFor="let item of configuracionInformesFiltrado"
+                        [ngClass]="{'selected-row': selectedRow === item}" (click)="selectRow(item)">
                         <td>{{ item.IdConfiguracion }}</td>
                         <td>{{ item.NombreInforme }}</td>
                         <td>{{ item.NombreSP }}</td>
@@ -395,6 +396,59 @@
     </div>
 </div>
 
+
+<!-- Modal Ayuda -->
+<div id="ModalAyuda" class="modal fade">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title"><i class="icon-question6"></i> Ayuda</h6>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li>Todos los campos marcados con <span class="text-danger">*</span> son obligatorios.</li>
+                    <li>Para guardar la configuración debe presionar el botón "Guardar".</li>
+                    <li>Para actualizar la configuración se debe dar clic sobre el botón editar de la tabla.</li>
+                    <li>Para que se visualicen nuevos módulos en la lista desplegable, se debe matricular en el módulo
+                        <strong>operaciones módulos</strong>, se busca <strong>informe ahorros</strong>
+                        y se le adicionan los nuevos módulos.</li>
+                    <li>Para habilitar el acceso del módulo a los perfiles, se debe dar acceso a Informe de Ahorros y en
+                        las operaciones, el acceso a los módulos de informes que se requiera.</li>
+                    <li>Para habilitar informes específicos como los dinámicos o predeterminados, se debe gestionar en
+                        este módulo desde la operación permisos.</li>
+                    <li>Los listados relacionados con <strong>oficina</strong>, deben tener el código de filtro
+                        <strong>999</strong></li>
+                    <li>Si se define un filtro o campo que <strong>contenga</strong> la palabra
+                        <strong>oficina</strong>, de forma automática se configurará así:</li>
+                    <ul>
+                        <li>Si el usuario está en administración, el listado estará habilitado y podrá elegir cualquir
+                            oficina o todas.</li>
+                        <li>Si el usuario está en oficina diferente a administración, dejará el campo deshabilitado y
+                            seleccionado en la oficina donde se encuentre.</li>
+                    </ul>
+                    <li><strong>Recomendación para la estructuración de los SP:</strong>
+                        <ul>
+                            <li>Los parámetros de entrada del procedimiento todos deben declararse
+                                <strong>=NULL</strong>.
+                            </li>
+                            <li>Si el procedimiento maneja acciones, se debe declarar el primer parámetro con la palabra
+                                reservada <strong>&#64;Accion</strong>.</li>
+                            <li>Si requiere que un campo numérico tome el formato de moneda en la visualización del
+                                informe, se debe poner al final del nombre del campo la palabra reservada
+                                <strong>_M</strong>, ejemplo <i>Saldo_M</i>.
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--  Fin Modal Ayuda -->
 
 <ngx-loading [show]="loading"
     [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">

@@ -10,6 +10,7 @@ export class TablaVirtualComponent implements OnChanges {
   @Input() datos: any[] = [];
   @Input() columnas: string[] = [];
   @Input() formatear?: (valor: any, columna?: string) => string;
+  @Input() mostrarBtnCopia: boolean = false;
   @Output() filaSeleccionada = new EventEmitter<any>();
 
 

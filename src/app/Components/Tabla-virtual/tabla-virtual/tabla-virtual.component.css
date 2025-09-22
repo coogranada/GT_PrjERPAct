@@ -13,11 +13,15 @@
     background-color: #fff;  
     z-index: 10; 
  }
- .table th {
-    font-weight: bold;
-    padding: 10px; 
- }
- .table tbody tr {
+ .table thead th {
+   font-weight: bold;
+   white-space: nowrap;
+   overflow: hidden;
+   text-transform: ellipsis;
+   padding: 10px; 
+}
+
+.table tbody tr {
     height: 40px !important;
  }
  .table td {

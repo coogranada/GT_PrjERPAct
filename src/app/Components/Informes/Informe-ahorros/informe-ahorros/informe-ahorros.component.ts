@@ -15,13 +15,14 @@ import { ConfiguracionInformesService } from '../../../../Services/Informes/conf
 import Swal from "sweetalert2";
 import { TablaVirtualComponent } from '../../../Tabla-virtual/tabla-virtual/tabla-virtual.component';
 import { InformePerfilService } from '../../../../Services/Maestros/informes-perfiles';
+import { GeneralesService } from '../../../../Services/Productos/generales.service';
 
 
 @Component({
   selector: 'app-informe-ahorros',
   templateUrl: './informe-ahorros.component.html',
   styleUrl: './informe-ahorros.component.css',
-  providers: [OperacionesService, ModuleValidationService, InformePerfilService],
+  providers: [OperacionesService, ModuleValidationService, InformePerfilService, GeneralesService],
   standalone: false
 })
 
@@ -82,7 +83,8 @@ export class InformeAhorrosComponent implements OnInit {
 
   CodModulo: number = 82
 
-  constructor(private excelReportService: ExcelService, private fb: FormBuilder, private configuracionInformesS: ConfiguracionInformesService, private informeAhorrosService: InformeAhorrosService, private operacionesService: OperacionesService, private el: ElementRef, private moduleValidationService: ModuleValidationService, private notif: ToastrService, private InformePerfilS:InformePerfilService ) {
+  constructor(private excelReportService: ExcelService, private fb: FormBuilder, private configuracionInformesS: ConfiguracionInformesService, private informeAhorrosService: InformeAhorrosService, private operacionesService: OperacionesService, 
+              private el: ElementRef, private moduleValidationService: ModuleValidationService, private notif: ToastrService, private InformePerfilS:InformePerfilService, private generalesService: GeneralesService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -298,7 +300,12 @@ export class InformeAhorrosComponent implements OnInit {
             } else {
               this.encabezados = Object.keys(respuesta[0]).slice(1);
             }
-            this.ModalCantidadRegistros(respuesta.length, false)
+            const LogData ={
+              NombreInforme: this.nombreInformeSelect,
+              ...this.formulario.getRawValue(),
+            }
+            this.ModalCantidadRegistros(respuesta.length, false);
+            this.GuardarLog(LogData, this.selectedId, 0, 0, this.CodModulo);
           }
           this.loading = false;
           return;
@@ -338,13 +345,15 @@ export class InformeAhorrosComponent implements OnInit {
       this.notif.warning('Advertencia', 'No hay información para exportar.', ConfiguracionNotificacion.configRightTop);
     } else {
       data = this.resultadoInforme.map(row => {
-        return Object.keys(row).slice(1)
+        return Object.keys(row)//.slice(1)
           .reduce((obj, key) => {
+            const newkey = key.replace('_M', '');
+
             const valor = row[key];
             if (typeof valor === 'string' && valor.includes('T') && !isNaN(Date.parse(valor))) {
-              (obj as { [key: string]: unknown })[key] = this.formatearValor(valor);
+              (obj as { [key: string]: unknown })[newkey] = this.formatearValor(valor);
             } else {
-              (obj as { [key: string]: unknown })[key] = valor;
+              (obj as { [key: string]: unknown })[newkey] = valor;
             }
 
             return obj;
@@ -383,16 +392,20 @@ export class InformeAhorrosComponent implements OnInit {
   }
 
   formatearValor = (valor: any, columna?: string): string => {
+
     if (columna && columna.endsWith('_M')) {
       const numero = Number(valor);
       if (!isNaN(numero)) {
-        return numero.toLocaleString('es-CL', {
+        return numero.toLocaleString('es-CO', {
           style: 'currency',
-          currency: 'CLP'
+          currency: 'COP',
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
         });
       }
       return valor;
     }
+  
 
     if (typeof valor === 'string' && this.esFechaISO(valor)) {
       const fecha = new Date(valor);
@@ -778,11 +791,17 @@ export class InformeAhorrosComponent implements OnInit {
     }
 
     const selectedNomSP = this.configuracionInformesFiltroDina[0].NombreSP;
+    const selectedNomInf = this.configuracionInformesFiltroDina[0].NombreInforme;
     const resultado: { [key: string]: any } = {};
     // Construir el objeto con los parámetros
     this.filtrosAgregadoWhere.forEach((param: any) => {
       resultado[param.NombreParametro] = param.Valor;
     });
+
+    const LogData ={
+      NombreInforme: selectedNomInf,
+      ...this.filtrosAgregadoWhere,
+    }
 
     // Obtener columnas seleccionadas por el usuario
     const columnasSeleccionadas = this.ListfilteredColumnasInf
@@ -822,6 +841,7 @@ export class InformeAhorrosComponent implements OnInit {
             });
             // Mostrar cantidad de registros
             this.ModalCantidadRegistros(this.resultadoInforme.length, false);
+            this.GuardarLog(LogData, this.selectedId, 0, 0, this.CodModulo);
             this.loading = false;
           },
           error => {
@@ -888,5 +908,13 @@ export class InformeAhorrosComponent implements OnInit {
     return esValido;
   }
 
+  GuardarLog(formulario : any, operacion : number, cuenta : number, tercero : number, modulo : number) {
+    this.loading = true;
+    this.generalesService.Guardarlog(formulario, operacion, cuenta, tercero, modulo).subscribe(
+      result => {
+        this.loading = false;
+        console.log(result);
+      });
+  }
 
 }
