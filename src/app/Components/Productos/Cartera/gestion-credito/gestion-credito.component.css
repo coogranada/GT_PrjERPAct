@@ -438,6 +438,7 @@ h3 {
 
 .pagare {
     display: flex;
+    column-gap: 12px;
 
     > div {
         padding: 0;
