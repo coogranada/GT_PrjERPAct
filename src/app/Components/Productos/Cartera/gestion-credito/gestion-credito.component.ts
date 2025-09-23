@@ -66,9 +66,13 @@ export class GestionCreditoComponent {
   estaTabValorCuotaActivo: boolean = false;
   estaTabGarantiasActivo: boolean = false;
   estaTabDiferidosActivo: boolean = false;
-  public carteraInfo = new DetalleCartera();
 
+  ColorAnterior: any;
+
+  public carteraInfo = new DetalleCartera();
   public ValidaPactado: boolean = false;
+  public lstCalificacion: any[] = [];
+  public lstAnalisisCalificacion: any[] = [];  
   // FIN TABS 
 
   constructor( 
@@ -82,11 +86,7 @@ export class GestionCreditoComponent {
   ngOnInit() {
     this.validateForm();
     this.loadOperaciones();
-    this.ObtenerFormasPago();
-    // Activa tab datos  
-    // this.devolverTab(Tabs.Datos);
-    // $('#Datos').addClass('activar');
-    // $('#Datos').addClass('active');
+    this.ObtenerFormasPago();    
   }
 
   validateForm() {
@@ -671,7 +671,8 @@ export class GestionCreditoComponent {
         }
           // TABS
         this.BuscarDatosCartera(+cuentaResumen.IdCuenta);
-        this.BuscarSaldosCartera(+cuentaResumen.IdCuenta)
+        this.BuscarSaldosCartera(+cuentaResumen.IdCuenta);
+        this.BuscarCalificacion(+cuentaResumen.IdCuenta)
       }
 
       if (checkCartera) {
@@ -763,7 +764,6 @@ export class GestionCreditoComponent {
       }
     );
   }
-
   BuscarSaldosCartera(IdCuenta: number) {
     this.carteraService.getSaldosCartera(IdCuenta).subscribe(
       result => {
@@ -788,8 +788,37 @@ export class GestionCreditoComponent {
         console.log(errorMessage);
       }
     );
-  }   
+  } 
+  CambiarColor(fil: any, producto: any) {
+    if (producto === 1) {
 
+      $(".filtrasa_" + this.ColorAnterior).css("background", "#FFFFFF");
+      $(".filtrasa_" + fil).css("background", "#e5e5e5");
+
+      this.ColorAnterior = fil;
+    }
+  }
+  BuscarCalificacion(IdCuenta: number) {      
+    this.carteraService.getCalificacionCartera(IdCuenta).subscribe(
+          result => {  
+            var cal = 0;
+            var ancal = 0;
+            for (var i = 0; i < result.Calificacion.length; i++) {
+              this.lstCalificacion[cal] = result.Calificacion[i];
+              cal++;
+            }
+            for (var i = 0; i < result.Analisis.length; i++) {
+              this.lstAnalisisCalificacion[ancal] = result.Analisis[i];
+              ancal++;
+            }
+          },
+          error => {
+          }
+        )
+  
+      
+  
+  }
 // FIN DATOS 
 // FIN TABS
 

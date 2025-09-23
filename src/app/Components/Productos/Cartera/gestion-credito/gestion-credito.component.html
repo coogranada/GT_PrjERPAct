@@ -505,6 +505,9 @@
                             </li>
                             <li class="nav-item" [class.active]="tabActivo === Tabs.Diferidos" (click)="devolverTab(Tabs.Diferidos)">
                                 <a>Diferidos</a>
+                            </li> 
+                            <li class="nav-item" [class.active]="tabActivo === Tabs.Calificacion" (click)="devolverTab(Tabs.Calificacion)">
+                                <a>Calificación</a>
                             </li>
                         </ul>
                         <div class="tab-content">
@@ -881,6 +884,106 @@
                                 
                             </div>
                             <!-- Fin diferidosTab -->
+                            <!-- Inicio CalificacionTab -->
+                            <div [hidden]="tabActivo !== Tabs.Calificacion">
+                                <article class="ac-text-cr">
+                                    <div id="contenedor">
+                                        <!-- //tala 1 -->
+                                        <div class="col-xs-12 col-md-9 col-lg-9 panel-flat">
+                                
+                                            <div id="tablaCaL1" class="table-responsive scrollTabla" style="max-height: 350px;">
+                                                <div class="form-group"
+                                                    style="border-bottom: 1px solid rgb(160, 0, 87); margin-bottom: 15px; padding: 15px 15px;">
+                                                    <label for=""><strong>Calificación del crédito</strong></label>
+                                                </div>
+                                                <table style="
+                                                                              border-left: 1px solid #ddd;
+                                                                              border-right: 1px solid #ddd;
+                                                                              border-bottom: 1px solid #ddd;
+                                                                              border-top: 1px solid #ddd;" class="table table-hove tabla1calificacion"
+                                                    *ngIf="lstCalificacion.length > 0 && lstCalificacion != null">
+                                                    <thead>
+                                                        <tr class="encabezadoTablas">
+                                                            <th class="columnotras_tabla1calificacion" style="text-align: center;">
+                                                                <strong>Cumplimiento</strong>
+                                                            </th>
+                                                            <th class="columnotras_tabla1calificacion" style="text-align: center;">
+                                                                <strong>Recalificación</strong>
+                                                            </th>
+                                                            <th class="columnotras_tabla1calificacion" style="text-align: center;">
+                                                                <strong>Reestructuración</strong>
+                                                            </th>
+                                                            <th class="columnotras_tabla1calificacion" style="text-align: center;">
+                                                                <strong>Cualitativa</strong>
+                                                            </th>
+                                                            <th class="columnFecha_tabla1calificacion" style="text-align: center;">
+                                                                <strong>Fecha calificación</strong>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody *ngFor="let itemCalificacion of lstCalificacion; let i = index">
+                                                        <tr class="ahoCumpli_{{i}}" (click)="CambiarColor(i,7)">
+                                                            <td style="text-align: center;">{{itemCalificacion.Cumplimiento}}</td>
+                                                            <td style="text-align: center;">{{itemCalificacion.Recalificacion}}</td>
+                                                            <td style="text-align: center;">{{itemCalificacion.Reestructuracion}}</td>
+                                                            <td style="text-align: center;">{{itemCalificacion.Cualitativa}}</td>
+                                                            <td style="text-align: center;">{{itemCalificacion.FechaCalificacion}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <div class="col-xs-12 col-md-9 col-lg-9" *ngIf="lstCalificacion.length <=0 || lstCalificacion == null">
+                                                    <br>
+                                                    <div class="alert alert-secondary" role="alert">
+                                                        No hay registros
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- terminar de arreglar tablas  -->
+                                        </div>
+                                        <!-- tabla 2 -->
+                                        <div class="col-xs-12 col-md-3 col-lg-3 panel-flat">
+                                            <div class="table-responsive" id="tablaCal2" style="max-height: 350px;">
+                                                <div class="form-group"
+                                                    style="border-bottom: 1px solid rgb(160, 0, 87); margin-bottom: 15px; padding: 15px 15px;">
+                                                    <label for=""><strong>Análisis</strong></label>
+                                                </div>
+                                                <table class="table table-hover" style="width: 260px;
+                                                                                          border-left: 1px solid #ddd;
+                                                                                          border-right: 1px solid #ddd;
+                                                                                          border-bottom: 1px solid #ddd;
+                                                                                          border-top: 1px solid #ddd;"
+                                                    *ngIf="lstCalificacion.length > 0 && lstCalificacion != null">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="text-align: center;">
+                                                                <strong>Calificación</strong>
+                                                            </th>
+                                                            <th style="text-align: center;">
+                                                                <strong>Número veces</strong>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody *ngFor="let itemAnalisis of lstAnalisisCalificacion; let i = index">
+                                                        <tr class="ahoCalid_{{i}}" (click)="CambiarColor(i,8)">
+                                                            <td style="text-align: center; ">{{itemAnalisis.Calificacion}}</td>
+                                                            <td style="text-align: center; ">{{itemAnalisis.NumeroVeces}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-3 col-lg-3" *ngIf="lstCalificacion.length <= 0 || lstCalificacion == null">
+                                            <br>
+                                            <div class="alert alert-secondary" role="alert">
+                                                No hay registros
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                </article>
+                                
+                            </div>
+                            <!-- Fin CalificacionTab -->
                         </div>
                     </div>
                 </div>

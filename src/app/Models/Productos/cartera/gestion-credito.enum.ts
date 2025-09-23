@@ -11,5 +11,6 @@ export enum Tabs {
     Saldos,
     ValorCuota,
     Garantias,
-    Diferidos
+    Diferidos,
+    Calificacion
   }
