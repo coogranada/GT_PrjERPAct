@@ -4,7 +4,6 @@ import { OperacionesService } from '../../../../Services/Maestros/operaciones.se
 import { Tabs, TipoBusquedaResumen } from '../../../../Models/Productos/cartera/gestion-credito.enum';
 import { CarteraService } from '../../../../Services/Productos/cartera.service';
 import { CuentaCarteraResumen, CuentaFormateada } from '../../../../Models/Productos/cartera/gestion-credito.model';
-import { DisponiblesService } from '../../../../Services/Productos/disponible.service';
 import { catchError, forkJoin, Observable, of } from 'rxjs';
 import { MiListaProductosService } from '../../../../Services/Informes/mi-lista-productos.service';
 import { ToastrService } from 'ngx-toastr';
@@ -14,12 +13,13 @@ import { DetalleCartera } from '../../../../Models/Informes/MisProductos/mis-pro
 import { TablaVirtualComponent } from '../../../Tabla-virtual/tabla-virtual/tabla-virtual.component';
 import { MapeoColumna, transformarDatosParaTabla } from '../../../../utils/tabla-utils';
 import { formatDate } from '@angular/common';
+import { ContractualService } from '../../../../Services/Productos/contractual.service';
 
 @Component({
   selector: 'app-gestion-credito',
   templateUrl: './gestion-credito.component.html',
   styleUrl: './gestion-credito.component.css',
-  providers: [DisponiblesService],
+  providers: [ContractualService],
   standalone: false
 })
 export class GestionCreditoComponent {
@@ -78,7 +78,7 @@ export class GestionCreditoComponent {
   constructor( 
     private operacionesService: OperacionesService,
     private carteraService: CarteraService,
-    private disponiblesServices: DisponiblesService,
+    private contractualService: ContractualService,
     private miListaProductosService: MiListaProductosService,
     private notif: ToastrService
   ) {}
@@ -475,7 +475,7 @@ export class GestionCreditoComponent {
   }
 
   ObtenerFormasPago() {
-    this.disponiblesServices.FormaPago().pipe(
+    this.contractualService.getFormaPago().pipe(
       catchError(error => {
         console.error('Error al obtener formaPago:', error);
         return of(null);
