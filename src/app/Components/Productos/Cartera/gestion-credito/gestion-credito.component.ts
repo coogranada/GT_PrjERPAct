@@ -323,7 +323,8 @@ export class GestionCreditoComponent {
       DireccionDisponible: DireccionDisponible,
       Titulares: Titulares,
       Talonarios: Talonarios,
-      IdAsesorExterno: IdAsesorExterno,
+      IdAsesorExterno,
+      NombreAsesorExterno,
       IdOperacionPermitida,
       NombreOperacionPermitida,
       Canales: Canales,
@@ -361,11 +362,11 @@ export class GestionCreditoComponent {
       Codigo: Codigo,
     });
 
-    this.AsesorExternoForm = new FormGroup({
-      IdAsesorExterno,
-      NombreAsesorExterno,
-      strTipo
-    });
+    // this.AsesorExternoForm = new FormGroup({
+    //   IdAsesorExterno,
+    //   NombreAsesorExterno,
+    //   strTipo
+    // });
 
     // this.AdicionarPuntosFrom = new FormGroup({
     //   AdicionarPunto: AdicionarPunto,
@@ -820,6 +821,24 @@ export class GestionCreditoComponent {
   
   }
 // FIN DATOS 
+
+// GARANTIAS
+
+  getGarantias() {
+
+  }
+
+// FIN GARANTIAS
+
+//DIFERIDOS
+
+//FIN DIFERIDOS
+
+
+//PROVISION
+
+//FIN PROVISION
+
 // FIN TABS
 
 }
