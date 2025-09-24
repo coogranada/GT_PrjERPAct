@@ -618,6 +618,7 @@ export class GestionCreditoComponent {
     }).subscribe(({ cuentaDetalle, checkCartera }) => {
       this.loading = false;
       if (cuentaDetalle) {
+        this.ValidaPactado = false;
         this.gestionCreditoForm.get('IdCuenta')?.setValue(cuentaResumen.IdCuenta);
         this.gestionCreditoForm.get('IdOficinaCuenta')?.setValue(cuentaResumen.IdOficinaCuenta);
         this.gestionCreditoForm.get('IdProductoCuenta')?.setValue(cuentaResumen.IdProducto);
