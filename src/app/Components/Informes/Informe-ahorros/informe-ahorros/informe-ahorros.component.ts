@@ -301,8 +301,7 @@ export class InformeAhorrosComponent implements OnInit {
               this.encabezados = Object.keys(respuesta[0]).slice(1);
             }
             const LogData ={
-              NombreInforme: this.nombreInformeSelect,
-              ...this.formulario.getRawValue(),
+              NombreInforme: this.nombreInformeSelect
             }
             this.ModalCantidadRegistros(respuesta.length, false);
             this.GuardarLog(LogData, this.selectedId, 0, 0, this.CodModulo);
@@ -336,7 +335,7 @@ export class InformeAhorrosComponent implements OnInit {
     if(this.selectedTab == 'dinamicos'){
       nombreInfrome = "INFORME "+ this.OperacionSelect.toUpperCase();
     }else{
-      nombreInfrome = this.nombreInformeSelect;
+      nombreInfrome = this.nombreInformeSelect.toUpperCase();
     }
 
     var data = null;
@@ -345,7 +344,8 @@ export class InformeAhorrosComponent implements OnInit {
       this.notif.warning('Advertencia', 'No hay información para exportar.', ConfiguracionNotificacion.configRightTop);
     } else {
       data = this.resultadoInforme.map(row => {
-        return Object.keys(row)//.slice(1)
+        if(this.selectedTab == 'dinamicos'){
+          return Object.keys(row)
           .reduce((obj, key) => {
             const newkey = key.replace('_M', '');
 
@@ -358,6 +358,23 @@ export class InformeAhorrosComponent implements OnInit {
 
             return obj;
           }, {});
+        }else{
+          return Object.keys(row).slice(1) //Predeterminados se les retira la primera fila
+          .reduce((obj, key) => {
+            const newkey = key.replace('_M', '');
+
+            const valor = row[key];
+            if (typeof valor === 'string' && valor.includes('T') && !isNaN(Date.parse(valor))) {
+              (obj as { [key: string]: unknown })[newkey] = this.formatearValor(valor);
+            } else {
+              (obj as { [key: string]: unknown })[newkey] = valor;
+            }
+
+            return obj;
+          }, {});
+        }
+       
+
       });
       this.excelReportService.exportAsExcelFile(data, nombreInfrome)
       this.loading = false ;
@@ -799,8 +816,7 @@ export class InformeAhorrosComponent implements OnInit {
     });
 
     const LogData ={
-      NombreInforme: selectedNomInf,
-      ...this.filtrosAgregadoWhere,
+      NombreInforme: selectedNomInf
     }
 
     // Obtener columnas seleccionadas por el usuario

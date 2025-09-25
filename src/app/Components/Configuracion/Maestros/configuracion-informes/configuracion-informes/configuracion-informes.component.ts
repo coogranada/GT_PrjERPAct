@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ConfiguracionInformesService } from '../../../../../Services/Informes/configuracion-informes.service';
 import { ModuleValidationService } from '../../../../../Services/Enviroment/moduleValidation.service';
 import { ToastrService } from 'ngx-toastr';
-import { fromEvent } from 'rxjs';
+import { fromEvent, lastValueFrom, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfiguracionNotificacion } from '../../../../../../environments/config.noticaciones';
@@ -85,7 +85,7 @@ export class ConfiguracionInformesComponent implements OnInit {
       nombreInforme: ['', Validators.required],
       nombreSP: ['', Validators.required],
       accionEjecuta: [''],
-      idModulo: [0, Validators.required], 
+      idModulo: [0, Validators.required],
       idTipo: [0]
     });
 
@@ -120,10 +120,10 @@ export class ConfiguracionInformesComponent implements OnInit {
       nombreParametro: parametro.NombreParametro,
       tipoDato: parametro.TipoDato,
       tamanoCampo: parametro.TamanoCampo,
-      orden: this.calcularOrdenMaximo()+1
+      orden: this.calcularOrdenMaximo() + 1
     });
 
-    if(parametro.NombreParametro.trim().toLowerCase().includes('@accion')){
+    if (parametro.NombreParametro.trim().toLowerCase().includes('@accion')) {
       this.parametroConfiguracionInfForm.patchValue({
         nombreCampo: 'Reservado'
       });
@@ -132,14 +132,14 @@ export class ConfiguracionInformesComponent implements OnInit {
   }
 
   calcularOrdenMaximo(): number {
-    const ordenes = this.configuracionParametrosInformesTbl.map((item : any)=> item.Orden);
+    const ordenes = this.configuracionParametrosInformesTbl.map((item: any) => item.Orden);
     let maximo = Math.max(...ordenes);
-    if(ordenes.length <= 0){
+    if (ordenes.length <= 0) {
       maximo = -1;
     }
     return maximo;
   }
-  
+
 
   selectRowParamTbl(parametro: any) {
     this.valEditar = 1;
@@ -191,6 +191,14 @@ export class ConfiguracionInformesComponent implements OnInit {
     this.ShowModalList.nativeElement.click();
     this.obtenerParametrosConfiguracionInformes(parametro.NombreSP);
     this.obtenerParametrosConfiguracionInformesTbl(parametro.IdConfiguracion);
+
+    this.validarExistenciaSP(parametro.NombreSP).subscribe({
+      next: (existe) => {
+        if (!existe) {
+          this.alertaSPInexistente();
+        }
+      }
+    })
 
     setTimeout(() => {
       this.configuracionParametrosInformesNoCoi = this.configuracionParametrosInformes.filter((parametro: any) =>
@@ -308,22 +316,22 @@ export class ConfiguracionInformesComponent implements OnInit {
 
         setTimeout(() => {
           this.configuracionInformesPred = respuesta.filter((config: any) => config.IdTipo === false)
-          .map((config: any) => {
-            const operacion = this.Operaciones.find(op => op.IdOperacion === config.IdModulo);
-            return {
-              ...config,
-              DescripcionOperacion: operacion ? operacion.Descripcion : 'No encontrada'
-            };
-          });
+            .map((config: any) => {
+              const operacion = this.Operaciones.find(op => op.IdOperacion === config.IdModulo);
+              return {
+                ...config,
+                DescripcionOperacion: operacion ? operacion.Descripcion : 'No encontrada'
+              };
+            });
 
           this.configuracionInformesDina = respuesta.filter((config: any) => config.IdTipo === true)
-          .map((config: any) => {
-            const operacion = this.Operaciones.find(op => op.IdOperacion === config.IdModulo);
-            return {
-              ...config,
-              DescripcionOperacion: operacion ? operacion.Descripcion : 'No encontrada'
-            };
-          });
+            .map((config: any) => {
+              const operacion = this.Operaciones.find(op => op.IdOperacion === config.IdModulo);
+              return {
+                ...config,
+                DescripcionOperacion: operacion ? operacion.Descripcion : 'No encontrada'
+              };
+            });
         }, 500);
       },
       error: (err) => {
@@ -334,16 +342,18 @@ export class ConfiguracionInformesComponent implements OnInit {
 
 
   guardarConfiguracionInformes() {
-    if(this.valueInfSelected === 1){
-      this.configuracionInfomesForm.patchValue({idTipo: true});
-    }else{
-      this.configuracionInfomesForm.patchValue({idTipo: false});
+    if (this.valueInfSelected === 1) {
+      this.configuracionInfomesForm.patchValue({ idTipo: true });
+    } else {
+      this.configuracionInfomesForm.patchValue({ idTipo: false });
     }
 
     this.configuracionInformesS.GuardarConfiguracion(this.configuracionInfomesForm.value).subscribe(
       (respuesta) => {
+        this.configuracionInfomesForm.reset();
         this.notif.success('Exitoso', 'Información guardada correctamente', ConfiguracionNotificacion.configRightTopNoClose);
         this.obtenerConfiguracionInformes();
+        this.IrAbajo();
       },
       error => {
         let mensaje = 'Ha ocurrido un error inesperado.';
@@ -360,16 +370,18 @@ export class ConfiguracionInformesComponent implements OnInit {
   }
 
   actualizarConfiguracionInformes() {
-    if(this.valueInfSelected === 1){
-      this.configuracionInfomesForm.patchValue({idTipo: true});
-    }else{
-      this.configuracionInfomesForm.patchValue({idTipo: false});
+    if (this.valueInfSelected === 1) {
+      this.configuracionInfomesForm.patchValue({ idTipo: true });
+    } else {
+      this.configuracionInfomesForm.patchValue({ idTipo: false });
     }
-    
+
     this.configuracionInformesS.ActualizarConfiguracion(this.configuracionInfomesForm.getRawValue()).subscribe(
       (respuesta) => {
         this.notif.success('Exitoso', 'Información actualizada correctamente', ConfiguracionNotificacion.configRightTopNoClose);
+        this.configuracionInfomesForm.reset();
         this.obtenerConfiguracionInformes();
+        this.IrAbajo();
       },
       error => {
         let mensaje = 'Ha ocurrido un error inesperado.';
@@ -399,6 +411,11 @@ export class ConfiguracionInformesComponent implements OnInit {
 
   IrArriba() {
     $('html, body').animate({ scrollTop: 0 }, 'slow');
+    return false;
+  }
+
+  IrAbajo() {
+    $('html, body').animate({ scrollTop: $(document).height() }, 'slow');
     return false;
   }
 
@@ -447,7 +464,7 @@ export class ConfiguracionInformesComponent implements OnInit {
       });
   }
 
-  mostrarListas(){
+  mostrarListas() {
     this.mostrarModal = true;
   }
 
@@ -462,12 +479,12 @@ export class ConfiguracionInformesComponent implements OnInit {
     //);
 
     return this.listasCodigos.filter(item =>
-      item.IdTipo?.toString().toLowerCase()=== this.filtroBusqueda.toLowerCase()
+      item.IdTipo?.toString().toLowerCase() === this.filtroBusqueda.toLowerCase()
     );
-    
+
   }
 
-  cerrarListas(){
+  cerrarListas() {
     this.mostrarModal = false;
   }
 
@@ -477,7 +494,7 @@ export class ConfiguracionInformesComponent implements OnInit {
       next: (respuesta) => {
         this.listasCodigos = respuesta
         this.unicosPorIdClase = Array.from(
-          new Map(respuesta.map((item : any) => [item.IdTipo, item])).values()
+          new Map(respuesta.map((item: any) => [item.IdTipo, item])).values()
         );
         this.loading = false;
       },
@@ -485,7 +502,7 @@ export class ConfiguracionInformesComponent implements OnInit {
         console.error('Error al cargar parámetros de informes:', err);
         this.loading = false;
       }
-    });    
+    });
   }
 
   filtrarPorIdTipo() {
@@ -501,29 +518,29 @@ export class ConfiguracionInformesComponent implements OnInit {
   }
 
   opcionInfSelected(e: Event): void {
-      const selectElement = e.target as HTMLSelectElement;
-      this.valueInfSelected = + selectElement.value;
-      this.configuracionInfomesForm.reset();
-      this.actualizarValidacionNombreFiltro();
+    const selectElement = e.target as HTMLSelectElement;
+    this.valueInfSelected = + selectElement.value;
+    this.configuracionInfomesForm.reset();
+    this.actualizarValidacionNombreFiltro();
   }
 
   actualizarValidacionNombreFiltro() {
     const nombreFiltroControl = this.parametroConfiguracionInfForm.get('nombreFiltro');
-  
+
     if (this.valueInfSelected === 1) {
       nombreFiltroControl?.setValidators([Validators.required]);
     } else {
       nombreFiltroControl?.clearValidators();
     }
-  
+
     nombreFiltroControl?.updateValueAndValidity();
   }
 
-  
-  deleteConfig(parametro: any){
+
+  deleteConfig(parametro: any) {
     swal.fire({
-      title: '<strong> ¿Desea eliminar esta configuración y los permisos asociados a este? </strong>',
-      text: '',
+      title: '<strong> Advertencia </strong>',
+      text: '¿Desea eliminar esta configuración y los permisos asociados a este?',
       icon: 'question',
       showCancelButton: true,
       confirmButtonText: 'Si',
@@ -541,7 +558,7 @@ export class ConfiguracionInformesComponent implements OnInit {
 
 
 
-  eliminarConfiguracionInformes(parametro : any) {
+  eliminarConfiguracionInformes(parametro: any) {
     this.selectRow(parametro);
     this.configuracionInformesS.EliminarConfiguracion(this.configuracionInfomesForm.getRawValue()).subscribe(
       (respuesta) => {
@@ -562,8 +579,26 @@ export class ConfiguracionInformesComponent implements OnInit {
       });
   }
 
-  get configuracionInformesFiltrado(){
+  get configuracionInformesFiltrado() {
     return this.valueInfSelected === 0 ? this.configuracionInformesPred : this.configuracionInformesDina;
+  }
+
+  validarExistenciaSP(nombreSP: string): Observable<boolean> {
+    return this.configuracionInformesS.ValidarExistenciaSP(nombreSP);
+  }
+
+  alertaSPInexistente() {
+    swal.fire({
+      title: '<strong> Adverencia </strong>',
+      text: 'El procedimiento almacenado ya no existe en la base de datos, gestione la corrección.',
+      icon: 'warning',
+      showCancelButton: false,
+      confirmButtonText: 'ok',
+      confirmButtonColor: 'rgb(13,165,80)',
+      allowOutsideClick: false,
+      allowEscapeKey: false
+    }).then((results) => {
+    });
   }
 
 }
