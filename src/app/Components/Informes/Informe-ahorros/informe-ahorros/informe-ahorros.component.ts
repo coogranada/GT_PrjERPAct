@@ -186,6 +186,7 @@ export class InformeAhorrosComponent implements OnInit {
       return informe.IdModulo === this.selectedId && informe.IdTipo === true &&
       this.permitidosResult.some((permiso) => permiso.IdInforme === informe.IdConfiguracion);
     });
+    this.getListaFiltros();
   }
 
   informeSelected(event: Event) {

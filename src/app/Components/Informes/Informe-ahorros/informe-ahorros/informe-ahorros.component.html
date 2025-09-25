@@ -41,7 +41,7 @@
     </div>
 </div>
 
-<div *ngIf="selectedId == 119">
+<div *ngIf="selectedId !== 0">
     <div class="panel panel-white">
         <div class="panel-body" id="contenidoDisponibles">
             <div class="row">
@@ -60,7 +60,7 @@
                         </ul>
 
                         <!--#Region Informes predeterminados-->
-                        <div class="tab-content">
+                        <div class="tab-content" *ngIf="configuracionInformesFiltro.length >= 1">
                             <div *ngIf="selectedTab === 'predeterminados'">
                                 <div>
                                     <div class="row">
@@ -165,7 +165,8 @@
                         <!--#endRegion Informes predeterminados-->
 
                         <!--#Region Informes dinámicos-->
-                        <div class="tab-content">
+                        <div class="tab-content" *ngIf="configuracionInformesFiltroDina.length >= 1"
+                            >
                             <div *ngIf="selectedTab === 'dinamicos'">
                                 <div>
                                     <div class="row">
