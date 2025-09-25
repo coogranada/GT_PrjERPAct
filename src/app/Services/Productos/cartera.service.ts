@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { EnvironmentService } from '../Enviroment/enviroment.service';
 import { Observable } from 'rxjs';
 import { TipoBusquedaResumen } from '../../Models/Productos/cartera/gestion-credito.enum';
-import { CuentaCarteraDetalle, CuentaCarteraResumen, CuentaFormateada } from '../../Models/Productos/cartera/gestion-credito.model';
+import { CuentaCarteraDetalle, CuentaCarteraResumen, CuentaFormateada, Diferido, GarantiasResponse, Provision } from '../../Models/Productos/cartera/gestion-credito.model';
 
 @Injectable({
     providedIn: 'root'
@@ -43,7 +43,7 @@ export class CarteraService {
     }
 
     // GARANTIAS
-    getGarantias(IdCuenta: number): Observable<any> {
+    getGarantias(IdCuenta: number): Observable<GarantiasResponse> {
         this.url = `${this.environment.Url}/getGarantias?idCuenta=${IdCuenta}`;
         return this._http.get<any>(this.url);
     }
@@ -51,11 +51,17 @@ export class CarteraService {
 
 
     //DIFERIDOS
-
+    getDiferidos(IdCuenta: number): Observable<Diferido[]> {
+        this.url = `${this.environment.Url}/getDiferidos?idCuenta=${IdCuenta}`;
+        return this._http.get<any>(this.url);
+    }
     //FIN DIFERIDOS
 
 
     //PROVISION
-
+    getProvisiones(IdCuenta: number): Observable<Provision[]> {
+        this.url = `${this.environment.Url}/getProvisiones?idCuenta=${IdCuenta}`;
+        return this._http.get<any>(this.url);
+    }
     //FIN PROVISION
 }

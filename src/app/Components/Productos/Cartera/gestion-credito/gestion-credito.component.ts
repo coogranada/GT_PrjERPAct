@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { OperacionesService } from '../../../../Services/Maestros/operaciones.service';
 import { Tabs, TipoBusquedaResumen } from '../../../../Models/Productos/cartera/gestion-credito.enum';
 import { CarteraService } from '../../../../Services/Productos/cartera.service';
-import { CuentaCarteraResumen, CuentaFormateada } from '../../../../Models/Productos/cartera/gestion-credito.model';
+import { CuentaCarteraResumen, CuentaFormateada, Diferido, GarantiaPersonalCod, GarantiaReal, Provision } from '../../../../Models/Productos/cartera/gestion-credito.model';
 import { catchError, forkJoin, Observable, of } from 'rxjs';
 import { MiListaProductosService } from '../../../../Services/Informes/mi-lista-productos.service';
 import { ToastrService } from 'ngx-toastr';
@@ -57,6 +57,17 @@ export class GestionCreditoComponent {
   public loading = false;
   public datosTransformados: any[] = [];
   public encabezadosTablaModalAlBuscar: string[] = [];
+  garantiasPersonalesCod: GarantiaPersonalCod[] = [];
+  garantiasReales: GarantiaReal[] = [];
+  estadoCargaTabs: Partial<Record<Tabs, boolean>> = {
+    [Tabs.Garantias]: false,
+    [Tabs.Diferidos]: false,
+    [Tabs.Provision]: false
+  };
+
+  diferidos: Diferido[] = [];
+  provisiones: Provision[] = [];
+
 
   // TABS
   Tabs = Tabs;
@@ -492,6 +503,7 @@ export class GestionCreditoComponent {
     if (this.gestionCreditoOperacionForm.get('Codigo')?.value === '2') { // Buscar
       this.reestablecerCamposEncabezado();
       this.habilitarCamposBusqueda();
+      this.resetTabs();
     }
   }
 
@@ -730,6 +742,23 @@ export class GestionCreditoComponent {
   devolverTab(tab: Tabs): void {
     this.tabActivo = tab;    
   }
+
+  resetEstadoCargaTabs() {
+    for(const key of Object.keys(this.estadoCargaTabs) as Array<keyof typeof this.estadoCargaTabs>) {
+      this.estadoCargaTabs[key] = false;
+
+    }
+  }
+
+  resetTabs() {
+    this.resetEstadoCargaTabs();
+    this.tabActivo = Tabs.Datos;
+    this.DatosForm.reset();
+    this.SaldosForm.reset();
+    this.resetTabGarantias();
+    this.diferidos = [];
+    this.provisiones = [];
+  }
 //DATOS 
   Cambiavistatasas() {
     if (this.ValidaPactado) {
@@ -825,18 +854,119 @@ export class GestionCreditoComponent {
 
 // GARANTIAS
 
-  getGarantias() {
+  onGarantiasTabClick() {
+    // if(this.tabActivo != Tabs.Garantias)
+    //   this.getGarantias();
 
+    // this.devolverTab(Tabs.Garantias); 
+    this.onTabChange(Tabs.Garantias, () => this.getGarantias());
+  }
+
+  onTabChange(tab: Tabs, callback?: () => void) {
+    this.tabActivo = tab;
+  
+    if (!this.estadoCargaTabs[tab]) {
+      callback?.();
+      this.estadoCargaTabs[tab] = true;
+    }
+  
+  }
+
+  getGarantias() {
+    const idCuenta = this.gestionCreditoForm.get('IdCuenta')?.value;
+    if(!idCuenta) return;
+
+    this.loading = true;
+    this.carteraService.getGarantias(idCuenta).pipe(
+      catchError(error => {
+        console.error('Error al obtener garantías:', error);
+        this.notif.error('Error', 'Error al obtener garantías.', ConfiguracionNotificacion.configRightTop);
+        return of(null);
+      })
+    ).subscribe(
+      garantiasData => {
+        this.loading = false;
+        if(!garantiasData) {
+          this.notif.error('Error', 'Error al obtener garantías.', ConfiguracionNotificacion.configRightTop);
+          return;
+        }
+
+        const { lstCodeudores, lstGarantiaReal } = garantiasData;
+        if(lstCodeudores) this.garantiasPersonalesCod = lstCodeudores;
+        if(lstGarantiaReal) this.garantiasReales = lstGarantiaReal;        
+
+      }
+    );
+  }
+
+  resetTabGarantias() {
+    this.garantiasPersonalesCod = [];
+    this.garantiasReales = [];
   }
 
 // FIN GARANTIAS
 
 //DIFERIDOS
+  onDiferidosTabClick() {
+    this.onTabChange(Tabs.Diferidos, () => this.getDiferidos());
+  }
+
+  getDiferidos() {
+    const idCuenta = this.gestionCreditoForm.get('IdCuenta')?.value;
+    if(!idCuenta) return;
+
+    this.loading = true;
+    this.carteraService.getDiferidos(this.gestionCreditoForm.get('IdCuenta')?.value).pipe(
+      catchError(error => {
+        console.error('Error al obtener diferidos:', error);
+        this.notif.error('Error', 'Error al obtener diferidos.', ConfiguracionNotificacion.configRightTop);
+        return of(null);
+      })
+    ).subscribe(
+      diferidosData => {
+        this.loading = false;
+        if (!diferidosData) {
+          this.notif.error('Error', 'Error al obtener diferidos.', ConfiguracionNotificacion.configRightTop);
+          return;
+        }
+
+        this.diferidos = diferidosData;
+
+      }
+    );
+  }
 
 //FIN DIFERIDOS
 
 
 //PROVISION
+
+  onProvisionTabClick() {
+    this.onTabChange(Tabs.Provision, () => this.getProvisiones());
+  }
+  getProvisiones() {
+    const idCuenta = this.gestionCreditoForm.get('IdCuenta')?.value;
+    if(!idCuenta) return;
+
+    this.loading = true;
+    this.carteraService.getProvisiones(this.gestionCreditoForm.get('IdCuenta')?.value).pipe(
+      catchError(error => {
+        console.error('Error al obtener provisiones:', error);
+        this.notif.error('Error', 'Error al obtener provisiones.', ConfiguracionNotificacion.configRightTop);
+        return of(null);
+      })
+    ).subscribe(
+      provisionesData => {
+        this.loading = false;
+        if (!provisionesData) {
+          this.notif.error('Error', 'Error al obtener provisiones.', ConfiguracionNotificacion.configRightTop);
+          return;
+        }
+
+        this.provisiones = provisionesData;
+      }
+    );
+  }
 
 //FIN PROVISION
 

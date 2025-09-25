@@ -7,10 +7,11 @@ export enum TipoBusquedaResumen {
 }
 
 export enum Tabs {
-    Datos = 1,
-    Saldos,
-    ValorCuota,
-    Garantias,
-    Diferidos,
-    Calificacion
-  }
+    Datos = 'datos',
+    Saldos = 'saldos',
+    ValorCuota = 'valorCuota',
+    Garantias = 'garantias',
+    Diferidos = 'diferidos',
+    Provision = 'provision',
+    Calificacion = 'calificacion'
+}
