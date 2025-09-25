@@ -446,6 +446,16 @@ h3 {
 }
 
 /* TABS */
+
+.tab-title {
+    font-size: 14px;
+    font-weight: bold;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgb(160, 0, 87);
+}
+
 #borde {
     border: 3px rgb(227, 227, 227);
     border-style: dashed;
