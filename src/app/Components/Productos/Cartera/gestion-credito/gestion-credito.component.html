@@ -498,14 +498,17 @@
                             <li class="nav-item" [class.active]="tabActivo === Tabs.ValorCuota" (click)="devolverTab(Tabs.ValorCuota)">
                                 <a>Valor Cuota</a>
                             </li>
-                            <li class="nav-item" [class.active]="tabActivo === Tabs.Garantias" (click)="devolverTab(Tabs.Garantias); getGarantias();">
+                            <li class="nav-item" [class.active]="tabActivo === Tabs.Garantias" (click)="onGarantiasTabClick()">
                                 <a>Garantías</a>
                             </li>
-                            <li class="nav-item" [class.active]="tabActivo === Tabs.Diferidos" (click)="devolverTab(Tabs.Diferidos)">
+                            <li class="nav-item" [class.active]="tabActivo === Tabs.Diferidos" (click)="onDiferidosTabClick()">
                                 <a>Diferidos</a>
                             </li> 
                             <li class="nav-item" [class.active]="tabActivo === Tabs.Calificacion" (click)="devolverTab(Tabs.Calificacion)">
                                 <a>Calificación</a>
+                            </li>
+                            <li class="nav-item" [class.active]="tabActivo === Tabs.Provision" (click)="onProvisionTabClick()">
+                                <a>Provisión</a>
                             </li>
                         </ul>
                         <div class="tab-content">
@@ -876,40 +879,99 @@
                             <div [hidden]="tabActivo !== Tabs.Garantias">
                                 <section>
                                     <article>
-                                        <h3>Garantías Personales Codeudores</h3>
-                                        <div class="alert alert-secondary" role="alert">
+                                        <h3 class="tab-title">Garantías Personales Codeudores</h3>
+                                        <div class="alert alert-secondary" role="alert" *ngIf="garantiasPersonalesCod.length === 0">
                                             No hay registros
                                         </div>
-                                        <table>
-                                            <thead>
-                                                <tr><th></th></tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr><td></td></tr>
-                                            </tbody>
-                                        </table>
+                                        <div class="table-responsive scrollTabla" *ngIf="garantiasPersonalesCod.length > 0">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Documento</th>
+                                                        <th>Nombre</th>
+                                                        <th>Celular</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let garantia of garantiasPersonalesCod">
+                                                        <td>{{ garantia.NumeroDocumento }}</td>
+                                                        <td>{{ garantia.Nombres }}</td>
+                                                        <td>{{ garantia.TelResidencia }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </article>
 
                                     <article>
-                                        <h3>Garantías Reales</h3>
-                                        <div class="alert alert-secondary" role="alert">
+                                        <h3 class="tab-title">Garantías Reales</h3>
+                                        <div class="alert alert-secondary" role="alert" *ngIf="garantiasReales.length === 0">
                                             No hay registros
                                         </div>
-                                        <table>
-                                            <thead>
-                                                <tr><th></th></tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr><td></td></tr>
-                                            </tbody>
-                                        </table>
+                                        <div class="table-responsive scrollTabla" *ngIf="garantiasReales.length > 0">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Garantía</th>
+                                                        <th>Clase</th>
+                                                        <th>Valor cobertura</th>
+                                                        <th>Valor que respalda</th>
+                                                        <th>Vencimiento póliza</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let garantia of garantiasReales">
+                                                        <td>{{ garantia.Garantia }}</td>
+                                                        <td>{{ garantia.Clase }}</td>
+                                                        <td>{{ garantia.ValorCobertura | currency }}</td>
+                                                        <td>{{ garantia.ValorRespalda | currency }}</td>
+                                                        <td>{{ garantia.VctoPoliza }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        
                                     </article>
                                 </section>
                             </div>
                             <!-- Fin garantiasTab -->
                             <!-- Inicio diferidosTab -->
                             <div [hidden]="tabActivo !== Tabs.Diferidos">
-                                
+                                <section>
+                                    <article>
+                                        <div class="alert alert-secondary" role="alert" *ngIf="diferidos.length === 0">
+                                            No hay registros
+                                        </div>
+                                        <div class="table-responsive scrollTabla" *ngIf="diferidos.length > 0">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Código</th>
+                                                        <th>Nombre</th>
+                                                        <th>Saldo deducible</th>
+                                                        <th>Valor cuota</th>
+                                                        <th>Saldo inicial deducible</th>
+                                                        <th>Plazo</th>
+                                                        <th>Cuota pactada</th>
+                                                        <th>Valor pagado</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let diferido of diferidos">
+                                                        <td>{{ diferido.Codigo }}</td>
+                                                        <td>{{ diferido.Nombre }}</td>
+                                                        <td>{{ diferido.SaldoDeducible | currency }}</td>
+                                                        <td>{{ diferido.ValorCuota | currency }}</td>
+                                                        <td>{{ diferido.SaldoInicialDeducible | currency }}</td>
+                                                        <td>{{ diferido.Plazo }}</td>
+                                                        <td>{{ diferido.CuotaPactada }}</td>
+                                                        <td>{{ diferido.ValorPagado | currency }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </article>
+                                </section>
                             </div>
                             <!-- Fin diferidosTab -->
                             <!-- Inicio CalificacionTab -->
@@ -1012,6 +1074,62 @@
                                 
                             </div>
                             <!-- Fin CalificacionTab -->
+
+                            <!-- Inicio provisionTab -->
+                            <div [hidden]="tabActivo !== Tabs.Provision">
+                                <section>
+                                    <article>
+                                        <div class="alert alert-secondary" role="alert" *ngIf="provisiones.length === 0">
+                                            No hay registros
+                                        </div>
+                                        <div class="table-responsive scrollTabla" *ngIf="provisiones.length > 0">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Fecha</th>
+                                                        <th>Capital</th>
+                                                        <th>Intereses</th>
+                                                        <th>Dias</th>
+                                                        <th>Calificación</th>
+                                                        <th>Provisión intereses</th>
+                                                        <th>Provisión capital</th>
+                                                        <th>Provisión adicional</th>
+                                                        <th>Hipotecas</th>
+                                                        <th>Otras</th>
+                                                        <th>Aportes</th>
+                                                        <th>Cubrimiento hipoteca</th>
+                                                        <th>Cubrimiento otros</th>
+                                                        <th>Cubrimiento aportes</th>
+                                                        <th>Costas judiciales</th>
+                                                        <th>Procentaje provisíon</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let provision of provisiones">
+                                                        <td>{{ provision.dtmFecha }}</td>
+                                                        <td>{{ provision.curCapital | currency }}</td>
+                                                        <td>{{ provision.curInteres | currency }}</td>
+                                                        <td>{{ provision.intDiasMora }}</td>
+                                                        <td>{{ provision.strCalificacion }}</td>
+                                                        <td>{{ provision.curProINT | currency }}</td>
+                                                        <td>{{ provision.curProCap | currency }}</td>
+                                                        <td>{{ provision.curProvisionAdicional | currency }}</td>
+                                                        <td>{{ provision.curHipotecas | currency }}</td>
+                                                        <td>{{ provision.curOtras | currency }}</td>
+                                                        <td>{{ provision.curAportes | currency }}</td>
+                                                        <td>{{ provision.curCubHip | currency }}</td>
+                                                        <td>{{ provision.curCubOtr | currency }}</td>
+                                                        <td>{{ provision.curCubApo | currency }}</td>
+                                                        <td>{{ provision.curProCos | currency }}</td>
+                                                        <td>{{ '%' }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </article>
+                                </section>
+                            </div>
+                            <!-- Fin provisionTab -->
                         </div>
                     </div>
                 </div>

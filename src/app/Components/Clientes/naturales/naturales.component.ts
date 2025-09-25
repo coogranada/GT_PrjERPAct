@@ -21178,6 +21178,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                 RegimenTributario: 'No responsable'
               };
               this.GuardarLog(logData, opera, 0, Number(localStorage.getItem('TerceroNatura')),11);
+              this.notif.onSuccess('Exitoso', 'El registro se realizó correctamente.');
               if (resulNatural.Result.asociadosNaturalesDto.IdRelacion !== 15) {
                 // si es diferente de tercero guarda el debito automatico si no no
                 this.GuardarDebitoAuto(1, resulNatural.Result.tercerosDto.IdTercero);

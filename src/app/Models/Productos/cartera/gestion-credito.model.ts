@@ -49,8 +49,60 @@ export interface SeguroHipotecario {
 }
 
 export interface CuentaFormateada {
-    oficina: string;
-    producto: string;
-    consecutivo: string;
-    digito: string;
+  oficina: string;
+  producto: string;
+  consecutivo: string;
+  digito: string;
+}
+
+export interface GarantiaPersonalCod {
+  Nombres: string;
+  PrimerApellido: string;
+  SegundoApellido: string;
+  NumeroDocumento: string;
+  TelResidencia: string | null;
+  TelEmpresa: string | null;
+}
+
+export interface GarantiaReal {
+  Clase: string;
+  Garantia: string;
+  ValorCobertura: number;
+  ValorRespalda: number;
+  VctoPoliza: string; 
+}
+
+export interface GarantiasResponse {
+  lstCodeudores: GarantiaPersonalCod[] | null;
+  lstGarantiaReal: GarantiaReal[] | null;
+}
+
+export interface Diferido {
+  Codigo: number;
+  CuotaPactada: number;
+  Nombre: string;
+  Plazo: number
+  SaldoDeducible: number
+  SaldoInicialDeducible: number
+  ValorCuota: number
+  ValorPagado: number
+}
+
+export interface Provision {
+  curAportes: number;
+  curCapital: number;
+  curCostas: number;
+  curCubApo: number;
+  curCubHip: number;
+  curCubOtr: number;
+  curHipotecas: number;
+  curInteres: number;
+  curOtras: number;
+  curProCap: number;
+  curProCos: string; 
+  curProINT: number;
+  curProvisionAdicional: number;
+  dtmFecha: string; 
+  intDiasMora: number;
+  strCalificacion: string;
 }
