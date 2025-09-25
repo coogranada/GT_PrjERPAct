@@ -621,7 +621,7 @@ export class EntrevistaComponent implements OnInit {
         const dataJuridico = result;
         const AnimoLucro = infoTotal.BasicosDto.AnimoLucro ? 'Si' : 'No';
         this.GuardarLog({...infoTotal, BasicosDto: { ...infoTotal.BasicosDto, AnimoLucro }}, this.OperacionSeleccionada, 0, dataJuridico.BasicosDto.IdTercero,12);
-        // this.notif.onSuccess('Exitoso', 'El registro se realizó correctamente.');
+        this.notif.onSuccess('Exitoso', 'El registro se realizó correctamente.');
         this.emitEventGuardado.emit({
           cargar: '1', consultar: infoTotal.JuridicoDto.Nit, consultarTercero: dataJuridico.BasicosDto.IdTercero,
           relacion: dataJuridico.BasicosDto.IdRelacion  });
