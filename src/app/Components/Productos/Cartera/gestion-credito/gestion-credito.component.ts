@@ -4,7 +4,6 @@ import { OperacionesService } from '../../../../Services/Maestros/operaciones.se
 import { Tabs, TipoBusquedaResumen } from '../../../../Models/Productos/cartera/gestion-credito.enum';
 import { CarteraService } from '../../../../Services/Productos/cartera.service';
 import { CuentaCarteraResumen, CuentaFormateada } from '../../../../Models/Productos/cartera/gestion-credito.model';
-import { DisponiblesService } from '../../../../Services/Productos/disponible.service';
 import { catchError, forkJoin, Observable, of } from 'rxjs';
 import { MiListaProductosService } from '../../../../Services/Informes/mi-lista-productos.service';
 import { ToastrService } from 'ngx-toastr';
@@ -14,12 +13,13 @@ import { DetalleCartera } from '../../../../Models/Informes/MisProductos/mis-pro
 import { TablaVirtualComponent } from '../../../Tabla-virtual/tabla-virtual/tabla-virtual.component';
 import { MapeoColumna, transformarDatosParaTabla } from '../../../../utils/tabla-utils';
 import { formatDate } from '@angular/common';
+import { ContractualService } from '../../../../Services/Productos/contractual.service';
 
 @Component({
   selector: 'app-gestion-credito',
   templateUrl: './gestion-credito.component.html',
   styleUrl: './gestion-credito.component.css',
-  providers: [DisponiblesService],
+  providers: [ContractualService],
   standalone: false
 })
 export class GestionCreditoComponent {
@@ -66,15 +66,19 @@ export class GestionCreditoComponent {
   estaTabValorCuotaActivo: boolean = false;
   estaTabGarantiasActivo: boolean = false;
   estaTabDiferidosActivo: boolean = false;
-  public carteraInfo = new DetalleCartera();
 
+  ColorAnterior: any;
+
+  public carteraInfo = new DetalleCartera();
   public ValidaPactado: boolean = false;
+  public lstCalificacion: any[] = [];
+  public lstAnalisisCalificacion: any[] = [];  
   // FIN TABS 
 
   constructor( 
     private operacionesService: OperacionesService,
     private carteraService: CarteraService,
-    private disponiblesServices: DisponiblesService,
+    private contractualService: ContractualService,
     private miListaProductosService: MiListaProductosService,
     private notif: ToastrService
   ) {}
@@ -82,11 +86,7 @@ export class GestionCreditoComponent {
   ngOnInit() {
     this.validateForm();
     this.loadOperaciones();
-    this.ObtenerFormasPago();
-    // Activa tab datos  
-    // this.devolverTab(Tabs.Datos);
-    // $('#Datos').addClass('activar');
-    // $('#Datos').addClass('active');
+    this.ObtenerFormasPago();    
   }
 
   validateForm() {
@@ -323,7 +323,8 @@ export class GestionCreditoComponent {
       DireccionDisponible: DireccionDisponible,
       Titulares: Titulares,
       Talonarios: Talonarios,
-      IdAsesorExterno: IdAsesorExterno,
+      IdAsesorExterno,
+      NombreAsesorExterno,
       IdOperacionPermitida,
       NombreOperacionPermitida,
       Canales: Canales,
@@ -361,11 +362,11 @@ export class GestionCreditoComponent {
       Codigo: Codigo,
     });
 
-    this.AsesorExternoForm = new FormGroup({
-      IdAsesorExterno,
-      NombreAsesorExterno,
-      strTipo
-    });
+    // this.AsesorExternoForm = new FormGroup({
+    //   IdAsesorExterno,
+    //   NombreAsesorExterno,
+    //   strTipo
+    // });
 
     // this.AdicionarPuntosFrom = new FormGroup({
     //   AdicionarPunto: AdicionarPunto,
@@ -475,7 +476,7 @@ export class GestionCreditoComponent {
   }
 
   ObtenerFormasPago() {
-    this.disponiblesServices.FormaPago().pipe(
+    this.contractualService.getFormaPago().pipe(
       catchError(error => {
         console.error('Error al obtener formaPago:', error);
         return of(null);
@@ -617,6 +618,7 @@ export class GestionCreditoComponent {
     }).subscribe(({ cuentaDetalle, checkCartera }) => {
       this.loading = false;
       if (cuentaDetalle) {
+        this.ValidaPactado = false;
         this.gestionCreditoForm.get('IdCuenta')?.setValue(cuentaResumen.IdCuenta);
         this.gestionCreditoForm.get('IdOficinaCuenta')?.setValue(cuentaResumen.IdOficinaCuenta);
         this.gestionCreditoForm.get('IdProductoCuenta')?.setValue(cuentaResumen.IdProducto);
@@ -671,7 +673,8 @@ export class GestionCreditoComponent {
         }
           // TABS
         this.BuscarDatosCartera(+cuentaResumen.IdCuenta);
-        this.BuscarSaldosCartera(+cuentaResumen.IdCuenta)
+        this.BuscarSaldosCartera(+cuentaResumen.IdCuenta);
+        this.BuscarCalificacion(+cuentaResumen.IdCuenta)
       }
 
       if (checkCartera) {
@@ -763,7 +766,6 @@ export class GestionCreditoComponent {
       }
     );
   }
-
   BuscarSaldosCartera(IdCuenta: number) {
     this.carteraService.getSaldosCartera(IdCuenta).subscribe(
       result => {
@@ -788,9 +790,56 @@ export class GestionCreditoComponent {
         console.log(errorMessage);
       }
     );
-  }   
+  } 
+  CambiarColor(fil: any, producto: any) {
+    if (producto === 1) {
 
+      $(".filtrasa_" + this.ColorAnterior).css("background", "#FFFFFF");
+      $(".filtrasa_" + fil).css("background", "#e5e5e5");
+
+      this.ColorAnterior = fil;
+    }
+  }
+  BuscarCalificacion(IdCuenta: number) {      
+    this.carteraService.getCalificacionCartera(IdCuenta).subscribe(
+          result => {  
+            var cal = 0;
+            var ancal = 0;
+            for (var i = 0; i < result.Calificacion.length; i++) {
+              this.lstCalificacion[cal] = result.Calificacion[i];
+              cal++;
+            }
+            for (var i = 0; i < result.Analisis.length; i++) {
+              this.lstAnalisisCalificacion[ancal] = result.Analisis[i];
+              ancal++;
+            }
+          },
+          error => {
+          }
+        )
+  
+      
+  
+  }
 // FIN DATOS 
+
+// GARANTIAS
+
+  getGarantias() {
+
+  }
+
+// FIN GARANTIAS
+
+//DIFERIDOS
+
+//FIN DIFERIDOS
+
+
+//PROVISION
+
+//FIN PROVISION
+
 // FIN TABS
 
 }
