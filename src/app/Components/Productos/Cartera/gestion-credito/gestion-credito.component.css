@@ -402,7 +402,8 @@ h3 {
     font-weight: bold;
 }
 
-.table tbody tr {
+.table tbody tr,
+.table tfoot tr {
     height: 45px !important;
 }
 
@@ -454,6 +455,67 @@ h3 {
     padding-left: 10px;
     padding-bottom: 8px;
     border-bottom: 1px solid rgb(160, 0, 87);
+}
+
+.horizontal-scroll {
+    overflow-x: auto;
+}
+
+.table-header {
+    white-space: nowrap
+}
+
+.table-header-medium {
+    min-width: 150px;
+    text-align: center;
+}
+
+
+.align-right {
+    text-align: right;
+    padding-right: 9%;
+}
+
+.align-right-large {
+    text-align: right;
+    padding-right: 40%;
+}
+
+
+
+@media (min-width: 1920px) {
+    .align-right {
+        padding-right: 40%;
+    }
+    .align-right-large {
+        padding-right: 60%;
+    }
+
+    .provision-table {
+        .align-right {
+            padding-right: 5%;
+        }
+    }
+
+}
+
+
+
+
+
+.centered {
+    text-align: center;
+}
+
+.total-tfoot {
+    
+    td {
+        border-top: 2px solid #000;
+    }
+
+    td:first-child {
+        border-right: 2px solid #000;
+    }
 }
 
 #borde {
