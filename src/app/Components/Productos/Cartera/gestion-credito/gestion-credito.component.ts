@@ -66,6 +66,11 @@ export class GestionCreditoComponent {
   };
 
   diferidos: Diferido[] = [];
+  saldoDeducibleTotal = 0;
+  valorCuotaTotal = 0;
+  saldoInicialDeducibleTotal = 0;
+  cuotaPactadaTotal = 0;
+  valorPagadoTotal = 0;
   provisiones: Provision[] = [];
 
 
@@ -931,6 +936,11 @@ export class GestionCreditoComponent {
         }
 
         this.diferidos = diferidosData;
+        this.saldoDeducibleTotal = diferidosData.reduce((acc, value) => acc + value.SaldoDeducible, 0);
+        this.valorCuotaTotal = diferidosData.reduce((acc, value) => acc + value.ValorCuota, 0);
+        this.saldoInicialDeducibleTotal = diferidosData.reduce((acc, value) => acc + value.SaldoInicialDeducible, 0);
+        this.cuotaPactadaTotal = diferidosData.reduce((acc, value) => acc + value.CuotaPactada, 0);
+        this.valorPagadoTotal = diferidosData.reduce((acc, value) => acc + value.ValorPagado, 0);
 
       }
     );
