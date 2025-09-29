@@ -57,6 +57,7 @@ export class InformeAhorrosComponent implements OnInit {
   public nombreSP: string = "";
   public accionEjecuta: string = "";
   public nombreInformeSelect: string = '';
+  public nombreInfrome: string = '';
   public filtro: string = '';
   public filtroSeleccionado: string | null = null;
   public fechaMax: any = null;
@@ -186,6 +187,9 @@ export class InformeAhorrosComponent implements OnInit {
       return informe.IdModulo === this.selectedId && informe.IdTipo === true &&
       this.permitidosResult.some((permiso) => permiso.IdInforme === informe.IdConfiguracion);
     });
+    this.filtrosAgregado = [];
+    this.filtrosAgregadoWhere = [];
+    this.allSelected = false;
     this.getListaFiltros();
   }
 
@@ -331,13 +335,7 @@ export class InformeAhorrosComponent implements OnInit {
 
   exportarExcel2() {
     this.loading = true;
-    let nombreInfrome;
 
-    if(this.selectedTab == 'dinamicos'){
-      nombreInfrome = "INFORME "+ this.OperacionSelect.toUpperCase();
-    }else{
-      nombreInfrome = this.nombreInformeSelect.toUpperCase();
-    }
 
     var data = null;
     if (!this.resultadoInforme || this.resultadoInforme.length === 0) {
@@ -377,7 +375,7 @@ export class InformeAhorrosComponent implements OnInit {
        
 
       });
-      this.excelReportService.exportAsExcelFile(data, nombreInfrome)
+      this.excelReportService.exportAsExcelFile(data, this.nombreInfrome)
       this.loading = false ;
     }
   }
@@ -497,6 +495,13 @@ export class InformeAhorrosComponent implements OnInit {
           if (idDowload) {
             this.exportarExcel2()
           } else {
+            
+            if(this.selectedTab == 'dinamicos'){
+              this.nombreInfrome = "INFORME "+ this.OperacionSelect.toUpperCase();
+            }else{
+              this.nombreInfrome = this.nombreInformeSelect.toUpperCase();
+            }
+
             this.ShowModalList.nativeElement.click();
           }
         }, 300);
