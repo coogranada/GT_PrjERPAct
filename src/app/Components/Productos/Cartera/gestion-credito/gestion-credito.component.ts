@@ -61,11 +61,17 @@ export class GestionCreditoComponent {
   garantiasReales: GarantiaReal[] = [];
   estadoCargaTabs: Partial<Record<Tabs, boolean>> = {
     [Tabs.Garantias]: false,
-    [Tabs.Diferidos]: false,
+    [Tabs.Deducibles]: false,
     [Tabs.Provision]: false
   };
 
-  diferidos: Diferido[] = [];
+  deducibles: Diferido[] = [];
+  selectedRows: Record<string, null | number> = {
+    codeudores: null,
+    reales: null,
+    deducibles: null,
+    provisiones: null
+  }
   saldoDeducibleTotal = 0;
   valorCuotaTotal = 0;
   saldoInicialDeducibleTotal = 0;
@@ -81,7 +87,7 @@ export class GestionCreditoComponent {
   activaSaldos: boolean = false;
   estaTabValorCuotaActivo: boolean = false;
   estaTabGarantiasActivo: boolean = false;
-  estaTabDiferidosActivo: boolean = false;
+  estaTabDeduciblesActivo: boolean = false;
 
   ColorAnterior: any;
 
@@ -459,6 +465,14 @@ export class GestionCreditoComponent {
     return numero < 10 ? '0' + numero : numero.toString();
   }
 
+  // selectRow(index: number): void {
+  //   this.selectedRow = index;
+  // }
+
+  selectRow(tableName: string, rowIndex: number) {
+    this.selectedRows[tableName] = rowIndex;
+  }
+
   formatearValor = (valor: any, columna?: string): string => {
     return valor !== null && valor !== undefined ? String(valor) : '';
   };
@@ -761,7 +775,7 @@ export class GestionCreditoComponent {
     this.DatosForm.reset();
     this.SaldosForm.reset();
     this.resetTabGarantias();
-    this.diferidos = [];
+    this.deducibles = [];
     this.provisiones = [];
   }
 //DATOS 
@@ -912,35 +926,35 @@ export class GestionCreditoComponent {
 // FIN GARANTIAS
 
 //DIFERIDOS
-  onDiferidosTabClick() {
-    this.onTabChange(Tabs.Diferidos, () => this.getDiferidos());
+  onDeduciblesTabClick() {
+    this.onTabChange(Tabs.Deducibles, () => this.getDeducibles());
   }
 
-  getDiferidos() {
+  getDeducibles() {
     const idCuenta = this.gestionCreditoForm.get('IdCuenta')?.value;
     if(!idCuenta) return;
 
     this.loading = true;
-    this.carteraService.getDiferidos(this.gestionCreditoForm.get('IdCuenta')?.value).pipe(
+    this.carteraService.getDeducibles(this.gestionCreditoForm.get('IdCuenta')?.value).pipe(
       catchError(error => {
-        console.error('Error al obtener diferidos:', error);
-        this.notif.error('Error', 'Error al obtener diferidos.', ConfiguracionNotificacion.configRightTop);
+        console.error('Error al obtener deducibles:', error);
+        this.notif.error('Error', 'Error al obtener deducibles.', ConfiguracionNotificacion.configRightTop);
         return of(null);
       })
     ).subscribe(
-      diferidosData => {
+      deduciblesData => {
         this.loading = false;
-        if (!diferidosData) {
-          this.notif.error('Error', 'Error al obtener diferidos.', ConfiguracionNotificacion.configRightTop);
+        if (!deduciblesData) {
+          this.notif.error('Error', 'Error al obtener deducibles.', ConfiguracionNotificacion.configRightTop);
           return;
         }
 
-        this.diferidos = diferidosData;
-        this.saldoDeducibleTotal = diferidosData.reduce((acc, value) => acc + value.SaldoDeducible, 0);
-        this.valorCuotaTotal = diferidosData.reduce((acc, value) => acc + value.ValorCuota, 0);
-        this.saldoInicialDeducibleTotal = diferidosData.reduce((acc, value) => acc + value.SaldoInicialDeducible, 0);
-        this.cuotaPactadaTotal = diferidosData.reduce((acc, value) => acc + value.CuotaPactada, 0);
-        this.valorPagadoTotal = diferidosData.reduce((acc, value) => acc + value.ValorPagado, 0);
+        this.deducibles = deduciblesData;
+        this.saldoDeducibleTotal = deduciblesData.reduce((acc, value) => acc + value.SaldoDeducible, 0);
+        this.valorCuotaTotal = deduciblesData.reduce((acc, value) => acc + value.ValorCuota, 0);
+        this.saldoInicialDeducibleTotal = deduciblesData.reduce((acc, value) => acc + value.SaldoInicialDeducible, 0);
+        this.cuotaPactadaTotal = deduciblesData.reduce((acc, value) => acc + value.CuotaPactada, 0);
+        this.valorPagadoTotal = deduciblesData.reduce((acc, value) => acc + value.ValorPagado, 0);
 
       }
     );

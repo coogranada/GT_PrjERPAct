@@ -51,7 +51,7 @@ export class CarteraService {
 
 
     //DIFERIDOS
-    getDiferidos(IdCuenta: number): Observable<Diferido[]> {
+    getDeducibles(IdCuenta: number): Observable<Diferido[]> {
         this.url = `${this.environment.Url}/getDiferidos?idCuenta=${IdCuenta}`;
         return this._http.get<any>(this.url);
     }

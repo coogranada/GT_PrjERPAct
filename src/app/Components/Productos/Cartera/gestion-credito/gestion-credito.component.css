@@ -454,7 +454,12 @@ h3 {
     padding-top: 10px;
     padding-left: 10px;
     padding-bottom: 8px;
-    border-bottom: 1px solid rgb(160, 0, 87);
+}
+
+.garantias-section {
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
 }
 
 .horizontal-scroll {
@@ -462,59 +467,61 @@ h3 {
 }
 
 .table-header {
-    white-space: nowrap
+    white-space: nowrap;
+    text-align: center;
 }
 
 .table-header-medium {
     min-width: 150px;
-    text-align: center;
 }
 
 
 .align-right {
     text-align: right;
-    padding-right: 9%;
 }
 
 .align-right-large {
     text-align: right;
-    padding-right: 40%;
+    padding-right: 20%;
 }
 
+.celda-fija {
+    position: sticky;
+    left: 0;
+    background-color: #fff;
+}
+
+.tr-selected {
+    background-color: rgb(229, 229, 229);
+
+    .celda-fija {
+        background-color: rgb(229, 229, 229);
+    }
+}
+
+.tr-selected:hover {
+    background-color: rgb(229, 229, 229);
+}
 
 
 @media (min-width: 1920px) {
     .align-right {
-        padding-right: 40%;
+        padding-right: 20%;
     }
     .align-right-large {
-        padding-right: 60%;
+        padding-right: 30%;
     }
-
-    .provision-table {
-        .align-right {
-            padding-right: 5%;
-        }
-    }
-
 }
 
-
-
-
-
-.centered {
-    text-align: center;
-}
 
 .total-tfoot {
+
+    tr:first-child {
+        background-color: rgb(178 178 178 / 40%);
+    }
     
     td {
         border-top: 2px solid #000;
-    }
-
-    td:first-child {
-        border-right: 2px solid #000;
     }
 }
 
