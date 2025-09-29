@@ -501,8 +501,8 @@
                             <li class="nav-item" [class.active]="tabActivo === Tabs.Garantias" (click)="onGarantiasTabClick()">
                                 <a>Garantías</a>
                             </li>
-                            <li class="nav-item" [class.active]="tabActivo === Tabs.Diferidos" (click)="onDiferidosTabClick()">
-                                <a>Diferidos</a>
+                            <li class="nav-item" [class.active]="tabActivo === Tabs.Deducibles" (click)="onDeduciblesTabClick()">
+                                <a>Deducibles</a>
                             </li> 
                             <li class="nav-item" [class.active]="tabActivo === Tabs.Calificacion" (click)="devolverTab(Tabs.Calificacion)">
                                 <a>Calificación</a>
@@ -877,7 +877,7 @@
                             <!-- Fin valorCuotaTab -->
                             <!-- Inicio garantiasTab -->
                             <div [hidden]="tabActivo !== Tabs.Garantias">
-                                <section>
+                                <section class="garantias-section">
                                     <article>
                                         <h3 class="tab-title">Garantías Personales Codeudores</h3>
                                         <div class="alert alert-secondary" role="alert" *ngIf="garantiasPersonalesCod.length === 0">
@@ -887,16 +887,16 @@
                                             <table class="table table-hover">
                                                 <thead>
                                                     <tr>
-                                                        <th>Documento</th>
-                                                        <th>Nombre</th>
-                                                        <th>Celular</th>
+                                                        <th class="table-header">Documento</th>
+                                                        <th class="table-header">Nombre</th>
+                                                        <th class="table-header">Celular</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr *ngFor="let garantia of garantiasPersonalesCod">
-                                                        <td>{{ garantia.NumeroDocumento }}</td>
-                                                        <td>{{ garantia.Nombres }}</td>
-                                                        <td>{{ garantia.TelResidencia }}</td>
+                                                    <tr *ngFor="let garantia of garantiasPersonalesCod; let i = index" (click)="selectRow('codeudores', i)" [class.tr-selected]="selectedRows['codeudores'] === i">
+                                                        <td class="text-center">{{ garantia.NumeroDocumento }}</td>
+                                                        <td class="text-center">{{ garantia.Nombres }}</td>
+                                                        <td class="text-center">{{ garantia.TelResidencia }}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -912,20 +912,20 @@
                                             <table class="table table-hover">
                                                 <thead>
                                                     <tr>
-                                                        <th>Garantía</th>
-                                                        <th>Clase</th>
-                                                        <th>Valor cobertura</th>
-                                                        <th>Valor que respalda</th>
-                                                        <th>Vencimiento póliza</th>
+                                                        <th class="table-header">Garantía</th>
+                                                        <th class="table-header">Clase</th>
+                                                        <th class="table-header">Valor cobertura</th>
+                                                        <th class="table-header">Valor que respalda</th>
+                                                        <th class="table-header">Vencimiento póliza</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr *ngFor="let garantia of garantiasReales">
-                                                        <td>{{ garantia.Garantia }}</td>
-                                                        <td>{{ garantia.Clase }}</td>
+                                                    <tr *ngFor="let garantia of garantiasReales; let i = index" (click)="selectRow('reales', i)" [class.tr-selected]="selectedRows['reales'] === i">
+                                                        <td class="text-center">{{ garantia.Garantia }}</td>
+                                                        <td class="text-center">{{ garantia.Clase }}</td>
                                                         <td><div class="align-right-large">{{ garantia.ValorCobertura | currency }}</div></td>
                                                         <td><div class="align-right-large">{{ garantia.ValorRespalda | currency }}</div></td>
-                                                        <td>{{ garantia.VctoPoliza }}</td>
+                                                        <td class="text-center">{{ garantia.VctoPoliza }}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -935,46 +935,46 @@
                                 </section>
                             </div>
                             <!-- Fin garantiasTab -->
-                            <!-- Inicio diferidosTab -->
-                            <div [hidden]="tabActivo !== Tabs.Diferidos">
+                            <!-- Inicio deduciblesTab -->
+                            <div [hidden]="tabActivo !== Tabs.Deducibles">
                                 <section>
                                     <article>
-                                        <div class="alert alert-secondary" role="alert" *ngIf="diferidos.length === 0">
+                                        <div class="alert alert-secondary" role="alert" *ngIf="deducibles.length === 0">
                                             No hay registros
                                         </div>
-                                        <div class="table-responsive scrollTabla" *ngIf="diferidos.length > 0">
+                                        <div class="table-responsive scrollTabla" *ngIf="deducibles.length > 0">
                                             <table class="table table-hover horizontal-scroll">
                                                 <thead>
                                                     <tr>
                                                         <th class="table-header">Código</th>
                                                         <th class="table-header">Nombre</th>
-                                                        <th class="table-header">Saldo deducible</th>
+                                                        <th class="table-header">Saldo</th>
                                                         <th class="table-header">Valor cuota</th>
-                                                        <th class="table-header">Saldo inicial deducible</th>
+                                                        <th class="table-header">Saldo inicial</th>
                                                         <th class="table-header">Plazo</th>
                                                         <th class="table-header">Cuota pactada</th>
                                                         <th class="table-header">Valor pagado</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr *ngFor="let diferido of diferidos">
-                                                        <td class="centered">{{ diferido.Codigo }}</td>
-                                                        <td>{{ diferido.Nombre }}</td>
-                                                        <td><div class="align-right">{{ diferido.SaldoDeducible | currency }}</div></td>
-                                                        <td><div class="align-right">{{ diferido.ValorCuota | currency }}</div></td>
-                                                        <td><div class="align-right">{{ diferido.SaldoInicialDeducible | currency }}</div></td>
-                                                        <td class="centered">{{ diferido.Plazo }}</td>
-                                                        <td><div class="align-right">{{ diferido.CuotaPactada | currency }}</div></td>
-                                                        <td><div class="align-right">{{ diferido.ValorPagado | currency }}</div></td>
+                                                    <tr *ngFor="let deducible of deducibles; let i = index" (click)="selectRow('deducibles', i)" [class.tr-selected]="selectedRows['deducibles'] === i">
+                                                        <td class="text-center">{{ deducible.Codigo }}</td>
+                                                        <td>{{ deducible.Nombre }}</td>
+                                                        <td><div class="align-right">{{ deducible.SaldoDeducible | currency }}</div></td>
+                                                        <td><div class="align-right">{{ deducible.ValorCuota | currency }}</div></td>
+                                                        <td><div class="align-right">{{ deducible.SaldoInicialDeducible | currency }}</div></td>
+                                                        <td class="text-center">{{ deducible.Plazo }}</td>
+                                                        <td><div class="align-right">{{ deducible.CuotaPactada | currency }}</div></td>
+                                                        <td><div class="align-right">{{ deducible.ValorPagado | currency }}</div></td>
                                                     </tr>
                                                 </tbody>
                                                 <tfoot class="total-tfoot">
                                                     <tr>
-                                                      <td colspan="2" class="centered"><strong>Total</strong></td>
+                                                      <td colspan="2" class="text-center"><strong>Total</strong></td>
                                                       <td><div class="align-right">{{ saldoDeducibleTotal | currency }}</div></td>
                                                       <td><div class="align-right">{{ valorCuotaTotal | currency }}</div></td>
                                                       <td><div class="align-right">{{ saldoInicialDeducibleTotal | currency }}</div></td>
-                                                      <td><div class="centered">—</div></td>
+                                                      <td><div class="text-center">—</div></td>
                                                       <td><div class="align-right">{{ cuotaPactadaTotal | currency }}</div></td>
                                                       <td><div class="align-right">{{ valorPagadoTotal | currency }}</div></td>
                                                     </tr>
@@ -984,7 +984,7 @@
                                     </article>
                                 </section>
                             </div>
-                            <!-- Fin diferidosTab -->
+                            <!-- Fin deduciblesTab -->
                             <!-- Inicio CalificacionTab -->
                             <div [hidden]="tabActivo !== Tabs.Calificacion">
                                 <article class="ac-text-cr">
@@ -1097,7 +1097,7 @@
                                             <table class="table table-hover provision-table">
                                                 <thead>
                                                     <tr>
-                                                        <th class="table-header">Fecha</th>
+                                                        <th class="table-header celda-fija">Fecha</th>
                                                         <th class="table-header table-header-medium">Capital</th>
                                                         <th class="table-header table-header-medium">Intereses</th>
                                                         <th class="table-header">Días</th>
@@ -1116,23 +1116,23 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr *ngFor="let provision of provisiones">
-                                                        <td>{{ provision.dtmFecha }}</td>
-                                                        <td><div class="align-right">{{ provision.curCapital | currency }}</div></td>
-                                                        <td><div class="align-right">{{ provision.curInteres | currency }}</div></td>
-                                                        <td class="centered">{{ provision.intDiasMora }}</td>
-                                                        <td class="centered">{{ provision.strCalificacion }}</td>
-                                                        <td><div class="align-right">{{ provision.curProINT | currency }}</div></td>
-                                                        <td><div class="align-right">{{ provision.curProCap | currency }}</div></td>
-                                                        <td><div class="align-right">{{ provision.curProvisionAdicional | currency }}</div></td>
-                                                        <td><div class="align-right">{{ provision.curHipotecas | currency }}</div></td>
-                                                        <td><div class="align-right">{{ provision.curOtras | currency }}</div></td>
-                                                        <td><div class="align-right">{{ provision.curAportes | currency }}</div></td>
-                                                        <td><div class="align-right">{{ provision.curCubHip | currency }}</div></td>
-                                                        <td><div class="align-right">{{ provision.curCubOtr | currency }}</div></td>
-                                                        <td><div class="align-right">{{ provision.curCubApo | currency }}</div></td>
-                                                        <td><div class="align-right">{{ provision.curCostas | currency }}</div></td>
-                                                        <td class="centered">{{ provision.curProCos }}%</td>
+                                                    <tr *ngFor="let provision of provisiones; let i = index" (click)="selectRow('provisiones', i)" [class.tr-selected]="selectedRows['provisiones'] === i">
+                                                        <td class="text-right celda-fija">{{ provision.dtmFecha }}</td>
+                                                        <td class="text-right">{{ provision.curCapital | currency }}</td>
+                                                        <td class="text-right">{{ provision.curInteres | currency }}</td>
+                                                        <td class="text-center">{{ provision.intDiasMora }}</td>
+                                                        <td class="text-center">{{ provision.strCalificacion }}</td>
+                                                        <td class="text-right">{{ provision.curProINT | currency }}</td>
+                                                        <td class="text-right">{{ provision.curProCap | currency }}</td>
+                                                        <td class="text-right">{{ provision.curProvisionAdicional | currency }}</td>
+                                                        <td class="text-right">{{ provision.curHipotecas | currency }}</td>
+                                                        <td class="text-right">{{ provision.curOtras | currency }}</td>
+                                                        <td class="text-right">{{ provision.curAportes | currency }}</td>
+                                                        <td class="text-right">{{ provision.curCubHip | currency }}</td>
+                                                        <td class="text-right">{{ provision.curCubOtr | currency }}</td>
+                                                        <td class="text-right">{{ provision.curCubApo | currency }}</td>
+                                                        <td class="text-right">{{ provision.curCostas | currency }}</td>
+                                                        <td class="text-center">{{ provision.curProCos}}%</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
