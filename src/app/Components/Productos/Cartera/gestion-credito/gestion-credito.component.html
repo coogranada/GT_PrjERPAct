@@ -898,7 +898,7 @@
                                                 <tbody>
                                                     <tr *ngFor="let garantia of garantiasPersonalesCod; let i = index" (click)="selectRow('codeudores', i)" [class.tr-selected]="selectedRows['codeudores'] === i">
                                                         <td class="text-center">{{ garantia.NumeroDocumento }}</td>
-                                                        <td class="text-center">{{ garantia.Nombres }}</td>
+                                                        <td class="text-center">{{ garantia.Nombres | concatWithSpace:garantia.PrimerApellido:garantia.SegundoApellido }}</td>
                                                         <td class="text-center">{{ garantia.TelResidencia }}</td>
                                                     </tr>
                                                 </tbody>
