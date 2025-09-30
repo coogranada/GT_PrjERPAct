@@ -510,6 +510,12 @@
                             <li class="nav-item" [class.active]="tabActivo === Tabs.Provision" (click)="onProvisionTabClick()">
                                 <a>Provisión</a>
                             </li>
+                            <li class="nav-item" [class.active]="tabActivo === Tabs.Cobros" (click)="devolverTab(Tabs.Cobros)">
+                                <a>Cobros</a>
+                            </li>
+                            <li class="nav-item" [class.active]="tabActivo === Tabs.Cambios" (click)="devolverTab(Tabs.Cambios)">
+                                <a>Cambios</a>
+                            </li>
                         </ul>
                         <div class="tab-content">
                             <!-- Inicio datosTab -->
@@ -993,8 +999,7 @@
                                         <div class="col-xs-12 col-md-9 col-lg-9 panel-flat">
                                 
                                             <div id="tablaCaL1" class="table-responsive scrollTabla" style="max-height: 350px;">
-                                                <div class="form-group"
-                                                    style="border-bottom: 1px solid rgb(160, 0, 87); margin-bottom: 15px; padding: 15px 15px;">
+                                                <div class="form-group">
                                                     <label for=""><strong>Calificación del crédito</strong></label>
                                                 </div>
                                                 <table style="
@@ -1017,6 +1022,9 @@
                                                             <th class="columnotras_tabla1calificacion" style="text-align: center;">
                                                                 <strong>Cualitativa</strong>
                                                             </th>
+                                                            <th class="columnotras_tabla1calificacion" style="text-align: center;">
+                                                                <strong>Modelo</strong>
+                                                            </th>
                                                             <th class="columnFecha_tabla1calificacion" style="text-align: center;">
                                                                 <strong>Fecha calificación</strong>
                                                             </th>
@@ -1028,12 +1036,12 @@
                                                             <td style="text-align: center;">{{itemCalificacion.Recalificacion}}</td>
                                                             <td style="text-align: center;">{{itemCalificacion.Reestructuracion}}</td>
                                                             <td style="text-align: center;">{{itemCalificacion.Cualitativa}}</td>
+                                                            <td style="text-align: center;">{{itemCalificacion.Modelo}}</td>
                                                             <td style="text-align: center;">{{itemCalificacion.FechaCalificacion}}</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                <div class="col-xs-12 col-md-9 col-lg-9" *ngIf="lstCalificacion.length <=0 || lstCalificacion == null">
-                                                    <br>
+                                                <div class="col-xs-12 col-md-9 col-lg-9" *ngIf="lstCalificacion.length <=0 || lstCalificacion == null">                                                    
                                                     <div class="alert alert-secondary" role="alert">
                                                         No hay registros
                                                     </div>
@@ -1044,8 +1052,7 @@
                                         <!-- tabla 2 -->
                                         <div class="col-xs-12 col-md-3 col-lg-3 panel-flat">
                                             <div class="table-responsive" id="tablaCal2" style="max-height: 350px;">
-                                                <div class="form-group"
-                                                    style="border-bottom: 1px solid rgb(160, 0, 87); margin-bottom: 15px; padding: 15px 15px;">
+                                                <div class="form-group">
                                                     <label for=""><strong>Análisis</strong></label>
                                                 </div>
                                                 <table class="table table-hover" style="width: 260px;
@@ -1073,8 +1080,7 @@
                                                 </table>
                                             </div>
                                         </div>
-                                        <div class="col-xs-12 col-md-3 col-lg-3" *ngIf="lstCalificacion.length <= 0 || lstCalificacion == null">
-                                            <br>
+                                        <div class="col-xs-12 col-md-3 col-lg-3" *ngIf="lstCalificacion.length <= 0 || lstCalificacion == null">                                          
                                             <div class="alert alert-secondary" role="alert">
                                                 No hay registros
                                             </div>
@@ -1141,6 +1147,383 @@
                                 </section>
                             </div>
                             <!-- Fin provisionTab -->
+
+                            <!-- Inicio CobrosTab -->
+                            <div [hidden]="tabActivo !== Tabs.Cobros">
+                                <form method="get" [formGroup]="CobrosForm">
+                                    <article class="ac-text-cr">
+                                        <div class="col-xs-12 col-md-12 col-lg-12">
+                                            <section class="container">
+                                                <div class="ac-sg">
+                                                    <input class="ac-input-sg" id="ac-sg-1" name="ac-sg-1" type="checkbox" />
+                                                    <label class="ac-label-sg" for="ac-sg-1">Prejuridíco</label>
+                                                    <article class="ac-text-sg">
+                                                        <br>
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                                <div class="form-group">
+                                                                    <label>Cuotas Mora:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" style="text-align: left;" [attr.disabled]="true"
+                                                                        formControlName="CuotasMoraPre" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-1 col-lg-1">
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                                <div class="form-group">
+                                                                    <label>Número veces:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" style="text-align: left;" [attr.disabled]="true"
+                                                                        formControlName="VecesPre" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-1 col-lg-1">
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                                <div class="form-group">
+                                                                    <label>Saldo capital:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" currencyMask value=" {{carteraInfo.SaldoCapitalPre |  currency}}"
+                                                                        class="form-control" style="text-align: right;" [attr.disabled]="true" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-1 col-lg-1">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                                <div class="form-group">
+                                                                    <label>Fecha matricula:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" [attr.disabled]="true"
+                                                                        formControlName="FechaMatriculaPre" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-1 col-lg-1">
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                                <div class="form-group">
+                                                                    <label>Fecha retiro:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" [attr.disabled]="true"
+                                                                        formControlName="FechaRetiroPre" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </article>
+                                                </div>
+                                            </section>
+                                        </div>
+                                        <div class="col-xs-12 col-md-12 col-lg-12">
+                                            <section class="container">
+                                                <div class="ac-sgg">
+                                                    <input class="ac-input-sg" id="ac-sg-2" name="ac-sg-2" type="checkbox" />
+                                                    <label class="ac-label-sg" for="ac-sg-2">Abogado</label>
+                                                    <article class="ac-text-sg">
+                                                        <br>
+                                                        <div div class="row">
+                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                                <div class="form-group">
+                                                                    <label>Estado:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" [attr.disabled]="true"
+                                                                        formControlName="EstadoJuridico" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-1 col-lg-1">
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                                <div class="form-group">
+                                                                    <label>Abogado:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" [attr.disabled]="true"
+                                                                        formControlName="Abogado" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-1 col-lg-1">
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                                <div class="form-group">
+                                                                    <label>Juzgado:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" [attr.disabled]="true"
+                                                                        formControlName="NumNombreJuzgado" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-1 col-lg-1">
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                                <div class="form-group">
+                                                                    <label>Saldo:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" currencyMask value=" {{carteraInfo.SaldoJuridico |  currency}}"
+                                                                        class="form-control" style="text-align: right;" [attr.disabled]="true" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                                <div class="form-group">
+                                                                    <label>Costas judiciales:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" currencyMask value=" {{carteraInfo.CostasJudiciales |  currency}}"
+                                                                        class="form-control" style="text-align: right;" [attr.disabled]="true" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-1 col-lg-1">
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                                <div class="form-group">
+                                                                    <label>Cuotas mora:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" style="text-align: left;" [attr.disabled]="true"
+                                                                        formControlName="CuotasMoraJuridico" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-1 col-lg-1">
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                                <div class="form-group">
+                                                                    <label>Número veces:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" style="text-align: left;" [attr.disabled]="true"
+                                                                        formControlName="VecesJuridico" />
+                                                                </div>
+                                                            </div>
+                                    
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                                <div class="form-group">
+                                                                    <label>Fecha matricula:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" [attr.disabled]="true"
+                                                                        formControlName="FechaMatriculaJuridico" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-1 col-lg-1">
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                                <div class="form-group">
+                                                                    <label>Fecha retiro:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" [attr.disabled]="true"
+                                                                        formControlName="FechaRetiroJuridico" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </article>
+                                                </div>
+                                            </section>
+                                        </div>
+                                        <div class="col-xs-12 col-md-12 col-lg-12">
+                                            <section class="container">
+                                                <div class="ac-sgg">
+                                                    <input class="ac-input-sg" id="ac-sg-3" name="ac-sg-3" type="checkbox" />
+                                                    <label class="ac-label-sg" for="ac-sg-3">Castigada</label>
+                                                    <article class="ac-text-sg">
+                                                        <br>
+                                                        <div class="col-xs-12 col-md-2 col-lg-2">
+                                                            <div class="form-group">
+                                                                <label>Interés mora:</label>
+                                                                <span class="text-danger"></span>
+                                                                <input type="text" currencyMask value=" {{carteraInfo.IntMoraCastigo |  currency}}"
+                                                                    class="form-control" style="text-align: right;" [attr.disabled]="true" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-md-1 col-lg-1">
+                                                        </div>
+                                                        <div class="col-xs-12 col-md-2 col-lg-2">
+                                                            <div class="form-group">
+                                                                <label>Interés corriente:</label>
+                                                                <span class="text-danger"></span>
+                                                                <input type="text" currencyMask value=" {{carteraInfo.CorrientesCatigo |  currency}}"
+                                                                    class="form-control" style="text-align: right;" [attr.disabled]="true" />
+                                    
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-md-1 col-lg-1">
+                                                        </div>
+                                                        <div class="col-xs-12 col-md-2 col-lg-2">
+                                                            <div class="form-group">
+                                                                <label>Saldo capital:</label>
+                                                                <span class="text-danger"></span>
+                                                                <input type="text" currencyMask value=" {{carteraInfo.SaldoCapitalCastigo |  currency}}"
+                                                                    class="form-control" style="text-align: right;" [attr.disabled]="true" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-md-1 col-lg-1">
+                                                        </div>
+                                                        <div class="col-xs-12 col-md-2 col-lg-2">
+                                                            <div class="form-group">
+                                                                <label>Costas judiciales:</label>
+                                                                <span class="text-danger"></span>
+                                                                <input type="text" currencyMask value=" {{carteraInfo.CostasJudicialesCastigo |  currency}}"
+                                                                    class="form-control" style="text-align: right;" [attr.disabled]="true" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-md-1 col-lg-1">
+                                                        </div>
+                                                        <div class="col-xs-12 col-md-2 col-lg-2">
+                                                            <div class="form-group">
+                                                                <label>Fecha castigo:</label>
+                                                                <span class="text-danger"></span>
+                                                                <input type="text" class="form-control" [attr.disabled]="true"
+                                                                    formControlName="FechaCastigo" />
+                                                            </div>
+                                                        </div>
+                                                    </article>
+                                                </div>
+                                            </section>
+                                        </div>
+                                    </article>
+                                </form>                               
+                            </div>
+                            <!-- Fin CobrosTab -->
+
+                            <!-- Inicio CambiosTab -->
+                            <div [hidden]="tabActivo !== Tabs.Cambios">
+                                <article class="ac-text-cr">
+                                    <br>
+                                    <div class="col-xs-12 col-md-4 col-lg-12">
+                                        <label for=""><strong>Reestructuración del crédito</strong></label>
+                                    </div>
+                                    <hr>
+                                    <div>
+                                        <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="lstReestructuracion.length <= 0">
+                                            <div class="alert alert-secondary" role="alert">
+                                                No hay registros
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive scrollTabla" *ngIf="lstReestructuracion.length > 0">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="text-align: center;">
+                                                            <strong>Monto</strong>
+                                                        </th>
+                                                        <th style="text-align: center;">
+                                                            <strong>Saldo</strong>
+                                                        </th>
+                                                        <th style="text-align: center;">
+                                                            <strong>Cuota</strong>
+                                                        </th>
+                                                        <th style="text-align: center;">
+                                                            <strong>Plazo</strong>
+                                                        </th>
+                                                        <th>
+                                                            <strong>Tasa</strong>
+                                                        </th>
+                                                        <th>
+                                                            <strong>Fecha</strong>
+                                                        </th>
+                                                        <th>
+                                                            <strong>Novedad</strong>
+                                                        </th>
+                                                        <th>
+                                                            <strong>Calificación actual</strong>
+                                                        </th>
+                                                        <th>
+                                                            <strong>Calificación anterior</strong>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody *ngFor="let itemReestructura of lstReestructuracion; let j = index">
+                                                    <tr class="filRes_{{j}}" (click)="CambiarColor(j,12)">
+                                                        <td style="text-align: right;min-width: 160px;"> {{itemReestructura.Monto | currency}}</td>
+                                                        <td style="text-align: right;min-width: 160px;"> {{itemReestructura.Saldo | currency}}</td>
+                                                        <td style="text-align: right;min-width: 160px;"> {{itemReestructura.Cuota | currency}}</td>
+                                                        <td style="text-align: center;">{{itemReestructura.Plazo}}</td>
+                                                        <td style="text-align: right; min-width: 160px;">{{itemReestructura.Tasa}} %</td>
+                                                        <td>{{itemReestructura.Fecha}}</td>
+                                                        <td style="min-width: 160px;">{{itemReestructura.Novedad}}</td>
+                                                        <td style="text-align: center; min-width: 160px;">{{itemReestructura.CalAct}}</td>
+                                                        <td style="text-align: center; min-width: 200px;">{{itemReestructura.CalAnt}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <br/>
+                                    <div class="col-xs-12 col-md-4 col-lg-12">
+                                        <label><strong>Reliquidación del crédito</strong></label>
+                                    </div>
+                                    <hr>
+                                    <div>
+                                        <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="lstReliquidacion.length <= 0">                            
+                                            <div class="alert alert-secondary" role="alert">
+                                                No hay registros
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="lstReliquidacion.length > 0">
+                                            <br>
+                                            <div class="table-responsive scrollTabla">
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="text-align: center;">
+                                                                <strong>Monto</strong>
+                                                            </th>
+                                                            <th style="text-align: center;">
+                                                                <strong>Saldo</strong>
+                                                            </th>
+                                                            <th style="text-align: center;">
+                                                                <strong>Cuota</strong>
+                                                            </th>
+                                                            <th style="text-align: center;">
+                                                                <strong>Plazo</strong>
+                                                            </th>
+                                                            <th style="text-align: center;">
+                                                                <strong>Tasa</strong>
+                                                            </th>
+                                                            <th>
+                                                                <strong>Fecha</strong>
+                                                            </th>
+                                                            <th>
+                                                                <strong>Novedad</strong>
+                                                            </th>
+                                                            <th style="text-align: center;">
+                                                                <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong>
+                                                            </th>
+                                                            <th style="text-align: center;">
+                                                                <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody *ngFor="let itemReliquida of lstReliquidacion; let j = index">
+                                                        <tr>
+                                                            <td style="text-align: right;">
+                                                                {{itemReliquida.Monto | currency}}
+                                                            </td>
+                                                            <td style="text-align: right;">
+                                                                {{itemReliquida.Saldo | currency}}
+                                                            </td>
+                                                            <td style="text-align: right;">
+                                                                {{itemReliquida.Cuota | currency}}
+                                                            </td>
+                                                            <td style="text-align: center;">
+                                                                {{itemReliquida.Plazo}}
+                                                            </td>
+                                                            <td style="text-align: right;">
+                                                                {{itemReliquida.Tasa}} %
+                                                            </td>
+                                                            <td style="text-align: center;">
+                                                                {{itemReliquida.Fecha}}
+                                                            </td>
+                                                            <td style="text-align: left;">
+                                                                {{itemReliquida.Novedad}}
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                            </div>
+                            <!-- Fin CambiosTab -->
                         </div>
                     </div>
                 </div>

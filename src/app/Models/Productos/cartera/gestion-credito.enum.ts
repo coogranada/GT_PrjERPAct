@@ -13,5 +13,7 @@ export enum Tabs {
     Garantias = 'garantias',
     Deducibles = 'deducibles',
     Provision = 'provision',
-    Calificacion = 'calificacion'
+    Calificacion = 'calificacion',
+    Cobros = 'Cobros', 
+    Cambios = 'Cambios'
 }

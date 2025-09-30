@@ -41,6 +41,15 @@ export class CarteraService {
         this.url = `${this.environment.Url}/BuscarCalificacionCartera?IdCuenta=${IdCuenta}`;
         return this._http.get<any>(this.url);
     }
+    getCobrosCartera(IdCuenta: number): Observable<any> {
+        this.url = `${this.environment.Url}/ObteneCobrosCartera?lngCuenta=${IdCuenta}`;
+        return this._http.get<any>(this.url);
+    }
+    getReestructuracionReliquidacion(IdCuenta: number): Observable<any> {
+        this.url = `${this.environment.Url}/BuscarReestructuracionReliquidacion?IdCuenta=${IdCuenta}`;
+        return this._http.get<any>(this.url);
+    }
+   
 
     // GARANTIAS
     getGarantias(IdCuenta: number): Observable<GarantiasResponse> {
