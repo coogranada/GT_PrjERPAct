@@ -205,7 +205,6 @@ export class GestionCreditoComponent {
     const NombreRelacionCliente = new FormControl({ value: '', disabled: true }, []);
     const estaReestructurado = new FormControl({ value: false, disabled: true }, []);
     const estaReliquidado = new FormControl({ value: false, disabled: true }, []);
-    const estaPagoAbogado = new FormControl({ value: false, disabled: true }, []);
     const estaCastigado = new FormControl({ value: false, disabled: true }, []);
     const estaSinCobertura = new FormControl({ value: false, disabled: true }, []);
     const Cuenta = new FormControl({ value: '', disabled: true }, []);
@@ -336,7 +335,6 @@ export class GestionCreditoComponent {
       NombreRelacionCliente,
       estaReestructurado,
       estaReliquidado,
-      estaPagoAbogado,
       estaCastigado,
       estaSinCobertura,
       Cuenta: Cuenta,
@@ -753,7 +751,6 @@ export class GestionCreditoComponent {
       if (checkCartera) {
         this.gestionCreditoForm.get('estaReestructurado')?.setValue(checkCartera.Reestructurado);
         this.gestionCreditoForm.get('estaReliquidado')?.setValue(checkCartera.Reliquidado);
-        this.gestionCreditoForm.get('estaPagoAbogado')?.setValue(checkCartera.Abogado);
         this.gestionCreditoForm.get('estaCastigado')?.setValue(checkCartera.Catigada);
       }
     });
