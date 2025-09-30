@@ -932,7 +932,6 @@ export class GestionCreditoComponent {
       garantiasData => {
         this.loading = false;
         if(!garantiasData) {
-          this.notif.error('Error', 'Error al obtener garantías.', ConfiguracionNotificacion.configRightTop);
           return;
         }
 
@@ -971,7 +970,6 @@ export class GestionCreditoComponent {
       deduciblesData => {
         this.loading = false;
         if (!deduciblesData) {
-          this.notif.error('Error', 'Error al obtener deducibles.', ConfiguracionNotificacion.configRightTop);
           return;
         }
 
@@ -1033,7 +1031,6 @@ export class GestionCreditoComponent {
       provisionesData => {
         this.loading = false;
         if (!provisionesData) {
-          this.notif.error('Error', 'Error al obtener provisiones.', ConfiguracionNotificacion.configRightTop);
           return;
         }
 
