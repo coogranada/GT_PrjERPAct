@@ -15,5 +15,7 @@ export enum Tabs {
     Provision = 'provision',
     Calificacion = 'calificacion',
     Cobros = 'Cobros', 
-    Cambios = 'Cambios'
+    Cambios = 'Cambios',
+    Referencias = 'referencias',
+    Historial = 'historial',
 }

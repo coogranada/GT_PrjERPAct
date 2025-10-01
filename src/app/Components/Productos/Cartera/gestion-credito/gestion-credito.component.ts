@@ -1115,6 +1115,20 @@ export class GestionCreditoComponent {
     }
 // FIN CAMBIOS
 
+//REESTRUCTURA
+
+//FIN REESTRUCTURA
+
+
+//REFERENCIAS
+
+//FIN REFERENCIAS
+
+
+//HISTORIAL
+
+//FIN HISTORIAL
+
 // FIN TABS
 
 }

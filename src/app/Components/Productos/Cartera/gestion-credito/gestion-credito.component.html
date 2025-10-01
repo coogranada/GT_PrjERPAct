@@ -513,6 +513,15 @@
                             <li class="nav-item" [class.active]="tabActivo === Tabs.Cambios" (click)="devolverTab(Tabs.Cambios)">
                                 <a>Cambios</a>
                             </li>
+                            <li class="nav-item">
+                                <a>Reestructura</a>
+                            </li>
+                            <li class="nav-item" [class.active]="tabActivo === Tabs.Referencias" (click)="devolverTab(Tabs.Referencias)">
+                                <a>Referencias</a>
+                            </li>
+                            <li class="nav-item" [class.active]="tabActivo === Tabs.Historial" (click)="devolverTab(Tabs.Cambios)">
+                                <a>Historial</a>
+                            </li>
                         </ul>
                         <div class="tab-content">
                             <!-- Inicio datosTab -->
@@ -1521,6 +1530,132 @@
                                 </article>
                             </div>
                             <!-- Fin CambiosTab -->
+
+                            <!-- Inicio reestructuraTab -->
+ 
+                            <!-- Fin reestructuraTab -->
+
+                            <!-- Inicio referenciasTab -->
+                            <div [hidden]="tabActivo !== Tabs.Referencias">
+                                <section class="referencias-section">
+                                    <article>
+                                        <h3 class="tab-title">Garantías Personales Codeudores</h3>
+                                        <div class="alert alert-secondary" role="alert" *ngIf="garantiasPersonalesCod.length === 0">
+                                            No hay registros
+                                        </div>
+                                        <div class="table-responsive scrollTabla" *ngIf="garantiasPersonalesCod.length > 0">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="table-header">Documento</th>
+                                                        <th class="table-header">Nombre</th>
+                                                        <th class="table-header">Celular</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let garantia of garantiasPersonalesCod; let i = index" (click)="selectRow('codeudores', i)" [class.tr-selected]="selectedRows['codeudores'] === i">
+                                                        <td class="text-center">{{ garantia.NumeroDocumento }}</td>
+                                                        <td class="text-center">{{ garantia.Nombres | concatWithSpace:garantia.PrimerApellido:garantia.SegundoApellido }}</td>
+                                                        <td class="text-center">{{ garantia.TelResidencia }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </article>
+
+                                    <article>
+                                        <h3 class="tab-title">Garantías Reales</h3>
+                                        <div class="alert alert-secondary" role="alert" *ngIf="garantiasReales.length === 0">
+                                            No hay registros
+                                        </div>
+                                        <div class="table-responsive scrollTabla" *ngIf="garantiasReales.length > 0">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="table-header">Garantía</th>
+                                                        <th class="table-header">Clase</th>
+                                                        <th class="table-header">Valor cobertura</th>
+                                                        <th class="table-header">Valor que respalda</th>
+                                                        <th class="table-header">Vencimiento póliza</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let garantia of garantiasReales; let i = index" (click)="selectRow('reales', i)" [class.tr-selected]="selectedRows['reales'] === i">
+                                                        <td class="text-center">{{ garantia.Garantia }}</td>
+                                                        <td class="text-center">{{ garantia.Clase }}</td>
+                                                        <td><div class="align-right-large">{{ garantia.ValorCobertura | currency }}</div></td>
+                                                        <td><div class="align-right-large">{{ garantia.ValorRespalda | currency }}</div></td>
+                                                        <td class="text-center">{{ garantia.VctoPoliza }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        
+                                    </article>
+                                </section>
+                            </div>
+                            <!-- Fin referenciasTab -->
+
+                            <!-- Inicio historialTab -->
+                            <div [hidden]="tabActivo !== Tabs.Historial">
+                                <section class="garantias-section">
+                                    <article>
+                                        <h3 class="tab-title">Garantías Personales Codeudores</h3>
+                                        <div class="alert alert-secondary" role="alert" *ngIf="garantiasPersonalesCod.length === 0">
+                                            No hay registros
+                                        </div>
+                                        <div class="table-responsive scrollTabla" *ngIf="garantiasPersonalesCod.length > 0">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="table-header">Documento</th>
+                                                        <th class="table-header">Nombre</th>
+                                                        <th class="table-header">Celular</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let garantia of garantiasPersonalesCod; let i = index" (click)="selectRow('codeudores', i)" [class.tr-selected]="selectedRows['codeudores'] === i">
+                                                        <td class="text-center">{{ garantia.NumeroDocumento }}</td>
+                                                        <td class="text-center">{{ garantia.Nombres | concatWithSpace:garantia.PrimerApellido:garantia.SegundoApellido }}</td>
+                                                        <td class="text-center">{{ garantia.TelResidencia }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </article>
+
+                                    <article>
+                                        <h3 class="tab-title">Garantías Reales</h3>
+                                        <div class="alert alert-secondary" role="alert" *ngIf="garantiasReales.length === 0">
+                                            No hay registros
+                                        </div>
+                                        <div class="table-responsive scrollTabla" *ngIf="garantiasReales.length > 0">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="table-header">Garantía</th>
+                                                        <th class="table-header">Clase</th>
+                                                        <th class="table-header">Valor cobertura</th>
+                                                        <th class="table-header">Valor que respalda</th>
+                                                        <th class="table-header">Vencimiento póliza</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let garantia of garantiasReales; let i = index" (click)="selectRow('reales', i)" [class.tr-selected]="selectedRows['reales'] === i">
+                                                        <td class="text-center">{{ garantia.Garantia }}</td>
+                                                        <td class="text-center">{{ garantia.Clase }}</td>
+                                                        <td><div class="align-right-large">{{ garantia.ValorCobertura | currency }}</div></td>
+                                                        <td><div class="align-right-large">{{ garantia.ValorRespalda | currency }}</div></td>
+                                                        <td class="text-center">{{ garantia.VctoPoliza }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        
+                                    </article>
+                                </section>
+                            </div>
+                            <!-- Fin historialTab -->
                         </div>
                     </div>
                 </div>

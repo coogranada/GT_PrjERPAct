@@ -73,4 +73,18 @@ export class CarteraService {
         return this._http.get<any>(this.url);
     }
     //FIN PROVISION
+
+    //REESTRUCTURA
+
+    //FIN REESTRUCTURA
+
+
+    //REFERENCIAS
+
+    //FIN REFERENCIAS
+
+
+    //HISTORIAL
+
+    //FIN  HISTORIAL
 }
