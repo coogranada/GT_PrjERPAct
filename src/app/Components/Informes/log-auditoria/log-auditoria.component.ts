@@ -29,6 +29,7 @@ export class LogAuditoriaComponent implements OnInit {
   ngOnInit() {
     this.GetOperaciones();
     $('#select').focus().select();
+    this.IrArriba();
    }
 
   Permisos() {
@@ -91,5 +92,9 @@ export class LogAuditoriaComponent implements OnInit {
   operacionBlur() { 
     if (this.valueSlectOperacion == 0) 
       this.validaOperacion = false;
+  }
+  IrArriba() {
+    $('html, body').animate({ scrollTop: 0 }, 'slow');
+    return false;
   }
 }

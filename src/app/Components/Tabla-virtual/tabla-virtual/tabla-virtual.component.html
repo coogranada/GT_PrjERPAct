@@ -3,7 +3,7 @@
     <table class="table table-hover" id="tablaDatos">
       <thead>
         <tr>
-          <th *ngFor="let col of columnas" (click)="ordenarPor(col)" style="cursor: pointer;">
+          <th *ngFor="let col of columnas" (click)="ordenarPor(col)" style="cursor: pointer; text-align: center;">
             {{ col.endsWith('_M') ? col.slice(0, -2) : col }}
             <span *ngIf="columnaOrden === col">
                 {{ ordenAscendente ? '↑' : '↓' }}

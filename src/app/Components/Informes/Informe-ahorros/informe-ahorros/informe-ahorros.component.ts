@@ -57,7 +57,7 @@ export class InformeAhorrosComponent implements OnInit {
   public nombreSP: string = "";
   public accionEjecuta: string = "";
   public nombreInformeSelect: string = '';
-  public nombreInfrome: string = '';
+  public nombreInforme: string = '';
   public filtro: string = '';
   public filtroSeleccionado: string | null = null;
   public fechaMax: any = null;
@@ -375,7 +375,7 @@ export class InformeAhorrosComponent implements OnInit {
        
 
       });
-      this.excelReportService.exportAsExcelFile(data, this.nombreInfrome)
+      this.excelReportService.exportAsExcelFile(data, this.nombreInforme)
       this.loading = false ;
     }
   }
@@ -497,9 +497,9 @@ export class InformeAhorrosComponent implements OnInit {
           } else {
             
             if(this.selectedTab == 'dinamicos'){
-              this.nombreInfrome = "INFORME "+ this.OperacionSelect.toUpperCase();
+              this.nombreInforme = "INFORME "+ this.OperacionSelect.toUpperCase();
             }else{
-              this.nombreInfrome = this.nombreInformeSelect.toUpperCase();
+              this.nombreInforme = this.nombreInformeSelect.toUpperCase();
             }
 
             this.ShowModalList.nativeElement.click();

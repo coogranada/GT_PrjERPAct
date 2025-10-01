@@ -41,6 +41,7 @@ export class InformeClientesComponent implements OnInit {
   ngOnInit() {
     this.GetOperaciones();
     $('#select').focus().select();
+    this.IrArriba();
   }
   GetOperaciones() {
     let datas = localStorage.getItem("Data")
@@ -84,6 +85,10 @@ export class InformeClientesComponent implements OnInit {
       this.validaOperacion = true;
       this.OperacionSelect = "/Informe Juridicos";
     }
+  }
+  IrArriba() {
+    $('html, body').animate({ scrollTop: 0 }, 'slow');
+    return false;
   }
 }
 
