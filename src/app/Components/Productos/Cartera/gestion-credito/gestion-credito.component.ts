@@ -35,6 +35,7 @@ export class GestionCreditoComponent {
   public AsesorExternoForm!: FormGroup;
   public DatosForm!: FormGroup;
   public SaldosForm!: FormGroup;
+  public CobrosForm!: FormGroup;
   public resultOperaciones : any;
   public bloquearConsultaCuenta : boolean = false;
   public BloquearBuscar = false;
@@ -61,11 +62,17 @@ export class GestionCreditoComponent {
   garantiasReales: GarantiaReal[] = [];
   estadoCargaTabs: Partial<Record<Tabs, boolean>> = {
     [Tabs.Garantias]: false,
-    [Tabs.Diferidos]: false,
+    [Tabs.Deducibles]: false,
     [Tabs.Provision]: false
   };
 
-  diferidos: Diferido[] = [];
+  deducibles: Diferido[] = [];
+  selectedRows: Record<string, null | number> = {
+    codeudores: null,
+    reales: null,
+    deducibles: null,
+    provisiones: null
+  }
   saldoDeducibleTotal = 0;
   valorCuotaTotal = 0;
   saldoInicialDeducibleTotal = 0;
@@ -73,23 +80,21 @@ export class GestionCreditoComponent {
   valorPagadoTotal = 0;
   provisiones: Provision[] = [];
 
-
-  // TABS
+  ColorAnterior: any;
   Tabs = Tabs;
   tabActivo: Tabs = Tabs.Datos;
   activaDatos: boolean = true;
   activaSaldos: boolean = false;
   estaTabValorCuotaActivo: boolean = false;
   estaTabGarantiasActivo: boolean = false;
-  estaTabDiferidosActivo: boolean = false;
-
-  ColorAnterior: any;
-
+  estaTabDeduciblesActivo: boolean = false;  
+  public ValidaPactado: boolean = false;  
   public carteraInfo = new DetalleCartera();
-  public ValidaPactado: boolean = false;
   public lstCalificacion: any[] = [];
-  public lstAnalisisCalificacion: any[] = [];  
-  // FIN TABS 
+  public lstAnalisisCalificacion: any[] = []; 
+  public lstReestructuracion: any[] = []; 
+  public lstReliquidacion: any[] = [];
+
 
   constructor( 
     private operacionesService: OperacionesService,
@@ -200,7 +205,6 @@ export class GestionCreditoComponent {
     const NombreRelacionCliente = new FormControl({ value: '', disabled: true }, []);
     const estaReestructurado = new FormControl({ value: false, disabled: true }, []);
     const estaReliquidado = new FormControl({ value: false, disabled: true }, []);
-    const estaPagoAbogado = new FormControl({ value: false, disabled: true }, []);
     const estaCastigado = new FormControl({ value: false, disabled: true }, []);
     const estaSinCobertura = new FormControl({ value: false, disabled: true }, []);
     const Cuenta = new FormControl({ value: '', disabled: true }, []);
@@ -331,7 +335,6 @@ export class GestionCreditoComponent {
       NombreRelacionCliente,
       estaReestructurado,
       estaReliquidado,
-      estaPagoAbogado,
       estaCastigado,
       estaSinCobertura,
       Cuenta: Cuenta,
@@ -401,7 +404,6 @@ export class GestionCreditoComponent {
 
     // TABS
 
-
     const Sistema = new FormControl({ value: '', disabled: true }, []);
     const PeriodoCapital = new FormControl({ value: '', disabled: true }, []);
     const PeriodoInteres = new FormControl({ value: '', disabled: true }, []);
@@ -442,6 +444,48 @@ export class GestionCreditoComponent {
       CoutasMora: CoutasMora,      
     });
 
+    const CuotasMoraPre = new FormControl('', []);
+        const VecesPre = new FormControl('', []);
+        const SaldoCapitalPre = new FormControl('', []);
+        const FechaMatriculaPre = new FormControl('', []);
+        const FechaRetiroPre = new FormControl('', []);
+        const EstadoJuridico = new FormControl('', []);
+        const Abogado = new FormControl('', []);
+        const SaldoJuridico = new FormControl('', []);
+        const CostasJudiciales = new FormControl('', []);
+        const CuotasMoraJuridico = new FormControl('', []);
+        const VecesJuridico = new FormControl('', []);
+        const FechaMatriculaJuridico = new FormControl('', []);
+        const FechaRetiroJuridico = new FormControl('', []);
+        const IntMoraCastigo = new FormControl('', []);
+        const CorrientesCatigo = new FormControl('', []);
+        const SaldoCapitalCastigo = new FormControl('', []);
+        const CostasJudicialesCastigo = new FormControl('', []);
+        const FechaCastigo = new FormControl('', []);
+        const NumNombreJuzgado = new FormControl('', []);
+
+    this.CobrosForm = new FormGroup({    
+      CuotasMoraPre: CuotasMoraPre,
+      VecesPre: VecesPre,
+      SaldoCapitalPre: SaldoCapitalPre,
+      FechaMatriculaPre: FechaMatriculaPre,
+      FechaRetiroPre: FechaRetiroPre,
+      EstadoJuridico: EstadoJuridico,
+      Abogado: Abogado,
+      SaldoJuridico: SaldoJuridico,
+      CostasJudiciales: CostasJudiciales,
+      CuotasMoraJuridico: CuotasMoraJuridico,
+      VecesJuridico: VecesJuridico,
+      FechaMatriculaJuridico: FechaMatriculaJuridico,
+      FechaRetiroJuridico: FechaRetiroJuridico,
+      IntMoraCastigo: IntMoraCastigo,
+      CorrientesCatigo: CorrientesCatigo,
+      SaldoCapitalCastigo: SaldoCapitalCastigo,
+      CostasJudicialesCastigo: CostasJudicialesCastigo,
+      FechaCastigo: FechaCastigo,
+      NumNombreJuzgado: NumNombreJuzgado,
+    });
+
     // FIN TABS
 
   }
@@ -457,6 +501,14 @@ export class GestionCreditoComponent {
  
   pad(numero: number): string {
     return numero < 10 ? '0' + numero : numero.toString();
+  }
+
+  // selectRow(index: number): void {
+  //   this.selectedRow = index;
+  // }
+
+  selectRow(tableName: string, rowIndex: number) {
+    this.selectedRows[tableName] = rowIndex;
   }
 
   formatearValor = (valor: any, columna?: string): string => {
@@ -691,13 +743,14 @@ export class GestionCreditoComponent {
           // TABS
         this.BuscarDatosCartera(+cuentaResumen.IdCuenta);
         this.BuscarSaldosCartera(+cuentaResumen.IdCuenta);
-        this.BuscarCalificacion(+cuentaResumen.IdCuenta)
+        this.BuscarCalificacion(+cuentaResumen.IdCuenta);
+        this.BuscarCobrosCartera(+cuentaResumen.IdCuenta);
+        this.BuscarReetructuracionReliquidacion(+cuentaResumen.IdCuenta);
       }
 
       if (checkCartera) {
         this.gestionCreditoForm.get('estaReestructurado')?.setValue(checkCartera.Reestructurado);
         this.gestionCreditoForm.get('estaReliquidado')?.setValue(checkCartera.Reliquidado);
-        this.gestionCreditoForm.get('estaPagoAbogado')?.setValue(checkCartera.Abogado);
         this.gestionCreditoForm.get('estaCastigado')?.setValue(checkCartera.Catigada);
       }
     });
@@ -761,8 +814,18 @@ export class GestionCreditoComponent {
     this.DatosForm.reset();
     this.SaldosForm.reset();
     this.resetTabGarantias();
-    this.diferidos = [];
+    this.deducibles = [];
     this.provisiones = [];
+  }
+
+  CambiarColor(fil: any, producto: any) {
+    if (producto === 1) {
+
+      $(".filtrasa_" + this.ColorAnterior).css("background", "#FFFFFF");
+      $(".filtrasa_" + fil).css("background", "#e5e5e5");
+
+      this.ColorAnterior = fil;
+    }
   }
 //DATOS 
   Cambiavistatasas() {
@@ -800,6 +863,9 @@ export class GestionCreditoComponent {
       }
     );
   }
+  // FIN DATOS 
+
+  // SALDOS
   BuscarSaldosCartera(IdCuenta: number) {
     this.carteraService.getSaldosCartera(IdCuenta).subscribe(
       result => {
@@ -825,37 +891,8 @@ export class GestionCreditoComponent {
       }
     );
   } 
-  CambiarColor(fil: any, producto: any) {
-    if (producto === 1) {
+  // FIN SALDOS
 
-      $(".filtrasa_" + this.ColorAnterior).css("background", "#FFFFFF");
-      $(".filtrasa_" + fil).css("background", "#e5e5e5");
-
-      this.ColorAnterior = fil;
-    }
-  }
-  BuscarCalificacion(IdCuenta: number) {      
-    this.carteraService.getCalificacionCartera(IdCuenta).subscribe(
-          result => {  
-            var cal = 0;
-            var ancal = 0;
-            for (var i = 0; i < result.Calificacion.length; i++) {
-              this.lstCalificacion[cal] = result.Calificacion[i];
-              cal++;
-            }
-            for (var i = 0; i < result.Analisis.length; i++) {
-              this.lstAnalisisCalificacion[ancal] = result.Analisis[i];
-              ancal++;
-            }
-          },
-          error => {
-          }
-        )
-  
-      
-  
-  }
-// FIN DATOS 
 
 // GARANTIAS
 
@@ -892,7 +929,6 @@ export class GestionCreditoComponent {
       garantiasData => {
         this.loading = false;
         if(!garantiasData) {
-          this.notif.error('Error', 'Error al obtener garantías.', ConfiguracionNotificacion.configRightTop);
           return;
         }
 
@@ -912,41 +948,64 @@ export class GestionCreditoComponent {
 // FIN GARANTIAS
 
 //DIFERIDOS
-  onDiferidosTabClick() {
-    this.onTabChange(Tabs.Diferidos, () => this.getDiferidos());
+  onDeduciblesTabClick() {
+    this.onTabChange(Tabs.Deducibles, () => this.getDeducibles());
   }
 
-  getDiferidos() {
+  getDeducibles() {
     const idCuenta = this.gestionCreditoForm.get('IdCuenta')?.value;
     if(!idCuenta) return;
 
     this.loading = true;
-    this.carteraService.getDiferidos(this.gestionCreditoForm.get('IdCuenta')?.value).pipe(
+    this.carteraService.getDeducibles(this.gestionCreditoForm.get('IdCuenta')?.value).pipe(
       catchError(error => {
-        console.error('Error al obtener diferidos:', error);
-        this.notif.error('Error', 'Error al obtener diferidos.', ConfiguracionNotificacion.configRightTop);
+        console.error('Error al obtener deducibles:', error);
+        this.notif.error('Error', 'Error al obtener deducibles.', ConfiguracionNotificacion.configRightTop);
         return of(null);
       })
     ).subscribe(
-      diferidosData => {
+      deduciblesData => {
         this.loading = false;
-        if (!diferidosData) {
-          this.notif.error('Error', 'Error al obtener diferidos.', ConfiguracionNotificacion.configRightTop);
+        if (!deduciblesData) {
           return;
         }
 
-        this.diferidos = diferidosData;
-        this.saldoDeducibleTotal = diferidosData.reduce((acc, value) => acc + value.SaldoDeducible, 0);
-        this.valorCuotaTotal = diferidosData.reduce((acc, value) => acc + value.ValorCuota, 0);
-        this.saldoInicialDeducibleTotal = diferidosData.reduce((acc, value) => acc + value.SaldoInicialDeducible, 0);
-        this.cuotaPactadaTotal = diferidosData.reduce((acc, value) => acc + value.CuotaPactada, 0);
-        this.valorPagadoTotal = diferidosData.reduce((acc, value) => acc + value.ValorPagado, 0);
+        this.deducibles = deduciblesData;
+        this.saldoDeducibleTotal = deduciblesData.reduce((acc, value) => acc + value.SaldoDeducible, 0);
+        this.valorCuotaTotal = deduciblesData.reduce((acc, value) => acc + value.ValorCuota, 0);
+        this.saldoInicialDeducibleTotal = deduciblesData.reduce((acc, value) => acc + value.SaldoInicialDeducible, 0);
+        this.cuotaPactadaTotal = deduciblesData.reduce((acc, value) => acc + value.CuotaPactada, 0);
+        this.valorPagadoTotal = deduciblesData.reduce((acc, value) => acc + value.ValorPagado, 0);
 
       }
     );
   }
 
 //FIN DIFERIDOS
+
+//CALIFICACION
+
+  BuscarCalificacion(IdCuenta: number) {
+    this.carteraService.getCalificacionCartera(IdCuenta).subscribe(
+      result => {
+        var cal = 0;
+        var ancal = 0;
+        for (var i = 0; i < result.Calificacion.length; i++) {
+          this.lstCalificacion[cal] = result.Calificacion[i];
+          cal++;
+        }
+        for (var i = 0; i < result.Analisis.length; i++) {
+          this.lstAnalisisCalificacion[ancal] = result.Analisis[i];
+          ancal++;
+        }
+      },
+      error => {
+        const errorMessage = <any>error;
+        console.log(errorMessage);
+      }
+    )
+  }
+// FIN CALIFICACION 
 
 
 //PROVISION
@@ -969,7 +1028,6 @@ export class GestionCreditoComponent {
       provisionesData => {
         this.loading = false;
         if (!provisionesData) {
-          this.notif.error('Error', 'Error al obtener provisiones.', ConfiguracionNotificacion.configRightTop);
           return;
         }
 
@@ -979,6 +1037,97 @@ export class GestionCreditoComponent {
   }
 
 //FIN PROVISION
+
+// COBROS
+  BuscarCobrosCartera(IdCuenta: number) {   
+    this.carteraService.getCobrosCartera(IdCuenta).subscribe(
+        result => {
+          if (result.Prejuridicos !== null) {
+            this.CobrosForm.get('CuotasMoraPre')?.setValue(result.Prejuridicos.CoutasMora);
+            this.CobrosForm.get('VecesPre')?.setValue(result.Prejuridicos.Veces);
+            this.carteraInfo.SaldoCapitalPre = result.Prejuridicos.SaldoCapital;
+            this.CobrosForm.get('FechaMatriculaPre')?.setValue(result.Prejuridicos.FechaMatricula);
+            this.CobrosForm.get('FechaRetiroPre')?.setValue(result.Prejuridicos.FechaRetiro);
+          } else {
+            this.carteraInfo.SaldoCapitalPre = 0;
+          }
+          if (result.Juridicos !== null) {
+            this.CobrosForm.get('EstadoJuridico')?.setValue(result.Juridicos.Estado);
+            this.CobrosForm.get('Abogado')?.setValue(result.Juridicos.Abogado);
+            this.carteraInfo.SaldoJuridico = result.Juridicos.Saldo;
+            this.carteraInfo.CostasJudiciales = result.Juridicos.CostasJudiciales;
+            this.CobrosForm.get('CuotasMoraJuridico')?.setValue(result.Juridicos.CoutasMora);
+            this.CobrosForm.get('VecesJuridico')?.setValue(result.Juridicos.Veces);
+            this.CobrosForm.get('FechaMatriculaJuridico')?.setValue(result.Juridicos.FechaMatricula);
+            this.CobrosForm.get('FechaRetiroJuridico')?.setValue(result.Juridicos.FechaRetiro);//
+            this.CobrosForm.get('NumNombreJuzgado')?.setValue(result.Juridicos.Juzgado);
+          } else {
+            this.carteraInfo.SaldoJuridico = 0;
+            this.carteraInfo.CostasJudiciales = 0;
+          }
+          if (result.Castigos !== null) {
+            this.carteraInfo.IntMoraCastigo = result.Castigos.IntMora;
+            this.carteraInfo.CorrientesCatigo = result.Castigos.Corrientes;
+            this.carteraInfo.SaldoCapitalCastigo = result.Castigos.SaldoCapital;
+            this.carteraInfo.CostasJudicialesCastigo = result.Castigos.CostasJudiciales;
+            this.CobrosForm.get('FechaCastigo')?.setValue(result.Castigos.FechaCastigo);
+          } else {
+            this.carteraInfo.IntMoraCastigo = 0;
+            this.carteraInfo.CorrientesCatigo = 0;
+            this.carteraInfo.SaldoCapitalCastigo = 0;
+            this.carteraInfo.CostasJudicialesCastigo = 0;            
+          }
+        },
+        error => {
+          const errorMessage = <any>error;
+          console.log(errorMessage);
+        }
+      )
+  }
+
+// FIN COBROS
+
+
+// TAB CAMBIOS
+  BuscarReetructuracionReliquidacion(IdCuenta: number) {    
+    this.carteraService.getReestructuracionReliquidacion(IdCuenta).subscribe(
+        result => {
+          var Reestr = 0;
+          var Reli = 0;
+          if (result.Reestructuracion !== null) {
+            for (var i = 0; i < result.Reestructuracion.length; i++) {
+              this.lstReestructuracion[Reestr] = result.Reestructuracion[i];
+              Reestr++;
+            }
+          }
+           if (result.Reliquidacion !== null) {
+            for (var i = 0; i < result.Reliquidacion.length; i++) {
+              this.lstReliquidacion[Reli] = result.Reliquidacion[i];
+              Reli++;
+            }
+          }
+        },
+        error => {
+          const errorMessage = <any>error;
+          console.log(errorMessage);
+        }
+      )
+    }
+// FIN CAMBIOS
+
+//REESTRUCTURA
+
+//FIN REESTRUCTURA
+
+
+//REFERENCIAS
+
+//FIN REFERENCIAS
+
+
+//HISTORIAL
+
+//FIN HISTORIAL
 
 // FIN TABS
 

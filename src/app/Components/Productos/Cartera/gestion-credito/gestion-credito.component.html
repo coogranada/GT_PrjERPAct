@@ -376,9 +376,6 @@
                             <input type="checkbox" id="estadoReliquidado" class="switchery"
                                 formControlName="estaReliquidado" />
                             <label for="estadoReliquidado">Reliquidado</label>
-                            <input type="checkbox" id="estadoPagoAbogado" class="switchery"
-                                formControlName="estaPagoAbogado" />
-                            <label for="estadoPagoAbogado">Pago Abogado</label>
                             <input type="checkbox" id="estadoCastigado" class="switchery"
                                 formControlName="estaCastigado" />
                             <label for="estadoCastigado">Castigado</label>
@@ -501,14 +498,29 @@
                             <li class="nav-item" [class.active]="tabActivo === Tabs.Garantias" (click)="onGarantiasTabClick()">
                                 <a>Garantías</a>
                             </li>
-                            <li class="nav-item" [class.active]="tabActivo === Tabs.Diferidos" (click)="onDiferidosTabClick()">
-                                <a>Diferidos</a>
+                            <li class="nav-item" [class.active]="tabActivo === Tabs.Deducibles" (click)="onDeduciblesTabClick()">
+                                <a>Deducibles</a>
                             </li> 
                             <li class="nav-item" [class.active]="tabActivo === Tabs.Calificacion" (click)="devolverTab(Tabs.Calificacion)">
                                 <a>Calificación</a>
                             </li>
                             <li class="nav-item" [class.active]="tabActivo === Tabs.Provision" (click)="onProvisionTabClick()">
                                 <a>Provisión</a>
+                            </li>
+                            <li class="nav-item" [class.active]="tabActivo === Tabs.Cobros" (click)="devolverTab(Tabs.Cobros)">
+                                <a>Cobros</a>
+                            </li>
+                            <li class="nav-item" [class.active]="tabActivo === Tabs.Cambios" (click)="devolverTab(Tabs.Cambios)">
+                                <a>Cambios</a>
+                            </li>
+                            <li class="nav-item">
+                                <a>Reestructura</a>
+                            </li>
+                            <li class="nav-item" [class.active]="tabActivo === Tabs.Referencias" (click)="devolverTab(Tabs.Referencias)">
+                                <a>Referencias</a>
+                            </li>
+                            <li class="nav-item" [class.active]="tabActivo === Tabs.Historial" (click)="devolverTab(Tabs.Cambios)">
+                                <a>Historial</a>
                             </li>
                         </ul>
                         <div class="tab-content">
@@ -877,7 +889,7 @@
                             <!-- Fin valorCuotaTab -->
                             <!-- Inicio garantiasTab -->
                             <div [hidden]="tabActivo !== Tabs.Garantias">
-                                <section>
+                                <section class="garantias-section">
                                     <article>
                                         <h3 class="tab-title">Garantías Personales Codeudores</h3>
                                         <div class="alert alert-secondary" role="alert" *ngIf="garantiasPersonalesCod.length === 0">
@@ -887,16 +899,16 @@
                                             <table class="table table-hover">
                                                 <thead>
                                                     <tr>
-                                                        <th>Documento</th>
-                                                        <th>Nombre</th>
-                                                        <th>Celular</th>
+                                                        <th class="table-header">Documento</th>
+                                                        <th class="table-header">Nombre</th>
+                                                        <th class="table-header">Celular</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr *ngFor="let garantia of garantiasPersonalesCod">
-                                                        <td>{{ garantia.NumeroDocumento }}</td>
-                                                        <td>{{ garantia.Nombres }}</td>
-                                                        <td>{{ garantia.TelResidencia }}</td>
+                                                    <tr *ngFor="let garantia of garantiasPersonalesCod; let i = index" (click)="selectRow('codeudores', i)" [class.tr-selected]="selectedRows['codeudores'] === i">
+                                                        <td class="text-center">{{ garantia.NumeroDocumento }}</td>
+                                                        <td class="text-center">{{ garantia.Nombres | concatWithSpace:garantia.PrimerApellido:garantia.SegundoApellido }}</td>
+                                                        <td class="text-center">{{ garantia.TelResidencia }}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -912,20 +924,20 @@
                                             <table class="table table-hover">
                                                 <thead>
                                                     <tr>
-                                                        <th>Garantía</th>
-                                                        <th>Clase</th>
-                                                        <th>Valor cobertura</th>
-                                                        <th>Valor que respalda</th>
-                                                        <th>Vencimiento póliza</th>
+                                                        <th class="table-header">Garantía</th>
+                                                        <th class="table-header">Clase</th>
+                                                        <th class="table-header">Valor cobertura</th>
+                                                        <th class="table-header">Valor que respalda</th>
+                                                        <th class="table-header">Vencimiento póliza</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr *ngFor="let garantia of garantiasReales">
-                                                        <td>{{ garantia.Garantia }}</td>
-                                                        <td>{{ garantia.Clase }}</td>
+                                                    <tr *ngFor="let garantia of garantiasReales; let i = index" (click)="selectRow('reales', i)" [class.tr-selected]="selectedRows['reales'] === i">
+                                                        <td class="text-center">{{ garantia.Garantia }}</td>
+                                                        <td class="text-center">{{ garantia.Clase }}</td>
                                                         <td><div class="align-right-large">{{ garantia.ValorCobertura | currency }}</div></td>
                                                         <td><div class="align-right-large">{{ garantia.ValorRespalda | currency }}</div></td>
-                                                        <td>{{ garantia.VctoPoliza }}</td>
+                                                        <td class="text-center">{{ garantia.VctoPoliza }}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -935,46 +947,46 @@
                                 </section>
                             </div>
                             <!-- Fin garantiasTab -->
-                            <!-- Inicio diferidosTab -->
-                            <div [hidden]="tabActivo !== Tabs.Diferidos">
+                            <!-- Inicio deduciblesTab -->
+                            <div [hidden]="tabActivo !== Tabs.Deducibles">
                                 <section>
                                     <article>
-                                        <div class="alert alert-secondary" role="alert" *ngIf="diferidos.length === 0">
+                                        <div class="alert alert-secondary" role="alert" *ngIf="deducibles.length === 0">
                                             No hay registros
                                         </div>
-                                        <div class="table-responsive scrollTabla" *ngIf="diferidos.length > 0">
+                                        <div class="table-responsive scrollTabla" *ngIf="deducibles.length > 0">
                                             <table class="table table-hover horizontal-scroll">
                                                 <thead>
                                                     <tr>
                                                         <th class="table-header">Código</th>
                                                         <th class="table-header">Nombre</th>
-                                                        <th class="table-header">Saldo deducible</th>
+                                                        <th class="table-header">Saldo</th>
                                                         <th class="table-header">Valor cuota</th>
-                                                        <th class="table-header">Saldo inicial deducible</th>
+                                                        <th class="table-header">Saldo inicial</th>
                                                         <th class="table-header">Plazo</th>
                                                         <th class="table-header">Cuota pactada</th>
                                                         <th class="table-header">Valor pagado</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr *ngFor="let diferido of diferidos">
-                                                        <td class="centered">{{ diferido.Codigo }}</td>
-                                                        <td>{{ diferido.Nombre }}</td>
-                                                        <td><div class="align-right">{{ diferido.SaldoDeducible | currency }}</div></td>
-                                                        <td><div class="align-right">{{ diferido.ValorCuota | currency }}</div></td>
-                                                        <td><div class="align-right">{{ diferido.SaldoInicialDeducible | currency }}</div></td>
-                                                        <td class="centered">{{ diferido.Plazo }}</td>
-                                                        <td><div class="align-right">{{ diferido.CuotaPactada | currency }}</div></td>
-                                                        <td><div class="align-right">{{ diferido.ValorPagado | currency }}</div></td>
+                                                    <tr *ngFor="let deducible of deducibles; let i = index" (click)="selectRow('deducibles', i)" [class.tr-selected]="selectedRows['deducibles'] === i">
+                                                        <td class="text-center">{{ deducible.Codigo }}</td>
+                                                        <td>{{ deducible.Nombre }}</td>
+                                                        <td><div class="align-right">{{ deducible.SaldoDeducible | currency }}</div></td>
+                                                        <td><div class="align-right">{{ deducible.ValorCuota | currency }}</div></td>
+                                                        <td><div class="align-right">{{ deducible.SaldoInicialDeducible | currency }}</div></td>
+                                                        <td class="text-center">{{ deducible.Plazo }}</td>
+                                                        <td><div class="align-right">{{ deducible.CuotaPactada | currency }}</div></td>
+                                                        <td><div class="align-right">{{ deducible.ValorPagado | currency }}</div></td>
                                                     </tr>
                                                 </tbody>
                                                 <tfoot class="total-tfoot">
                                                     <tr>
-                                                      <td colspan="2" class="centered"><strong>Total</strong></td>
+                                                      <td colspan="2" class="text-center"><strong>Total</strong></td>
                                                       <td><div class="align-right">{{ saldoDeducibleTotal | currency }}</div></td>
                                                       <td><div class="align-right">{{ valorCuotaTotal | currency }}</div></td>
                                                       <td><div class="align-right">{{ saldoInicialDeducibleTotal | currency }}</div></td>
-                                                      <td><div class="centered">—</div></td>
+                                                      <td><div class="text-center">—</div></td>
                                                       <td><div class="align-right">{{ cuotaPactadaTotal | currency }}</div></td>
                                                       <td><div class="align-right">{{ valorPagadoTotal | currency }}</div></td>
                                                     </tr>
@@ -984,7 +996,7 @@
                                     </article>
                                 </section>
                             </div>
-                            <!-- Fin diferidosTab -->
+                            <!-- Fin deduciblesTab -->
                             <!-- Inicio CalificacionTab -->
                             <div [hidden]="tabActivo !== Tabs.Calificacion">
                                 <article class="ac-text-cr">
@@ -993,8 +1005,7 @@
                                         <div class="col-xs-12 col-md-9 col-lg-9 panel-flat">
                                 
                                             <div id="tablaCaL1" class="table-responsive scrollTabla" style="max-height: 350px;">
-                                                <div class="form-group"
-                                                    style="border-bottom: 1px solid rgb(160, 0, 87); margin-bottom: 15px; padding: 15px 15px;">
+                                                <div class="form-group">
                                                     <label for=""><strong>Calificación del crédito</strong></label>
                                                 </div>
                                                 <table style="
@@ -1017,6 +1028,9 @@
                                                             <th class="columnotras_tabla1calificacion" style="text-align: center;">
                                                                 <strong>Cualitativa</strong>
                                                             </th>
+                                                            <th class="columnotras_tabla1calificacion" style="text-align: center;">
+                                                                <strong>Modelo</strong>
+                                                            </th>
                                                             <th class="columnFecha_tabla1calificacion" style="text-align: center;">
                                                                 <strong>Fecha calificación</strong>
                                                             </th>
@@ -1028,12 +1042,12 @@
                                                             <td style="text-align: center;">{{itemCalificacion.Recalificacion}}</td>
                                                             <td style="text-align: center;">{{itemCalificacion.Reestructuracion}}</td>
                                                             <td style="text-align: center;">{{itemCalificacion.Cualitativa}}</td>
+                                                            <td style="text-align: center;">{{itemCalificacion.Modelo}}</td>
                                                             <td style="text-align: center;">{{itemCalificacion.FechaCalificacion}}</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                <div class="col-xs-12 col-md-9 col-lg-9" *ngIf="lstCalificacion.length <=0 || lstCalificacion == null">
-                                                    <br>
+                                                <div class="col-xs-12 col-md-9 col-lg-9" *ngIf="lstCalificacion.length <=0 || lstCalificacion == null">                                                    
                                                     <div class="alert alert-secondary" role="alert">
                                                         No hay registros
                                                     </div>
@@ -1044,8 +1058,7 @@
                                         <!-- tabla 2 -->
                                         <div class="col-xs-12 col-md-3 col-lg-3 panel-flat">
                                             <div class="table-responsive" id="tablaCal2" style="max-height: 350px;">
-                                                <div class="form-group"
-                                                    style="border-bottom: 1px solid rgb(160, 0, 87); margin-bottom: 15px; padding: 15px 15px;">
+                                                <div class="form-group">
                                                     <label for=""><strong>Análisis</strong></label>
                                                 </div>
                                                 <table class="table table-hover" style="width: 260px;
@@ -1073,8 +1086,7 @@
                                                 </table>
                                             </div>
                                         </div>
-                                        <div class="col-xs-12 col-md-3 col-lg-3" *ngIf="lstCalificacion.length <= 0 || lstCalificacion == null">
-                                            <br>
+                                        <div class="col-xs-12 col-md-3 col-lg-3" *ngIf="lstCalificacion.length <= 0 || lstCalificacion == null">                                          
                                             <div class="alert alert-secondary" role="alert">
                                                 No hay registros
                                             </div>
@@ -1097,7 +1109,7 @@
                                             <table class="table table-hover provision-table">
                                                 <thead>
                                                     <tr>
-                                                        <th class="table-header">Fecha</th>
+                                                        <th class="table-header celda-fija">Fecha</th>
                                                         <th class="table-header table-header-medium">Capital</th>
                                                         <th class="table-header table-header-medium">Intereses</th>
                                                         <th class="table-header">Días</th>
@@ -1116,23 +1128,23 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr *ngFor="let provision of provisiones">
-                                                        <td>{{ provision.dtmFecha }}</td>
-                                                        <td><div class="align-right">{{ provision.curCapital | currency }}</div></td>
-                                                        <td><div class="align-right">{{ provision.curInteres | currency }}</div></td>
-                                                        <td class="centered">{{ provision.intDiasMora }}</td>
-                                                        <td class="centered">{{ provision.strCalificacion }}</td>
-                                                        <td><div class="align-right">{{ provision.curProINT | currency }}</div></td>
-                                                        <td><div class="align-right">{{ provision.curProCap | currency }}</div></td>
-                                                        <td><div class="align-right">{{ provision.curProvisionAdicional | currency }}</div></td>
-                                                        <td><div class="align-right">{{ provision.curHipotecas | currency }}</div></td>
-                                                        <td><div class="align-right">{{ provision.curOtras | currency }}</div></td>
-                                                        <td><div class="align-right">{{ provision.curAportes | currency }}</div></td>
-                                                        <td><div class="align-right">{{ provision.curCubHip | currency }}</div></td>
-                                                        <td><div class="align-right">{{ provision.curCubOtr | currency }}</div></td>
-                                                        <td><div class="align-right">{{ provision.curCubApo | currency }}</div></td>
-                                                        <td><div class="align-right">{{ provision.curCostas | currency }}</div></td>
-                                                        <td class="centered">{{ provision.curProCos }}%</td>
+                                                    <tr *ngFor="let provision of provisiones; let i = index" (click)="selectRow('provisiones', i)" [class.tr-selected]="selectedRows['provisiones'] === i">
+                                                        <td class="text-right celda-fija">{{ provision.dtmFecha }}</td>
+                                                        <td class="text-right">{{ provision.curCapital | currency }}</td>
+                                                        <td class="text-right">{{ provision.curInteres | currency }}</td>
+                                                        <td class="text-center">{{ provision.intDiasMora }}</td>
+                                                        <td class="text-center">{{ provision.strCalificacion }}</td>
+                                                        <td class="text-right">{{ provision.curProINT | currency }}</td>
+                                                        <td class="text-right">{{ provision.curProCap | currency }}</td>
+                                                        <td class="text-right">{{ provision.curProvisionAdicional | currency }}</td>
+                                                        <td class="text-right">{{ provision.curHipotecas | currency }}</td>
+                                                        <td class="text-right">{{ provision.curOtras | currency }}</td>
+                                                        <td class="text-right">{{ provision.curAportes | currency }}</td>
+                                                        <td class="text-right">{{ provision.curCubHip | currency }}</td>
+                                                        <td class="text-right">{{ provision.curCubOtr | currency }}</td>
+                                                        <td class="text-right">{{ provision.curCubApo | currency }}</td>
+                                                        <td class="text-right">{{ provision.curCostas | currency }}</td>
+                                                        <td class="text-center">{{ provision.curProCos}}%</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -1141,6 +1153,509 @@
                                 </section>
                             </div>
                             <!-- Fin provisionTab -->
+
+                            <!-- Inicio CobrosTab -->
+                            <div [hidden]="tabActivo !== Tabs.Cobros">
+                                <form method="get" [formGroup]="CobrosForm">
+                                    <article class="ac-text-cr">
+                                        <div class="col-xs-12 col-md-12 col-lg-12">
+                                            <section class="container">
+                                                <div class="ac-sg">
+                                                    <input class="ac-input-sg" id="ac-sg-1" name="ac-sg-1" type="checkbox" />
+                                                    <label class="ac-label-sg" for="ac-sg-1">Prejuridíco</label>
+                                                    <article class="ac-text-sg">
+                                                        <br>
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                                <div class="form-group">
+                                                                    <label>Cuotas Mora:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" style="text-align: left;" [attr.disabled]="true"
+                                                                        formControlName="CuotasMoraPre" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-1 col-lg-1">
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                                <div class="form-group">
+                                                                    <label>Número veces:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" style="text-align: left;" [attr.disabled]="true"
+                                                                        formControlName="VecesPre" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-1 col-lg-1">
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                                <div class="form-group">
+                                                                    <label>Saldo capital:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" currencyMask value=" {{carteraInfo.SaldoCapitalPre |  currency}}"
+                                                                        class="form-control" style="text-align: right;" [attr.disabled]="true" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-1 col-lg-1">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                                <div class="form-group">
+                                                                    <label>Fecha matricula:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" [attr.disabled]="true"
+                                                                        formControlName="FechaMatriculaPre" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-1 col-lg-1">
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                                <div class="form-group">
+                                                                    <label>Fecha retiro:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" [attr.disabled]="true"
+                                                                        formControlName="FechaRetiroPre" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </article>
+                                                </div>
+                                            </section>
+                                        </div>
+                                        <div class="col-xs-12 col-md-12 col-lg-12">
+                                            <section class="container">
+                                                <div class="ac-sgg">
+                                                    <input class="ac-input-sg" id="ac-sg-2" name="ac-sg-2" type="checkbox" />
+                                                    <label class="ac-label-sg" for="ac-sg-2">Abogado</label>
+                                                    <article class="ac-text-sg">
+                                                        <br>
+                                                        <div div class="row">
+                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                                <div class="form-group">
+                                                                    <label>Estado:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" [attr.disabled]="true"
+                                                                        formControlName="EstadoJuridico" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-1 col-lg-1">
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                                <div class="form-group">
+                                                                    <label>Abogado:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" [attr.disabled]="true"
+                                                                        formControlName="Abogado" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-1 col-lg-1">
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                                <div class="form-group">
+                                                                    <label>Juzgado:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" [attr.disabled]="true"
+                                                                        formControlName="NumNombreJuzgado" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-1 col-lg-1">
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                                <div class="form-group">
+                                                                    <label>Saldo:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" currencyMask value=" {{carteraInfo.SaldoJuridico |  currency}}"
+                                                                        class="form-control" style="text-align: right;" [attr.disabled]="true" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                                <div class="form-group">
+                                                                    <label>Costas judiciales:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" currencyMask value=" {{carteraInfo.CostasJudiciales |  currency}}"
+                                                                        class="form-control" style="text-align: right;" [attr.disabled]="true" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-1 col-lg-1">
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                                <div class="form-group">
+                                                                    <label>Cuotas mora:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" style="text-align: left;" [attr.disabled]="true"
+                                                                        formControlName="CuotasMoraJuridico" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-1 col-lg-1">
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                                <div class="form-group">
+                                                                    <label>Número veces:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" style="text-align: left;" [attr.disabled]="true"
+                                                                        formControlName="VecesJuridico" />
+                                                                </div>
+                                                            </div>
+                                    
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                                <div class="form-group">
+                                                                    <label>Fecha matricula:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" [attr.disabled]="true"
+                                                                        formControlName="FechaMatriculaJuridico" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-1 col-lg-1">
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                                <div class="form-group">
+                                                                    <label>Fecha retiro:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" [attr.disabled]="true"
+                                                                        formControlName="FechaRetiroJuridico" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </article>
+                                                </div>
+                                            </section>
+                                        </div>
+                                        <div class="col-xs-12 col-md-12 col-lg-12">
+                                            <section class="container">
+                                                <div class="ac-sgg">
+                                                    <input class="ac-input-sg" id="ac-sg-3" name="ac-sg-3" type="checkbox" />
+                                                    <label class="ac-label-sg" for="ac-sg-3">Castigada</label>
+                                                    <article class="ac-text-sg">
+                                                        <br>
+                                                        <div class="col-xs-12 col-md-2 col-lg-2">
+                                                            <div class="form-group">
+                                                                <label>Interés mora:</label>
+                                                                <span class="text-danger"></span>
+                                                                <input type="text" currencyMask value=" {{carteraInfo.IntMoraCastigo |  currency}}"
+                                                                    class="form-control" style="text-align: right;" [attr.disabled]="true" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-md-1 col-lg-1">
+                                                        </div>
+                                                        <div class="col-xs-12 col-md-2 col-lg-2">
+                                                            <div class="form-group">
+                                                                <label>Interés corriente:</label>
+                                                                <span class="text-danger"></span>
+                                                                <input type="text" currencyMask value=" {{carteraInfo.CorrientesCatigo |  currency}}"
+                                                                    class="form-control" style="text-align: right;" [attr.disabled]="true" />
+                                    
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-md-1 col-lg-1">
+                                                        </div>
+                                                        <div class="col-xs-12 col-md-2 col-lg-2">
+                                                            <div class="form-group">
+                                                                <label>Saldo capital:</label>
+                                                                <span class="text-danger"></span>
+                                                                <input type="text" currencyMask value=" {{carteraInfo.SaldoCapitalCastigo |  currency}}"
+                                                                    class="form-control" style="text-align: right;" [attr.disabled]="true" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-md-1 col-lg-1">
+                                                        </div>
+                                                        <div class="col-xs-12 col-md-2 col-lg-2">
+                                                            <div class="form-group">
+                                                                <label>Costas judiciales:</label>
+                                                                <span class="text-danger"></span>
+                                                                <input type="text" currencyMask value=" {{carteraInfo.CostasJudicialesCastigo |  currency}}"
+                                                                    class="form-control" style="text-align: right;" [attr.disabled]="true" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-md-1 col-lg-1">
+                                                        </div>
+                                                        <div class="col-xs-12 col-md-2 col-lg-2">
+                                                            <div class="form-group">
+                                                                <label>Fecha castigo:</label>
+                                                                <span class="text-danger"></span>
+                                                                <input type="text" class="form-control" [attr.disabled]="true"
+                                                                    formControlName="FechaCastigo" />
+                                                            </div>
+                                                        </div>
+                                                    </article>
+                                                </div>
+                                            </section>
+                                        </div>
+                                    </article>
+                                </form>                               
+                            </div>
+                            <!-- Fin CobrosTab -->
+
+                            <!-- Inicio CambiosTab -->
+                            <div [hidden]="tabActivo !== Tabs.Cambios">
+                                <article class="ac-text-cr">
+                                    <br>
+                                    <div class="col-xs-12 col-md-4 col-lg-12">
+                                        <label for=""><strong>Reestructuración del crédito</strong></label>
+                                    </div>
+                                    <hr>
+                                    <div>
+                                        <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="lstReestructuracion.length <= 0">
+                                            <div class="alert alert-secondary" role="alert">
+                                                No hay registros
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive scrollTabla" *ngIf="lstReestructuracion.length > 0">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="text-align: center;">
+                                                            <strong>Monto</strong>
+                                                        </th>
+                                                        <th style="text-align: center;">
+                                                            <strong>Saldo</strong>
+                                                        </th>
+                                                        <th style="text-align: center;">
+                                                            <strong>Cuota</strong>
+                                                        </th>
+                                                        <th style="text-align: center;">
+                                                            <strong>Plazo</strong>
+                                                        </th>
+                                                        <th>
+                                                            <strong>Tasa</strong>
+                                                        </th>
+                                                        <th>
+                                                            <strong>Fecha</strong>
+                                                        </th>
+                                                        <th>
+                                                            <strong>Novedad</strong>
+                                                        </th>
+                                                        <th>
+                                                            <strong>Calificación actual</strong>
+                                                        </th>
+                                                        <th>
+                                                            <strong>Calificación anterior</strong>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody *ngFor="let itemReestructura of lstReestructuracion; let j = index">
+                                                    <tr class="filRes_{{j}}" (click)="CambiarColor(j,12)">
+                                                        <td style="text-align: right;min-width: 160px;"> {{itemReestructura.Monto | currency}}</td>
+                                                        <td style="text-align: right;min-width: 160px;"> {{itemReestructura.Saldo | currency}}</td>
+                                                        <td style="text-align: right;min-width: 160px;"> {{itemReestructura.Cuota | currency}}</td>
+                                                        <td style="text-align: center;">{{itemReestructura.Plazo}}</td>
+                                                        <td style="text-align: right; min-width: 160px;">{{itemReestructura.Tasa}} %</td>
+                                                        <td>{{itemReestructura.Fecha}}</td>
+                                                        <td style="min-width: 160px;">{{itemReestructura.Novedad}}</td>
+                                                        <td style="text-align: center; min-width: 160px;">{{itemReestructura.CalAct}}</td>
+                                                        <td style="text-align: center; min-width: 200px;">{{itemReestructura.CalAnt}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <br/>
+                                    <div class="col-xs-12 col-md-4 col-lg-12">
+                                        <label><strong>Reliquidación del crédito</strong></label>
+                                    </div>
+                                    <hr>
+                                    <div>
+                                        <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="lstReliquidacion.length <= 0">                            
+                                            <div class="alert alert-secondary" role="alert">
+                                                No hay registros
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="lstReliquidacion.length > 0">
+                                            <br>
+                                            <div class="table-responsive scrollTabla">
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="text-align: center;">
+                                                                <strong>Monto</strong>
+                                                            </th>
+                                                            <th style="text-align: center;">
+                                                                <strong>Saldo</strong>
+                                                            </th>
+                                                            <th style="text-align: center;">
+                                                                <strong>Cuota</strong>
+                                                            </th>
+                                                            <th style="text-align: center;">
+                                                                <strong>Plazo</strong>
+                                                            </th>
+                                                            <th style="text-align: center;">
+                                                                <strong>Tasa</strong>
+                                                            </th>
+                                                            <th>
+                                                                <strong>Fecha</strong>
+                                                            </th>
+                                                            <th>
+                                                                <strong>Novedad</strong>
+                                                            </th>
+                                                            <th style="text-align: center;">
+                                                                <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong>
+                                                            </th>
+                                                            <th style="text-align: center;">
+                                                                <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody *ngFor="let itemReliquida of lstReliquidacion; let j = index">
+                                                        <tr>
+                                                            <td style="text-align: right;">
+                                                                {{itemReliquida.Monto | currency}}
+                                                            </td>
+                                                            <td style="text-align: right;">
+                                                                {{itemReliquida.Saldo | currency}}
+                                                            </td>
+                                                            <td style="text-align: right;">
+                                                                {{itemReliquida.Cuota | currency}}
+                                                            </td>
+                                                            <td style="text-align: center;">
+                                                                {{itemReliquida.Plazo}}
+                                                            </td>
+                                                            <td style="text-align: right;">
+                                                                {{itemReliquida.Tasa}} %
+                                                            </td>
+                                                            <td style="text-align: center;">
+                                                                {{itemReliquida.Fecha}}
+                                                            </td>
+                                                            <td style="text-align: left;">
+                                                                {{itemReliquida.Novedad}}
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                            </div>
+                            <!-- Fin CambiosTab -->
+
+                            <!-- Inicio reestructuraTab -->
+ 
+                            <!-- Fin reestructuraTab -->
+
+                            <!-- Inicio referenciasTab -->
+                            <div [hidden]="tabActivo !== Tabs.Referencias">
+                                <section class="referencias-section">
+                                    <article>
+                                        <h3 class="tab-title">Garantías Personales Codeudores</h3>
+                                        <div class="alert alert-secondary" role="alert" *ngIf="garantiasPersonalesCod.length === 0">
+                                            No hay registros
+                                        </div>
+                                        <div class="table-responsive scrollTabla" *ngIf="garantiasPersonalesCod.length > 0">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="table-header">Documento</th>
+                                                        <th class="table-header">Nombre</th>
+                                                        <th class="table-header">Celular</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let garantia of garantiasPersonalesCod; let i = index" (click)="selectRow('codeudores', i)" [class.tr-selected]="selectedRows['codeudores'] === i">
+                                                        <td class="text-center">{{ garantia.NumeroDocumento }}</td>
+                                                        <td class="text-center">{{ garantia.Nombres | concatWithSpace:garantia.PrimerApellido:garantia.SegundoApellido }}</td>
+                                                        <td class="text-center">{{ garantia.TelResidencia }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </article>
+
+                                    <article>
+                                        <h3 class="tab-title">Garantías Reales</h3>
+                                        <div class="alert alert-secondary" role="alert" *ngIf="garantiasReales.length === 0">
+                                            No hay registros
+                                        </div>
+                                        <div class="table-responsive scrollTabla" *ngIf="garantiasReales.length > 0">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="table-header">Garantía</th>
+                                                        <th class="table-header">Clase</th>
+                                                        <th class="table-header">Valor cobertura</th>
+                                                        <th class="table-header">Valor que respalda</th>
+                                                        <th class="table-header">Vencimiento póliza</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let garantia of garantiasReales; let i = index" (click)="selectRow('reales', i)" [class.tr-selected]="selectedRows['reales'] === i">
+                                                        <td class="text-center">{{ garantia.Garantia }}</td>
+                                                        <td class="text-center">{{ garantia.Clase }}</td>
+                                                        <td><div class="align-right-large">{{ garantia.ValorCobertura | currency }}</div></td>
+                                                        <td><div class="align-right-large">{{ garantia.ValorRespalda | currency }}</div></td>
+                                                        <td class="text-center">{{ garantia.VctoPoliza }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        
+                                    </article>
+                                </section>
+                            </div>
+                            <!-- Fin referenciasTab -->
+
+                            <!-- Inicio historialTab -->
+                            <div [hidden]="tabActivo !== Tabs.Historial">
+                                <section class="garantias-section">
+                                    <article>
+                                        <h3 class="tab-title">Garantías Personales Codeudores</h3>
+                                        <div class="alert alert-secondary" role="alert" *ngIf="garantiasPersonalesCod.length === 0">
+                                            No hay registros
+                                        </div>
+                                        <div class="table-responsive scrollTabla" *ngIf="garantiasPersonalesCod.length > 0">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="table-header">Documento</th>
+                                                        <th class="table-header">Nombre</th>
+                                                        <th class="table-header">Celular</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let garantia of garantiasPersonalesCod; let i = index" (click)="selectRow('codeudores', i)" [class.tr-selected]="selectedRows['codeudores'] === i">
+                                                        <td class="text-center">{{ garantia.NumeroDocumento }}</td>
+                                                        <td class="text-center">{{ garantia.Nombres | concatWithSpace:garantia.PrimerApellido:garantia.SegundoApellido }}</td>
+                                                        <td class="text-center">{{ garantia.TelResidencia }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </article>
+
+                                    <article>
+                                        <h3 class="tab-title">Garantías Reales</h3>
+                                        <div class="alert alert-secondary" role="alert" *ngIf="garantiasReales.length === 0">
+                                            No hay registros
+                                        </div>
+                                        <div class="table-responsive scrollTabla" *ngIf="garantiasReales.length > 0">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="table-header">Garantía</th>
+                                                        <th class="table-header">Clase</th>
+                                                        <th class="table-header">Valor cobertura</th>
+                                                        <th class="table-header">Valor que respalda</th>
+                                                        <th class="table-header">Vencimiento póliza</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let garantia of garantiasReales; let i = index" (click)="selectRow('reales', i)" [class.tr-selected]="selectedRows['reales'] === i">
+                                                        <td class="text-center">{{ garantia.Garantia }}</td>
+                                                        <td class="text-center">{{ garantia.Clase }}</td>
+                                                        <td><div class="align-right-large">{{ garantia.ValorCobertura | currency }}</div></td>
+                                                        <td><div class="align-right-large">{{ garantia.ValorRespalda | currency }}</div></td>
+                                                        <td class="text-center">{{ garantia.VctoPoliza }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        
+                                    </article>
+                                </section>
+                            </div>
+                            <!-- Fin historialTab -->
                         </div>
                     </div>
                 </div>

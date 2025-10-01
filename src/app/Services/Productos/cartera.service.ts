@@ -41,6 +41,15 @@ export class CarteraService {
         this.url = `${this.environment.Url}/BuscarCalificacionCartera?IdCuenta=${IdCuenta}`;
         return this._http.get<any>(this.url);
     }
+    getCobrosCartera(IdCuenta: number): Observable<any> {
+        this.url = `${this.environment.Url}/ObteneCobrosCartera?lngCuenta=${IdCuenta}`;
+        return this._http.get<any>(this.url);
+    }
+    getReestructuracionReliquidacion(IdCuenta: number): Observable<any> {
+        this.url = `${this.environment.Url}/BuscarReestructuracionReliquidacion?IdCuenta=${IdCuenta}`;
+        return this._http.get<any>(this.url);
+    }
+   
 
     // GARANTIAS
     getGarantias(IdCuenta: number): Observable<GarantiasResponse> {
@@ -51,7 +60,7 @@ export class CarteraService {
 
 
     //DIFERIDOS
-    getDiferidos(IdCuenta: number): Observable<Diferido[]> {
+    getDeducibles(IdCuenta: number): Observable<Diferido[]> {
         this.url = `${this.environment.Url}/getDiferidos?idCuenta=${IdCuenta}`;
         return this._http.get<any>(this.url);
     }
@@ -64,4 +73,18 @@ export class CarteraService {
         return this._http.get<any>(this.url);
     }
     //FIN PROVISION
+
+    //REESTRUCTURA
+
+    //FIN REESTRUCTURA
+
+
+    //REFERENCIAS
+
+    //FIN REFERENCIAS
+
+
+    //HISTORIAL
+
+    //FIN  HISTORIAL
 }

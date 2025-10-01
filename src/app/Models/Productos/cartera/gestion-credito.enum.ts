@@ -11,7 +11,11 @@ export enum Tabs {
     Saldos = 'saldos',
     ValorCuota = 'valorCuota',
     Garantias = 'garantias',
-    Diferidos = 'diferidos',
+    Deducibles = 'deducibles',
     Provision = 'provision',
-    Calificacion = 'calificacion'
+    Calificacion = 'calificacion',
+    Cobros = 'Cobros', 
+    Cambios = 'Cambios',
+    Referencias = 'referencias',
+    Historial = 'historial',
 }
