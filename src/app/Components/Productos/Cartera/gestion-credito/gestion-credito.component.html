@@ -1391,10 +1391,9 @@
                             <div [hidden]="tabActivo !== Tabs.Cambios">
                                 <article class="ac-text-cr">
                                     <br>
-                                    <div class="col-xs-12 col-md-4 col-lg-12">
+                                    <div>
                                         <h3 class="tab-title">Reestructuración del crédito</h3>
                                     </div>
-                                    <hr>
                                     <div>
                                         <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="lstReestructuracion.length <= 0">
                                             <div class="alert alert-secondary" role="alert">
@@ -1403,48 +1402,41 @@
                                         </div>
                                         <div class="table-responsive scrollTabla" *ngIf="lstReestructuracion.length > 0">
                                             <table class="table table-hover">
+                                                <colgroup>
+                                                    <col style="width: 11%;">
+                                                    <col style="width: 11%;">
+                                                    <col style="width: 11%;">
+                                                    <col style="width: 10%;">
+                                                    <col style="width: 10%;">
+                                                    <col style="width: 11%;">
+                                                    <col style="width: 12%;">
+                                                    <col style="width: 12%;">
+                                                    <col style="width: 12%;">
+                                                </colgroup>
                                                 <thead>
                                                     <tr>
-                                                        <th style="text-align: center;">
-                                                            <strong>Monto</strong>
-                                                        </th>
-                                                        <th style="text-align: center;">
-                                                            <strong>Saldo</strong>
-                                                        </th>
-                                                        <th style="text-align: center;">
-                                                            <strong>Cuota</strong>
-                                                        </th>
-                                                        <th style="text-align: left;">
-                                                            <strong>Plazo</strong>
-                                                        </th>
-                                                        <th style="text-align: center;">
-                                                            <strong>Tasa</strong>
-                                                        </th>
-                                                        <th style="text-align: center;">
-                                                            <strong>Fecha</strong>
-                                                        </th>
-                                                        <th style="text-align: center;">
-                                                            <strong>Novedad</strong>
-                                                        </th>
-                                                        <th style="text-align: center;">
-                                                            <strong>Calif. Actual</strong>
-                                                        </th>
-                                                        <th style="text-align: center;">
-                                                            <strong>Calif. Anterior</strong>
-                                                        </th>
+                                                        <th><strong>Monto</strong></th>
+                                                        <th><strong>Saldo</strong></th>
+                                                        <th><strong>Cuota</strong></th>
+                                                        <th><strong>Plazo</strong></th>
+                                                        <th><strong>Tasa</strong></th>
+                                                        <th><strong>Fecha</strong></th>
+                                                        <th><strong>Novedad</strong></th>
+                                                        <th><strong>Calif. Actual</strong></th>
+                                                        <th><strong>Calif. Anterior</strong></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody *ngFor="let itemReestructura of lstReestructuracion; let j = index">
                                                     <tr class="filRes_{{j}}" (click)="CambiarColor(j,12)">
-                                                        <td style="text-align: right;min-width: 120px;"> {{itemReestructura.Monto | currency}}</td>
-                                                        <td style="text-align: right;min-width: 120px;"> {{itemReestructura.Saldo | currency}}</td>
-                                                        <td style="text-align: right;min-width: 120px;"> {{itemReestructura.Cuota | currency}}</td>
-                                                        <td style="text-align: center">{{itemReestructura.Plazo}}</td>
-                                                        <td style="text-align: center; min-width: 120px;">{{itemReestructura.Tasa}} %</td>
-                                                        <td>{{itemReestructura.Fecha}}</td>
-                                                        <td style="min-width: center 120px;">{{itemReestructura.Novedad}}</td>
-                                                        <td style="text-align: center; min-width: 120px;">{{itemReestructura.CalAct}}</td>
-                                                        <td style="text-align: center; min-width: 120px;">{{itemReestructura.CalAnt}}</td>
+                                                        <td>{{ itemReestructura.Monto | currency }}</td>
+                                                        <td>{{ itemReestructura.Saldo | currency }}</td>
+                                                        <td>{{ itemReestructura.Cuota | currency }}</td>
+                                                        <td>{{ itemReestructura.Plazo }} </td>
+                                                        <td>{{ itemReestructura.Tasa }} %</td>
+                                                        <td>{{ itemReestructura.Fecha }} </td>
+                                                        <td>{{ itemReestructura.Novedad }} </td>
+                                                        <td>{{ itemReestructura.CalAct }} </td>
+                                                        <td>{{ itemReestructura.CalAnt }} </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -1466,60 +1458,41 @@
                                             <br>
                                             <div class="table-responsive scrollTabla">
                                                 <table class="table table-hover">
+                                                    <colgroup>
+                                                        <col style="width: 11%;">
+                                                        <col style="width: 11%;">
+                                                        <col style="width: 11%;">
+                                                        <col style="width: 10%;">
+                                                        <col style="width: 10%;">
+                                                        <col style="width: 11%;">
+                                                        <col style="width: 12%;">
+                                                        <col style="width: 12%;">
+                                                        <col style="width: 12%;">
+                                                    </colgroup>
                                                     <thead>
                                                         <tr>
-                                                            <th style="text-align: center;">
-                                                                <strong>Monto</strong>
-                                                            </th>
-                                                            <th style="text-align: center;">
-                                                                <strong>Saldo</strong>
-                                                            </th>
-                                                            <th style="text-align: center;">
-                                                                <strong>Cuota</strong>
-                                                            </th>
-                                                            <th style="text-align: left;">
-                                                                <strong>Plazo</strong>
-                                                            </th>
-                                                            <th style="text-align: center;">
-                                                                <strong>Tasa</strong>
-                                                            </th>
-                                                            <th style="text-align: center;">
-                                                                <strong>Fecha</strong>
-                                                            </th>
-                                                            <th style="text-align: center;">
-                                                                <strong>Novedad</strong>
-                                                            </th>
-                                                            <th style="text-align: center;">
-                                                                <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong>
-                                                            </th>
-                                                            <th style="text-align: center;">
-                                                                <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong>
-                                                            </th>
+                                                            <th><strong>Monto</strong></th>
+                                                            <th><strong>Saldo</strong></th>
+                                                            <th><strong>Cuota</strong></th>
+                                                            <th><strong>Plazo</strong></th>
+                                                            <th><strong>Tasa</strong></th>
+                                                            <th><strong>Fecha</strong></th>
+                                                            <th><strong>Novedad</strong></th>
+                                                            <th></th>
+                                                            <th></th>
                                                         </tr>
                                                     </thead>
                                                     <tbody *ngFor="let itemReliquida of lstReliquidacion; let j = index">
                                                         <tr>
-                                                            <td style="text-align: right;min-width: 120px;">
-                                                                {{itemReliquida.Monto | currency}}
-                                                            </td>
-                                                            <td style="text-align: right;min-width: 120px;">
-                                                                {{itemReliquida.Saldo | currency}}
-                                                            </td>
-                                                            <td style="text-align: right;min-width: 120px;">
-                                                                {{itemReliquida.Cuota | currency}}
-                                                            </td>
-                                                            <td style="text-align: center;">
-                                                                {{itemReliquida.Plazo}}
-                                                            </td>
-                                                            <td style="text-align: center; min-width: 120px;">
-                                                                {{itemReliquida.Tasa}} %
-                                                            </td>
-                                                            <td style="text-align: center 120px;">
-                                                                {{itemReliquida.Fecha}}
-                                                            </td>
-                                                            <td style="text-align: center 120px;">
-                                                                {{itemReliquida.Novedad}}
-                                                            </td>
+                                                            <td>{{ itemReliquida.Monto | currency }}</td>
+                                                            <td>{{ itemReliquida.Saldo | currency }}</td>
+                                                            <td>{{ itemReliquida.Cuota | currency }}</td>
+                                                            <td>{{ itemReliquida.Plazo }}</td>
+                                                            <td>{{ itemReliquida.Tasa }} %</td>
+                                                            <td>{{ itemReliquida.Fecha }}</td>
+                                                            <td>{{ itemReliquida.Novedad }}</td>
+                                                            <td></td>
+                                                            <td></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
