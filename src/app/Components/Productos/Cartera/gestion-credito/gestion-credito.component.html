@@ -140,7 +140,7 @@
                         </div>
                         <div class="col-xs-6 col-md-2 col-lg-1">
                             <input type="text" class="form-control" tooltip="Nombre" placement="top" show-delay="500"
-                                formControlName="Radicado" (keypress)="LimpiarCampos('Radicado')" />
+                                formControlName="Radicado"  />
                         </div>
                         <!-- Fin Radicado -->
 
@@ -152,7 +152,7 @@
                             </div>
                             <div class="">
                                 <input type="text" class="form-control" tooltip="Nombre" placement="top" show-delay="500"
-                                    formControlName="pagare" (keypress)="LimpiarCampos('pagare')" />
+                                    formControlName="pagare"  />
                                 <span class="help-block validationSpan"
                                     *ngIf="gestionCreditoForm.controls['pagare'].errors?.['pattern']">
                                     El pagaré solo acepta números.
@@ -176,19 +176,17 @@
                         </div>
                         <div class="col-xs-4 col-md-3 col-lg-2">
                             <input type="text" class="form-control" id="SelectDocumento"
-                                formControlName="NumeroDocumento" (keypress)="LimpiarCampos('NumeroDocumento')"
-                                (blur)="BuscarAsociado()" maxlength="15">
+                                formControlName="NumeroDocumento" maxlength="15">
                             <!-- <span class="help-block validationSpan" *ngIf="gestionCreditoForm.controls['NumeroDocumento'].errors?.['pattern']">
                                 El documento solo acepta números.
                             </span> -->
                         </div>
                         <div class="col-xs-6 col-md-5 col-lg-3">
                             <input type="text" class="form-control pmayuscula" formControlName="Nombre"
-                                (keypress)="LimpiarCampos('Nombre')">
+                                >
                         </div>
                         <div class="col-xs-1 col-md-1 col-lg-1">
                             <button type="button" class="btn Gt-btn-verde btn-icon legitRipple"
-                                (click)="BuscarAsociado()"
                                 [disabled]="gestionCreditoForm.get('NumeroDocumento')?.disabled">
                                 <i class="icon-search4"></i></button>
                         </div>
@@ -217,17 +215,15 @@
                             <span class="grande">*</span>
                         </div>
                         <div class="col-xs-4 col-md-3 col-lg-1">
-                            <input type="text" class="form-control" id="SelectProducto" formControlName="IdProducto"
-                                (keypress)="LimpiarCampos('IdProducto')" (change)="Producto()" maxlength="3">
+                            <input type="text" class="form-control" id="SelectProducto" formControlName="IdProducto" maxlength="3">
                         </div>
                         <div class="col-xs-6 col-md-5 col-lg-4">
                             <input type="text" class="form-control" formControlName="DescripcionProducto"
-                                (keypress)="LimpiarCampos('DescripcionProducto')">
+                                >
                         </div>
                         <div class="col-xs-1 col-md-1 col-lg-1">
-                            <button type="button" class="btn Gt-btn-verde btn-icon legitRipple"
-                                (click)="BuscarProducto()" [disabled]="gestionCreditoForm.get('IdProducto')?.disabled">
-                                <i class="icon-search4"></i></button>
+                            <button type="button" class="btn Gt-btn-verde btn-icon legitRipple" [disabled]="gestionCreditoForm.get('IdProducto')?.disabled">
+                            <i class="icon-search4"></i></button>
                         </div>
                         <!-- Fin Producto -->
 
@@ -254,17 +250,14 @@
                             <span class="grande">*</span>
                         </div>
                         <div class="col-xs-4 col-md-3 col-lg-1">
-                            <input type="text" class="form-control" id="SelectProducto" formControlName="IdLinea"
-                                (keypress)="LimpiarCampos('IdLinea')" (change)="Producto()" maxlength="3">
+                            <input type="text" class="form-control" id="SelectProducto" formControlName="IdLinea" maxlength="3">
                         </div>
                         <div class="col-xs-6 col-md-5 col-lg-4">
-                            <input type="text" class="form-control" formControlName="Linea"
-                                (keypress)="LimpiarCampos('DescripcionProducto')">
+                            <input type="text" class="form-control" formControlName="Linea">
                         </div>
                         <div class="col-xs-1 col-md-1 col-lg-1">
-                            <button type="button" class="btn Gt-btn-verde btn-icon legitRipple"
-                                (click)="BuscarProducto()" [disabled]="gestionCreditoForm.get('IdLinea')?.disabled">
-                                <i class="icon-search4"></i></button>
+                            <button type="button" class="btn Gt-btn-verde btn-icon legitRipple" [disabled]="gestionCreditoForm.get('IdLinea')?.disabled">
+                            <i class="icon-search4"></i></button>
                         </div>
                         <!-- Fin Linea -->
 
@@ -294,11 +287,11 @@
                         </div>
                         <div class="col-xs-4 col-md-3 col-lg-1">
                             <input type="text" class="form-control" formControlName="IdAsesor"
-                                (keypress)="LimpiarCampos('IdAsesor')">
+                                >
                         </div>
                         <div class="col-xs-6 col-md-5 col-lg-4">
                             <input type="text" class="form-control" formControlName="NombreAsesor"
-                                (keypress)="LimpiarCampos('NombreAsesor')">
+                                >
                         </div>
                         <div class="col-xs-1 col-md-1 col-lg-1">
                             <button type="button" class="btn Gt-btn-verde btn-icon legitRipple"
@@ -332,7 +325,6 @@
                         <div class="col-xs-4 col-md-3 col-lg-1">
                             <input type="text" class="form-control" tooltip="Id asesor" id="SelectAsesorExterno"
                                 placement="top" show-delay="500" formControlName="IdAsesorExterno"
-                                (blur)="BuscarAsesorExternoCodigo()" (keypress)="LimpiarCampos('IdAsesorExterno')"
                                 maxlength="4" />
                             <!-- <span class="help-block validationSpan" *ngIf="AsesorExternoForm.controls['IdAsesorExterno'].errors?.['pattern']">
                                 El Id asesor solo acepta números.
@@ -341,13 +333,12 @@
                         <div class="col-xs-6 col-md-5 col-lg-4">
                             <input type="text" class="form-control" tooltip="Nombre asesor" placement="top"
                                 show-delay="500" formControlName="NombreAsesorExterno"
-                                (keypress)="LimpiarCampos('NombreAsesorExterno')" />
+                                 />
                         </div>
                         <div class="col-xs-1 col-md-1 col-lg-1">
                             <button type="button" class="btn Gt-btn-verde btn-icon legitRipple"
-                                (click)="BuscarAsesorExternoTodos()"
                                 [disabled]="gestionCreditoForm.get('IdAsesorExterno')?.disabled">
-                                <i class="icon-search4"></i></button>
+                            <i class="icon-search4"></i></button>
                         </div>
                         <!-- Fin Asesor Externo -->
 
@@ -940,7 +931,7 @@
                                                         <th>Clase</th>
                                                         <th>Valor cobertura</th>
                                                         <th>Valor que respalda</th>
-                                                        <th>Vencimiento póliza</th>
+                                                        <th class="text-center">Vencimiento póliza</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>

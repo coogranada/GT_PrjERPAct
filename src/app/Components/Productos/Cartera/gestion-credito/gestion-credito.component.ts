@@ -116,7 +116,6 @@ export class GestionCreditoComponent {
   }
 
   validateForm() {
-    const OficinaCambio = new FormControl({ value: '', disabled: true }, []);
     const IdAsesor = new FormControl({ value: '', disabled: true }, [Validators.required]);
     const NombreAsesor = new FormControl({ value: '', disabled: true }, [Validators.required]);
     const IdProducto = new FormControl({ value: '', disabled: true }, []);
@@ -129,12 +128,6 @@ export class GestionCreditoComponent {
       Validators.maxLength(100),
       Validators.pattern("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s'-]+$")
     ]);
-    const DocumentoTitular = new FormControl({value:"",disabled:true}, [Validators.pattern('[0-9]*')]);
-    const NombreTitular = new FormControl({value:"",disabled:true}, []);
-    const Titular = new FormControl({ value: '', disabled: true }, []);
-    const Autorizado = new FormControl({ value: '', disabled: true }, []);
-    const Observacion = new FormControl({ value: '', disabled: true }, []);
-    const ObservacionCuenta = new FormControl({ value: '', disabled: true }, []);
     const Codigo = new FormControl({ value: '', disabled: false }, [Validators.required]);
     const IdDigito = new FormControl({ value: '', disabled: true }, [Validators.pattern('^[0-9]*$')]);
     const IdConsecutivo = new FormControl({ value: '', disabled: true }, [Validators.pattern('^[0-9]*$')]);
@@ -145,48 +138,13 @@ export class GestionCreditoComponent {
     const NombreOficinaAsociado = new FormControl({ value: '', disabled: true }, [Validators.required]);
     const NombreOficina = new FormControl({ value: '', disabled: true }, [Validators.required]);
     const NumeroOficina = new FormControl({ value: '', disabled: true }, [Validators.required]);
-    const DescripcionOperacion = new FormControl({ value: '', disabled: true }, [Validators.required]);
-    const Clase = new FormControl({ value: '', disabled: true }, [Validators.required]);
     const IdEstadoCuenta = new FormControl({ value: '', disabled: true }, []);
     const NombreEstadoCuenta = new FormControl({ value: '', disabled: true }, []);
-    const DescripcionEstado = new FormControl({ value: '', disabled: true }, [Validators.required]);
     const IdFormaPago = new FormControl({ value: '', disabled: true }, []);
     const DescripcionFormaPago = new FormControl({ value: '', disabled: true }, [Validators.required]);
-    const InteresCausado = new FormControl({ value: '', disabled: true }, []);
-    const SaldoInicial = new FormControl({ value: '', disabled: true }, []);
-    const SaldoMinimo = new FormControl({ value: '', disabled: true }, []);
-    const ValorExonerado = new FormControl({ value: '', disabled: true }, []);
-    const InteresdelPeriodo = new FormControl({ value: '', disabled: true }, []);
-    const Canje = new FormControl({ value: '', disabled: true }, []);
-    const RetiroDelPerido = new FormControl({ value: '', disabled: true }, []);
-    const RetencionFuentePeriodo = new FormControl({ value: '', disabled: true }, []);
-    const Efectivo = new FormControl({ value: '', disabled: true }, []);
-    const SaldoTotal = new FormControl({ value: '', disabled: true }, []);
-    const GMFAdescontar = new FormControl({ value: '', disabled: true }, []);
-    const FechaApertura = new FormControl({ value: '', disabled: true }, []);
-    const FechaUltimaTrans = new FormControl({ value: '', disabled: true }, []);
-    const FechaCancelacion = new FormControl({ value: '', disabled: true }, []);
-    const FechaMarcaGMF = new FormControl({ value: '', disabled: true }, []);
-    const FechaDesmarcaGMF = new FormControl({ value: '', disabled: true }, []);
     const IdAsesorExterno = new FormControl({ value: '', disabled: true }, [Validators.pattern('[0-9]*')]);
     const NombreAsesorExterno = new FormControl({ value: '', disabled: true }, []);
-    const strTipo = new FormControl({ value: '', disabled: true }, []);
-    const Canal = new FormControl({value:"",disabled:true});
-    const DescripcionCanal = new FormControl({ value: '', disabled: true }, []);
-    const NumeroOperaciones = new FormControl({ value: '', disabled: true }, [Validators.pattern('^[0-9]+$')]);
-    const MontoMaximo = new FormControl({ value: '', disabled: true }, []);
-    const IdMedioPago = new FormControl({ value: '', disabled: true }, []);
-    const IdConvenio = new FormControl({ value: '', disabled: true }, []);
     const IdCuenta = new FormControl({ value: '', disabled: true }, []);
-    const IdUsuarioSGF = new FormControl({ value: '', disabled: true }, []);
-    const IdUsuarioERP = new FormControl({ value: '', disabled: true }, []);
-    const ActivaMovimiento = new FormControl({ value: '', disabled: true }, []);
-    const Exenta = new FormControl({ value: '', disabled: true }, []);
-    const ExoneradaGmf = new FormControl({ value: '', disabled: true }, []);
-    const Inicial = new FormControl({ value: '', disabled: true }, [Validators.pattern('[0-9]*')]);
-    const Final = new FormControl({ value: '', disabled: true }, []);
-    const FechaVigenciaTarjeta = new FormControl({ value: '', disabled: true }, []);
-    const NumeroTarjeta = new FormControl({ value: '', disabled: true }, [Validators.pattern('[0-9]*')]);
     const CuotaManejo = new FormControl({ value: '', disabled: true }, []);
     const FechaRediferir = new FormControl({ value: '', disabled: true }, []);
     const IdPlazo = new FormControl({ value: '', disabled: true }, []);
@@ -204,7 +162,6 @@ export class GestionCreditoComponent {
     const FechaCredito = new FormControl({ value: '', disabled: true }, []);
     const FechaProximoCobro = new FormControl({ value: '', disabled: true }, []);
     const LibretaPlastico = new FormControl({ value: '', disabled: true }, []);
-    const MoraCuotaManejo = new FormControl({ value: '', disabled: true }, []);
     const pagare = new FormControl({ value: '', disabled: true }, [Validators.pattern('^[0-9]*$')]);
     const IdRelacionCliente = new FormControl({ value: '', disabled: true }, []);
     const NombreRelacionCliente = new FormControl({ value: '', disabled: true }, []);
@@ -213,8 +170,6 @@ export class GestionCreditoComponent {
     const estaCastigado = new FormControl({ value: false, disabled: true }, []);
     const estaSinCobertura = new FormControl({ value: false, disabled: true }, []);
     const Cuenta = new FormControl({ value: '', disabled: true }, []);
-    const TelefonoDisponible = new FormControl({ value: '', disabled: true }, []);
-    const Titulares = new FormControl({ value: '', disabled: true }, []);
     const IdOperacionPermitida = new FormControl({ value: '', disabled: true }, []);
     const NombreOperacionPermitida = new FormControl({ value: '', disabled: true }, []);
     const IdTercero = new FormControl({ value: '', disabled: true }, []);
@@ -230,7 +185,6 @@ export class GestionCreditoComponent {
     const ValorCobertura = new FormControl({ value: '', disabled: true }, []);
 
     this.gestionCreditoForm = new FormGroup({
-      OficinaCambio: OficinaCambio,
       IdAsesor: IdAsesor,
       NombreAsesor: NombreAsesor,
       IdProducto: IdProducto,
@@ -239,12 +193,6 @@ export class GestionCreditoComponent {
       NumeroDocumento: NumeroDocumento,
       BuscarDocumento: BuscarDocumento,
       BuscarNombre: BuscarNombre,
-      DocumentoTitular: DocumentoTitular,
-      NombreTitular: NombreTitular,
-      Titular: Titular,
-      Autorizado: Autorizado,
-      Observacion: Observacion,
-      ObservacionCuenta: ObservacionCuenta,
       IdDigito: IdDigito,
       IdConsecutivo: IdConsecutivo,
       IdProductoCuenta: IdProductoCuenta,
@@ -254,45 +202,11 @@ export class GestionCreditoComponent {
       NombreOficinaAsociado: NombreOficinaAsociado,
       NombreOficina: NombreOficina,
       NumeroOficina: NumeroOficina,
-      DescripcionOperacion: DescripcionOperacion,
-      Clase: Clase,
       IdEstadoCuenta,
       NombreEstadoCuenta,
-      DescripcionEstado: DescripcionEstado,
       IdFormaPago: IdFormaPago,
       DescripcionFormaPago: DescripcionFormaPago,
-      InteresCausado: InteresCausado,
-      SaldoInicial: SaldoInicial,
-      SaldoMinimo: SaldoMinimo,
-      ValorExonerado: ValorExonerado,
-      InteresdelPeriodo: InteresdelPeriodo,
-      Canje: Canje,
-      RetiroDelPerido: RetiroDelPerido,
-      RetencionFuentePeriodo: RetencionFuentePeriodo,
-      Efectivo: Efectivo,
-      SaldoTotal: SaldoTotal,
-      GMFAdescontar: GMFAdescontar,
-      FechaApertura: FechaApertura,
-      FechaUltimaTrans: FechaUltimaTrans,
-      FechaCancelacion: FechaCancelacion,
-      FechaMarcaGMF: FechaMarcaGMF,
-      FechaDesmarcaGMF: FechaDesmarcaGMF,
-      Canal: Canal,
-      DescripcionCanal: DescripcionCanal,
-      NumeroOperaciones: NumeroOperaciones,
-      MontoMaximo: MontoMaximo,
-      IdMedioPago: IdMedioPago,
-      IdConvenio: IdConvenio,
       IdCuenta: IdCuenta,
-      IdUsuarioSGF: IdUsuarioSGF,
-      IdUsuarioERP: IdUsuarioERP,
-      ActivaMovimiento: ActivaMovimiento,
-      Exenta: Exenta,
-      ExoneradaGmf: ExoneradaGmf,
-      Inicial: Inicial,
-      Final: Final,
-      FechaVigenciaTarjeta: FechaVigenciaTarjeta,
-      NumeroTarjeta: NumeroTarjeta,
       CuotaManejo: CuotaManejo,
       FechaRediferir: FechaRediferir,
       IdPlazo: IdPlazo,
@@ -310,7 +224,6 @@ export class GestionCreditoComponent {
       FechaCredito: FechaCredito,
       FechaProximoCobro: FechaProximoCobro,
       LibretaPlastico: LibretaPlastico,
-      MoraCuotaManejo: MoraCuotaManejo,
       pagare,
       IdRelacionCliente,
       NombreRelacionCliente,
@@ -319,8 +232,6 @@ export class GestionCreditoComponent {
       estaCastigado,
       estaSinCobertura,
       Cuenta: Cuenta,
-      TelefonoDisponible: TelefonoDisponible,
-      Titulares: Titulares,
       IdAsesorExterno,
       NombreAsesorExterno,
       IdOperacionPermitida,
@@ -463,10 +374,6 @@ export class GestionCreditoComponent {
   pad(numero: number): string {
     return numero < 10 ? '0' + numero : numero.toString();
   }
-
-  // selectRow(index: number): void {
-  //   this.selectedRow = index;
-  // }
 
   selectRow(tableName: string, rowIndex: number) {
     this.selectedRows[tableName] = rowIndex;
@@ -718,45 +625,6 @@ export class GestionCreditoComponent {
     });
   }
 
-  LimpiarCampos(campo: string) {
-
-  }
-
-  BuscarAsociado() {
-
-  }
-
-  Producto() {
-
-  }
-
-  ChangeCheck(campo: string) {
-
-  }
-
-  SeleccionMedioPago() {
-
-  }
-
-  FormaPagoSeleccionada() {
-
-  }
-
-  BuscarAsesorExternoTodos() {
-
-  }
-
-  BuscarAsesorExternoCodigo() {
-    
-  }
-
-  selectEstadoActivo() {
-    
-  }
-
-  BuscarProducto() {
-    
-  }
 
 // TABS 
   devolverTab(tab: Tabs): void {
@@ -866,10 +734,6 @@ export class GestionCreditoComponent {
 // GARANTIAS
 
   onGarantiasTabClick() {
-    // if(this.tabActivo != Tabs.Garantias)
-    //   this.getGarantias();
-
-    // this.devolverTab(Tabs.Garantias); 
     this.onTabChange(Tabs.Garantias, () => this.getGarantias());
   }
 
