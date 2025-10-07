@@ -512,6 +512,12 @@
                             <li class="nav-item" [class.active]="tabActivo === Tabs.Cambios" (click)="devolverTab(Tabs.Cambios)">
                                 <a>Cambios</a>
                             </li>
+                            <li class="nav-item" [class.active]="tabActivo === Tabs.Referencias" (click)="onReferenciasTabClick()">
+                                <a>Referencias</a>
+                            </li>
+                            <li class="nav-item" [class.active]="tabActivo === Tabs.Historial" (click)="onHistorialTabClick()">
+                                <a>Historial</a>
+                            </li>
                         </ul>
                         <div class="tab-content">
                             <!-- Inicio datosTab -->
@@ -887,18 +893,27 @@
                                         </div>
                                         <div class="table-responsive scrollTabla" *ngIf="garantiasPersonalesCod.length > 0">
                                             <table class="table table-hover">
+                                                <colgroup>
+                                                    <col style="width: 20%;">
+                                                    <col style="width: 20%;">
+                                                    <col style="width: 20%;">
+                                                    <col style="width: 20%;">
+                                                    <col style="width: 20%;">
+                                                </colgroup>
                                                 <thead>
                                                     <tr>
-                                                        <th class="table-header">Documento</th>
-                                                        <th class="table-header">Nombre</th>
-                                                        <th class="table-header">Celular</th>
+                                                        <th>Documento</th>
+                                                        <th colspan="2">Nombre</th>
+                                                        <th>Celular</th>
+                                                        <th></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr *ngFor="let garantia of garantiasPersonalesCod; let i = index" (click)="selectRow('codeudores', i)" [class.tr-selected]="selectedRows['codeudores'] === i">
-                                                        <td class="text-center">{{ garantia.NumeroDocumento }}</td>
-                                                        <td class="text-center">{{ garantia.Nombres | concatWithSpace:garantia.PrimerApellido:garantia.SegundoApellido }}</td>
-                                                        <td class="text-center">{{ garantia.TelResidencia }}</td>
+                                                        <td><div>{{ garantia.NumeroDocumento }}</div></td>
+                                                        <td colspan="2"><div>{{ garantia.Nombres | concatWithSpace:garantia.PrimerApellido:garantia.SegundoApellido }}</div></td>
+                                                        <td><div>{{ garantia.TelResidencia }}</div></td>
+                                                        <td></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -912,19 +927,26 @@
                                         </div>
                                         <div class="table-responsive scrollTabla" *ngIf="garantiasReales.length > 0">
                                             <table class="table table-hover">
+                                                <colgroup>
+                                                    <col style="width: 20%;">
+                                                    <col style="width: 20%;">
+                                                    <col style="width: 20%;">
+                                                    <col style="width: 20%;">
+                                                    <col style="width: 20%;">
+                                                </colgroup>
                                                 <thead>
                                                     <tr>
-                                                        <th class="table-header">Garantía</th>
-                                                        <th class="table-header">Clase</th>
-                                                        <th class="table-header">Valor cobertura</th>
-                                                        <th class="table-header">Valor que respalda</th>
-                                                        <th class="table-header">Vencimiento póliza</th>
+                                                        <th>Garantía</th>
+                                                        <th>Clase</th>
+                                                        <th>Valor cobertura</th>
+                                                        <th>Valor que respalda</th>
+                                                        <th>Vencimiento póliza</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr *ngFor="let garantia of garantiasReales; let i = index" (click)="selectRow('reales', i)" [class.tr-selected]="selectedRows['reales'] === i">
-                                                        <td class="text-center">{{ garantia.Garantia }}</td>
-                                                        <td class="text-center">{{ garantia.Clase }}</td>
+                                                        <td><div>{{ garantia.Garantia }}</div></td>
+                                                        <td><div>{{ garantia.Clase }}</div></td>
                                                         <td><div class="align-right-large">{{ garantia.ValorCobertura | currency }}</div></td>
                                                         <td><div class="align-right-large">{{ garantia.ValorRespalda | currency }}</div></td>
                                                         <td class="text-center">{{ garantia.VctoPoliza }}</td>
@@ -932,7 +954,6 @@
                                                 </tbody>
                                             </table>
                                         </div>
-                                        
                                     </article>
                                 </section>
                             </div>
@@ -1518,6 +1539,194 @@
                                 </article>
                             </div>
                             <!-- Fin CambiosTab -->
+
+                            <!-- Inicio referenciasTab -->
+                            <div [hidden]="tabActivo !== Tabs.Referencias">
+                                <section class="garantias-section">
+                                    <article>
+                                        <h3 class="tab-title">Familiares/Personales</h3>
+                                        <div class="alert alert-secondary" role="alert" *ngIf="refPersonales.length === 0">
+                                            No hay registros
+                                        </div>
+                                        <div class="table-responsive scrollTabla" *ngIf="refPersonales.length > 0">
+                                            <table class="table table-hover">
+                                                <colgroup>
+                                                    <col style="width: 40%;">
+                                                    <col style="width: 20%;">
+                                                    <col style="width: 20%;">
+                                                    <col style="width: 20%;">
+                                                </colgroup>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Nombre completo</th>
+                                                        <th>Celular</th>
+                                                        <th>Teléfono</th>
+                                                        <th>Tipo referencia</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let refPersonal of refPersonales; let i = index" (click)="selectRow('refPersonales', i)" [class.tr-selected]="selectedRows['refPersonales'] === i">
+                                                        <td class="capitalize">{{ refPersonal.NombreCompleto }}</td>
+                                                        <td>{{ refPersonal.Celular }}</td>
+                                                        <td>{{ refPersonal.TelefonoResidencia }}</td>
+                                                        <td>{{ refPersonal.DescripcionReferencia }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </article>
+
+                                    <article>
+                                        <h3 class="tab-title">Financieras/Comerciales</h3>
+                                        <div class="alert alert-secondary" role="alert" *ngIf="refComcerciales.length === 0">
+                                            No hay registros
+                                        </div>
+                                        <div class="table-responsive scrollTabla" *ngIf="refComcerciales.length > 0">
+                                            <table class="table table-hover">
+                                                <colgroup>
+                                                    <col style="width: 40%;">
+                                                    <col style="width: 20%;">
+                                                    <col style="width: 20%;">
+                                                    <col style="width: 20%;">
+                                                </colgroup>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Nombre completo</th>
+                                                        <th>Teléfono</th>
+                                                        <th>Tipo referencia</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let refComercial of refComcerciales  ; let i = index" (click)="selectRow('refComcerciales', i)" [class.tr-selected]="selectedRows['refComcerciales'] === i">
+                                                        <td class="capitalize">{{ refComercial.NombreEmpresa }}</td>
+                                                        <td>{{ refComercial.TelefonoEmpresa }}</td>
+                                                        <td>{{ refComercial.DescripcionReferencia }}</td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </article>
+                                </section>
+                            </div>
+                            <!-- Fin referenciasTab -->
+
+                            <!-- Inicio historialTab -->
+                            <div [hidden]="tabActivo !== Tabs.Historial">
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <!-- Fechas -->
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <div class="form-group">
+                                            <label class="fw-bold">Apertura:</label>
+                                            <span class="text-danger"></span>
+                                            <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaApertura" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="fw-bold">Última transacción:</label>
+                                            <span class="text-danger"></span>
+                                            <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaUltimaTrans" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="fw-bold">Cancelación:</label>
+                                            <span class="text-danger"></span>
+                                            <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaCancelacion" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="fw-bold">Vencimiento:</label>
+                                            <span class="text-danger"></span>
+                                            <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaVencimiento" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="fw-bold">Cambio fecha de pago:</label>
+                                            <span class="text-danger"></span>
+                                            <input type="text" class="form-control" [attr.disabled]="true" formControlName="cambioFechaPago" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="fw-bold">Próximo pago:</label>
+                                            <span class="text-danger"></span>
+                                            <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaProximoPago" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="fw-bold">Entro a contingencia:</label>
+                                            <span class="text-danger"></span>
+                                            <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaContingencia" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="fw-bold">Inicio período gracia:</label>
+                                            <span class="text-danger"></span>
+                                            <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaInicioPeriodoGracia" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="fw-bold">Cambio de tasa:</label>
+                                            <span class="text-danger"></span>
+                                            <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaCambioTasa" />
+                                        </div>
+                                    </div>
+
+                                    <!-- Historial -->
+                                    <div class="col-xs-12 col-md-9 col-lg-9" *ngIf="historial.length === 0">
+                                        <br>
+                                        <div class="alert alert-secondary" role="alert">
+                                            No hay registros
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xs-12 col-md-9 col-lg-9" *ngIf="historial.length > 0">
+                                        <div class="table-responsive scrollTabla panel panel-default table-larger">
+
+                                            <table id="TablaDatosHistorial" class="table table-hover scrollTablaHistorial">
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+                                                            <strong>Fecha</strong>
+                                                        </th>
+                                                        <th>
+                                                            <strong>Oficina</strong>
+                                                        </th>
+                                                        <th>
+                                                            <strong>Usuario responsable</strong>
+                                                        </th>
+                                                        <th>
+                                                            <strong>Operación</strong>
+                                                        </th>
+                                                        <th>
+                                                            <strong>Opciones</strong>
+                                                        </th>
+                                                        <th>
+                                                            <strong>Descripción</strong>
+                                                        </th>
+                                                        <th>
+                                                            <strong>Detalles</strong>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let historialOperacion of historial; let i = index" (click)="selectRow('historial', i)" [class.tr-selected]="selectedRows['historial'] === i">
+                                                        <td>{{ historialOperacion.FechaHistorial | date: 'yyyy/MM/dd HH:mm:ss'  }}</td>
+                                                        <td>{{ historialOperacion.NombreOficina }}</td>
+                                                        <td>{{ historialOperacion.NombreCompleto }}</td>
+                                                        <td>{{ historialOperacion.Descripcion }}</td>
+                                                        <td></td>
+                                                        <td>{{ historialOperacion.TiposObservaciones }}</td>
+                                                        <td>{{ historialOperacion.Detalles }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <!-- Fin Historial -->
+
+                                    <div class="col-xs-12 col-md-3 col-lg-3">
+                                        <!-- Inicio espacio -->
+                                        <div class="form-group">
+                                        </div>
+                                        <!-- Fin espacio -->
+                                    </div>
+                                </div>
+                            
+                            </div>
+                            <!-- Fin historialTab -->
                         </div>
                     </div>
                 </div>

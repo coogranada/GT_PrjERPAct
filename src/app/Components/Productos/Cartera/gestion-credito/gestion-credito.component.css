@@ -454,8 +454,20 @@ h3 {
     padding-top: 10px;
     padding-left: 10px;
     padding-bottom: 8px;
+    background-color: rgb(198 198 198 / 40%);
 }
 
+.fw-bold {
+    font-weight: bold;
+}
+
+.capitalize{
+    text-transform: capitalize;
+}
+.table-larger {
+    max-height: 900px;
+    overflow-y: auto;
+}
 .garantias-section {
     display: flex;
     flex-direction: column;
@@ -475,6 +487,25 @@ h3 {
     min-width: 150px;
 }
 
+.align-left-with-justify {
+    text-align: left;
+    max-width: 40%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.align-left-with-justify-large {
+    text-align: left;
+    max-width: 75%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.align-left {
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
 
 .align-right {
     text-align: right;
@@ -511,6 +542,15 @@ h3 {
     .align-right-large {
         padding-right: 30%;
     }
+    .align-left-with-justify {
+        max-width: 30%;
+    }
+    .align-left-with-justify-large {
+        max-width: 50%;
+    }
+    .align-left {
+        max-width: initial;
+    }
 }
 
 
@@ -522,6 +562,7 @@ h3 {
     
     td {
         border-top: 2px solid #000;
+        font-weight: bold;
     }
 }
 

@@ -74,9 +74,6 @@ export class CarteraService {
     }
     //FIN PROVISION
 
-    //REESTRUCTURA
-
-    //FIN REESTRUCTURA
 
 
     //REFERENCIAS
@@ -85,6 +82,9 @@ export class CarteraService {
 
 
     //HISTORIAL
-
+    getHistorial(idCuenta: number, idProducto: number): Observable<any[]> {
+        this.url = `${this.environment.Url}/getHistorial?idCuenta=${idCuenta}&idProducto=${idProducto}`;
+        return this._http.get<any>(this.url);
+    }
     //FIN  HISTORIAL
 }

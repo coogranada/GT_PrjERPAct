@@ -22,6 +22,7 @@ export interface CuentaCarteraDetalle {
 }
 
 export interface GestionCreditoEncabezado {
+  IdTercero: number;
   IdOficinaCliente: number;
   OficinaCliente: string;
   NumeroDocumento: string;
@@ -105,4 +106,43 @@ export interface Provision {
   dtmFecha: string; 
   intDiasMora: number;
   strCalificacion: string;
+}
+
+export interface Referencia {
+  Celular: string;
+  DescripcionReferencia: string;
+  NombreCompleto: string;
+  NombreEmpresa: string;
+  TelefonoEmpresa: string;
+  TelefonoResidencia: string;
+  TipoReferencia: number;
+}
+
+export interface FechasCredito {
+  Apertura: string;
+  CambioFechaPago: string;
+  CambioTasa: string;
+  Cancelacion: string;
+  CartaPrejuridico: string;
+  Contingencia: string;
+  EntradaPrejuridico: string;
+  InicioPeriodoGracia: string;
+  ProximoPago: string;
+  UltTransaccion: string;
+  Vencimiento: string;
+  dtmDoumentaTD: string;
+  dtmUltimaTransTD: string;
+}
+
+export interface HistorialOperacion {
+  Descripcion: string;
+  Detalles: string; 
+  FechaHistorial: string; 
+  IdCuenta: number;
+  IdTiposObservaciones: number;
+  IdUsuario: number;
+  NombreCompleto: string;
+  NombreOficina: string;
+  Operacion: number;
+  TiposObservaciones: string | null; 
 }
