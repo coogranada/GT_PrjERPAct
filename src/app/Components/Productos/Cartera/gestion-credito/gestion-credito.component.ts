@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { OperacionesService } from '../../../../Services/Maestros/operaciones.service';
 import { Tabs, TipoBusquedaResumen } from '../../../../Models/Productos/cartera/gestion-credito.enum';
 import { CarteraService } from '../../../../Services/Productos/cartera.service';
-import { CuentaCarteraResumen, CuentaFormateada, Diferido, GarantiaPersonalCod, GarantiaReal, Provision } from '../../../../Models/Productos/cartera/gestion-credito.model';
+import { CuentaCarteraResumen, CuentaFormateada, Diferido, FechasCredito, GarantiaPersonalCod, GarantiaReal, HistorialOperacion, Provision, Referencia } from '../../../../Models/Productos/cartera/gestion-credito.model';
 import { catchError, forkJoin, Observable, of } from 'rxjs';
 import { MiListaProductosService } from '../../../../Services/Informes/mi-lista-productos.service';
 import { ToastrService } from 'ngx-toastr';
@@ -71,7 +71,9 @@ export class GestionCreditoComponent {
     codeudores: null,
     reales: null,
     deducibles: null,
-    provisiones: null
+    provisiones: null,
+    refPersonales: null,
+    refComerciales: null
   }
   saldoDeducibleTotal = 0;
   valorCuotaTotal = 0;
@@ -79,6 +81,9 @@ export class GestionCreditoComponent {
   cuotaPactadaTotal = 0;
   valorPagadoTotal = 0;
   provisiones: Provision[] = [];
+  refPersonales: Referencia[] = [];
+  refComcerciales: Referencia[] = [];
+  historial: HistorialOperacion[] = [];
 
   ColorAnterior: any;
   Tabs = Tabs;
@@ -210,43 +215,19 @@ export class GestionCreditoComponent {
     const Cuenta = new FormControl({ value: '', disabled: true }, []);
     const TelefonoDisponible = new FormControl({ value: '', disabled: true }, []);
     const Titulares = new FormControl({ value: '', disabled: true }, []);
-    const Talonarios = new FormControl({ value: '', disabled: true }, []);
     const IdOperacionPermitida = new FormControl({ value: '', disabled: true }, []);
     const NombreOperacionPermitida = new FormControl({ value: '', disabled: true }, []);
-    const Canales = new FormControl({ value: '', disabled: true }, []);
-    const LngTercero = new FormControl({ value: '', disabled: true }, []);
-    const AdicionarPunto = new FormControl({ value: '', disabled: true }, []);
-    const TibrarComentario = new FormControl({ value: '', disabled: true }, []);
-    const TasaEfectiva = new FormControl({ value: '', disabled: true }, []);
-    const TasaNominal = new FormControl({ value: '', disabled: true }, []);
-    const IdIndicador = new FormControl({ value: '', disabled: true }, []);
-    const Puntos = new FormControl({ value: '', disabled: true }, []);
-    const CuentaCupo = new FormControl({ value: '', disabled: true }, []);
-    const IdCuentaCupo = new FormControl({ value: '', disabled: true }, []);
-    const lngTercero = new FormControl({ value: '', disabled: true }, []);
-    const lngCuenta = new FormControl({ value: '', disabled: true }, []);
-    const IdTipoObservacion = new FormControl({ value: '', disabled: true }, []);
-    const NumeroMatricula = new FormControl({ value: '', disabled: true }, []);
-    const DescripcionMatricula = new FormControl({ value: '', disabled: true }, []);
+    const IdTercero = new FormControl({ value: '', disabled: true }, []);
+    const fechaApertura = new FormControl({ value: '', disabled: true }, []);
+    const fechaUltimaTrans = new FormControl({ value: '', disabled: true }, []);
+    const fechaCancelacion = new FormControl({ value: '', disabled: true }, []);
+    const fechaVencimiento = new FormControl({ value: '', disabled: true }, []);
+    const cambioFechaPago = new FormControl({ value: '', disabled: true }, []);
+    const fechaProximoPago = new FormControl({ value: '', disabled: true }, []);
+    const fechaContingencia = new FormControl({ value: '', disabled: true }, []);
+    const fechaInicioPeriodoGracia = new FormControl({ value: '', disabled: true }, []);
+    const fechaCambioTasa = new FormControl({ value: '', disabled: true }, []);
     const ValorCobertura = new FormControl({ value: '', disabled: true }, []);
-    const ValorRespaldo = new FormControl({ value: '', disabled: true }, []);
-    const PagoTotal = new FormControl({ value: '', disabled: true }, []);
-    const PagoMinimo = new FormControl({ value: '', disabled: true }, []);
-    const DireccionDisponible = new FormControl({ value: '', disabled: true }, []);
-    const TipoDocumento = new FormControl({ value: '', disabled: true }, []);
-    const IdTipoDocumento = new FormControl({ value: '', disabled: true }, []);
-    const SaldoPromedioMesAnterior = new FormControl({ value: '', disabled: true }, []);
-    const InteresMesAnterior = new FormControl({ value: '', disabled: true }, []);
-    const SaldoCertificado = new FormControl({ value: '', disabled: true }, []);
-    const IdGarantia = new FormControl({ value: '', disabled: true }, []);
-    const DescripcionGarantia = new FormControl({ value: '', disabled: true }, []);
-    const IdGarantiaConsecutivo = new FormControl({ value: '', disabled: true }, []);
-    const DocumentoAsesor = new FormControl({ value: '', disabled: true }, []);
-    const IdObseCambioEstado = new FormControl({ value: '', disabled: true }, []);
-    const RetiroPeriodo = new FormControl({ value: '', disabled: true }, []);
-    const AliasCuenta = new FormControl({ value: '', disabled: true }, []);
-    const ExoCobroHasta = new FormControl({ value: '', disabled: true }, []);
-    const Edad = new FormControl({ value: '', disabled: true }, []);
 
     this.gestionCreditoForm = new FormGroup({
       OficinaCambio: OficinaCambio,
@@ -339,42 +320,22 @@ export class GestionCreditoComponent {
       estaSinCobertura,
       Cuenta: Cuenta,
       TelefonoDisponible: TelefonoDisponible,
-      DireccionDisponible: DireccionDisponible,
       Titulares: Titulares,
-      Talonarios: Talonarios,
       IdAsesorExterno,
       NombreAsesorExterno,
       IdOperacionPermitida,
       NombreOperacionPermitida,
-      Canales: Canales,
-      LngTercero: LngTercero,
-      TibrarComentario: TibrarComentario,
-      TasaNominal: TasaNominal,
-      TasaEfectiva: TasaEfectiva,
-      IdIndicador: IdIndicador,
-      Puntos: Puntos,
-      CuentaCupo: CuentaCupo,
-      IdCuentaCupo: IdCuentaCupo,
-      NumeroMatricula: NumeroMatricula,
-      DescripcionMatricula: DescripcionMatricula,
+      IdTercero,
+      fechaApertura,
+      fechaUltimaTrans,
+      fechaCancelacion,
+      fechaVencimiento,
+      cambioFechaPago,
+      fechaProximoPago,
+      fechaContingencia,
+      fechaInicioPeriodoGracia,
+      fechaCambioTasa,
       ValorCobertura: ValorCobertura,
-      ValorRespaldo: ValorRespaldo,
-      PagoMinimo: PagoMinimo,
-      PagoTotal: PagoTotal,
-      TipoDocumento: TipoDocumento,
-      IdTipoDocumento: IdTipoDocumento,
-      SaldoPromedioMesAnterior: SaldoPromedioMesAnterior,
-      InteresMesAnterior: InteresMesAnterior,
-      IdGarantia: IdGarantia,
-      DescripcionGarantia: DescripcionGarantia,
-      IdGarantiaConsecutivo: IdGarantiaConsecutivo,
-      DocumentoAsesor: DocumentoAsesor,
-      IdObseCambioEstado: IdObseCambioEstado, 
-      RetiroPeriodo: RetiroPeriodo,
-      AliasCuenta: AliasCuenta,
-      ExoCobroHasta: ExoCobroHasta,
-      Edad: Edad,
-
     });
 
     this.gestionCreditoOperacionForm = new FormGroup({
@@ -718,6 +679,7 @@ export class GestionCreditoComponent {
         this.gestionCreditoForm.get('NombreOperacionPermitida')?.setValue(cuentaDetalle.Encabezado.NombreOperacionPermitida);
         this.gestionCreditoForm.get('IdFormaPago')?.setValue(cuentaDetalle.Encabezado.IdFormaPago);
         this.gestionCreditoForm.get('estaSinCobertura')?.setValue(cuentaDetalle.Encabezado.EstaSinCobertura);
+        this.gestionCreditoForm.get('IdTercero')?.setValue(cuentaDetalle.Encabezado.IdTercero);
         this.reestablecerCamposEncabezado('BuscarDocumento', 'BuscarNombre');
         this.gestionCreditoOperacionForm.reset();
         this.deshabilitarCamposBusqueda();
@@ -1122,18 +1084,77 @@ export class GestionCreditoComponent {
     }
 // FIN CAMBIOS
 
-//REESTRUCTURA
+  //REFERENCIAS
+  onReferenciasTabClick() {
+    this.onTabChange(Tabs.Referencias, () => this.getReferencias());
+  }
 
-//FIN REESTRUCTURA
+  getReferencias() {
+    const idTercero = this.gestionCreditoForm.get('IdTercero')?.value;
+    if (!idTercero) return;
+    this.loading = true;
 
-
-//REFERENCIAS
-
-//FIN REFERENCIAS
+    this.miListaProductosService.GetReferenciasCartera(idTercero, 0).pipe(
+      catchError(error => {
+        console.error('Error al obtener referencias:', error);
+        return of(null);
+      })
+    ).subscribe(
+      (result: Referencia[] | null) => {
+        this.loading = false;
+        if (!result) {
+          return;
+        }
+        this.refPersonales = result.filter(ref => [2, 4].includes(ref.TipoReferencia));
+        this.refComcerciales = result.filter(ref => [1, 3].includes(ref.TipoReferencia));
+      }
+    );
+  }
+  //FIN REFERENCIAS
 
 
 //HISTORIAL
+onHistorialTabClick() {
+  this.onTabChange(Tabs.Historial, () => this.getHistorial());
+}
 
+  getHistorial() {
+
+    const { IdCuenta, IdProductoCuenta } = this.gestionCreditoForm.value;
+
+    forkJoin({
+      fechas: this.miListaProductosService.getFechasCartera(IdCuenta).pipe(
+        catchError(error => {
+          console.error('Error al obtener fechas:', error);
+          return of(null);
+        })
+      ) as Observable<FechasCredito | null>,
+      historialOperaciones: this.carteraService.getHistorial(IdCuenta, IdProductoCuenta).pipe(
+        catchError(error => {
+          console.error('Error al obtener historial operaciones:', error);
+          return of(null);
+        })
+      )
+    }).subscribe(({ fechas, historialOperaciones }) => {
+      this.loading = false;
+      if (fechas) {
+        this.gestionCreditoForm.get('fechaApertura')?.setValue(fechas.Apertura);
+        this.gestionCreditoForm.get('fechaUltimaTrans')?.setValue(fechas.UltTransaccion);
+        this.gestionCreditoForm.get('fechaCancelacion')?.setValue(fechas.Cancelacion);
+        this.gestionCreditoForm.get('fechaVencimiento')?.setValue(fechas.Vencimiento);
+        this.gestionCreditoForm.get('cambioFechaPago')?.setValue(fechas.CambioFechaPago);
+        this.gestionCreditoForm.get('fechaProximoPago')?.setValue(fechas.ProximoPago);
+        this.gestionCreditoForm.get('fechaContingencia')?.setValue(fechas.Contingencia);
+        this.gestionCreditoForm.get('fechaInicioPeriodoGracia')?.setValue(fechas.InicioPeriodoGracia);
+        this.gestionCreditoForm.get('fechaCambioTasa')?.setValue(fechas.CambioTasa);
+      }
+
+      if (historialOperaciones) {
+        this.historial = historialOperaciones;
+      }
+
+    });
+  }
 //FIN HISTORIAL
 
 // FIN TABS
