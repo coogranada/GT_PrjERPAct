@@ -1418,7 +1418,7 @@
                                                         <th><strong>Monto</strong></th>
                                                         <th><strong>Saldo</strong></th>
                                                         <th><strong>Cuota</strong></th>
-                                                        <th><strong>Plazo</strong></th>
+                                                        <th class="text-center"><strong>Plazo</strong></th>
                                                         <th><strong>Tasa</strong></th>
                                                         <th><strong>Fecha</strong></th>
                                                         <th><strong>Novedad</strong></th>
@@ -1431,12 +1431,12 @@
                                                         <td>{{ itemReestructura.Monto | currency }}</td>
                                                         <td>{{ itemReestructura.Saldo | currency }}</td>
                                                         <td>{{ itemReestructura.Cuota | currency }}</td>
-                                                        <td>{{ itemReestructura.Plazo }} </td>
+                                                        <td class="text-center">{{itemReestructura.Plazo }} </td>
                                                         <td>{{ itemReestructura.Tasa }} %</td>
                                                         <td>{{ itemReestructura.Fecha }} </td>
                                                         <td>{{ itemReestructura.Novedad }} </td>
-                                                        <td>{{ itemReestructura.CalAct }} </td>
-                                                        <td>{{ itemReestructura.CalAnt }} </td>
+                                                        <td class="text-center">{{ itemReestructura.CalAct }} </td>
+                                                        <td class="text-center">{{ itemReestructura.CalAnt }} </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -1474,7 +1474,7 @@
                                                             <th><strong>Monto</strong></th>
                                                             <th><strong>Saldo</strong></th>
                                                             <th><strong>Cuota</strong></th>
-                                                            <th><strong>Plazo</strong></th>
+                                                            <th class="text-center"><strong>Plazo</strong></th>
                                                             <th><strong>Tasa</strong></th>
                                                             <th><strong>Fecha</strong></th>
                                                             <th><strong>Novedad</strong></th>
@@ -1487,7 +1487,7 @@
                                                             <td>{{ itemReliquida.Monto | currency }}</td>
                                                             <td>{{ itemReliquida.Saldo | currency }}</td>
                                                             <td>{{ itemReliquida.Cuota | currency }}</td>
-                                                            <td>{{ itemReliquida.Plazo }}</td>
+                                                            <td class="text-center">{{ itemReliquida.Plazo }}</td>
                                                             <td>{{ itemReliquida.Tasa }} %</td>
                                                             <td>{{ itemReliquida.Fecha }}</td>
                                                             <td>{{ itemReliquida.Novedad }}</td>
