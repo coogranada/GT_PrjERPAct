@@ -810,12 +810,19 @@ export class GestionCreditoComponent {
 
   resetTabs() {
     this.resetEstadoCargaTabs();
-    this.tabActivo = Tabs.Datos;
-    this.DatosForm.reset();
-    this.SaldosForm.reset();
+    this.tabActivo = Tabs.Datos;   
     this.resetTabGarantias();
     this.deducibles = [];
     this.provisiones = [];
+
+    this.DatosForm.reset();
+    this.SaldosForm.reset();
+    this.CobrosForm.reset();
+    this.carteraInfo = new DetalleCartera(); 
+    this.lstCalificacion = [];               
+    this.lstAnalisisCalificacion = [];
+    this.lstReestructuracion = [];
+    this.lstReliquidacion = [];
   }
 
   CambiarColor(fil: any, producto: any) {

@@ -462,7 +462,7 @@ export class GMFDisponibleComponent implements OnInit {
             this.notificacion.onSuccess('Exitoso', result.strMensajeExencion);
             this.ReportModal.nativeElement.click();
           } else if (result.strCodigoExencion === '02') {
-            this.notificacion.onDanger('Advertencia', 'El asociado no tiene ninguna cuenta exonerada en CIFIN. Por favor reportar por GLPI al área de operaciones.');
+            this.notificacion.onDanger('Advertencia', 'El asociado no tiene ninguna cuenta exonerada en CIFIN');
           } else {
             this.InfoCuenta.nativeElement.click();
             this.notificacion.onDanger('Advertencia', 'No se pudo desmarcar la cuenta. Por favor reportar por GLPI al área de operaciones.');

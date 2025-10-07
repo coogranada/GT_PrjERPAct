@@ -512,15 +512,6 @@
                             <li class="nav-item" [class.active]="tabActivo === Tabs.Cambios" (click)="devolverTab(Tabs.Cambios)">
                                 <a>Cambios</a>
                             </li>
-                            <li class="nav-item">
-                                <a>Reestructura</a>
-                            </li>
-                            <li class="nav-item" [class.active]="tabActivo === Tabs.Referencias" (click)="devolverTab(Tabs.Referencias)">
-                                <a>Referencias</a>
-                            </li>
-                            <li class="nav-item" [class.active]="tabActivo === Tabs.Historial" (click)="devolverTab(Tabs.Cambios)">
-                                <a>Historial</a>
-                            </li>
                         </ul>
                         <div class="tab-content">
                             <!-- Inicio datosTab -->
@@ -1002,11 +993,10 @@
                                     <div id="contenedor">
                                         <!-- //tala 1 -->
                                         <div class="col-xs-12 col-md-9 col-lg-9 panel-flat">
-                                
-                                            <div id="tablaCaL1" class="table-responsive scrollTabla" style="max-height: 350px;">
-                                                <div class="form-group">
-                                                    <label for=""><strong>Calificación del crédito</strong></label>
-                                                </div>
+                                            <div class="form-group" style="background-color: #e5e5e5">
+                                                 <label for=""><strong>Calificación del crédito</strong></label>
+                                            </div>
+                                            <div id="tablaCaL1" class="table-responsive scrollTabla" style="max-height: 350px;">                                               
                                                 <table style="
                                                                               border-left: 1px solid #ddd;
                                                                               border-right: 1px solid #ddd;
@@ -1057,7 +1047,7 @@
                                         <!-- tabla 2 -->
                                         <div class="col-xs-12 col-md-3 col-lg-3 panel-flat">
                                             <div class="table-responsive" id="tablaCal2" style="max-height: 350px;">
-                                                <div class="form-group">
+                                                <div class="form-group" style="background-color: #e5e5e5">
                                                     <label for=""><strong>Análisis</strong></label>
                                                 </div>
                                                 <table class="table table-hover" style="width: 260px;
@@ -1167,7 +1157,7 @@
                                                         <div class="row">
                                                             <div class="col-xs-12 col-md-2 col-lg-2">
                                                                 <div class="form-group">
-                                                                    <label>Cuotas Mora:</label>
+                                                                    <label><strong>Cuotas Mora:</strong></label>
                                                                     <span class="text-danger"></span>
                                                                     <input type="text" class="form-control" style="text-align: left;" [attr.disabled]="true"
                                                                         formControlName="CuotasMoraPre" />
@@ -1177,7 +1167,7 @@
                                                             </div>
                                                             <div class="col-xs-12 col-md-2 col-lg-2">
                                                                 <div class="form-group">
-                                                                    <label>Número veces:</label>
+                                                                    <label><strong>Número veces:</strong></label>
                                                                     <span class="text-danger"></span>
                                                                     <input type="text" class="form-control" style="text-align: left;" [attr.disabled]="true"
                                                                         formControlName="VecesPre" />
@@ -1187,7 +1177,7 @@
                                                             </div>
                                                             <div class="col-xs-12 col-md-2 col-lg-2">
                                                                 <div class="form-group">
-                                                                    <label>Saldo capital:</label>
+                                                                    <label><strong>Saldo capital:</strong></label>
                                                                     <span class="text-danger"></span>
                                                                     <input type="text" currencyMask value=" {{carteraInfo.SaldoCapitalPre |  currency}}"
                                                                         class="form-control" style="text-align: right;" [attr.disabled]="true" />
@@ -1199,7 +1189,7 @@
                                                         <div class="row">
                                                             <div class="col-xs-12 col-md-2 col-lg-2">
                                                                 <div class="form-group">
-                                                                    <label>Fecha matricula:</label>
+                                                                    <label><strong>Fecha matricula:</strong></label>
                                                                     <span class="text-danger"></span>
                                                                     <input type="text" class="form-control" [attr.disabled]="true"
                                                                         formControlName="FechaMatriculaPre" />
@@ -1209,7 +1199,7 @@
                                                             </div>
                                                             <div class="col-xs-12 col-md-2 col-lg-2">
                                                                 <div class="form-group">
-                                                                    <label>Fecha retiro:</label>
+                                                                    <label> <strong>Fecha retiro:</strong></label>
                                                                     <span class="text-danger"></span>
                                                                     <input type="text" class="form-control" [attr.disabled]="true"
                                                                         formControlName="FechaRetiroPre" />
@@ -1228,29 +1218,19 @@
                                                     <article class="ac-text-sg">
                                                         <br>
                                                         <div div class="row">
-                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                            <div class="col-xs-12 col-md-2 col-lg-5">
                                                                 <div class="form-group">
-                                                                    <label>Estado:</label>
+                                                                    <label><strong>Estado:</strong></label>
                                                                     <span class="text-danger"></span>
                                                                     <input type="text" class="form-control" [attr.disabled]="true"
                                                                         formControlName="EstadoJuridico" />
                                                                 </div>
-                                                            </div>
+                                                            </div>                                                                                                                     
                                                             <div class="col-xs-12 col-md-1 col-lg-1">
                                                             </div>
                                                             <div class="col-xs-12 col-md-2 col-lg-2">
                                                                 <div class="form-group">
-                                                                    <label>Abogado:</label>
-                                                                    <span class="text-danger"></span>
-                                                                    <input type="text" class="form-control" [attr.disabled]="true"
-                                                                        formControlName="Abogado" />
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-xs-12 col-md-1 col-lg-1">
-                                                            </div>
-                                                            <div class="col-xs-12 col-md-2 col-lg-2">
-                                                                <div class="form-group">
-                                                                    <label>Juzgado:</label>
+                                                                    <label><strong>Juzgado:</strong></label>
                                                                     <span class="text-danger"></span>
                                                                     <input type="text" class="form-control" [attr.disabled]="true"
                                                                         formControlName="NumNombreJuzgado" />
@@ -1260,27 +1240,26 @@
                                                             </div>
                                                             <div class="col-xs-12 col-md-2 col-lg-2">
                                                                 <div class="form-group">
-                                                                    <label>Saldo:</label>
+                                                                    <label><strong>Saldo:</strong>Saldo:</label>
                                                                     <span class="text-danger"></span>
                                                                     <input type="text" currencyMask value=" {{carteraInfo.SaldoJuridico |  currency}}"
                                                                         class="form-control" style="text-align: right;" [attr.disabled]="true" />
                                                                 </div>
-                                                            </div>
+                                                            </div>                                                                                                                      
                                                         </div>
                                                         <div class="row">
-                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                            <div class="col-xs-12 col-md-2 col-lg-5">
                                                                 <div class="form-group">
-                                                                    <label>Costas judiciales:</label>
+                                                                    <label><strong>Abogado:</strong></label>
                                                                     <span class="text-danger"></span>
-                                                                    <input type="text" currencyMask value=" {{carteraInfo.CostasJudiciales |  currency}}"
-                                                                        class="form-control" style="text-align: right;" [attr.disabled]="true" />
+                                                                    <input type="text" class="form-control" [attr.disabled]="true" formControlName="Abogado" />
                                                                 </div>
                                                             </div>
                                                             <div class="col-xs-12 col-md-1 col-lg-1">
-                                                            </div>
+                                                            </div>                                                            
                                                             <div class="col-xs-12 col-md-2 col-lg-2">
                                                                 <div class="form-group">
-                                                                    <label>Cuotas mora:</label>
+                                                                    <label><strong>Cuotas mora:</strong></label>
                                                                     <span class="text-danger"></span>
                                                                     <input type="text" class="form-control" style="text-align: left;" [attr.disabled]="true"
                                                                         formControlName="CuotasMoraJuridico" />
@@ -1290,7 +1269,7 @@
                                                             </div>
                                                             <div class="col-xs-12 col-md-2 col-lg-2">
                                                                 <div class="form-group">
-                                                                    <label>Número veces:</label>
+                                                                    <label><strong>Número veces:</strong></label>
                                                                     <span class="text-danger"></span>
                                                                     <input type="text" class="form-control" style="text-align: left;" [attr.disabled]="true"
                                                                         formControlName="VecesJuridico" />
@@ -1301,7 +1280,17 @@
                                                         <div class="row">
                                                             <div class="col-xs-12 col-md-2 col-lg-2">
                                                                 <div class="form-group">
-                                                                    <label>Fecha matricula:</label>
+                                                                    <label><strong>Costas judiciales:</strong></label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" currencyMask value=" {{carteraInfo.CostasJudiciales |  currency}}" class="form-control"
+                                                                        style="text-align: right;" [attr.disabled]="true" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-1 col-lg-1">
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-2 col-lg-2">
+                                                                <div class="form-group">
+                                                                    <label><strong>Fecha matricula:</strong></label>
                                                                     <span class="text-danger"></span>
                                                                     <input type="text" class="form-control" [attr.disabled]="true"
                                                                         formControlName="FechaMatriculaJuridico" />
@@ -1311,7 +1300,7 @@
                                                             </div>
                                                             <div class="col-xs-12 col-md-2 col-lg-2">
                                                                 <div class="form-group">
-                                                                    <label>Fecha retiro:</label>
+                                                                    <label><strong>Fecha retiro:</strong></label>
                                                                     <span class="text-danger"></span>
                                                                     <input type="text" class="form-control" [attr.disabled]="true"
                                                                         formControlName="FechaRetiroJuridico" />
@@ -1331,7 +1320,7 @@
                                                         <br>
                                                         <div class="col-xs-12 col-md-2 col-lg-2">
                                                             <div class="form-group">
-                                                                <label>Interés mora:</label>
+                                                                <label><strong>Interés mora:</strong></label>
                                                                 <span class="text-danger"></span>
                                                                 <input type="text" currencyMask value=" {{carteraInfo.IntMoraCastigo |  currency}}"
                                                                     class="form-control" style="text-align: right;" [attr.disabled]="true" />
@@ -1341,7 +1330,7 @@
                                                         </div>
                                                         <div class="col-xs-12 col-md-2 col-lg-2">
                                                             <div class="form-group">
-                                                                <label>Interés corriente:</label>
+                                                                <label><strong>Interés corriente:</strong></label>
                                                                 <span class="text-danger"></span>
                                                                 <input type="text" currencyMask value=" {{carteraInfo.CorrientesCatigo |  currency}}"
                                                                     class="form-control" style="text-align: right;" [attr.disabled]="true" />
@@ -1352,7 +1341,7 @@
                                                         </div>
                                                         <div class="col-xs-12 col-md-2 col-lg-2">
                                                             <div class="form-group">
-                                                                <label>Saldo capital:</label>
+                                                                <label><strong>Saldo capital:</strong></label>
                                                                 <span class="text-danger"></span>
                                                                 <input type="text" currencyMask value=" {{carteraInfo.SaldoCapitalCastigo |  currency}}"
                                                                     class="form-control" style="text-align: right;" [attr.disabled]="true" />
@@ -1362,7 +1351,7 @@
                                                         </div>
                                                         <div class="col-xs-12 col-md-2 col-lg-2">
                                                             <div class="form-group">
-                                                                <label>Costas judiciales:</label>
+                                                                <label><strong>Costas judiciales:</strong></label>
                                                                 <span class="text-danger"></span>
                                                                 <input type="text" currencyMask value=" {{carteraInfo.CostasJudicialesCastigo |  currency}}"
                                                                     class="form-control" style="text-align: right;" [attr.disabled]="true" />
@@ -1372,7 +1361,7 @@
                                                         </div>
                                                         <div class="col-xs-12 col-md-2 col-lg-2">
                                                             <div class="form-group">
-                                                                <label>Fecha castigo:</label>
+                                                                <label><strong>Fecha castigo:</strong></label>
                                                                 <span class="text-danger"></span>
                                                                 <input type="text" class="form-control" [attr.disabled]="true"
                                                                     formControlName="FechaCastigo" />
@@ -1391,7 +1380,7 @@
                             <div [hidden]="tabActivo !== Tabs.Cambios">
                                 <article class="ac-text-cr">
                                     <br>
-                                    <div class="col-xs-12 col-md-4 col-lg-12">
+                                    <div class="col-xs-12 col-md-4 col-lg-12" style="background-color: #e5e5e5">
                                         <label for=""><strong>Reestructuración del crédito</strong></label>
                                     </div>
                                     <hr>
@@ -1414,37 +1403,37 @@
                                                         <th style="text-align: center;">
                                                             <strong>Cuota</strong>
                                                         </th>
-                                                        <th style="text-align: center;">
+                                                        <th style="text-align: left;">
                                                             <strong>Plazo</strong>
                                                         </th>
-                                                        <th>
+                                                        <th style="text-align: center;">
                                                             <strong>Tasa</strong>
                                                         </th>
-                                                        <th>
+                                                        <th style="text-align: center;">
                                                             <strong>Fecha</strong>
                                                         </th>
-                                                        <th>
+                                                        <th style="text-align: center;">
                                                             <strong>Novedad</strong>
                                                         </th>
-                                                        <th>
-                                                            <strong>Calificación actual</strong>
+                                                        <th style="text-align: center;">
+                                                            <strong>Calif. actual</strong>
                                                         </th>
-                                                        <th>
-                                                            <strong>Calificación anterior</strong>
+                                                        <th style="text-align: center;">
+                                                            <strong>Calif.anterior</strong>
                                                         </th>
                                                     </tr>
                                                 </thead>
                                                 <tbody *ngFor="let itemReestructura of lstReestructuracion; let j = index">
                                                     <tr class="filRes_{{j}}" (click)="CambiarColor(j,12)">
-                                                        <td style="text-align: right;min-width: 160px;"> {{itemReestructura.Monto | currency}}</td>
-                                                        <td style="text-align: right;min-width: 160px;"> {{itemReestructura.Saldo | currency}}</td>
-                                                        <td style="text-align: right;min-width: 160px;"> {{itemReestructura.Cuota | currency}}</td>
-                                                        <td style="text-align: center;">{{itemReestructura.Plazo}}</td>
-                                                        <td style="text-align: right; min-width: 160px;">{{itemReestructura.Tasa}} %</td>
+                                                        <td style="text-align: right;min-width: 120px;"> {{itemReestructura.Monto | currency}}</td>
+                                                        <td style="text-align: right;min-width: 120px;"> {{itemReestructura.Saldo | currency}}</td>
+                                                        <td style="text-align: right;min-width: 120px;"> {{itemReestructura.Cuota | currency}}</td>
+                                                        <td style="text-align: center">{{itemReestructura.Plazo}}</td>
+                                                        <td style="text-align: center; min-width: 120px;">{{itemReestructura.Tasa}} %</td>
                                                         <td>{{itemReestructura.Fecha}}</td>
-                                                        <td style="min-width: 160px;">{{itemReestructura.Novedad}}</td>
-                                                        <td style="text-align: center; min-width: 160px;">{{itemReestructura.CalAct}}</td>
-                                                        <td style="text-align: center; min-width: 200px;">{{itemReestructura.CalAnt}}</td>
+                                                        <td style="min-width: center 120px;">{{itemReestructura.Novedad}}</td>
+                                                        <td style="text-align: center; min-width: 120px;">{{itemReestructura.CalAct}}</td>
+                                                        <td style="text-align: center; min-width: 120px;">{{itemReestructura.CalAnt}}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -1452,7 +1441,7 @@
                                     </div>
                                     <br>
                                     <br/>
-                                    <div class="col-xs-12 col-md-4 col-lg-12">
+                                    <div class="col-xs-12 col-md-4 col-lg-12" style="background-color: #e5e5e5">
                                         <label><strong>Reliquidación del crédito</strong></label>
                                     </div>
                                     <hr>
@@ -1477,16 +1466,16 @@
                                                             <th style="text-align: center;">
                                                                 <strong>Cuota</strong>
                                                             </th>
-                                                            <th style="text-align: center;">
+                                                            <th style="text-align: left;">
                                                                 <strong>Plazo</strong>
                                                             </th>
                                                             <th style="text-align: center;">
                                                                 <strong>Tasa</strong>
                                                             </th>
-                                                            <th>
+                                                            <th style="text-align: center;">
                                                                 <strong>Fecha</strong>
                                                             </th>
-                                                            <th>
+                                                            <th style="text-align: center;">
                                                                 <strong>Novedad</strong>
                                                             </th>
                                                             <th style="text-align: center;">
@@ -1499,25 +1488,25 @@
                                                     </thead>
                                                     <tbody *ngFor="let itemReliquida of lstReliquidacion; let j = index">
                                                         <tr>
-                                                            <td style="text-align: right;">
+                                                            <td style="text-align: right;min-width: 120px;">
                                                                 {{itemReliquida.Monto | currency}}
                                                             </td>
-                                                            <td style="text-align: right;">
+                                                            <td style="text-align: right;min-width: 120px;">
                                                                 {{itemReliquida.Saldo | currency}}
                                                             </td>
-                                                            <td style="text-align: right;">
+                                                            <td style="text-align: right;min-width: 120px;">
                                                                 {{itemReliquida.Cuota | currency}}
                                                             </td>
                                                             <td style="text-align: center;">
                                                                 {{itemReliquida.Plazo}}
                                                             </td>
-                                                            <td style="text-align: right;">
+                                                            <td style="text-align: center; min-width: 120px;">
                                                                 {{itemReliquida.Tasa}} %
                                                             </td>
                                                             <td style="text-align: center;">
                                                                 {{itemReliquida.Fecha}}
                                                             </td>
-                                                            <td style="text-align: left;">
+                                                            <td style="min-width: center 120px;">
                                                                 {{itemReliquida.Novedad}}
                                                             </td>
                                                         </tr>
@@ -1529,132 +1518,6 @@
                                 </article>
                             </div>
                             <!-- Fin CambiosTab -->
-
-                            <!-- Inicio reestructuraTab -->
- 
-                            <!-- Fin reestructuraTab -->
-
-                            <!-- Inicio referenciasTab -->
-                            <div [hidden]="tabActivo !== Tabs.Referencias">
-                                <section class="referencias-section">
-                                    <article>
-                                        <h3 class="tab-title">Garantías Personales Codeudores</h3>
-                                        <div class="alert alert-secondary" role="alert" *ngIf="garantiasPersonalesCod.length === 0">
-                                            No hay registros
-                                        </div>
-                                        <div class="table-responsive scrollTabla" *ngIf="garantiasPersonalesCod.length > 0">
-                                            <table class="table table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="table-header">Documento</th>
-                                                        <th class="table-header">Nombre</th>
-                                                        <th class="table-header">Celular</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr *ngFor="let garantia of garantiasPersonalesCod; let i = index" (click)="selectRow('codeudores', i)" [class.tr-selected]="selectedRows['codeudores'] === i">
-                                                        <td class="text-center">{{ garantia.NumeroDocumento }}</td>
-                                                        <td class="text-center">{{ garantia.Nombres | concatWithSpace:garantia.PrimerApellido:garantia.SegundoApellido }}</td>
-                                                        <td class="text-center">{{ garantia.TelResidencia }}</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </article>
-
-                                    <article>
-                                        <h3 class="tab-title">Garantías Reales</h3>
-                                        <div class="alert alert-secondary" role="alert" *ngIf="garantiasReales.length === 0">
-                                            No hay registros
-                                        </div>
-                                        <div class="table-responsive scrollTabla" *ngIf="garantiasReales.length > 0">
-                                            <table class="table table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="table-header">Garantía</th>
-                                                        <th class="table-header">Clase</th>
-                                                        <th class="table-header">Valor cobertura</th>
-                                                        <th class="table-header">Valor que respalda</th>
-                                                        <th class="table-header">Vencimiento póliza</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr *ngFor="let garantia of garantiasReales; let i = index" (click)="selectRow('reales', i)" [class.tr-selected]="selectedRows['reales'] === i">
-                                                        <td class="text-center">{{ garantia.Garantia }}</td>
-                                                        <td class="text-center">{{ garantia.Clase }}</td>
-                                                        <td><div class="align-right-large">{{ garantia.ValorCobertura | currency }}</div></td>
-                                                        <td><div class="align-right-large">{{ garantia.ValorRespalda | currency }}</div></td>
-                                                        <td class="text-center">{{ garantia.VctoPoliza }}</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        
-                                    </article>
-                                </section>
-                            </div>
-                            <!-- Fin referenciasTab -->
-
-                            <!-- Inicio historialTab -->
-                            <div [hidden]="tabActivo !== Tabs.Historial">
-                                <section class="garantias-section">
-                                    <article>
-                                        <h3 class="tab-title">Garantías Personales Codeudores</h3>
-                                        <div class="alert alert-secondary" role="alert" *ngIf="garantiasPersonalesCod.length === 0">
-                                            No hay registros
-                                        </div>
-                                        <div class="table-responsive scrollTabla" *ngIf="garantiasPersonalesCod.length > 0">
-                                            <table class="table table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="table-header">Documento</th>
-                                                        <th class="table-header">Nombre</th>
-                                                        <th class="table-header">Celular</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr *ngFor="let garantia of garantiasPersonalesCod; let i = index" (click)="selectRow('codeudores', i)" [class.tr-selected]="selectedRows['codeudores'] === i">
-                                                        <td class="text-center">{{ garantia.NumeroDocumento }}</td>
-                                                        <td class="text-center">{{ garantia.Nombres | concatWithSpace:garantia.PrimerApellido:garantia.SegundoApellido }}</td>
-                                                        <td class="text-center">{{ garantia.TelResidencia }}</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </article>
-
-                                    <article>
-                                        <h3 class="tab-title">Garantías Reales</h3>
-                                        <div class="alert alert-secondary" role="alert" *ngIf="garantiasReales.length === 0">
-                                            No hay registros
-                                        </div>
-                                        <div class="table-responsive scrollTabla" *ngIf="garantiasReales.length > 0">
-                                            <table class="table table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="table-header">Garantía</th>
-                                                        <th class="table-header">Clase</th>
-                                                        <th class="table-header">Valor cobertura</th>
-                                                        <th class="table-header">Valor que respalda</th>
-                                                        <th class="table-header">Vencimiento póliza</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr *ngFor="let garantia of garantiasReales; let i = index" (click)="selectRow('reales', i)" [class.tr-selected]="selectedRows['reales'] === i">
-                                                        <td class="text-center">{{ garantia.Garantia }}</td>
-                                                        <td class="text-center">{{ garantia.Clase }}</td>
-                                                        <td><div class="align-right-large">{{ garantia.ValorCobertura | currency }}</div></td>
-                                                        <td><div class="align-right-large">{{ garantia.ValorRespalda | currency }}</div></td>
-                                                        <td class="text-center">{{ garantia.VctoPoliza }}</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        
-                                    </article>
-                                </section>
-                            </div>
-                            <!-- Fin historialTab -->
                         </div>
                     </div>
                 </div>
