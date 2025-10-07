@@ -20,6 +20,7 @@ export class TablaVirtualComponent implements OnChanges {
   buffer: number = 10;
   idsCargados = new Set<any>();
   filaSeleccionadaData: any = null;
+  ultimoScrollTop: number = 0;
 
   columnaOrden: string | null = null;
   ordenAscendente: boolean = true;
@@ -40,7 +41,7 @@ export class TablaVirtualComponent implements OnChanges {
 
   onClickFila(fila: any) {
     this.filaSeleccionadaData = this.getRowId(fila);
-    this.filaSeleccionada.emit(fila);    
+    this.filaSeleccionada.emit(fila);
   }
 
   loadMore(): void {
@@ -48,11 +49,9 @@ export class TablaVirtualComponent implements OnChanges {
     const nextIndex = this.currentIndex + this.pageSize;
     const nuevosDatos = this.datos.slice(this.currentIndex, nextIndex);
     const nuevoUnicos = nuevosDatos.filter(fila => !this.idsCargados.has(this.getRowId(fila)));
-
-    nuevosDatos.forEach(fila => this.idsCargados.add(this.getRowId(fila)));
-
+    nuevoUnicos.forEach(fila => this.idsCargados.add(this.getRowId(fila)));
     this.filasVisibles = [...this.filasVisibles, ...nuevoUnicos];
-    this.currentIndex += this.pageSize;
+    this.currentIndex = nextIndex;
   }
 
 
@@ -71,33 +70,39 @@ export class TablaVirtualComponent implements OnChanges {
       this.columnaOrden = col;
       this.ordenAscendente = true;
     }
-
     this.datos.sort((a, b) => {
       const valorA = a[col] ?? '';
       const valorB = b[col] ?? '';
-
       if (typeof valorA === 'number' && typeof valorB === 'number') {
         return this.ordenAscendente ? valorA - valorB : valorB - valorA;
       }
-
       return this.ordenAscendente
         ? String(valorA).localeCompare(String(valorB))
         : String(valorB).localeCompare(String(valorA));
     });
-
-    // Reiniciar la paginación
+    // Reiniciar paginación y control de duplicados
     this.currentIndex = 0;
-    this.filasVisibles = this.datos.slice(0, this.pageSize + this.buffer);
-  }
+    this.idsCargados.clear(); 
+    // Cargar primeros datos ordenados
+    const nuevosDatos = this.datos.slice(0, this.pageSize + this.buffer);
+    const nuevoUnicos = nuevosDatos.filter(fila => !this.idsCargados.has(this.getRowId(fila)));
+    nuevoUnicos.forEach(fila => this.idsCargados.add(this.getRowId(fila)));
+    this.filasVisibles = nuevoUnicos;
+    this.currentIndex = this.pageSize + this.buffer;
+   }
 
   onScroll(event: Event): void {
 
     const element = event.target as HTMLElement;
-
-    const atBottom = element.scrollTop + element.clientHeight >= element.scrollHeight - 10;
-
-    if (atBottom) {
-      this.loadMore();
+    const nuevoScrollTop = element.scrollTop;
+    // Detectar si el scroll vertical realmente cambió
+    if (nuevoScrollTop !== this.ultimoScrollTop) {
+      console.log('vertical srcroll')
+      this.ultimoScrollTop = nuevoScrollTop;
+      const atBottom = nuevoScrollTop + element.clientHeight >= element.scrollHeight - 10;
+      if (atBottom) {
+        this.loadMore();
+      }
     }
   }
 
@@ -112,7 +117,7 @@ export class TablaVirtualComponent implements OnChanges {
 
     const blob = new Blob([html], { type: 'text/html' });
 
-      if (navigator.clipboard && navigator.clipboard.write) {
+    if (navigator.clipboard && navigator.clipboard.write) {
       const data = [new ClipboardItem({ 'text/html': blob })];
       navigator.clipboard.write(data).then(() => {
         alert('Tabla copiada al portapapeles.');

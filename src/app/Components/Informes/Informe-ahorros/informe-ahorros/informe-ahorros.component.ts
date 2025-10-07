@@ -190,7 +190,20 @@ export class InformeAhorrosComponent implements OnInit {
     this.filtrosAgregado = [];
     this.filtrosAgregadoWhere = [];
     this.allSelected = false;
-    this.getListaFiltros();
+    if(this.configuracionInformesFiltro.length >= 1){
+      setTimeout(() => {
+        if (this.selectElementRef) {
+          const selectElement = this.selectElementRef.nativeElement;
+          selectElement.value = '0';
+          selectElement.dispatchEvent(new Event('change', { bubbles: true }));
+          this.formulario = this.fb.group({});
+        }
+      }, 200);
+    }
+    if(this.configuracionInformesFiltroDina.length >= 1){
+      this.getListaFiltros();
+    }
+    
   }
 
   informeSelected(event: Event) {
