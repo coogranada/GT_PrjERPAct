@@ -1629,8 +1629,19 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     this.serviciosFrom.get('montoSolicitado')?.reset();
     this.serviciosFrom.get('plazoDeseado')?.reset();
     this.serviciosFrom.get('Destino')?.reset();
+
+    if(radicadoNumber === '') {
+      this.serviciosFrom.get('montoSolicitado')?.enable();
+      this.serviciosFrom.get('plazoDeseado')?.enable();
+      this.serviciosFrom.get('Destino')?.enable();
+      return
+    }
+
     const currentRadicadoInfo = this.resultRadicados.find(rad => rad.Radicado == radicadoNumber);
     if(currentRadicadoInfo) {
+      this.serviciosFrom.get('montoSolicitado')?.disable();
+      this.serviciosFrom.get('plazoDeseado')?.disable();
+      this.serviciosFrom.get('Destino')?.disable();
       const { Monto, Plazo, IdLinea } = currentRadicadoInfo;
       this.serviciosFrom.get('montoSolicitado')?.setValue(Monto);
       this.serviciosFrom.get('plazoDeseado')?.setValue(Plazo);
@@ -7905,7 +7916,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     const montoSolicitado = new FormControl({ value: '', disabled: true }, [Validators.pattern('^[0-9]*')]);
     const plazoDeseado = new FormControl({ value: '', disabled: true }, [Validators.pattern('^[1-9][0-9]*$')]);
     const radicado = new FormControl({ value: '', disabled: true }, []);
-    const Destino = new FormControl({ value: '', disabled: true }, []);
+    const Destino = new FormControl({ value: '', disabled: true }, [Validators.pattern(/.*\S.*/)]);
     const proceso = new FormControl('', []);
     const Oficina = new FormControl('', []);
     const Asesor = new FormControl('', []);
