@@ -1631,53 +1631,57 @@
 
                             <!-- Inicio historialTab -->
                             <div [hidden]="tabActivo !== Tabs.Historial">
-                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                <div class="historial-container">
                                     <!-- Fechas -->
-                                    <div class="col-xs-12 col-md-3 col-lg-3">
-                                        <div class="form-group">
-                                            <label class="fw-bold">Apertura:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaApertura" />
+                                    <div class="fechas">
+                                        <div>
+                                            <div class="form-group">
+                                                <label class="fw-bold">Apertura:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaApertura" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="fw-bold">Última transacción:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaUltimaTrans" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="fw-bold">Cancelación:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaCancelacion" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="fw-bold">Vencimiento:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaVencimiento" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="fw-bold">Cambio fecha de pago:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" formControlName="cambioFechaPago" />
+                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="fw-bold">Última transacción:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaUltimaTrans" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="fw-bold">Cancelación:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaCancelacion" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="fw-bold">Vencimiento:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaVencimiento" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="fw-bold">Cambio fecha de pago:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" class="form-control" [attr.disabled]="true" formControlName="cambioFechaPago" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="fw-bold">Próximo pago:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaProximoPago" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="fw-bold">Entro a contingencia:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaContingencia" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="fw-bold">Inicio período gracia:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaInicioPeriodoGracia" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="fw-bold">Cambio de tasa:</label>
-                                            <span class="text-danger"></span>
-                                            <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaCambioTasa" />
+                                        <div>
+                                            <div class="form-group">
+                                                <label class="fw-bold">Próximo pago:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaProximoPago" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="fw-bold">Entró a contingencia:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaContingencia" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="fw-bold">Inicio período gracia:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaInicioPeriodoGracia" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="fw-bold">Cambio de tasa:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaCambioTasa" />
+                                            </div>
                                         </div>
                                     </div>
 
@@ -1689,7 +1693,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-xs-12 col-md-9 col-lg-9" *ngIf="historial.length > 0">
+                                    <div class="historial-table-wrapper" *ngIf="historial.length > 0">
                                         <div class="table-responsive scrollTabla panel panel-default table-larger">
 
                                             <table id="TablaDatosHistorial" class="table table-hover scrollTablaHistorial">
@@ -1733,13 +1737,6 @@
                                         </div>
                                     </div>
                                     <!-- Fin Historial -->
-
-                                    <div class="col-xs-12 col-md-3 col-lg-3">
-                                        <!-- Inicio espacio -->
-                                        <div class="form-group">
-                                        </div>
-                                        <!-- Fin espacio -->
-                                    </div>
                                 </div>
                             
                             </div>

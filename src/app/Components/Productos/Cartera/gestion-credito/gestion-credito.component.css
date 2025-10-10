@@ -534,6 +534,42 @@ h3 {
     background-color: rgb(229, 229, 229);
 }
 
+.historial-container {
+    display: flex;
+    gap: 20px;
+}
+
+.fechas {
+    display: flex;
+    column-gap: 8px;
+    min-width: 300px;
+    width: 30%;
+    max-width: 400px;
+}
+
+.historial-table-wrapper {
+    width: 65%;
+    flex: 1;
+
+}
+
+@media (max-width: 1250px) {
+
+    .historial-container {
+        flex-wrap: wrap;
+    }
+}
+@media (min-width: 1500px) {
+
+    .historial-table-wrapper {
+        max-width: initial;
+    }
+
+    .fechas {
+        column-gap: 30px;
+
+    }
+}
 
 @media (min-width: 1920px) {
     .align-right {
@@ -551,6 +587,7 @@ h3 {
     .align-left {
         max-width: initial;
     }
+    
 }
 
 
