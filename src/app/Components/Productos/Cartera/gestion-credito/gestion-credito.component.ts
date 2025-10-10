@@ -730,6 +730,16 @@ export class GestionCreditoComponent {
   } 
   // FIN SALDOS
 
+  // CALCULAR CUOTA
+  onCuotaCheck(){
+
+  }
+
+  onCancelacionCheck(){
+
+  }
+
+  // FIN CALCULAR CUTOTA
 
 // GARANTIAS
 

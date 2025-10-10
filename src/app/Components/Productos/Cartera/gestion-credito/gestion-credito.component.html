@@ -872,9 +872,7 @@
                             <!-- Inicio valorCuotaTab -->
                             <div [hidden]="tabActivo !== Tabs.ValorCuota">
                                 <article class="ac-text-cr">
-                                    <div class="col-xs-12 col-md-12 col-lg-12">
-                                        <section class="container">
-                                            <div class="ac-sg">
+                                    <section class="container cuota">                                        
                                                 <input class="ac-input-sg" id="ac-sg-4" name="ac-sg-4" type="checkbox" />
                                                 <label class="ac-label-sg" for="ac-sg-4">Calcular cuota</label>
                                                 <article class="ac-text-sg">
@@ -883,9 +881,9 @@
                                                         <div class="col-xs-12 col-md-2 col-lg-4">
                                                             <div class="form-group">
                                                                 <label><strong>Pagos:</strong></label>
-                                                                <input type="checkbox" class="switchery"  />
+                                                                <input type="checkbox" id="CuotaCheck" class="switchery" (change)="onCuotaCheck()"  />
                                                                 <label >Cuota</label>
-                                                                <input type="checkbox"class="switchery"  />
+                                                                <input type="checkbox" id="CancelacionCheck" class="switchery" (change)="onCancelacionCheck()"  />
                                                                 <label >Cancelación</label>                                                              
                                                             </div>
                                                         </div>                                                     
@@ -928,21 +926,18 @@
                                                         </table>
                                                     </div>
                                                 </article>
-                                            </div>
-                                        </section>
-                                    </div>
-                                    <div class="col-xs-12 col-md-12 col-lg-12">
-                                        <section class="container">
-                                            <div class="ac-sgg">
-                                                <input class="ac-input-sg" id="ac-sg-5" name="ac-sg-5" type="checkbox" />
-                                                <label class="ac-label-sg" for="ac-sg-5">Simular pago</label>
-                                                <article class="ac-text-sg">
-                                                    <br>
+                                            
+                                    </section>
+                                    <section class="container sumular">
+                                        <div class="ac-sgg">
+                                            <input class="ac-input-sg" id="ac-sg-5" name="ac-sg-5" type="checkbox" />
+                                            <label class="ac-label-sg" for="ac-sg-5">Simular pago</label>
+                                            <article class="ac-text-sg">
+                                            <br>
                                                     
-                                                </article>
-                                            </div>
-                                        </section>
-                                    </div>
+                                            </article>
+                                        </div>
+                                    </section>
                                 </article>
                             </div>
                             <!-- Fin valorCuotaTab -->
