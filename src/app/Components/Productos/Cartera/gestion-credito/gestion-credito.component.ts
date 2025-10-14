@@ -85,6 +85,8 @@ export class GestionCreditoComponent {
   refComcerciales: Referencia[] = [];
   historial: HistorialOperacion[] = [];
 
+  
+  
   ColorAnterior: any;
   Tabs = Tabs;
   tabActivo: Tabs = Tabs.Datos;
@@ -92,7 +94,10 @@ export class GestionCreditoComponent {
   activaSaldos: boolean = false;
   estaTabValorCuotaActivo: boolean = false;
   estaTabGarantiasActivo: boolean = false;
-  estaTabDeduciblesActivo: boolean = false;  
+  estaTabDeduciblesActivo: boolean = false; 
+  isCuota: boolean = true;
+  isCancelacion: boolean = false; 
+  _datoCuota = false;  
   public ValidaPactado: boolean = false;  
   public carteraInfo = new DetalleCartera();
   public lstCalificacion: any[] = [];
@@ -743,12 +748,30 @@ export class GestionCreditoComponent {
   // FIN SALDOS
 
   // CALCULAR CUOTA
-  onCuotaCheck(){
 
+  private cuotaSwitch: any;
+  private cancelacionSwitch: any;
+
+  // ngAfterViewInit() {
+  //   this.cuotaSwitch = new Switchery(document.getElementById('CuotaCheck'), { color: '#b96f97' });
+  //   this.cancelacionSwitch = new Switchery(document.getElementById('CancelacionCheck'), { color: '#b96f97' });
+  // }
+  onCuotaCheck(){
+    this._datoCuota = false;
+    if (this.isCuota) {
+      this.isCancelacion = false;
+      this.cancelacionSwitch.setPosition(false);
+      this.cancelacionSwitch.handleOnchange(true);    
+    }
   }
 
   onCancelacionCheck(){
-
+    this._datoCuota = true;
+    if (this.isCancelacion) {
+      this.isCuota = false;
+      this.cuotaSwitch.setPosition(false);
+      this.cuotaSwitch.handleOnchange(true);
+    }
   }
 
   // FIN CALCULAR CUTOTA
