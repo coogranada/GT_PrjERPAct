@@ -638,6 +638,17 @@ export class GestionCreditoComponent {
     }
   }
 
+  resetFilasSeleccionadas() {
+    this.selectedRows = {
+      codeudores: null,
+      reales: null,
+      deducibles: null,
+      provisiones: null,
+      refPersonales: null,
+      refComerciales: null
+    }
+  }
+
   resetTabs() {
     this.resetEstadoCargaTabs();
     this.tabActivo = Tabs.Datos;   
@@ -645,6 +656,7 @@ export class GestionCreditoComponent {
     this.deducibles = [];
     this.provisiones = [];
 
+    this.resetFilasSeleccionadas();
     this.DatosForm.reset();
     this.SaldosForm.reset();
     this.CobrosForm.reset();
@@ -993,9 +1005,8 @@ onHistorialTabClick() {
 }
 
   getHistorial() {
-
     const { IdCuenta, IdProductoCuenta } = this.gestionCreditoForm.value;
-
+    this.loading = true;
     forkJoin({
       fechas: this.miListaProductosService.getFechasCartera(IdCuenta).pipe(
         catchError(error => {
