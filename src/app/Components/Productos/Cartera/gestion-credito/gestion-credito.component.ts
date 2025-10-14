@@ -95,8 +95,6 @@ export class GestionCreditoComponent {
   estaTabValorCuotaActivo: boolean = false;
   estaTabGarantiasActivo: boolean = false;
   estaTabDeduciblesActivo: boolean = false; 
-  isCuota: boolean = true;
-  isCancelacion: boolean = false; 
   _datoCuota = false;  
   public ValidaPactado: boolean = false;  
   public carteraInfo = new DetalleCartera();
@@ -749,29 +747,12 @@ export class GestionCreditoComponent {
 
   // CALCULAR CUOTA
 
-  private cuotaSwitch: any;
-  private cancelacionSwitch: any;
-
-  // ngAfterViewInit() {
-  //   this.cuotaSwitch = new Switchery(document.getElementById('CuotaCheck'), { color: '#b96f97' });
-  //   this.cancelacionSwitch = new Switchery(document.getElementById('CancelacionCheck'), { color: '#b96f97' });
-  // }
   onCuotaCheck(){
-    this._datoCuota = false;
-    if (this.isCuota) {
-      this.isCancelacion = false;
-      this.cancelacionSwitch.setPosition(false);
-      this.cancelacionSwitch.handleOnchange(true);    
-    }
+    this._datoCuota = false;   
   }
 
   onCancelacionCheck(){
-    this._datoCuota = true;
-    if (this.isCancelacion) {
-      this.isCuota = false;
-      this.cuotaSwitch.setPosition(false);
-      this.cuotaSwitch.handleOnchange(true);
-    }
+    this._datoCuota = true;    
   }
 
   // FIN CALCULAR CUTOTA
