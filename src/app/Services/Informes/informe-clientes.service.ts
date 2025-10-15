@@ -12,6 +12,10 @@ export class InformeClientesService {
       this.url = `${this.environment.Url}/getCantidadRegistros`;
       return this._http.post<any>(this.url, Datos);
     }
+    GenerarInforme(Datos: any): Observable<any> {
+      this.url = `${this.environment.Url}/GenerarInforme`;
+      return this._http.post<any>(this.url, Datos);
+    }
     GenerarXLSXInforme(Datos: any): Observable<any> {
       this.url = `${this.environment.Url}/GenerarXLSXInforme`;
       return this._http.post<any>(this.url, Datos);

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-tabla-virtual',
@@ -7,10 +7,13 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from
   standalone: false
 })
 export class TablaVirtualComponent implements OnChanges {
+  @ViewChild('scrollContent') scrollContent!: ElementRef<HTMLDivElement>;
+
   @Input() datos: any[] = [];
   @Input() columnas: string[] = [];
   @Input() formatear?: (valor: any, columna?: string) => string;
   @Input() mostrarBtnCopia: boolean = false;
+  @Input() mostrarTotal: boolean = false;
   @Output() filaSeleccionada = new EventEmitter<any>();
 
 
@@ -31,6 +34,7 @@ export class TablaVirtualComponent implements OnChanges {
       this.currentIndex = 0;
       this.filasVisibles = [];
       this.idsCargados.clear();
+      this.resetScroll();
 
       const inicial = this.datos.slice(0, this.pageSize + this.buffer);
       inicial.forEach(fila => this.idsCargados.add(this.getRowId(fila)));
@@ -82,14 +86,14 @@ export class TablaVirtualComponent implements OnChanges {
     });
     // Reiniciar paginación y control de duplicados
     this.currentIndex = 0;
-    this.idsCargados.clear(); 
+    this.idsCargados.clear();
     // Cargar primeros datos ordenados
     const nuevosDatos = this.datos.slice(0, this.pageSize + this.buffer);
     const nuevoUnicos = nuevosDatos.filter(fila => !this.idsCargados.has(this.getRowId(fila)));
     nuevoUnicos.forEach(fila => this.idsCargados.add(this.getRowId(fila)));
     this.filasVisibles = nuevoUnicos;
     this.currentIndex = this.pageSize + this.buffer;
-   }
+  }
 
   onScroll(event: Event): void {
 
@@ -97,7 +101,6 @@ export class TablaVirtualComponent implements OnChanges {
     const nuevoScrollTop = element.scrollTop;
     // Detectar si el scroll vertical realmente cambió
     if (nuevoScrollTop !== this.ultimoScrollTop) {
-      console.log('vertical srcroll')
       this.ultimoScrollTop = nuevoScrollTop;
       const atBottom = nuevoScrollTop + element.clientHeight >= element.scrollHeight - 10;
       if (atBottom) {
@@ -111,35 +114,55 @@ export class TablaVirtualComponent implements OnChanges {
   }
 
   copiarTabla() {
-    const tabla = document.getElementById('tablaDatos');
-    if (!tabla) return;
-    const html = tabla.outerHTML;
-
-    const blob = new Blob([html], { type: 'text/html' });
-
-    if (navigator.clipboard && navigator.clipboard.write) {
-      const data = [new ClipboardItem({ 'text/html': blob })];
-      navigator.clipboard.write(data).then(() => {
-        alert('Tabla copiada al portapapeles.');
-      }).catch(err => {
-        console.error('Error al copiar', err);
+    const tablaOriginal = document.getElementById('tablaDatos') as HTMLTableElement;
+    if (!tablaOriginal) return;
+    let textoPlano = '';
+    for (const fila of tablaOriginal.rows) {
+      const celdasTexto = Array.from(fila.cells).map(celda => {
+        return celda.textContent?.trim().replace(/\u00A0/g, ' ') || '';
       });
-    } else {
-
-      const range = document.createRange();
-      range.selectNode(tabla);
-      const selection = window.getSelection();
-      if (!selection) return;
-      selection.removeAllRanges();
-      selection.addRange(range);
-      try {
-        const successful = document.execCommand('copy');
-        alert(successful ? 'Tabla copiada al portapapeles.' : 'No se pudo copiar');
-      } catch (err) {
-        console.error('Fallback copy failed', err);
-      }
-      selection.removeAllRanges();
+      textoPlano += celdasTexto.join('\t') + '\n';
     }
+    navigator.clipboard.writeText(textoPlano).then(() => {
+      alert('Tabla copiada al portapapeles.');
+    }).catch(err => {
+      console.error('Error al copiar la tabla como texto plano', err);
+    });
+  }
+
+  resetScroll() {
+    if (this.scrollContent) {
+      this.scrollContent.nativeElement.scrollTop = 0;
+      this.scrollContent.nativeElement.scrollLeft = 0;
+    }
+  }
+
+  getColumnasMoneda(): string[] {
+    return this.columnas.filter(col => col.endsWith('_M'));
+  }
+
+  getTotales(): { [col: string]: number } {
+    const totales: { [col: string]: number } = {};
+    this.getColumnasMoneda().forEach(col => {
+      totales[col] = this.filasVisibles.reduce((sum, fila) => {
+        let raw = this.getValor(fila, col);
+        if (typeof raw === 'string') {
+
+          raw = raw.replace(/[^\d,.-]/g, '') // quita $, espacios,  
+            .replace(/\./g, '')       // quita puntos (miles)
+            .replace(',', '.');       // cambia coma decimal por punto
+        }
+
+        const val = parseFloat(raw) || 0;
+        return sum + val;
+
+      }, 0);
+
+    });
+
+    return totales;
 
   }
+
+
 }

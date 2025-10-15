@@ -1,45 +1,4 @@
-<div class="panel panel-white">
-    <div class="panel-heading doNotPrint">
-        <h6 class="panel-title">Informes {{OperacionSelect}}</h6>
-        <div class="heading-elements">
-            <ul class="icons-list">
-                <li>
-                    <a data-toggle="modal" data-target="#ModalAyuda">
-                        <i class="icon-question6 " title="Ayuda" data-popup="tooltip" data-trigger="hover"
-                            data-placement="top"></i>
-                    </a>
-                </li>
-                <li>
-                    <a data-action="collapse"></a>
 
-                </li>
-            </ul>
-        </div>
-    </div>
-    <div class="panel-body doNotPrint">
-        <form method="get">
-            <div class="col-xs-12 col-md-12 col-lg-12" id="Operacion">
-                <div class="row">
-                    <div class="col-xs-12 col-md-3 col-lg-3">
-                        <div class="form-group">
-                            <label class="textNegrilla">Operación:</label>
-                            <span class="grande"> *</span>
-                            <select class="form-control" (change)="opcionSelected($event)">
-                                <option value="0">--Seleccione--</option>
-                                <option *ngFor="let item of Operaciones" [value]="item.ERP_tblOperacion.IdOperacion">
-                                    {{item.ERP_tblOperacion.Descripcion}}
-                                </option>
-                            </select>
-                            <span class="help-block validationSpan" *ngIf="!validaOperacion ">
-                                La operación es obligatoria.
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
 
 <div *ngIf="selectedId !== 0">
     <div class="panel panel-white">
@@ -318,11 +277,11 @@
                                             </div>
 
                                             <div class="table-responsive scrollTablaCampos">
-                                                <table class="table table-hover tablaBorder table-fixed">
+                                                <table class="table table-hover tablaBorder table-fixed sticky-last-column">
                                                     <thead>
                                                         <tr class="encabezadoTablas">
                                                             <th class="textNegrilla"><strong>Campo</strong></th>
-                                                            <th class="textNegrilla"><strong>Permitir</strong>
+                                                            <th class="textNegrilla operacionFija"><strong>Permitir</strong>
                                                             </th>
                                                         </tr>
                                                     </thead>
@@ -402,7 +361,7 @@
             <div class="modal-body">
                 <div class="scrollTabla" (scroll)="onScroll($event)">
                     <app-tabla-virtual [datos]="resultadoInforme" [columnas]="encabezados"
-                        [formatear]="formatearValor" [mostrarBtnCopia]="true" [mostrarTotal]="true"></app-tabla-virtual>
+                        [formatear]="formatearValor" [mostrarBtnCopia]="true"></app-tabla-virtual>
                 </div>
 
             </div>

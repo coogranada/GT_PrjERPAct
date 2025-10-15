@@ -14,6 +14,8 @@ import { metodosComoConocio } from '../../../../../environments/Maestros.Natural
 import { ConfiguracionNotificacion } from '../../../../../environments/config.noticaciones';
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import { ToastrService } from 'ngx-toastr';
+import { ExcelService } from '../../../../Services/General/excel.service';
+import { TablaVirtualComponent } from '../../../Tabla-virtual/tabla-virtual/tabla-virtual.component';
 declare var $: any;
 @Component({
   selector: 'app-informe-clientes-naturales',
@@ -55,6 +57,8 @@ export class InformeClientesNaturalesComponent implements OnInit {
   ListCiudad: any[] = [];
   ListBarrio: any[] = [];
   ListOficina: any[] = [];
+  resultadoInforme: any[] = [];
+  encabezados: any[] = [];
   ListPepsAdministrador : any[] = [{ id: 1, descri: "No" }, { id: 2, descri: "Si" }];
   ListMotivosIngreso: any[] = [];
   primaryColour = 'rgb(13,165,80)';
@@ -71,12 +75,16 @@ export class InformeClientesNaturalesComponent implements OnInit {
   dateBegin: string = "";
   dateEnd: string = "";
   @ViewChild('ModalProgressBar', { static: true }) private ModalProgressBar!: ElementRef;
+  @ViewChild('ShowModalList', { static: true }) private ShowModalList!: ElementRef;
+  @ViewChild(TablaVirtualComponent) tablaVirtual!: TablaVirtualComponent;
+  
   ProcentajeProgressBar: number = 0;
   constructor(private clientesGetListService: ClientesGetListService, private informeClientesService: InformeClientesService,
     private notif: ToastrService,
     private moduleValidationService: ModuleValidationService, private el: ElementRef, private loginService: LoginService,private serviseGeneral : RecursosGeneralesService,
     private router: Router,
-    private operacionesService:OperacionesService) {
+    private operacionesService:OperacionesService,
+    private excelReportService: ExcelService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -605,7 +613,7 @@ export class InformeClientesNaturalesComponent implements OnInit {
       cancelButtonColor: "#852662",
       confirmButtonColor: "#269051",
       cancelButtonText: "Cerrar",
-      confirmButtonText: "Descargar"
+      confirmButtonText: "Ver Lista"
     }).then((result) => {
       if (result.value) {
         this.loading = true;
@@ -623,19 +631,29 @@ export class InformeClientesNaturalesComponent implements OnInit {
       Campos : this.ShowCampos.filter(x => x.check == true)
     }
     this.ModalPrgressBar(cant);
-    this.informeClientesService.GenerarXLSXInforme(payload).subscribe(x => {
+    this.informeClientesService.GenerarInforme(payload).subscribe(x => {
       if (this.ProcentajeProgressBar < 95)
         clearInterval(this.inter)
       this.ProcentajeProgressBar = 100;
       this.DeletedOficina();
-      var baseg4 = x;
-      const linkSource = `data:application/xlsx;base64,${baseg4}`;
-      const downloadLink = document.createElement("a");
-      const fileName = "InformeNaturales.xlsx";
-      downloadLink.href = linkSource;
-      downloadLink.download = fileName;
-      downloadLink.click();
-      setTimeout(() => { this.CloseModal(); }, 1500);
+      if (x && x.length > 0) {
+        this.resultadoInforme = x;
+        if (x.length > 1 && x[1]) {
+          this.encabezados = Object.keys(x[1]).slice(1);
+        } else {
+          this.encabezados = Object.keys(x[0]).slice(1);
+        }       
+      }
+      this.ocultarModalProgreso();
+      this.ShowModalList.nativeElement.click();
+      //var baseg4 = x;
+      //const linkSource = `data:application/xlsx;base64,${baseg4}`;
+      //const downloadLink = document.createElement("a");
+      //const fileName = "InformeNaturales.xlsx";
+      //downloadLink.href = linkSource;
+      //downloadLink.download = fileName;
+      //downloadLink.click();
+      //setTimeout(() => { this.CloseModal(); }, 1500);
     },
     err => {
       this.DeletedOficina();
@@ -688,8 +706,86 @@ export class InformeClientesNaturalesComponent implements OnInit {
     },timer)
   }
   inter: any = null;
+
   CloseModal() {
     $('#ModalProgressBar').modal("hide");
   }
+
+  exportarExcel2() {
+    this.loading = true;
+
+
+    var data = null;
+    if (!this.resultadoInforme || this.resultadoInforme.length === 0) {
+    this.loading = false ;
+      this.notif.warning('Advertencia', 'No hay información para exportar.', ConfiguracionNotificacion.configRightTop);
+    } else {
+      data = this.resultadoInforme.map(row => {
+          return Object.keys(row).slice(1) //Predeterminados se les retira la primera fila
+          .reduce((obj, key) => {
+            const newkey = key.replace('_M', '');
+
+            const valor = row[key];
+            if (typeof valor === 'string' && valor.includes('T') && !isNaN(Date.parse(valor))) {
+              (obj as { [key: string]: unknown })[newkey] = this.formatearValor(valor);
+            } else {
+              (obj as { [key: string]: unknown })[newkey] = valor;
+            }
+
+            return obj;
+          }, {});    
+      });
+      this.excelReportService.exportAsExcelFile(data, 'INFORME NATURALES')
+      this.loading = false ;
+    }
+  }
+
+  formatearValor = (valor: any, columna?: string): string => {
+
+    if (columna && columna.endsWith('_M')) {
+      const numero = Number(valor);
+      if (!isNaN(numero)) {
+        return numero.toLocaleString('es-CO', {
+          style: 'currency',
+          currency: 'COP',
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+      }
+      return valor;
+    }
+  
+
+    if (typeof valor === 'string' && this.esFechaISO(valor)) {
+      const fecha = new Date(valor);
+      return `${fecha.getFullYear()}/${this.pad(fecha.getMonth() + 1)}/${this.pad(fecha.getDate())} ${this.pad(fecha.getHours())}:${this.pad(fecha.getMinutes())}:${this.pad(fecha.getSeconds())}`;
+    }
+
+    return valor !== null && valor !== undefined ? String(valor) : '';
+  }
+
+  esFechaISO(valor: string): boolean {
+    return /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(valor);
+  }
+
+  pad(numero: number): string {
+    return numero < 10 ? '0' + numero : numero.toString();
+  }
+
+  onModalCerrar() {
+    this.resultadoInforme = [];
+  }
+
+  ocultarModalProgreso() {
+    clearInterval(this.ProcentajeProgressBar);
+    this.ProcentajeProgressBar = 100;
+
+    setTimeout(() => {
+      ($('#ModalProgressBar') as any).modal('hide');
+    }, 500);
+
+  }
+
+
 }
 

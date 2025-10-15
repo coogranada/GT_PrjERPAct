@@ -1,32 +1,31 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ModuleValidationService } from '../../../../Services/Enviroment/moduleValidation.service';
 import { fromEvent } from 'rxjs';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { filter, map } from 'rxjs/operators';
 import { NgxLoadingComponent } from 'ngx-loading';
-import { ConfiguracionNotificacion } from '../../../../../environments/config.noticaciones';
-import { OperacionesService } from '../../../../Services/Maestros/operaciones.service';
 import { ToastrService } from 'ngx-toastr';
-import { Filtro } from '../../../../Models/Informes/informe-ahorros/informe-ahorros.model';
-import { InformeAhorrosService } from '../../../../Services/Informes/informe-ahorros.service';
-import { SPParametros } from '../../../../Models/Informes/configuracion-informes/parametros-informes.model';
-import { ExcelService } from '../../../../Services/General/excel.service';
-import { ConfiguracionInformesService } from '../../../../Services/Informes/configuracion-informes.service';
 import Swal from "sweetalert2";
-import { TablaVirtualComponent } from '../../../Tabla-virtual/tabla-virtual/tabla-virtual.component';
-import { InformePerfilService } from '../../../../Services/Maestros/informes-perfiles';
-import { GeneralesService } from '../../../../Services/Productos/generales.service';
-
+import { ModuleValidationService } from '../../../../../Services/Enviroment/moduleValidation.service';
+import { ConfiguracionNotificacion } from '../../../../../../environments/config.noticaciones';
+import { OperacionesService } from '../../../../../Services/Maestros/operaciones.service';
+import { InformePerfilService } from '../../../../../Services/Maestros/informes-perfiles';
+import { GeneralesService } from '../../../../../Services/Productos/generales.service';
+import { Filtro } from '../../../../../Models/Informes/informe-clientes/informe-clientes.model';
+import { InformeAhorrosService } from '../../../../../Services/Informes/informe-ahorros.service';
+import { SPParametros } from '../../../../../Models/Informes/configuracion-informes/parametros-informes.model';
+import { ExcelService } from '../../../../../Services/General/excel.service';
+import { ConfiguracionInformesService } from '../../../../../Services/Informes/configuracion-informes.service';
+import { TablaVirtualComponent } from '../../../../Tabla-virtual/tabla-virtual/tabla-virtual.component';
 
 @Component({
-  selector: 'app-informe-ahorros',
-  templateUrl: './informe-ahorros.component.html',
-  styleUrl: './informe-ahorros.component.css',
+  selector: 'app-informe-personas-naturales',
+  templateUrl: './informe-personas-naturales.component.html',
+  styleUrl: './informe-personas-naturales.component.css',
   providers: [OperacionesService, ModuleValidationService, InformePerfilService, GeneralesService],
-  standalone: false
+  standalone : false
 })
+export class InformePersonasNaturalesComponent {
 
-export class InformeAhorrosComponent implements OnInit {
   @ViewChild('ShowModalList', { static: true }) private ShowModalList!: ElementRef;
   @ViewChild('ModalProgressBar', { static: true }) private ModalProgressBar!: ElementRef;
   @ViewChild(TablaVirtualComponent) tablaVirtual!: TablaVirtualComponent;
@@ -82,7 +81,7 @@ export class InformeAhorrosComponent implements OnInit {
   public formulario: FormGroup;
   public formularioD: FormGroup;
 
-  CodModulo: number = 82
+  CodModulo: number = 76
 
   constructor(private excelReportService: ExcelService, private fb: FormBuilder, private configuracionInformesS: ConfiguracionInformesService, private informeAhorrosService: InformeAhorrosService, private operacionesService: OperacionesService, 
               private el: ElementRef, private moduleValidationService: ModuleValidationService, private notif: ToastrService, private InformePerfilS:InformePerfilService, private generalesService: GeneralesService) {
@@ -510,7 +509,7 @@ export class InformeAhorrosComponent implements OnInit {
           } else {
             
             if(this.selectedTab == 'dinamicos'){
-              this.nombreInforme = "INFORME "+ this.OperacionSelect.toUpperCase();
+              this.nombreInforme = this.OperacionSelect.toUpperCase();
             }else{
               this.nombreInforme = this.nombreInformeSelect.toUpperCase();
             }

@@ -30,7 +30,7 @@ export class ConfiguracionInformesComponent implements OnInit {
   primaryColour = 'rgb(13,165,80)';
   secondaryColour = 'rgb(13,165,80,0.7)';
 
-  CodModuloAdmitidos = [82] //Aqui se debe adicionar los nuevos módulos asignados a los informes 
+  CodModuloAdmitidos = [82, 76] //Aqui se debe adicionar los nuevos módulos asignados a los informes 
   public filtroBusqueda = '';
   public selectedId: number = 0;
   public selectedIdConfig: number = 0;
@@ -398,14 +398,17 @@ export class ConfiguracionInformesComponent implements OnInit {
   }
 
   getOperaciones() {
-    this.operacionesModulosService.ObtenerOperacionesPermitidas(82).subscribe((result) => {
-      result.forEach((element: any) => {
-        this.Operaciones.push(element);
+    this.CodModuloAdmitidos.forEach((moduloId : any) => {
+      this.operacionesModulosService.ObtenerOperacionesPermitidas(moduloId).subscribe((result) => {
+        result.forEach((element: any) => {
+          this.Operaciones.push(element);
+        });
+        this.OpcionSelected = true;
+      }, (error) => {
+        this.notif.error("Error", error, ConfiguracionNotificacion.configRightTopNoClose);
       });
-      this.OpcionSelected = true;
-    }, (error) => {
-      this.notif.error("Error", error, ConfiguracionNotificacion.configRightTopNoClose);
     });
+
   }
 
 

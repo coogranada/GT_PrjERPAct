@@ -23,7 +23,7 @@
                         <div class="form-group">
                             <label class="textNegrilla">Operación:</label>
                             <span class="grande"> *</span>
-                            <select class="form-control" id="select"  name="select"  [(ngModel)]="valueSlect" (change)="opcionSelected(valueSlect)" (blur)="operacionBlur()">
+                            <select class="form-control" id="select"  name="select"  [(ngModel)]="valueSlect" (change)="opcionSelected1(valueSlect)" (blur)="operacionBlur()" (change)="onChange($event)">
                           <option value="0" [selected]="OpcionSelected" >
                             --Seleccione--
                           </option>
@@ -49,6 +49,6 @@
 </div>
 <div  *ngIf="valueSlect == '88'">
     <div >
-        <app-informe-clientes-naturales></app-informe-clientes-naturales>
+        <app-informe-personas-naturales></app-informe-personas-naturales>
     </div>
 </div>

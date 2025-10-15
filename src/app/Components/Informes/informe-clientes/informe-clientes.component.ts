@@ -8,6 +8,8 @@ import { ConfiguracionNotificacion } from '../../../../environments/config.notic
 import { OperacionesService } from '../../../Services/Maestros/operaciones.service';
 import { ClientesGetListService } from '../../../Services/Clientes/clientesGetList.service';
 import { ToastrService } from 'ngx-toastr';
+import { InformePersonasNaturalesComponent } from './informe-personas-naturales/informe-personas-naturales/informe-personas-naturales.component';
+
 declare var $: any;
 @Component({
   selector: 'app-informe-clientes',
@@ -27,6 +29,12 @@ export class InformeClientesComponent implements OnInit {
   public OperacionSelect: string = "";
   CodModulo : number = 76
   
+  @ViewChild(InformePersonasNaturalesComponent) hijo!: InformePersonasNaturalesComponent;
+
+  ngAfterViewInit(){
+
+  }
+
   //end valdiaciones
   constructor(private operacionesService: OperacionesService, private el: ElementRef, private moduleValidationService: ModuleValidationService, private notif: ToastrService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
@@ -65,11 +73,22 @@ export class InformeClientesComponent implements OnInit {
       this.notif.error( "Error", error, ConfiguracionNotificacion.configRightTopNoClose );
     });
   }
+
+  onChange(event : Event){
+    setTimeout(() => {
+      if(this.hijo){
+        this.hijo.opcionSelected(event);
+      }else{
+        console.log('Comp hijo no disponible')
+      }
+    }, 500);
+  }
+
   operacionBlur() {
     if (this.valueSlect == "0") 
       this.validaOperacion = false;
   }
-  opcionSelected(valueSelect : string) {
+  opcionSelected1(valueSelect : string) {
     console.log(valueSelect)
     if (Number(valueSelect) == 0){
       this.validaOperacion = false;
