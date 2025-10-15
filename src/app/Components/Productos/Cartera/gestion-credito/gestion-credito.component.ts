@@ -658,7 +658,6 @@ export class GestionCreditoComponent {
     this.resetTabGarantias();
     this.deducibles = [];
     this.provisiones = [];
-
     this.resetFilasSeleccionadas();
     this.DatosForm.reset();
     this.SaldosForm.reset();
