@@ -516,10 +516,31 @@ h3 {
     padding-right: 20%;
 }
 
-.celda-fija {
+.celda-fija-izquierda {
     position: sticky;
     left: 0;
     background-color: #fff;
+    z-index: 1;
+}
+
+.celda-fija-arriba {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 2;
+}
+
+.encabezado-fijo {
+    thead th {
+        position: sticky;
+        top: 0;
+        background: #fff;
+        z-index: 2;
+    }
+}
+
+th.celda-fija-izquierda {
+    z-index: 3;
 }
 
 .tr-selected {

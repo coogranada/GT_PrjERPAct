@@ -953,7 +953,7 @@
                                             No hay registros
                                         </div>
                                         <div class="table-responsive scrollTabla" *ngIf="garantiasPersonalesCod.length > 0">
-                                            <table class="table table-hover">
+                                            <table class="table table-hover encabezado-fijo">
                                                 <colgroup>
                                                     <col style="width: 20%;">
                                                     <col style="width: 20%;">
@@ -987,7 +987,7 @@
                                             No hay registros
                                         </div>
                                         <div class="table-responsive scrollTabla" *ngIf="garantiasReales.length > 0">
-                                            <table class="table table-hover">
+                                            <table class="table table-hover encabezado-fijo">
                                                 <colgroup>
                                                     <col style="width: 20%;">
                                                     <col style="width: 20%;">
@@ -1027,7 +1027,7 @@
                                             No hay registros
                                         </div>
                                         <div class="table-responsive scrollTabla" *ngIf="deducibles.length > 0">
-                                            <table class="table table-hover horizontal-scroll">
+                                            <table class="table table-hover horizontal-scroll encabezado-fijo">
                                                 <thead>
                                                     <tr>
                                                         <th class="table-header">Código</th>
@@ -1177,27 +1177,27 @@
                                             <table class="table table-hover provision-table">
                                                 <thead>
                                                     <tr>
-                                                        <th class="table-header celda-fija">Fecha</th>
-                                                        <th class="table-header table-header-medium">Capital</th>
-                                                        <th class="table-header table-header-medium">Intereses</th>
-                                                        <th class="table-header">Días</th>
-                                                        <th class="table-header">Calificación</th>
-                                                        <th class="table-header">Provisión intereses</th>
-                                                        <th class="table-header">Provisión capital</th>
-                                                        <th class="table-header">Provisión adicional</th>
-                                                        <th class="table-header table-header-medium">Hipotecas</th>
-                                                        <th class="table-header table-header-medium">Otras</th>
-                                                        <th class="table-header table-header-medium">Aportes</th>
-                                                        <th class="table-header">Cubrimiento hipoteca</th>
-                                                        <th class="table-header">Cubrimiento otros</th>
-                                                        <th class="table-header">Cubrimiento aportes</th>
-                                                        <th class="table-header">Costas judiciales</th>
-                                                        <th class="table-header">Porcentaje provisión</th>
+                                                        <th class="table-header celda-fija-izquierda celda-fija-arriba">Fecha</th>
+                                                        <th class="table-header table-header-medium celda-fija-arriba">Capital</th>
+                                                        <th class="table-header table-header-medium celda-fija-arriba">Intereses</th>
+                                                        <th class="table-header celda-fija-arriba">Días</th>
+                                                        <th class="table-header celda-fija-arriba">Calificación</th>
+                                                        <th class="table-header celda-fija-arriba">Provisión intereses</th>
+                                                        <th class="table-header celda-fija-arriba">Provisión capital</th>
+                                                        <th class="table-header celda-fija-arriba">Provisión adicional</th>
+                                                        <th class="table-header table-header-medium celda-fija-arriba">Hipotecas</th>
+                                                        <th class="table-header table-header-medium celda-fija-arriba">Otras</th>
+                                                        <th class="table-header table-header-medium celda-fija-arriba">Aportes</th>
+                                                        <th class="table-header celda-fija-arriba">Cubrimiento hipoteca</th>
+                                                        <th class="table-header celda-fija-arriba">Cubrimiento otros</th>
+                                                        <th class="table-header celda-fija-arriba">Cubrimiento aportes</th>
+                                                        <th class="table-header celda-fija-arriba">Costas judiciales</th>
+                                                        <th class="table-header celda-fija-arriba">Porcentaje provisión</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr *ngFor="let provision of provisiones; let i = index" (click)="selectRow('provisiones', i)" [class.tr-selected]="selectedRows['provisiones'] === i">
-                                                        <td class="text-right celda-fija">{{ provision.dtmFecha }}</td>
+                                                        <td class="text-right celda-fija-izquierda">{{ provision.dtmFecha }}</td>
                                                         <td class="text-right">{{ provision.curCapital | currency }}</td>
                                                         <td class="text-right">{{ provision.curInteres | currency }}</td>
                                                         <td class="text-center">{{ provision.intDiasMora }}</td>
@@ -1564,7 +1564,7 @@
                                             No hay registros
                                         </div>
                                         <div class="table-responsive scrollTabla" *ngIf="refPersonales.length > 0">
-                                            <table class="table table-hover">
+                                            <table class="table table-hover encabezado-fijo">
                                                 <colgroup>
                                                     <col style="width: 40%;">
                                                     <col style="width: 20%;">
@@ -1597,7 +1597,7 @@
                                             No hay registros
                                         </div>
                                         <div class="table-responsive scrollTabla" *ngIf="refComcerciales.length > 0">
-                                            <table class="table table-hover">
+                                            <table class="table table-hover encabezado-fijo">
                                                 <colgroup>
                                                     <col style="width: 40%;">
                                                     <col style="width: 20%;">
@@ -1697,25 +1697,25 @@
                                             <table id="TablaDatosHistorial" class="table table-hover scrollTablaHistorial">
                                                 <thead>
                                                     <tr>
-                                                        <th>
+                                                        <th class="celda-fija-arriba">
                                                             <strong>Fecha</strong>
                                                         </th>
-                                                        <th>
+                                                        <th class="celda-fija-arriba">
                                                             <strong>Oficina</strong>
                                                         </th>
-                                                        <th>
+                                                        <th class="celda-fija-arriba">
                                                             <strong>Usuario responsable</strong>
                                                         </th>
-                                                        <th class="celda-fija">
+                                                        <th class="celda-fija-izquierda celda-fija-arriba">
                                                             <strong>Operación</strong>
                                                         </th>
-                                                        <th>
+                                                        <th class="celda-fija-arriba">
                                                             <strong>Opciones</strong>
                                                         </th>
-                                                        <th>
+                                                        <th class="celda-fija-arriba">
                                                             <strong>Descripción</strong>
                                                         </th>
-                                                        <th>
+                                                        <th class="celda-fija-arriba">
                                                             <strong>Detalles</strong>
                                                         </th>
                                                     </tr>
@@ -1725,7 +1725,7 @@
                                                         <td>{{ historialOperacion.FechaHistorial | date: 'yyyy/MM/dd HH:mm:ss'  }}</td>
                                                         <td>{{ historialOperacion.NombreOficina }}</td>
                                                         <td>{{ historialOperacion.NombreCompleto }}</td>
-                                                        <td class="celda-fija">{{ historialOperacion.Descripcion }}</td>
+                                                        <td class="celda-fija-izquierda">{{ historialOperacion.Descripcion }}</td>
                                                         <td></td>
                                                         <td>{{ historialOperacion.TiposObservaciones }}</td>
                                                         <td>{{ historialOperacion.Detalles }}</td>

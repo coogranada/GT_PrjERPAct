@@ -658,6 +658,9 @@ export class GestionCreditoComponent {
     this.resetTabGarantias();
     this.deducibles = [];
     this.provisiones = [];
+    this.resetTabReferencias();
+    this.resetTabHistorial();
+
     this.resetFilasSeleccionadas();
     this.DatosForm.reset();
     this.SaldosForm.reset();
@@ -1012,6 +1015,11 @@ export class GestionCreditoComponent {
       }
     );
   }
+
+  resetTabReferencias() {
+    this.refPersonales = [];
+    this.refComcerciales = [];
+  }
   //FIN REFERENCIAS
 
 
@@ -1055,6 +1063,19 @@ onHistorialTabClick() {
       }
 
     });
+  }
+
+  resetTabHistorial() {
+    this.historial = [];
+    this.gestionCreditoForm.get('fechaApertura')?.reset();
+    this.gestionCreditoForm.get('fechaUltimaTrans')?.reset();
+    this.gestionCreditoForm.get('fechaCancelacion')?.reset();
+    this.gestionCreditoForm.get('fechaVencimiento')?.reset();
+    this.gestionCreditoForm.get('cambioFechaPago')?.reset();
+    this.gestionCreditoForm.get('fechaProximoPago')?.reset();
+    this.gestionCreditoForm.get('fechaContingencia')?.reset();
+    this.gestionCreditoForm.get('fechaInicioPeriodoGracia')?.reset();
+    this.gestionCreditoForm.get('fechaCambioTasa')?.reset();
   }
 //FIN HISTORIAL
 
