@@ -454,8 +454,20 @@ h3 {
     padding-top: 10px;
     padding-left: 10px;
     padding-bottom: 8px;
+    background-color: rgb(198 198 198 / 40%);
 }
 
+.fw-bold {
+    font-weight: bold;
+}
+
+.capitalize{
+    text-transform: capitalize;
+}
+.table-larger {
+    max-height: 900px;
+    overflow-y: auto;
+}
 .garantias-section {
     display: flex;
     flex-direction: column;
@@ -475,6 +487,25 @@ h3 {
     min-width: 150px;
 }
 
+.align-left-with-justify {
+    text-align: left;
+    max-width: 40%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.align-left-with-justify-large {
+    text-align: left;
+    max-width: 75%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.align-left {
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
 
 .align-right {
     text-align: right;
@@ -485,10 +516,31 @@ h3 {
     padding-right: 20%;
 }
 
-.celda-fija {
+.celda-fija-izquierda {
     position: sticky;
     left: 0;
     background-color: #fff;
+    z-index: 1;
+}
+
+.celda-fija-arriba {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 2;
+}
+
+.encabezado-fijo {
+    thead th {
+        position: sticky;
+        top: 0;
+        background: #fff;
+        z-index: 2;
+    }
+}
+
+th.celda-fija-izquierda {
+    z-index: 3;
 }
 
 .tr-selected {
@@ -503,14 +555,60 @@ h3 {
     background-color: rgb(229, 229, 229);
 }
 
+.historial-container {
+    display: flex;
+    gap: 20px;
+}
+
+.fechas {
+    display: flex;
+    column-gap: 8px;
+    min-width: 300px;
+    width: 30%;
+    max-width: 400px;
+}
+
+.historial-table-wrapper {
+    width: 65%;
+    flex: 1;
+
+}
+
+@media (max-width: 1250px) {
+
+    .historial-container {
+        flex-wrap: wrap;
+    }
+}
+@media (min-width: 1500px) {
+
+    .historial-table-wrapper {
+        max-width: initial;
+    }
+
+    .fechas {
+        column-gap: 30px;
+
+    }
+}
 
 @media (min-width: 1920px) {
     .align-right {
         padding-right: 20%;
     }
     .align-right-large {
-        padding-right: 30%;
+        padding-right: 40%;
     }
+    .align-left-with-justify {
+        max-width: 30%;
+    }
+    .align-left-with-justify-large {
+        max-width: 50%;
+    }
+    .align-left {
+        max-width: initial;
+    }
+    
 }
 
 
@@ -522,6 +620,7 @@ h3 {
     
     td {
         border-top: 2px solid #000;
+        font-weight: bold;
     }
 }
 
@@ -559,4 +658,18 @@ h3 {
     border-bottom: 1px dashed #ddd;
     width: auto;
     max-width: 100%;
+}
+
+.box-form {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px 20px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.box-form:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    border-color: #b39ddb;
 }
