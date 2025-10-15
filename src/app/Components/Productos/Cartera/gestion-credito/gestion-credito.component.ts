@@ -672,10 +672,23 @@ export class GestionCreditoComponent {
 
   CambiarColor(fil: any, producto: any) {
     if (producto === 1) {
-
-      $(".filtrasa_" + this.ColorAnterior).css("background", "#FFFFFF");
-      $(".filtrasa_" + fil).css("background", "#e5e5e5");
-
+      $(".ahoCumpli_" + this.ColorAnterior).css("background", "#FFFFFF");
+      $(".ahoCumpli_" + fil).css("background", "#e5e5e5");
+      this.ColorAnterior = fil;
+    }
+    if (producto === 2) {
+      $(".ahoCalid_" + this.ColorAnterior).css("background", "#FFFFFF");
+      $(".ahoCalid_" + fil).css("background", "#e5e5e5");
+      this.ColorAnterior = fil;
+    }
+    if (producto === 3) {
+      $(".filRes_" + this.ColorAnterior).css("background", "#FFFFFF");
+      $(".filRes_" + fil).css("background", "#e5e5e5");
+      this.ColorAnterior = fil;
+    }
+    if (producto === 4) {
+      $(".filRel_" + this.ColorAnterior).css("background", "#FFFFFF");
+      $(".filRel_" + fil).css("background", "#e5e5e5");
       this.ColorAnterior = fil;
     }
   }

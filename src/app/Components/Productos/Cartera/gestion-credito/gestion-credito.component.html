@@ -1079,10 +1079,10 @@
                                         </div>
                                         <div id="tablaCaL1" class="table-responsive scrollTabla" style="max-height: 350px;">
                                             <table style="
-                                                                                                              border-left: 1px solid #ddd;
-                                                                                                              border-right: 1px solid #ddd;
-                                                                                                              border-bottom: 1px solid #ddd;
-                                                                                                              border-top: 1px solid #ddd;"
+                                                border-left: 1px solid #ddd;
+                                                border-right: 1px solid #ddd;
+                                                border-bottom: 1px solid #ddd;
+                                                border-top: 1px solid #ddd;"
                                                 class="table table-hove tabla1calificacion"
                                                 *ngIf="lstCalificacion.length > 0 && lstCalificacion != null">
                                                 <thead>
@@ -1108,7 +1108,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody *ngFor="let itemCalificacion of lstCalificacion; let i = index">
-                                                    <tr class="ahoCumpli_{{i}}" (click)="CambiarColor(i,7)">
+                                                    <tr class="ahoCumpli_{{i}}" (click)="CambiarColor(i,1)">
                                                         <td style="text-align: center;">{{itemCalificacion.Cumplimiento}}</td>
                                                         <td style="text-align: center;">{{itemCalificacion.Recalificacion}}</td>
                                                         <td style="text-align: center;">{{itemCalificacion.Reestructuracion}}</td>
@@ -1149,7 +1149,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody *ngFor="let itemAnalisis of lstAnalisisCalificacion; let i = index">
-                                                    <tr class="ahoCalid_{{i}}" (click)="CambiarColor(i,8)">
+                                                    <tr class="ahoCalid_{{i}}" (click)="CambiarColor(i,2)">
                                                         <td style="text-align: center; ">{{itemAnalisis.Calificacion}}</td>
                                                         <td style="text-align: center; ">{{itemAnalisis.NumeroVeces}}</td>
                                                     </tr>
@@ -1466,7 +1466,7 @@
                                                     <col style="width: 12%;">
                                                 </colgroup>
                                                 <thead>
-                                                    <tr>
+                                                    <tr class="encabezadoTablas">
                                                         <th><strong>Monto</strong></th>
                                                         <th><strong>Saldo</strong></th>
                                                         <th><strong>Cuota</strong></th>
@@ -1479,7 +1479,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody *ngFor="let itemReestructura of lstReestructuracion; let j = index">
-                                                    <tr class="filRes_{{j}}" (click)="CambiarColor(j,12)">
+                                                    <tr class="filRes_{{j}}" (click)="CambiarColor(j,3)">
                                                         <td>{{ itemReestructura.Monto | currency }}</td>
                                                         <td>{{ itemReestructura.Saldo | currency }}</td>
                                                         <td>{{ itemReestructura.Cuota | currency }}</td>
@@ -1522,7 +1522,7 @@
                                                         <col style="width: 12%;">
                                                     </colgroup>
                                                     <thead>
-                                                        <tr>
+                                                        <tr class="encabezadoTablas">
                                                             <th><strong>Monto</strong></th>
                                                             <th><strong>Saldo</strong></th>
                                                             <th><strong>Cuota</strong></th>
@@ -1535,7 +1535,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody *ngFor="let itemReliquida of lstReliquidacion; let j = index">
-                                                        <tr>
+                                                        <tr class="filRel_{{j}}" (click)="CambiarColor(j,4)">
                                                             <td>{{ itemReliquida.Monto | currency }}</td>
                                                             <td>{{ itemReliquida.Saldo | currency }}</td>
                                                             <td>{{ itemReliquida.Cuota | currency }}</td>
