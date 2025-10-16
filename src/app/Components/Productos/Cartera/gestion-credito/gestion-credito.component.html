@@ -619,6 +619,16 @@
                                                         </div>
                                                         <div class="col-xs-12 col-md-2 col-lg-2">
                                                             <div class="form-group">
+                                                                <label><strong>Alivios:</strong></label>
+                                                                <span class="text-danger"></span>
+                                                                <input type="text"  class="form-control"
+                                                                    style="text-align: left;" [attr.disabled]="true" class="form-control" formControlName="DescripcionAlivio"  />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-md-1 col-lg-1">
+                                                        </div>
+                                                        <div class="col-xs-12 col-md-2 col-lg-2">
+                                                            <div class="form-group">
                                                                 <label><strong>Cuota libranza:</strong></label>
                                                                 <span class="text-danger"></span>
                                                                 <input type="text" currencyMask value=" {{carteraInfo.CuotaLibranza |  currency}}" class="form-control"
