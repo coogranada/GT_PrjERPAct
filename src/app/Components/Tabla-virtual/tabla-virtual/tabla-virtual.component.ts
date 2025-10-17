@@ -124,18 +124,27 @@ export class TablaVirtualComponent implements OnChanges {
     const tablaOriginal = document.getElementById('tablaDatos') as HTMLTableElement;
     if (!tablaOriginal) return;
     let textoPlano = '';
+    const limpiarNumero = (valor: string): string => {
+      return valor
+        .replace(/[^\d,.-]/g, '') // quita todo menos dígitos, comas, puntos, guiones
+        .replace(/\.(?=\d{3})/g, '') // elimina puntos de miles
+        .replace(',', '.'); // reemplaza coma decimal por punto
+    };
     for (const fila of tablaOriginal.rows) {
       const celdasTexto = Array.from(fila.cells).map(celda => {
-        return celda.textContent?.trim().replace(/\u00A0/g, ' ') || '';
+        let texto = celda.textContent?.trim().replace(/\u00A0/g, ' ') || '';
+        if (texto.includes('$')) {
+          texto = limpiarNumero(texto);
+        }
+        return texto;
       });
       textoPlano += celdasTexto.join('\t') + '\n';
     }
-    navigator.clipboard.writeText(textoPlano).then(() => {
-      alert('Tabla copiada al portapapeles.');
-    }).catch(err => {
-      console.error('Error al copiar la tabla como texto plano', err);
-    });
+    navigator.clipboard.writeText(textoPlano)
+      .then(() => alert('Tabla copiada al portapapeles.'))
+      .catch(err => console.error('Error al copiar la tabla como texto plano', err));
   }
+   
 
   resetScroll() {
     if (this.scrollContent) {
