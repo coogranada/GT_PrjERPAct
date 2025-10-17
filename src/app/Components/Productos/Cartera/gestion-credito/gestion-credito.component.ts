@@ -26,7 +26,8 @@ export class GestionCreditoComponent {
 
   @ViewChild('ModalBuscarAsociados', { static: true }) private ModalBuscarAsociados!: ElementRef;
   @ViewChild('cerrarModal', { static: true }) private cerrarModal!: ElementRef;
-  @ViewChild(TablaVirtualComponent) tablaVirtual!: TablaVirtualComponent
+  @ViewChild(TablaVirtualComponent) tablaVirtual!: TablaVirtualComponent;
+
 
   private codModulo = 45;
   public dataUser : any;
@@ -292,6 +293,7 @@ export class GestionCreditoComponent {
     const TasaPeriodicaP = new FormControl({ value: '', disabled: true }, []);
     const TasaPactada = new FormControl({ value: '', disabled: true }, []);
     const EfectivaPactada = new FormControl({ value: '', disabled: true }, []);
+    const DescripcionAlivio = new FormControl({ value: '', disabled: true }, []);
 
     this.DatosForm = new FormGroup({
       Sistema: Sistema,
@@ -306,7 +308,8 @@ export class GestionCreditoComponent {
       EfectivaLiquidada: EfectivaLiquidada,
       TasaPeriodicaP: TasaPeriodicaP,
       TasaPactada: TasaPactada,
-      EfectivaPactada: EfectivaPactada
+      EfectivaPactada: EfectivaPactada,
+      DescripcionAlivio: DescripcionAlivio
     });
 
     const CoutasPagas = new FormControl({ value: '', disabled: true }, []);
@@ -715,6 +718,7 @@ export class GestionCreditoComponent {
         this.carteraInfo.Cuota = result.Cuota;
         this.carteraInfo.CuotaLibranza = result.CuotaLibranza;
         this.DatosForm.get('PeriodoGracia')?.setValue(result.PeriodoGracia);
+        this.DatosForm.get('DescripcionAlivio')?.setValue(result.DescripcionAlivio);
         this.DatosForm.get('FormaPago')?.setValue(result.FormaPago);
         this.DatosForm.get('EstadoDatos')?.setValue(result.Estado);  
         this.DatosForm.get('TasaPeriodicaL')?.setValue(result.TasaPeriodicaL);
@@ -859,7 +863,7 @@ export class GestionCreditoComponent {
 
 //CALIFICACION
 
-  BuscarCalificacion(IdCuenta: number) {
+  BuscarCalificacion(IdCuenta: number) {   
     this.carteraService.getCalificacionCartera(IdCuenta).subscribe(
       result => {
         var cal = 0;
