@@ -614,13 +614,7 @@ export class GestionCreditoComponent {
             confirmButtonText: 'Ok',
             confirmButtonColor: 'rgb(160, 0, 87)'
           });
-        }
-          // TABS
-        this.BuscarDatosCartera(+cuentaResumen.IdCuenta);
-        this.BuscarSaldosCartera(+cuentaResumen.IdCuenta);
-        this.BuscarCalificacion(+cuentaResumen.IdCuenta);
-        this.BuscarCobrosCartera(+cuentaResumen.IdCuenta);
-        this.BuscarReetructuracionReliquidacion(+cuentaResumen.IdCuenta);
+        }        
       }
 
       if (checkCartera) {
@@ -629,6 +623,7 @@ export class GestionCreditoComponent {
         this.gestionCreditoForm.get('estaCastigado')?.setValue(checkCartera.Catigada);
       }
     });
+    this.BuscarDatosCartera(+cuentaResumen.IdCuenta);
   }
 
 
@@ -705,7 +700,9 @@ export class GestionCreditoComponent {
       this.ValidaPactado = true;
     }
   }
-  BuscarDatosCartera(IdCuenta : number){
+
+ 
+  BuscarDatosCartera(IdCuenta: number){
     this.carteraService.getDatosCartera(IdCuenta).subscribe(
       result => {
         this.DatosForm.get('Sistema')?.setValue(result.Sistema);
@@ -737,7 +734,13 @@ export class GestionCreditoComponent {
   // FIN DATOS 
 
   // SALDOS
-  BuscarSaldosCartera(IdCuenta: number) {
+  onSaldosTabClick() {
+    this.onTabChange(Tabs.Saldos, () => this.BuscarSaldosCartera());
+  }
+
+  BuscarSaldosCartera() {
+    const IdCuenta = this.gestionCreditoForm.get('IdCuenta')?.value;
+    if (!IdCuenta) return;
     this.carteraService.getSaldosCartera(IdCuenta).subscribe(
       result => {
         this.carteraInfo.AbonoCanje = result.AbonoCanje;
@@ -863,7 +866,13 @@ export class GestionCreditoComponent {
 
 //CALIFICACION
 
-  BuscarCalificacion(IdCuenta: number) {   
+  onCalificacionTabClick() {
+    this.onTabChange(Tabs.Calificacion, () => this.BuscarCalificacion());
+  }
+
+  BuscarCalificacion() {  
+    const IdCuenta = this.gestionCreditoForm.get('IdCuenta')?.value;
+    if (!IdCuenta) return;
     this.carteraService.getCalificacionCartera(IdCuenta).subscribe(
       result => {
         var cal = 0;
@@ -917,7 +926,14 @@ export class GestionCreditoComponent {
 //FIN PROVISION
 
 // COBROS
-  BuscarCobrosCartera(IdCuenta: number) {   
+
+  onCobrosTabClick() {
+    this.onTabChange(Tabs.Cobros, () => this.BuscarCobrosCartera());
+  }
+
+  BuscarCobrosCartera() { 
+    const IdCuenta = this.gestionCreditoForm.get('IdCuenta')?.value;
+    if (!IdCuenta) return;  
     this.carteraService.getCobrosCartera(IdCuenta).subscribe(
         result => {
           if (result.Prejuridicos !== null) {
@@ -967,7 +983,12 @@ export class GestionCreditoComponent {
 
 
 // TAB CAMBIOS
-  BuscarReetructuracionReliquidacion(IdCuenta: number) {    
+  onCambiosTabClick() {
+    this.onTabChange(Tabs.Cambios, () => this.BuscarReetructuracionReliquidacion());
+  }
+  BuscarReetructuracionReliquidacion() {   
+    const IdCuenta = this.gestionCreditoForm.get('IdCuenta')?.value;
+    if (!IdCuenta) return; 
     this.carteraService.getReestructuracionReliquidacion(IdCuenta).subscribe(
         result => {
           var Reestr = 0;

@@ -479,7 +479,7 @@
                             <li class="nav-item" [class.active]="tabActivo === Tabs.Datos" (click)="devolverTab(Tabs.Datos)">
                                 <a>Datos</a>
                             </li>
-                            <li class="nav-item" [class.active]="tabActivo === Tabs.Saldos" (click)="devolverTab(Tabs.Saldos)">
+                            <li class="nav-item" [class.active]="tabActivo === Tabs.Saldos" (click)="onSaldosTabClick()">
                                 <a>Saldos</a>
                             </li>
                             <li class="nav-item" [class.active]="tabActivo === Tabs.ValorCuota" (click)="devolverTab(Tabs.ValorCuota)">
@@ -491,16 +491,16 @@
                             <li class="nav-item" [class.active]="tabActivo === Tabs.Deducibles" (click)="onDeduciblesTabClick()">
                                 <a>Deducibles</a>
                             </li> 
-                            <li class="nav-item" [class.active]="tabActivo === Tabs.Calificacion" (click)="devolverTab(Tabs.Calificacion)">
+                            <li class="nav-item" [class.active]="tabActivo === Tabs.Calificacion" (click)="onCalificacionTabClick()">
                                 <a>Calificación</a>
                             </li>
                             <li class="nav-item" [class.active]="tabActivo === Tabs.Provision" (click)="onProvisionTabClick()">
                                 <a>Provisión</a>
                             </li>
-                            <li class="nav-item" [class.active]="tabActivo === Tabs.Cobros" (click)="devolverTab(Tabs.Cobros)">
+                            <li class="nav-item" [class.active]="tabActivo === Tabs.Cobros" (click)="onCobrosTabClick()">
                                 <a>Cobros</a>
                             </li>
-                            <li class="nav-item" [class.active]="tabActivo === Tabs.Cambios" (click)="devolverTab(Tabs.Cambios)">
+                            <li class="nav-item" [class.active]="tabActivo === Tabs.Cambios" (click)="onCambiosTabClick()">
                                 <a>Cambios</a>
                             </li>
                             <li class="nav-item" [class.active]="tabActivo === Tabs.Referencias" (click)="onReferenciasTabClick()">
