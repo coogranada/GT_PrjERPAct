@@ -156,7 +156,12 @@
 
                                                         <form [formGroup]="formularioD" *ngIf="filtroSeleccionado">
                                                             <div class="form-row">
-                                                                <div class="form-group col-md-5"
+                                                                <div class="form-group"
+                                                                     [ngClass]="{
+                                                                    'col-md-6': filtrosAgrupados[filtroSeleccionado].length === 1,                               
+                                                                    'col-md-5': filtrosAgrupados[filtroSeleccionado].length > 1 }"
+                                                              
+                                                                
                                                                     *ngFor="let param of filtrosAgrupados[filtroSeleccionado]">
                                                                     <label><strong>{{ param.AliasCampo
                                                                             }}:</strong></label>
@@ -168,8 +173,8 @@
                                                                         [formControlName]="param.NombreParametro" />
                                                                     <input *ngIf="param.TipoDato === 'number'"
                                                                         type="number" class="form-control"
-                                                                        [attr.maxLength]="param.TamanoCampo"
-                                                                        [formControlName]="param.NombreParametro" />
+                                                                        [formControlName]="param.NombreParametro" 
+                                                                        [min]="0" [max]="200" />
                                                                     <input *ngIf="param.TipoDato === 'money'"
                                                                         type="text"
                                                                         class="form-control form-control-lg"

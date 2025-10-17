@@ -9,6 +9,8 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewC
 export class TablaVirtualComponent implements OnChanges {
   @ViewChild('scrollContent') scrollContent!: ElementRef<HTMLDivElement>;
 
+
+
   @Input() datos: any[] = [];
   @Input() columnas: string[] = [];
   @Input() formatear?: (valor: any, columna?: string) => string;
@@ -16,7 +18,7 @@ export class TablaVirtualComponent implements OnChanges {
   @Input() mostrarTotal: boolean = false;
   @Output() filaSeleccionada = new EventEmitter<any>();
 
-
+  totales: {[col: string]: number} ={}
   filasVisibles: any[] = [];
   currentIndex: number = 0;
   pageSize: number = 20;
@@ -41,6 +43,11 @@ export class TablaVirtualComponent implements OnChanges {
       this.filasVisibles = [...inicial];
       this.currentIndex = this.filasVisibles.length;
     }
+    
+    if(this.mostrarTotal &&  (changes['datos'] || changes['mostrarTotal'])){
+      this.totales = this.calcularTotales()
+    }
+
   }
 
   onClickFila(fila: any) {
@@ -141,27 +148,21 @@ export class TablaVirtualComponent implements OnChanges {
     return this.columnas.filter(col => col.endsWith('_M'));
   }
 
-  getTotales(): { [col: string]: number } {
+  calcularTotales(): { [col: string]: number } {
     const totales: { [col: string]: number } = {};
     this.getColumnasMoneda().forEach(col => {
-      totales[col] = this.filasVisibles.reduce((sum, fila) => {
+      totales[col] = (this.datos || []).reduce((sum, fila) => {
         let raw = this.getValor(fila, col);
         if (typeof raw === 'string') {
-
-          raw = raw.replace(/[^\d,.-]/g, '') // quita $, espacios,  
-            .replace(/\./g, '')       // quita puntos (miles)
-            .replace(',', '.');       // cambia coma decimal por punto
+          raw = raw.replace(/[^\d,.-]/g, '') // elimina $, espacios, etc.
+                   .replace(/\./g, '')       // quita puntos de miles
+                   .replace(',', '.');       // convierte coma a punto decimal
         }
-
         const val = parseFloat(raw) || 0;
         return sum + val;
-
       }, 0);
-
     });
-
     return totales;
-
   }
 
 

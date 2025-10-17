@@ -27,12 +27,12 @@
     
     <tfoot class="total-tfoot" *ngIf="mostrarTotal">
       <tr>
-        <td *ngFor="let col of columnas" [ngClass]="{'alinear-derecha': col?.endsWith('_M')}">
+        <td *ngFor="let col of columnas" [ngClass]="{'alinear-derecha': col?.endsWith('_M')}"  style="font-weight: bold;">
           <ng-container *ngIf="col.endsWith('_M'); else noTotal">
-            {{ formatear ? formatear(getTotales()[col], col) : (getTotales()[col] | number:'1.2-2') }}
+            {{ formatear ? formatear(totales[col], col) : (totales[col] | number:'1.2-2') }}
           </ng-container>
-          <ng-template #noTotal class="text-center" style="font-weight: bold;">
-            {{ col === columnas[0] ? 'Total' : '' }}
+          <ng-template #noTotal class="text-center">
+            {{ col === columnas[0] ? '&nbsp;&nbsp;&nbsp;&nbsp;Total' : '' }}
           </ng-template>
         </td>
       </tr>

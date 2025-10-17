@@ -497,6 +497,8 @@ export class InformeAhorrosComponent implements OnInit {
       imageAlt: 'Custom image',
       title: 'El número de registros es: ' + Cant,
       showCancelButton: true,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
       cancelButtonColor: "#852662",
       confirmButtonColor: "#269051",
       cancelButtonText: "Cerrar",

@@ -197,7 +197,10 @@
 
                                                         <form [formGroup]="formularioD" *ngIf="filtroSeleccionado">
                                                             <div class="form-row">
-                                                                <div class="form-group col-md-5"
+                                                                <div class="form-group"
+                                                                [ngClass]="{
+                                                               'col-md-6': filtrosAgrupados[filtroSeleccionado].length === 1,                               
+                                                               'col-md-5': filtrosAgrupados[filtroSeleccionado].length > 1 }"
                                                                     *ngFor="let param of filtrosAgrupados[filtroSeleccionado]">
                                                                     <label><strong>{{ param.AliasCampo
                                                                             }}:</strong></label>

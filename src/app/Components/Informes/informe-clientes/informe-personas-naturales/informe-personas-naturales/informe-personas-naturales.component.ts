@@ -45,6 +45,10 @@ export class InformePersonasNaturalesComponent {
   public selectedId: number = 0;
   public idOficina: number = 0;
   public idPerfil: number = 0;
+  public idFiltroOcupa: number = 0;
+  public idPaisSelected: number = 0;
+  public idDeptoSelected: number = 0;
+  public idCiudadSelected: number = 0;
   public OpcionSelected: Boolean = true;
   public validaOperacion: Boolean = true;
   public deshabilitarOficina: boolean = true;
@@ -478,6 +482,29 @@ export class InformePersonasNaturalesComponent {
     );
   }
 
+  filtrarListasOcupacion(i: number, nombreParametro: string) {
+    this.listasPorParametro[nombreParametro] = this.ListGenerico.filter(
+      (listGen: any) => listGen.IdTipo === i && listGen.IdFiltro === this.idFiltroOcupa
+    );
+  }
+
+  filtrarListasDepartamento(i: number, nombreParametro: string) {
+    this.listasPorParametro[nombreParametro] = this.ListGenerico.filter(
+      (listGen: any) => listGen.IdTipo === i && listGen.IdFiltro === this.idPaisSelected
+    );
+  }
+
+  filtrarListasCiudad(i: number, nombreParametro: string) {
+    this.listasPorParametro[nombreParametro] = this.ListGenerico.filter(
+      (listGen: any) => listGen.IdTipo === i && listGen.IdFiltro === this.idDeptoSelected
+    );
+  }
+
+  filtrarListasBarrio(i: number, nombreParametro: string) {
+    this.listasPorParametro[nombreParametro] = this.ListGenerico.filter(
+      (listGen: any) => listGen.IdTipo === i && listGen.IdFiltro === this.idCiudadSelected
+    );
+  }
 
   InitVariables() {
     const hoy = new Date();
@@ -496,6 +523,8 @@ export class InformePersonasNaturalesComponent {
       imageAlt: 'Custom image',
       title: 'El número de registros es: ' + Cant,
       showCancelButton: true,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
       cancelButtonColor: "#852662",
       confirmButtonColor: "#269051",
       cancelButtonText: "Cerrar",
@@ -651,8 +680,16 @@ export class InformePersonasNaturalesComponent {
 
       if (param.TipoDato === 'selectn' && param.IdTipo === 999) {
         this.filtrarListasOficinas(param.IdTipo, param.NombreParametro);
-      } else {
-        this.filtrarListas(param.IdTipo, param.NombreParametro);
+      } else if(param.TipoDato === 'selectn' && param.IdTipo === 979) {
+          this.filtrarListasOcupacion(param.IdTipo, param.NombreParametro);
+      }else if(param.TipoDato === 'selectn' && param.IdTipo === 988) {
+        this.filtrarListasDepartamento(param.IdTipo, param.NombreParametro);
+      }else if(param.TipoDato === 'selectn' && param.IdTipo === 987) {
+        this.filtrarListasCiudad(param.IdTipo, param.NombreParametro);
+      }else if(param.TipoDato === 'selectn' && param.IdTipo === 986) {
+        this.filtrarListasBarrio(param.IdTipo, param.NombreParametro);
+      }else{
+          this.filtrarListas(param.IdTipo, param.NombreParametro);
       }
 
     }
@@ -667,6 +704,32 @@ export class InformePersonasNaturalesComponent {
         }
       }
     }
+
+    if(filtro.toLowerCase().includes('tipo ocupacion') || filtro.toLowerCase().includes('tipo ocupación') ){
+      if(this.idFiltroOcupa === 0 ){
+        this.alertaListaVacia('tipo empleo');
+      }
+    }
+
+    if(filtro.toLowerCase().includes('departamento residencia') ){
+      if(this.idPaisSelected === 0 ){
+        this.alertaListaVacia('país de residencia');
+      }
+    }
+
+    if(filtro.toLowerCase().includes('ciudad residencia') ){
+      if(this.idDeptoSelected === 0 ){
+        this.alertaListaVacia('departamento de residencia');
+      }
+    }
+
+    if(filtro.toLowerCase().includes('barrio residencia') ){
+      if(this.idCiudadSelected === 0 ){
+        this.alertaListaVacia('ciudad de residencia');
+      }
+    }
+
+
   }
 
   agregarCriterio() {
@@ -696,6 +759,23 @@ export class InformePersonasNaturalesComponent {
         const lista = this.listasPorParametro[campo.NombreParametro];
         const item = lista?.find(opt => opt.IdClase == valor);
         descripcion = item ? item.Descripcion : valor;
+        
+        if(campo.IdTipo === 980){
+          this.idFiltroOcupa = item ? item.IdClase : valor;
+        }
+
+        if(campo.IdTipo === 989){
+          this.idPaisSelected = item ? item.IdClase : valor;
+        }
+
+        if(campo.IdTipo === 988){
+          this.idDeptoSelected = item ? item.IdClase : valor;
+        }
+
+        if(campo.IdTipo === 987){
+          this.idCiudadSelected = item ? item.IdClase : valor;
+        }
+
       }
 
       return { NombreParametro: campo.NombreParametro, alias: campo.AliasCampo, Valor: valor, Descripcion: descripcion };
@@ -778,7 +858,21 @@ export class InformePersonasNaturalesComponent {
       return;
     }
 
+    if(item.NombreFiltro?.toLowerCase().includes('tipo empleo')){
+      this.idFiltroOcupa = 0;
+    }
 
+    if(item.NombreFiltro?.toLowerCase().includes('país residencia')){
+      this.idPaisSelected = 0;
+    }
+
+    if(item.NombreFiltro?.toLowerCase().includes('departamento residencia')){
+      this.idDeptoSelected = 0;
+    }
+
+    if(item.NombreFiltro?.toLowerCase().includes('ciudad residencia')){
+      this.idCiudadSelected = 0;
+    }
 
     // 1. Eliminar el item de filtrosAgregado
     const index = this.filtrosAgregado.findIndex((f: any) =>
@@ -940,9 +1034,23 @@ export class InformePersonasNaturalesComponent {
             control.setErrors({ required: true });
             control.markAsTouched();
             esValido = false;
-            this.notif.warning('Advertencia', `Debe diligenciar la información, para agregar el criterio de filtro.`, ConfiguracionNotificacion.configRightTopNoClose);
+            this.notif.warning('Advertencia', `Debe diligenciar la información para agregar el criterio de filtro.`, ConfiguracionNotificacion.configRightTopNoClose);
           } else {
             control.setErrors(null);
+          }
+
+          if (typeof valor === 'number') {
+            const minVal = 0;  
+            const maxVal = 200;
+            if (valor < minVal) {
+              control.setErrors({ min: true });
+              esValido = false;
+              this.notif.warning('Advertencia', `Debe ingresar un valor válido para agregar el criterio de filtro.`, ConfiguracionNotificacion.configRightTopNoClose);
+            } else if (valor > maxVal) {
+              control.setErrors({ max: true });
+              esValido = false;
+              this.notif.warning('Advertencia', `Debe ingresar un valor válido para agregar el criterio de filtro.`, ConfiguracionNotificacion.configRightTopNoClose);
+            }
           }
         }
       }
@@ -958,5 +1066,20 @@ export class InformePersonasNaturalesComponent {
         console.log(result);
       });
   }
+
+  alertaListaVacia(val: string) {
+    Swal.fire({
+      title: '<strong> Adverencia </strong>',
+      text: 'La lista se encuentra vacía, asegúrese de haber ingresado el filtro por ' + val +' antes de usar este filtro.',
+      icon: 'warning',
+      showCancelButton: false,
+      confirmButtonText: 'ok',
+      confirmButtonColor: 'rgb(13,165,80)',
+      allowOutsideClick: false,
+      allowEscapeKey: false
+    }).then((results) => {
+    });
+  }
+
 
 }
