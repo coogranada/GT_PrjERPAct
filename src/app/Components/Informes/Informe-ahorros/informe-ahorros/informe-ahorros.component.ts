@@ -10,12 +10,12 @@ import { ToastrService } from 'ngx-toastr';
 import { Filtro } from '../../../../Models/Informes/informe-ahorros/informe-ahorros.model';
 import { InformeAhorrosService } from '../../../../Services/Informes/informe-ahorros.service';
 import { SPParametros } from '../../../../Models/Informes/configuracion-informes/parametros-informes.model';
-import { ExcelService } from '../../../../Services/General/excel.service';
 import { ConfiguracionInformesService } from '../../../../Services/Informes/configuracion-informes.service';
 import Swal from "sweetalert2";
 import { TablaVirtualComponent } from '../../../Tabla-virtual/tabla-virtual/tabla-virtual.component';
 import { InformePerfilService } from '../../../../Services/Maestros/informes-perfiles';
 import { GeneralesService } from '../../../../Services/Productos/generales.service';
+import { ExceljsService } from '../../../../Services/General/exceljs.service';
 
 
 @Component({
@@ -84,7 +84,7 @@ export class InformeAhorrosComponent implements OnInit {
 
   CodModulo: number = 82
 
-  constructor(private excelReportService: ExcelService, private fb: FormBuilder, private configuracionInformesS: ConfiguracionInformesService, private informeAhorrosService: InformeAhorrosService, private operacionesService: OperacionesService, 
+  constructor(private excelReportService: ExceljsService, private fb: FormBuilder, private configuracionInformesS: ConfiguracionInformesService, private informeAhorrosService: InformeAhorrosService, private operacionesService: OperacionesService, 
               private el: ElementRef, private moduleValidationService: ModuleValidationService, private notif: ToastrService, private InformePerfilS:InformePerfilService, private generalesService: GeneralesService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {

@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { fromEvent } from 'rxjs';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
-import { filter, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { NgxLoadingComponent } from 'ngx-loading';
 import { ToastrService } from 'ngx-toastr';
 import Swal from "sweetalert2";
@@ -13,9 +13,9 @@ import { GeneralesService } from '../../../../../Services/Productos/generales.se
 import { Filtro } from '../../../../../Models/Informes/informe-clientes/informe-clientes.model';
 import { InformeAhorrosService } from '../../../../../Services/Informes/informe-ahorros.service';
 import { SPParametros } from '../../../../../Models/Informes/configuracion-informes/parametros-informes.model';
-import { ExcelService } from '../../../../../Services/General/excel.service';
 import { ConfiguracionInformesService } from '../../../../../Services/Informes/configuracion-informes.service';
 import { TablaVirtualComponent } from '../../../../Tabla-virtual/tabla-virtual/tabla-virtual.component';
+import { ExceljsService } from '../../../../../Services/General/exceljs.service';
 
 @Component({
   selector: 'app-informe-personas-naturales',
@@ -87,7 +87,7 @@ export class InformePersonasNaturalesComponent {
 
   CodModulo: number = 76
 
-  constructor(private excelReportService: ExcelService, private fb: FormBuilder, private configuracionInformesS: ConfiguracionInformesService, private informeAhorrosService: InformeAhorrosService, private operacionesService: OperacionesService, 
+  constructor(private excelReportService: ExceljsService, private fb: FormBuilder, private configuracionInformesS: ConfiguracionInformesService, private informeAhorrosService: InformeAhorrosService, private operacionesService: OperacionesService, 
               private el: ElementRef, private moduleValidationService: ModuleValidationService, private notif: ToastrService, private InformePerfilS:InformePerfilService, private generalesService: GeneralesService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
@@ -851,6 +851,51 @@ export class InformePersonasNaturalesComponent {
     return false;
   }
 
+  validarParametroPais() {
+    for (let filtro of this.obtenerFiltrosAgregados()) {
+      if (filtro.NombreFiltro.toLowerCase().includes('país')) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  validarParametroDpto() {
+    for (let filtro of this.obtenerFiltrosAgregados()) {
+      if (filtro.NombreFiltro.toLowerCase().includes('departamento')) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  validarParametroCiudad() {
+    for (let filtro of this.obtenerFiltrosAgregados()) {
+      if (filtro.NombreFiltro.toLowerCase().includes('ciudad')) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  validarParametroBarrio() {
+    for (let filtro of this.obtenerFiltrosAgregados()) {
+      if (filtro.NombreFiltro.toLowerCase().includes('barrio')) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  validarParametroOcupacion() {
+    for (let filtro of this.obtenerFiltrosAgregados()) {
+      if (filtro.NombreFiltro.toLowerCase().includes('tipo ocupación')) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   eliminarCriterio(item: any) {
 
     if (this.validarParametroOficina() && this.idOficina !== 3 && item.NombreFiltro?.toLowerCase().includes('oficina')) {
@@ -859,19 +904,39 @@ export class InformePersonasNaturalesComponent {
     }
 
     if(item.NombreFiltro?.toLowerCase().includes('tipo empleo')){
-      this.idFiltroOcupa = 0;
+      if(this.validarParametroOcupacion()){
+        this.notif.warning('Advertencia', 'Debe eliminar primero el filtro por tipo ocupación.', ConfiguracionNotificacion.configRightTop);
+        return;
+      }else{
+        this.idFiltroOcupa = 0;
+      }
     }
 
     if(item.NombreFiltro?.toLowerCase().includes('país residencia')){
-      this.idPaisSelected = 0;
+      if(this.validarParametroDpto()){
+        this.notif.warning('Advertencia', 'Debe eliminar primero el filtro por departamento.', ConfiguracionNotificacion.configRightTop);
+        return;
+      }else{
+        this.idPaisSelected = 0;
+      }
     }
 
     if(item.NombreFiltro?.toLowerCase().includes('departamento residencia')){
-      this.idDeptoSelected = 0;
+      if(this.validarParametroCiudad()){
+        this.notif.warning('Advertencia', 'Debe eliminar primero el filtro por ciudad.', ConfiguracionNotificacion.configRightTop);
+        return;
+      }else{
+        this.idDeptoSelected = 0;
+      }
     }
 
     if(item.NombreFiltro?.toLowerCase().includes('ciudad residencia')){
-      this.idCiudadSelected = 0;
+      if(this.validarParametroBarrio()){
+        this.notif.warning('Advertencia', 'Debe eliminar primero el filtro por barrio.', ConfiguracionNotificacion.configRightTop);
+        return;
+      }else{
+        this.idCiudadSelected = 0;
+      }
     }
 
     // 1. Eliminar el item de filtrosAgregado
@@ -902,6 +967,9 @@ export class InformePersonasNaturalesComponent {
 
   }
 
+  obtenerFiltrosAgregados() {
+    return this.filtrosAgregado;
+  }
 
 
   generarFiltrosWhere() {
