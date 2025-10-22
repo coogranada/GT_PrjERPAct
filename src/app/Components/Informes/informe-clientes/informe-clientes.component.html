@@ -30,6 +30,14 @@
                           <option *ngFor="let item of Operaciones"  [value]="item.ERP_tblOperacion.IdOperacion">
                             {{item.ERP_tblOperacion.Descripcion}}
                           </option>
+                          <!--BORRAR-->
+                        <option [value]="881">
+                            Informe naturales anterior
+                        </option>
+                        <option [value]="891">
+                            Informe jurídicos anterior
+                        </option>
+                          <!--FIN BORRAR-->
                         </select>
                             <span class="help-block validationSpan" *ngIf="!validaOperacion ">
                           La operación es obligatoria.
@@ -44,11 +52,23 @@
 
 <div  *ngIf="valueSlect == '89'">
     <div >
+        <app-informe-personas-juridicas></app-informe-personas-juridicas>
+    </div>
+</div>
+<div  *ngIf="valueSlect == '891'">
+    <div >
         <app-informe-juridicos ></app-informe-juridicos>
     </div>
 </div>
+
 <div  *ngIf="valueSlect == '88'">
     <div >
         <app-informe-personas-naturales></app-informe-personas-naturales>
+    </div>
+</div>
+
+<div  *ngIf="valueSlect == '881'">
+    <div >
+        <app-informe-clientes-naturales ></app-informe-clientes-naturales>
     </div>
 </div>

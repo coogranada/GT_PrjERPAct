@@ -217,26 +217,4 @@
     </div>
 </div>
 
-<input type="hidden" #ShowModalList data-toggle="modal" data-target="#ShowModalList" data-popup="tooltip"
-    data-trigger="hover" data-placement="top">
 
-<div id="ShowModalList" class="modal fade" data-backdrop="static">
-    <div style="width: 88%; margin: 30px auto; height: 90%;">
-        <div class="modal-content modal-xl">
-            <div class="modal-header bg-morado">
-                <button type="button" class="close" data-dismiss="modal"  (click)="onModalCerrar()">&times;</button>
-                <h6 class="modal-title">Informe naturales</h6>
-            </div>
-            <div class="modal-body">
-                    <app-tabla-virtual [datos]="resultadoInforme" [columnas]="encabezados"
-                        [formatear]="formatearValor" [mostrarBtnCopia]="true"></app-tabla-virtual>
-            </div>
-            <div class="modal-footer">
-                <button class="btn Gt-btn-verde" (click)="exportarExcel2()" id="xlsx">
-                    <i class="icon-download4"></i>&nbsp; EXCEL
-                </button>
-                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal" (click)="onModalCerrar()">Cerrar</button>
-            </div>
-        </div>
-    </div>
-</div>

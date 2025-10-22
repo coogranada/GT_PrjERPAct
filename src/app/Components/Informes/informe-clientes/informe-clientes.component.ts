@@ -9,6 +9,7 @@ import { OperacionesService } from '../../../Services/Maestros/operaciones.servi
 import { ClientesGetListService } from '../../../Services/Clientes/clientesGetList.service';
 import { ToastrService } from 'ngx-toastr';
 import { InformePersonasNaturalesComponent } from './informe-personas-naturales/informe-personas-naturales/informe-personas-naturales.component';
+import { InformePersonasJuridicasComponent } from './informe-personas-juridicas/informe-personas-juridicas/informe-personas-juridicas.component';
 
 declare var $: any;
 @Component({
@@ -29,7 +30,8 @@ export class InformeClientesComponent implements OnInit {
   public OperacionSelect: string = "";
   CodModulo : number = 76
   
-  @ViewChild(InformePersonasNaturalesComponent) hijo!: InformePersonasNaturalesComponent;
+  @ViewChild(InformePersonasNaturalesComponent) hijoNatural!: InformePersonasNaturalesComponent;
+  @ViewChild(InformePersonasJuridicasComponent) hijoJuridico!: InformePersonasNaturalesComponent;
 
   ngAfterViewInit(){
 
@@ -75,13 +77,22 @@ export class InformeClientesComponent implements OnInit {
   }
 
   onChange(event : Event){
+    const selectedValue = (event.target as HTMLSelectElement).value;
     setTimeout(() => {
-      if(this.hijo){
-        this.hijo.opcionSelected(event);
-      }else{
-        console.log('Comp hijo no disponible')
+      if(selectedValue === '89'){
+        if(this.hijoJuridico){
+          this.hijoJuridico.opcionSelected(event);
+        }else{
+          console.log('Comp hijo jurídico no disponible')
+        }
+      }else if(selectedValue === '88'){
+        if(this.hijoNatural){
+          this.hijoNatural.opcionSelected(event);
+        }else{
+          console.log('Comp hijo natural no disponible')
+        }
       }
-    }, 500);
+    }, 600);
   }
 
   operacionBlur() {

@@ -40,6 +40,7 @@ import { LogProductosVirtualesComponent } from '../Components/Informes/log-audit
 import { InformeAhorrosComponent } from '../Components/Informes/Informe-ahorros/informe-ahorros/informe-ahorros.component';
 import { ShareComponentModule } from './share-component.module';
 import { InformePersonasNaturalesComponent } from '../Components/Informes/informe-clientes/informe-personas-naturales/informe-personas-naturales/informe-personas-naturales.component';
+import { InformePersonasJuridicasComponent } from '../Components/Informes/informe-clientes/informe-personas-juridicas/informe-personas-juridicas/informe-personas-juridicas.component';
 
 
 @NgModule({
@@ -67,6 +68,7 @@ import { InformePersonasNaturalesComponent } from '../Components/Informes/inform
     InformeClientesComponent,
     InformeAhorrosComponent,
     InformePersonasNaturalesComponent,
+    InformePersonasJuridicasComponent,
     InformeClientesNaturalesComponent,
     InformeJuridicosComponent,
     LogAuditoriaComponent,
