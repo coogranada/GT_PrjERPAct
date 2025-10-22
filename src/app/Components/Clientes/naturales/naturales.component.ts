@@ -35,6 +35,7 @@ import { OficinasService } from '../../../Services/Maestros/oficinas.service';;
 import { AlertService } from '../../../Services/Alert/alert.service';
 import { NaturalesAllModel, NaturalesServicio } from '../../../Models/Clientes/naturalesAll.model';
 import { MiListaProductosService } from '../../../Services/Informes/mi-lista-productos.service';
+import { Estados } from '../../../../environments/Estados';
 
 declare var $: any;
 const PrimaryWhite = 'rgb(13,165,80)';
@@ -26024,7 +26025,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             resolve([]);
             return;
           }
-          resolve( result.filter((radicado: any) => ![10, 43, 46, 42].includes( radicado.IdEstado ) ));
+          resolve( result.filter((radicado: any) => [+Estados.Pendiente, +Estados.Aprobado, +Estados.Activa].includes( radicado.IdEstado ) ));
         },
         (error) => {
           reject(error);

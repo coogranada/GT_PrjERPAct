@@ -38,6 +38,7 @@ import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { Cardinales, Divisas, Inmueble, Vias }  from '../../../../environments/Maestros.Naturales';
 import { AlertService } from '../../../Services/Alert/alert.service';
 import { MiListaProductosService } from '../../../Services/Informes/mi-lista-productos.service';
+import { Estados } from '../../../../environments/Estados';
 
 declare var $: any;
 const PrimaryWhite = 'rgb(13,165,80)';
@@ -7857,7 +7858,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
             resolve([]);
             return;
           }
-          resolve( result.filter((radicado: any) => ![10, 43, 46, 42].includes( radicado.IdEstado ) ));
+          resolve( result.filter((radicado: any) => [+Estados.Pendiente, +Estados.Aprobado, +Estados.Activa].includes( radicado.IdEstado ) ));
         },
         (error) => {
           reject(error);
