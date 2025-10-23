@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { OperacionesService } from '../../../../Services/Maestros/operaciones.service';
 import { Tabs, TipoBusquedaResumen } from '../../../../Models/Productos/cartera/gestion-credito.enum';
 import { CarteraService } from '../../../../Services/Productos/cartera.service';
-import { CuentaCarteraResumen, CuentaFormateada, Diferido, FechasCredito, GarantiaPersonalCod, GarantiaReal, HistorialOperacion, Provision, Referencia } from '../../../../Models/Productos/cartera/gestion-credito.model';
+import { CalcularCuota, CuentaCarteraResumen, CuentaFormateada, Diferido, FechasCredito, GarantiaPersonalCod, GarantiaReal, HistorialOperacion, Provision, Referencia } from '../../../../Models/Productos/cartera/gestion-credito.model';
 import { catchError, forkJoin, Observable, of } from 'rxjs';
 import { MiListaProductosService } from '../../../../Services/Informes/mi-lista-productos.service';
 import { ToastrService } from 'ngx-toastr';
@@ -14,6 +14,7 @@ import { TablaVirtualComponent } from '../../../Tabla-virtual/tabla-virtual/tabl
 import { MapeoColumna, transformarDatosParaTabla } from '../../../../utils/tabla-utils';
 import { formatDate } from '@angular/common';
 import { ContractualService } from '../../../../Services/Productos/contractual.service';
+import { event } from 'jquery';
 
 @Component({
   selector: 'app-gestion-credito',
@@ -37,6 +38,7 @@ export class GestionCreditoComponent {
   public DatosForm!: FormGroup;
   public SaldosForm!: FormGroup;
   public CobrosForm!: FormGroup;
+  public CuotaForm!: FormGroup;
   public resultOperaciones : any;
   public bloquearConsultaCuenta : boolean = false;
   public BloquearBuscar = false;
@@ -96,7 +98,11 @@ export class GestionCreditoComponent {
   estaTabValorCuotaActivo: boolean = false;
   estaTabGarantiasActivo: boolean = false;
   estaTabDeduciblesActivo: boolean = false; 
-  _datoCuota = false;  
+  _datoCuota = true; 
+  isCuota = false;
+  isCancelacion = false; 
+  public BloquearCalcularCuota = true;
+  calcularCuota: CalcularCuota[] = [];
   public ValidaPactado: boolean = false;  
   public carteraInfo = new DetalleCartera();
   public lstCalificacion: any[] = [];
@@ -161,6 +167,7 @@ export class GestionCreditoComponent {
     const Tipo = new FormControl({ value: '', disabled: true }, []);
     const TipoFirma = new FormControl({ value: '', disabled: true }, []);
     const IdLinea = new FormControl({ value: '', disabled: true }, []);
+    const Sigla = new FormControl({ value: '', disabled: true }, []);
     const Linea = new FormControl({ value: '', disabled: true }, []);
     const Monto = new FormControl({ value: '', disabled: true }, []);
     const FechaCredito = new FormControl({ value: '', disabled: true }, []);
@@ -223,6 +230,7 @@ export class GestionCreditoComponent {
       Tipo: Tipo,
       TipoFirma: TipoFirma,
       IdLinea,
+      Sigla,
       Linea,
       Monto: Monto,
       FechaCredito: FechaCredito,
@@ -323,24 +331,24 @@ export class GestionCreditoComponent {
     });
 
     const CuotasMoraPre = new FormControl('', []);
-        const VecesPre = new FormControl('', []);
-        const SaldoCapitalPre = new FormControl('', []);
-        const FechaMatriculaPre = new FormControl('', []);
-        const FechaRetiroPre = new FormControl('', []);
-        const EstadoJuridico = new FormControl('', []);
-        const Abogado = new FormControl('', []);
-        const SaldoJuridico = new FormControl('', []);
-        const CostasJudiciales = new FormControl('', []);
-        const CuotasMoraJuridico = new FormControl('', []);
-        const VecesJuridico = new FormControl('', []);
-        const FechaMatriculaJuridico = new FormControl('', []);
-        const FechaRetiroJuridico = new FormControl('', []);
-        const IntMoraCastigo = new FormControl('', []);
-        const CorrientesCatigo = new FormControl('', []);
-        const SaldoCapitalCastigo = new FormControl('', []);
-        const CostasJudicialesCastigo = new FormControl('', []);
-        const FechaCastigo = new FormControl('', []);
-        const NumNombreJuzgado = new FormControl('', []);
+    const VecesPre = new FormControl('', []);
+    const SaldoCapitalPre = new FormControl('', []);
+    const FechaMatriculaPre = new FormControl('', []);
+    const FechaRetiroPre = new FormControl('', []);
+    const EstadoJuridico = new FormControl('', []);
+    const Abogado = new FormControl('', []);
+    const SaldoJuridico = new FormControl('', []);
+    const CostasJudiciales = new FormControl('', []);
+    const CuotasMoraJuridico = new FormControl('', []);
+    const VecesJuridico = new FormControl('', []);
+    const FechaMatriculaJuridico = new FormControl('', []);
+    const FechaRetiroJuridico = new FormControl('', []);
+    const IntMoraCastigo = new FormControl('', []);
+    const CorrientesCatigo = new FormControl('', []);
+    const SaldoCapitalCastigo = new FormControl('', []);
+    const CostasJudicialesCastigo = new FormControl('', []);
+    const FechaCastigo = new FormControl('', []);
+    const NumNombreJuzgado = new FormControl('', []);
 
     this.CobrosForm = new FormGroup({    
       CuotasMoraPre: CuotasMoraPre,
@@ -363,6 +371,15 @@ export class GestionCreditoComponent {
       FechaCastigo: FechaCastigo,
       NumNombreJuzgado: NumNombreJuzgado,
     });
+
+    const NumeroCuota = new FormControl({ value: '', disabled: true }, []);
+   
+
+    this.CuotaForm = new FormGroup({
+      NumeroCuota: NumeroCuota,
+      
+    });
+
 
     // FIN TABS
 
@@ -575,6 +592,7 @@ export class GestionCreditoComponent {
         this.gestionCreditoForm.get('IdProducto')?.setValue(cuentaResumen.IdProducto);
         this.gestionCreditoForm.get('DescripcionProducto')?.setValue(cuentaDetalle.Encabezado.NombreProducto);
         this.gestionCreditoForm.get('IdLinea')?.setValue(cuentaResumen.IdLinea);
+        this.gestionCreditoForm.get('Sigla')?.setValue(cuentaResumen.Sigla);
         this.gestionCreditoForm.get('Linea')?.setValue(cuentaDetalle.Encabezado.Linea);
         this.gestionCreditoForm.get('IdAsesor')?.setValue(cuentaDetalle.Encabezado.IdAsesor);
         this.gestionCreditoForm.get('NombreAsesor')?.setValue(cuentaDetalle.Encabezado.Asesor);
@@ -624,6 +642,7 @@ export class GestionCreditoComponent {
       }
     });
     this.BuscarDatosCartera(+cuentaResumen.IdCuenta);
+    this.ActivarCalcularCuota();    
   }
 
 
@@ -700,7 +719,6 @@ export class GestionCreditoComponent {
       this.ValidaPactado = true;
     }
   }
-
  
   BuscarDatosCartera(IdCuenta: number){
     this.carteraService.getDatosCartera(IdCuenta).subscribe(
@@ -768,13 +786,47 @@ export class GestionCreditoComponent {
   // FIN SALDOS
 
   // CALCULAR CUOTA
-
+ 
   onCuotaCheck(){
-    this._datoCuota = false;   
+    this._datoCuota = false; 
+    this.onCheckboxChange(1, true);    
   }
 
-  onCancelacionCheck(){
-    this._datoCuota = true;    
+  onCancelacionCheck(){  
+    this._datoCuota = true;   
+    this.onCheckboxChange(2, true);  
+  }
+
+  onCheckboxChange(option: number, checked: boolean) {
+    if (option === 1) {
+      this.isCuota = checked;
+      if (checked) this.isCancelacion = false;
+    } else if (option === 2) {
+      this.isCancelacion = checked;
+      if (checked) this.isCuota = false;
+    }
+  }
+
+  ValidarNumeroCuota(){
+    const NumeroCuota = this.CuotaForm.get('NumeroCuota')?.value;
+    const CuotasPediente = this.SaldosForm.get('CoutasPendientes')?.value;
+    if (NumeroCuota > CuotasPediente){
+      this.notif.warning('Advertencia', 'El número de cuota debe ser menor que las cuotas pendientes.');
+    }
+  }
+
+  ActivarCalcularCuota(){
+    const isCupo = this.gestionCreditoForm.get('Sigla')?.value;
+    if (isCupo !== 'CTD'){
+      this.BloquearCalcularCuota = false;
+    } else{
+      this.BloquearCalcularCuota = true;
+    }
+  }
+
+  CalcularCuota(){
+    const IdCuenta = this.gestionCreditoForm.get('IdCuenta')?.value;
+    const NumeroCuotas = this.CuotaForm.get('NumeroCuota')?.value;
   }
 
   // FIN CALCULAR CUTOTA
