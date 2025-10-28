@@ -100,12 +100,20 @@ export class GestionCreditoComponent {
   estaTabDeduciblesActivo: boolean = false; 
   _datoCuota = true; 
   isCuota = false;
-  isCancelacion = false; 
+  isCancelacion = false;
+  // totales cuota
+  totalCapital: number = 0;
+  totalInteres: number = 0;
+  totalInteresMora: number = 0;
+  totalDeducibles: number = 0;
+  totalSeguro: number = 0;
+  total: number = 0; 
+  //Final totales cuota
   public BloquearCalcularCuota = true;
-  calcularCuota: CalcularCuota[] = [];
   public ValidaPactado: boolean = false;  
   public carteraInfo = new DetalleCartera();
   public lstCalificacion: any[] = [];
+  public lstCalcularCuota: any[] = [];
   public lstAnalisisCalificacion: any[] = []; 
   public lstReestructuracion: any[] = []; 
   public lstReliquidacion: any[] = [];
@@ -614,6 +622,8 @@ export class GestionCreditoComponent {
         this.reestablecerCamposEncabezado('BuscarDocumento', 'BuscarNombre');
         this.gestionCreditoOperacionForm.reset();
         this.deshabilitarCamposBusqueda();
+        this.BuscarDatosCartera(+cuentaResumen.IdCuenta);
+        this.ActivarCalcularCuota();  
         
         const saldo = cuentaDetalle.SaldoSeguroHipotecario?.Saldo;
         const formatoCOP = new Intl.NumberFormat('en-US', {
@@ -641,8 +651,6 @@ export class GestionCreditoComponent {
         this.gestionCreditoForm.get('estaCastigado')?.setValue(checkCartera.Catigada);
       }
     });
-    this.BuscarDatosCartera(+cuentaResumen.IdCuenta);
-    this.ActivarCalcularCuota();    
   }
 
 
@@ -682,11 +690,13 @@ export class GestionCreditoComponent {
     this.DatosForm.reset();
     this.SaldosForm.reset();
     this.CobrosForm.reset();
+    this.CuotaForm.reset();
     this.carteraInfo = new DetalleCartera(); 
     this.lstCalificacion = [];               
     this.lstAnalisisCalificacion = [];
     this.lstReestructuracion = [];
     this.lstReliquidacion = [];
+    this.lstCalcularCuota = [];
   }
 
   CambiarColor(fil: any, producto: any) {
@@ -708,6 +718,11 @@ export class GestionCreditoComponent {
     if (producto === 4) {
       $(".filRel_" + this.ColorAnterior).css("background", "#FFFFFF");
       $(".filRel_" + fil).css("background", "#e5e5e5");
+      this.ColorAnterior = fil;
+    }
+    if (producto === 5) {
+      $(".filCuota_" + this.ColorAnterior).css("background", "#FFFFFF");
+      $(".filCuota_" + fil).css("background", "#e5e5e5");
       this.ColorAnterior = fil;
     }
   }
@@ -789,7 +804,8 @@ export class GestionCreditoComponent {
  
   onCuotaCheck(){
     this._datoCuota = false; 
-    this.onCheckboxChange(1, true);    
+    this.onCheckboxChange(1, true);  
+    this.CuotaForm.get('NumeroCuota')?.enable();
   }
 
   onCancelacionCheck(){  
@@ -810,11 +826,11 @@ export class GestionCreditoComponent {
   ValidarNumeroCuota(){
     const NumeroCuota = this.CuotaForm.get('NumeroCuota')?.value;
     const CuotasPediente = this.SaldosForm.get('CoutasPendientes')?.value;
-    if (NumeroCuota > CuotasPediente){
+    if (NumeroCuota < CuotasPediente){
       this.notif.warning('Advertencia', 'El número de cuota debe ser menor que las cuotas pendientes.');
     }
   }
-
+//NOVEDAD
   ActivarCalcularCuota(){
     const isCupo = this.gestionCreditoForm.get('Sigla')?.value;
     if (isCupo !== 'CTD'){
@@ -825,8 +841,33 @@ export class GestionCreditoComponent {
   }
 
   CalcularCuota(){
+    this.lstCalcularCuota = [];
+    this.totalCapital = 0;
+    this.totalInteres = 0;
+    this.totalInteresMora = 0;
+    this.totalDeducibles = 0;
+    this.totalSeguro = 0;
+    this.total = 0;
     const IdCuenta = this.gestionCreditoForm.get('IdCuenta')?.value;
     const NumeroCuotas = this.CuotaForm.get('NumeroCuota')?.value;
+    this.carteraService.CalcularCuota(IdCuenta, NumeroCuotas).subscribe(
+      result => { 
+        this.lstCalcularCuota = result; 
+
+        for (let item of this.lstCalcularCuota) {
+          this.totalCapital += item.Capital || 0;
+          this.totalInteres += item.Intereses || 0;
+          this.totalInteresMora += item.Mora || 0;
+          this.totalDeducibles += item.TotalDeducibles || 0;
+          this.totalSeguro += item.TotalSeguro || 0;
+          this.total += item.TotalCuota || 0;
+        }
+      },
+      error => {
+        const errorMessage = <any>error;
+        console.log(errorMessage);
+      }
+    );
   }
 
   // FIN CALCULAR CUTOTA

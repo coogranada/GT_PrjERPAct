@@ -913,33 +913,53 @@
                                                             </div>
                                                         </div>
                                                     </div> 
-                                                    <div class="alert alert-secondary" role="alert" *ngIf="calcularCuota.length === 0">
+                                                    <div class="alert alert-secondary" role="alert" *ngIf="lstCalcularCuota.length === 0">
                                                         No hay registros
                                                     </div>
-                                                    <div class="table-responsive scrollTabla" *ngIf="calcularCuota.length > 0">
+                                                    <div class="table-responsive scrollTabla" *ngIf="lstCalcularCuota.length > 0">
                                                         <table class="table table-hover horizontal-scroll">
                                                             <thead>
                                                                 <tr>
                                                                     <th class="table-header">Nro</th>
-                                                                    <th class="table-header">Abono capital</th>
-                                                                    <th class="table-header">Intereses corriente</th>
-                                                                    <th class="table-header">Intereses mora</th>
+                                                                    <th class="table-header">Capital</th>
+                                                                    <th class="table-header">Interes cte</th>
+                                                                    <th class="table-header">Interes mora</th>
                                                                     <th class="table-header">Dias mora</th>
                                                                     <th class="table-header">Tasa</th>
-                                                                    <th class="table-header">fecha mora</th>
+                                                                    <th class="table-header">Fecha mora</th>
                                                                     <th class="table-header">Cuota deducibles</th> 
                                                                     <th class="table-header">Cuota seguro</th>
+                                                                    <th class="table-header">Total cuota</th>
                                                                 </tr>
                                                             </thead>
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>                                                                   
+                                                            <tbody  *ngFor="let itemCalcularCuota of lstCalcularCuota; let i = index">
+                                                                <tr class="filCuota_{{i}}" (click)="CambiarColor(i,5)">
+                                                                    <td style="text-align: center;">{{itemCalcularCuota.Cuota}}</td>
+                                                                    <td style="text-align: center;">{{itemCalcularCuota.Capital | currency}}</td>
+                                                                    <td style="text-align: center;">{{itemCalcularCuota.Intereses | currency}}</td>
+                                                                    <td style="text-align: center;">{{itemCalcularCuota.Mora | currency}}</td>
+                                                                    <td style="text-align: center;">{{itemCalcularCuota.DiasMora}}</td>
+                                                                    <td style="text-align: center;">{{itemCalcularCuota.Tasa}}</td>
+                                                                    <td style="text-align: center;">{{itemCalcularCuota.FechaVencimiento}}</td>
+                                                                    <td style="text-align: center;">{{itemCalcularCuota.TotalDeducibles | currency}}</td>
+                                                                    <td style="text-align: center;">{{itemCalcularCuota.TotalSeguro | currency}}</td>
+                                                                    <td style="text-align: center;">{{itemCalcularCuota.TotalCuota | currency}}</td>
                                                                 </tr>
                                                             </tbody>
-                                                           
+                                                            <tfoot class="total-tfoot">
+                                                                <tr>
+                                                                    <td style="text-align: center;"></td>
+                                                                    <td style="text-align: center;">{{totalCapital | currency}}</td>
+                                                                    <td style="text-align: center;">{{totalInteres| currency}}</td>
+                                                                    <td style="text-align: center;">{{totalInteresMora | currency}}</td>
+                                                                    <td style="text-align: center;">—</td>
+                                                                    <td style="text-align: center;">—</td>
+                                                                    <td style="text-align: center;">—</td>
+                                                                    <td style="text-align: center;">{{totalDeducibles | currency}}</td>
+                                                                    <td style="text-align: center;">{{totalSeguro | currency}}</td>
+                                                                    <td style="text-align: center;">{{total | currency}}</td>                                                                    
+                                                                </tr>
+                                                            </tfoot>                                                           
                                                         </table>
                                                     </div>
                                                 </article>
