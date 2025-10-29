@@ -135,12 +135,13 @@
 
                         <!-- Inicio Radicado -->
                         <div class="col-xs-12 col-md-1 col-lg-1">
-                            <label class="textNegrilla">Radicado:</label>
+                            <label class="textNegrilla button-text">Radicado:</label>
                             <!-- <span class="grande"> *</span> -->
                         </div>
                         <div class="col-xs-6 col-md-2 col-lg-1">
-                            <input type="text" class="form-control" tooltip="Nombre" placement="top" show-delay="500"
+                            <input *ngIf="!gestionCreditoForm.get('Radicado')?.value" type="text" class="form-control" tooltip="Nombre" placement="top" show-delay="500"
                                 formControlName="Radicado"  />
+                            <span *ngIf="gestionCreditoForm.get('Radicado')?.value" class="custom-badge" (click)="onClickRadicado()">{{ gestionCreditoForm.get('Radicado')?.value }}</span>
                         </div>
                         <!-- Fin Radicado -->
 
@@ -419,6 +420,7 @@
                 <input type="hidden" #ModalCancelarCupo data-toggle="modal" data-target="#ModalCancelarCupo" data-popup="tooltip" data-trigger="hover" data-placement="top">
                 <input type="hidden" #ModalReglamentoVivienda data-toggle="modal" data-target="#ModalReglamentoVivienda" data-popup="tooltip" data-trigger="hover" data-placement="top">
                 <input type="hidden" #ModalReglamentoTarjeta data-toggle="modal" data-target="#ModalReglamentoTarjeta" data-popup="tooltip" data-trigger="hover" data-placement="top"> -->
+                <input type="hidden" #abrirModalDetalleRadicado data-toggle="modal" data-target="#modalDetalleRadicado" data-popup="tooltip" data-trigger="hover" data-placement="top">
             </div>
         </div>
         <!-- Modal Ayuda -->
@@ -464,6 +466,12 @@
             </div>
         </div>
         <!--/ Fin Modal BuscarAsociados -->
+        <!-- modal detalle radicado -->
+        <div id="modalDetalleRadicado" class="modal">
+            <app-radicado-detalle *ngIf="!loading && detalleRadicado" [radicadoData]="detalleRadicado"></app-radicado-detalle>
+        </div>
+        <!-- fin modal detalle radicado -->
+
         <!-- loader -->
         <ngx-loading [show]="loading"
             [config]="{primaryColour: 'rgb(13,165,80)', secondaryColour: 'rgb(13,165,80,0.7)', tertiaryColour: 'rgb(13,165,80)', backdropBorderRadius: '3px'}">
@@ -1650,8 +1658,8 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr *ngFor="let refComercial of refComcerciales  ; let i = index" (click)="selectRow('refComcerciales', i)" [class.tr-selected]="selectedRows['refComcerciales'] === i">
-                                                        <td class="capitalize">{{ refComercial.NombreEmpresa }}</td>
-                                                        <td>{{ refComercial.TelefonoEmpresa }}</td>
+                                                        <td class="capitalize">{{ refComercial.NombreEmpresa || refComercial.NombreCompleto }}</td>
+                                                        <td>{{ refComercial.TelefonoEmpresa || refComercial.TelefonoResidencia }}</td>
                                                         <td>{{ refComercial.DescripcionReferencia }}</td>
                                                         <td></td>
                                                     </tr>

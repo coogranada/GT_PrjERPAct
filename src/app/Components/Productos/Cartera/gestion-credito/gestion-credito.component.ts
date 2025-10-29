@@ -9,7 +9,7 @@ import { MiListaProductosService } from '../../../../Services/Informes/mi-lista-
 import { ToastrService } from 'ngx-toastr';
 import { ConfiguracionNotificacion } from '../../../../../environments/config.noticaciones';
 import Swal from 'sweetalert2';
-import { DetalleCartera } from '../../../../Models/Informes/MisProductos/mis-producto.model';
+import { DetalleCartera, DetalleRadicado, EncabezadoRadicado } from '../../../../Models/Informes/MisProductos/mis-producto.model';
 import { TablaVirtualComponent } from '../../../Tabla-virtual/tabla-virtual/tabla-virtual.component';
 import { MapeoColumna, transformarDatosParaTabla } from '../../../../utils/tabla-utils';
 import { formatDate } from '@angular/common';
@@ -28,7 +28,7 @@ export class GestionCreditoComponent {
   @ViewChild('ModalBuscarAsociados', { static: true }) private ModalBuscarAsociados!: ElementRef;
   @ViewChild('cerrarModal', { static: true }) private cerrarModal!: ElementRef;
   @ViewChild(TablaVirtualComponent) tablaVirtual!: TablaVirtualComponent;
-
+  @ViewChild('abrirModalDetalleRadicado', { static: true }) private abrirModalDetalleRadicado!: ElementRef;
 
   private codModulo = 45;
   public dataUser : any;
@@ -87,8 +87,8 @@ export class GestionCreditoComponent {
   refPersonales: Referencia[] = [];
   refComcerciales: Referencia[] = [];
   historial: HistorialOperacion[] = [];
-
-  
+  encabezadoRadicado: EncabezadoRadicado | null = null;
+  detalleRadicado: DetalleRadicado | null = null;
   
   ColorAnterior: any;
   Tabs = Tabs;
@@ -192,6 +192,7 @@ export class GestionCreditoComponent {
     const IdOperacionPermitida = new FormControl({ value: '', disabled: true }, []);
     const NombreOperacionPermitida = new FormControl({ value: '', disabled: true }, []);
     const IdTercero = new FormControl({ value: '', disabled: true }, []);
+    const TipoCliente = new FormControl({ value: '', disabled: true }, []);
     const fechaApertura = new FormControl({ value: '', disabled: true }, []);
     const fechaUltimaTrans = new FormControl({ value: '', disabled: true }, []);
     const fechaCancelacion = new FormControl({ value: '', disabled: true }, []);
@@ -257,6 +258,7 @@ export class GestionCreditoComponent {
       IdOperacionPermitida,
       NombreOperacionPermitida,
       IdTercero,
+      TipoCliente,
       fechaApertura,
       fechaUltimaTrans,
       fechaCancelacion,
@@ -619,6 +621,7 @@ export class GestionCreditoComponent {
         this.gestionCreditoForm.get('IdFormaPago')?.setValue(cuentaDetalle.Encabezado.IdFormaPago);
         this.gestionCreditoForm.get('estaSinCobertura')?.setValue(cuentaDetalle.Encabezado.EstaSinCobertura);
         this.gestionCreditoForm.get('IdTercero')?.setValue(cuentaDetalle.Encabezado.IdTercero);
+        this.gestionCreditoForm.get('TipoCliente')?.setValue(cuentaDetalle.Encabezado.TipoCliente);
         this.reestablecerCamposEncabezado('BuscarDocumento', 'BuscarNombre');
         this.gestionCreditoOperacionForm.reset();
         this.deshabilitarCamposBusqueda();
@@ -1117,7 +1120,7 @@ export class GestionCreditoComponent {
     if (!idTercero) return;
     this.loading = true;
 
-    this.miListaProductosService.GetReferenciasCartera(idTercero, 0).pipe(
+    this.miListaProductosService.GetReferenciasCartera(idTercero, this.gestionCreditoForm.get('TipoCliente')?.value).pipe(
       catchError(error => {
         console.error('Error al obtener referencias:', error);
         return of(null);
@@ -1198,5 +1201,76 @@ onHistorialTabClick() {
 //FIN HISTORIAL
 
 // FIN TABS
+
+
+onClickRadicado() {
+  const idTercero = this.gestionCreditoForm.get('IdTercero')?.value;
+  const radicado = this.gestionCreditoForm.get('Radicado')?.value;
+  const numeroDocumento = this.gestionCreditoForm.get('NumeroDocumento')?.value;
+  if(!idTercero || !radicado) return;
+
+  this.loading = true;
+  forkJoin({
+    radicados: this.miListaProductosService.GetRadicados(idTercero).pipe(
+      catchError(error => {
+        console.error('Error al obtener radicados:', error);
+        return of(null);
+      })
+    ),
+    detalleRadicado: this.miListaProductosService.GetDetalleRadicados(radicado, this.gestionCreditoForm.get('TipoCliente')?.value).pipe(
+      catchError(error => {
+        console.error('Error al obtener detalle del radicado:', error);
+        return of(null);
+      })
+    ),
+    encabezadoMiLista: this.miListaProductosService.ObtenerEncabezado(numeroDocumento).pipe(
+      catchError(error => {
+        console.error('Error al obtener encabezado MiLista:', error);
+        return of(null);
+      })
+    )
+  }).subscribe(({ radicados, detalleRadicado, encabezadoMiLista }) => {
+    this.loading = false;
+    // if (radicados) {
+    //   this.encabezadoRadicado = radicados.find((rad: any) => rad.Radicado == radicado);
+    // }
+
+    if (detalleRadicado && detalleRadicado.Negociacion.EncabezadoRadicado) {
+      this.encabezadoRadicado = new EncabezadoRadicado();
+      this.encabezadoRadicado.Radicado = detalleRadicado.Negociacion.EncabezadoRadicado.Radicado;
+      this.encabezadoRadicado.NombreProducto = detalleRadicado.Negociacion.EncabezadoRadicado.NombreProducto;
+      this.encabezadoRadicado.NombreLinea = detalleRadicado.Negociacion.EncabezadoRadicado.NombreLinea;
+      this.encabezadoRadicado.Estado = detalleRadicado.Negociacion.EncabezadoRadicado.Estado;
+      this.encabezadoRadicado.apertura = detalleRadicado.Negociacion.EncabezadoRadicado.Apertura;
+      this.encabezadoRadicado.cancelacion = detalleRadicado.Negociacion.EncabezadoRadicado.Cancelacion;
+      this.encabezadoRadicado.Oficina = detalleRadicado.Negociacion.EncabezadoRadicado.Oficina;
+      this.encabezadoRadicado.Telefono = detalleRadicado.Negociacion.EncabezadoRadicado.Telefono;
+      this.encabezadoRadicado.NombreAsesor = detalleRadicado.Negociacion.EncabezadoRadicado.NombreAsesor;
+      this.encabezadoRadicado.AsesorExterno = detalleRadicado.Negociacion.EncabezadoRadicado.AsesorExterno;
+      this.encabezadoRadicado.obsComite = detalleRadicado.Negociacion.EncabezadoRadicado.obsComite;
+      this.encabezadoRadicado.obsAsesor = detalleRadicado.Negociacion.EncabezadoRadicado.obsAsesor;
+      if(encabezadoMiLista) this.encabezadoRadicado.Telefono = encabezadoMiLista.Celular;
+
+      this.detalleRadicado = {
+        encabezadoRadicado: this.encabezadoRadicado,
+        negociacionRadicado: detalleRadicado.Negociacion,
+        saldoCancelar: detalleRadicado.SaldoCancelar,
+        decisionRadicado: detalleRadicado.Decision,
+        deducibles: detalleRadicado.Deducibles,
+        saldoVigenteRadicado: detalleRadicado.SaldosVigentes,
+        codeudoresRadicado: detalleRadicado.codeudoresRadicado,
+        referenciaRadicado: detalleRadicado.referencias,
+        observaciones: detalleRadicado.Observaciones,
+        tipoCliente: this.gestionCreditoForm.get('TipoCliente')?.value
+      }
+      this.detalleRadicado.negociacionRadicado.ValorDiferido = detalleRadicado.ValorDiferido;
+      this.detalleRadicado.negociacionRadicado.ValorMensualDiferido = detalleRadicado.ValorMensualDiferido;
+      this.detalleRadicado.negociacionRadicado.ValorMensualDiferido = detalleRadicado.ValorMensualDiferido;
+      this.abrirModalDetalleRadicado.nativeElement.click();
+    }
+
+  });
+
+}
 
 }

@@ -7,7 +7,12 @@ import {
   NegociacionRadicado,
   DecicionRadicado,
   LogMisProductos,
-  DatosProductos
+  DatosProductos,
+  DetalleRadicado,
+  DeducibleRadicado,
+  SaldoVigenteRadicado,
+  CodeudorRadicado,
+  ReferenciaRadicado
 } from "../../../../../Models/Informes/MisProductos/mis-producto.model";
 import { AlertService } from '../../../../../Services/Alert/alert.service';
 
@@ -26,10 +31,10 @@ export class RadicadosComponent implements OnInit {
   public encabezadoRadicado = new EncabezadoRadicado();
   public negociacionRadicado = new NegociacionRadicado();
   public DecisionRadicado = new DecicionRadicado();
-  public DeduciblesRadicado: any[] = [];
-  public SaldoVigenteRadicado: any[] = [];
-  public CodeudoresRadicado: any[] = [];
-  public ReferenciaRadicado: any[] = [];
+  public DeduciblesRadicado: DeducibleRadicado[] = [];
+  public SaldoVigenteRadicado: SaldoVigenteRadicado[] = [];
+  public CodeudoresRadicado: CodeudorRadicado[] = [];
+  public ReferenciaRadicado: ReferenciaRadicado[] = [];
   public nuevoObjetoCalifica: any[] = [];
   public Decision: any[] = [];
   public TelefonoAsociado: any;
@@ -63,6 +68,8 @@ export class RadicadosComponent implements OnInit {
   public totalMicroEmpCartera_: any;
   public MostarDetalleRadicado: Boolean = false;
   public MostrarResumenRadicado: Boolean = false;
+  detalleRadicado: DetalleRadicado | null = null;
+  cargandoDatos = false;
 
   constructor(
     private MiListaProductosService: MiListaProductosService,
@@ -258,11 +265,9 @@ export class RadicadosComponent implements OnInit {
     this.encabezadoRadicado.apertura = data.Apertura;
     this.encabezadoRadicado.cancelacion = data.Cancelacion;
     this.Decision.length = 0;
-    this.MiListaProductosService.GetDetalleRadicados(data.Radicado,this.TipoCliente).subscribe(
-      (result) => {
-        console.log("Información de radicados")
-        console.log(result);
-
+    this.cargandoDatos = true;
+    this.MiListaProductosService.GetDetalleRadicados(data.Radicado,this.TipoCliente).subscribe({
+      next: (result) => {
         this.negociacionRadicado.FormaPago = result.Negociacion.FormaPago;
         this.negociacionRadicado.curCuota = result.Negociacion.curCuota;
         this.negociacionRadicado.curMonto = result.Negociacion.curMonto;
@@ -304,15 +309,27 @@ export class RadicadosComponent implements OnInit {
         this.SaldoVigenteRadicado = result.SaldosVigentes;
         this.CodeudoresRadicado = result.codeudoresRadicado;
         this.ReferenciaRadicado = result.referencias;
-
+        this.detalleRadicado = {
+          encabezadoRadicado: this.encabezadoRadicado,
+          negociacionRadicado: this.negociacionRadicado,
+          saldoCancelar: this.saldoCancelar,
+          decisionRadicado: this.DecisionRadicado,
+          deducibles: this.DeduciblesRadicado,
+          saldoVigenteRadicado: this.SaldoVigenteRadicado,
+          codeudoresRadicado: this.CodeudoresRadicado,
+          referenciaRadicado: this.ReferenciaRadicado,
+          observaciones: result.Observaciones,
+          tipoCliente: this.TipoCliente
+        };
+        this.cargandoDatos = false;
       },
-      (error) => {
-
-        console.log(console.error());
-
+      error: (err) => {
+        console.error('Error al cargar data', err);
+   
       }
-    )
+    });
 
+    
     //#region Guarda log
     let datas = localStorage.getItem("Data");
     var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));

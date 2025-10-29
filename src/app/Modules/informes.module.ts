@@ -39,6 +39,7 @@ import { LogMisProductosComponent } from '../Components/Informes/log-auditoria/l
 import { LogProductosVirtualesComponent } from '../Components/Informes/log-auditoria/log-productos-virtuales/log-productos-virtuales.component';
 import { InformeAhorrosComponent } from '../Components/Informes/Informe-ahorros/informe-ahorros/informe-ahorros.component';
 import { ShareComponentModule } from './share-component.module';
+import { RadicadoDetalleComponent } from '../Components/Informes/mi-lista-productos/Tabs/radicados/radicado-detalle/radicado-detalle.component';
 import { InformePersonasNaturalesComponent } from '../Components/Informes/informe-clientes/informe-personas-naturales/informe-personas-naturales/informe-personas-naturales.component';
 import { InformePersonasJuridicasComponent } from '../Components/Informes/informe-clientes/informe-personas-juridicas/informe-personas-juridicas/informe-personas-juridicas.component';
 
@@ -80,6 +81,7 @@ import { InformePersonasJuridicasComponent } from '../Components/Informes/inform
     LogGestionClientesComponent,
     LogMisProductosComponent,
     LogProductosVirtualesComponent,
+    RadicadoDetalleComponent
   ],
   imports: [
     CommonModule,
@@ -92,6 +94,7 @@ import { InformePersonasJuridicasComponent } from '../Components/Informes/inform
     }),
     ReactiveFormsModule.withConfig({callSetDisabledState: 'whenDisabledForLegacyCode'}),
     ShareComponentModule
-  ]
+  ],
+  exports:[RadicadoDetalleComponent]
 })
 export class InformesModule { }

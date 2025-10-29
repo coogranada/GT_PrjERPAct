@@ -17,6 +17,7 @@ import { DisponiblesComponent } from '../Components/Productos/Ahorros/Disponible
 import { AsesoriaTerminoComponent } from '../Components/Productos/Ahorros/Termino/asesoria-termino/asesoria-termino.component';
 import { GestionCreditoComponent } from '../Components/Productos/Cartera/gestion-credito/gestion-credito.component';
 import { ConcatWithSpacePipe } from '../Pipes/utilidades/concatWithSpace.pipe';
+import { InformesModule } from './informes.module';
 
 @NgModule({
   declarations: [
@@ -39,10 +40,11 @@ import { ConcatWithSpacePipe } from '../Pipes/utilidades/concatWithSpace.pipe';
     FormsModule,
     CurrencyMaskModule,
     NgxLoadingModule.forRoot({
-      backdropBackgroundColour: 'rgba(255,255,255,0.8)'
+        backdropBackgroundColour: 'rgba(255,255,255,0.8)'
     }),
-    ReactiveFormsModule.withConfig({callSetDisabledState: 'whenDisabledForLegacyCode'}),
+    ReactiveFormsModule.withConfig({ callSetDisabledState: 'whenDisabledForLegacyCode' }),
     ConcatWithSpacePipe,
-  ]
+    InformesModule
+]
 })
 export class ProductosModule { }

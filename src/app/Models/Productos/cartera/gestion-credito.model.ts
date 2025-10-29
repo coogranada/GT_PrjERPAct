@@ -24,6 +24,7 @@ export interface CuentaCarteraDetalle {
 
 export interface GestionCreditoEncabezado {
   IdTercero: number;
+  TipoCliente: number;
   IdOficinaCliente: number;
   OficinaCliente: string;
   NumeroDocumento: string;
