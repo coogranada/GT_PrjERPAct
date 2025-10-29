@@ -922,14 +922,15 @@
                                                                 <tr>
                                                                     <th class="table-header">Nro</th>
                                                                     <th class="table-header">Capital</th>
-                                                                    <th class="table-header">Interes cte</th>
+                                                                    <th class="table-header">Interes corriente</th>
                                                                     <th class="table-header">Interes mora</th>
                                                                     <th class="table-header">Dias mora</th>
                                                                     <th class="table-header">Tasa</th>
                                                                     <th class="table-header">Fecha mora</th>
                                                                     <th class="table-header">Cuota deducibles</th> 
-                                                                    <th class="table-header">Cuota seguro</th>
                                                                     <th class="table-header">Total cuota</th>
+                                                                    <th class="table-header">Cuota seguro</th>
+                                                                    
                                                                 </tr>
                                                             </thead>
                                                             <tbody  *ngFor="let itemCalcularCuota of lstCalcularCuota; let i = index">
@@ -941,9 +942,9 @@
                                                                     <td style="text-align: center;">{{itemCalcularCuota.DiasMora}}</td>
                                                                     <td style="text-align: center;">{{itemCalcularCuota.Tasa}}</td>
                                                                     <td style="text-align: center;">{{itemCalcularCuota.FechaVencimiento}}</td>
-                                                                    <td style="text-align: center;">{{itemCalcularCuota.TotalDeducibles | currency}}</td>
-                                                                    <td style="text-align: center;">{{itemCalcularCuota.TotalSeguro | currency}}</td>
+                                                                    <td style="text-align: center;">{{itemCalcularCuota.TotalDeducibles | currency}}</td>                                                                    
                                                                     <td style="text-align: center;">{{itemCalcularCuota.TotalCuota | currency}}</td>
+                                                                    <td style="text-align: center;">{{itemCalcularCuota.TotalSeguro | currency}}</td>
                                                                 </tr>
                                                             </tbody>
                                                             <tfoot class="total-tfoot">
@@ -956,8 +957,8 @@
                                                                     <td style="text-align: center;">—</td>
                                                                     <td style="text-align: center;">—</td>
                                                                     <td style="text-align: center;">{{totalDeducibles | currency}}</td>
-                                                                    <td style="text-align: center;">{{totalSeguro | currency}}</td>
-                                                                    <td style="text-align: center;">{{total | currency}}</td>                                                                    
+                                                                    <td style="text-align: center; background-color: rgba(200, 100, 150, 0.4); font-weight: bold">{{total | currency}}</td>
+                                                                    <td style="text-align: center;">{{totalSeguro | currency}}</td>                                                                                                                                      
                                                                 </tr>
                                                             </tfoot>                                                           
                                                         </table>

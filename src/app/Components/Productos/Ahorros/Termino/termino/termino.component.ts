@@ -2127,18 +2127,23 @@ export class TerminoComponent implements OnInit {
                   // Validar  aportes ysalazar
                   this.TerminoService.CuentaAportes(result[0].lngTercero).subscribe(
                     resultA => {
-                      resultA.forEach((element: any) => {
-                        if (element.IdEstado === 5) {
-                          this.BuscarAsociadoModal(result[0].NumeroDocumento);
-                          this.bloquearDatosTitulares = null;
-                          this.bloquearProducto = null;
-                          this.MostrasAlertaAsociado = false;
-                          this.generalesService.Autofocus('SelectProducto');
-                        }else{
-                          this.notif.onWarning('Advertencia', 'Asociado sin aportes activos.');
-                          this.TerminoForm.get('NumeroDocumento')?.reset();
-                        }
-                      });
+                      if (resultA.length >= 1) {
+                        resultA.forEach((element: any) => {
+                          if (element.IdEstado === 5) {
+                            this.BuscarAsociadoModal(result[0].NumeroDocumento);
+                            this.bloquearDatosTitulares = null;
+                            this.bloquearProducto = null;
+                            this.MostrasAlertaAsociado = false;
+                            this.generalesService.Autofocus('SelectProducto');
+                          } else {
+                            this.notif.onWarning('Advertencia', 'Asociado sin aportes activos.');
+                            this.TerminoForm.get('NumeroDocumento')?.reset();
+                          }
+                        });
+                      } else {
+                        this.notif.onWarning('Advertencia', 'Asociado sin aportes activos.');
+                        this.TerminoForm.get('NumeroDocumento')?.reset();
+                      }                      
                     });                  
                 } else {
                   this.notif.onWarning('Advertencia', 'La apertura debe ser de diferente titular.');
