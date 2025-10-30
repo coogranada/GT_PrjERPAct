@@ -1596,19 +1596,24 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                 // Validar  aportes ysalazar
                 this.ContractualServices.CuentaAportes(result[0].lngTercero).subscribe(
                   resultA => {
-                    resultA.forEach((element: any) => {
-                      if(element.IdEstado === 5){
-                        this.BuscarAsociadoModal(result[0].NumeroDocumento);
-                        this.BloquearDatoTitular = null;
-                        this.BloquaerProducto = null;
-                        this.BloquearFormaPago = null;
-                        this.MostrasAlertaAsociado = false;
-                        this.generalesService.Autofocus('SelectProducto');
-                      } else{
-                        this.notif.onWarning('Advertencia', 'Asociado sin aportes activos.');
-                        this.contractualFrom.get('NumeroDocumento')?.reset();
-                      }
-                    });                  
+                    if (resultA.length >= 1){
+                      resultA.forEach((element: any) => {
+                        if (element.IdEstado === 5) {
+                          this.BuscarAsociadoModal(result[0].NumeroDocumento);
+                          this.BloquearDatoTitular = null;
+                          this.BloquaerProducto = null;
+                          this.BloquearFormaPago = null;
+                          this.MostrasAlertaAsociado = false;
+                          this.generalesService.Autofocus('SelectProducto');
+                        } else {
+                          this.notif.onWarning('Advertencia', 'Asociado sin aportes activos.');
+                          this.contractualFrom.get('NumeroDocumento')?.reset();
+                        }
+                      });  
+                    } else {
+                      this.notif.onWarning('Advertencia', 'Asociado sin aportes activos.');
+                      this.contractualFrom.get('NumeroDocumento')?.reset();
+                    }                                    
                   });
               } else if (result.length > 1) {
                 this.resultAsociados = result;

@@ -3401,15 +3401,20 @@ export class DisponiblesComponent implements OnInit {
                   // Validar  aportes ysalazar
                   this.DisponiblesServices.CuentaAportes(result[0].lngTercero).subscribe(
                     resultA => {
-                      resultA.forEach((element: any) => {
-                        if (element.IdEstado === 5) {
-                          this.BuscarAsociadoModal(result[0].NumeroDocumento);
-                          this.generalesService.Autofocus('SelectProducto');
-                        }else {
-                          this.notif.warning('Advertencia', 'Asociado sin aportes activos.');
-                          this.DisponibleForm.get('NumeroDocumento')?.reset();
-                        }
-                      });
+                      if (resultA.length >= 1){
+                        resultA.forEach((element: any) => {
+                          if (element.IdEstado === 5) {
+                            this.BuscarAsociadoModal(result[0].NumeroDocumento);
+                            this.generalesService.Autofocus('SelectProducto');
+                          } else {
+                            this.notif.warning('Advertencia', 'Asociado sin aportes activos.');
+                            this.DisponibleForm.get('NumeroDocumento')?.reset();
+                          }
+                        });
+                      } else{
+                        this.notif.warning('Advertencia', 'Asociado sin aportes activos.');
+                        this.DisponibleForm.get('NumeroDocumento')?.reset();   
+                      }                                      
                     });                  
                 } else {
                   this.notif.warning('Advertencia', 'Asociado debe actualizar datos.', ConfiguracionNotificacion.configRightTop);

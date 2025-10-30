@@ -33,10 +33,14 @@ export class CarteraService {
         this.url = `${this.environment.Url}/BuscarDatosCartera?IdCuenta=${IdCuenta}`;
         return this._http.get<any>(this.url);
     }
-     getSaldosCartera(IdCuenta: number): Observable<any> {
+    getSaldosCartera(IdCuenta: number): Observable<any> {
          this.url = `${this.environment.Url}/BuscarSaldosCartera?IdCuenta=${IdCuenta}`;
         return this._http.get<any>(this.url);
-      }
+    }
+    CalcularCuota(IdCuenta: number, NumeroCuotas: number): Observable<any> {
+        this.url = `${this.environment.Url}/CalcularCuota?IdCuenta=${IdCuenta}&NumeroCuotas=${NumeroCuotas}`;
+        return this._http.get<any>(this.url);
+    }
     getCalificacionCartera(IdCuenta: number): Observable<any> {
         this.url = `${this.environment.Url}/BuscarCalificacionCartera?IdCuenta=${IdCuenta}`;
         return this._http.get<any>(this.url);

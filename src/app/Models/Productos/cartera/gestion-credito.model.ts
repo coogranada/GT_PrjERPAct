@@ -14,6 +14,7 @@ export interface CuentaCarteraResumen {
     Pagare: number;
     FechaMatricula: string;
     IdLinea: number;
+    Sigla: string;
 }
 
 export interface CuentaCarteraDetalle {
@@ -145,4 +146,16 @@ export interface HistorialOperacion {
   NombreOficina: string;
   Operacion: number;
   TiposObservaciones: string | null; 
+}
+
+export interface CalcularCuota {
+  nro: number;
+  abonoCapital: number;
+  interesCorriente: number;
+  interesMora: number;
+  diasMora: number;
+  tasa: number;
+  fechaMora: string;
+  cuotaDeducibles: number;
+  cuotaSeguro: number;
 }
