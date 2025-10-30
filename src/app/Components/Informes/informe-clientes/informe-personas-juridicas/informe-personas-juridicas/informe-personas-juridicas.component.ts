@@ -12,7 +12,7 @@ import { ExceljsService } from '../../../../../Services/General/exceljs.service'
 import { ConfiguracionInformesService } from '../../../../../Services/Informes/configuracion-informes.service';
 import { InformeAhorrosService } from '../../../../../Services/Informes/informe-ahorros.service';
 import { ToastrService } from 'ngx-toastr';
-import { fromEvent, map } from 'rxjs';
+import { forkJoin, fromEvent, map } from 'rxjs';
 import { ConfiguracionNotificacion } from '../../../../../../environments/config.noticaciones';
 import Swal from 'sweetalert2';
 
@@ -42,7 +42,6 @@ export class InformePersonasJuridicasComponent {
   public intervaloProgreso: any;
   public selectedId: number = 0;
   public idOficina: number = 0;
-  public idPerfil: number = 0;
   public idFiltroOcupa: number = 0;
   public idPaisSelected: number = 0;
   public idDeptoSelected: number = 0;
@@ -80,6 +79,7 @@ export class InformePersonasJuridicasComponent {
   public ListColumnasInf: any[] = [];
   public ListfilteredColumnasInf: any[] = [];
   public permitidosResult: any [] = [];
+  public perfilesUsuario: any[] = [];
   public formulario: FormGroup;
   public formularioD: FormGroup;
 
@@ -111,15 +111,23 @@ export class InformePersonasJuridicasComponent {
   }
 
   obtenerInformesPermitidos() {
+    const peticiones  = this.perfilesUsuario.map((perfil : any) =>
+      this.InformePerfilS.ObtenerInformesPermitidosP(perfil.IdPerfil)
+    );
+    forkJoin(peticiones).subscribe({
+      next: (respuesta: any[]) => {
+        this.permitidosResult = respuesta.flat();
 
-    this.InformePerfilS.ObtenerInformesPermitidosP(this.idPerfil).subscribe({
-      next: (respuesta) => {
-        this.permitidosResult = respuesta;
+        this.permitidosResult = this.permitidosResult.filter(
+          (permiso, index, self) =>
+            index == self.findIndex(p => p.IdInforme === permiso.IdInforme)
+          
+        );
       },
-      error: (err) => {
+      error: (err) =>{
         console.error('Error al cargar configuración informes:', err);
       }
-    });
+    })
   }
 
 
@@ -163,7 +171,9 @@ export class InformePersonasJuridicasComponent {
     var resultDataStore = JSON.parse(window.atob(datas == null ? "" : datas));
     this.idOficina = Number(resultDataStore.NumeroOficina);
     this.nombreOficina = resultDataStore.Oficina;
-    this.idPerfil = Number(resultDataStore.idPerfilUsuario);
+    let profiles = localStorage.getItem("profiles");
+    var resultDataStoreP = JSON.parse(window.atob(profiles == null ? "" : profiles));
+    this.perfilesUsuario = resultDataStoreP;
   }
 
   operacionBlur() {

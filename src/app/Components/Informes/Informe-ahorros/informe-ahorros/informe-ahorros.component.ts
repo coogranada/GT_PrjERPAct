@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ModuleValidationService } from '../../../../Services/Enviroment/moduleValidation.service';
-import { fromEvent } from 'rxjs';
+import { forkJoin, fromEvent } from 'rxjs';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { filter, map } from 'rxjs/operators';
 import { NgxLoadingComponent } from 'ngx-loading';
@@ -45,7 +45,6 @@ export class InformeAhorrosComponent implements OnInit {
   public intervaloProgreso: any;
   public selectedId: number = 0;
   public idOficina: number = 0;
-  public idPerfil: number = 0;
   public OpcionSelected: Boolean = true;
   public validaOperacion: Boolean = true;
   public deshabilitarOficina: boolean = true;
@@ -71,6 +70,7 @@ export class InformeAhorrosComponent implements OnInit {
   public parametrosConfiguracionInfDina: SPParametros[] = [];
   public filtrosAgrupados: { [nombreFiltro: string]: any[] } = {};
   public resultadoInforme: any[] = [];
+  public perfilesUsuario: any[] = [];
   public encabezados: any[] = [];
   public Operaciones: any[] = [];
   public Filtros: Filtro[] = [];
@@ -110,15 +110,23 @@ export class InformeAhorrosComponent implements OnInit {
   }
 
   obtenerInformesPermitidos() {
+    const peticiones  = this.perfilesUsuario.map((perfil : any) =>
+      this.InformePerfilS.ObtenerInformesPermitidosP(perfil.IdPerfil)
+    );
+    forkJoin(peticiones).subscribe({
+      next: (respuesta: any[]) => {
+        this.permitidosResult = respuesta.flat();
 
-    this.InformePerfilS.ObtenerInformesPermitidosP(this.idPerfil).subscribe({
-      next: (respuesta) => {
-        this.permitidosResult = respuesta;
+        this.permitidosResult = this.permitidosResult.filter(
+          (permiso, index, self) =>
+            index == self.findIndex(p => p.IdInforme === permiso.IdInforme)
+          
+        );
       },
-      error: (err) => {
+      error: (err) =>{
         console.error('Error al cargar configuración informes:', err);
       }
-    });
+    })
   }
 
 
@@ -162,7 +170,9 @@ export class InformeAhorrosComponent implements OnInit {
     var resultDataStore = JSON.parse(window.atob(datas == null ? "" : datas));
     this.idOficina = Number(resultDataStore.NumeroOficina);
     this.nombreOficina = resultDataStore.Oficina;
-    this.idPerfil = Number(resultDataStore.idPerfilUsuario);
+    let profiles = localStorage.getItem("profiles");
+    var resultDataStoreP = JSON.parse(window.atob(profiles == null ? "" : profiles));
+    this.perfilesUsuario = resultDataStoreP;
   }
 
   operacionBlur() {

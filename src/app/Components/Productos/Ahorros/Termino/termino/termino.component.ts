@@ -10,13 +10,15 @@ import { DatePipe, formatDate } from '@angular/common';
 import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import swal from 'sweetalert2';
 import { AlertService } from '../../../../../Services/Alert/alert.service';
+import { DisponiblesService } from '../../../../../Services/Productos/disponible.service';
+import { ConfiguracionNotificacion } from '../../../../../../environments/config.noticaciones';
 declare var $: any;
 
 @Component({
   selector: 'app-termino',
   templateUrl: './termino.component.html',
   styleUrls: ['./termino.component.css'],
-  providers: [ModuleValidationService, OperacionesService, TerminoAhorrosService, GeneralesService],
+  providers: [ModuleValidationService, OperacionesService, TerminoAhorrosService, GeneralesService, DisponiblesService],
   standalone : false
 })
 export class TerminoComponent implements OnInit {
@@ -27,7 +29,8 @@ export class TerminoComponent implements OnInit {
     private notif: AlertService,
     private operacionesService: OperacionesService,
     private TerminoService: TerminoAhorrosService,
-    private generalesService: GeneralesService) {
+    private generalesService: GeneralesService,
+    private DisponiblesServices: DisponiblesService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -45,6 +48,7 @@ export class TerminoComponent implements OnInit {
   @ViewChild('ModalImpresionTitulo', { static: true }) private ModalImpresionTitulo!: ElementRef;
   @ViewChild('ModalImpresionCapitalizacion', { static: true }) private ModalImpresionCapitalizacion!: ElementRef;
   @ViewChild('ModalImpresionCuentaDestino', { static: true }) private ModalImpresionCuentaDestino!: ElementRef;
+  @ViewChild('ModalImpresion', { static: true }) private ModalImpresion!: ElementRef;
   @ViewChild('Cerrar', { static: true }) private Cerrar!: ElementRef;
   @ViewChild('ModalCambioEstado', { static: true }) private ModalCambioEstado!: ElementRef;
   @ViewChild('tab1', { static: true }) private tab1!: ElementRef;
@@ -6269,6 +6273,7 @@ export class TerminoComponent implements OnInit {
               this.ReciprocidadSetDate();
             this.notif.onSuccess('Exitoso', 'El cambio estado se realizó correctamente.');
             this.Guardarlog(estadoLog);
+            this.NovedadesAhorrosPDF('Desbloquear título','Desbloquear cuenta', false)
             this.BuscarPorCuenta();
             this.CambioEstadoFrom.reset();
             this.TerminoOperacionForm.get('Codigo')?.reset();
@@ -7771,4 +7776,84 @@ export class TerminoComponent implements OnInit {
     this.TerminoForm.controls["Tipo"].disable();
     this.TerminoForm.controls['TipoFirma'].disable();
   }
+  NovedadesAhorrosPDF(TipoNovedad : string, motivo : string  = "", entregaTarjetaBool : boolean = false ) {
+    let itemsSendNovedad: any = {};
+
+    if (motivo != "")
+    itemsSendNovedad.MotivoNovedad = motivo;
+    itemsSendNovedad.EntregaTarjeta = entregaTarjetaBool;
+    itemsSendNovedad.Nombre = this.TerminoForm.get('Nombre')?.value;
+    itemsSendNovedad.Documento = this.TerminoForm.get('NumeroDocumento')?.value;
+    itemsSendNovedad.TipoDocumento = this.TerminoForm.get('TipoDocumento')?.value;
+    itemsSendNovedad.Telefono = this.TerminoForm.get('TelefonoTermino')?.value;
+    itemsSendNovedad.Direccion = this.TerminoForm.get('DireccionTermino')?.value;
+    itemsSendNovedad.Oficina = this.dataUser.Oficina; //DFRAMIREZ: Cambia a oficina donde esté el usuario
+    itemsSendNovedad.TipoProducto = this.TerminoForm.get('DescripcionProducto')?.value;
+    itemsSendNovedad.NumeroCuenta = this.TerminoForm.get('Cuenta')?.value;
+    itemsSendNovedad.TipoNovedad = TipoNovedad;
+    itemsSendNovedad.FechaUltimaTransaccion = this.TerminoForm.get('FechaUltimaTrans')?.value;
+
+    itemsSendNovedad.NumeroTarjeta = "";
+    itemsSendNovedad.Plazo = 0;
+    itemsSendNovedad.DiaCorte = "";
+    itemsSendNovedad.Canales = [];
+    itemsSendNovedad.Canales.push({ Canal: "02",  NumeroOperaciones: "N/A", MontoMaximo: "N/A" });
+      itemsSendNovedad.Canales.push({ Canal: "04", NumeroOperaciones: "N/A", MontoMaximo: "N/A" });
+      itemsSendNovedad.Canales.push({ Canal: "05", NumeroOperaciones: "N/A", MontoMaximo: "N/A" });
+      itemsSendNovedad.Canales.push({ Canal: "01",  NumeroOperaciones: "N/A", MontoMaximo: "N/A" });
+
+    itemsSendNovedad.LibreTarjetaSin =  " Título";
+    itemsSendNovedad.NumeroTarjeta = this.TerminoForm.get('NroTitulo')?.value
+    itemsSendNovedad.Plazo = "N/A";
+    itemsSendNovedad.DiaCorte = "N/A";
+
+    itemsSendNovedad.FechaUltimaTransaccion = this.TerminoForm.get('FechaUltimaTrans')?.value;
+    itemsSendNovedad.NombreAsesor = this.NombreAsesor();
+
+    $("#ImpresionNovedades").show();
+    this.ModalImpresion.nativeElement.click();
+    let html : HTMLObjectElement =  document.getElementById("ImpresionNovedades") as HTMLObjectElement;
+    this.linkPdf = "";
+    let pdfinBase64 = null;
+    let byteArray = null;
+    let newBolb = null;
+    let url = null;
+    this.loading = true;
+    html.data = "";
+    html.name = "";
+    html.type = "";
+
+    this.DisponiblesServices.NovedadesAhorrosPDF(itemsSendNovedad).subscribe(
+      result => {
+        pdfinBase64 = result.FileStream._buffer;
+        byteArray = new Uint8Array(atob(pdfinBase64).split("").map((char) => char.charCodeAt(0)));
+        newBolb = new Blob([byteArray], { type: "application/pdf" });
+        this.linkPdf = URL.createObjectURL(newBolb);
+        url = window.URL.createObjectURL(newBolb);
+        html.data = url;
+        html.name ="Impresion";
+        html.type =  "application/pdf";
+        this.loading = false;
+      },
+      error => {
+        this.loading = false
+        const errorMessage = <any>error;
+        this.notif.onDanger('Error', errorMessage);
+        console.log(errorMessage);
+      }
+    );
+  }
+  NombreAsesor() {
+    let NombreCompleto: string = "";
+    let setNombres: string[] = this.dataUser.Nombre.split(" ");
+    if (setNombres.length > 0) {
+       setNombres.forEach(( x: any) => {
+        NombreCompleto = NombreCompleto + " " + x.substring(0,1).toUpperCase() + x.slice(1).toLowerCase()
+      })
+    } else {
+      return this.dataUser.Nombre
+    }
+    return NombreCompleto;
+  }  
+
 }

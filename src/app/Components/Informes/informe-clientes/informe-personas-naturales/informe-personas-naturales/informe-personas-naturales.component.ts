@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { fromEvent } from 'rxjs';
+import { forkJoin, fromEvent } from 'rxjs';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { map } from 'rxjs/operators';
 import { NgxLoadingComponent } from 'ngx-loading';
@@ -44,7 +44,6 @@ export class InformePersonasNaturalesComponent {
   public intervaloProgreso: any;
   public selectedId: number = 0;
   public idOficina: number = 0;
-  public idPerfil: number = 0;
   public idFiltroOcupa: number = 0;
   public idPaisSelected: number = 0;
   public idDeptoSelected: number = 0;
@@ -65,6 +64,7 @@ export class InformePersonasNaturalesComponent {
   public filtroSeleccionado: string | null = null;
   public fechaMax: any = null;
   public fechaMinima: any = null;
+  public perfilesUsuario: any[] = [];
   public filtrosAgregado: any = [];
   public filtrosAgregadoWhere: any = [];
   public configuracionInformes: any[] = [];
@@ -113,15 +113,23 @@ export class InformePersonasNaturalesComponent {
   }
 
   obtenerInformesPermitidos() {
+    const peticiones  = this.perfilesUsuario.map((perfil : any) =>
+      this.InformePerfilS.ObtenerInformesPermitidosP(perfil.IdPerfil)
+    );
+    forkJoin(peticiones).subscribe({
+      next: (respuesta: any[]) => {
+        this.permitidosResult = respuesta.flat();
 
-    this.InformePerfilS.ObtenerInformesPermitidosP(this.idPerfil).subscribe({
-      next: (respuesta) => {
-        this.permitidosResult = respuesta;
+        this.permitidosResult = this.permitidosResult.filter(
+          (permiso, index, self) =>
+            index == self.findIndex(p => p.IdInforme === permiso.IdInforme)
+          
+        );
       },
-      error: (err) => {
+      error: (err) =>{
         console.error('Error al cargar configuración informes:', err);
       }
-    });
+    })
   }
 
 
@@ -165,7 +173,9 @@ export class InformePersonasNaturalesComponent {
     var resultDataStore = JSON.parse(window.atob(datas == null ? "" : datas));
     this.idOficina = Number(resultDataStore.NumeroOficina);
     this.nombreOficina = resultDataStore.Oficina;
-    this.idPerfil = Number(resultDataStore.idPerfilUsuario);
+    let profiles = localStorage.getItem("profiles");
+    var resultDataStoreP = JSON.parse(window.atob(profiles == null ? "" : profiles));
+    this.perfilesUsuario = resultDataStoreP;
   }
 
   operacionBlur() {
