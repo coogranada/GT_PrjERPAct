@@ -1,3 +1,4 @@
+
 export class dataBeneficiariosOlivos {
   FechaAfiliacion: string = "";
   TipoDocumento: string = "";
@@ -387,8 +388,10 @@ export class EncabezadoRadicado{
   NombreLinea: string = "";
   Estado: string = "";
   apertura: string = "";
+  Apertura: string = "";
   aprobacion: string = "";
   cancelacion: string = "";
+  Cancelacion: string = "";
   Oficina: string = "";
   Telefono: string = "";
   NombreAsesor: string = "";
@@ -433,3 +436,58 @@ export class DecicionRadicado{
   curCuota: number = 0;
   NombreLinea: string = "";
 }
+
+export interface CodeudorRadicado {
+  NumeroDocumento: string;
+  Nombres: string;
+  FechaMatricula: string;
+  TelefonoResidencia: string | null;
+  TelefonoEmpresa: string | null;
+}
+
+export interface ReferenciaRadicado {
+  Nombres: string;
+  strTelRes: string;
+  strTelEmp: string;
+  TipoReferencia: string;
+}
+
+
+export interface DeducibleRadicado {
+  intCodigo: number;
+  strNombre: string;
+  intPlazo: number;
+  curValor: number;
+  curValorCuota: number;
+}
+
+export interface SaldoVigenteRadicado {
+  Cuenta: string;
+  curEfectivo: number;
+  curIntVencidos: number;
+  curIntMora: number;
+  curCanje: number;
+  curTotal: number;
+  lngRadicado: number;
+  curCuota: number;
+}
+
+interface ObservacionRadicado {
+  intEstadoTipo: number;
+  strDescripcion: string;
+}
+
+export interface DetalleRadicado {
+  encabezadoRadicado: EncabezadoRadicado;
+  negociacionRadicado: NegociacionRadicado;
+  saldoCancelar: number;
+  decisionRadicado: DecicionRadicado;
+  deducibles: DeducibleRadicado[];
+  saldoVigenteRadicado: SaldoVigenteRadicado[];
+  codeudoresRadicado: CodeudorRadicado[];
+  referenciaRadicado: ReferenciaRadicado[];
+  observaciones: ObservacionRadicado[];
+  tipoCliente: number;
+}
+
+

@@ -24,11 +24,13 @@ export interface CuentaCarteraDetalle {
 
 export interface GestionCreditoEncabezado {
   IdTercero: number;
+  TipoCliente: number;
   IdOficinaCliente: number;
   OficinaCliente: string;
   NumeroDocumento: string;
   NombreProducto: string;
   Linea: string;
+  ManejoCupo: boolean;
   Radicado: number;
   IdAsesor: number;
   Asesor: string;
@@ -146,6 +148,20 @@ export interface HistorialOperacion {
   NombreOficina: string;
   Operacion: number;
   TiposObservaciones: string | null; 
+}
+
+export interface CupoInfo {
+  Bloqueos: number;
+  CupoAprobado: number;
+  CupoDisponible: number;
+  CupoUtilizado: number;
+  DtmActualizacion: string;        
+  DtmAprobacionCupo: string;      
+  DtmDocumentacion: string | null;
+  DtmMatricula: string;
+  DtmRetiro: string;
+  DtmVencimiento: string;
+  NumeroCupo: number;
 }
 
 export interface CalcularCuota {

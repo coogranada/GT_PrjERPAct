@@ -135,12 +135,13 @@
 
                         <!-- Inicio Radicado -->
                         <div class="col-xs-12 col-md-1 col-lg-1">
-                            <label class="textNegrilla">Radicado:</label>
+                            <label class="textNegrilla button-text">Radicado:</label>
                             <!-- <span class="grande"> *</span> -->
                         </div>
                         <div class="col-xs-6 col-md-2 col-lg-1">
-                            <input type="text" class="form-control" tooltip="Nombre" placement="top" show-delay="500"
+                            <input *ngIf="!gestionCreditoForm.get('Radicado')?.value" type="text" class="form-control" tooltip="Nombre" placement="top" show-delay="500"
                                 formControlName="Radicado"  />
+                            <span *ngIf="gestionCreditoForm.get('Radicado')?.value" class="custom-badge" (click)="onClickRadicado()">{{ gestionCreditoForm.get('Radicado')?.value }}</span>
                         </div>
                         <!-- Fin Radicado -->
 
@@ -371,7 +372,7 @@
                             <label for="estadoCastigado">Castigado</label>
                             <input type="checkbox" id="estadoSinCobertura" class="switchery"
                                 formControlName="estaSinCobertura" />
-                            <label for="estadoSinCobertura">Sin Cobertura seguro</label>
+                            <label for="estadoSinCobertura">Sin cobertura de seguros</label>
                         </div>
                         <div class="col-xs-12 col-md-12 col-lg-12">
                             <br />
@@ -419,6 +420,7 @@
                 <input type="hidden" #ModalCancelarCupo data-toggle="modal" data-target="#ModalCancelarCupo" data-popup="tooltip" data-trigger="hover" data-placement="top">
                 <input type="hidden" #ModalReglamentoVivienda data-toggle="modal" data-target="#ModalReglamentoVivienda" data-popup="tooltip" data-trigger="hover" data-placement="top">
                 <input type="hidden" #ModalReglamentoTarjeta data-toggle="modal" data-target="#ModalReglamentoTarjeta" data-popup="tooltip" data-trigger="hover" data-placement="top"> -->
+                <input type="hidden" #abrirModalDetalleRadicado data-toggle="modal" data-target="#modalDetalleRadicado" data-popup="tooltip" data-trigger="hover" data-placement="top">
             </div>
         </div>
         <!-- Modal Ayuda -->
@@ -464,6 +466,12 @@
             </div>
         </div>
         <!--/ Fin Modal BuscarAsociados -->
+        <!-- modal detalle radicado -->
+        <div id="modalDetalleRadicado" class="modal">
+            <app-radicado-detalle *ngIf="!loading && detalleRadicado" [radicadoData]="detalleRadicado"></app-radicado-detalle>
+        </div>
+        <!-- fin modal detalle radicado -->
+
         <!-- loader -->
         <ngx-loading [show]="loading"
             [config]="{primaryColour: 'rgb(13,165,80)', secondaryColour: 'rgb(13,165,80,0.7)', tertiaryColour: 'rgb(13,165,80)', backdropBorderRadius: '3px'}">
@@ -505,6 +513,9 @@
                             </li>
                             <li class="nav-item" [class.active]="tabActivo === Tabs.Referencias" (click)="onReferenciasTabClick()">
                                 <a>Referencias</a>
+                            </li>
+                            <li class="nav-item" [class.active]="tabActivo === Tabs.Cupo" (click)="onCupoTabClick()">
+                                <a>Cupo</a>
                             </li>
                             <li class="nav-item" [class.active]="tabActivo === Tabs.Historial" (click)="onHistorialTabClick()">
                                 <a>Historial</a>
@@ -1591,6 +1602,129 @@
                             </div>
                             <!-- Fin CambiosTab -->
 
+                            <!-- Cupo Tab -->
+                            <div [hidden]="tabActivo !== Tabs.Cupo">
+                                <article class="ac-text-cr">
+                                    <form [formGroup]="cupoForm">
+                                        <br>
+                                        <div class="col-xs-12 col-md-12 col-lg-12">
+                                            <div class="row">
+                                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                                    <div class="form-group">
+                                                        <label>Numero de cupo:</label>
+                                                        <span class="text-danger"></span>
+                                                        <input type="text" class="form-control" [attr.disabled]="true" formControlName="numeroCupo" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-md-1 col-lg-1">
+                                                </div>
+                                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                                    <div class="form-group">
+                                                        <label>Cupo aprobado:</label>
+                                                        <span class="text-danger"></span>
+                                                        <input type="text" currencyMask value=" {{carteraInfo.CupoAprobadoCN |  currency}}"
+                                                            class="form-control" style="text-align: right;" [attr.disabled]="true" formControlName="cupoAprobado" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-md-1 col-lg-1">
+                                                </div>
+                                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                                    <div class="form-group">
+                                                        <label>Cupo utilizado:</label>
+                                                        <span class="text-danger"></span>
+                                                        <input type="text" currencyMask value=" {{carteraInfo.CupoUtilizadoCN |  currency}}"
+                                                            class="form-control" style="text-align: right;" [attr.disabled]="true" formControlName="cupoUtilizado" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-md-1 col-lg-1">
+                                                </div>
+                                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                                    <div class="form-group">
+                                                        <label>Cupo disponible:</label>
+                                                        <span class="text-danger"></span>
+                                                        <input type="text" currencyMask value=" {{carteraInfo.CupoDisponibleCN |  currency}}"
+                                                            class="form-control" style="text-align: right;" [attr.disabled]="true" formControlName="cupoDisponible" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-12 col-lg-12">
+                                            <div class="row">
+                                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                                    <div class="form-group">
+                                                        <label>Fecha matricula:</label>
+                                                        <span class="text-danger"></span>
+                                                        <input type="text" class="form-control" [attr.disabled]="true"
+                                                            formControlName="fechaMatricula" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-md-1 col-lg-1">
+                                                </div>
+                                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                                    <div class="form-group">
+                                                        <label>Fecha aprobación:</label>
+                                                        <span class="text-danger"></span>
+                                                        <input type="text" class="form-control" [attr.disabled]="true"
+                                                            formControlName="fechaAprobacion" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-md-1 col-lg-1">
+                                                </div>
+                                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                                    <div class="form-group">
+                                                        <label>Fecha documentación:</label>
+                                                        <span class="text-danger"></span>
+                                                        <input type="text" class="form-control" [attr.disabled]="true"
+                                                            formControlName="fechaDocumentacion" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-md-1 col-lg-1">
+                                                </div>
+                                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                                    <div class="form-group">
+                                                        <label>Fecha actualización:</label>
+                                                        <span class="text-danger"></span>
+                                                        <input type="text" class="form-control" [attr.disabled]="true"
+                                                            formControlName="fechaActualizacion" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-12 col-lg-12">
+                                            <div class="row">
+                                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                                    <div class="form-group">
+                                                        <label>Fecha vencimiento:</label>
+                                                        <span class="text-danger"></span>
+                                                        <input type="text" class="form-control" [attr.disabled]="true"
+                                                            formControlName="fechaVencimiento" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-md-1 col-lg-1">
+                                                </div>
+                                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                                    <div class="form-group">
+                                                        <label>Fecha retiro:</label>
+                                                        <span class="text-danger"></span>
+                                                        <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaRetiro" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-md-1 col-lg-1">
+                                                </div>
+                                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                                    <div class="form-group">
+                                                        <label>Bloqueos:</label>
+                                                        <span class="text-danger"></span>
+                                                        <input type="text" class="form-control" [attr.disabled]="true" formControlName="bloqueos" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </article>
+                                
+                            </div>
+                            <!-- Fin Cupo Tab -->
                             <!-- Inicio referenciasTab -->
                             <div [hidden]="tabActivo !== Tabs.Referencias">
                                 <section class="garantias-section">
@@ -1650,8 +1784,8 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr *ngFor="let refComercial of refComcerciales  ; let i = index" (click)="selectRow('refComcerciales', i)" [class.tr-selected]="selectedRows['refComcerciales'] === i">
-                                                        <td class="capitalize">{{ refComercial.NombreEmpresa }}</td>
-                                                        <td>{{ refComercial.TelefonoEmpresa }}</td>
+                                                        <td class="capitalize">{{ refComercial.NombreEmpresa || refComercial.NombreCompleto }}</td>
+                                                        <td>{{ refComercial.TelefonoEmpresa || refComercial.TelefonoResidencia }}</td>
                                                         <td>{{ refComercial.DescripcionReferencia }}</td>
                                                         <td></td>
                                                     </tr>

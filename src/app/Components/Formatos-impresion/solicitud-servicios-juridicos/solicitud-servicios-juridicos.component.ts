@@ -224,6 +224,8 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
       }
     });
     this.ubicacionEmpresa.Estrato = dataPrint.BasicosDto.Estrato || '';
+    if(dataPrint.BasicosDto.IdTipoLocal === 1) this.ubicacionEmpresa.TipoLocal = 'Propio';
+    else if(dataPrint.BasicosDto.IdTipoLocal === 2) this.ubicacionEmpresa.TipoLocal = 'Arrendado';
     //#endregion
 
     //#region Carga departamento pais y ciudad de la informacion principal
@@ -388,7 +390,7 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
       });
       dataPrint.RepresentanteDto.ListContacto.forEach((elementContacto : any) => {
         if (elementContacto.IdTipoContacto === 1) { // direcccion
-          this.CargarCiudadRepresenta(elementContacto);
+          this.infoRepresentate.Ciudad = this.GetData.ListCiudad.find((ciudad: any) => ciudad.IdCiudad === elementContacto.IdCiudad)?.Descripcion;
           this.infoRepresentate.DireccionResidencia = elementContacto.Descripcion;
         }
         if (elementContacto.IdTipoContacto === 6) { // celular
@@ -699,39 +701,23 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
     this.conceptosResul = [] = [];
 
   }
-  private CargarCiudades(result: any) {
-    if (result.IdCiudadExp !== undefined && result.IdCiudadExp !== null && result.IdCiudadExp !== 0) {
-      this.clientesGetListService.GetCiudad('B').subscribe(resultCiu => {
-        resultCiu.forEach((elemenFor : any) => {
-          if (elemenFor.IdCiudad === result.IdCiudadExp) {
-            const ciudadName = elemenFor.Nombre.split('-');
-            this.infoRepresentate.lugarExpedicion = ciudadName[0];
-          } else {
-            this.GetData.ListCiudad.forEach((elementCiudad : any) => {
-              if (result.IdCiudadExp === elementCiudad.IdCiudad) {
-                this.infoRepresentate.lugarExpedicion = elementCiudad.Descripcion;;
-              }
-            });
-          }
-        });
-      });
+  private CargarCiudades(representateInfo: any) {
+
+    const idCiudadNacimiento = representateInfo.IdCiudadNac;
+    if (idCiudadNacimiento) {
+      const { Descripcion: ciudadNacimiento, IdDepartamento } = this.GetData.ListCiudad.find((ciudad: any) => ciudad.IdCiudad === idCiudadNacimiento);
+      const idPais = this.GetData.ListDepartamento.find((departamento: any) => departamento.IdDepartamento === IdDepartamento)?.IdPais;
+      const paisNacimiento = this.GetData.ListPais.find((pais: any) => pais.IdPais === idPais)?.Descripcion?.trim();
+      this.infoRepresentate.lugarNacimiento = [ciudadNacimiento, paisNacimiento].filter(Boolean).join(', ');
     }
 
-    if (result.IdCiudadNac !== undefined && result.IdCiudadNac !== null && result.IdCiudadNac !== 0) {
-      this.clientesGetListService.GetCiudad('B').subscribe(resultCiu => {
-        resultCiu.forEach((elemenFor : any) => {
-          if (elemenFor.IdCiudad === result.IdCiudadNac) {
-            const ciudadName = elemenFor.Nombre.split('-');
-            this.infoRepresentate.lugarNacimiento = ciudadName[0];
-          } else {
-            this.GetData.ListCiudad.forEach((elementCiudad : any)=> {
-              if (result.IdCiudadNac === elementCiudad.IdCiudad) {
-                this.infoRepresentate.lugarNacimiento = elementCiudad.Descripcion;;
-              }
-            });
-          }
-        });
-      });
+
+    const idCiudadExpedicion = representateInfo.IdCiudadExp;
+    if (idCiudadExpedicion) {
+      const { Descripcion: ciudadExpedicion, IdDepartamento } = this.GetData.ListCiudad.find((ciudad: any) => ciudad.IdCiudad === idCiudadExpedicion);
+      const idPais = this.GetData.ListDepartamento.find((departamento: any) => departamento.IdDepartamento === IdDepartamento)?.IdPais;
+      const paisExpedicion = this.GetData.ListPais.find((pais: any) => pais.IdPais === idPais)?.Descripcion?.trim();
+      this.infoRepresentate.lugarExpedicion = [ciudadExpedicion, paisExpedicion].filter(Boolean).join(', ');
     }
 
   }
