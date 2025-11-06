@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { EnvironmentService } from '../Enviroment/enviroment.service';
 import { Observable } from 'rxjs';
 import { TipoBusquedaResumen } from '../../Models/Productos/cartera/gestion-credito.enum';
-import { CuentaCarteraDetalle, CuentaCarteraResumen, CuentaFormateada, Diferido, GarantiasResponse, Provision } from '../../Models/Productos/cartera/gestion-credito.model';
+import { CuentaCarteraDetalle, CuentaCarteraResumen, CuentaFormateada, CupoInfo, Diferido, GarantiasResponse, Provision } from '../../Models/Productos/cartera/gestion-credito.model';
 
 @Injectable({
     providedIn: 'root'
@@ -80,9 +80,12 @@ export class CarteraService {
 
 
 
-    //REFERENCIAS
-
-    //FIN REFERENCIAS
+    //CUPOS
+    getCuposInfo(IdCuenta: number): Observable<CupoInfo | null> {
+        this.url = `${this.environment.Url}/GetCuposInfo?idCuenta=${IdCuenta}`;
+        return this._http.get<CupoInfo | null>(this.url);
+    }
+    //FIN CUPOS
 
 
     //HISTORIAL
