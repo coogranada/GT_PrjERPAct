@@ -587,81 +587,91 @@ export class GestionCreditoComponent {
     this.resetEstadoCargaTabs();
 
     this.loading = true;
-    forkJoin({
-      cuentaDetalle: this.carteraService.buscarCuentaDetalle(cuentaResumen.IdCuenta).pipe(
-        catchError(error => {
-          console.error('Error al obtener cuentaDetalle:', error);
-          return of(null);
-        })
-      ),
-      checkCartera: this.miListaProductosService.SetCheckCartera(cuentaResumen.IdCuenta).pipe( //Petición para obtener los estados del credito
-        catchError(error => {
-          console.error('Error al obtener checkCartera:', error);
-          return of(null);
-        })
-      )
-    }).subscribe(({ cuentaDetalle, checkCartera }) => {
-      this.loading = false;
-      if (cuentaDetalle) {
-        this.ValidaPactado = false;
-        this.gestionCreditoForm.get('IdCuenta')?.setValue(cuentaResumen.IdCuenta);
-        this.gestionCreditoForm.get('IdOficinaCuenta')?.setValue(cuentaResumen.IdOficinaCuenta);
-        this.gestionCreditoForm.get('IdProductoCuenta')?.setValue(cuentaResumen.IdProducto);
-        this.gestionCreditoForm.get('IdConsecutivo')?.setValue(cuentaResumen.IdConsecutivo);
-        this.gestionCreditoForm.get('IdDigito')?.setValue(cuentaResumen.IdDigito);
-        this.gestionCreditoForm.get('NumeroOficinaAsociado')?.setValue(cuentaDetalle.Encabezado.IdOficinaCliente);
-        this.gestionCreditoForm.get('NombreOficinaAsociado')?.setValue(cuentaDetalle.Encabezado.OficinaCliente);
-        this.gestionCreditoForm.get('NumeroDocumento')?.setValue(cuentaDetalle.Encabezado.NumeroDocumento);
-        const { PrimerApellido: pa, SegundoApellido: sa, PrimerNombre: pn, SegundoNombre: sn } = cuentaResumen;
-        this.gestionCreditoForm.get('Nombre')?.setValue(this.concatWithSpace(pa, sa, pn, sn));
-        this.gestionCreditoForm.get('IdProducto')?.setValue(cuentaResumen.IdProducto);
-        this.gestionCreditoForm.get('DescripcionProducto')?.setValue(cuentaDetalle.Encabezado.NombreProducto);
-        this.gestionCreditoForm.get('IdLinea')?.setValue(cuentaResumen.IdLinea);
-        this.gestionCreditoForm.get('Sigla')?.setValue(cuentaDetalle.Encabezado.Sigla);
-        this.gestionCreditoForm.get('Linea')?.setValue(cuentaDetalle.Encabezado.Linea);
-        this.gestionCreditoForm.get('IdAsesor')?.setValue(cuentaDetalle.Encabezado.IdAsesor);
-        this.gestionCreditoForm.get('NombreAsesor')?.setValue(cuentaDetalle.Encabezado.Asesor);
-        this.gestionCreditoForm.get('IdAsesorExterno')?.setValue(cuentaDetalle.Encabezado.IdAsesorExterno);
-        this.gestionCreditoForm.get('NombreAsesorExterno')?.setValue(cuentaDetalle.Encabezado.AsesorExterno);
-        this.gestionCreditoForm.get('Radicado')?.setValue(cuentaDetalle.Encabezado.Radicado);
-        this.gestionCreditoForm.get('pagare')?.setValue(cuentaResumen.Pagare);
-        this.gestionCreditoForm.get('IdRelacionCliente')?.setValue(cuentaDetalle.Encabezado.IdRelacionCliente);
-        this.gestionCreditoForm.get('NombreRelacionCliente')?.setValue(cuentaDetalle.Encabezado.NombreRelacionCliente);
-        this.gestionCreditoForm.get('NumeroOficina')?.setValue(cuentaResumen.IdOficinaCuenta);
-        this.gestionCreditoForm.get('NombreOficina')?.setValue(cuentaDetalle.Encabezado.OficinaCuenta);
-        this.gestionCreditoForm.get('IdEstadoCuenta')?.setValue(cuentaResumen.IdEstado);
-        this.gestionCreditoForm.get('NombreEstadoCuenta')?.setValue(cuentaResumen.Estado);
-        this.gestionCreditoForm.get('IdOperacionPermitida')?.setValue(cuentaDetalle.Encabezado.IdOperacionPermitida);
-        this.gestionCreditoForm.get('NombreOperacionPermitida')?.setValue(cuentaDetalle.Encabezado.NombreOperacionPermitida);
-        this.gestionCreditoForm.get('IdFormaPago')?.setValue(cuentaDetalle.Encabezado.IdFormaPago);
-        this.gestionCreditoForm.get('estaSinCobertura')?.setValue(cuentaDetalle.Encabezado.EstaSinCobertura);
-        this.gestionCreditoForm.get('IdTercero')?.setValue(cuentaDetalle.Encabezado.IdTercero);
-        this.reestablecerCamposEncabezado('BuscarDocumento', 'BuscarNombre');
-        this.gestionCreditoOperacionForm.reset();
-        this.deshabilitarCamposBusqueda();
-        this.BuscarDatosCartera(+cuentaResumen.IdCuenta);
-        this.ActivarCalcularCuota();  
-        
-        const saldo = cuentaDetalle.SaldoSeguroHipotecario?.Saldo;
-        const formatoCOP = new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD',
-          minimumFractionDigits: 2
-        });
-        if(saldo && saldo > 0) {
-          Swal.fire({
-            icon: 'warning',
-            title: '<strong>! Advertencia ¡</strong>',
-            html: `Posee deuda de seguro de garantía hipotecaria por valor de ${formatoCOP.format(saldo)}`,
-            animation: false,
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            confirmButtonText: 'Ok',
-            confirmButtonColor: 'rgb(160, 0, 87)'
-          });
-        }        
-      }
+    this.carteraService.buscarCuentaDetalle(cuentaResumen.IdCuenta).pipe(
+      catchError(error => {
+        console.error('Error al obtener cuentaDetalle:', error);
+        return of(null);
+      }),
+      switchMap(cuentaDetalle => {
+        if (cuentaDetalle) {
+          this.ValidaPactado = false;
+          this.gestionCreditoForm.get('IdCuenta')?.setValue(cuentaResumen.IdCuenta);
+          this.gestionCreditoForm.get('IdOficinaCuenta')?.setValue(cuentaResumen.IdOficinaCuenta);
+          this.gestionCreditoForm.get('IdProductoCuenta')?.setValue(cuentaResumen.IdProducto);
+          this.gestionCreditoForm.get('IdConsecutivo')?.setValue(cuentaResumen.IdConsecutivo);
+          this.gestionCreditoForm.get('IdDigito')?.setValue(cuentaResumen.IdDigito);
+          this.gestionCreditoForm.get('NumeroOficinaAsociado')?.setValue(cuentaDetalle.Encabezado.IdOficinaCliente);
+          this.gestionCreditoForm.get('NombreOficinaAsociado')?.setValue(cuentaDetalle.Encabezado.OficinaCliente);
+          this.gestionCreditoForm.get('NumeroDocumento')?.setValue(cuentaDetalle.Encabezado.NumeroDocumento);
+          const { PrimerApellido: pa, SegundoApellido: sa, PrimerNombre: pn, SegundoNombre: sn } = cuentaResumen;
+          this.gestionCreditoForm.get('Nombre')?.setValue(this.concatWithSpace(pa, sa, pn, sn));
+          this.gestionCreditoForm.get('IdProducto')?.setValue(cuentaResumen.IdProducto);
+          this.gestionCreditoForm.get('DescripcionProducto')?.setValue(cuentaDetalle.Encabezado.NombreProducto);
+          this.gestionCreditoForm.get('IdLinea')?.setValue(cuentaResumen.IdLinea);
+          this.gestionCreditoForm.get('Linea')?.setValue(cuentaDetalle.Encabezado.Linea);
+          this.gestionCreditoForm.get('IdAsesor')?.setValue(cuentaDetalle.Encabezado.IdAsesor);
+          this.gestionCreditoForm.get('NombreAsesor')?.setValue(cuentaDetalle.Encabezado.Asesor);
+          this.gestionCreditoForm.get('IdAsesorExterno')?.setValue(cuentaDetalle.Encabezado.IdAsesorExterno);
+          this.gestionCreditoForm.get('NombreAsesorExterno')?.setValue(cuentaDetalle.Encabezado.AsesorExterno);
+          this.gestionCreditoForm.get('Radicado')?.setValue(cuentaDetalle.Encabezado.Radicado);
+          this.gestionCreditoForm.get('pagare')?.setValue(cuentaResumen.Pagare);
+          this.gestionCreditoForm.get('IdRelacionCliente')?.setValue(cuentaDetalle.Encabezado.IdRelacionCliente);
+          this.gestionCreditoForm.get('NombreRelacionCliente')?.setValue(cuentaDetalle.Encabezado.NombreRelacionCliente);
+          this.gestionCreditoForm.get('NumeroOficina')?.setValue(cuentaResumen.IdOficinaCuenta);
+          this.gestionCreditoForm.get('NombreOficina')?.setValue(cuentaDetalle.Encabezado.OficinaCuenta);
+          this.gestionCreditoForm.get('IdEstadoCuenta')?.setValue(cuentaResumen.IdEstado);
+          this.gestionCreditoForm.get('NombreEstadoCuenta')?.setValue(cuentaResumen.Estado);
+          this.gestionCreditoForm.get('IdOperacionPermitida')?.setValue(cuentaDetalle.Encabezado.IdOperacionPermitida);
+          this.gestionCreditoForm.get('NombreOperacionPermitida')?.setValue(cuentaDetalle.Encabezado.NombreOperacionPermitida);
+          this.gestionCreditoForm.get('IdFormaPago')?.setValue(cuentaDetalle.Encabezado.IdFormaPago);
+          this.gestionCreditoForm.get('estaSinCobertura')?.setValue(cuentaDetalle.Encabezado.EstaSinCobertura);
+          this.gestionCreditoForm.get('IdTercero')?.setValue(cuentaDetalle.Encabezado.IdTercero);
+          this.gestionCreditoForm.get('TipoCliente')?.setValue(cuentaDetalle.Encabezado.TipoCliente);
+          this.gestionCreditoForm.get('ManejoCupo')?.setValue(cuentaDetalle.Encabezado.ManejoCupo);
+          this.reestablecerCamposEncabezado('BuscarDocumento', 'BuscarNombre');
+          this.gestionCreditoOperacionForm.reset();
+          this.deshabilitarCamposBusqueda();
 
+          const saldo = cuentaDetalle.SaldoSeguroHipotecario?.Saldo;
+          const formatoCOP = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 2
+          });
+          if (saldo && saldo > 0) {
+            Swal.fire({
+              icon: 'warning',
+              title: '<strong>! Advertencia ¡</strong>',
+              html: `Posee deuda de seguro de garantía hipotecaria por valor de ${formatoCOP.format(saldo)}`,
+              animation: false,
+              allowOutsideClick: false,
+              allowEscapeKey: false,
+              confirmButtonText: 'Ok',
+              confirmButtonColor: 'rgb(160, 0, 87)'
+            });
+          }
+
+          return forkJoin({
+            checkCartera: this.miListaProductosService.SetCheckCartera(cuentaResumen.IdCuenta).pipe(
+              catchError(error => {
+                console.error('Error al obtener checkCartera:', error);
+                return of(null);
+              })
+            ),
+            radicados: this.miListaProductosService.GetRadicados(cuentaDetalle.Encabezado.IdTercero).pipe(
+              catchError(error => {
+                console.error('Error al obtener radicados:', error);
+                return of(null);
+              })
+            )
+          });
+        } else {
+          return of({ checkCartera: null, radicados: null });
+        }
+      })
+    ).subscribe(({ checkCartera, radicados }) => {
+      this.loading = false;
+      const radicado = this.gestionCreditoForm.get('Radicado')?.value;
       if (checkCartera) {
         this.gestionCreditoForm.get('estaReestructurado')?.setValue(checkCartera.Reestructurado);
         this.gestionCreditoForm.get('estaReliquidado')?.setValue(checkCartera.Reliquidado);
