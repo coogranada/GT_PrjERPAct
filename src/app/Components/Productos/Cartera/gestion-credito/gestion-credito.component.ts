@@ -881,12 +881,12 @@ export class GestionCreditoComponent {
 
     let intSistema = this.DatosForm.get('IdSistema')?.value;
     let intNroCuotas = +this.CuotaForm.get('NumeroCuota')?.value;
-    let intCuotasMora = this.SaldoForm.get('CoutasMora');
+    let intCuotasMora = this.SaldosForm.get('CuotasMora')?.value;
 
-    if (intSistema === sgfStmaFijaVble || intSistema === StmaVariableVble) {
+    if (intSistema === SistemaTres || intSistema === SistemaCuatro) {
       if (intNroCuotas > intCuotasMora + 1) {
         intNroCuotas = intCuotasMora + 1;
-        alert(`Número de cuotas, para este sistema el número máximo de cuotas es: ${intCuotasMora + 1}`);
+        alert('Número de cuotas, para este sistema el número máximo de cuotas es: ${intCuotasMora + 1}');
       }
     }
 
