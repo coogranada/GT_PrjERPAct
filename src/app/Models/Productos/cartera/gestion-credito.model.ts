@@ -13,8 +13,7 @@ export interface CuentaCarteraResumen {
     Estado: string;
     Pagare: number;
     FechaMatricula: string;
-    IdLinea: number;
-    Sigla: string;
+    IdLinea: number;    
 }
 
 export interface CuentaCarteraDetalle {
@@ -44,6 +43,7 @@ export interface GestionCreditoEncabezado {
   IdFormaPago: number;
   OficinaCuenta: string;
   EstaSinCobertura: boolean;
+  Sigla: string;
 }
 
 export interface SeguroHipotecario {

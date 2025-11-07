@@ -20,3 +20,9 @@ export enum Tabs {
     Cupo = 'cupo',
     Historial = 'historial',
 }
+export enum TipoSistemas {
+    CuotaFija = 1,
+    CuotaVariable = 2,
+    CuotaFijaTasaVariable = 3,
+    CuotaVariableTasaVariable = 4,
+}
