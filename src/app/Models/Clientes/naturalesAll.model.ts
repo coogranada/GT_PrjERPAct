@@ -172,6 +172,10 @@ export class NaturalesServicio {
     TipoIdentificacion: string | null = "";
     esDeudorAsociado?: string;
     RadicadoCredito?: string = "";
+    NombreTutor?: string = "";
+    NumeroDocTutor?: string = "";
+    TipoIdentificacionTutor?: string = "";
+    esTutorAsociado?: string = "";
 
 }
 export class NaturalesMenorModel {

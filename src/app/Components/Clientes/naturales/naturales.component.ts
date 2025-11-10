@@ -772,6 +772,8 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   resultRadicados: any[] = [];
   currentIdTerceroDeudor?: number;
   esDeudorAsociado: string = '';
+  esTutorAsociado: string = '';
+  idTipoDocTutor: number | null = null;
   public currentHdvBase64 = '';
   isCredito = false;
   showLoader = false;
@@ -10792,8 +10794,13 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       TipoIdentificacion: this.tiposDocumento[idTipoDoc - 1]?.Descripcion || '',
       Destino: this.serviciosFrom.get('Destino')?.value?.StrNombre || this.serviciosFrom.get('Destino')?.value || '',
       esDeudorAsociado: this.esDeudorAsociado || '',
-      RadicadoCredito: this.serviciosFrom.get('radicado')?.value || ''
+      RadicadoCredito: this.serviciosFrom.get('radicado')?.value || '',
+      NombreTutor: this.basicosFrom.get('NombreTutor')?.value || '',
+      NumeroDocTutor: this.basicosFrom.get('IdentificacionTutor')?.value || '',
+      esTutorAsociado: this.esTutorAsociado || '',
     };
+
+    if(this.idTipoDocTutor) naturalesServicio.TipoIdentificacionTutor = this.tiposDocumento[this.idTipoDocTutor - 1]?.Descripcion
     
     this.clientesService.GenerarPDFHojaVida({...this.recievedNatural, ...naturalesServicio }).subscribe(
       async (blob) => {
@@ -21959,6 +21966,8 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                   this.basicosFrom.get('NombreTutor')?.setValue(resultInfo.strPrimerNombre + ' ' + resultInfo.strSegundoNombre
                     + ' ' + resultInfo.strPrimerApellido + ' ' + resultInfo.strSegundoApellido);
                   this.InfoTutorSeleccionado.DocumentoTutor.push(resultInfo.strDocumento);
+                  this.esTutorAsociado = resultInfo.idTipoRelacion == 5 || resultInfo.idTipoRelacion == 10 ? 'Si' : 'No';
+                  this.idTipoDocTutor = resultInfo.intTipoDocumento;
                 },
                 error => {
                   this.notif.onDanger('Error - Tutor', error);
