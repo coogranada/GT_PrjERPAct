@@ -162,6 +162,8 @@ export interface CupoInfo {
   DtmRetiro: string;
   DtmVencimiento: string;
   NumeroCupo: number;
+  DiaMaxMora: number;
+  MaxCuotaMora: number;
 }
 
 export interface CalcularCuota {
