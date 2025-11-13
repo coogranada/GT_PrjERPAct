@@ -1605,122 +1605,235 @@
                             <!-- Cupo Tab -->
                             <div [hidden]="tabActivo !== Tabs.Cupo">
                                 <article class="ac-text-cr">
-                                    <form [formGroup]="cupoForm">
-                                        <br>
-                                        <div class="col-xs-12 col-md-12 col-lg-12">
-                                            <div class="row">
-                                                <div class="col-xs-12 col-md-2 col-lg-2">
-                                                    <div class="form-group">
-                                                        <label>Numero de cupo:</label>
-                                                        <span class="text-danger"></span>
-                                                        <input type="text" class="form-control" [attr.disabled]="true" formControlName="numeroCupo" />
-                                                    </div>
+                                    <!-- <form [formGroup]="cupoForm" class="cupo-form"> -->
+
+                                        <!-- <div class="form-col">
+
+                                            <div class="form-row">
+                                                <div class="form-group">
+                                                    <label>Numero de cupo:</label>
+                                                    <span class="text-danger"></span>
+                                                    <input type="text" class="form-control" [attr.disabled]="true" formControlName="numeroCupo" />
                                                 </div>
-                                                <div class="col-xs-12 col-md-1 col-lg-1">
+                                                <div class="form-group">
+                                                    <label>Fecha matricula:</label>
+                                                    <span class="text-danger"></span>
+                                                    <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaMatricula" />
                                                 </div>
-                                                <div class="col-xs-12 col-md-2 col-lg-2">
-                                                    <div class="form-group">
-                                                        <label>Cupo aprobado:</label>
-                                                        <span class="text-danger"></span>
-                                                        <input type="text" currencyMask value=" {{carteraInfo.CupoAprobadoCN |  currency}}"
-                                                            class="form-control" style="text-align: right;" [attr.disabled]="true" formControlName="cupoAprobado" />
-                                                    </div>
+                                                <div class="form-group">
+                                                    <label>Fecha aprobación:</label>
+                                                    <span class="text-danger"></span>
+                                                    <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaAprobacion" />
                                                 </div>
-                                                <div class="col-xs-12 col-md-1 col-lg-1">
+                                                
+                                            </div>
+
+                                            <div class="form-row">
+                                                <div class="form-group">
+                                                    <label>Cupo aprobado:</label>
+                                                    <span class="text-danger"></span>
+                                                    <input type="text" currencyMask value=" {{carteraInfo.CupoAprobadoCN |  currency}}"
+                                                        class="form-control" style="text-align: right;" [attr.disabled]="true"
+                                                        formControlName="cupoAprobado" />
                                                 </div>
-                                                <div class="col-xs-12 col-md-2 col-lg-2">
-                                                    <div class="form-group">
-                                                        <label>Cupo utilizado:</label>
-                                                        <span class="text-danger"></span>
-                                                        <input type="text" currencyMask value=" {{carteraInfo.CupoUtilizadoCN |  currency}}"
-                                                            class="form-control" style="text-align: right;" [attr.disabled]="true" formControlName="cupoUtilizado" />
-                                                    </div>
+                                                <div class="form-group">
+                                                    <label>Fecha documentación:</label>
+                                                    <span class="text-danger"></span>
+                                                    <input type="text" class="form-control" [attr.disabled]="true"
+                                                        formControlName="fechaDocumentacion" />
                                                 </div>
-                                                <div class="col-xs-12 col-md-1 col-lg-1">
+                                                <div class="form-group">
+                                                    <label>Fecha actualización:</label>
+                                                    <span class="text-danger"></span>
+                                                    <input type="text" class="form-control" [attr.disabled]="true"
+                                                        formControlName="fechaActualizacion" />
                                                 </div>
-                                                <div class="col-xs-12 col-md-2 col-lg-2">
-                                                    <div class="form-group">
-                                                        <label>Cupo disponible:</label>
-                                                        <span class="text-danger"></span>
-                                                        <input type="text" currencyMask value=" {{carteraInfo.CupoDisponibleCN |  currency}}"
-                                                            class="form-control" style="text-align: right;" [attr.disabled]="true" formControlName="cupoDisponible" />
-                                                    </div>
+                                            </div>
+
+                                            <div class="form-row">
+                                                
+                                                <div class="form-group">
+                                                    <label>Cupo utilizado:</label>
+                                                    <span class="text-danger"></span>
+                                                    <input type="text" currencyMask value=" {{carteraInfo.CupoUtilizadoCN |  currency}}"
+                                                        class="form-control" style="text-align: right;" [attr.disabled]="true"
+                                                        formControlName="cupoUtilizado" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Fecha vencimiento:</label>
+                                                    <span class="text-danger"></span>
+                                                    <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaVencimiento" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Fecha retiro:</label>
+                                                    <span class="text-danger"></span>
+                                                    <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaRetiro" />
+                                                </div>
+                                                
+                                            </div>
+
+                                            <div class="form-row">
+                                                <div class="form-group">
+                                                    <label>Cupo disponible:</label>
+                                                    <span class="text-danger"></span>
+                                                    <input type="text" currencyMask value=" {{carteraInfo.CupoDisponibleCN |  currency}}"
+                                                        class="form-control" style="text-align: right;" [attr.disabled]="true"
+                                                        formControlName="cupoDisponible" />
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <div class="form-col">
+                                            <div class="form-group">
+                                                <label>Bloqueos:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" formControlName="bloqueos" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Bloqueos:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" formControlName="bloqueos" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Bloqueos:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" formControlName="bloqueos" />
+                                            </div>
+                                        </div> -->
+
+                                    <form method="get" [formGroup]="cupoForm">
                                         <div class="col-xs-12 col-md-12 col-lg-12">
-                                            <div class="row">
-                                                <div class="col-xs-12 col-md-2 col-lg-2">
-                                                    <div class="form-group">
-                                                        <label>Fecha matricula:</label>
-                                                        <span class="text-danger"></span>
-                                                        <input type="text" class="form-control" [attr.disabled]="true"
-                                                            formControlName="fechaMatricula" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-12 col-md-1 col-lg-1">
-                                                </div>
-                                                <div class="col-xs-12 col-md-2 col-lg-2">
-                                                    <div class="form-group">
-                                                        <label>Fecha aprobación:</label>
-                                                        <span class="text-danger"></span>
-                                                        <input type="text" class="form-control" [attr.disabled]="true"
-                                                            formControlName="fechaAprobacion" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-12 col-md-1 col-lg-1">
-                                                </div>
-                                                <div class="col-xs-12 col-md-2 col-lg-2">
-                                                    <div class="form-group">
-                                                        <label>Fecha documentación:</label>
-                                                        <span class="text-danger"></span>
-                                                        <input type="text" class="form-control" [attr.disabled]="true"
-                                                            formControlName="fechaDocumentacion" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-12 col-md-1 col-lg-1">
-                                                </div>
-                                                <div class="col-xs-12 col-md-2 col-lg-2">
-                                                    <div class="form-group">
-                                                        <label>Fecha actualización:</label>
-                                                        <span class="text-danger"></span>
-                                                        <input type="text" class="form-control" [attr.disabled]="true"
-                                                            formControlName="fechaActualizacion" />
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col-md-9">
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-md-3 col-lg-3">
+                                                                <div class="form-group">
+                                                                    <label>Numero de cupo:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" [attr.disabled]="true" formControlName="numeroCupo" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                                            <div class="col-xs-12 col-md-3 col-lg-3">
+                                                                <div class="form-group">
+                                                                    <label>Fecha matricula:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaMatricula" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                                            <div class="col-xs-12 col-md-3 col-lg-3">
+                                                                <div class="form-group">
+                                                                    <label>Fecha aprobación:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaAprobacion" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-md-3 col-lg-3">
+                                                                <div class="form-group">
+                                                                    <label>Cupo aprobado:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" currencyMask value=" {{carteraInfo.CupoAprobadoCN |  currency}}"
+                                                                        class="form-control" style="text-align: right;" [attr.disabled]="true"
+                                                                        formControlName="cupoAprobado" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                                            <div class="col-xs-12 col-md-3 col-lg-3">
+                                                                <div class="form-group">
+                                                                    <label>Fecha documentación:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" [attr.disabled]="true"
+                                                                        formControlName="fechaDocumentacion" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                                            <div class="col-xs-12 col-md-3 col-lg-3">
+                                                                <div class="form-group">
+                                                                    <label>Fecha actualización:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" [attr.disabled]="true"
+                                                                        formControlName="fechaActualizacion" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            
+                                                            
+                                                            
+                                                            <div class="col-xs-12 col-md-3 col-lg-3">
+                                                                <div class="form-group">
+                                                                    <label>Cupo utilizado:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" currencyMask value=" {{carteraInfo.CupoUtilizadoCN |  currency}}"
+                                                                        class="form-control" style="text-align: right;" [attr.disabled]="true"
+                                                                        formControlName="cupoUtilizado" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                                            <div class="col-xs-12 col-md-3 col-lg-3">
+                                                                <div class="form-group">
+                                                                    <label>Fecha vencimiento:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaVencimiento" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                                            <div class="col-xs-12 col-md-3 col-lg-3">
+                                                                <div class="form-group">
+                                                                    <label>Fecha retiro:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaRetiro" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-md-3 col-lg-3">
+                                                                <div class="form-group">
+                                                                    <label>Cupo disponible:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" currencyMask value=" {{carteraInfo.CupoDisponibleCN |  currency}}"
+                                                                        class="form-control" style="text-align: right;" [attr.disabled]="true"
+                                                                        formControlName="cupoDisponible" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>                                                
+                                                    <div class="col-md-1 border borderCuotas linea">
+                                                        <div class="row" >
+                                                            <div class="col-4">
+                                                                <div class="form-group">
+                                                                    <label>Días max mora:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" [attr.disabled]="true" formControlName="bloqueos" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <div class="form-group">
+                                                                    <label>Cuotas mora otra:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" [attr.disabled]="true" formControlName="bloqueos" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <div class="form-group">
+                                                                    <label>Bloqueos:</label>
+                                                                    <span class="text-danger"></span>
+                                                                    <input type="text" class="form-control" [attr.disabled]="true" formControlName="bloqueos" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-xs-12 col-md-12 col-lg-12">
-                                            <div class="row">
-                                                <div class="col-xs-12 col-md-2 col-lg-2">
-                                                    <div class="form-group">
-                                                        <label>Fecha vencimiento:</label>
-                                                        <span class="text-danger"></span>
-                                                        <input type="text" class="form-control" [attr.disabled]="true"
-                                                            formControlName="fechaVencimiento" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-12 col-md-1 col-lg-1">
-                                                </div>
-                                                <div class="col-xs-12 col-md-2 col-lg-2">
-                                                    <div class="form-group">
-                                                        <label>Fecha retiro:</label>
-                                                        <span class="text-danger"></span>
-                                                        <input type="text" class="form-control" [attr.disabled]="true" formControlName="fechaRetiro" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-12 col-md-1 col-lg-1">
-                                                </div>
-                                                <div class="col-xs-12 col-md-2 col-lg-2">
-                                                    <div class="form-group">
-                                                        <label>Bloqueos:</label>
-                                                        <span class="text-danger"></span>
-                                                        <input type="text" class="form-control" [attr.disabled]="true" formControlName="bloqueos" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        </div>                                   
                                     </form>
+
+
+
                                 </article>
                                 
                             </div>
