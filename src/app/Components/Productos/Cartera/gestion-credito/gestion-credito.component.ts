@@ -607,6 +607,7 @@ export class GestionCreditoComponent {
           this.gestionCreditoForm.get('Nombre')?.setValue(this.concatWithSpace(pa, sa, pn, sn));
           this.gestionCreditoForm.get('IdProducto')?.setValue(cuentaResumen.IdProducto);
           this.gestionCreditoForm.get('DescripcionProducto')?.setValue(cuentaDetalle.Encabezado.NombreProducto);
+          this.gestionCreditoForm.get('Sigla')?.setValue(cuentaDetalle.Encabezado.Sigla);
           this.gestionCreditoForm.get('IdLinea')?.setValue(cuentaResumen.IdLinea);
           this.gestionCreditoForm.get('Linea')?.setValue(cuentaDetalle.Encabezado.Linea);
           this.gestionCreditoForm.get('IdAsesor')?.setValue(cuentaDetalle.Encabezado.IdAsesor);
@@ -824,10 +825,10 @@ export class GestionCreditoComponent {
         this.carteraInfo.TotalInteres = result.TotalInteres;
         this.carteraInfo.SaldoDeuda = result.SaldoDeuda;
         this.carteraInfo.InteresMora = result.InteresMora;
-        this.SaldosForm.get('CoutasPagas')?.setValue(result.CuotasPagas);       
-        this.SaldosForm.get('CoutasPendientes')?.setValue(result.CuotasPendientes); 
-        this.SaldosForm.get('CoutasMora')?.setValue(result.CuotasMora);
-       
+        this.SaldosForm.get('CuotasPagas')?.setValue(result.CuotasPagas);       
+        this.SaldosForm.get('CuotasPendientes')?.setValue(result.CuotasPendientes); 
+        this.SaldosForm.get('CuotasMora')?.setValue(result.CuotasMora);
+        this.ActivarCalcularCuota();       
       },
       error => {
         const errorMessage = <any>error;
@@ -867,7 +868,7 @@ export class GestionCreditoComponent {
   ValidarNumeroCuota(){
     // 2-valida que numero cutoas no sea mayor a cuotas pendientes
     const NumeroCuota = +this.CuotaForm.get('NumeroCuota')?.value;
-    const CuotasPediente = this.SaldosForm.get('CoutasPendientes')?.value;
+    const CuotasPediente = this.SaldosForm.get('CuotasPendientes')?.value;
     if (NumeroCuota > CuotasPediente){
       this.notif.warning('Advertencia', 'El número de cuota debe ser menor que las cuotas pendientes.', ConfiguracionNotificacion.configRightTop);      
       this.CuotaForm.get('NumeroCuota')?.reset();      
@@ -885,21 +886,16 @@ export class GestionCreditoComponent {
   }
 
   CalcularCuota(){
-    // 3-valida el sistema 
+    // 3-Declara variables 
     const SistemaTres = TipoSistemas.CuotaFijaTasaVariable;
     const SistemaCuatro = TipoSistemas.CuotaVariableTasaVariable;
 
     let intSistema = this.DatosForm.get('IdSistema')?.value;
     let intNroCuotas = +this.CuotaForm.get('NumeroCuota')?.value;
-    let intCuotasMora = this.SaldosForm.get('CuotasMora')?.value;
+    let intCuotasMora = this.SaldosForm.get('CuotasMora')?.value;    
 
-    if (intSistema === SistemaTres || intSistema === SistemaCuatro) {
-      if (intNroCuotas > intCuotasMora + 1) {
-        intNroCuotas = intCuotasMora + 1;
-        alert('Número de cuotas, para este sistema el número máximo de cuotas es: ${intCuotasMora + 1}');
-      }
-    }
-
+    const IdCuenta = this.gestionCreditoForm.get('IdCuenta')?.value;
+    const NumeroCuotas = this.CuotaForm.get('NumeroCuota')?.value;
 
     this.lstCalcularCuota = [];
     this.totalCapital = 0;
@@ -908,26 +904,39 @@ export class GestionCreditoComponent {
     this.totalDeducibles = 0;
     this.totalSeguro = 0;
     this.total = 0;
-    const IdCuenta = this.gestionCreditoForm.get('IdCuenta')?.value;
-    const NumeroCuotas = this.CuotaForm.get('NumeroCuota')?.value;
-    this.carteraService.CalcularCuota(IdCuenta, NumeroCuotas).subscribe(
-      result => { 
-        this.lstCalcularCuota = result; 
 
-        for (let item of this.lstCalcularCuota) {
-          this.totalCapital += item.Capital || 0;
-          this.totalInteres += item.Intereses || 0;
-          this.totalInteresMora += item.Mora || 0;
-          this.totalDeducibles += item.TotalDeducibles || 0;
-          this.totalSeguro += item.TotalSeguro || 0;
-          this.total += item.TotalCuota || 0;
-        }
-      },
-      error => {
-        const errorMessage = <any>error;
-        console.log(errorMessage);
+    // 4- Valida sistema
+    if (intSistema === SistemaTres || intSistema === SistemaCuatro) {
+      if (intNroCuotas > intCuotasMora + 1) {
+        intNroCuotas = intCuotasMora + 1;
+        alert('Número de cuotas, para este sistema el número máximo de cuotas es: ${intCuotasMora + 1}');
       }
-    );
+    }
+    
+    // 5-Calcular cuota sin y con mora
+      this.carteraService.CalcularCuota(IdCuenta, NumeroCuotas).subscribe(
+        result => {
+          this.lstCalcularCuota = result;
+
+          for (let item of this.lstCalcularCuota) {
+            this.totalCapital += item.Capital || 0;
+            this.totalInteres += item.Intereses || 0;
+            this.totalInteresMora += item.Mora || 0;
+            this.totalDeducibles += item.TotalDeducibles || 0;
+            this.totalSeguro += item.TotalSeguro || 0;
+            this.total += item.TotalCuota || 0;
+          }
+        },
+        error => {
+          const errorMessage = <any>error;
+          console.log(errorMessage);
+        }
+      );
+  
+
+
+    
+    
   }
 
   // FIN CALCULAR CUTOTA
