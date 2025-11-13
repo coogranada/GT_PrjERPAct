@@ -100,21 +100,21 @@
                                             <div class="form-group">
                                                 <label>Sistema:</label>
                                                 <span class="text-danger"></span>
-                                                <input type="text" value="{{radicadoData.negociacionRadicado.strSistema}}" currencyMask class="form-control" [attr.disabled]="true" />
+                                                <input type="text" value="{{radicadoData.negociacionRadicado.strSistema}}" class="form-control" [attr.disabled]="true" />
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-md-2 col-lg-2">
                                             <div class="form-group">
                                                 <label>Período capital:</label>
                                                 <span class="text-danger"></span>
-                                                <input type="text" currencyMask value="{{radicadoData.negociacionRadicado.PeriodoCapital}}" class="form-control" [attr.disabled]="true" />
+                                                <input type="text" value="{{radicadoData.negociacionRadicado.PeriodoCapital}}" class="form-control" [attr.disabled]="true" />
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-md-2 col-lg-2">
                                             <div class="form-group">
                                                 <label>Período intereses:</label>
                                                 <span class="text-danger"></span>
-                                                <input type="text" currencyMask value="{{radicadoData.negociacionRadicado.PeriodoInteres}}" class="form-control" [attr.disabled]="true" />
+                                                <input type="text" value="{{radicadoData.negociacionRadicado.PeriodoInteres}}" class="form-control" [attr.disabled]="true" />
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-md-2 col-lg-2">
@@ -140,7 +140,7 @@
                                             <div class="form-group">
                                                 <label>Días de gracia:</label>
                                                 <span class="text-danger"></span>
-                                                <input type="text" currencyMask value="{{radicadoData.negociacionRadicado.intDiasGracia}}" class="form-control" [attr.disabled]="true" />
+                                                <input type="text" value="{{radicadoData.negociacionRadicado.intDiasGracia}}" class="form-control" [attr.disabled]="true" />
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-md-2 col-lg-2">
@@ -154,14 +154,14 @@
                                             <div class="form-group">
                                                 <label>Plazo:</label>
                                                 <span class="text-danger"></span>
-                                                <input type="text" value="{{radicadoData.negociacionRadicado.intPlazo}}" currencyMask class="form-control" [attr.disabled]="true" />
+                                                <input type="text" value="{{radicadoData.negociacionRadicado.intPlazo}}" class="form-control" [attr.disabled]="true" />
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-md-2 col-lg-2">
                                             <div class="form-group">
                                                 <label>Garantía:</label>
                                                 <span class="text-danger"></span>
-                                                <input type="text" value="{{radicadoData.negociacionRadicado.strGarantia}}" currencyMask class="form-control" [attr.disabled]="true" />
+                                                <input type="text" value="{{radicadoData.negociacionRadicado.strGarantia}}" class="form-control" [attr.disabled]="true" />
                                             </div>
                                         </div>
                                     </div>
@@ -350,6 +350,10 @@
                                     <div class="row">
                                         <div *ngIf="radicadoData.observaciones?.length" class="table-responsive scrollTabla panel panel-default observaciones-table">
                                             <table class="table table-hover scrollTablaHistorial">
+                                                <colgroup>
+                                                    <col style="width: 15%;">
+                                                    <col style="width: 85%;">
+                                                </colgroup>
                                                 <thead>
                                                     <tr>
                                                         <th class="celda-fija-arriba">
@@ -362,7 +366,7 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr *ngFor="let observacion of radicadoData.observaciones">
-                                                        <td>{{ observacion.intEstadoTipo }}</td>
+                                                        <td style="padding-left: 20px;">{{ observacion.intEstadoTipo }}</td>
                                                         <td>{{ observacion.strDescripcion }}</td>
                                                     </tr>
                                                 </tbody>
@@ -528,14 +532,14 @@
                                             <div class="form-group">
                                                 <label>Producto:</label>
                                                 <span class="text-danger"></span>
-                                                <input type="text" value="{{radicadoData.encabezadoRadicado.NombreProducto}}" title="{{radicadoData.encabezadoRadicado.NombreProducto}}" currencyMask class="form-control" [attr.disabled]="true" />
+                                                <input type="text" value="{{radicadoData.encabezadoRadicado.NombreProducto}}" title="{{radicadoData.encabezadoRadicado.NombreProducto}}" class="form-control" [attr.disabled]="true" />
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-md-2 col-lg-2">
                                             <div class="form-group">
                                                 <label>Línea:</label>
                                                 <span class="text-danger"></span>
-                                                <input type="text" currencyMask value="{{radicadoData.decisionRadicado.NombreLinea}}" title="{{radicadoData.decisionRadicado.NombreLinea}}" class="form-control" [attr.disabled]="true" />
+                                                <input type="text" value="{{radicadoData.decisionRadicado.NombreLinea}}" title="{{radicadoData.decisionRadicado.NombreLinea}}" class="form-control" [attr.disabled]="true" />
                                             </div>
                                         </div>
                                     </div>
@@ -553,28 +557,28 @@
                                             <div class="form-group">
                                                 <label>Sistema:</label>
                                                 <span class="text-danger"></span>
-                                                <input type="text" value="{{radicadoData.negociacionRadicado.strSistema}}" currencyMask class="form-control" [attr.disabled]="true" />
+                                                <input type="text" value="{{radicadoData.negociacionRadicado.strSistema}}" class="form-control" [attr.disabled]="true" />
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-md-2 col-lg-2">
                                             <div class="form-group">
                                                 <label>Período capital:</label>
                                                 <span class="text-danger"></span>
-                                                <input type="text" value="{{radicadoData.negociacionRadicado.PeriodoCapital}}" currencyMask class="form-control" [attr.disabled]="true" />
+                                                <input type="text" value="{{radicadoData.negociacionRadicado.PeriodoCapital}}" class="form-control" [attr.disabled]="true" />
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-md-2 col-lg-2">
                                             <div class="form-group">
                                                 <label>Período intereses:</label>
                                                 <span class="text-danger"></span>
-                                                <input type="text" value="{{radicadoData.negociacionRadicado.PeriodoInteres}}" currencyMask class="form-control" [attr.disabled]="true" />
+                                                <input type="text" value="{{radicadoData.negociacionRadicado.PeriodoInteres}}" class="form-control" [attr.disabled]="true" />
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-md-2 col-lg-2">
                                             <div class="form-group">
                                                 <label>Forma de pago:</label>
                                                 <span class="text-danger"></span>
-                                                <input type="text" currencyMask value="{{radicadoData.negociacionRadicado.FormaPago}}" class="form-control" [attr.disabled]="true" />
+                                                <input type="text" value="{{radicadoData.negociacionRadicado.FormaPago}}" class="form-control" [attr.disabled]="true" />
                                             </div>
                                         </div>
                                     </div>
@@ -592,7 +596,7 @@
                                             <div class="form-group">
                                                 <label>Días de gracia:</label>
                                                 <span class="text-danger"></span>
-                                                <input type="text" currencyMask value="{{radicadoData.decisionRadicado.intDiasGracia}}" class="form-control" [attr.disabled]="true" />
+                                                <input type="text" style="text-align: left;" value="{{radicadoData.decisionRadicado.intDiasGracia}}" class="form-control" [attr.disabled]="true" />
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-md-2 col-lg-2">
@@ -606,14 +610,14 @@
                                             <div class="form-group">
                                                 <label>Plazo:</label>
                                                 <span class="text-danger"></span>
-                                                <input type="text" value="{{radicadoData.decisionRadicado.intPlazo}}" currencyMask class="form-control" [attr.disabled]="true" />
+                                                <input type="text" style="text-align: left;" value="{{radicadoData.decisionRadicado.intPlazo}}" class="form-control" [attr.disabled]="true" />
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-md-2 col-lg-2">
                                             <div class="form-group">
                                                 <label>Garantía:</label>
                                                 <span class="text-danger"></span>
-                                                <input type="text" value="{{radicadoData.negociacionRadicado.strGarantia}}" currencyMask class="form-control" [attr.disabled]="true" />
+                                                <input type="text" style="text-align: left;" value="{{radicadoData.negociacionRadicado.strGarantia}}" class="form-control" [attr.disabled]="true" />
                                             </div>
                                         </div>
                                     </div>
@@ -643,14 +647,14 @@
                                             <div class="form-group">
                                                 <label>Matricula:</label>
                                                 <span class="text-danger"></span>
-                                                <input type="text" value="{{radicadoData.encabezadoRadicado.apertura}}" currencyMask class="form-control" [attr.disabled]="true" />
+                                                <input type="text" value="{{radicadoData.encabezadoRadicado.apertura}}" class="form-control" [attr.disabled]="true" />
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-md-2 col-lg-3">
                                             <div class="form-group">
                                                 <label>Aprobación:</label>
                                                 <span class="text-danger"></span>
-                                                <input type="text" value="{{radicadoData.negociacionRadicado.dtmAprobacion}}" currencyMask class="form-control" [attr.disabled]="true" />
+                                                <input type="text" value="{{radicadoData.negociacionRadicado.dtmAprobacion}}" class="form-control" [attr.disabled]="true" />
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-md-2 col-lg-3">
@@ -658,7 +662,7 @@
                                             <div class="form-group">
                                                 <label>Retiro:</label>
                                                 <span class="text-danger"></span>
-                                                <input type="text" value="{{radicadoData.encabezadoRadicado.cancelacion}}" currencyMask class="form-control" [attr.disabled]="true" />
+                                                <input type="text" value="{{radicadoData.encabezadoRadicado.cancelacion}}" class="form-control" [attr.disabled]="true" />
                                             </div>
                                         </div>
                                     </div>
