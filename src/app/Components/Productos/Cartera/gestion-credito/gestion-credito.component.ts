@@ -389,7 +389,8 @@ export class GestionCreditoComponent {
       pagoMinimo: new FormControl({ value: '', disabled: true }, []),
       pagoTotal: new FormControl({ value: '', disabled: true }, []),
       cuentaCupo: new FormControl({ value: '', disabled: true }, []),
-      diasMaxMora: new FormControl({ value: '', disabled: true }, []),
+      diaMaxMora: new FormControl({ value: '', disabled: true }, []),
+      maxCuotaMora: new FormControl({ value: '', disabled: true }, []),
       bloqueos: new FormControl({ value: '', disabled: true }, []),
     });
 
@@ -682,6 +683,8 @@ export class GestionCreditoComponent {
       if (radicados) {
         this.encabezadoRadicado = radicados.find((rad: any) => rad.Radicado == radicado);
         if(!this.encabezadoRadicado) this.gestionCreditoForm.get('Radicado')?.setValue(0);
+      } else {
+        this.gestionCreditoForm.get('Radicado')?.setValue(0);
       }
     });
     
@@ -1349,10 +1352,13 @@ getCupos() {
         this.cupoForm.get('cupoDisponible')?.setValue(result.CupoDisponible);
         this.cupoForm.get('cupoUtilizado')?.setValue(result.CupoUtilizado);
         this.cupoForm.get('fechaMatricula')?.setValue(result.DtmMatricula);
-        this.cupoForm.get('fechaAprobacion')?.setValue(result.DtmAprobacionCupo);
+        this.cupoForm.get('fechaAprobacion')?.setValue(result.DtmAprobacionCupo); 
         this.cupoForm.get('fechaActualizacion')?.setValue(result.DtmActualizacion);
+        this.cupoForm.get('fechaVencimiento')?.setValue(result.DtmVencimiento);
         this.cupoForm.get('fechaRetiro')?.setValue(result.DtmRetiro);
-        this.cupoForm.get('fechaDocumentacion')?.setValue(result.DtmVencimiento);
+        this.cupoForm.get('fechaDocumentacion')?.setValue(result.DtmDocumentacion);
+        this.cupoForm.get('diaMaxMora')?.setValue(result.DiaMaxMora);
+        this.cupoForm.get('maxCuotaMora')?.setValue(result.MaxCuotaMora);
         this.cupoForm.get('bloqueos')?.setValue(result.Bloqueos);
         
       }
