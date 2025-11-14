@@ -17926,9 +17926,23 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     let ciudadReigistrada : any[] = [];
     const operacion = this.basicosFrom.get('operacion')?.value;
 
-    if (operacion === '5') {
+    if (operacion === '5') { // Creacion asociado
       this.BlockReferencia = null;
       if (this.referenciaForm.value.idTipoReferencia !== null && this.referenciaForm.value.idTipoReferencia !== '') {
+        
+        const tipoId = this.referenciaForm.value.idTipoReferencia.Id;
+
+        if (!this.validarLimitePorTipo(tipoId)) {
+          let tipo = '';
+
+          if (tipoId === 1) tipo = 'comerciales';
+          else if (tipoId === 3) tipo = 'financieras';
+          else if (tipoId === 2) tipo = 'familiares';
+          else if (tipoId === 4) tipo = 'personales';
+
+          this.notif.onWarning('Advertencia', `Solo puede agregar dos referencias ${tipo}.`);
+          return;
+        }
 
         if (this.referenciaForm.value.idTipoReferencia.Id === 1) {// Comercial
 
@@ -18091,10 +18105,8 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             if (this.referenciaForm.value.Ciudad !== null &&
               this.referenciaForm.value.Ciudad !== undefined &&
               this.referenciaForm.value.Ciudad !== '' &&
-              this.referenciaForm.value.idTipoReferencia.Id === 3) {
-              
-            //   if (this.referenciaForm.value.Ciudad.IdCiudad !== undefined && this.referenciaForm.value.Ciudad.IdCiudad != null) {
-                if (this.referenciaForm.value.TelefonoFinanciera !== null &&
+              this.referenciaForm.value.idTipoReferencia.Id === 3) {              
+              if (this.referenciaForm.value.TelefonoFinanciera !== null &&
                   this.referenciaForm.value.TelefonoFinanciera !== undefined && this.referenciaForm.value.TelefonoFinanciera !== '') {
                   this.referenciaForm.get('NombreEmpresa')?.setValue(this.referenciaForm.value.idTipoReferencia.Descripcion);
                   this.referenciaForm.get('idTipoReferencia')?.setValue(this.referenciaForm.value.idTipoReferencia.Id);
@@ -18239,8 +18251,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             } else {
               // Valida que venga una ciudad valida y un index al editar creando
               if (this.referenciaForm.get('Ciudad')?.value !== null && this.indexReferencia !== null) {
-                // this.referenciaForm.get('IdCiudadR')?.setValue(this.referenciaForm.get('ciudad')?.value);
-
                 if (this.indexReferencia !== null) {
                 if (this.referenciaForm.value.Ciudad !== null) {
                   this.dataCiudadesAll.forEach((elementCiu : any ) => {
@@ -18470,10 +18480,23 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         this.notif.onWarning('Advertencia', 'Debe seleccionar un tipo de referencia válido.');
       }
 
-    } else if (operacion === '1') {
+    } else if (operacion === '1') { // Editar
       this.BlockReferencia = null;
       if (this.referenciaForm.value.idTipoReferencia !== null && this.referenciaForm.value.idTipoReferencia !== '') {
 
+        const tipoId = this.referenciaForm.value.idTipoReferencia.Id;
+
+        if (!this.validarLimitePorTipo(tipoId)) {
+          let tipo = '';
+
+          if (tipoId === 1) tipo = 'comerciales';
+          else if (tipoId === 3) tipo = 'financieras';
+          else if (tipoId === 2) tipo = 'familiares';
+          else if (tipoId === 4) tipo = 'personales';
+
+          this.notif.onWarning('Advertencia', `Solo puede agregar dos referencias ${tipo}.`);
+          return;
+        }
         if (this.referenciaForm.value.idTipoReferencia.Id === 1) { // Comercial
 
           if (
@@ -18716,43 +18739,21 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
 
               if (this.referenciaForm.value.Ciudad === null && this.indexReferencia !== null) {
 
-                if (this.indexReferencia !== null) {
-
-                  // this.dataCiudadesAll.forEach((elementCiu : any ) => {
-                  //   if (elementCiu.IdCiudad === +this.referenciaForm.value.Ciudad) {
-                  //     this.referenciaForm.get('Ciudad')?.setValue(elementCiu);
-                  //     this.dataDepartamentosAll.forEach((elementDep : any ) => {
-                  //       if (elementDep.IdDepartamento === +this.referenciaForm.value.Departamento) {
-                  //         this.referenciaForm.get('Departamento')?.setValue(elementDep);
-                          this.dataPaisesAll.forEach((elementPais : any ) => {
-                            if (elementPais.IdPais === +this.referenciaForm.value.Pais) {
-                              this.referenciaForm.get('Pais')?.setValue(elementPais);
-                              this.itemsFamiliaPersonal.splice(this.indexReferencia, 1);
-                              this.indexReferencia = null;
-                            }
-                          });
-                  //       }
-                  //     });
-                  //   }
-                  // });
+                if (this.indexReferencia !== null) {                  
+                  this.dataPaisesAll.forEach((elementPais : any ) => {
+                    if (elementPais.IdPais === +this.referenciaForm.value.Pais) {
+                      this.referenciaForm.get('Pais')?.setValue(elementPais);
+                      this.itemsFamiliaPersonal.splice(this.indexReferencia, 1);
+                      this.indexReferencia = null;
+                    }
+                  });              
 
                 } else {
-
-                    // this.dataCiudadesAll.forEach((elementCiu : any ) => {
-                    // if (elementCiu.IdCiudad === +this.referenciaForm.value.Ciudad) {
-                    //   this.referenciaForm.get('Ciudad')?.setValue(elementCiu);
-                    //   this.dataDepartamentosAll.forEach((elementDep : any ) => {
-                    //     if (elementDep.IdDepartamento === +this.referenciaForm.value.Departamento) {
-                    //       this.referenciaForm.get('Departamento')?.setValue(elementDep);
-                          this.dataPaisesAll.forEach((elementPais : any ) => {
-                            if (elementPais.IdPais === +this.referenciaForm.value.Pais) {
-                              this.referenciaForm.get('Pais')?.setValue(elementPais);
-                            }
-                          });
-                    //     }
-                    //   });
-                    // }
-                    // });
+                  this.dataPaisesAll.forEach((elementPais : any ) => {
+                  if (elementPais.IdPais === +this.referenciaForm.value.Pais) {
+                    this.referenciaForm.get('Pais')?.setValue(elementPais);
+                  }
+                });            
                   
                 }
                 this.referenciaForm.get('IdCiudadR')?.setValue(ciudadReigistrada);
@@ -18784,13 +18785,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                               this.itemsFamiliaPersonal.splice(this.indexReferencia, 1);
                                 this.referenciaForm.get('NombreEmpresa')?.setValue(this.referenciaForm.value.idTipoReferencia.Descripcion);
                                 this.referenciaForm.get('idTipoReferencia')?.setValue(this.referenciaForm.value.idTipoReferencia.Id);
-                                if (this.itemsFamiliaPersonal.length < 4) {
-                                  this.itemsFamiliaPersonal.push(this.referenciaForm.value);
-                                  this.referenciaForm.reset();
-                                } else {
-                                  this.notif.onWarning('Advertencia', 'Solo puede agregar dos referencias femiliares y dos personales.',
-                                    );
-                                }
+                                this.itemsFamiliaPersonal.push(this.referenciaForm.value);
                                 this.referenciaForm.reset();
                                 ciudadReigistrada = [];
                                 this.EnableUpdateReferencia = true;
@@ -18814,13 +18809,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                               this.referenciaForm.get('Pais')?.setValue(elementPais);
                               this.referenciaForm.get('NombreEmpresa')?.setValue(this.referenciaForm.value.idTipoReferencia.Descripcion);
                               this.referenciaForm.get('idTipoReferencia')?.setValue(this.referenciaForm.value.idTipoReferencia.Id);
-                              if (this.itemsFamiliaPersonal.length < 4) {
-                                this.itemsFamiliaPersonal.push(this.referenciaForm.value);
-                                this.referenciaForm.reset();
-                              } else {
-                                this.notif.onWarning('Advertencia', 'Solo puede agregar dos referencias femiliares y dos personales.',
-                                  );
-                              }
+                              this.itemsFamiliaPersonal.push(this.referenciaForm.value);
                               this.referenciaForm.reset();
                               ciudadReigistrada = [];
                               this.EnableUpdateReferencia = true;
@@ -18841,13 +18830,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                         this.itemsFamiliaPersonal.splice(this.indexReferencia, 1);
                           this.referenciaForm.get('NombreEmpresa')?.setValue(this.referenciaForm.value.idTipoReferencia.Descripcion);
                           this.referenciaForm.get('idTipoReferencia')?.setValue(this.referenciaForm.value.idTipoReferencia.Id);
-                          if (this.itemsFamiliaPersonal.length < 4) {
-                            this.itemsFamiliaPersonal.push(this.referenciaForm.value);
-                            this.referenciaForm.reset();
-                          } else {
-                            this.notif.onWarning('Advertencia', 'Solo puede agregar dos referencias femiliares y dos personales.',
-                              );
-                          }
+                          this.itemsFamiliaPersonal.push(this.referenciaForm.value);                       
                           this.referenciaForm.reset();
                           ciudadReigistrada = [];
                           this.EnableUpdateReferencia = true;
@@ -18861,13 +18844,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                       this.referenciaForm.get('Pais')?.setValue(elementPais);
                       this.referenciaForm.get('NombreEmpresa')?.setValue(this.referenciaForm.value.idTipoReferencia.Descripcion);
                       this.referenciaForm.get('idTipoReferencia')?.setValue(this.referenciaForm.value.idTipoReferencia.Id);
-                      if (this.itemsFamiliaPersonal.length < 4) {
-                        this.itemsFamiliaPersonal.push(this.referenciaForm.value);
-                        this.referenciaForm.reset();
-                      } else {
-                        this.notif.onWarning('Advertencia', 'Solo puede agregar dos referencias femiliares y dos personales.',
-                          );
-                      }
+                      this.itemsFamiliaPersonal.push(this.referenciaForm.value);
                       this.referenciaForm.reset();
                       ciudadReigistrada = [];
                       this.EnableUpdateReferencia = true;
@@ -18891,6 +18868,23 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       this.notif.onWarning('Advertencia', 'Debe seleccionar una operación válida.',
         );
     }
+  }
+
+  validarLimitePorTipo(tipoId: number): boolean {
+    const MAX = 2;
+    let lista = [];
+    if (tipoId === 1 || tipoId === 3) {
+      lista = this.itemsFinancieraComercial;
+    } else if (tipoId === 2 || tipoId === 4) {
+      lista = this.itemsFamiliaPersonal;
+    }
+    const mismasReferencias = lista.filter(x => x.idTipoReferencia === tipoId);
+    if (this.indexReferencia !== null) {
+      const referenciaActual = lista[this.indexReferencia];
+
+      return mismasReferencias.filter(r => r !== referenciaActual).length < MAX;
+    }
+    return mismasReferencias.length < MAX;
   }
 
   eliminarItemReferencia(index : any, tipo : any) {

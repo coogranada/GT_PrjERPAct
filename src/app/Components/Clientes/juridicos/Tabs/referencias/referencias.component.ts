@@ -394,147 +394,80 @@ export class ReferenciasComponent implements OnInit {
       this.referenciasFrom.controls['Ciudad'].clearValidators();
       this.referenciasFrom.controls['Ciudad'].setValidators(null);
     }
+    if (!this.referenciasFrom.valid) {
+      this.notif.onWarning('Advertencia', 'Debe completar los campos marcados como obligatorios.');
+      return;
+    }
+    this.itemsReferencias.forEach(ref => {
+      if (ref.TipoReferencia.Id === 1) countComer++;
+      else countFina++;
+    });
+    if (form.TipoReferencia && form.TipoReferencia.Id === 1 && countComer >= 2) {
+      this.notif.onWarning('Advertencia', 'Solo puede relacionar dos referencias comerciales.');
+      return;
+    }
 
-      if (this.referenciasFrom.valid) {
-        if (this.indexReferencia === null) {
-          this.itemsReferencias.forEach(elementRefe => {
-            if (elementRefe.TipoReferencia.Id === 1) {
-              countComer = countComer + 1;
-            } else {
-              countFina = countFina + 1;
-            }
-          });
-          if (countFina >= 2 && countComer >= 2) {
-            this.notif.onWarning('Advertencia', 'Solo puede relacionar dos referencias comerciales y dos referencias financieras.',);
-          } else {
-            if (form.TipoReferencia !== '' && form.TipoReferencia !== undefined && form.TipoReferencia !== null) {
-              if (form.TipoReferencia.Id === 1) {
-                if (+this.referenciasFrom.value.Ciudad !== null && +this.referenciasFrom.value.Ciudad !== undefined &&
-                  +this.referenciasFrom.value.Ciudad !== 0 && this.referenciasFrom.value.Ciudad !== '') {
-                  this.dataCiudades.forEach((elementCiu : any)=> {
-                    if (elementCiu.IdCiudad === +this.referenciasFrom.value.Ciudad) {
-                      this.referenciasFrom.get('Ciudad')?.setValue(elementCiu);
-                      this.dataDepartamentos.forEach((elementDep : any) => {
-                        if (elementDep.IdDepartamento === +this.referenciasFrom.value.Departamento) {
-                          this.referenciasFrom.get('Departamento')?.setValue(elementDep);
-                          this.dataPais.forEach((elementPais : any) => {
-                            if (elementPais.IdPais === +this.referenciasFrom.value.Pais) {
-                              this.referenciasFrom.get('Pais')?.setValue(elementPais);
-                              if (this.referenciasFrom.value.NombreEmpresa !== null && this.referenciasFrom.value.NombreEmpresa !== undefined) {
-                                this.referenciasFrom.value.NombreEmpresa = this.referenciasFrom.value.NombreEmpresa.substr(0, 1).toUpperCase() +
-                                  this.referenciasFrom.value.NombreEmpresa.substr(1).toLowerCase();
-                              }
-                              this.itemsReferencias.push(this.referenciasFrom.value);
-                              this.bloqDeparta = true;
-                              this.bloqCiudad = true;
-                              this.referenciasFrom.reset();
-                              this.indexReferencia = null;
-                              this.EnableUpdateReferencias = true;
-                            }
-                          });
-                        }
-                      });
-                    }
-                  });
-                } else {
-                  this.dataPais.forEach((elementPais : any) => {
-                    if (elementPais.IdPais === +this.referenciasFrom.value.Pais) {
-                      this.referenciasFrom.get('Pais')?.setValue(elementPais);
-                      if (this.referenciasFrom.value.NombreEmpresa !== null && this.referenciasFrom.value.NombreEmpresa !== undefined) {
-                        this.referenciasFrom.value.NombreEmpresa = this.referenciasFrom.value.NombreEmpresa.substr(0, 1).toUpperCase() +
-                          this.referenciasFrom.value.NombreEmpresa.substr(1).toLowerCase();
-                      }
-                      this.itemsReferencias.push(this.referenciasFrom.value);
-                      this.bloqDeparta = true;
-                      this.bloqCiudad = true;
-                      this.referenciasFrom.reset();
-                      this.indexReferencia = null;
-                      this.EnableUpdateReferencias = true;
-                    }
-                  });
-                }
-              } else {
-                if (this.referenciasFrom.value.Entidad !== null && this.referenciasFrom.value.Entidad !== undefined) {
-                  this.referenciasFrom.value.Entidad = this.referenciasFrom.value.Entidad.substr(0, 1).toUpperCase() +
-                    this.referenciasFrom.value.Entidad.substr(1).toLowerCase();
-                }
-                if (this.referenciasFrom.value.Oficina !== null && this.referenciasFrom.value.Oficina !== undefined) {
-                  this.referenciasFrom.value.Oficina = this.referenciasFrom.value.Oficina.substr(0, 1).toUpperCase() +
-                    this.referenciasFrom.value.Oficina.substr(1).toLowerCase();
-                }
-                if (this.referenciasFrom.value.Producto !== null && this.referenciasFrom.value.Producto !== undefined) {
-                  this.referenciasFrom.value.Producto = this.referenciasFrom.value.Producto.substr(0, 1).toUpperCase() +
-                    this.referenciasFrom.value.Producto.substr(1).toLowerCase();
-                }
-                this.itemsReferencias.push(form);
-                this.referenciasFrom.reset();
-                this.indexReferencia = null;
-                this.EnableUpdateReferencias = true;
-              }
-            } else {
-              this.notif.onWarning('Advertencia', 'Debe seleccionar un tipo de referencia válido.');
-            }
-          }
-        } else {
-          if (countFina >= 2 && countComer >= 2) {
-            this.notif.onWarning('Advertencia', 'Solo puede relacionar dos referencias comerciales y dos referencias financieras.');
-          } else {
-            if (form.TipoReferencia !== '' && form.TipoReferencia !== undefined && form.TipoReferencia !== null) {
-              if (form.TipoReferencia.Id === 1) {
-                if (+this.referenciasFrom.value.Ciudad !== null && +this.referenciasFrom.value.Ciudad !== undefined &&
-                  +this.referenciasFrom.value.Ciudad !== 0 && this.referenciasFrom.value.Ciudad !== '') {
-                  this.dataCiudades.forEach((elementCiu : any) => {
-                    if (elementCiu.IdCiudad === +this.referenciasFrom.value.Ciudad) {
-                      this.referenciasFrom.get('Ciudad')?.setValue(elementCiu);
-                      this.dataDepartamentos.forEach((elementDep : any) => {
-                        if (elementDep.IdDepartamento === +this.referenciasFrom.value.Departamento) {
-                          this.referenciasFrom.get('Departamento')?.setValue(elementDep);
-                          this.dataPais.forEach((elementPais : any) => {
-                            if (elementPais.IdPais === +this.referenciasFrom.value.Pais) {
-                              this.referenciasFrom.get('Pais')?.setValue(elementPais);
-                              this.itemsReferencias.splice(this.indexReferencia, 1);
-                              this.itemsReferencias.push(this.referenciasFrom.value);
-                              this.bloqDeparta = true;
-                              this.bloqCiudad = true;
-                              this.referenciasFrom.reset();
-                              this.indexReferencia = null;
-                              this.EnableUpdateReferencias = true;
-                            }
-                          });
-                        }
-                      });
-                    }
-                  });
-                } else {
-                  this.dataPais.forEach((elementPais : any) => {
-                    if (elementPais.IdPais === +this.referenciasFrom.value.Pais) {
-                      this.referenciasFrom.get('Pais')?.setValue(elementPais);
-                      this.itemsReferencias.splice(this.indexReferencia, 1);
-                      this.itemsReferencias.push(this.referenciasFrom.value);
-                      this.bloqDeparta = true;
-                      this.bloqCiudad = true;
-                      this.referenciasFrom.reset();
-                      this.indexReferencia = null;
-                      this.EnableUpdateReferencias = true;
-                    }
-                  });
-                }
-              } else {
+    if (form.TipoReferencia && form.TipoReferencia.Id !== 1 && countFina >= 2) {
+      this.notif.onWarning('Advertencia', 'Solo puede relacionar dos referencias financieras.');
+      return;
+    }
+
+    if (!form.TipoReferencia || !form.TipoReferencia.Id) {
+      this.notif.onWarning('Advertencia', 'Debe seleccionar un tipo de referencia válido.');
+      return;
+    }
+
   
-                this.itemsReferencias.splice(this.indexReferencia, 1);
-                this.itemsReferencias.push(form);
-                this.referenciasFrom.reset();
-                this.indexReferencia = null;
-                this.EnableUpdateReferencias = true;
-              }
-            } else {
-              this.notif.onWarning('Advertencia', 'Debe seleccionar un tipo de referencia válido.');
-            }
-          }
-        }
-      } else {
-        this.notif.onWarning('Advertencia', 'Debe completar los campos marcados como obligatorios.');
+    const capitalize = (text: string) =>
+      text ? text.charAt(0).toUpperCase() + text.slice(1).toLowerCase() : text;
+
+  
+    const asignarUbicacion = () => {
+      if (+form.Ciudad) {
+        const ciudad = this.dataCiudades.find((c: any) => c.IdCiudad === +form.Ciudad);
+        if (ciudad) this.referenciasFrom.get('Ciudad')?.setValue(ciudad);
       }
+
+      if (+form.Departamento) {
+        const dep = this.dataDepartamentos.find((d: any) => d.IdDepartamento === +form.Departamento);
+        if (dep) this.referenciasFrom.get('Departamento')?.setValue(dep);
+      }
+
+      if (+form.Pais) {
+        const pais = this.dataPais.find((p: any) => p.IdPais === +form.Pais);
+        if (pais) this.referenciasFrom.get('Pais')?.setValue(pais);
+      }
+    };
+
+    if (form.TipoReferencia.Id === 1) {
+      asignarUbicacion();
+
+      if (form.NombreEmpresa)
+        this.referenciasFrom.get('NombreEmpresa')?.setValue(capitalize(form.NombreEmpresa));
+    } else {
+    
+      if (form.Entidad)
+        this.referenciasFrom.get('Entidad')?.setValue(capitalize(form.Entidad));
+
+      if (form.Oficina)
+        this.referenciasFrom.get('Oficina')?.setValue(capitalize(form.Oficina));
+
+      if (form.Producto)
+        this.referenciasFrom.get('Producto')?.setValue(capitalize(form.Producto));
+    }
+
+
+    if (this.indexReferencia === null) {
+      this.itemsReferencias.push(this.referenciasFrom.value);
+    } else {
+      this.itemsReferencias.splice(this.indexReferencia, 1, this.referenciasFrom.value);
+    }
+
+    this.bloqDeparta = true;
+    this.bloqCiudad = true;
+    this.referenciasFrom.reset();
+    this.indexReferencia = null;
+    this.EnableUpdateReferencias = true;  
   }
 
   EliminarReferencia(index : number) {
