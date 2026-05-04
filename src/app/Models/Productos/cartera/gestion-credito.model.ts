@@ -105,13 +105,6 @@ export interface GarantiaReal {
   ValorRespalda?: any;
   VctoPoliza: any;
   GarantiaId: number;
-  Tipo: string;
-  IdTercero: any;
-  TotalDeuda: number;
-  CantidadCreditos: number;
-  GrupoGarantia?: string | null;
-  mostrarDetalle?: boolean;
-  detalleCreditos?: any[];
 }
 
 export interface GarantiasResponse {
@@ -449,14 +442,31 @@ export interface CambiarCalificacionDto {
 
 export interface GarantiaDisponible {
   Consecutivo: number;
-  Descripcion: string;
+  Matricula: string;
   Tipo: string;
   Clase: any;
+  Descripcion: string;
   Respalda: any;
   Cobertura: string;
   IdTercero: number;
   CantidadCreditos: number;
   GrupoGarantia?: string | null;
+}
+
+export interface GarantiaRealAsignada {
+  Consecutivo: number;
+  Matricula: string;
+  Tipo: string;
+  Clase: any;
+  Descripcion: string;
+  Respalda?: any;
+  Cobertura: string;
+  IdTercero: any;
+  TotalDeuda: number;
+  CantidadCreditos: number;
+  GrupoGarantia?: string | null;
+  mostrarDetalle?: boolean;
+  detalleCreditos?: any[];
 }
 
 export interface CambiarGarantiaDto {
@@ -487,4 +497,10 @@ export interface DetalleGarantiaCreditoDto {
   NombreDeudor: string | null;
   ValorCredito: number;
   strMatricula: string | null;
+}
+
+export interface ObtenerCodeudorBasicoModel {
+  IdTercero: number;
+  NumeroDocumento : string;
+  NombreCompleto : string;
 }

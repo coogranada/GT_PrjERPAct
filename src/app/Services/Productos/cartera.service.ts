@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { EnvironmentService } from '../Enviroment/enviroment.service';
 import { Observable, retry } from 'rxjs';
 import { TipoBusquedaResumen } from '../../Models/Productos/cartera/gestion-credito.enum';
-import { ActualizarPagareCupoDto, ActualizarPagareDto, CalcularDatosRequest, CambiarCalificacionDto, CambiarFormaPagoDto, CambiarGarantiaDto, CambiarGarantiasRequestDto, CambiarLineaCreditoDto, CuentaCarteraDetalle, CuentaCarteraResumen, CuentaFormateada, CupoInfo, DebitoAutomaticoCreditoDto, DetalleGarantiaCreditoDto, Diferido, GarantiaDisponible, GarantiasResponse, HistorialOperacion, LineaCambioListDto, ManejarSeguroCreditoDto, ObservacionRadicado, PersonaNaturalBusquedaDto, Provision, ResultadoOperacionDto, ResultCalcularCambioDatos, UltimaCalificacionDto } from '../../Models/Productos/cartera/gestion-credito.model';
+import { ActualizarPagareCupoDto, ActualizarPagareDto, CalcularDatosRequest, CambiarCalificacionDto, CambiarFormaPagoDto, CambiarGarantiaDto, CambiarGarantiasRequestDto, CambiarLineaCreditoDto, CuentaCarteraDetalle, CuentaCarteraResumen, CuentaFormateada, CupoInfo, DebitoAutomaticoCreditoDto, DetalleGarantiaCreditoDto, Diferido, GarantiaDisponible, GarantiaRealAsignada, GarantiasResponse, HistorialOperacion, LineaCambioListDto, ManejarSeguroCreditoDto, ObservacionRadicado, ObtenerCodeudorBasicoModel, PersonaNaturalBusquedaDto, Provision, ResultadoOperacionDto, ResultCalcularCambioDatos, UltimaCalificacionDto } from '../../Models/Productos/cartera/gestion-credito.model';
 import { buildParams } from '../../utils/helpers';
 
 @Injectable({
@@ -225,11 +225,16 @@ export class CarteraService {
         return this._http.post<ResultadoOperacionDto>(url, dto);
     }
 
-    getGarantiasDisponibles(idCuenta: number, documento?: string): Observable<GarantiaDisponible[]> {
+    getGarantiasDisponibles(idTercero: number): Observable<GarantiaDisponible[]> {
         const url = `${this.environment.Url}/ObtenerGarantiasDisponibles`;
-        let params = new HttpParams().set('idCuenta', idCuenta);
-        if (documento) { params = params.set('documento', documento); }
+        let params = new HttpParams().set('idTercero', idTercero);
         return this._http.get<GarantiaDisponible[]>(url, { params });
+    }
+    
+    getGarantiasAsignadas(idCuenta: number): Observable<GarantiaRealAsignada[]> {
+        const url = `${this.environment.Url}/ObtenerGarantiasAsignadas`;
+        let params = new HttpParams().set('idCuenta', idCuenta);
+        return this._http.get<GarantiaRealAsignada[]>(url, { params });
     }
 
     cambiarGarantias(dto: CambiarGarantiasRequestDto): Observable<ResultadoOperacionDto> {
@@ -241,6 +246,12 @@ export class CarteraService {
       const url = `${this.environment.Url}/ObtenerDetalleGarantiaCreditos`;
       const params = new HttpParams().set('garantia', garantia).set('tipo', tipo);
       return this._http.get<DetalleGarantiaCreditoDto[]>(url, { params });
+    }
+    
+    getCodeudoresBasico(idCuenta: number): Observable<ObtenerCodeudorBasicoModel[]> {
+        const url = `${this.environment.Url}/ObtenerCodeudoresBasico`;
+        let params = new HttpParams().set('idCuenta', idCuenta);
+        return this._http.get<ObtenerCodeudorBasicoModel[]>(url, { params });
     }
 
 }
