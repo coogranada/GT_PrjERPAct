@@ -11,6 +11,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MonedaDirectivaDirective } from '../../shared/directives/moneda-directiva.directive';
 import { LoginService } from '../../../Services/Login/login.service';
 import { lastValueFrom } from 'rxjs';
+import { SoloNumeroDirective } from '../../shared/directives/solo-numero.directive';
 
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -20,7 +21,7 @@ const ColorSecundario = 'rgb(13,165,80,0.7)';
   templateUrl: './transacciones-caja.component.html',
   styleUrls: ['./transacciones-caja.component.css'],
   standalone: false,
-  providers: [DisponiblesService, MonedaDirectivaDirective, LoginService]
+  providers: [DisponiblesService, MonedaDirectivaDirective, LoginService, SoloNumeroDirective]
 })
 export class TransaccionesCajaComponent implements OnInit {
 
@@ -1307,16 +1308,6 @@ export class TransaccionesCajaComponent implements OnInit {
     if (iframe) {
       iframe.src = pdfUrl;
     }
-  }
-
-  generarImpresion1() {// solo para pruebas
-    this.transaccionesCajaService.GenerarPDFTransaccion(12486374, "DFRAMIREZ", "Administracion")
-      .subscribe(result => {
-        this.pdfTransBase64 = result;
-        this.generarImpresion();
-      }, error => {
-        this.notif.onDanger('Error', 'No se pudo obtener el PDF.');
-      });
   }
   //#endregion
 

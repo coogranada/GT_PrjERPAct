@@ -105,7 +105,7 @@
                                                                         type="text"
                                                                         class="form-control form-control-lg"
                                                                         [formControlName]="param.NombreParametro" 
-                                                                        currencyMask [options]="{precision : 0, max: 999999999 }" />
+                                                                        appMonedaDirectiva maxlength="12" style="text-align: right;"/>
                                                                     <input *ngIf="param.TipoDato === 'datetime'"
                                                                         type="date" [attr.max]="fechaMax"
                                                                         class="form-control"
@@ -217,10 +217,10 @@
                                                                     <input *ngIf="param.TipoDato === 'money'"
                                                                         type="text"
                                                                         class="form-control form-control-lg"
-                                                                        [attr.maxLength]="17"
+                                                                        [attr.maxLength]="12"
                                                                         value="0"
                                                                         [formControlName]="param.NombreParametro" 
-                                                                        currencyMask [options]="{precision : 0, max: 999999999 }" />
+                                                                        appMonedaDirectiva maxlength="12" style="text-align: right;">
                                                                     <input *ngIf="param.TipoDato === 'datetime'"
                                                                         type="date" [attr.max]="fechaMax"
                                                                         class="form-control"

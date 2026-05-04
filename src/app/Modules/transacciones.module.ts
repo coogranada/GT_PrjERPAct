@@ -10,10 +10,11 @@ import { TransaccionesCajaComponent } from '../Components/Transacciones/transacc
 import { TransaccionesRoutingModule } from '../Routes/transacciones-routing.module';
 import { MonedaDirectivaDirective } from '../Components/shared/directives/moneda-directiva.directive';
 import { ImprimirTransaccionComponent } from '../Components/Transacciones/imprimir-transaccion/imprimir-transaccion.component';
+import { SoloNumeroDirective } from '../Components/shared/directives/solo-numero.directive';
 
 @NgModule({
   declarations: [
-    TransaccionesCajaComponent, MonedaDirectivaDirective, ImprimirTransaccionComponent
+    TransaccionesCajaComponent, MonedaDirectivaDirective, ImprimirTransaccionComponent, SoloNumeroDirective
   ],
   imports: [
     CommonModule,

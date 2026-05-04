@@ -1,0 +1,57 @@
+.radioB {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    /* create custom radiobutton appearance */
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    padding: 6px;
+    /* background-color only for content */
+    background-clip: content-box;
+    border: 2px solid #bbbbbb;
+    background-color: #e7e6e7;
+    border-radius: 50%;
+}
+
+.radioB:checked {
+    background-color: rgb(160, 0, 87);
+    border-color: rgb(160, 0, 87);
+}
+
+.radio-custom {
+    display: flex;
+    align-items: center;    
+    gap: 8px;               
+    cursor: pointer;
+}
+
+/* Contenedor */
+.fila-busqueda.cuentas {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: nowrap;
+}
+
+/* Reset Bootstrap REAL */
+.fila-busqueda.cuentas .form-control {
+    box-sizing: border-box;
+    width: auto !important;
+    min-width: 0 !important;
+    padding: 4px 6px;
+    flex-grow: 0 !important;
+    flex-shrink: 0 !important;
+}
+
+/* Corto */
+.cuenta-corta {
+    flex: 0 0 55px !important;
+    text-align: center;
+}
+
+/* Largo */
+.cuenta-larga {
+    flex: 0 0 120px !important;
+    text-align: center;
+}

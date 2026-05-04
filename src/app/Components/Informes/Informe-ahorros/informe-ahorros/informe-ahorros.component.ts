@@ -16,13 +16,14 @@ import { TablaVirtualComponent } from '../../../Tabla-virtual/tabla-virtual/tabl
 import { InformePerfilService } from '../../../../Services/Maestros/informes-perfiles';
 import { GeneralesService } from '../../../../Services/Productos/generales.service';
 import { ExceljsService } from '../../../../Services/General/exceljs.service';
+import { MonedaDirectivaDirective } from '../../../shared/directives/moneda-directiva.directive';
 
 
 @Component({
   selector: 'app-informe-ahorros',
   templateUrl: './informe-ahorros.component.html',
   styleUrl: './informe-ahorros.component.css',
-  providers: [OperacionesService, ModuleValidationService, InformePerfilService, GeneralesService],
+  providers: [OperacionesService, ModuleValidationService, InformePerfilService, GeneralesService, MonedaDirectivaDirective],
   standalone: false
 })
 
@@ -435,9 +436,7 @@ export class InformeAhorrosComponent implements OnInit {
     if (columna && columna.endsWith('_M')) {
       const numero = Number(valor);
       if (!isNaN(numero)) {
-        return numero.toLocaleString('es-CO', {
-          style: 'currency',
-          currency: 'COP',
+        return numero.toLocaleString('en-US', {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2
         });

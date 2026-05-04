@@ -164,8 +164,8 @@ export class TablaVirtualComponent implements OnChanges {
         let raw = this.getValor(fila, col);
         if (typeof raw === 'string') {
           raw = raw.replace(/[^\d,.-]/g, '') // elimina $, espacios, etc.
-                   .replace(/\./g, '')       // quita puntos de miles
-                   .replace(',', '.');       // convierte coma a punto decimal
+                   .replace(/\,/g, '')       // quita puntos de miles
+                   .replace('.', ',');       // convierte coma a punto decimal
         }
         const val = parseFloat(raw) || 0;
         return sum + val;
