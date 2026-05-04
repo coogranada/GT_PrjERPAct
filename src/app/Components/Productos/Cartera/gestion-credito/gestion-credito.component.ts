@@ -3,8 +3,8 @@ import { ControlContainer, FormControl, FormGroup, Validators } from '@angular/f
 import { OperacionesService } from '../../../../Services/Maestros/operaciones.service';
 import { FormaPagoEnum, Tabs, TipoBusquedaResumen, TipoSistemas } from '../../../../Models/Productos/cartera/gestion-credito.enum';
 import { CarteraService } from '../../../../Services/Productos/cartera.service';
-import { ActualizarPagareDto, CalcularCuota, CambiarCalificacionDto, CambiarFormaPagoDto, CambiarLineaCreditoDto, CodeudorDraft, CuentaCarteraDetalle, CuentaCarteraResumen, CuentaFormateada, DebitoAutomaticoCreditoDto, Diferido, FechasCredito, GarantiaDisponible, GarantiaPersonalCod, GarantiaReal, HistorialOperacion, LineaCambioListDto, LogCambiarCodeudores, ManejarSeguroCreditoDto, ObservacionRadicado, Provision, Referencia, ResultadoOperacionDto, CambiarInfoCreditoLog, CambiarGarantiaDto, CambiarGarantiasRequestDto, DetalleGarantiaCreditoDto } from '../../../../Models/Productos/cartera/gestion-credito.model';
-import { catchError, finalize, firstValueFrom, forkJoin, Observable, of, switchMap } from 'rxjs';
+import { ActualizarPagareDto, CalcularCuota, CambiarCalificacionDto, CambiarFormaPagoDto, CambiarLineaCreditoDto, CodeudorDraft, CuentaCarteraDetalle, CuentaCarteraResumen, CuentaFormateada, DebitoAutomaticoCreditoDto, Diferido, FechasCredito, GarantiaDisponible, GarantiaPersonalCod, GarantiaReal, HistorialOperacion, LineaCambioListDto, LogCambiarCodeudores, ManejarSeguroCreditoDto, ObservacionRadicado, Provision, Referencia, ResultadoOperacionDto, CambiarInfoCreditoLog, CambiarGarantiaDto, CambiarGarantiasRequestDto, DetalleGarantiaCreditoDto, GarantiaRealAsignada, ObtenerCodeudorBasicoModel } from '../../../../Models/Productos/cartera/gestion-credito.model';
+import { catchError, concatMap, finalize, firstValueFrom, forkJoin, Observable, of, switchMap, tap } from 'rxjs';
 import { MiListaProductosService } from '../../../../Services/Informes/mi-lista-productos.service';
 import { ToastrService } from 'ngx-toastr';
 import { ConfiguracionNotificacion } from '../../../../../environments/config.noticaciones';
@@ -132,9 +132,11 @@ export class GestionCreditoComponent {
   public isDisabledLimpiarGarantiasButton: boolean = true;
   public mostrarGarantiasCodeudor: boolean = false;
   public isDisabledSaveGarantiasButton: boolean = true;
-  public garantiasEliminar: GarantiaReal[] = [];
-  public garantiasAgregar: GarantiaReal[] = [];
-  public garantiasRealesInicial: GarantiaReal[] = [];
+  public garantiasEliminar: GarantiaRealAsignada[] = [];
+  public garantiasAgregar: GarantiaRealAsignada[] = [];
+  public garantiasRealesAsignadas: GarantiaRealAsignada[] = [];
+  public codeudoresBasico: ObtenerCodeudorBasicoModel [] = []
+  public garantiasRealesAsignadasInicial: GarantiaRealAsignada[] = [];
   public garantiasDisponiblesInicialCodeudor: GarantiaDisponible[] = [];
   public garantiasDisponiblesInicialDeudor: GarantiaDisponible[] = [];
   public selectedRowsGarantia: Record<string, null | number> = {
@@ -143,7 +145,6 @@ export class GestionCreditoComponent {
   public valorRespaldadoTotal: number = 0;
   public valorCoberturaTotal: number = 0;
   public valorDisponibleTotal: number = 0;
-  public idDeudor!: number;
   public codeudorSeleccionadoId?: number;
   public valorCoberturaDisponibleDeudor: number = 0;
   public valorRespaldadoDisponibleDeudor: number = 0;
@@ -866,18 +867,18 @@ export class GestionCreditoComponent {
   
   obtenerPorcentaje(respaldo: number, cobertura: number): number {
     if (!cobertura || cobertura <= 0) { return 0; }
-    return (respaldo / cobertura) * 100;
+      return (respaldo / cobertura) * 100;
   }
 
   obtenerEstado(respaldo: number, cobertura: number): string {
 
     const porcentaje = this.obtenerPorcentaje(respaldo, cobertura);
 
-    if (porcentaje <= 70) {
+    if (porcentaje <= 75) {
       return 'VERDE';
     }
 
-    if (porcentaje <= 90) {
+    if (porcentaje <= 95) {
       return 'AMARILLO';
     }
 
@@ -910,15 +911,9 @@ export class GestionCreditoComponent {
     }
   }
 
-  onClickDetalleGarantia(
-    garantiaId: any,
-    tipo?: any,
-    tabla?: string,
-    strMatricula?: string
-  ) {
+  onClickDetalleGarantia( garantiaId: any, tipo?: any, tabla?: string, strMatricula?: string ) {
 
-    if (
-      this.mostrarDetalleGarantia &&
+    if (this.mostrarDetalleGarantia &&
       this.filaSeleccionadaGarantia === garantiaId &&
       this.tablaDetalleActiva === tabla
     ) {
@@ -933,11 +928,9 @@ export class GestionCreditoComponent {
       this.selectedRowsGarantias[key] = null;
     });
 
-    const esAsignadaNueva =
-      tabla === 'asignadas' &&
-      !this.garantiasRealesInicial.some(
-        (x: any) =>
-          Number(x.GarantiaId || x.Consecutivo) === Number(garantiaId)
+    const esAsignadaNueva = tabla === 'asignadas' &&
+      !this.garantiasRealesAsignadasInicial.some(
+        (x: any) => Number(x.GarantiaId || x.Consecutivo) === Number(garantiaId)
       );
 
     this.loading.show();
@@ -952,25 +945,16 @@ export class GestionCreditoComponent {
 
           let detalle = data || [];
 
-          const esDisponible =
-            tabla === 'deudorDisponibles' ||
-            tabla === 'codeudorDisponibles';
+          const esDisponible = tabla === 'deudorDisponibles' || tabla === 'codeudorDisponibles';
 
           /* FILTRAR CRÉDITO ACTUAL EN DISPONIBLES */
           if (esDisponible) {
 
-            const idCuentaActual =
-              Number(
-                this.gestionCreditoForm.get('IdCuenta')?.value
-              ) || 0;
+            const idCuentaActual = Number( this.gestionCreditoForm.get('IdCuenta')?.value ) || 0;
 
             detalle = detalle.filter((item: any) => {
 
-              const idDetalle = Number(
-                  item.IdCuenta ??
-                  item.lngIdCuenta ??
-                  item.Cuenta
-                ) || 0;
+              const idDetalle = Number( item.IdCuenta ?? item.lngIdCuenta ?? item.Cuenta ) || 0;
 
               return idDetalle !== idCuentaActual;
 
@@ -979,20 +963,18 @@ export class GestionCreditoComponent {
 
           if (esAsignadaNueva) {
 
-            const cuentaTexto =
-              `${this.gestionCreditoForm.get('IdOficinaCuenta')?.value || ''}-` +
-              `${this.gestionCreditoForm.get('IdProductoCuenta')?.value || ''}-` +
-              `${this.gestionCreditoForm.get('IdConsecutivo')?.value || ''}-` +
-              `${this.gestionCreditoForm.get('IdDigito')?.value || ''}`;
+            const cuentaTexto = this.generarCuenta(
+              this.gestionCreditoForm.get('IdOficinaCuenta')?.value,
+              this.gestionCreditoForm.get('IdProductoCuenta')?.value,
+              this.gestionCreditoForm.get('IdConsecutivo')?.value,
+              this.gestionCreditoForm.get('IdDigito')?.value
+            );
 
-            const idCuentaNumerico =
-              Number(
-                this.gestionCreditoForm.get('IdCuenta')?.value
-              ) || 0;
+            const idCuentaNumerico = Number( this.gestionCreditoForm.get('IdCuenta')?.value ) || 0;
 
             const linea = this.gestionCreditoForm.get('IdLinea')?.value || '';
             const nombreLinea = this.gestionCreditoForm.get('Linea')?.value || '';
-            const documento = this.gestionCreditoForm.get('NumeroDocumento')?.value || this.idDeudor || '';
+            const documento = this.gestionCreditoForm.get('NumeroDocumento')?.value || this.gestionCreditoForm.get('IdTercero')?.value || '';
             const nombre =
               this.gestionCreditoForm.get('NombreDeudor')?.value ||
               this.gestionCreditoForm.get('Nombre')?.value ||
@@ -1030,6 +1012,15 @@ export class GestionCreditoComponent {
       });
   }
 
+  private generarCuenta( oficina: any, producto: any, consecutivo: any, digito: any ): string {
+    const ofi = String(Number(oficina) || 0).padStart(3, '0');
+    const pro = String(Number(producto) || 0).padStart(3, '0');
+    const con = String(Number(consecutivo) || 0).padStart(7, '0');
+    const dig = String(Number(digito) || 0).padStart(1, '0');
+
+    return `${ofi}-${pro}-${con}-${dig}`;
+  }
+
   cerrarDetalleGarantia(event?: Event) {
     if (event) event.stopPropagation();
     
@@ -1055,14 +1046,13 @@ export class GestionCreditoComponent {
     return '#6c757d';
   }
 
-  getPorcentajeCobertura(item: any): number {
-    if (!item.TotalDeuda || item.TotalDeuda == 0) return 0;
-
-    return Math.round((item.Cobertura / item.TotalDeuda) * 100);
-  }
 
   validarSaldo(): boolean {
-    if ( (this.valorDisponibleTotal + this.carteraInfo.SaldoCapital) < this.carteraInfo.SaldoCapital ) {
+    if(this.garantiasRealesAsignadas.length === 0) {
+      this.notif.warning('Advertencia', 'Garantía no cubre el valor del crédito.', ConfiguracionNotificacion.configRightTop);
+      return false;
+    }
+    if (this.valorDisponibleTotal <= 0) {
       this.notif.warning('Advertencia', 'Garantía no cubre el valor del crédito.', ConfiguracionNotificacion.configRightTop);
       return false;
     }
@@ -1088,20 +1078,30 @@ export class GestionCreditoComponent {
   }
 
   onChangeCodeudor(event: any) {
-    const documento = event.target.value;
+    const dataTercero = event.target.value;
 
-    if (!documento) return;
+    if (!dataTercero) return;
 
     this.mostrarDetalleGarantia = false;
 
-    const codeudor = this.garantiasPersonalesCod.find(
-      c => c.NumeroDocumento == documento
+    const codeudor = this.codeudoresBasico.find(
+      c => c.IdTercero == dataTercero
     );
 
     if (codeudor) {
       this.codeudorSeleccionadoId = codeudor.IdTercero;
-      this.cargarGarantiasDisponibles(documento);
-      this.mostrarGarantiasCodeudor = true;
+
+      this.getGarantiasDisponibles(
+        codeudor.IdTercero,
+        true
+      ).subscribe({
+        next: () => {
+          this.mostrarGarantiasCodeudor = true;
+        },
+        error: (err: any) => {
+          console.error(err);
+        }
+      });
     }
   }
 
@@ -1144,8 +1144,8 @@ export class GestionCreditoComponent {
     const gruposAsignadas = new Set<string>();
     const totalAsignadas = { valor: 0 };
 
-    this.garantiasReales.forEach((garantia: any) => {
-      const cobertura = Number(garantia.ValorCobertura) || 0;
+    this.garantiasRealesAsignadas.forEach((garantia: GarantiaRealAsignada) => {
+      const cobertura = Number(garantia.Cobertura) || 0;
       this.valorCoberturaTotal += cobertura;
       sumarValoresGrupo(garantia.GrupoGarantia, gruposAsignadas, totalAsignadas );
     });
@@ -1159,7 +1159,7 @@ export class GestionCreditoComponent {
     const gruposDeudor = new Set<string>();
     const totalDeudor = { valor: 0 };
 
-    this.listGarantiasDisponiblesDeudor.forEach((garantia: any) => {
+    this.listGarantiasDisponiblesDeudor.forEach((garantia: GarantiaDisponible) => {
 
       const cobertura = Number(garantia.Cobertura) || 0;
 
@@ -1179,7 +1179,7 @@ export class GestionCreditoComponent {
     const gruposCodeudor = new Set<string>();
     const totalCodeudor = { valor: 0 };
 
-    this.listGarantiasDisponiblesCodeudor.forEach((garantia: any) => {
+    this.listGarantiasDisponiblesCodeudor.forEach((garantia: GarantiaDisponible) => {
       const cobertura = Number(garantia.Cobertura) || 0;
       this.valorCoberturaDisponibleCodeudor += cobertura;
 
@@ -1191,57 +1191,102 @@ export class GestionCreditoComponent {
     });
 
     this.valorRespaldadoDisponibleCodeudor = totalCodeudor.valor;
-    this.isDisabledConfirmarGarantiasButton = this.garantiasAgregar.length === 0 && this.garantiasEliminar.length === 0;
-    this.isDisabledLimpiarGarantiasButton = this.garantiasReales.length === this.garantiasRealesInicial.length;
+    this.isDisabledConfirmarGarantiasButton = this.sonMismasGarantias( this.garantiasRealesAsignadas, this.garantiasRealesAsignadasInicial, false );  
+    this.isDisabledLimpiarGarantiasButton = this.sonMismasGarantias( this.garantiasRealesAsignadas, this.garantiasRealesAsignadasInicial, true ); 
   }
 
-  cargarGarantiasDisponibles(documento?: string) {
+  private sonMismasGarantias(a: any[], b: any[], limpiarButton: boolean): boolean {
 
-      const idCuenta = this.gestionCreditoForm.get('IdCuenta')?.value
+    console.log(this.garantiasRealesAsignadas.length);
+    
+    if(!limpiarButton) {
+      if(this.garantiasRealesAsignadas.length === 0) return true;
+    }
+
+    if (a.length !== b.length) return false;
+
+    const ordenA = [...a]
+      .map(x => Number(x.Consecutivo))
+      .sort((x, y) => x - y);
+
+    const ordenB = [...b]
+      .map(x => Number(x.Consecutivo))
+      .sort((x, y) => x - y);
+
+    return ordenA.every((id, i) => id === ordenB[i]);
+  }
+
+  getGarantiasDisponibles(idTercero: number, codeudor: boolean) {
+    this.loading.show()
+    return this.carteraService.getGarantiasDisponibles(idTercero).pipe(
+      tap((data: any) => {
+
+        const filtradas = (data ?? []).filter((g: any) =>
+          !this.garantiasRealesAsignadas.some(
+            r => Number(r.Consecutivo) === Number(g.Consecutivo)
+          )
+        );
+
+        if (codeudor) {
+
+          this.listGarantiasDisponiblesCodeudor = filtradas;
+          this.garantiasDisponiblesInicialCodeudor = JSON.parse(JSON.stringify(filtradas));
+        } else {
+          this.listGarantiasDisponiblesDeudor = filtradas;
+          this.garantiasDisponiblesInicialDeudor = JSON.parse(JSON.stringify(filtradas));
+        }
+        this.loading.hide()
+      })
+    );
+  }
+
+  getGarantiasAsignadas() {
+    const idCuenta = this.gestionCreditoForm.get('IdCuenta')?.value;
 
     this.loading.show();
-    this.carteraService
-      .getGarantiasDisponibles(idCuenta, documento)
-      .subscribe({
+
+    return this.carteraService.getGarantiasAsignadas(idCuenta).pipe(
+      tap((data: any) => {
+        this.garantiasRealesAsignadas = (data ?? []).map((g: any) => ({
+          ...g,
+          Tipo: this.mapTipoGarantia(g.Tipo, true)
+        }));
+
+        this.garantiasRealesAsignadasInicial = JSON.parse(JSON.stringify(this.garantiasRealesAsignadas));
+      }),
+      finalize(() => this.loading.hide())
+    );
+  }
+
+  getCodeudorBasico() {
+    const idCuenta = this.gestionCreditoForm.get('IdCuenta')?.value
+
+    this.loading.show();
+    this.carteraService.getCodeudoresBasico(idCuenta).subscribe({
         next: (data) => {
-
-          const filtradas = data.filter((g: any) =>
-            !this.garantiasReales.some(r => r.GarantiaId === g.Consecutivo)
-          );
-
-          if(documento) {
-            this.listGarantiasDisponiblesCodeudor = filtradas;
-            this.garantiasDisponiblesInicialCodeudor = JSON.parse(JSON.stringify(filtradas));
-          } else {
-            this.listGarantiasDisponiblesDeudor  = filtradas;
-            this.garantiasDisponiblesInicialDeudor = JSON.parse(JSON.stringify(filtradas));
-          }
-          this.calcularTotalesGarantias();
+          this.codeudoresBasico = data ?? [];
           this.loading.hide();
-
-          if (!documento) 
-            this.openCambiarGarantiasModal.nativeElement.click()
         },
         error: (err) => {
           console.error(err);
-          this.loading.hide();
           this.notif.warning('Advertencia', 'No se encontró registro.', ConfiguracionNotificacion.configRightTop);
           this.garantiasForm.reset();        
+          this.loading.hide();
         }
-    });
+      });
   }
 
   private construirLogCambioGarantia() {
-    const formatear = (lista: GarantiaReal[]) =>
+    const formatear = (lista: GarantiaRealAsignada[]) =>
       lista.map(g => ({
-        Id: g.GarantiaId,
+        Id: g.Consecutivo,
         Tipo: g.Tipo,
-        ValorCobertura: g.ValorCobertura
+        ValorCobertura: g.Cobertura
       }));
     
     return {
       Anterior: {
-        Garantias: formatear(this.garantiasRealesInicial)
+        Garantias: formatear(this.garantiasRealesAsignadasInicial)
       },
       Actualiza: {
         Agregadas: formatear(this.garantiasAgregar),
@@ -1275,9 +1320,9 @@ export class GestionCreditoComponent {
         clase: g.Clase,
         consecutivo: IdConsecutivo,
         digito: IdDigito,
-        garantia: g.GarantiaId,
+        garantia: g.Consecutivo,
         tipo: this.mapTipoGarantia(g.Tipo, false),
-        valor: g.ValorCobertura,
+        valor: g.Cobertura,
         usuario: usuario,
         fecha: null
       })),
@@ -1288,9 +1333,9 @@ export class GestionCreditoComponent {
         clase: g.Clase,
         consecutivo: IdConsecutivo,
         digito: IdDigito,
-        garantia: g.GarantiaId,
+        garantia: g.Consecutivo,
         tipo: this.mapTipoGarantia(g.Tipo, false),
-        valor: g.ValorCobertura,
+        valor: g.Cobertura,
         usuario: usuario,
         fecha: new Date().toISOString().split('T')[0]
       }))
@@ -1329,7 +1374,7 @@ export class GestionCreditoComponent {
   }
 
   onClickLimpiarGarantias() {
-    this.garantiasReales = JSON.parse(JSON.stringify(this.garantiasRealesInicial));
+    this.garantiasRealesAsignadas = JSON.parse(JSON.stringify(this.garantiasRealesAsignadasInicial));
     this.listGarantiasDisponiblesDeudor = JSON.parse(JSON.stringify(this.garantiasDisponiblesInicialDeudor));
 
     Object.keys(this.selectedRowsGarantias).forEach(key => {
@@ -1363,21 +1408,33 @@ export class GestionCreditoComponent {
     this.mostrarDetalleGarantia = false;
     event?.stopPropagation();
 
-    const garantia = this.garantiasReales[index];
-    const esDeudor = garantia.IdTercero === this.idDeudor;
+    
+    
+    const garantia = this.garantiasRealesAsignadas[index];
+    console.log(this.gestionCreditoForm.get('IdTercero')?.value);
+    console.log(garantia.IdTercero);
+    
+    const esDeudor = Number(garantia.IdTercero) === Number(this.gestionCreditoForm.get('IdTercero')?.value);
     const hayCodeudorSeleccionado = !!this.codeudorSeleccionadoId;
     const esMismoCodeudor = garantia.IdTercero === this.codeudorSeleccionadoId;
     const idCuenta = this.gestionCreditoForm.get('IdCuenta')?.value?.toString().trim();
 
+    console.log(
+      garantia,
+      esDeudor,
+      hayCodeudorSeleccionado,
+      esMismoCodeudor,
+      idCuenta, '🤠🤠'
+    );
+    
+
     let valorRespaldaDisponible = 0;
     let grupoGarantiaNuevo = '';
 
-    const grupo =
-      (garantia.GrupoGarantia || '').toString().trim();
+    const grupo = (garantia.GrupoGarantia || '').toString().trim();
 
     if (grupo) {
-      const items = grupo
-        .split('-')
+      const items = grupo.split('-')
         .map((x: string) => x.trim())
         .filter((x: string) => x);
 
@@ -1407,12 +1464,13 @@ export class GestionCreditoComponent {
     if (esDeudor) {
 
       this.listGarantiasDisponiblesDeudor.push({
-        Consecutivo: garantia.GarantiaId,
-        Descripcion: garantia.Garantia,
+        Consecutivo: garantia.Consecutivo,
+        Matricula: garantia.Matricula,
         Clase: garantia.Clase,
+        Descripcion: garantia.Descripcion,
         Tipo: garantia.Tipo,
         Respalda: valorRespaldaDisponible,
-        Cobertura: garantia.ValorCobertura,
+        Cobertura: garantia.Cobertura,
         IdTercero: garantia.IdTercero,
         CantidadCreditos: cantidadCreditos,
         GrupoGarantia: grupoGarantiaNuevo
@@ -1421,12 +1479,13 @@ export class GestionCreditoComponent {
     } else if ( hayCodeudorSeleccionado && esMismoCodeudor ) {
 
       this.listGarantiasDisponiblesCodeudor.push({
-        Consecutivo: garantia.GarantiaId,
-        Descripcion: garantia.Garantia,
+        Consecutivo: garantia.Consecutivo,
+        Matricula: garantia.Matricula,
         Clase: garantia.Clase,
+        Descripcion: garantia.Descripcion,
         Tipo: garantia.Tipo,
         Respalda: valorRespaldaDisponible,
-        Cobertura: garantia.ValorCobertura,
+        Cobertura: garantia.Cobertura,
         IdTercero: garantia.IdTercero,
         CantidadCreditos: cantidadCreditos,
         GrupoGarantia: grupoGarantiaNuevo
@@ -1435,28 +1494,34 @@ export class GestionCreditoComponent {
     }
 
     this.garantiasEliminar.push(garantia);
-    this.garantiasReales.splice(index, 1);
-
+    this.garantiasRealesAsignadas.splice(index, 1);
     this.calcularTotalesGarantias();
-
-    this.isDisabledConfirmarGarantiasButton = false;
   }
 
   habilitarCambiarGarantia() {
-    if (this.gestionCreditoForm.get('Sigla')?.value === 'CTD') 
-      if (!this.validarCreditoPadre()) return; 
-    
-    this.cargarGarantiasDisponibles();
-    this.getGarantias();
-    this.BuscarSaldosCartera();
-  }
+  if (this.gestionCreditoForm.get('Sigla')?.value === 'CTD')
+    if (!this.validarCreditoPadre()) return;
+
+  const idTercero = this.gestionCreditoForm.get('IdTercero')?.value;
+
+  this.getCodeudorBasico(); 
+
+  this.getGarantiasAsignadas().pipe(
+    concatMap(() => this.getGarantiasDisponibles(idTercero, false))
+  ).subscribe({
+    next: () => {
+      this.calcularTotalesGarantias();
+      this.openCambiarGarantiasModal.nativeElement.click();
+    }
+  });
+}
 
   onClickCerrarModalGarantias() {
     this.garantiasForm.reset();
     this.gestionCreditoOperacionForm.get('Codigo')?.reset();
     this.garantiasAgregar = [];
     this.garantiasEliminar = [];
-    this.garantiasReales = [];
+    this.garantiasRealesAsignadas = [];
     this.isDisabledConfirmarGarantiasButton = true;
     this.isDisabledLimpiarGarantiasButton = true;
     this.isDisabledSaveGarantiasButton = true;
@@ -1465,11 +1530,7 @@ export class GestionCreditoComponent {
   }
 
 
-  onClickAgregarGarantia(
-    index: number,
-    tipo: 'codeudor' | 'deudor',
-    event?: Event
-  ) {
+  onClickAgregarGarantia(index: number, tipo: 'codeudor' | 'deudor', event?: Event) {
 
     this.mostrarDetalleGarantia = false;
     event?.stopPropagation();
@@ -1482,9 +1543,8 @@ export class GestionCreditoComponent {
 
     if (!garantia) return;
 
-    const idTercero = tipo === 'codeudor'
-      ? this.codeudorSeleccionadoId
-      : this.idDeudor;
+    const idTercero = tipo === 'codeudor' ? this.codeudorSeleccionadoId 
+                                          : this.gestionCreditoForm.get('IdTercero')?.value;;
 
     const idCuentaActual =
       this.gestionCreditoForm.get('IdCuenta')?.value
@@ -1499,7 +1559,6 @@ export class GestionCreditoComponent {
     const nuevoGrupo = `${idCuentaActual}:${valorActual}`;
 
     /* AGREGAR SOLO SI NO EXISTE EL CREDITO */
-
     if (!grupoGarantia) {
       grupoGarantia = nuevoGrupo;
     } else {
@@ -1535,12 +1594,12 @@ export class GestionCreditoComponent {
 
     const cantidadCreditos = gruposUnicos.size;
 
-    const nueva: GarantiaReal = {
-      Garantia: garantia.Descripcion,
+    const nueva: GarantiaRealAsignada = {
+      Matricula: garantia.Matricula,
       Clase: garantia.Clase,
-      ValorCobertura: garantia.Cobertura,
-      VctoPoliza: '',
-      GarantiaId: Number(garantia.Consecutivo),
+      Descripcion: garantia.Descripcion,
+      Cobertura: garantia.Cobertura,
+      Consecutivo: Number(garantia.Consecutivo),
       Tipo: garantia.Tipo,
       IdTercero: idTercero,
       TotalDeuda: valorRespaldaAsignado,
@@ -1548,13 +1607,11 @@ export class GestionCreditoComponent {
       GrupoGarantia: grupoGarantia
     };
 
-    this.garantiasReales.push(nueva);
+    this.garantiasRealesAsignadas.push(nueva);
 
     lista.splice(index, 1);
 
     this.garantiasAgregar.push(nueva);
-
-    this.isDisabledConfirmarGarantiasButton = false;
 
     this.calcularTotalesGarantias();
   }
@@ -3510,13 +3567,7 @@ CalcularSimularPago(){
       if (garantiasData) {
         const { lstCodeudores, lstGarantiaReal } = garantiasData;
         this.garantiasPersonalesCod = lstCodeudores ?? [];
-        this.garantiasReales = (lstGarantiaReal ?? []).map(g => ({
-        ...g,
-        Tipo: this.mapTipoGarantia(g.Tipo, true)
-      }));
-        this.garantiasRealesInicial = JSON.parse(JSON.stringify(this.garantiasReales));
-        this.idDeudor = this.gestionCreditoForm.get('IdTercero')?.value;
-        this.calcularTotalesGarantias();
+        this.garantiasReales = lstGarantiaReal ?? []
       }
     } finally {
       this.loading.hide();
