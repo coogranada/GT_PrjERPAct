@@ -1,0 +1,229 @@
+<div class="panel panel-white">
+    <div class="panel-body" id="contenidoJuridicos" >
+        <div class="row">
+            <div class="col-xs-12 col-md-3 col-lg-3">
+                <div class="container">
+                    <ul class="nav nav-tabs">
+                        <li >
+                            <a >Filtro Gestión Clientes</a>
+                        </li>
+                    </ul>
+                    <div> 
+                        <div>
+                            <div class="row">
+                                <div class="col-md-8 col-lg-8 col-sm-8  panel-default" id="PanelDatos">
+                                    <div class="panel-body ">
+                                        <div class="row" id="SelectFilter" [ngClass]="{'BordeLine': filtrosAgregado.length > 0}">
+                                            <label class="textNegrilla">Tipo Cliente:</label>
+                                            <span class="grande"> *</span>
+                                            <div class="row">
+                                                <div class="col-md-12 col-lg-12 col-sm-12">
+                                                    <div class="col-md-3 col-lg-3 col-sm-3">
+                                                        <div>
+                                                            <input type="checkbox"  id="radio1"  class="switchery" [(ngModel)]="tipoClienteBool1" (change)="opcionSelectedTipoCliente(1)" />
+                                                            <label for="radio1" >Naturales</label>
+                                                        </div>
+                                                    </div>
+                            
+                                                    <div class="col-md-3 col-lg-3 col-sm-3">
+                                                        <div>
+                                                            <input type="checkbox" id="radio2" class="switchery"  [(ngModel)]="tipoClienteBool2"   (change)="opcionSelectedTipoCliente(2)" />
+                                                            <label for="radio2"  >Juridico</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="col-md-4 col-lg-4 col-sm-4">
+                                                <div class="form-group">
+                                                    <label class="textNegrilla">Filtro:</label>
+                                                    <span class="grande"> *</span>
+                                                    <select class="form-control form-control-lg" id="select" name="select" [(ngModel)]="filtroSelect" (change)="opcionSelectedFilter(filtroSelect)">
+                                                    <option value="0" selected="true">
+                                                    --Seleccione--
+                                                    </option>
+                                                    <option *ngFor="let item of Filtros"  [value]="item.idFiltro">
+                                                    {{item.NombreFiltro}}
+                                                    </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                             <br>
+
+                                            <div class="row" *ngIf="filtroSelect != 0">
+                                                <div class="col-md-12 col-lg-12 col-sm-12">
+                                                    <div class="col-md-4 col-lg-4 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label class="textNegrilla">Fecha Inicial:</label>
+                                                            <span class="grande"> *</span>
+                                                            <input type="date" class="form-control" min="{{fechaMinima}}" max="{{fechaMax}}"  [(ngModel)]="valueFechaInicial" (change)="opcionSelectedFechas(1)" />
+                                                            <span class="help-block validationSpan" *ngIf="valueFechaInicial === undefined && clearFechaInicial == false ">
+                                                            La fecha inicial es obligatoria.
+                                                            </span>
+                                                            <span class="help-block validationSpan" *ngIf="!valida1F && clearFechaInicial == false ">
+                                                            La fecha inicial no valida.
+                                                            </span>
+                                                            <span class="help-block validationSpan" *ngIf="valueFechaInicial > valueFechaFinal">
+                                                            La fecha inicial debe ser menor a la fecha final.
+                                                        </span>
+                                                        </div>
+                                                    </div>
+                            
+                                                    <div class="col-md-4 col-lg-4 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label class="textNegrilla">Fecha Final:</label>
+                                                            <span class="grande"> *</span>
+                                                            <span class="text-danger"></span>
+                                                            <input type="date" class="form-control" min="{{valueFechaInicial}}"  max="{{fechaMax}}"   [(ngModel)]="valueFechaFinal" (change)="opcionSelectedFechas(2)" [disabled]="(valueFechaInicial === undefined) && valueFechaFinal == undefined"
+                                                            />
+                                                            <span class="help-block validationSpan" *ngIf="valueFechaFinal === undefined && (valueFechaInicial != undefined) && clearFechaFinal == false">
+                                                            La fecha final es obligatoria.
+                                                            </span>
+                                                            <span class="help-block validationSpan" *ngIf="!valida2F && clearFechaFinal == false">
+                                                            La fecha final no valida.
+                                                            </span>
+                                                            <span class="help-block validationSpan" *ngIf="valueFechaFinal < valueFechaInicial && clearFechaFinal == false ">
+                                                            La fecha final debe ser mayor a la fecha inicial.
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                           
+                                           
+                                            <div class="col-md-12 col-lg-12 col-sm-12 text-right" *ngIf="selectedFiltroBool == true && btnGenerate">
+                                                <button type="button"  (click)="GetCantInforme(false)" class="btn Gt-btn-verde btn-icon legitRipple">
+                                                    Ver informe
+                                                </button>
+                                                    &nbsp;
+                                                    &nbsp;
+                                                    &nbsp;
+                                                <button type="submit" class="btn Gt-btn-verde" value="Confirmar" (click)="GenerarInformeLogs()">
+                                                Generar informe
+                                                </button>
+                                                <br><br><br>
+                                            </div>
+                
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 col-lg-4 col-sm-4 panel-default">
+                                    <div class="table-responsive scrollTablaCampos">
+                                        <table class="table table-hover tablaBorder table-fixed">
+                                            <thead>
+                                                <tr class="encabezadoTablas">
+                                                    <th class="textNegrilla"><strong>Campo</strong></th>
+                                                    <th class="textNegrilla"><strong>Permitir</strong></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td style="color: #333333;">
+                                                        Seleccionar todos
+                                                    </td>
+                                                    <td>
+                                                        <input type="checkbox"  [(checked)]="checkAll"  class="switchery selectedAll" (click)="SeleccionaTodoJuridico(-1)">
+                                                    </td>
+                                                </tr>
+                                                <tr *ngFor="let permitir of Campos; let i = index">
+                                                    <td style="color: #333333;">
+                                                        {{permitir.NombreCampo}}
+                                                    </td>
+                                                    <td>
+                                                        <input type="checkbox" [(checked)]="permitir.check" class="switchery check_{{permitir.idCampo}}" (click)="SeleccionaTodoJuridico(i)">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>     
+                </div>
+            </div>
+        </div>
+        <ngx-loading [show]="loading" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+        </ngx-loading>
+    </div>
+</div>
+
+<input type="hidden" #ShowModalListLogs data-toggle="modal" data-target="#ShowModalLog" data-popup="tooltip" data-trigger="hover" data-placement="top">
+<div id="ShowModalLog"  class="modal fade"  data-backdrop="static"  >
+    <div style="width: 88%; margin: 30px auto; height: 90%;">
+        <div class="modal-content modal-xl" >
+            <div class="modal-header bg-morado" >
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 *ngIf="Type == 2">Informe logs gestion PEPS</h6>
+                <h6 *ngIf="Type == 3">Informe logs solicitud retiro</h6>
+                <h6 *ngIf="Type == 4">Informe logs reingreso</h6>
+                <h6 *ngIf="Type == 5">Informe logs tratamiento de datos</h6>
+                <h6 *ngIf="Type == 6">Informe logs seguros</h6>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive scrollTabla">
+                   <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th style="min-width: 220px;"><strong>Tipo documento</strong></th>
+                                <th style="min-width: 200px;"><strong>Documento</strong></th>
+                                <th style="min-width: 300px;"><strong>Nombre</strong></th>
+                                <th *ngIf="Type == 2 && isShowFechaMarcacion" style="min-width: 200px;"><strong>Fecha marcación</strong></th>
+                                <th *ngIf="Type == 2 && isShowFechaDesmarcacion " style="min-width: 200px;"><strong>Fecha desmarcación</strong></th>
+                                <th *ngIf="Type == 2" style="min-width: 300px;"><strong>Asesor</strong></th>
+                                <th *ngIf="Type == 3" style="min-width: 200px;"><strong>Fecha retiro</strong></th>
+                                <th *ngIf="Type == 3" style="min-width: 300px;"><strong>Asesor</strong></th>
+                                <th *ngIf="Type == 3" style="min-width: 250px;"><strong>Motivo retiro</strong></th>
+                                <th *ngIf="Type == 3" style="min-width: 300px;"><strong>Descripción </strong></th>
+                                <th *ngIf="Type == 4" style="min-width: 200px;"><strong>Fecha de reingreso</strong></th>
+                                <th *ngIf="Type == 4" style="min-width: 300px;"><strong>Asesor</strong></th>
+                                <th *ngIf="Type == 5" style="min-width: 100px;"><strong>Acepta</strong></th>
+                                <th *ngIf="Type == 5  && filtroSelect == 9" style="min-width: 200px;"><strong>Fecha acepta</strong></th>
+                                <th *ngIf="Type == 5  && filtroSelect == 23" style="min-width: 200px;"><strong>Fecha no acepta</strong></th>
+                                <th *ngIf="Type == 5" style="min-width: 300px;"><strong>Asesor</strong></th>
+                                <th *ngIf="Type == 6" style="min-width: 300px;"><strong>Estado</strong></th>
+                                <th *ngIf="Type == 6" style="min-width: 200px;"><strong>Seguro</strong></th>
+                                <th *ngIf="Type == 6" style="min-width: 200px;"><strong>Monto asegurado</strong></th>
+                                <th *ngIf="Type == 6" style="min-width: 200px;"><strong>Fecha matricula</strong></th>
+                                <th *ngIf="Type == 6" style="min-width: 300px;"><strong>Fecha respuesta aseguradora</strong></th>
+                                <th *ngIf="Type == 6" style="min-width: 200px;"><strong>Fecha modificación</strong></th>
+                               
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let log of InformesLog ; let i=index">
+                            <tr class="FilRecip{{i}}" (click)="CambiarColor(i)">
+                                <td >{{log.TipoDoc}}</td>
+                                <td >{{log.Doc}}</td>
+                                <td >{{log.Nombre}}</td>
+                                <td *ngIf="Type == 2 && isShowFechaMarcacion" >{{log.FechaMarca == "1900-01-01T00:00:00" ? "" : log.FechaMarca |  date: "yyyy/MM/dd"}}</td>
+                                <td *ngIf="Type == 2 && isShowFechaDesmarcacion" >{{log.FechaDesMarca == "1900-01-01T00:00:00" ? "" : log.FechaDesMarca | date: "yyyy/MM/dd"}}</td>
+                                <td *ngIf="Type == 2" >{{log.Asesor}}</td>
+                                <td *ngIf="Type == 3" >{{log.FechaRetiro == "1900-01-01T00:00:00" ? "" : log.FechaRetiro  | date: "yyyy/MM/dd HH:mm:ss" }}</td>  
+                                <td *ngIf="Type == 3" >{{log.Asesor}}</td>
+                                <td *ngIf="Type == 3" >{{log.MotivoRetiro}}</td>
+                                <td *ngIf="Type == 3" >{{log.Descripcion}}</td>  
+                                <td *ngIf="Type == 4" >{{log.FechaReingreso == "1900-01-01T00:00:00" ? "" : log.FechaReingreso | date: "yyyy/MM/dd HH:mm:ss" }}</td>
+                                <td *ngIf="Type == 4" >{{log.Asesor}}</td>  
+                                <td *ngIf="Type == 5" >{{log.Acepta}}</td>  
+                                <td *ngIf="Type == 5  && filtroSelect == 9" >{{log.FechaAcepta == "1900-01-01T00:00:00" ? "" : log.FechaAcepta | date: "yyyy/MM/dd" }}</td>
+                                <td *ngIf="Type == 5  && filtroSelect == 23" >{{log.FechaNoAcepta == "1900-01-01T00:00:00" ? "" : log.FechaNoAcepta | date: "yyyy/MM/dd" }}</td>  
+                                <td *ngIf="Type == 5" >{{log.Asesor}}</td>  
+                                <td *ngIf="Type == 6" >{{log.Estado}}</td>
+                                <td *ngIf="Type == 6" >{{log.Seguro}}</td>  
+                                <td *ngIf="Type == 6 " style="text-align:right" >{{log.Monto  | number:'1.2-2'}}</td>
+                                <td *ngIf="Type == 6" >{{log.FechaCrea == "1900-01-01T00:00:00" ? "" : log.FechaCrea  | date: "yyyy/MM/dd HH:mm:ss" }}</td>  
+                                <td *ngIf="Type == 6" >{{log.FechaResp == "1900-01-01T00:00:00" ? "" : log.FechaResp  | date: "yyyy/MM/dd" }}</td>
+                                <td *ngIf="Type == 6" >{{log.FechaModifica == "1900-01-01T00:00:00" ? "" : log.FechaModifica  | date: "yyyy/MM/dd HH:mm:ss" }}</td>  
+                                                          
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado"  data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

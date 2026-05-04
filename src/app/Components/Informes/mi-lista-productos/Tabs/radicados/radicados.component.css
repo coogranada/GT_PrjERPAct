@@ -1,0 +1,245 @@
+.encabezadoTablasRadicados {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #ffffff;
+}
+
+.modal-xl {
+    width: 80% !important;
+    margin-left: 170px;
+}
+
+.modal-dialog-xl {
+    width: 100% !important;
+}
+
+#ModelDetalleRadicado {
+    display: none;
+    z-index: 10000;
+}
+
+@media (max-width: 767px) {
+    .modal-xl {
+        width: 95% !important;
+        margin-left: 1%;
+    }
+    .modal-dialog-xl {
+        width: 99% !important;
+    }
+}
+
+.radicadoFijo {
+    position: sticky !important;
+    left: 0;
+    background: #fff;
+}
+
+.container {
+    width: 100%;
+    margin: 10px auto;
+}
+
+#cols3 .col-md-2 {
+    margin-bottom: 30px;
+    padding: 10px;
+    margin: 1%;
+}
+
+#cols3 .col-md-3 {
+    margin-bottom: 30px;
+    padding: 10px;
+    margin: 1%;
+}
+
+#cols6 .col-md-2 {
+    margin-bottom: 30px;
+    padding: 10px;
+    margin: 1%;
+}
+
+#cols6 .col-md-3 {
+    margin-bottom: 30px;
+    padding: 10px;
+    margin: 1%;
+}
+
+.ac-label-ap {
+    font-weight: 700;
+    position: relative;
+    padding: .5em 1em;
+    margin-bottom: .5em;
+    display: block;
+    cursor: pointer;
+    background-color: whiteSmoke;
+    transition: background-color .15s ease-in-out;
+}
+
+.ac-input-ap:checked+label,
+.ac-label-ap:hover {
+    background: rgb(185 111 151);
+    color: rgb(63, 63, 63);
+}
+
+.ac-label-ap:after,
+.ac-input-ap:checked+.ac-label-ap:after {
+    content: "+";
+    position: absolute;
+    display: block;
+    right: 0;
+    top: 0;
+    width: 2em;
+    height: 100%;
+    line-height: 2.25em;
+    text-align: center;
+    background-color: #e5e5e5;
+    transition: background-color .15s ease-in-out;
+}
+
+.ac-label-ap:hover:after,
+.ac-input-ap:checked+.ac-label-ap:after {
+    background-color: #b5b5b5;
+}
+
+.ac-input-ap:checked+.ac-label-ap:after {
+    content: "-";
+}
+
+.ac-input-ap {
+    display: none;
+}
+
+.ac-text-ap,
+.ac-sub-text-ap {
+    opacity: 0;
+    height: 0;
+    margin-bottom: .5em;
+    transition: opacity .5s ease-in-out;
+    overflow: hidden;
+}
+
+.ac-input-ap:checked~.ac-text-ap,
+.ac-sub-ap .ac-input-ap:checked~.ac-sub-text-ap {
+    opacity: 1;
+    height: auto;
+}
+
+.ac-sub-ap .ac-label-ap {
+    background: none;
+    font-weight: 600;
+    padding: .5em 2em;
+    margin-bottom: 0;
+}
+
+.ac-sub-ap .ac-label-ap:checked {
+    background: none;
+    border-bottom: 1px solid whitesmoke;
+}
+
+.ac-sub-ap .ac-label-ap:after,
+.ac-sub-ap .ac-input-ap:checked+.ac-label-ap:after {
+    left: 0;
+    background: none;
+}
+
+.ac-sub-ap .ac-input-ap:checked+label,
+.ac-sub-ap .ac-label-ap:hover {
+    background: none;
+}
+
+.ac-sub-text-ap {
+    padding: 0 1em 0 2em;
+}
+
+.NombreProdRadicado {
+    min-width: 150px;
+}
+
+.NombreProdRadicadoX2 {
+    min-width: 223px;
+}
+
+.NombreProdRadicadoX3 {
+    min-width: 270px;
+}
+
+.NombreLineaRadicado {
+    min-width: 200px;
+}
+
+.NombreLineaRadicadoX2 {
+    min-width: 288px;
+}
+
+.NombreLineaRadicadoX3 {
+    min-width: 355px;
+}
+
+.Saldox1 {
+    min-width: 90px;
+}
+
+.columnCuenta_tblcrecomercial {
+    min-width: 163px;
+}
+
+.Saldox2 {
+    min-width: 180px;
+}
+
+.EstadoRadicado {
+    min-width: 150px;
+}
+
+.OficinaRadicado {
+    min-width: 160px;
+}
+
+.OficinaRadicadoX2 {
+    min-width: 260px;
+}
+
+.OpcionesRadicado {
+    min-width: 160px;
+}
+
+.bordesTablas {
+    max-height: 280px;
+    border-bottom: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
+
+.CuentaFija {
+    position: sticky !important;
+    left: 0;
+    background: #fff;
+}
+
+.table tbody tr {
+    height: 45px !important;
+}
+
+.table td {
+    vertical-align: middle;
+    padding: 1px 5px 0;
+    white-space: nowrap;
+}
+
+.sticky-last-column td:last-child {
+    position: sticky;
+    right: 0;
+    z-index: 1;
+    text-align: center;
+}
+
+.operacionFija {
+    position: sticky !important;
+    right: 0;
+    background: #fff;
+    z-index: 1; 
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    min-width: 30px;
+}
+

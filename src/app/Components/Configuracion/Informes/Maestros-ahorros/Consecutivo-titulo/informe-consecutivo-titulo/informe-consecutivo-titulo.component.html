@@ -1,0 +1,175 @@
+<div class="panel panel-white">
+    <div class="panel-heading">
+        <h6 class="panel-title"></h6>
+        <div class="heading-elements">
+            <ul class="icons-list">
+                <li>
+                    <a data-toggle="modal" data-target="#ModalAyuda">
+                        <i class=" icon-question6 " title="Ayuda" data-popup="tooltip" data-trigger="hover" data-placement="top"></i>
+                    </a>
+                </li>
+                <li>
+                    <a data-action="collapse"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="panel-body">
+        <form method="get" [formGroup]="consecutivoOperacionFrom">
+            <div class="col-xs-12 col-md-12 col-lg-12 mb-5 pb-5">
+                <div class="col-xs-12 col-md-3 col-lg-3">
+                    <label>Operación:</label><span class="text-danger ObligatorioGrande"> *</span>
+                    <select class="form-control" formControlName="Codigo" id="select" (change)=" ValorSeleccionado()">
+                        <option *ngFor="let operacionConsecutivo of resultOperaciones"
+                        [value]="operacionConsecutivo.ERP_tblOperacion.IdOperacion">
+                        {{operacionConsecutivo.ERP_tblOperacion.Descripcion}}</option>
+                    </select>
+                    <span class="help-block validationSpan" *ngIf="consecutivoOperacionFrom.controls['Codigo'].errors?.['required'] && (consecutivoOperacionFrom.controls['Codigo'].dirty || consecutivoOperacionFrom.controls['Codigo'].touched)">
+                        La operación es obligatoria.
+                    </span>
+                </div>
+                <div class="col-xs-12 col-md-3 col-lg-3" *ngIf="!operacion">
+                    <label>Tipo operación:</label><span class="text-danger ObligatorioGrande"> *</span>
+                    <select class="form-control" formControlName="operacion" id="operacionFiltro" [attr.disabled]="BloquearAsignar" (change)=" ValorSeleccionadoFiltro()">
+                        <option [selected]="true" value=''>Todas</option>
+                        <option *ngFor="let operacionConsecutivo of resultOperacionesFiltro"
+                        [value]="operacionConsecutivo.ERP_tblOperacion.IdOperacion">
+                        {{operacionConsecutivo.ERP_tblOperacion.Descripcion}}</option>
+                    </select>
+                    <span class="help-block validationSpan" *ngIf="consecutivoOperacionFrom.controls['operacion'].errors?.['required'] && (consecutivoOperacionFrom.controls['operacion'].dirty || consecutivoOperacionFrom.controls['operacion'].touched)">
+                        La operación es obligatoria.
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-md-12 col-lg-12 mt-5 pt-5 mb-5 pb-5" *ngIf="!formulario">
+                <div class="col-xs-12 col-md-3 col-lg-3">
+                    <label>Módulo:</label><span class="text-danger ObligatorioGrande"> *</span>
+                    <select class="form-control" formControlName="IdModulo" id="modulo" name="select" [attr.disabled]="BloquearAsignar" [(ngModel)]="Idmodulo" (change)="ValorSeleccionadoModulo(Idmodulo)">
+                                <option [selected]="true" value='-'>-- Seleccione --</option>
+                                <option *ngFor="let consecutivo of resultConsecutivos"  [value]="consecutivo.IdModulo">{{consecutivo.NombreModulo}}</option>
+                            </select>
+                    <span class="help-block validationSpan " *ngIf="consecutivoOperacionFrom.controls['IdModulo'].errors?.['required'] && (consecutivoOperacionFrom.controls['IdModulo'].dirty || consecutivoOperacionFrom.controls['IdModulo'].touched)|| consecutivoOperacionFrom.controls['IdModulo'].value === '-'">
+                                El módulo es obligatorio.
+                            </span>
+                </div>
+
+
+                <div class="col-xs-12 col-md-3 col-lg-3" *ngIf="!disponibles">
+                    <label>Productos:</label><span class="text-danger ObligatorioGrande"> *</span>
+                    <select class="form-control" formControlName="IdProducto" id="productos" name="select" [attr.disabled]="BloquearProductos" [(ngModel)]="Idproducto" (change)="ProductoSeleccionado(Idproducto)">
+                            <option [selected]="true" value='-'>-- Seleccione --</option>
+                            <option *ngFor="let consecutivo of resultDocumentosYProductos"  [value]="consecutivo.IdProducto">{{consecutivo.DescripcionProducto}}</option>
+                        </select>
+                    <span class="help-block validationSpan" *ngIf="consecutivoOperacionFrom.controls['IdProducto'].errors?.['required'] && (consecutivoOperacionFrom.controls['IdProducto'].dirty || consecutivoOperacionFrom.controls['IdProducto'].touched)|| consecutivoOperacionFrom.controls['IdProducto'].value === '-'">
+                            El producto es obligatorio.
+                        </span>
+                </div>
+
+                <div class="col-xs-12 col-md-3 col-lg-3" *ngIf="!formulario">
+                    <label>Documentos:</label><span class="text-danger ObligatorioGrande"> *</span>
+                    <select class="form-control" formControlName="IdDocumentos" name="select" id="documentos" [attr.disabled]="BloquearDocumentos" [(ngModel)]="Iddocumento" (change)="DocumentoSeleccionado(Iddocumento)">
+                            <option [selected]="true" value='-'>-- Seleccione --</option>
+                            <option *ngFor="let consecutivo of resultDocumentosConsecutivos" [text]="consecutivo.Nombre" [value]="consecutivo.IdConsecutivo" >{{consecutivo.Nombre}}</option>
+                        </select>
+                    <span class="help-block validationSpan" *ngIf="consecutivoOperacionFrom.controls['IdDocumentos'].errors?.['required'] && (consecutivoOperacionFrom.controls['IdDocumentos'].dirty || consecutivoOperacionFrom.controls['IdDocumentos'].touched)|| consecutivoOperacionFrom.controls['IdDocumentos'].value === '-'">
+                            El documento es obligatorio.
+                        </span>
+                </div>
+
+                <div class="col-xs-12 col-md-3 col-lg-3" *ngIf="!operacion">
+                    <label>Usuario:</label>
+                    <select class="form-control" formControlName="IdUsuario" name="select" id="usuario" [attr.disabled]="BloquearUsuarios">
+                            <option [selected]="true" value=''>Todos</option>
+                            <option *ngFor="let usuario of resultUsuarios" [text]="usuario.Usuario" [value]="usuario.IdUsuario" >{{usuario.Usuario}}</option>
+                        </select>
+                    <span class="help-block validationSpan" *ngIf="consecutivoOperacionFrom.controls['IdUsuario'].errors?.['required'] && (consecutivoOperacionFrom.controls['IdUsuario'].dirty || consecutivoOperacionFrom.controls['IdUsuario'].touched)|| consecutivoOperacionFrom.controls['IdUsuario'].value === '-'">
+                            El Usuario es obligatorio.
+                        </span>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-md-12 col-lg-12 mt-5 pt-5 mb-5 pb-5" *ngIf="!formulario">
+                <div class="col-xs-12 col-md-3 col-lg-3" *ngIf="!operacion">
+                    <label>Fecha Inicial:</label><span class="text-danger ObligatorioGrande"> *</span>
+                    <div class="">
+                        <!-- <span class="input-group-addon "><i class="icon-calendar22 "></i></span> -->
+                        <input type="date" id="fechaInicial" name="FechaInicial" formControlName="FechaInicial" max="{{FechaActual}}" class="form-control" [attr.disabled]="BloquearDocumentos" />
+                        <span class="help-block validationSpan" *ngIf="consecutivoOperacionFrom.controls['FechaInicial'].errors?.['required'] && (consecutivoOperacionFrom.controls['FechaInicial'].dirty || consecutivoOperacionFrom.controls['FechaInicial'].touched)|| consecutivoOperacionFrom.controls['FechaInicial'].value === null">
+                            La fecha inicial es obligatoria
+                        </span>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-3 col-lg-3">
+                    <label>Fecha{{operacion ? ' de corte' : ' Final'}}:</label><span class="text-danger ObligatorioGrande"> *</span>
+                    <div class="">
+                        <!-- <span class="input-group-addon "><i class="icon-calendar22 "></i></span> -->
+                        <input type="date" id="fechaFinal" name="FechaFinal" formControlName="FechaFinal" class="form-control" max="{{FechaActual}}" [attr.disabled]="BloquearDocumentos" (change)="FechasSeleccionadas()" />
+                        <span class="help-block validationSpan" *ngIf="consecutivoOperacionFrom.controls['FechaFinal'].errors?.['required'] && (consecutivoOperacionFrom.controls['FechaFinal'].dirty || consecutivoOperacionFrom.controls['FechaFinal'].touched)|| consecutivoOperacionFrom.controls['FechaFinal'].value === null">
+                            La fecha final es obligatoria
+                        </span>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-3 col-lg-3" *ngIf="!formulario">
+                    <label>Oficina:</label><span class="text-danger ObligatorioGrande"> *</span>
+                    <select class="form-control" id="oficina" name="IdOficina" formControlName="IdOficina" [attr.disabled]="BloquearOficina">
+                        <option *ngIf="!operacion" selected="selected" value="">Todas</option>
+                        <option *ngFor="let Oficina of resultOficina" [value]="Oficina.Valor">
+                            {{Oficina.Descripcion}}</option>
+                    </select>
+                    <span class="help-block validationSpan" *ngIf="consecutivoOperacionFrom.controls['IdOficina'].errors?.['required'] && (consecutivoOperacionFrom.controls['IdOficina'].dirty || consecutivoOperacionFrom.controls['IdOficina'].touched)|| consecutivoOperacionFrom.controls['IdOficina'].value === '-'">
+                        La oficina es obligatoria
+                    </span>
+                </div>
+                <div class="col-xs-12 col-md-3 col-lg-3" *ngIf="!operacion">
+                    <label>Estado:</label><span class="text-danger ObligatorioGrande"> *</span>
+                    <select class="form-control" id="estado" name="IdEstado" formControlName="IdEstado" [attr.disabled]="BloquearDocumentos">
+                        <option selected="selected" value="">Todos</option>
+                        <option *ngFor="let Estado of resultEstado" [value]="Estado.IdEstado">
+                            {{Estado.DescripcionEstado}}</option>
+                    </select>
+                    <span class="help-block validationSpan" *ngIf="consecutivoOperacionFrom.controls['IdEstado'].errors?.['required'] && (consecutivoOperacionFrom.controls['IdEstado'].dirty || consecutivoOperacionFrom.controls['IdEstado'].touched)|| consecutivoOperacionFrom.controls['IdEstado'].value === '-'">
+                        El estado es obligatorio
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-md-12 col-lg-12 mt-5 pt-5 text-right">
+
+                <input type="button" class="btn Gt-btn-morado mr-5 mt-20" value="Limpiar" (click)="ClearFormConsecutivo()" />
+
+                <input type="button" *ngIf="!btn" name="btnValue" formControlName="btnValue" class="btn Gt-btn-verde ml-5 mt-20" [attr.disabled]="BloquearBoton" (click)="click()" />
+                <input id="modalAbrir" data-toggle="modal" data-target="#ModalFormatosMovimientos" style="display: none;" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<ngx-loading [show]="loading" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+</ngx-loading>
+<div id="ModalFormatosMovimientos" class="modal" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content contenedor">
+            <div class="modal-header bg-morado">
+                <h6 class="modal-title">Informe Consecutivo</h6>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="panel-body">
+                    <div>
+                        <object></object>
+                    </div>
+                    <div class="botones mt-20">
+                        <button class="btn Gt-btn-verde" (click)="clickPDF()" id="pdf">
+                            <i class="icon-download4"></i>&nbsp; PDF
+                        </button>&nbsp;
+                        <button class="btn Gt-btn-verde" (click)="clickEXCEL()">
+                            <i class="icon-download4"></i>&nbsp; EXCEL
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

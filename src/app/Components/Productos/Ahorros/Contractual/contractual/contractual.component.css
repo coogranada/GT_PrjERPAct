@@ -1,0 +1,103 @@
+.modal.right .modal-dialog {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    margin: 0;
+    width: 400px;
+}
+
+.grande {
+    font-size: 25px !important;
+    color: #D84315;
+    margin-top: -5px !important;
+    margin-left: 6px;
+    position: absolute;
+}
+
+.textNegrilla {
+    color: #565656;
+    font-weight: bold;
+}
+
+.pmayuscula {
+    text-transform: capitalize;
+}
+
+object {
+    width: 100%;
+    height: 1000px;
+    border: none;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    overflow: hidden;
+}
+
+.columnProductoX3_disponibles {
+    min-width: 300px !important;
+}
+
+.columnProductoX2_disponibles {
+    min-width: 300px !important;
+}
+
+.columnProductoX1_disponibles {
+    min-width: 200px !important;
+}
+
+.columnProductoX_disponibles {
+    min-width: 270px !important;
+}
+
+.columnProductoX0_disponibles {
+    min-width: 120px !important;
+}
+.columnDetalles_termino {
+    min-width: 3000px !important;
+}
+
+.OperacionFija {
+    position: sticky !important;
+    left: 0;
+    background: #fff;
+}
+
+
+.table th {
+    font-weight: bold;
+}
+
+.table tbody tr {
+    height: 45px !important;
+}
+
+.table td {
+    vertical-align: middle;
+    padding: 1px 5px 0;
+    white-space: nowrap;
+}
+
+
+
+.sticky-last-column td:last-child {
+    position: sticky;
+    right: 0;
+    z-index: 1;
+    text-align: center;
+}
+
+
+.operacionFija {
+    position: sticky !important;
+    right: 0;
+    background: #fff;
+    z-index: 1; 
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    min-width: 30px;
+}
+
+.centerColumn{
+    text-align: center !important;
+    align-items: center;
+}

@@ -1,0 +1,89 @@
+.radioB {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    /* create custom radiobutton appearance */
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    padding: 6px;
+    /* background-color only for content */
+    background-clip: content-box;
+    border: 2px solid #bbbbbb;
+    background-color: #e7e6e7;
+    border-radius: 50%;
+}
+
+.radioB:checked {
+    background-color: rgb(160, 0, 87);
+    border-color: rgb(160, 0, 87);
+}
+
+.radio-custom {
+    display: flex;
+    align-items: center;    
+    gap: 8px;               
+    cursor: pointer;
+}
+
+#iframeReporte {
+    width: 100%;
+    height: 600px;
+    border: none;
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: block;
+}
+
+
+/* Tooltip container */
+.mensajeInfo {
+    display: inline;
+}
+.mensajeInfo i{
+  font-size: 13px;
+  color: rgb(38, 144, 81);
+  margin-left: 5px;
+}
+
+.mensajeInfoText {
+  visibility: hidden;
+  width: 300px;
+  background-color: rgba(63, 63, 63, 0.894);
+  color: white;
+  text-align: center;
+  padding: 5px;
+  border-radius: 6px;
+
+  /* Position the tooltip text - see examples below! */
+  overflow: visible;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -150px;
+}
+.mensajeInfoTextBottom {
+  visibility: hidden;
+  width: 300px;
+  background-color: rgba(63, 63, 63, 0.9);
+  color: white;
+  text-align: center;
+  padding: 5px;
+  z-index: 20;
+  border-radius: 6px;
+
+  /* Position the tooltip text - see examples below! */
+  overflow: visible;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -150px;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.mensajeInfo:hover .mensajeInfoText {
+  visibility: visible;
+}
+.mensajeInfo:hover .mensajeInfoTextBottom {
+  visibility: visible;
+}

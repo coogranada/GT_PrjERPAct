@@ -1,0 +1,356 @@
+<div class="panel panel-white">
+    <form method="get" [formGroup]="misProductosFrom" autocomplete="off">
+        <div class="panel-body">
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-md-4 col-lg-2">
+                        <div class="form-group">
+                            <label class="textNegrilla">Tipo documento</label>
+                            <input type="text" class="form-control" Id="TipoDocumento" formControlName="TipoDocumento" [attr.disabled]="true" />
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-4 col-lg-2">
+                        <div class="form-group">
+                            <label class="textNegrilla">Número documento</label>
+                            <span class="grande"> *</span>
+                            <input type="hidden" id="TerceroPrincipal">
+                            <input type="text" class="form-control" #CCdocumento id="NumeroDocumento" formControlName="Documento" (keypress)="limpiarNombre('Nombre')" (keydown)="handleKeyDown($event)" [attr.disabled]="disbaleBusqueda" />
+                            <input type="text" value="" style="display: none;" class="MostrarCertificadoSaldos" />
+                            <input type="text" value="" style="display: none;" class="MostrarCertificadoRetencion" />
+                            <input type="hidden" id="TipoCliente" />
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="textNegrilla">Nombre</label>
+                            <input type="text" class="form-control" Id="Nombre" formControlName="Nombre" [attr.disabled]="disbaleBusqueda" (keypress)="limpiarCampoNombre('Documento')" (keydown)="handleKeyDown($event)" />
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-4 col-lg-1">
+                        <button type="button" *ngIf="!btnLupa" class="btn Gt-btn-verde btn-icon" (click)="BotonBuscarMisProductos()" [attr.disabled]="disbaleBusqueda">
+                          <i class="icon-search4"></i>
+                      </button>
+                        <button *ngIf="!btnBorrador" class="btn Gt-btn-morado btn-icon legitRipple" (click)="LimpiarFormularioBorrador()">
+                          <i class="icon-eraser2"></i>
+                      </button>
+                    </div>
+                    <div class="col-xs-12 col-md-4 col-lg-2" style="text-align: right; margin-top: 28px;">
+                        Activos <input type="checkbox" class="switchery" formControlName=ProductosActivos (click)="ValidarSeleccion('si')" id="activosProduct"><br/> Cancelados <input type="checkbox" class="switchery" formControlName="ProductosCancelados"
+                            (click)="ValidarSeleccion('No')" id="canceladosProduct">
+                    </div>
+                    <div class="col-xs-12 col-md-4 col-lg-1" style="text-align: right; margin-top: 28px; width: 1px;" *ngIf="mostrarAnalisis || mostrarEstadoCuent">
+                        <button class="btn Gt-btn-morado btn-icon legitRipple" [attr.disabled]="disbaleEstadodeCuenta" (click)="ConsultaEstadoCuenta()">
+                      <i class="icon-three-bars"></i>
+                  </button>
+
+                        <button style="display: none;" id="BotonEstadoCuenta" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModalExtractosMovimientos" [attr.disabled]="disbaleEstadodeCuenta"></button>
+
+                    </div>
+
+                </div>
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-md-4 col-lg-2">
+                        <div class="form-group">
+                            <label class="textNegrilla">Tipo relación</label>
+                            <input type="text" class="form-control" Id="TipoRelacion" formControlName="TipoRelacion" [attr.disabled]="true" />
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-4 col-lg-2">
+                        <div class="form-group">
+                            <label class="textNegrilla">Estado</label>
+                            <input type="text" class="form-control" Id="Estado" formControlName="Estado" [attr.disabled]="true" />
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-4 col-lg-2">
+                        <div class="form-group">
+                            <label>Oficina asociado</label>
+                            <span class="text-danger"></span>
+                            <input type="text" class="form-control" Id="Oficina" formControlName="Oficina" [attr.disabled]="true" />
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-4 col-lg-2">
+                        <div class="form-group">
+                            <label class="textNegrilla">Teléfono</label>
+                            <input type="text" class="form-control" [attr.disabled]="true" formControlName="Telefono" />
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-4 col-lg-2">
+                        <div class="form-group">
+                            <label class="textNegrilla">Celular</label>
+                            <input type="text" class="form-control" [attr.disabled]="true" formControlName="Celular" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                </div>
+            </div>
+            <div class="col-md-12  col-sm-12 col-lg-12" id="PanelDatos">
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                </div>
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                </div>
+            </div>
+        </div>
+        <!-- <ngx-loading [show]="loading" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+      </ngx-loading> -->
+    </form>
+
+    <ngx-loading [show]="loading" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+    </ngx-loading>
+
+</div>
+<!-- Totales -->
+<div class="panel panel-white">
+    <div class="panel-body">
+        <div class="col-xs-12 col-md-12 col-lg-12">
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <div class="col-xs-12 col-md-4 col-lg-2">
+                    <div class="form-group">
+                        <label class="textNegrilla"> Aportes</label>
+                        <span class="grande"> </span>
+                        <input type="text" class="form-control " [attr.disabled]="true" value="{{Totales.TotalAportes |  currency}}" />
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-4 col-lg-2">
+                    <div class="form-group">
+                        <label class="textNegrilla"> Ahorros</label>
+                        <input type="text" class="form-control " [attr.disabled]="true" value="{{Totales.TotalAhorros |   currency}}" />
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-4 col-lg-2">
+                    <div class="form-group">
+                        <label class="textNegrilla"> Cartera</label>
+                        <input type="text" class="form-control " [attr.disabled]="true" value="{{Totales.TotalCartera |   currency}}" />
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-4 col-lg-2">
+                    <div class="form-group">
+                        <label class="textNegrilla"> Codeudor</label>
+                        <!-- alinearIzquierda -->
+                        <input type="text" class="form-control " [attr.disabled]="true" value="{{Totales.TotalCoodeudor |   currency}}" />
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-4 col-lg-2">
+                    <div class="form-group">
+                        <label class="textNegrilla"> Tarjeta débito</label>
+                        <span class="text-danger"></span>
+                        <input type="text" class="form-control " [attr.disabled]="true" value="{{Totales.TotalTarjeta |   currency}}" />
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-4 col-lg-2">
+                    <div class="form-group" style="min-width: 130px;">
+                        <label class="textNegrilla">Seguros y convenios</label>
+                        <span class="text-danger"></span>
+                        <input type="text" class="form-control " [attr.disabled]="true" value="{{Totales.TotalSeguro |   currency}}" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-12  col-sm-12 col-lg-12" id="PanelDatos">
+            <div class="col-xs-12 col-md-12 col-lg-12">
+
+            </div>
+            <div class="col-xs-12 col-md-12 col-lg-12">
+
+            </div>
+        </div>
+    </div>
+</div>
+<div id="ModalBuscarAsociados" class="modal" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal" (click)="LimpiarFormularioBorrador()">&times;</button>
+                <h6 class="modal-title">Asociados</h6>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive scrollTabla">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th><strong>Documento</strong></th>
+                                <th><strong>Nombre completo</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let resultTercero of dataTercero">
+                            <tr (click)="ConsultarInformacionAsociadopornombre(resultTercero.NumeroDocumento)">
+                                <td data-dismiss="modal">
+                                    {{resultTercero.NumeroDocumento}}
+                                </td>
+                                <td data-dismiss="modal">
+                                    {{resultTercero.PrimerApellido}} {{resultTercero.SegundoApellido}} {{resultTercero.PrimerNombre}} {{resultTercero.SegundoNombre}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal" (click)="LimpiarFormularioBorrador()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Tabs -->
+<div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelTab">
+    <!-- <div class="panel panel-white"> -->
+    <!-- Panel datos estado cuentas-->
+    <form method="get">
+        <div class="row">
+            <!-- <div class="panel-body"> -->
+            <div class="col-xs-12 col-md-3 col-lg-3">
+                <div class="container">
+                    <div class="tabbable">
+                        <!--Tabs estado cuentas NavTab-->
+                        <ul class="nav nav-tabs">
+                            <li [ngClass]="{'activar': activarBasico === true,
+                                            'cursorNone': disabledTabs,
+                                            'cursorPointer': !disabledTabs }" id="AportesTab" (click)="organizarTab(1)" *ngIf="mostrarTabAportes">
+                                <a data-toggle="tab" href="#aportesTab">Aportes</a>
+                            </li>
+                            <li [ngClass]="{'activar': activarFinanciero === true,
+                                            'cursorNone': disabledTabs,
+                                            'cursorPointer': !disabledTabs }" id="AhorrosTab" (click)="organizarTab(2)" *ngIf="mostrarTabAhorros">
+                                <a data-toggle="tab" href="#ahorrosTab">Ahorros</a>
+                            </li>
+                            <li [ngClass]="{'activar': activarContacto === true,
+                                            'cursorNone': disabledTabs,
+                                            'cursorPointer': !disabledTabs }" id="CarteraTab" (click)="organizarTab(3)" *ngIf="mostrarTabCartera">
+                                <a data-toggle="tab" href="#carteraTab">Cartera</a>
+                            </li>
+                            <li [ngClass]="{'activar': activarConvenio === true,
+                                            'cursorNone': disabledTabs,
+                                            'cursorPointer': !disabledTabs }" id="ConveniosTab" (click)="organizarTab(11)" *ngIf="mostrarConvenios">
+                                <a data-toggle="tab" href="#conveniosTab">Convenios</a>
+                            </li>
+                            <li [ngClass]="{'activar': activarAccionista === true,
+                                            'cursorNone': disabledTabs,
+                                            'cursorPointer': !disabledTabs}" id="SegurosTab" (click)="organizarTab(4)" *ngIf="mostrarTabSeguros">
+                                <a data-toggle="tab" href="#segurosTab">Seguros</a>
+                            </li>
+                            <li [ngClass]="{'activar': activarPatrimonio === true,
+                                            'cursorNone': disabledTabs,
+                                            'cursorPointer': !disabledTabs}" id="CodeudorTab" (click)="organizarTab(5)" *ngIf="mostrarTabCodeudor">
+                                <a data-toggle="tab" href="#codeudorTab">Codeudor</a>
+                            </li>
+                            <li [ngClass]="{'activar': activarReferencias === true,
+                                            'cursorNone': disabledTabs,
+                                            'cursorPointer': !disabledTabs}" id="RadicadosTab" (click)="organizarTab(6)" *ngIf="mostrarTabRadicado">
+                                <a data-toggle="tab" href="#radicadosTab">Radicados</a>
+                            </li>
+                            <li [ngClass]="{'activar': activarRepLegal === true,
+                                            'cursorNone': disabledTabs,
+                                            'cursorPointer': !disabledTabs}" id="ContabilidadTab" (click)="organizarTab(7)" *ngIf="mostrarTabContabilidad">
+                                <a data-toggle="tab" href="#contabilidadTab">Contabilidad</a>
+                            </li>
+                            <li [ngClass]="{'activar': activarEntrevista === true,
+                                            'cursorNone': disabledTabs,
+                                            'cursorPointer': !disabledTabs}" id="Otros-conceptosTab" (click)="organizarTab(8)" *ngIf="mostrarTabOtros">
+                                <a data-toggle="tab" href="#otros-conceptosTab">Otros conceptos</a>
+                            </li>
+                            <li [ngClass]="{'activar': activarEntrevista === true,
+                                            'cursorNone': disabledTabs,
+                                            'cursorPointer': !disabledTabs}" id="NotificacionTab" (click)="organizarTab(9)" *ngIf="mostrarTabNotificaciones">
+                                <a data-toggle="tab" href="#notificacionTab">Notificaciones</a>
+                            </li>
+                            <li [ngClass]="{'activar': activarHistorial === true,
+                                            'cursorNone': disabledTabs,
+                                            'cursorPointer': !disabledTabs}" id="UtilidadesTab" (click)="organizarTab(10)" *ngIf="mostrarTabUtilidades">
+                                <a data-toggle="tab" href="#utilidadesTab">Utilidades</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="tab-content">
+                        <!--Tabs estado ceuntas info-->
+                        <div id="aportesTab" class="tab-pane fade ">
+                            <app-aportes-tab #aportesComponent></app-aportes-tab>
+                        </div>
+
+                        <div id="carteraTab" class="tab-pane fade">
+                            <app-cartera-tab #carteraComponent></app-cartera-tab>
+                        </div>
+
+                        <div id="ahorrosTab" class="tab-pane fade">
+                            <app-ahorros-tab #ahorrosComponent></app-ahorros-tab>
+                        </div>
+
+                        <div id="codeudorTab" class="tab-pane fade">
+                            <app-coodeudor-tab #coodeudorTabComponent></app-coodeudor-tab>
+                        </div>
+
+                        <div id="contabilidadTab" class="tab-pane fade">
+                            <app-contabilidad-tab #contabilidadComponent></app-contabilidad-tab>
+                        </div>
+
+                        <div id="segurosTab" class="tab-pane fade">
+                            <app-seguros-tab #segurosComponent></app-seguros-tab>
+                        </div>
+
+                        <div id="radicadosTab" class="tab-pane fade">
+                            <app-radicados #radicadoComponent></app-radicados>
+                        </div>
+
+                        <div id="notificacionTab" class="tab-pane fade">
+                            <app-notificaciones-tab #notificacionesTabComponent></app-notificaciones-tab>
+                        </div>
+
+                        <div id="otros-conceptosTab" class="tab-pane fade">
+                            <app-otros-conp-tab #otrosConpComponent></app-otros-conp-tab>
+                        </div>
+                        <div id="conveniosTab" class="tab-pane fade">
+                            <app-convenios #convenioComponent></app-convenios>
+                        </div>
+                        <div id="utilidadesTab" class="tab-pane fade">
+                            <app-utilidades-tab #utilidadesComponent></app-utilidades-tab>
+                        </div>
+
+                        <button type="button" style="visibility:hidden" #BuscarAsociados class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModalBuscarAsociados">
+                       <i class="icon-search4"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- </div> -->
+    </form>
+    <!-- </div> -->
+</div>
+
+
+<div id="ModalExtractosMovimientos" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg" style="width: 1400px; left: -390px;">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" (click)="cerrarModal()" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Informes de cuentas</h6>
+            </div>
+            <div class="modal-body">
+                <div class="panel-body">
+                    <div>
+                        <object *ngIf="infoTrue" id="EsatadoCuenta"></object>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="panel-body">
+                    <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                        <button class="btn Gt-btn-verde " (click)="generarPDFEstadoCuenta()">
+                      <i class="icon-download4"></i>&nbsp; PDF
+                    </button>&nbsp;
+                        <button class="btn Gt-btn-verde " (click)="generarEXCEL()">
+                          <i class="icon-download4"></i>&nbsp; EXCEL
+                        </button>&nbsp;
+                        <button class="btn Gt-btn-verde" (click)="SendEmail()" *ngIf="OpcionEstadoCuenta">
+                          <i class="icon-mail5"></i>&nbsp; ENVIAR AL CORREO
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <ngx-loading [show]="loading2" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+            </ngx-loading>
+        </div>
+    </div>
+
+</div>

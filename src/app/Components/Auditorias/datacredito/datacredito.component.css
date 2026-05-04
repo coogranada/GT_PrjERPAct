@@ -1,0 +1,34 @@
+.switchery{
+  accent-color: rgb(185 111 151);
+}
+
+.table th {
+    font-weight: bold;
+}
+
+.table tbody tr {
+    height: 40px !important;
+}
+
+.table td {
+    vertical-align: middle;
+    /* Alinea el contenido verticalmente en el centro */
+    padding: 1px 5px 0;
+    white-space: nowrap;
+}
+
+.selected-row {
+    background-color: rgb(229, 229, 229);
+    /* Color de fondo gris para la fila seleccionada */
+}
+
+.center{
+    text-align: center;
+}
+
+#TablaAuditoria thead th {
+    position: sticky;
+    top: 0;
+    background-color: white; 
+    z-index: 2;
+}

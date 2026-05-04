@@ -1,0 +1,180 @@
+<form>
+    <form method="get" [formGroup]="debitoAutomaticoForm">
+        <div class="panel panel-white">
+            <div class="panel-heading">
+                <h6 class="panel-title">Datos</h6>
+                <div class="heading-elements">
+                    <ul class="icons-list">
+                        <li><a data-toggle="modal" data-target="#ModalAyuda"><i class="icon-question6 " title="Ayuda" data-popup="tooltip" data-trigger="hover" data-placement="top"></i></a></li>
+                        <li>
+                            <a data-action="collapse"></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label>Número de identificación:</label><span class="text-danger"> *</span>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3">
+                            <input type="text" class="form-control" id="selectDocumento" formControlName="NumeroDocumento" (blur)="ObtenerCuentas()" maxlength="10" />
+                            <span class="help-block validationSpan" *ngIf="debitoAutomaticoForm.controls['NumeroDocumento'].errors?.['required'] && (debitoAutomaticoForm.controls['NumeroDocumento'].dirty || debitoAutomaticoForm.controls['NumeroDocumento'].touched)">
+                            El número de identificación es obligatorio
+                          </span>
+                            <span class="help-block validationSpan" *ngIf="debitoAutomaticoForm.controls['NumeroDocumento'].errors?.['pattern']">
+                            El documento solo acepta números.
+                            </span>
+                        </div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <label>Número de cuenta:</label>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3">
+                            <select class="form-control" formControlName="NumeroCuentas" name="select" [attr.disabled]="BloquearCuenta" (change)="CambioCuenta()">
+                                <option>--Seleccione--</option>
+                                <option *ngFor="let Cuenta of resultCuentas"  [value]="Cuenta.IdCuentaOrigen">{{Cuenta.CuentaOrigen}} </option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                        <button type="button" class="btn Gt-btn-verde" (click)="ObtenerDebitos()" [attr.disabled]="BloquearBotonConsultar">Consultar</button> &nbsp; &nbsp;
+                        <button type="button" class="btn Gt-btn-morado" (click)="limpiarForm()">Limpiar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelTab" *ngIf="resultDebitos !== Undefined">
+            <div class="panel-body">
+
+                <div class="col-md-12 col-lg-12 col-sm-12">
+                    <br/>
+                </div>
+
+                <div class="col-md-8 col-lg-8 col-sm-8" *ngIf="dataObjet !== Undefined">
+                    <div class="table-responsive panel panel-default">
+                        <table id="TablaCuentaOrigen " class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th><strong>Cuenta origen a debitar</strong></th>
+                                    <th><strong>Número documento</strong></th>
+                                    <th><strong>Nombre</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody *ngFor="let CuentaOrigen of dataObjet; let i=index">
+                                <tr>
+                                    <td>{{CuentaOrigen.CuentaOrigen}}</td>
+                                    <td>{{CuentaOrigen.DocumentoOrigen}}</td>
+                                    <td>{{CuentaOrigen.NombreOrigen}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-md-12 col-lg-12 col-sm-12" *ngIf="dataObjetActual.length !== 0">
+                    <div class="table-responsive panel panel-default">
+                        <table id="TablaCuentaDestino " class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th><strong>Cuenta destino a acreditar</strong></th>
+                                    <th><strong>Número documento</strong></th>
+                                    <th><strong>Nombre</strong></th>
+                                    <th><strong>Periodo pago</strong></th>
+                                    <th><strong>Valor cuota</strong></th>
+                                    <th><strong>Fecha matricula débito</strong></th>
+                                    <th><strong>Fecha vencimiento débito</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody *ngFor="let CuentaOrigen of dataObjetActual; let i=index">
+                                <tr>
+                                    <td>{{CuentaOrigen.CuentaDestino}}</td>
+                                    <td>{{CuentaOrigen.DocumentoDestino}}</td>
+                                    <td>{{CuentaOrigen.NombreDestino}}</td>
+                                    <td>{{CuentaOrigen.DescripcionPeriocidad}}</td>
+                                    <td>{{CuentaOrigen.CuotaMes | currency: '$' }}</td>
+                                    <td>{{CuentaOrigen.FechaMatricula}}</td>
+                                    <td>{{CuentaOrigen.FechaVencimiento}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-md-10 col-lg-10 col-sm-10" *ngIf="dataObjetRetiro.length !== 0">
+                    <label><strong>Retiro</strong></label>
+                    <br/>
+                    <div class="table-responsive panel panel-default">
+                        <table id="TablaRetiros" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th><strong>Cuenta destino a acreditar</strong></th>
+                                    <th><strong>Número documento</strong></th>
+                                    <th><strong>Nombre</strong></th>
+                                    <th><strong>Periodo pago</strong></th>
+                                    <th><strong>Valor cuota</strong></th>
+                                    <th><strong>Fecha retiro</strong></th>
+
+                                </tr>
+                            </thead>
+                            <tbody *ngFor="let CuentaRetiro of dataObjetRetiro; let i=index">
+                                <tr>
+                                    <td>{{CuentaRetiro.CuentaDestino}}</td>
+                                    <td>{{CuentaRetiro.DocumentoDestino}}</td>
+                                    <td>{{CuentaRetiro.NombreDestino}}</td>
+                                    <td>{{CuentaRetiro.DescripcionPeriocidad}}</td>
+                                    <td>{{CuentaRetiro.CuotaMes | currency: '$' }}</td>
+                                    <td>{{CuentaRetiro.FechaRetiro}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-md-12 col-lg-12 col-sm-12 text-right">
+                    <button type="button" class="btn Gt-btn-verde" (click)="ImprimirFormato()">Imprimir</button>
+                </div>
+
+                <div class="col-md-12 col-lg-12 col-sm-12">
+                    <br/>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+            <app-formato-debitoautomatico #FormatoDebitoAutomatico></app-formato-debitoautomatico>
+            <button type="button" style="visibility:hidden" #ModalImpresionDebitoAutomatico (click)="FormatoDebitoAutomatico.AbrirFormato(resultDebitos)"></button>
+        </div>
+    </form>
+    <!-- <ngx-loading [show]="loading" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+        </ngx-loading> -->
+</form>
+<!-- <app-root (permisosEmit)="getPermisos($event)">
+</app-root> -->
+<!-- Modal Ayuda -->
+<div id="ModalAyuda" class="modal fade">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title"><i class="icon-question6"></i> Ayuda</h6>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li>Todos los campos marcados con <span class="text-danger ObligatorioGrande">*</span> son obligatorios.</li>
+                    <li>Seleccione un perfil para habilitar los permisos </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

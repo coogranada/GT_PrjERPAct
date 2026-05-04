@@ -1,0 +1,38 @@
+.ObservacionNotix1 {
+    min-width: 210px;
+}
+
+.ObservacionNotix2 {
+    min-width: 300px;
+}
+
+.ObservacionNotix3 {
+    min-width: 560px;
+}
+
+.encabezadoTablasNotidy {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #ffffff;
+}
+
+.CuentaFija {
+    position: sticky !important;
+    left: 0;
+    background: #fff;
+}
+
+.table th {
+    font-weight: bold;
+}
+
+.table tbody tr {
+    height: 45px !important;
+}
+
+.table td {
+    vertical-align: middle;
+    padding: 1px 5px 0;
+    white-space: nowrap;
+}

@@ -1,0 +1,25 @@
+.textBlod {
+   color: #565656;
+    font-weight: bold;
+}
+
+.textBigRed {
+    font-size: 25px !important;
+    color: #D84315;
+    margin-top: -5px !important;
+    margin-left: 6px;
+    position: absolute;
+
+}
+
+.tutorInfo{
+    position: relative;
+    padding: 15px;
+    color: white;
+    background:  rgb(13,165,80);;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.hiddenText { 
+ color: white;
+}

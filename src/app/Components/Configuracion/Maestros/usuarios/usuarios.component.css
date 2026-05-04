@@ -1,0 +1,11 @@
+.columnaNombre {
+    min-width: 300px !important;
+}
+
+.columnaCargo {
+    min-width: 250px !important;
+}
+
+.columnaPerfil {
+    min-width: 250px !important;
+}

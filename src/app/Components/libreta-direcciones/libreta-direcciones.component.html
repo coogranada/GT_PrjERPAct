@@ -1,0 +1,241 @@
+<!--Encabezado de consultas-->
+<div class="panel panel-white">
+    <div class="panel-heading doNotPrint">
+        <h6 class="panel-title">Datos</h6>
+        <div class="heading-elements">
+            <ul class="icons-list">
+                <li>
+                    <a data-toggle="modal" data-target="#ModalAyuda">
+                        <i class="icon-question6 " title="Ayuda" data-popup="tooltip" data-trigger="hover"
+                            data-placement="top"></i>
+                    </a>
+                </li>
+                <li>
+                    <a data-action="collapse"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="panel-body doNotPrint">
+        <form method="get" [formGroup]="libretaDireccionesFrom" >
+            <div class="col-xs-12 col-md-12 col-lg-12" id="tipoConsulta">
+                <div class="row">
+                    <div class="col-xs-12 col-md-12 col-lg-3">
+                        <div class="form-group">
+                            <label class="textNegrilla">Tipo de consulta:</label>
+                            <span class="grande"> *</span>
+                            <select class="form-control" formControlName="TipoConsulta" name="select" id="operaJquery" autofocus (change)="validarTipoConsulta(libretaDireccionesFrom.value)">
+                                <option value="0">-- Seleccione --</option>
+                                <option value="1">Area</option>
+                                <option value="2">Documento</option>
+                                <option value="3">Nombre</option>
+                                <option value="4">Oficina</option>
+                                <option value="5">Usuario</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-3" *ngIf="habilitarDocumento">
+                        <div class="form-group">
+                            <label class="textNegrilla">Documento:</label>
+                            <span class="text-danger"> </span> 
+                            <span tooltip="Documento" placement="top" show-delay="500">
+                                <input type="text" class="form-control" id="documento" formControlName="Documento">
+                            </span>
+                            <span class="help-block validationSpan"
+                                *ngIf="libretaDireccionesFrom.controls['Documento'].errors?.required && 
+                                (libretaDireccionesFrom.controls['Documento'].dirty || libretaDireccionesFrom.controls['Documento'].touched)">
+                                El campodocumento es obligatorio.
+                            </span>
+                            <span class="help-block validationSpan"
+                                *ngIf="libretaDireccionesFrom.controls['Documento'].errors?.pattern && 
+                                (libretaDireccionesFrom.controls['Documento'].dirty || libretaDireccionesFrom.controls['Documento'].touched)">
+                                El campo documento por solo números.
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-3" *ngIf="habilitarNombre">
+                        <div class="form-group">
+                            <label class="ocultarLabel"> Nombre:</label>
+                            <span class="text-danger"> </span>
+                            <span tooltip="Nombre" placement="top" show-delay="500">
+                                <input type="text" class="form-control" id="nombre" formControlName="Nombre">
+                            </span>
+                            <span class="help-block validationSpan"
+                                *ngIf="libretaDireccionesFrom.controls['Nombre'].errors?.required && 
+                                    (libretaDireccionesFrom.controls['Nombre'].dirty || libretaDireccionesFrom.controls['Nombre'].touched)">
+                                El campo nombre es obligatorio.
+                            </span>
+                            <span class="help-block validationSpan"
+                                *ngIf="libretaDireccionesFrom.controls['Nombre'].errors?.pattern && 
+                                    (libretaDireccionesFrom.controls['Nombre'].dirty || libretaDireccionesFrom.controls['Nombre'].touched)">
+                                El campo nombre por solo letras.
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-3" *ngIf="habilitarOficina">
+                        <div class="form-group">
+                            <label class="ocultarLabel"> Oficina:</label>
+                            <span class="text-danger"> </span>
+                            <span tooltip="Oficina" placement="top" show-delay="500">
+                                <select class="form-control" formControlName="Oficina" id="oficina" name="select"  autofocus>
+                                    <option *ngFor="let oficina of dataOficina" [value]="oficina.IdLista">
+                                            {{oficina.Descripcion}}
+                                    </option>
+                                </select>
+                                <span class="help-block validationSpan"
+                                    *ngIf="libretaDireccionesFrom.controls['Oficina'].errors?.required && 
+                                         (libretaDireccionesFrom.controls['Oficina'].dirty || libretaDireccionesFrom.controls['Oficina'].touched)">
+                                    Debe seleccionar una opción.
+                                </span>
+                              
+                            </span>
+                    
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-3" *ngIf="habilitarUsuario">
+                        <div class="form-group">
+                            <label class="ocultarLabel"> Usuario:</label>
+                            <span class="text-danger"> </span>
+                            <span tooltip="Usuario" placement="top" show-delay="500">
+                                <input type="text" class="form-control" id="usuario" formControlName="Usuario">
+                            </span>
+                            <span class="help-block validationSpan"
+                                *ngIf="libretaDireccionesFrom.controls['Usuario'].errors?.required && 
+                                    (libretaDireccionesFrom.controls['Usuario'].dirty || libretaDireccionesFrom.controls['Usuario'].touched)">
+                                El campo usuario es obligatorio.
+                            </span>
+                            <span class="help-block validationSpan"
+                                *ngIf="libretaDireccionesFrom.controls['Usuario'].errors?.pattern && 
+                                       (libretaDireccionesFrom.controls['Usuario'].dirty || libretaDireccionesFrom.controls['Usuario'].touched)">
+                                El campo usuario por solo letras.
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-3" *ngIf="habilitarArea">
+                        <div class="form-group">
+                            <label class="ocultarLabel"> Area:</label>
+                            <span class="text-danger"> </span>
+                            <span tooltip="Oficina" placement="top" show-delay="500">
+                                <select class="form-control" formControlName="Area" id="area" name="select"  autofocus>
+                                    <option *ngFor="let area of resultArea" [value]="area.IdArea">
+                                        {{area.Nombre}}
+                                    </option>
+                                </select>
+                            </span>
+                            <span class="help-block validationSpan"
+                                *ngIf="libretaDireccionesFrom.controls['Area'].errors?.required && 
+                                       (libretaDireccionesFrom.controls['Area'].dirty || libretaDireccionesFrom.controls['Area'].touched)">
+                                Debe seleccionar una opción.
+                            </span>
+                        </div>
+                    </div>                  
+                    <div class="col-xs-12 col-md-3 col-lg-3" >
+                        <button type="button" class="btn Gt-btn-verde btn-icon" (click)="ConsultarUsuario()" *ngIf="habilitaBotonBuscar">
+                            <i class="icon-search4"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!--Card perfil usuario-->
+<form method="get">
+    <div class="row">
+        <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="MostrarCard">
+            <div class="panel registration-form">
+                <div class="panel-body">
+                    <br/>
+                    <div class="content8" id="conten8">
+                        <div class="blog-card">
+                            <div class="meta">
+                                <!-- style="background-image: url(../../../assets/images/FJB.jpg)" -->
+                                <div class="photo" >
+                                    <img [src]="dataCardUser.ImgUser" *ngIf="dataCardUser.ImgUser !== null" alt="" class="ImgUser" id="imgUserId">
+                                    <img  src="../../../assets/images/user-null.jpg" *ngIf="dataCardUser.ImgUser == null"  alt="" style="width: 109%; margin: 0px 0px 0px -17px;">
+                                </div>
+                                <ul class="details">
+                                    <li class="area">{{dataCardUser.Area}}</li>
+                                    <li class="author">{{dataCardUser.Cargo}}</li>
+                                    <li class="date">Oficina - {{dataCardUser.Oficina}}</li>
+                                </ul>
+                            </div>
+                            <div class="description">
+                                <h1 style="font-size: 30px; padding-bottom: 10px;" class="camelcase">{{dataCardUser.NombreUsuario | titlecase}}</h1>
+                                
+                                <h2><label><i class="icon-user"></i> Usuario:</label>&nbsp; {{dataCardUser.Usuario}}</h2>
+                                <!-- <h2 style="font-size: 13px;"><label><i class=" icon-vcard"></i> Tipo Identificación:</label>&nbsp;Cedula</h2> -->
+                                <h2><label><i class=" icon-vcard"></i> Identificación:</label>&nbsp;{{dataCardUser.Identificacion}}</h2>        
+                                <!-- <h2 style="font-size: 13px;"><label><i class="icon-collaboration"></i> Oficina:</label>&nbsp;Medellin</h2> -->
+                                <h2><label><i class=" icon-calendar"></i> Fecha cumpleaños:</label>&nbsp;{{ dataCardUser.Cumpleanos | date:'dd MMMM' }}</h2>
+                                <!-- <h2 style="font-size: 13px;"><label><i class="icon-collaboration"></i> Área:</label>vGestión Tecnologica</h2> -->
+                                <h2><label><i class=" icon-phone2"></i> Extensión:</label>&nbsp; {{dataCardUser.Extencion}}</h2>
+                                <h2><label><i class=" icon-phone2"></i> Celular:</label>&nbsp;{{dataCardUser.Celular}}</h2>
+                                <h2 class="minuscula"><label ><i class="icon-envelop3"></i> Email:</label>&nbsp; {{dataCardUser.Correo}}</h2>
+                                <br>  <!-- --> <!-- <h2><label><i class=" icon-user-tie"></i> Cargo:</label>&nbsp;Analista desarrollador</h2> -->
+                                <!-- <p class="read-more">
+                                    <a href="https://es.stackoverflow.com/users/70787/francisco-j-blanco">Francisco javier blanco.</a>
+                                </p> -->
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="!MostrarCard">
+            <div class="panel registration-form">
+                <div class="panel-body">
+                    <div class="alert alert-secondary" role="alert">
+                        Aún no hay información para mostrar
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn Gt-btn-verde btn-icon legitRipple" style="visibility:hidden" #AbrirEps data-toggle="modal"
+        data-target="#ModalEPS">
+    </button>
+</form>
+
+<div id="ModalEPS" class="modal" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal" (click)="LimpiarCampo()">&times;</button>
+                <h6 class="modal-title">Usuarios</h6>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive scrollTabla">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <!-- <th><strong>Documento</strong></th> -->
+                                <th><strong>Nombre</strong></th>
+                                <th><strong>Area</strong></th>
+                                <th><strong>Cargo</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let itemUser of dataUserArea; let i = index">
+                            <tr (click)="ConsultarUserId(itemUser.IdUsuario)">
+                                <td data-dismiss="modal">
+                                    {{itemUser.Nombre}}
+                                </td>
+                                <td data-dismiss="modal">
+                                    {{itemUser.IdArea}}
+                                </td>
+                                <td data-dismiss="modal">
+                                    {{itemUser.IdCargo}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal" (click)="LimpiarCampo()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

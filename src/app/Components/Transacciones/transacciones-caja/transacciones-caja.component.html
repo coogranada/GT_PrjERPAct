@@ -1,0 +1,1129 @@
+<div class="row">
+    <!-- ÁREA PRINCIPAL -->
+    <div class="col-md-8">
+        <div class="row">
+            <!-- BÚSQUEDA -->
+            <div class="col-md-12">
+                <div class="panel panel-white">
+                    <div class="panel-heading">
+                        <section class="caja-main">
+                            <div>
+                                <div>
+                                    <div class="col-md-5 text-center">
+
+                                        <div class="row">
+                                            <div class="col-xs-6">
+                                                <label class="radio-custom">
+                                                    <input type="radio" class="radioB" name="TipoPersona" value="0"
+                                                        (dblclick)="abrirModalNombres()"
+                                                        (click)="SeleccionBusqueda(true)">
+                                                    <span (dblclick)="abrirModalNombres()">Documento</span>
+                                                </label>
+                                            </div>
+
+                                            <div class="col-xs-6">
+                                                <label class="radio-custom">
+                                                    <input type="radio" class="radioB" name="TipoPersona" value="1"
+                                                        (change)="SeleccionBusqueda(false)"
+                                                        (dblclick)="setCuentaTesoreria()">
+                                                    <span (dblclick)="setCuentaTesoreria()">Cuenta</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7 text-center">
+                                        <form autocomplete="off" id="form" [formGroup]="formBusqueda">
+                                            <!-- Campo Documento -->
+                                            <div *ngIf="vbleDocCuenta" class="fila-busqueda">
+                                                <input type="text" class="form-control campo-documento"
+                                                    tooltip="Documento" id="SelectBuscar" placement="top"
+                                                    formControlName="documento" maxlength="20" placeholder="Documento"
+                                                    #inputDocumento (change)="limpiarFormulario(1)" />
+
+                                                <select class="form-control campo-documento"
+                                                    (change)="capturarTipoProducto($event)"
+                                                    formControlName="idTipoProducto">
+                                                    <option value="">--seleccione</option>
+                                                    <option *ngFor="let i of ListCatProducto" [value]="i.CodProducto">
+                                                        {{i.DesProducto}}</option>
+                                                </select>
+
+                                                <button type="button" class="btn Gt-btn-verde btn-icon btn-buscar"
+                                                    (click)="capturarDocumento(inputDocumento)">
+                                                    <i class="glyphicon glyphicon-search"></i>
+                                                </button>
+                                            </div>
+
+                                            <!-- Campos Cuenta -->
+                                            <div *ngIf="!vbleDocCuenta" class="fila-busqueda">
+
+                                                <input type="text" class="form-control cuenta-corta" maxlength="3"
+                                                    formControlName="cuenta1" placeholder="000" inputmode="numeric" />
+                                                <input type="text" class="form-control cuenta-corta" maxlength="3"
+                                                    formControlName="cuenta2" placeholder="000" inputmode="numeric"
+                                                    #cuenta2 />
+                                                <input type="text" class="form-control cuenta-larga" maxlength="7"
+                                                    formControlName="cuenta3" placeholder="0000000" inputmode="numeric"
+                                                    #cuenta3 />
+                                                <input type="text" class="form-control cuenta-corta" maxlength="1"
+                                                    formControlName="cuenta4" placeholder="0" inputmode="numeric"
+                                                    #cuenta4 />
+
+                                                <button type="button" class="btn Gt-btn-verde btn-icon btn-buscar"
+                                                    (click)="buscarProductosCuentaTransa()">
+                                                    <i class="glyphicon glyphicon-search"></i>
+                                                </button>
+                                            </div>
+                                        </form>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+            <!-- PRODUCTO Y CUENTA -->
+            <div class="col-md-12">
+                <div class="panel panel-white">
+                    <div class="panel-heading pad5">
+                        <section class="caja-main">
+
+                            <div class="col-xs-12 col-md-12 col-lg-12">
+                                <div class="scrollTablaProductos ">
+                                    <div class="col-xs-12 col-md-12 col-lg-12 pad0">
+                                        <div *ngIf="!ListProducto || ListProducto.length === 0"
+                                            class="panel panel-default">
+                                            <div class="panel-body">
+                                                <div class="alert-secondary" role="alert">
+                                                    No hay registros
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <table *ngIf="ListProducto && ListProducto.length > 0" id="tablaProducto"
+                                            class="table table-hover sticky-last-column">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <strong>Cuenta</strong>
+                                                    </th>
+                                                    <th>
+                                                        <strong>Producto</strong>
+                                                    </th>
+                                                    <th style="text-align: left;">
+                                                        <strong>Efectivo</strong>
+                                                    </th>
+                                                    <th style="text-align: center;">
+                                                        <strong>Estado</strong>
+                                                    </th>
+                                                    <th>
+                                                        <strong>Opciones</strong>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let i of ListProducto">
+                                                    <td>{{i.strCuenta}}</td>
+                                                    <td>{{i.DescripcionProducto}}</td>
+                                                    <td>{{i.Efectivo | currency: '$'}}</td>
+                                                    <td style="text-align: center;">{{i.DescripcionEstado}}</td>
+                                                    <td class="operacionFija">
+                                                        <input type="radio" name="productoSelect"
+                                                            (click)="seleccionarProducto(i)" class="radioB">
+                                                        &nbsp;&nbsp;
+                                                        <button class="btn Gt-btn-verde btn-icon legitRipple"
+                                                            (click)="seleccionarProducto(i)"
+                                                            (click)="abrirModalcondiciones()"
+                                                            [disabled]="!HabilitaDetalle">
+                                                            <i class="glyphicon glyphicon-folder-open"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </section>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TRANSACCION -->
+            <div class="col-md-12">
+                <div class="panel panel-white">
+                    <div class="panel-heading">
+                        <section class="caja-main">
+                            <div>
+                                <span><strong>Transacción:</strong></span>
+                                <form autocomplete="off" id="form" [formGroup]="formTransaccion">
+                                    <select class="form-control" (change)="capturarTipoTransaccion($event)"
+                                        formControlName="idTransaccion">
+                                        <option value="">--seleccione</option>
+                                        <option *ngFor="let i of ListTransaccionxPerfilFiltrado"
+                                            [value]="i.IdConfiguracion">
+                                            {{i.Descripcion}}</option>
+                                    </select>
+                                </form>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- RESUMEN -->
+    <div class="col-md-4 caja-summary">
+        <aside>
+            <div class="panel panel-white">
+                <div class="panel-heading pad5T pad0R pad10L pad0B">
+                    <div class="summary-item total mar5T">
+                        <p class="txt-principal mar0B">Resumen de la operación</p>
+                    </div>
+
+
+                    <div class="summary-item">
+                        <span>Documento:</span>
+                        <strong>{{DocumentoSelected}}</strong>
+                    </div>
+
+                    <div class="summary-item">
+                        <span>Nombre:</span>
+                        <strong>{{NombreSelected}}</strong>
+                    </div>
+
+                    <div class="summary-item">
+                        <span>Oficina cliente:</span>
+                        <strong>{{NombOficinaCliselected}}</strong>
+                    </div>
+
+                    <div class="summary-item">
+                        <span>Cuenta:</span>
+                        <strong>{{CuentaSelected}}</strong>
+                    </div>
+
+                    <div class="summary-item">
+                        <span>Operación permitida:</span>
+                        <strong>{{OperacionPSelected}}</strong>
+                    </div>
+
+                    <div class="summary-item" *ngIf="TipoProductoSelected !== 11">
+                        <span>Activa por movimiento:</span>
+                        <strong>
+                            <input type="checkbox" class="switchery input-escalado check-dis"
+                                [checked]="ActivaMovtoSelected">
+                        </strong>
+                    </div>
+
+                    <div class="summary-item">
+                        <span>Producto:</span>
+                        <strong>{{ProductoSelected}}</strong>
+                    </div>
+
+
+                    <div class="summary-item">
+                        <span>Operación:</span>
+                        <strong>{{TipoTransaccionStrSelected}}</strong>
+                    </div>
+
+
+                    <div class="summary-item">
+                        <span>Total:</span>
+                        <span><strong>{{TotalSaldo | currency: '$'}}</strong></span>
+                    </div>
+
+
+                    <div class="summary-item total mar1T">
+                        <div class="panel panel-default">
+                            <div class="panel-body pad0B pad10T" *ngIf="NaturalezaTransa == -1">
+                                <p class="txt-principal1"><i class="glyphicon glyphicon-plus-sign"></i>&nbsp; RECIBO
+                                    DINERO - Ingresos a caja</p>
+                            </div>
+                            <div class="panel-body  pad0B pad10T" *ngIf="NaturalezaTransa == 1">
+                                <p class="txt-principal"><i class="glyphicon glyphicon-minus-sign"></i>&nbsp; ENTREGA
+                                    DINERO - Egresos de caja</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+<div class="row">
+    <!-- OPERACION -->
+    <div class="col-md-12">
+        <div class="panel panel-white ">
+            <div class="panel-heading" style="
+    border-bottom-width: 0px;
+    padding-bottom: 0px;
+">
+                <section class="caja-main">
+
+                    <div class="row">
+
+
+                        <div class="col-md-8 col-lg-8 col-sm-8 espacioCol1 pad0L pad5R">
+                            <div class="panel panel-default" id="PanelTab">
+                                <div class="panel-body">
+                                    <div class="col-xs-12 col-md-12 col-lg-12">
+                                        <div class="tabbable">
+                                            <ul class="nav nav-tabs">
+                                                <li id="tesoreria" (click)="esTabHabilitado(1) && devolverTab(1)"
+                                                    [ngClass]="{'activar': activaTesoreria === true, 'disabled': !esTabHabilitado(1) }">
+                                                    <a href="#tab1" data-toggle="tab" #tesoreriaTab>Tesorería</a>
+                                                </li>
+                                                <li id="cuotas" (click)="esTabHabilitado(2) && devolverTab(2)"
+                                                    [ngClass]="{'activar': activaCuotas === true, 'disabled': !esTabHabilitado(2)}">
+                                                    <a href="#tab2" data-toggle="tab" #cuotasTab>Cuotas</a>
+                                                </li>
+                                                <li id="cartera" (click)="esTabHabilitado(3) && devolverTab(3)"
+                                                    [ngClass]="{'activar': activaCartera=== true, 'disabled': !esTabHabilitado(3) }">
+                                                    <a href="#tab3" data-toggle="tab" #carteraTab>Cartera</a>
+                                                </li>
+                                                <li id="sarlaft" (click)="esTabHabilitado(4) && devolverTab(4)"
+                                                    [ngClass]="{'activar': activaSiplaft=== true, 'disabled': !esTabHabilitado(4) }">
+                                                    <a href="#tab4" data-toggle="tab" #sarlaftTab>Sarlaft</a>
+                                                </li>
+                                                <li id="cheques" (click)="esTabHabilitado(5) && devolverTab(5)"
+                                                    [ngClass]="{'activar': activaCheque=== true, 'disabled': !esTabHabilitado(5) }">
+                                                    <a href="#tab5" data-toggle="tab" #chequesTab>Cheques</a>
+                                                </li>
+                                                <li id="convenio" (click)="esTabHabilitado(6) && devolverTab(6)"
+                                                    [ngClass]="{'activar': activaConvenio === true, 'disabled': !esTabHabilitado(6) }">
+                                                    <a href="#tab6" data-toggle="tab" #convenioTab>Convenio</a>
+                                                </li>
+                                                <li id="transa" (click)="esTabHabilitado(7) && devolverTab(7)"
+                                                    (click)="generarImpresion()"
+                                                    [ngClass]="{'activar': activaTransa === true, 'disabled': !esTabHabilitado(7) }">
+                                                    <a href="#tab7" data-toggle="tab" #transaTab>Transa</a>
+                                                </li>
+                                            </ul>
+                                            <div class="tab-content">
+                                                <!-- Inicio tab1 -->
+                                                <div class="tab-pane" id="tab1">
+
+                                                    <div class="row">
+                                                        <div class="col-lg-3 col-md-3 col-sm-3">
+                                                            <div class="form-group">
+                                                                <label><strong>Transacción:</strong></label>
+                                                                <input type="text" class="form-control" placeholder=""
+                                                                    [(ngModel)]="OtraTransaccionCodigo"
+                                                                    (blur)="buscarCodigoOtraTransaccion()"
+                                                                    (input)="limpiarcamposOtraTransa('codigo')">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6 col-md-6 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label><strong>Descripción:</strong></label>
+                                                                <input type="text" class="form-control" placeholder=""
+                                                                    [(ngModel)]="OtraTransaccionDescripcion"
+                                                                    (input)="limpiarcamposOtraTransa('descripcion')">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-lg-1 col-md-1 col-sm-1">
+                                                            <div class="form-group">
+                                                                <label>&nbsp;</label>
+                                                                <button type="button"
+                                                                    (click)="buscarDescripcionOtraTransaccion()"
+                                                                    class="btn Gt-btn-verde btn-icon btn-buscar">
+                                                                    <i class="glyphicon glyphicon-search"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-lg-3 col-md-3 col-sm-3">
+                                                            <div class="form-group">
+                                                                <label><strong>Documento:</strong></label>
+                                                                <input type="text" class="form-control" placeholder=""
+                                                                    [(ngModel)]="OtraTransaccionDocumento"
+                                                                    (blur)="buscarDocumentoOtraTransaccion()"
+                                                                    (input)="limpiarcamposOtraTransaDoc('documento')">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-lg-6 col-md-6 col-sm-6">
+                                                            <div class="form-group">
+                                                                <label><strong>Nombre:</strong></label>
+                                                                <input type="text" class="form-control pmayuscula"
+                                                                    placeholder="" [(ngModel)]="OtraTransaccionNombre"
+                                                                    (input)="limpiarcamposOtraTransaDoc('nombre')">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-lg-1 col-md-1 col-sm-1">
+                                                            <div class="form-group">
+                                                                <label>&nbsp;</label>
+                                                                <button type="button"
+                                                                    (click)="buscarNombreOtraTransaccion()"
+                                                                    class="btn Gt-btn-verde btn-icon btn-buscar">
+                                                                    <i class="glyphicon glyphicon-search"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-lg-12 col-md-12 col-sm-12">
+                                                            <div class="form-group">
+                                                                <label><strong>Comentario:</strong></label>
+                                                                <input type="text" class="form-control" placeholder=""
+                                                                    [(ngModel)]="OtraTransaccionComentario"
+                                                                    maxlength="250">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- Inicio tab2 -->
+                                                <div class="tab-pane" id="tab2">
+                                                    <div class="row">
+                                                        <div class="col-lg-12 col-md-12 col-sm-12s">
+                                                            <div class="form-group">
+                                                                <label>Código o descripción:</label>
+                                                                <textarea class="form-control"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Inicio tab3 -->
+                                                <div class="tab-pane" id="tab3">
+                                                    <div class="row">
+                                                        <div class="col-lg-12 col-md-12 col-sm-12">
+                                                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                                                <label class="radio-custom">
+                                                                    <input type="radio" class="radioB" value="0"
+                                                                        name="tabCartera">
+                                                                    <span>Ponerse al día</span>
+                                                                </label>
+                                                                <label class="radio-custom">
+                                                                    <input type="radio" class="radioB" value="0"
+                                                                        name="tabCartera">
+                                                                    <span>Cuotas a pagar:</span>
+                                                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                                                        <input type="number" class="form-control">
+                                                                    </div>
+                                                                </label>
+
+                                                                <label class="radio-custom">
+                                                                    <input type="radio" class="radioB" value="0"
+                                                                        name="tabCartera">
+                                                                    <span>Cancelar</span>
+                                                                </label>
+
+                                                                <div class="row">
+                                                                    <div class="col-lg-11 col-md-11 col-sm-11">
+                                                                        <div class="form-group">
+                                                                            <input type="text" currencyMask
+                                                                                [options]="{precision : 0 }"
+                                                                                class="form-control  txt-bold txt-total" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-1 col-md-1 col-sm-1"></div>
+                                                            <div
+                                                                class="col-lg-5 col-md-5 col-sm-5 panel panel-default paddingCol">
+                                                                <div>
+                                                                    <div class="form-group">
+                                                                        <label class="espacioCarinf">Interés de
+                                                                            mora:</label>
+                                                                        <input type="text"
+                                                                            class="form-control espacioCarsup"
+                                                                            placeholder="">
+                                                                    </div>
+                                                                </div>
+                                                                <div>
+                                                                    <div class="form-group">
+                                                                        <label class="espacioCarinf">Diferidos:</label>
+                                                                        <input type="text"
+                                                                            class="form-control espacioCarsup"
+                                                                            placeholder="">
+                                                                    </div>
+                                                                </div>
+                                                                <div>
+                                                                    <div class="form-group">
+                                                                        <label class="espacioCarinf">Interés
+                                                                            corriente:</label>
+                                                                        <input type="text"
+                                                                            class="form-control espacioCarsup"
+                                                                            placeholder="">
+                                                                    </div>
+                                                                </div>
+                                                                <div>
+                                                                    <div class="form-group">
+                                                                        <label class="espacioCarinf">Capital:</label>
+                                                                        <input type="text"
+                                                                            class="form-control espacioCarsup"
+                                                                            placeholder="">
+                                                                    </div>
+                                                                </div>
+                                                                <div>
+                                                                    <div class="form-group">
+                                                                        <label class="espacioCarinf">Interés
+                                                                            anticipado:</label>
+                                                                        <input type="text"
+                                                                            class="form-control espacioCarsup"
+                                                                            placeholder="">
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                <!-- Inicio tab4 -->
+                                                <div class="tab-pane" id="tab4">
+                                                    <div class="row">
+                                                        <div class="col-lg-12 col-md-12 col-sm-12">
+                                                            <div class="row text-center"><strong>IDENTIFICACIÓN DE QUIEN
+                                                                    REALIZA LA TRANSACCIÓN</strong>
+                                                                <hr>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label>Consecutivo:</label>
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder="">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label>Documento:</label>
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder="">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                                                    <div class="form-group">
+                                                                        <label>Tipo documento:</label>
+                                                                        <select name="selectTd" id=""
+                                                                            class="form-control">
+                                                                            <option value="1">--seleccione</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label>Primer apellido:</label>
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder="">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label>Segundo apellido:</label>
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder="">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label>Primer nombre:</label>
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder="">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label>Segundo nombre:</label>
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder="">
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label>Celular:</label>
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder="">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                                                    <div class="form-group">
+                                                                        <label>Dirección:</label>
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder="">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Inicio tab5 -->
+                                                <div class="tab-pane" id="tab5">
+                                                    <div class="row">
+                                                        <div class="col-lg-12 col-md-12 col-sm-12">
+                                                            <div class="row">
+                                                                <div class="col-lg-1 col-md-1 col-sm-1">
+                                                                    <div class="form-group">
+                                                                        <label>Banco:</label>
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder="">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-5 col-md-5 col-sm-5">
+                                                                    <div class="form-group">
+                                                                        <label>&nbsp;</label>
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder="">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label>Cuenta corriente:</label>
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder="">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label>Número cheque:</label>
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder="">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label>Remesa:</label>
+                                                                        <select name="" id="" class="form-control">
+                                                                            <option value="1">--seleccione</option>
+                                                                            <option value="1">Al cobro</option>
+                                                                            <option value="1">Interna</option>
+                                                                            <option value="1">Local</option>
+                                                                            <option value="1">Negociada</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label>Valor cheque:</label>
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder="">
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-xs-12 col-md-12 col-lg-12"
+                                                                    style="justify-items: end; padding: 1em;">
+                                                                    <div class="actions clearfix">
+
+                                                                        <button
+                                                                            class="btn Gt-btn-verde btn-icon legitRipple"
+                                                                            type="button">
+                                                                            <i class=""></i>&nbsp; AGREGAR
+                                                                        </button>&nbsp;
+
+                                                                        <button
+                                                                            class="btn Gt-btn-morado btn-icon legitRipple"
+                                                                            type="reset">
+                                                                            LIMPIAR
+                                                                        </button>&nbsp;
+
+                                                                        <button
+                                                                            class="btn Gt-btn-verde btn-icon legitRipple"
+                                                                            type="button">
+                                                                            <i class=""></i>&nbsp; GUARDAR
+                                                                        </button>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <hr>
+                                                                <table class="table table-hover">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Banco</th>
+                                                                            <th>Cuenta corriente</th>
+                                                                            <th>Nro cheque</th>
+                                                                            <th>Valor cheque</th>
+                                                                            <th>Remesa</th>
+                                                                            <th>Opciones</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <!--
+                                                                        <tr>
+                                                                            <td>07-Bancolombia</td>
+                                                                            <td style="text-align: center;">123809128301
+                                                                            </td>
+                                                                            <td style="text-align: center;">0997</td>
+                                                                            <td>$2,000,000.00</td>
+                                                                            <td>Local</td>
+                                                                            <td class="operacionFija">
+                                                                                <button
+                                                                                    class="btn Gt-btn-verde btn-icon legitRipple">
+                                                                                    <i
+                                                                                        class="icon-pencil"></i></button>&nbsp;
+                                                                                <button
+                                                                                    class="btn Gt-btn-morado btn-icon legitRipple">
+                                                                                    <i
+                                                                                        class="glyphicon glyphicon-trash"></i></button>
+                                                                            </td>
+
+                                                                        </tr>
+                                                                        -->
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="col-lg-6 col-md-6 col-sm-6"></div>
+                                                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                                                    <div class="form-group">
+                                                                        <label for=""><strong>Total
+                                                                                cheques:</strong></label>
+                                                                        <input type="text" currencyMask
+                                                                            [options]="{precision : 2 }"
+                                                                            class="form-control  txt-bold txt-total"
+                                                                            value="" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Inicio tab6 -->
+                                                <div class="tab-pane" id="tab6">
+                                                    <div class="row">
+                                                        <div class="col-lg-12 col-md-12 col-sm-12s">
+
+                                                            <div class="table-responsive scrollTablaProductos">
+                                                                <div class="col-xs-12 col-md-12 col-lg-12 pad0">
+                                                                    <table id="tablaProducto" cellpadding="6"
+                                                                        cellspacing="0"
+                                                                        class="table table-hover sticky-last-column">
+
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Tipo</th>
+                                                                                <th>Código</th>
+                                                                                <th>Entidad</th>
+                                                                                <th>Fecha</th>
+                                                                                <th>Valor</th>
+                                                                                <th class="operacionFija pad5L">
+                                                                                    <input type="checkbox"
+                                                                                        class="switchery"
+                                                                                        [(ngModel)]="SelectAll"
+                                                                                        (change)="toggleAll()">
+                                                                                </th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <tr *ngFor="let i of ListCarteraConvenio">
+                                                                                <td>{{i.Tipo}}</td>
+                                                                                <td>{{i.Contrato}}</td>
+                                                                                <td>{{i.Entidad}}</td>
+                                                                                <td>{{i.FechaInicio | date :
+                                                                                    "yyyy/MM/dd"}}</td>
+                                                                                <td>{{i.Saldo | currency: '$' }}</td>
+                                                                                <td class="operacionFija ">
+                                                                                    <input type="checkbox"
+                                                                                        name="importeSelect"
+                                                                                        class="switchery"
+                                                                                        [(ngModel)]="i.selected"
+                                                                                        (change)="recalcularTotal()">
+                                                                                    &nbsp;&nbsp;
+                                                                                </td>
+                                                                            </tr>
+
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Inicio tab7 -->
+                                                <div class="tab-pane" id="tab7">
+                                                    <div class="pdf-container">
+                                                        <iframe id="ImpresionTransaccion" width="100%" height="700px"
+                                                            style="border: none;">
+                                                        </iframe>
+                                                    </div>
+
+                                                </div>
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-4 pad0R">
+                            <div class="panel panel-default paddingCol">
+                                <div class="form-group">
+                                    <label class="txt-principal txt-bold">Efectivo:</label>
+                                    <input type="text" appMonedaDirectiva class="form-control txt-bold txt-right"
+                                        [(ngModel)]="TotalEfectivo" (blur)="recalcularSaldoTotal()"
+                                        [disabled]="!HabilitaEfectivo" maxlength="12" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="txt-principal txt-bold">Cheque:</label>
+                                    <input type="text" appMonedaDirectiva class="form-control  txt-bold txt-right"
+                                        [(ngModel)]="TotalCheque" (blur)="recalcularSaldoTotal()"
+                                        [disabled]="!HabilitaCheque" maxlength="12" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="txt-principal txt-bold">Total:</label>
+                                    <input type="text" appMonedaDirectiva
+                                        class="form-control  txt-bold txt-total txt-right" [(ngModel)]="TotalSaldo"
+                                        [ngClass]="{'txt-totalC': NaturalezaTransa === -1, 'txt-totalR': NaturalezaTransa === 1}"
+                                        [disabled]="true" />
+                                </div>
+                            </div>
+
+                            <div class="div-derecha panel panel-default paddingCol">
+                                <button class="btn Gt-btn-morado"
+                                    (click)="preguntarLimpiarFormulario()">Limpiar</button>&nbsp;&nbsp;
+                                <button class="btn Gt-btn-verde" (click)="guardarTransaccion()">Guardar</button>
+                                <!-- <button class="btn Gt-btn-verde" (click)="imprimirValidadora()">imprimir</button> -->
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" #ModalCondiciones data-toggle="modal" data-target="#ModalCondiciones" data-popup="tooltip"
+    data-placement="top" data-trigger="hover">
+<input type="hidden" #ModalOtrasTransacciones data-toggle="modal" data-target="#ModalOtrasTransacciones"
+    data-popup="tooltip" data-placement="top" data-trigger="hover">
+<input type="hidden" #ModalImagenRegistroFirmas data-toggle="modal" data-target="#ModalImagenesRegistroFirmas"
+    data-popup="tooltip" data-placement="top" data-trigger="hover">
+<input type="hidden" #ModalOtrasTransaccionesNombres data-toggle="modal" data-target="#ModalOtrasTransaccionesNombres"
+    data-popup="tooltip" data-placement="top" data-trigger="hover">
+<input type="hidden" #ModalBuscarNombres data-toggle="modal" data-target="#ModalBuscarNombres" data-popup="tooltip"
+    data-placement="top" data-trigger="hover">
+
+<!-- Modal Condiciones -->
+<div id="ModalCondiciones" class="modal fade" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog ">
+        <div class="modal-content modal-lg" style="width: 1110px; left: -200px;">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Condiciones de manejo</h6>
+            </div>
+            <div class="modal-body">
+
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="col-lg-9 col-md-9 col-sm-9">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <label>Cuenta:</label>
+                                    <input type="text" class="form-control" disabled [value]="CuentaSelected">
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                <div class="form-group">
+                                    <label>Titular:</label>
+                                    <input type="text" class="form-control" disabled [value]="DocumentoSelected">
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label>Nombres:</label>
+                                    <input type="text" class="form-control" disabled [value]="NombreSelected">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div *ngIf="ListAutorizados?.length <= 0" class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="alert-secondary" role="alert">
+                                        No hay registros
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="table-responsive scrollTabla1 panel panel-default">
+                                <table class="table table-hover scrollTabla1 tabla-autorizados "
+                                    *ngIf="ListAutorizados?.length > 0">
+                                    <thead>
+                                        <tr>
+                                            <th>Documento</th>
+                                            <th>Nombre</th>
+                                            <th>Fecha matrícula</th>
+                                            <th>Tipo</th>
+                                            <th>Tipo firma</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let i of ListAutorizados">
+                                            <td>{{i.Documento}}</td>
+                                            <td>{{i.Nombre}}</td>
+                                            <td>{{i.FechaMatricula | date : "yyyy/MM/dd hh:mm:ss" }}</td>
+                                            <td style="text-align: center;">{{i.TipoTitular}}</td>
+                                            <td class="col-nombre" [title]="i.TipoFirma">{{i.TipoFirma}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                        <div class="row">
+                            <a class="thumbnail">
+
+                                <!-- IMAGEN -->
+                                <div class="zoom-container">
+                                    <img *ngIf="!isPdf && converted_image" [src]="converted_image"
+                                        style="width: 100%; height: auto;" class="zoom-img" />
+
+                                    <!-- PDF -->
+                                    <object *ngIf="isPdf" [data]="pdfUrl" type="application/pdf"
+                                        style="width: 100%; height: 500px;">
+                                    </object>
+                                </div>
+
+
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="row">
+                    <div class="div-derecha">
+                        <button class="btn Gt-btn-verde" data-dismiss="modal" (click)="showPdf()">REGISTRO
+                            FIRMA</button> &nbsp;&nbsp;
+                        <button class="btn Gt-btn-morado" data-dismiss="modal">CERRAR</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fin Modal Condiciones -->
+<!-- Modal Otras Transacciones -->
+<div id="ModalOtrasTransacciones" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Otras transacciones</h6>
+            </div>
+            <div class="modal-body pad0T modal1-body ">
+                <div class="table-responsive scrollTabla">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th><strong>Código</strong></th>
+                                <th><strong>Nombre transacción</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let i of ListOtrasTransaccionxPerfilFiltrado"
+                                (click)="seleccionarOtraTransaccion(i)">
+                                <td data-dismiss="modal">
+                                    {{i.intCodigo}}
+                                </td>
+                                <td data-dismiss="modal">
+                                    {{i.strDescripcion}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Fin Modal otras Transacciones -->
+<!-- Modal búsqueda documentos nombre -->
+<div id="ModalOtrasTransaccionesNombres" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal"
+                    (click)="limpiarBusquedaNombre()">&times;</button>
+                <h6 class="modal-title">Documentos</h6>
+            </div>
+            <div class="modal-body pad0T modal1-body ">
+                <div class="table-responsive scrollTabla">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th><strong>Documento</strong></th>
+                                <th><strong>Nombre</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let i of ListDocumentosBusqueda" (click)="seleccionarOtraTransaccionNombres(i)">
+                                <td data-dismiss="modal">
+                                    {{i.Documento}}
+                                </td>
+                                <td data-dismiss="modal">
+                                    {{i.Nombre}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal"
+                    (click)="limpiarBusquedaNombre()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Fin Modal búsqueda documentos nombre -->
+<!--Modal Registro firmas -->
+<div id="ModalImagenesRegistroFirmas" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title text-left">Registro firmas</h6>
+            </div>
+            <div class="modal-body">
+                <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="showRegistroFirma">
+                    <img [src]="converted_image" style="width: 100%; height: 80%;" alt="Select Image" />
+                </div>
+                <div *ngIf="!showRegistroFirma">
+                    <iframe *ngIf="linkPdf" [src]="linkPdf" style="width: 100%; height: 550px;">
+                    </iframe>
+                </div>
+            </div>
+            <div class="modal-footer">
+                &nbsp;
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Fin Modal registro firmas -->
+<!-- Modal búsqueda por nombre -->
+<div id="ModalBuscarNombres" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal"
+                    (click)="limpiarBusquedaNombre()">&times;</button>
+                <h6 class="modal-title">Buscar nombres</h6>
+            </div>
+            <div class="modal-body modal1-body ">
+
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="form-group">
+                            <label><strong>Nombre:</strong></label>
+                            <input type="text" class="form-control pmayuscula" placeholder=""
+                                [(ngModel)]="NombreBusqueda">
+                        </div>
+                    </div>
+
+                    <div class="col-lg-1 col-md-1 col-sm-1">
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                            <br>
+                            <button type="button" class="btn Gt-btn-verde btn-icon btn-buscar"
+                                (click)="busquedaNombres()">
+                                <i class="glyphicon glyphicon-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div *ngIf="!ListDocumentosBusqueda || ListDocumentosBusqueda.length === 0" class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="alert-secondary" role="alert">
+                            No hay registros
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div *ngIf="ListDocumentosBusqueda && ListDocumentosBusqueda.length > 0">
+                        <table class="table-responsive scrollTabla table table-hover">
+                            <thead>
+                                <tr>
+                                    <th><strong>Documento</strong></th>
+                                    <th><strong>Nombre</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let i of ListDocumentosBusqueda" (click)="mapDocumento(i.Documento)">
+                                    <td data-dismiss="modal">
+                                        {{i.Documento}}
+                                    </td>
+                                    <td data-dismiss="modal">
+                                        {{i.Nombre}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal"
+                    (click)="limpiarBusquedaNombre()">Cerrar</button>
+            </div>
+
+            <div class="loader-overlay" *ngIf="loading2">
+                <div class="spinner"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--Fin Modal búsqueda por nombre -->

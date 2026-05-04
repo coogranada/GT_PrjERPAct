@@ -1,0 +1,59 @@
+
+<div  class="container-all">
+    <input type="radio" id="0" name="image-salide" hidden/>
+    <input type="radio" id="1" name="image-salide" hidden />
+    <input type="radio" id="2" name="image-salide" hidden />
+    <input type="radio" id="3" name="image-salide" hidden />
+
+    <div class="slide">
+        <div class="item-slide" *ngFor="let itemArray of bannerArray ; let i = index">
+            <a href="{{itemArray.urlImg !== null ? itemArray.urlImg:'#' }}"  target="_blank">
+                <img class="resize_fit_center" src="data:image/png;base64,{{itemArray.Base64String}}"  alt="">
+            </a>
+           
+        </div>
+    </div>
+    <div class="pagination">
+        <label class="pagination-item" *ngFor="let itemArray of bannerArray ; let i = index" for="{{i}}">
+            <img src="data:image/png;base64,{{itemArray.Base64String}}" alt="">
+        </label>
+    </div>
+</div>
+
+<!-- <div class="container-all">
+    <input type="radio" id="1" name="image-salide" hidden />
+    <input type="radio" id="2" name="image-salide" hidden />
+    <input type="radio" id="3" name="image-salide" hidden />
+    <input type="radio" id="4" name="image-salide" hidden />
+
+    <div class="slide">
+        <div class="item-slide">
+            <img class="resize_fit_center" src="../../../../../../assets/images/GT/banner-asamblea_mesa-de-trabajo-1.jpg" alt="">
+        </div>
+        <div class="item-slide">
+            <img class="resize_fit_center" src="../../../../../../assets/images/GT/ImagenInicio3.png" alt="">
+            
+        </div>
+        <div class="item-slide">
+            <img class="resize_fit_center" src="../../../../../../assets/images/GT/banner-asamblea_mesa-de-trabajo-1.jpg" alt="">
+        </div>
+        <div class="item-slide">
+            <img class="resize_fit_center" src="../../../../../../assets/images/GT/banner-asamblea_mesa-de-trabajo-1.jpg" alt="">
+        </div>
+    </div>
+    <div class="pagination">
+        <label class="pagination-item"  for="1">
+            <img src="../../../../../../assets/images/GT/banner-asamblea_mesa-de-trabajo-1.jpg" alt="">
+        </label>
+        <label class="pagination-item" for="2">
+            <img src="../../../../../../assets/images/GT/ImagenInicio3.png" alt="">
+        </label>
+        <label class="pagination-item" for="3">
+            <img src="../../../../../../assets/images/GT/banner-asamblea_mesa-de-trabajo-1.jpg" alt="">
+        </label>
+        <label class="pagination-item" for="4">
+            <img src="../../../../../../assets/images/GT/banner-asamblea_mesa-de-trabajo-1.jpg" alt="">
+        </label>
+    </div>
+</div> -->
+

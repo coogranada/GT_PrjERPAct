@@ -1,0 +1,29 @@
+/* body{
+    overflow-x: hidden !important;
+}
+.modal {
+    overflow-x: hidden !important;
+    overflow-y: auto;
+} */
+
+@media print{
+    .doNotPrint{display:none !important;}
+}
+
+.imgLogo {
+    visibility: visible !important;
+    display: inline-block !important;
+    width: 200px !important;
+    z-index: 9999;
+}
+
+.modal-full-retiro {
+    width: 75% !important;
+    margin-top: 10px !important;
+    margin-bottom: 20px !important;
+}
+
+#rptNumeroIdentificacion, #rptLugarExpedicion {
+    white-space: nowrap;
+  }
+

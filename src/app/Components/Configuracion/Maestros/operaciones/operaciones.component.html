@@ -1,0 +1,134 @@
+<form>
+    <div class="panel panel-white">
+        <div class="panel-heading">
+            <h6 class="panel-title">Datos</h6>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a data-toggle="modal" data-target="#ModalAyuda"><i class="icon-question6 " title="Ayuda" data-popup="tooltip"
+                data-trigger="hover" data-placement="top"></i></a></li>
+                    <li>
+                        <a data-action="collapse"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <form method="get" [formGroup]="operacionesFrom" (ngSubmit)="operacionesFrom.reset()">
+            <div class="panel-body">
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <div class="row">
+                        <div class="col-xs-12 col-md-4 col-lg-4">
+                            <div class="form-group">
+                                <label>Perfil:</label><span class="text-danger ObligatorioGrande"> *</span>
+                                <select class="form-control" formControlName="IdPerfil" name="select" (change)="ObtenerModulosPermitidos()">
+              <option>-- Seleccione --</option>
+              <option *ngFor="let perfiles of dataPerfil" [value]="perfiles.IdPerfil">{{perfiles.Nombre}}</option>
+            </select>
+                                <span class="help-block validationSpan" *ngIf="operacionesFrom.controls['IdPerfil'].errors?.['required'] && (operacionesFrom.controls['IdPerfil'].dirty || operacionesFrom.controls['IdPerfil'].touched)">
+                Debe seleccionar al menos una opcion </span>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-4 col-lg-4">
+                            <div class="form-group">
+                                <label>Modulo:</label><span class="text-danger ObligatorioGrande"> *</span>
+                                <select class="form-control" formControlName="IdModulo" name="select" (change)="ObtenerPermitidosDenegados()">
+                <option>-- Seleccione --</option>
+                <option *ngFor="let modulos of dataModulos" [value]="modulos.IdModulo">{{modulos.Nombre}}</option>
+              </select>
+                                <span class="help-block validationSpan" *ngIf="operacionesFrom.controls['IdModulo'].errors?.['required'] && (operacionesFrom.controls['IdModulo'].dirty || operacionesFrom.controls['IdModulo'].touched)">
+                Debe seleccionar al menos una opcion </span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatos" *ngIf="datapermitidas !== compareUndefined || dataDenegadas !== compareUndefined">
+                            <div class="panel-body ">
+                                <div class="row">
+                                    <div class="col-xs-6 col-md-4">
+                                        <div class="table-responsive scrollTabla">
+                                            <table id="TablaAreas" class="table table-hover tablaBorder table-fixed">
+                                                <thead>
+                                                    <tr>
+                                                        <th><strong>Operaciones denegadas</strong></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody *ngFor="let denegadas of dataDenegadas; let i = index" (click)="setClickedRowAdd(i + 1)" [class.active]="i+1 === selectedRowAdd">
+                                                    <tr>
+                                                        <td style="cursor: pointer" (click)="AddPermisos(denegadas)">
+                                                            {{denegadas.Descripcion}}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6 col-md-2">
+                                        <input type="submit" id="btnAgregar" class="btn Gt-btn-verde" value="Agregar" (click)="sendPermisos()" [class.disabled]="bloqueoAgregar" [disabled]="!operacionesFrom.valid && bloqueoAgregar !== false" />
+                                    </div>
+
+                                    <div class="col-xs-6 col-md-4">
+                                        <div class="table-responsive scrollTabla">
+                                            <table id="TablaAreas" class="table table-hover tablaBorder table-fixed">
+                                                <thead>
+                                                    <tr>
+                                                        <th><strong>Operaciones permitidas</strong></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody *ngFor="let permitidas of datapermitidas; let a = index" (click)="setClickedRowRemove(a + 1)" [class.active]="a+1 === selectedRowRemove">
+                                                    <tr>
+                                                        <td style="cursor: pointer" (click)="RemovePermisos(permitidas)">
+                                                            {{permitidas.ERP_tblOperacion.Descripcion}}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-6 col-md-2">
+                                        <input type="submit" id="btnEliminar" class="btn Gt-btn-morado" value="Eliminar" (click)="returnPermisos()" [class.disabled]="bloqueoEliminar" [disabled]="!operacionesFrom.valid && bloqueoEliminar !== false" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- <input type="hidden" formControlName="idArea" /> -->
+                    </div>
+                    <br /><br />
+                </div>
+                <div class="row">
+                    <br /><br />
+                    <div class="col-xs-12 col-md-4 col-lg-4">
+                        <div class="form-group">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <ngx-loading [show]="loading" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+    </ngx-loading>
+</form>
+<!-- <app-root (permisosEmit)="getPermisos($event)">
+</app-root> -->
+<!-- Modal Ayuda -->
+<div id="ModalAyuda" class="modal fade">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title"><i class="icon-question6"></i> Ayuda</h6>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li>Todos los campos marcados con <span class="text-danger ObligatorioGrande">*</span> son obligatorios.</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ Fin Modal Ayuda -->

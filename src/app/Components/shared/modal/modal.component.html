@@ -1,0 +1,15 @@
+<div class="modal-backdrop in"></div>
+<div id="cambiarCodeudores" class="modal in"
+    style="display: block; padding-right: 15px;">
+    <div class="modal-dialog" [class]="'modal-dialog modal-' + size">
+        <div class="modal-content">
+            <div class="modal-header bg-morado">
+                <h6 class="modal-title">{{ title }}</h6>
+                <button type="button" class="close" (click)="close()">×</button>
+            </div>
+            <div class="modal-body">
+                <ng-content></ng-content>
+            </div>
+        </div>
+    </div>
+</div>

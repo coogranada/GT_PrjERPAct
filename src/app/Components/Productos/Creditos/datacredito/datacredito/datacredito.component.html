@@ -1,0 +1,216 @@
+<div class="panel panel-white">
+    <div class="panel-heading">
+        <h6 class="panel-title">Búsqueda</h6>
+        <div class="heading-elements">
+            <ul class="icons-list">
+                <li><a data-toggle="modal" data-target="#ModalAyuda"><i class="icon-question6 " title="Ayuda"
+                            data-popup="tooltip" data-trigger="hover" data-placement="top"></i></a></li>
+                <li>
+                    <a data-action="collapse"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <form autocomplete="off" [formGroup]="DataForm">
+
+        <div class="panel-body">
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <div class="row">
+                    <div class="col-xs-12 col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label>Identificación:</label>
+                            <span class="text-danger"> *</span>
+                            <div class="mensajeInfo">
+                                <i class="icon-info22"></i>
+                                <span class="mensajeInfoText">Ingresa el documento y presiona Tab, si la persona existe,
+                                    el formulario se autocompletará.</span>
+                            </div>
+                            <input type="text" class="form-control" formControlName="NumeroDocumento"
+                                (blur)="ObtenerInformacionPersona()" />
+                            <span class="help-block validationSpan"
+                                *ngIf="DataForm.controls['NumeroDocumento'].errors?.['required'] && (DataForm.controls['NumeroDocumento'].dirty || DataForm.controls['NumeroDocumento'].touched)">
+                                El número de identificación es obligatorio.
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label>Tipo de identificación:</label><span class="text-danger"> *</span>
+                            <select class="form-control" formControlName="TipoDocumento" name="select">
+                                <option [selected]="true" value='-'>-- Seleccione --</option>
+                                <option *ngFor="let tipoIdentificacion of dataTipoIdentificacion"
+                                    [ngValue]="tipoIdentificacion.Codigo">
+                                    {{tipoIdentificacion.Descripcion}}</option>
+
+                            </select>
+                            <span class="help-block validationSpan"
+                                *ngIf="DataForm.controls['TipoDocumento'].errors?.['required'] && (DataForm.controls['TipoDocumento'].dirty || DataForm.controls['TipoDocumento'].touched)|| DataForm.controls['TipoDocumento'].value === '-'">
+                                El tipo de identificación es obligatorio.
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label>Primer apellido:</label><span class="text-danger"> *</span>
+                            <input type="text" class="form-control text-uppercase" formControlName="PrimerApellido" />
+                            <span class="help-block validationSpan"
+                                *ngIf="DataForm.controls['PrimerApellido'].errors?.['required'] && (DataForm.controls['PrimerApellido'].dirty || DataForm.controls['PrimerApellido'].touched)">
+                                El primer apellido es obligatorio.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <!-- MOTIVO DE CONSULTA -->
+                    <div class="col-xs-12 col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label>Motivo de consulta:</label><span class="text-danger"> *</span>
+                            <select class="form-control" formControlName="IdMotivoConsulta" name="select">
+                                <option [selected]="true" value=''>-- Seleccione --</option>
+                                <option *ngFor="let motivoConsulta of dataMotivoConsulta" [ngValue]="motivoConsulta.IdLista">
+                                    {{motivoConsulta.Valor}}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- TIPO DE OCUPACIÓN -->
+                    <div class="col-xs-12 col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label>Tipo de ocupación:</label><span class="text-danger"> *</span>
+
+                            <div class="row" style="margin-top: 5px; align-items: left;">
+
+                                <div class="col-xs-5">
+                                    <label class="radio-custom">
+                                        <input type="radio" class="radioB" name="TipoPersona"
+                                            formControlName="TipoPersona" value="0" (change)="onChangeTipoocupa()">
+                                        <span>Dependiente</span>
+                                    </label>
+                                </div>
+
+                                <div class="col-xs-6">
+                                    <label class="radio-custom">
+                                        <input type="radio" class="radioB" name="TipoPersona"
+                                            formControlName="TipoPersona" value="1" (change)="onChangeTipoocupa()">
+                                        <span>Independiente</span>
+                                    </label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- INGRESO VALIDAR-->
+                    <div class="col-xs-12 col-md-4 col-lg-4">
+                        <div class="form-group" *ngIf="vbleIngreso">
+                            <label>Ingreso a validar:</label><span class="text-danger"> *</span>
+                            <input style="text-align:right" class="form-control" currencyMask
+                                [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 0}"
+                                formControlName="IngresoValidar">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12 col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label>Origen de datos:</label><span class="text-danger"> *</span>
+                            <select [attr.disabled]="bOrigenDatos" class="form-control" formControlName="IdOrigenDatos"
+                                name="select">
+                                <option *ngFor="let origenDatos of OrigenDatos" [ngValue]="origenDatos.Id">
+                                    {{origenDatos.Descripcion}}</option>
+                            </select>
+                            <span class="help-block validationSpan"
+                                *ngIf="DataForm.controls['IdOrigenDatos'].errors?.['required'] && (DataForm.controls['IdOrigenDatos'].dirty || DataForm.controls['IdOrigenDatos'].touched) || DataForm.controls['IdOrigenDatos'].value === '-'">
+                                El origen de datos es obligatorio.
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-md-4 col-lg-4" style="visibility: hidden;">
+                        <input type="text"  formControlName="UsuarioConsulta" >
+                    </div>
+
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                    <input type="submit" id="btnConsultar" class="btn Gt-btn-verde" value="Consultar"
+                        (click)="ConsultarReporteData()" [disabled]="!DataForm.valid" />
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelReporte" hidden>
+    <div class="panel-body ">
+        <iframe id="frmReport" frameborder="0" scrolling="no"></iframe>
+    </div>
+</div>
+
+<ngx-loading [show]="loading"
+    [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+</ngx-loading>
+
+<input type="hidden" #ModalImpresion data-toggle="modal" data-target="#ModalImpresion" data-placement="top">
+<!--/ formato  de impresion nuevo-->
+<div id="ModalImpresion" class="modal fade" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg" style="width: 1110px; left: -200px;">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Consulta Datacrédito</h6>
+            </div>
+            <div class="modal-body">
+                <iframe id="iframeReporte" style="width:100%; height:600px; border:none;">
+                </iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--/ Fin formato de impresion nuevo -->
+
+
+
+<!-- Modal Ayuda -->
+<div id="ModalAyuda" class="modal fade">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title"><i class="icon-question6"></i> Ayuda</h6>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li>Todos los campos marcados con <span class="text-danger">*</span> son obligatorios.</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ Fin Modal Ayuda -->
+
+<!--/ iframe oculto para inicializar reporting services -->
+<iframe
+  id="iframeWarmup"
+  style="display:none"
+></iframe>
+
+<div class="modal-body">
+  <iframe
+    id="iframeReporte"
+    style="width:100%; height:600px; border:none; display: none">
+  </iframe>
+</div>

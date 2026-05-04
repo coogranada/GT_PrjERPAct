@@ -1,0 +1,137 @@
+<form method="get" [formGroup]="ScoreForm">
+    <div class="panel panel-white">
+        <div class="panel-heading">
+            <h6 class="panel-title">Búsqueda</h6>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a data-toggle="modal" data-target="#ModalAyuda"><i class="icon-question6 " title="Ayuda" data-popup="tooltip" data-trigger="hover" data-placement="top"></i></a></li>
+                    <li>
+                        <a data-action="collapse"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-xs-12 col-md-3 col-lg-3">
+                    <label>Fecha inicial:</label><span class="text-danger ObligatorioGrande"> *</span>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="icon-calendar22"></i></span>
+                        <input type="date" class="form-control " formControlName="FechaInicial" />
+                        <span class="help-block validationSpan" *ngIf="ScoreForm.controls['FechaInicial'].errors?.['required'] && (ScoreForm.controls['FechaInicial'].dirty || ScoreForm.controls['FechaInicial'].touched)">
+                      La fecha inicial es obligatoria.</span>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-3 col-lg-3">
+                    <label>Fecha final:</label><span class="text-danger ObligatorioGrande"> *</span>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="icon-calendar22"></i></span>
+                        <input type="date" class="form-control " formControlName="FechaFinal">
+                        <span class="help-block validationSpan" *ngIf="ScoreForm.controls['FechaFinal'].errors?.['required'] && (ScoreForm.controls['FechaFinal'].dirty || ScoreForm.controls['FechaFinal'].touched)">
+                      La fecha final es obligatoria.</span>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-3 col-lg-3">
+                    <div class="form-group">
+                        <label>Usuario:</label>
+                        <input type="text" class="form-control" id="txtUsuario" formControlName="Usuario" />
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-3 col-lg-3">
+                    <div class="form-group">
+                        <label>Asociado:</label>
+                        <input type="text" class="form-control" id="txtAsociado" formControlName="Asociado" />
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                    <input type="submit" id="btnConsultar" class="btn Gt-btn-verde" value="Consultar" (click)="ConsultarGMFAuditoria()" [disabled]="!ScoreForm.valid" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!-- <app-root (permisosEmit)="getPermisos($event)">
+</app-root> -->
+<!-- Tabla de resltados -->
+<div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatos" *ngIf="dataScoreAuditoria != null">
+    <div class="panel-body ">
+        <div class="table-responsive scrollTabla">
+            <table id="TablaAuditoria" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th><strong>Fecha consulta</strong></th>
+                        <th><strong>Tipo identificación</strong></th>
+                        <th><strong>Asociado</strong></th>
+                        <th><strong>Proveedor</strong></th>
+                        <th><strong>Código información</strong></th>
+                        <th><strong>Motivo consulta</strong></th>
+                        <th><strong>Origen datos</strong></th>
+                        <th><strong>Oficina</strong></th>
+                        <th><strong>Usuario</strong></th>
+                        <th><strong>Nombre usuario</strong></th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let resultScore of dataScoreAuditoria">
+                    <tr>
+                        <td>
+                            {{resultScore.FechaConsulta | date : "yyyy/MM/dd hh:mm:ss" }}
+                        </td>
+                        <td>
+                            {{resultScore.TipoIdentificacion}}
+                        </td>
+                        <td>
+                            {{resultScore.IdAsociado}}
+                        </td>
+                        <td>
+                            {{resultScore.NIT}}
+                        </td>
+                        <td>
+                            {{resultScore.CodInformacion}}
+                        </td>
+                        <td>
+                            {{resultScore.MotivoConsulta}}
+                        </td>
+                        <td>
+                            {{resultScore.OrigenDatos}}
+                        </td>
+                        <td>
+                            {{resultScore.Oficina}}
+                        </td>
+                        <td>
+                            {{resultScore.Usuario}}
+                        </td>
+                        <td>
+                            {{resultScore.NombreUsuario}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!--/ Tabla de resltados -->
+
+<!-- Modal Ayuda -->
+<div id="ModalAyuda" class="modal fade">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title"><i class="icon-question6"></i> Ayuda</h6>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li>Todos los campos marcados con <span class="text-danger ObligatorioGrande">*</span> son obligatorios.</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ Fin Modal Ayuda -->

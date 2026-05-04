@@ -1,0 +1,69 @@
+.modal-xl {
+    width: 80% !important;
+    margin-left: 170px;
+}
+
+.modal-dialog-xl {
+    width: 100% !important;
+}
+
+.abligatorioY {
+    font-size: 25px !important;
+    color: #D84315;
+    margin-top: -5px !important;
+    margin-left: 6px;
+    position: absolute;
+}
+
+@media (max-width: 767px) {
+    .modal-xl {
+        width: 95% !important;
+        margin-left: 1%;
+    }
+    .modal-dialog-xl {
+        width: 99% !important;
+    }
+}
+
+.modalCertificadoSaldos {
+    width: 60% !important;
+    margin-left: 20%;
+}
+
+.propertyModal {
+    margin-top: 3% !important;
+    padding-right: 225px !important;
+    padding-left: 225px !important;
+}
+
+table,
+td,
+div,
+h1,
+p {
+    font-family: Arial, sans-serif;
+}
+
+@media screen and (max-width: 530px) {
+    .unsub {
+        display: block;
+        padding: 8px;
+        margin-top: 14px;
+        border-radius: 6px;
+        background-color: #555555;
+        text-decoration: none !important;
+        font-weight: bold;
+    }
+    .col-lge {
+        max-width: 100% !important;
+    }
+}
+
+@media screen and (min-width: 531px) {
+    .col-sml {
+        max-width: 27% !important;
+    }
+    .col-lge {
+        max-width: 73% !important;
+    }
+}

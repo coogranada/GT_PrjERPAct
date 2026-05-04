@@ -1,0 +1,167 @@
+<form>
+    <div class="panel panel-white">
+        <div class="panel-heading">
+            <h6 class="panel-title">Datos</h6>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li>
+                        <a data-toggle="modal" data-target="#ModalAyuda">
+                            <i class="icon-question6 " title="Ayuda" data-popup="tooltip" data-trigger="hover" data-placement="top"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a data-action="collapse"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <form method="get" [formGroup]="usuariosproveedoresForm">
+            <div class="panel-body">
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <label>Documento:</label><span class="text-danger ObligatorioGrande"> *</span>
+                        <input type="text" class="form-control" name="NumeroDocumento" formControlName="NumeroDocumento" maxlength="15" (blur)="ValidaDocumento()"/>
+                        <span class="help-block validationSpan" *ngIf="usuariosproveedoresForm.controls['NumeroDocumento'].errors?.['required'] && (usuariosproveedoresForm.controls['NumeroDocumento'].dirty || usuariosproveedoresForm.controls['NumeroDocumento'].touched)">
+                            El documento es obligatorio.
+                        </span>
+                    </div>
+
+                    <div class="col-xs-12 col-md-1 col-lg-1">
+                        <button type="submit" id="btnBuscar" (click)="BuscarUsuariosProveedores()" class="btn Gt-btn-verde btn-icon legitRipple"><i class="icon-search4"></i></button>
+                    </div>
+
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label>Nombre Proveedor:</label><span class="text-danger ObligatorioGrande"> *</span>
+                            <input type="text" id="NombreProveedor" class="form-control  text-capitalize" name="NombreProveedor" formControlName="NombreProveedor" />
+                            <span class="help-block validationSpan" *ngIf="usuariosproveedoresForm.controls['NombreProveedor'].errors?.['required'] && (usuariosproveedoresForm.controls['NombreProveedor'].dirty || usuariosproveedoresForm.controls['NombreProveedor'].touched)">
+                                El nombre es obligatorio.
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-md-1 col-lg-1">
+                    </div>
+
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label>Email:</label><span class="text-danger ObligatorioGrande"> *</span>
+                            <input type="email" class="form-control  text-lowercase" name="Email" formControlName="Email" placeholder="usuario@coogranada.com.co" />
+                            <span class="help-block validationSpan" *ngIf="usuariosproveedoresForm.controls['Email'].errors?.['required']  && (usuariosproveedoresForm.controls['Email'].dirty || usuariosproveedoresForm.controls['Email'].touched)">
+                                El email es obligatorio.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label>Estado:</label><span class="text-danger ObligatorioGrande"> *</span>
+                            <select class="form-control" name="Estado" id="selectedE" formControlName="Estado">
+                                <option [selected]="selectedEstado === '-'" value='-'>-- Seleccione --</option>
+                                <option *ngFor="let estados of estadosUsuarioProveedor" [value]="estados.value"
+                                    [selected]="estados.value === selectedEstado">
+                                    {{estados.descripcion}}
+                                </option>
+                            </select>
+                            <span class="help-block validationSpan" *ngIf="usuariosproveedoresForm.controls['Estado'].errors?.['required'] && (usuariosproveedoresForm.controls['Estado'].dirty || usuariosproveedoresForm.controls['Estado'].touched)|| usuariosproveedoresForm.controls['Estado'].value === '-'">
+                                El estado es obligatorio.
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-1 col-lg-1">
+                    </div>
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <label>Usuario:</label><span class="text-danger ObligatorioGrande"> *</span>
+                        <input type="text" id="usuariodisabled" class="form-control  text-lowercase" name="UsuarioProveedor" formControlName="UsuarioProveedor" />
+                        <span class="help-block validationSpan" *ngIf="usuariosproveedoresForm.controls['UsuarioProveedor'].errors?.['required'] && (usuariosproveedoresForm.controls['UsuarioProveedor'].dirty || usuariosproveedoresForm.controls['UsuarioProveedor'].touched)">
+                            El usuario es obligatorio.
+                        </span>
+                    </div>
+
+                    <div class="col-xs-12 col-md-1 col-lg-1">
+                    </div>
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <label>Clave:</label><span class="text-danger ObligatorioGrande"> *</span>
+                        <input type="hidden" value="N/A" name="FechaCreacion" formControlName="FechaCreacion" />
+                        <input type="password" id="txtPassword" class="form-control " value="contraseña" name="Clave" formControlName="Clave" />
+                        <span id="imgContrasena" data-activo=false class="glyphicon glyphicon-eye-open"></span>
+                        <span class="help-block validationSpan" *ngIf="usuariosproveedoresForm.controls['Clave'].errors?.['required'] && (usuariosproveedoresForm.controls['Clave'].dirty || usuariosproveedoresForm.controls['Clave'].touched)">
+                            La clave es obligatoria.
+                        </span>
+                    </div>
+                    <div class="col-xs-12 col-md-1 col-lg-1">
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-8 col-lg-12 text-right">
+                    <div class="col-xs-12 col-md-8 col-lg-11 text-right" *ngIf="desactivaActualizar">
+                        <input type="submit" id="btnGuardar" class="btn Gt-btn-verde" value="Guardar" (click)="GuardarRegistro()" [disabled]="usuariosproveedoresForm.invalid" /> &nbsp;
+                    </div>
+                    <div class="col-xs-12 col-md-8 col-lg-11 text-right" *ngIf="!desactivaActualizar">
+                        <input type="submit" id="btnActualizar" class="btn Gt-btn-verde" value="Actualizar" (click)="ActualizarRegistro()" [disabled]="usuariosproveedoresForm.invalid" /> &nbsp;
+                    </div>
+                    <div class="col-xs-12 col-md-8 col-lg-1 text-right">
+                        <input type="submit" id="btnNuevo" class="btn Gt-btn-morado" value="Nuevo" (click)="NuevoRegistro()" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</form>
+
+
+<!-- Tabla usuarios proveedores -->
+<div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatos">
+    <div class="panel-body ">
+        <div class="table-responsive scrollTabla">
+            <table id="TablaUsuarios" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th><strong>Documento</strong></th>
+                        <th><strong>Nombre Proveedor</strong></th>
+                        <th><strong>Usuario</strong></th>
+                        <th><strong>Email</strong></th>
+                        <th><strong>Estado</strong></th>
+                        <th><strong>Fecha Creacion Token</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let usuario of usuarios">
+                        <td >{{usuario.NumeroDocumento}}</td>
+                        <td >{{usuario.NombreProveedor}}</td>
+                        <td >{{usuario.UsuarioProveedor}}</td>
+                        <td >{{usuario.Email}}</td>
+                        <td >{{usuario.NombreEstado}}</td>
+                        <td >{{usuario.FechaCreacion}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- Fin Tabla usuarios proveedores -->
+<!-- Modal Ayuda -->
+<div id="ModalAyuda" class="modal fade">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title"><i class="icon-question6"></i> Ayuda</h6>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li>Todos los campos marcados con <span class="text-danger">*</span> son obligatorios.</li>
+                    <li>Para Guardar los perfiles debe presionar el botón "Guardar".</li>
+                    <li>Para buscar los perfiles debe presionar en la lupa verde.</li>
+                    <li>Para actualizar primero se debe consultar por documento.</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--  Fin Modal Ayuda -->

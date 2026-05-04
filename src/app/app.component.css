@@ -1,0 +1,29 @@
+.divNoAlto {
+  display: inline-block; 
+  min-height: 0;         
+  margin: 0;
+  padding: 0;
+  line-height: 1;        
+  visibility: hidden;  
+  height: 0.5px;             
+  overflow: hidden;     
+}
+
+/* .toast-top-right {
+    top: 90%;
+    right: 12px;
+  }
+  
+  @media (max-width: 575.98px) {
+    .toast-top-right {
+      top: unset;
+      bottom: 0;
+      right: 0;
+      width: 100%;
+    }
+    .toast-container.toast-top-right .toast {
+      width: 300px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  } */

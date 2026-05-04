@@ -1,0 +1,425 @@
+<div class="panel panel-white">
+    <div class="panel-heading doNotPrint">
+        <h6 class="panel-title">Informes {{OperacionSelect}}</h6>
+        <div class="heading-elements">
+            <ul class="icons-list">
+                <li>
+                    <a data-toggle="modal" data-target="#ModalAyuda">
+                        <i class="icon-question6 " title="Ayuda" data-popup="tooltip" data-trigger="hover"
+                            data-placement="top"></i>
+                    </a>
+                </li>
+                <li>
+                    <a data-action="collapse"></a>
+
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="panel-body doNotPrint">
+        <form method="get">
+            <div class="col-xs-12 col-md-12 col-lg-12" id="Operacion">
+                <div class="row">
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="textNegrilla">Operación:</label>
+                            <span class="grande"> *</span>
+                            <select class="form-control" (change)="opcionSelected($event)">
+                                <option value="0">--Seleccione--</option>
+                                <option *ngFor="let item of Operaciones" [value]="item.ERP_tblOperacion.IdOperacion">
+                                    {{item.ERP_tblOperacion.Descripcion}}
+                                </option>
+                            </select>
+                            <span class="help-block validationSpan" *ngIf="!validaOperacion ">
+                                La operación es obligatoria.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div *ngIf="selectedId !== 0">
+    <div class="panel panel-white">
+        <div class="panel-body" id="contenidoDisponibles">
+            <div class="row">
+                <div class="col-xs-12 col-md-3 col-lg-3">
+
+                    <div class="container">
+                        <ul class="nav nav-tabs">
+                            <li [class.active]="selectedTab === 'predeterminados'"
+                                (click)="selectTab('predeterminados')" *ngIf="configuracionInformesFiltro.length >= 1">
+                                <a>Informes predeterminados</a>
+                            </li>
+                            <li [class.active]="selectedTab === 'dinamicos'" 
+                             (click)="selectTab('dinamicos')" *ngIf="configuracionInformesFiltroDina.length >= 1" >
+                                <a>Informes dinámicos</a>
+                            </li>
+                        </ul>
+
+                        <!--#Region Informes predeterminados  -->
+                        <div class="tab-content" *ngIf="configuracionInformesFiltro.length >= 1">
+                            <div *ngIf="selectedTab === 'predeterminados'">
+                                <div>
+                                    <div class="row">
+                                        <div class="col-md-12 col-lg-12 col-sm-12  panel-default" id="PanelDatos">
+                                            <div class="panel-body ">
+
+                                                <div class="row" id="SelectInforme">
+                                                    <div class="col-md-3 col-lg-3 col-sm-3">
+                                                        <div class="form-group">
+                                                            <label class="textNegrilla">Informe:</label>
+                                                            <span class="grande"> *</span>
+                                                            <select #selectInformeL class="form-control form-control-lg" id="selectInformeL"
+                                                                name="selectInformeL" (change)="informeSelected($event)">
+                                                                <option value="0">--Seleccione--</option>
+                                                                <option *ngFor="let item of configuracionInformesFiltro"
+                                                                    [value]="item.IdConfiguracion">
+                                                                    {{item.NombreInforme}}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-9 col-lg-9 col-sm-9">
+                                                        <form [formGroup]="formulario">
+                                                            <div class="form-row">
+                                                                <div class="form-group col-md-4"
+                                                                    *ngFor="let param of parametrosConfiguracionInf">
+                                                                    <label><strong>{{ param.AliasCampo
+                                                                            }}:</strong></label>
+                                                                    <span *ngIf="param.Requerido === true"
+                                                                        class="grande">
+                                                                        *</span>
+                                                                    <input *ngIf="param.TipoDato === 'varchar'"
+                                                                        type="text" class="form-control"
+                                                                        [attr.maxLength]="param.TamanoCampo"
+                                                                        [formControlName]="param.NombreParametro" />
+                                                                    <input *ngIf="param.TipoDato === 'number'"
+                                                                        type="number"
+                                                                        class="form-control form-control-lg"
+                                                                        [attr.maxLength]="param.TamanoCampo"
+                                                                        [formControlName]="param.NombreParametro" />
+                                                                    <input *ngIf="param.TipoDato === 'money'"
+                                                                        type="text"
+                                                                        class="form-control form-control-lg"
+                                                                        [formControlName]="param.NombreParametro" 
+                                                                        currencyMask [options]="{precision : 0, max: 999999999 }" />
+                                                                    <input *ngIf="param.TipoDato === 'datetime'"
+                                                                        type="date" [attr.max]="fechaMax"
+                                                                        class="form-control"
+                                                                        [formControlName]="param.NombreParametro" />
+                                                                    <select
+                                                                        *ngIf="param.TipoDato === 'selectn' && param.IdTipo === 999"
+                                                                        class="form-control"
+                                                                        [formControlName]="param.NombreParametro">
+                                                                        <option value="">--Seleccione--</option>
+                                                                        <option
+                                                                            *ngFor="let item of listasPorParametro[param.NombreParametro]"
+                                                                            [value]="item.IdClase">
+                                                                            {{ item.Descripcion }}</option>
+                                                                    </select>
+                                                                    <select
+                                                                        *ngIf="param.TipoDato === 'selectn' && param.IdTipo !== 999"
+                                                                        class="form-control"
+                                                                        [formControlName]="param.NombreParametro">
+                                                                        <option value="">--Seleccione--</option>
+                                                                        <option
+                                                                            *ngFor="let item of listasPorParametro[param.NombreParametro]"
+                                                                            [value]="item.IdClase">
+                                                                            {{ item.Descripcion }}</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+
+                                                    <div class="col-md-12 col-lg-12 col-sm-12 text-right">
+                                                        <button type="submit"
+                                                            [disabled]="formulario.invalid || nombreInformeSelect == '--Seleccione--' || nombreInformeSelect == '' "
+                                                            class="btn Gt-btn-verde" (click)="ejecutarSP()">Generar
+                                                            Informe</button>
+                                                    </div>
+
+                                                    <br>
+
+                                                </div>
+
+                                                <div class="row" id="SelectFiltro">
+                                                    <div class="col-md-4 col-lg-4 col-sm-4">
+
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="selectedTab === 'dinamicos'">
+
+                            </div>
+                        </div>
+                        <!--#endRegion Informes predeterminados-->
+
+                        <!--#Region Informes dinámicos-->
+                        <div class="tab-content" *ngIf="configuracionInformesFiltroDina.length >= 1"
+                            >
+                            <div *ngIf="selectedTab === 'dinamicos'">
+                                <div>
+                                    <div class="row">
+                                        <div class="col-md-8 col-lg-8 col-sm-8  panel-default" id="PanelDatosD">
+                                            <div class="panel-body ">
+                                                <div class="row" id="SelectFilter">
+
+                                                    <div class="col-md-4 col-lg-4 col-sm-4">
+                                                        <div class="form-group">
+                                                            <label class="textNegrilla">Filtro:</label>
+                                                            <span class="grande"> *</span>
+                                                            <select class="form-control form-control-lg" id="select"
+                                                                name="select" [(ngModel)]="filtroSeleccionado"
+                                                                (change)="filtroChange()">
+                                                                <option value="0" selected="true">
+                                                                    --Seleccione--
+                                                                </option>
+                                                                <option [value]="filtro"
+                                                                    *ngFor="let filtro of obtenerFiltros()">{{filtro}}
+                                                                </option>
+
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-8 col-lg-8 col-sm-8 panel-default">
+
+
+                                                        <form [formGroup]="formularioD" *ngIf="filtroSeleccionado">
+                                                            <div class="form-row">
+                                                                <div class="form-group"
+                                                                [ngClass]="{
+                                                               'col-md-6': filtrosAgrupados[filtroSeleccionado].length === 1,                               
+                                                               'col-md-5': filtrosAgrupados[filtroSeleccionado].length > 1 }"
+                                                                    *ngFor="let param of filtrosAgrupados[filtroSeleccionado]">
+                                                                    <label><strong>{{ param.AliasCampo
+                                                                            }}:</strong></label>
+                                                                    <span *ngIf="param.Requerido"
+                                                                        class="grande">*</span>
+                                                                    <input *ngIf="param.TipoDato === 'varchar'"
+                                                                        type="text" class="form-control"
+                                                                        [attr.maxLength]="param.TamanoCampo"
+                                                                        [formControlName]="param.NombreParametro" />
+                                                                    <input *ngIf="param.TipoDato === 'number'"
+                                                                        type="number" class="form-control"
+                                                                        [attr.maxLength]="param.TamanoCampo"
+                                                                        [formControlName]="param.NombreParametro" />
+                                                                    <input *ngIf="param.TipoDato === 'money'"
+                                                                        type="text"
+                                                                        class="form-control form-control-lg"
+                                                                        [attr.maxLength]="17"
+                                                                        value="0"
+                                                                        [formControlName]="param.NombreParametro" 
+                                                                        currencyMask [options]="{precision : 0, max: 999999999 }" />
+                                                                    <input *ngIf="param.TipoDato === 'datetime'"
+                                                                        type="date" [attr.max]="fechaMax"
+                                                                        class="form-control"
+                                                                        [formControlName]="param.NombreParametro" />
+                                                                    <select
+                                                                        *ngIf="param.TipoDato === 'selectn' && param.IdTipo === 999"
+                                                                        class="form-control"
+                                                                        [formControlName]="param.NombreParametro">
+                                                                        <option value="">--Seleccione--</option>
+                                                                        <option
+                                                                            *ngFor="let item of listasPorParametro[param.NombreParametro]"
+                                                                            [value]="item.IdClase">
+                                                                            {{ item.Descripcion }}</option>
+                                                                    </select>
+                                                                    <select
+                                                                        *ngIf="param.TipoDato === 'selectn' && param.IdTipo !== 999"
+                                                                        class="form-control"
+                                                                        [formControlName]="param.NombreParametro">
+                                                                        <option value="">--Seleccione--</option>
+                                                                        <option
+                                                                            *ngFor="let item of listasPorParametro[param.NombreParametro]"
+                                                                            [value]="item.IdClase">
+                                                                            {{ item.Descripcion }}</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <!-- Botón para agregar criterio -->
+
+                                                            <button class="btn Gt-btn-verde btn-icon legitRipple"
+                                                                style="top: 20px" (click)="agregarCriterio()">
+                                                                <i class="icon-plus3" aria-hidden="true"></i>
+                                                            </button>
+
+                                                        </form>
+
+                                                    </div>
+
+                                                </div>
+
+
+                                                <div class="row">
+                                                    <div class="col-md-12 col-lg-12 col-sm-12">
+                                                            <div class="col-xs-12 col-md-12 col-lg-12" id="NotHaveReg" *ngIf="filtrosAgregado.length <=0">
+                                                            <br>
+                                                            <div class="alert alert-secondary" role="alert">
+                                                               Sin filtros agregados
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="table-responsive scrollTablaFiltros" *ngIf="filtrosAgregado.length >=1">
+                                                            <table id="TablaFiltros"
+                                                                class="table table-hover tablaBorder table-fixed">
+                                                                <tbody>
+                                                                    <tr *ngFor="let item of filtrosAgregado">
+                                                                        <td style="color: #333333;">
+                                                                            {{item.NombreFiltro}}
+                                                                        </td>
+                                                                        <td style="color: #333333;">
+                                                                            <strong>{{item.Validacion}}</strong>
+                                                                        </td>
+                                                                        <td style="color: #333333;">
+                                                                            {{item.ValorInicial}}
+                                                                        </td>
+                                                                        <td style="color: #333333;"
+                                                                            style="cursor: pointer;">
+                                                                            <i class="icon-cross3"
+                                                                                (click)="eliminarCriterio(item)"
+                                                                                aria-hidden="true"
+                                                                                style="background-color: #852662;color:white; font-size: 25px;"></i>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 col-lg-12 col-sm-12 text-right" style="margin-top: 15px;">
+                                                    <button type="submit" class="btn Gt-btn-verde" (click)="ejecutarSPDinamico()">
+                                                        Generar informe
+                                                    </button>
+                                                    <br><br><br>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-md-4 col-lg-4 col-sm-4 panel-default">
+
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="form-group">
+                                                        <label class="textNegrilla">Buscar Campo:</label>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="Buscar Campo" [(ngModel)]="filtro" (input)="filtrarLista()" />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="table-responsive scrollTablaCampos">
+                                                <table class="table table-hover tablaBorder table-fixed">
+                                                    <thead>
+                                                        <tr class="encabezadoTablas">
+                                                            <th class="textNegrilla"><strong>Campo</strong></th>
+                                                            <th class="textNegrilla"><strong>Permitir</strong>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="color: #333333;">
+                                                                Seleccionar todos
+                                                            </td>
+                                                            <td class="centrarContenido">
+                                                                <input type="checkbox" class="switchery selectedAll" 
+                                                                [(ngModel)]="allSelected"
+                                                                (change)="toggleAllCheckboxes()">
+                                                            </td>
+                                                        </tr>
+                                                        <tr *ngFor="let permitir of ListfilteredColumnasInf">
+                                                            <td style="color: #333333;">
+                                                                {{permitir.name.endsWith('_M') ?  permitir.name.slice(0, -2) : permitir.name}}
+                                                            </td>
+                                                            <td class="centrarContenido">
+                                                                <input type="checkbox" class="switchery"
+                                                                [(ngModel)]="permitir.selected"
+                                                                (change)="checkIfAllSelected()">
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!--#Region Informes dinámicos-->
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="ModalProgressBar" tabindex="-1" role="dialog" aria-labelledby="ModalProgressBarTitle"
+        data-backdrop="static">
+        <div class="modal-dialog modal-lg" style="margin-top: 10%;">
+            <br>
+            <div class="panel panel-body">
+                <div class="text-center">
+                    <h5 class="no-margin text-semibold">Generando Informe . . . </h5>
+                    <br>
+                </div>
+
+                <div class="progress progress-rounded" style="height: 25px;">
+                    <div class="progress-bar" role="progressbar" [style.width.%]="progreso"
+                        [attr.aria-valuenow]="progreso" aria-valuemin="0" aria-valuemax="100"
+                        style="background-color: #852662;">
+                        <span style="font-size: 18px;">{{ progreso }}% Completado</span>
+                    </div>
+                </div>
+
+            </div>
+            <br>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" #ShowModalList data-toggle="modal" data-target="#ShowModalList" data-popup="tooltip"
+    data-trigger="hover" data-placement="top">
+
+<div id="ShowModalList" class="modal fade" data-backdrop="static">
+    <div style="width: 88%; margin: 30px auto; height: 90%;">
+        <div class="modal-content modal-xl">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal"  (click)="onModalCerrar()">&times;</button>
+                <h6 class="modal-title">{{ nombreInforme.charAt(0).toUpperCase() + nombreInforme.slice(1).toLowerCase() }}</h6>
+            </div>
+            <div class="modal-body">
+                <div class="scrollTabla" (scroll)="onScroll($event)">
+                    <app-tabla-virtual [datos]="resultadoInforme" [columnas]="encabezados"
+                        [formatear]="formatearValor" [mostrarBtnCopia]="true" [mostrarTotal]="true"></app-tabla-virtual>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn Gt-btn-verde" (click)="exportarExcel2()" id="xlsx">
+                    <i class="icon-download4"></i>&nbsp; EXCEL
+                </button>
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal" (click)="onModalCerrar()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<ngx-loading [show]="loading"
+    [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+</ngx-loading>

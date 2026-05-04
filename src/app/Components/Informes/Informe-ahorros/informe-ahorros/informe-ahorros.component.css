@@ -1,0 +1,118 @@
+.grande {
+    font-size: 25px !important;
+    color: #D84315;
+    margin-top: -5px !important;
+    margin-left: 6px;
+    position: absolute;
+}
+
+.active {
+    background-color: rgba(160, 0, 87, 0.60) !important;
+    /* color: white; */
+}
+
+.textNegrilla {
+    color: #565656;
+    font-weight: bold;
+}
+
+.activar {
+    border-bottom-color: transparent;
+    cursor: default;
+    cursor: pointer;
+    background-color: var(--color-verde-institucional);
+    border: 1px solid var(--color-verde-institucional);
+}
+
+
+.range-slider {
+    width: 300px;
+    text-align: center;
+    position: relative;
+}
+
+.nav-tabs li {
+    display: inline-block;
+    margin-right: 5px;
+  }
+  
+  .nav-tabs li a {
+    text-decoration: none;
+    padding: 10px 15px;
+    display: block;
+    background-color: #f0f0f0;
+    color: #000;
+    border-radius: 5px;
+  }
+  
+  .nav-tabs li.active a {
+    background-color:  var(--color-verde-institucional);
+    color: white;
+  }
+
+  .text-truncate {
+    max-width: 110px;
+    /* Ancho fijo de la celda */
+    overflow: hidden;
+    /* Oculta el desbordamiento */
+    white-space: nowrap;
+    /* Evita que el texto se divida en varias líneas */
+    text-overflow: ellipsis;
+    /* Muestra puntos suspensivos (...) */
+}
+
+
+.table th {
+    font-weight: bold;
+}
+
+.table tbody tr {
+    height: 40px !important;
+    /* Altura fija para todas las filas */
+}
+
+.table td {
+    vertical-align: middle;
+    /* Alinea el contenido verticalmente en el centro */
+    padding: 1px 5px 0;
+    white-space: nowrap;
+}
+
+
+.selected-row {
+    background-color: rgb(229, 229, 229);
+    /* Color de fondo gris para la fila seleccionada */
+}
+
+.scrollTabla {
+    max-height: 500px !important;   
+    overflow-y: auto;  
+    overflow-x: auto;  
+    width: 100%;       
+    position: relative;   
+}
+
+.scrollTablaFiltros {
+    max-height: 265px;
+    overflow-y: scroll;
+}
+
+.scrollTablaCampos {
+    max-height: 479px;
+    overflow-y: scroll;
+}
+  
+
+.centrarContenido {
+    color: #333333;
+    text-align: center;      
+    vertical-align: middle; 
+    padding: 10px;
+}
+  
+.encabezadoTablas {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #ffffff;
+}

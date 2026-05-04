@@ -1,0 +1,166 @@
+<form autocomplete="off" [formGroup]="DataForm">
+    <div class="panel panel-white">
+        <div class="panel-heading">
+            <h6 class="panel-title">Búsqueda</h6>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a data-toggle="modal" data-target="#ModalAyuda"><i class="icon-question6 " title="Ayuda" data-popup="tooltip" data-trigger="hover" data-placement="top"></i></a></li>
+                    <li>
+                        <a data-action="collapse"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-xs-12 col-md-3 col-lg-3">
+                    <label>Fecha inicial:</label><span class="text-danger ObligatorioGrande"> *</span>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="icon-calendar22"></i></span>
+                        <input type="date" class="form-control " formControlName="FechaInicial" />
+                        <span class="help-block validationSpan" *ngIf="DataForm.controls['FechaInicial'].errors?.['required'] && (DataForm.controls['FechaInicial'].dirty || DataForm.controls['FechaInicial'].touched)">
+                      La fecha inicial es obligatoria.</span>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-3 col-lg-3">
+                    <label>Fecha final:</label><span class="text-danger ObligatorioGrande"> *</span>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="icon-calendar22"></i></span>
+                        <input type="date" class="form-control " formControlName="FechaFinal">
+                        <span class="help-block validationSpan" *ngIf="DataForm.controls['FechaFinal'].errors?.['required'] && (DataForm.controls['FechaFinal'].dirty || DataForm.controls['FechaFinal'].touched)">
+                      La fecha final es obligatoria.</span>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-3 col-lg-3">
+                    <div class="form-group">
+                        <label>Usuario:</label>
+                        <input type="text" class="form-control" id="txtUsuario" formControlName="Usuario" />
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-3 col-lg-3">
+                    <div class="form-group">
+                        <label>Identificacion:</label>
+                        <input type="text" class="form-control" id="txtAsociado" formControlName="Identificacion" />
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                    <input type="submit" id="btnConsultar" class="btn Gt-btn-verde" value="Consultar" (click)="ConsultarDataAuditoria()" [disabled]="!DataForm.valid" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!-- <app-root (permisosEmit)="getPermisos($event)">
+</app-root> -->
+<!-- Tabla de resltados -->
+<div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatos" *ngIf="dataScoreAuditoria != null">
+    <div class="panel-body ">
+        <div class="table-responsive scrollTabla">
+            <table id="TablaAuditoria" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th><strong>Fecha consulta</strong></th>
+                        <th><strong>Tipo identificación</strong></th>
+                        <th><strong>identificación</strong></th>
+                        <th><strong>Motivo consulta</strong></th>
+                        <th><strong>Origen datos</strong></th>
+                        <th><strong>Oficina</strong></th>
+                        <th><strong>Usuario</strong></th>
+                        <th><strong>Nombre Usuario</strong></th>
+                        <th><strong>Historia de crédito</strong></th>
+                        <th><strong>Advance 1.1</strong></th>
+                        <th><strong>Advance inclusion</strong></th>
+                        <th><strong>Advance income</strong></th>
+                        <th><strong>Valor ingreso</strong></th>
+
+                    </tr>
+                </thead>
+                <tbody *ngFor="let resultScore of dataScoreAuditoria">
+                    <tr [ngClass]="{'selected-row': selectedRow === resultScore}" class="table-row"
+                        (click)="selectRow(resultScore)">
+                        <td>{{resultScore.FechaConsulta | date : "yyyy/MM/dd hh:mm:ss" }}</td>
+                        <td>{{resultScore.TipoIdentificacion}}</td>
+                        <td>{{resultScore.Identificacion}}</td>
+                        <td>{{resultScore.MotivoConsulta}}</td>
+                        <td>{{resultScore.OrigenDatos}}</td>
+                        <td>{{resultScore.Oficina}}</td>
+                        <td>{{resultScore.Usuario}}</td>
+                        <td>{{resultScore.NombreUsuario}}</td>
+                        <td class="center">{{resultScore.HistoriaCredito ? 'Si' : 'No' }}</td>
+                        <td class="center">{{resultScore.Advance1_1 ? 'Si' : 'No' }}</td>
+                        <td class="center">{{resultScore.AdvanceInclusion ? 'Si' : 'No' }}</td>
+                        <td class="center">{{resultScore.AdvanceIncome ? 'Si' : 'No' }}</td>
+                        <td class="center">{{resultScore.ValorIngreso ? 'Si' : 'No' }}</td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+            <div class="row">
+                <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                    <input type="submit"  class="btn Gt-btn-verde" value="RESUMEN" (click)="ConsultarDataFactura()" />
+                </div>
+            </div>
+    </div>
+</div>
+<!--/ Tabla de resltados -->
+
+<!-- Modal Ayuda -->
+<div id="ModalAyuda" class="modal fade">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title"><i class="icon-question6"></i> Ayuda</h6>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li>Todos los campos marcados con <span class="text-danger ObligatorioGrande">*</span> son obligatorios.</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ Fin Modal Ayuda -->
+
+<input type="hidden" #ShowModalList data-toggle="modal" data-target="#ShowModalList" data-popup="tooltip"
+    data-trigger="hover" data-placement="top">
+
+<div id="ShowModalList" class="modal fade" data-backdrop="static">
+    <div style="width: 88%; margin: 30px auto; height: 90%;">
+        <div class="modal-content modal-xl">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal"  (click)="onModalCerrar()">&times;</button>
+                <h6 class="modal-title">Resumen</h6>
+            </div>
+            <div class="modal-body">
+                <div class="scrollTabla">
+                    <app-tabla-virtual 
+                            [datos]="resultadoInforme" 
+                            [columnas]="encabezados"
+                            [formatear]="formatearValor"
+                            [mostrarBtnCopia]="true"
+                        />
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn Gt-btn-verde" (click)="exportarExcel2()" id="xlsx">
+                    <i class="icon-download4"></i>&nbsp; EXCEL
+                </button>
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal" (click)="onModalCerrar()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ngx-loading [show]="loading"
+    [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+</ngx-loading>

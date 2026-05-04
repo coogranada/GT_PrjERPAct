@@ -1,0 +1,46 @@
+import { Injectable } from '@angular/core';
+@Injectable()
+export class EnvironmentService {
+  public Url: string = ""; //Url de back .net framework
+  public UrlCore: string = "";//Url de back .net core
+  public UrlFront : string = "";// Url front
+  public UrlBaseOlivos : string = ""; 
+  UrlBackEnvironmentInt: number = 1;// variable de entorno
+  //UrlBackEnvironmentInt == 1 == Desarrollo
+  //UrlBackEnvironmentInt == 2 == Pruebas
+  //UrlBackEnvironmentInt == 3 == Pruebas produccion
+  //UrlBackEnvironmentInt == 4 == Produccion
+  constructor() {
+    this.GetUrls(this.UrlBackEnvironmentInt);
+    this.getUrlEnvironment();
+  }  
+  GetUrls(UrlBackEnvironmentInt : number) {
+    switch (UrlBackEnvironmentInt) {
+      case 1:
+        this.Url = 'http://localhost:64486';
+        this.UrlCore = "https://PruebasERPBCore.coogranada.com.co";// "https://localhost:7154" 
+        this.UrlFront = 'http://localhost:4200/';
+        break;
+      case 2:
+        this.Url = 'https://pruebaserpb.coogranada.com.co';
+        this.UrlCore = "https://PruebasERPBCore.coogranada.com.co";
+        this.UrlFront = "https://PruebasERPAct.coogranada.com.co"//'https://pruebaserp.coogranada.com.co';
+        break;
+      case 3:
+        this.Url = 'https://produccionerpb.coogranada.com.co';
+        this.UrlCore = "https://ProERPBCore.coogranada.com.co";
+        this.UrlFront = 'https://produccionerp.coogranada.com.co';
+        break;
+      case 4: //produccion 
+        this.Url = 'https://proerpb.coogranada.com.co/';
+        this.UrlCore = "https://ProduccionERPBCore.coogranada.com.co";
+        this.UrlFront = 'https://erp.coogranada.com.co/';
+        break;
+      default:
+        break;
+    }
+  }
+private getUrlEnvironment() {
+      this.Url = this.Url;
+  }
+}

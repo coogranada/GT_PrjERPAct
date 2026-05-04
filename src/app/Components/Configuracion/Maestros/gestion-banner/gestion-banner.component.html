@@ -1,0 +1,51 @@
+<form method="get" [formGroup]="bannerFrom">
+    <div class="content">
+        <!-- Form horizontal -->
+            <div class="panel panel-flat">
+            <div class="panel-body">
+                <br>
+                <div class="form-group">
+                    <div class="col-lg-4">
+                        <input type="file" class="file-styled" accept="image/gif,image/jpeg,image/jpg,image/png" formControlName="Base64String" (change)="handleFileSelect($event)">
+                    </div>
+                    <div class="col-lg-4">
+                        <input type="text" class="form-control" placeholder="Url de la imagen" formControlName="urlImagen">
+                    </div>
+                    <div class="col-lg-2">
+                        <input type="submit" class="btn Gt-btn-verde" [disabled]="bloqueoBtnAgregar"  value="Agregar" (click)="AddImagenBanner()"/>
+                        &nbsp;
+                    </div>
+                    <div class="col-lg-2">
+                        <input type="submit" class="btn Gt-btn-verde"  value="Guardar Imagenes" [disabled]="habilitarBtn" (click)="GuardarImagenBanner()" />
+                    </div>
+                </div>
+                <!-- </fieldset> -->
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="bannerArrayList.length <= 0">
+        <br>
+        <div class="alert alert-secondary" role="alert">
+            Aún no hay imagenes para mostrar.
+        </div>
+    </div>
+    <div class="content" *ngIf="bannerArrayList.length > 0">
+        <!-- Form horizontal -->
+        <div class="panel panel-flat">
+            <div class="panel-body">
+                <div class="form-group" class="bannerContent col-sm-12 col-lg-12">
+                    <div *ngFor="let itemArray of bannerArrayList ; let i = index">
+                        <div  class="col-sm-4 col-lg-4 contentBannerImg " > 
+                            <img src="data:image/png;base64,{{itemArray.Base64String}}" alt="">
+                            <br>
+                            <label for="">{{itemArray.urlImg}}</label>
+                            <input type="submit" class="btn Gt-btn-morado center-btn" value="Eliminar" (click)="EliminarImagenBanner(i)" />
+                        </div>
+                    </div>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

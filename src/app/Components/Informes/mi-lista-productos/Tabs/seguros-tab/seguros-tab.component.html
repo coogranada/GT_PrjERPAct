@@ -1,0 +1,1902 @@
+<section class="container">
+    <!-- seguro de vida -->
+    <div class="ac-sg">
+        <input class="ac-input-sg acordeon1" id="ac-sg-1" name="ac-sg-1" type="checkbox" (click)="cerrarSeguros(1)" />
+        <label class="ac-label-sg" for="ac-sg-1">Seguros de vida</label>
+
+        <article class="ac-text-sg">
+            <div class="col-xs-12 col-md-12 col-lg-12" id="NotHaveRegSegVida" *ngIf="DataSeguros.length <=0 && DataSegurosCancelados.length <=0 && !ActivaCargando">
+                <br>
+                <div class="alert alert-secondary" role="alert">
+                    No hay registros
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="ActivaCargando">
+                <br>
+                <div class="alert alert-secondary" role="alert">
+                    Cargando...
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-lg-12" id="NotHaveRegSegVida_" style="display: none;">
+                <br>
+                <div class="alert alert-secondary" role="alert">
+                    No hay registros
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="DataSeguros.length > 0 && DataSeguros != null && ValidadaActivo">
+                <div class="table-responsive scrollTablaSeguros">
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <table id="tablaIngresos" class="table table-hover tablaSegVida sticky-last-column">
+                            <thead>
+                                <tr>
+                                    <th class="columnCuenta_SegVida CuentaFija">
+                                        <strong>Cuenta</strong>
+                                    </th>
+                                    <th class="columnProducto_SegVida">
+                                        <strong>Producto</strong>
+                                    </th>
+                                    <th class="columnEfectivo_SegVida">
+                                        <strong>Saldo efectivo</strong>
+                                    </th>
+                                    <th class="columnCuota_SegVida">
+                                        <strong>Cuota</strong>
+                                    </th>
+                                    <th class="columnEstado_SegVida centerColumn">
+                                        <strong>Estado</strong>
+                                    </th>
+                                    <th class="columnApertura_SegVida centerColumn">
+                                        <strong>Fecha apertura</strong>
+                                    </th>
+                                    <th class="columntransaccion_SegVida">
+                                        <strong>Última transacción</strong>
+                                    </th>
+                                    <th class="operacionFija">
+                                        <strong>Opciones</strong>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of DataSeguros" class="Seg_{{item.lngIdCuenta}}" (click)="CambiarColor(item.lngIdCuenta)">
+                                    <td class="columnCuenta_SegVida CuentaFija strCuentaSeg_{{item.lngIdCuenta}}">{{item.strCuenta}}</td>
+                                    <td [ngClass]="{'columnProducto_SegVida': item.NameProducto.length < 29,
+                                            'columnProductoX2_Seguros': item.NameProducto.length > 29 && item.NameProducto.length < 35,
+                                            'columnProductoX3_Seguros': item.NameProducto.length >= 35}">{{item.NameProducto}}</td>
+                                    <td class="columnEfectivo_SegVida"> {{(item.curEfectivo + item.curSaldoAnterior) |  currency}}</td>
+                                    <td class="columnCuota_SegVida"> {{item.curCuota |  currency}}</td>
+                                    <td class="columnEstado_SegVida centerColumn">{{item.NameEstado}}</td>
+                                    <td class="columnApertura_SegVida centerColumn">{{item.dtmMatricula | date: 'yyyy/MM/dd'}}</td>
+                                    <td class="columntransaccion_SegVida centerColumn">{{item.dtmUltimaTrans | date: 'yyyy/MM/dd'}}</td>
+                                    <td class="operacionFija">
+                                        <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="MostrarDetalleSeguro" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModelDetalleSeguroVida" (click)="DetalleSeguroVida(item)">
+                                    <i class="icon-eye2"></i>
+                                </button>&nbsp;
+                                        <button class="btn Gt-btn-morado btn-icon legitRipple" *ngIf="MostrarExtractoSeguro" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModalSegurosExtVida" (click)="detalleExtractoVida(item)">
+                                    <i class="icon-three-bars"></i>
+                                </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="DataSegurosCancelados.length > 0 && DataSegurosCancelados != null && !ValidadaActivo">
+                <div class="table-responsive scrollTablaSeguros">
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <table id="tablaIngresos" class="table table-hover CALCEL tablaSegVida sticky-last-column">
+                            <thead>
+                                <tr>
+                                    <th class="columnCuenta_SegVida CuentaFija">
+                                        <strong>Cuenta</strong>
+                                    </th>
+                                    <th class="columnProducto_SegVida">
+                                        <strong>Producto</strong>
+                                    </th>
+                                    <th class="columnEfectivo_SegVida">
+                                        <strong>Saldo efectivo</strong>
+                                    </th>
+                                    <th class="columnCuota_SegVida">
+                                        <strong>Cuota</strong>
+                                    </th>
+                                    <th class="columnEstado_SegVida centerColumn">
+                                        <strong>Estado</strong>
+                                    </th>
+                                    <th class="columnApertura_SegVida centerColumn">
+                                        <strong>Fecha apertura</strong>
+                                    </th>
+                                    <th class="columntransaccion_SegVida">
+                                        <strong>Última transacción</strong>
+                                    </th>
+                                    <th class="operacionFija">
+                                        <strong>Opciones</strong>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of DataSegurosCancelados; let i = index" class="Seg_{{item.lngIdCuenta}}" (click)="CambiarColor(item.lngIdCuenta)">
+                                    <td class="columnCuenta_SegVida CuentaFija strCuentaSeg_{{item.lngIdCuenta}}">{{item.strCuenta}}</td>
+                                    <td [ngClass]="{'columnProducto_SegVida': item.NameProducto.length < 29,
+                                                    'columnProductoX2_Seguros': item.NameProducto.length > 29 && item.NameProducto.length < 35,
+                                                    'columnProductoX3_Seguros': item.NameProducto.length >= 35}">{{item.NameProducto}}</td>
+                                    <td class="columnEfectivo_SegVida"> {{(item.curEfectivo + item.curSaldoAnterior) |  currency}}</td>
+                                    <td class="columnCuota_SegVida"> {{item.curCuota |  currency}}</td>
+                                    <td class="columnEstado_SegVida centerColumn">{{item.NameEstado}}</td>
+                                    <td class="columnApertura_SegVida centerColumn">{{item.dtmMatricula | date: 'yyyy/MM/dd'}}</td>
+                                    <td class="columntransaccion_SegVida centerColumn">{{item.dtmUltimaTrans | date: 'yyyy/MM/dd'}}</td>
+                                    <td class="operacionFija">
+                                        <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="MostrarDetalleSeguro" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModelDetalleSeguroVida" (click)="DetalleSeguroVida(item)">
+                                            <i class="icon-eye2"></i>
+                                        </button>&nbsp;
+                                        <button class="btn Gt-btn-morado btn-icon legitRipple" *ngIf="MostrarExtractoSeguro" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModalSegurosExtVida" (click)="detalleExtractoVida(item)">
+                                            <i class="icon-three-bars"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </div>
+    <!-- fin de seguro vida -->
+
+    <!-- seguro vehículo -->
+    <div class="ac-sg">
+        <input class="ac-input-sg acordeon3" id="ac-sg-8" name="ac-sg-8" type="checkbox" (click)="cerrarSeguros(3)" />
+        <label class="ac-label-sg" for="ac-sg-8">Seguro de vehículo</label>
+
+        <article class="ac-text-sg">
+            <div class="col-xs-12 col-md-12 col-lg-12" id="noregistraSeguro" *ngIf="SeguroVehiculo.length <=0 && SeguroVehiculoCancelado.length <=0 && !ActivaCargando">
+                <br>
+                <div class="alert alert-secondary" role="alert">
+                    No hay registros
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="ActivaCargando">
+                <br>
+                <div class="alert alert-secondary" role="alert">
+                    Cargando...
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-lg-12" id="noregistraSeguro_" style="display: none;">
+                <br>
+                <div class="alert alert-secondary" role="alert">
+                    No hay registros
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="SeguroVehiculo.length > 0 && SeguroVehiculo != null && ValidadaActivo">
+                <div class="table-responsive scrollTablaSeguros">
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <table id="tablaIngresos" class="table table-hover tablaVehiculo sticky-last-column">
+                            <thead>
+                                <tr>
+                                    <th class="columnCuenta_SegVehiculo CuentaFija">
+                                        <strong>Cuenta</strong>
+                                    </th>
+                                    <th class="columnProducto_SegVehiculo">
+                                        <strong>Producto</strong>
+                                    </th>
+                                    <th class="columnEfectivo_SegVehiculo">
+                                        <strong>Saldo efectivo</strong>
+                                    </th>
+                                    <th class="columnCuota_SegVehiculo">
+                                        <strong>Cuota</strong>
+                                    </th>
+                                    <th class="columnEstado_SegVehiculo centerColumn">
+                                        <strong>Estado</strong>
+                                    </th>
+                                    <th class="columnApertura_SegVehiculo centerColumn">
+                                        <strong>Fecha apertura</strong>
+                                    </th>
+                                    <th class="columntransaccion_SegVehiculo">
+                                        <strong>Última transacción</strong>
+                                    </th>
+                                    <th class="operacionFija">
+                                        <strong>Opciones</strong>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of SeguroVehiculo" class="Seg_{{item.lngIdCuenta}}" (click)="CambiarColor(item.lngIdCuenta)">
+                                    <td class="columnCuenta_SegVehiculo CuentaFija strCuentaSeg_{{item.lngIdCuenta}}">{{item.strCuenta}}</td>
+                                    <td [ngClass]="{'columnProducto_SegExequial': item.NameProducto.length < 29,
+                                            'columnProductoX2_Seguros': item.NameProducto.length > 29 && item.NameProducto.length < 35,
+                                            'columnProductoX3_Seguros': item.NameProducto.length >= 35}">{{item.NameProducto}}</td>
+                                    <td class="columnEfectivo_SegVehiculo"> {{(item.curEfectivo + item.curSaldoAnterior) |  currency}}</td>
+                                    <td class="columnCuota_SegVehiculo"> {{item.curCuota |  currency}}</td>
+                                    <td class="columnEstado_SegVehiculo centerColumn">{{item.NameEstado}}</td>
+                                    <td class="columnApertura_SegVehiculo centerColumn">{{item.dtmMatricula | date: 'yyyy/MM/dd'}}</td>
+                                    <td class="columntransaccion_SegVehiculo centerColumn">{{item.dtmUltimaTrans | date: 'yyyy/MM/dd'}}</td>
+                                    <td class="operacionFija">
+                                        <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="MostrarDetalleSeguro" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModelDetalleSeguroVehiculo" (click)="DetalleSeguroVehiculo(item)">
+                                        <i class="icon-eye2"></i>
+                                    </button>&nbsp;
+                                        <button class="btn Gt-btn-morado btn-icon legitRipple" *ngIf="MostrarExtractoSeguro" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModalSegurosVehiculoExt" (click)="detalleExtractoVehiculo(item)">
+                                        <i class="icon-three-bars"></i>
+                                    </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="SeguroVehiculoCancelado.length > 0 && SeguroVehiculoCancelado != null && !ValidadaActivo">
+                <div class="table-responsive scrollTablaSeguros">
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <table id="tablaIngresos" class="table table-hover tablaVehiculo sticky-last-column">
+                            <thead>
+                                <tr>
+                                    <th class="columnCuenta_SegVehiculo CuentaFija">
+                                        <strong>Cuenta</strong>
+                                    </th>
+                                    <th class="columnProducto_SegVehiculo">
+                                        <strong>Producto</strong>
+                                    </th>
+                                    <th class="columnEfectivo_SegVehiculo">
+                                        <strong>Saldo efectivo</strong>
+                                    </th>
+                                    <th class="columnCuota_SegVehiculo">
+                                        <strong>Cuota</strong>
+                                    </th>
+                                    <th class="columnEstado_SegVehiculo centerColumn">
+                                        <strong>Estado</strong>
+                                    </th>
+                                    <th class="columnApertura_SegVehiculo centerColumn">
+                                        <strong>Fecha apertura</strong>
+                                    </th>
+                                    <th class="columntransaccion_SegVehiculo">
+                                        <strong>Última transacción</strong>
+                                    </th>
+                                    <th class="operacionFija">
+                                        <strong>Opciones</strong>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of SeguroVehiculoCancelado; let i = index" class="Seg_{{item.lngIdCuenta}}" (click)="CambiarColor(item.lngIdCuenta)">
+                                    <td class="columnCuenta_SegVehiculo CuentaFija strCuentaSeg_{{item.lngIdCuenta}}">{{item.strCuenta}}</td>
+                                    <td [ngClass]="{'columnProducto_SegExequial': item.NameProducto.length < 29,
+                                            'columnProductoX2_Seguros': item.NameProducto.length > 29 && item.NameProducto.length < 35,
+                                            'columnProductoX3_Seguros': item.NameProducto.length >= 35}">{{item.NameProducto}}</td>
+                                    <td class="columnEfectivo_SegVehiculo"> {{(item.curEfectivo + item.curSaldoAnterior) |  currency}}</td>
+                                    <td class="columnCuota_SegVehiculo"> {{item.curCuota |  currency}}</td>
+                                    <td class="columnEstado_SegVehiculo centerColumn">{{item.NameEstado}}</td>
+                                    <td class="columnApertura_SegVehiculo centerColumn">{{item.dtmMatricula | date: 'yyyy/MM/dd'}}</td>
+                                    <td class="columntransaccion_SegVehiculo centerColumn">{{item.dtmUltimaTrans | date: 'yyyy/MM/dd'}}</td>
+                                    <td class="operacionFija">
+                                        <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="MostrarDetalleSeguro" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModelDetalleSeguroVehiculo" (click)="DetalleSeguroVehiculo(item)">
+                                        <i class="icon-eye2"></i>
+                                    </button>&nbsp;
+                                        <button class="btn Gt-btn-morado btn-icon legitRipple" *ngIf="MostrarExtractoSeguro" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModalSegurosVehiculoExt" (click)="detalleExtractoVehiculo(item)">
+                                        <i class="icon-three-bars"></i>
+                                    </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </div>
+    <!-- fin de seguro vehículo -->
+
+</section>
+
+
+
+
+<!-- modales de seguros  -->
+<div id="ModelDetalleSeguroVida" class="modal">
+
+    <div class="modal-dialog modal-dialog-xl">
+        <div class="modal-content modal-lg modal-xl">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal" (click)="cerrarAcordeonSeguroVida()">&times;</button>
+                <h6 class="modal-title">Encabezado - Seguro de vida</h6>
+            </div>
+            <div class="modal-body">
+                <div class="panel-body">
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-4 col-lg-3">
+                                <div class="form-group">
+                                    <label>Cuenta:</label>
+                                    <span class="text-danger"></span>
+                                    <input type="text" class="form-control" [attr.disabled]="true" value="{{infoSeguroVidaDta.strCuenta}}" />
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-4 col-lg-3">
+                                <div class="form-group">
+                                    <label>Producto:</label>
+                                    <span class="text-danger"></span>
+                                    <input type="text" class="form-control" [attr.disabled]="true" value="{{infoSeguroVidaDta.DescripcionProducto}}" />
+
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-4 col-lg-3">
+                                <div class="form-group">
+                                    <label>Estado:</label>
+                                    <span class="text-danger"></span>
+                                    <input type="text" class="form-control" [attr.disabled]="true" value="{{infoSeguroVidaDta.DescribeEstado}}" />
+
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-4 col-lg-3">
+                                <div class="form-group">
+                                    <label>Oficina producto:</label>
+                                    <span class="text-danger"></span>
+                                    <input type="text" class="form-control" [attr.disabled]="true" value="{{infoSeguroVidaDta.DescribeOficina}}" />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-4 col-lg-3">
+                                <div class="form-group" *ngIf="!infoSeguroVidaDta.validaJuridico">
+                                    <label>Edad:</label>
+                                    <span class="text-danger"></span>
+                                    <input type="text" class="form-control" [attr.disabled]="true" value="{{infoSeguroVidaDta.edad}} años" />
+                                </div>
+                                <div class="form-group" *ngIf="infoSeguroVidaDta.validaJuridico">
+                                    <label>Fecha constitución:</label>
+                                    <span class="text-danger"></span>
+                                    <input type="text" class="form-control" [attr.disabled]="true" value="{{infoSeguroVidaDta.FechaConstitucion | date:'yyyy/MM/dd'}}" />
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-4 col-lg-3">
+                                <div class="form-group">
+                                    <label>Número orden:</label>
+                                    <span class="text-danger"></span>
+                                    <input type="text" class="form-control" [attr.disabled]="true" value="{{infoSeguroVidaDta.lngCertificado}}" />
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-4 col-lg-3">
+                                <div class="form-group">
+                                    <label>Póliza:</label>
+                                    <span class="text-danger"></span>
+                                    <input type="text" class="form-control" [attr.disabled]="true" value="{{infoSeguroVidaDta.lngPoliza}}" />
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-4 col-lg-3">
+                                <div class="form-group">
+                                    <label>Asesor:</label>
+                                    <span class="text-danger"></span>
+                                    <input type="text" class="form-control" [attr.disabled]="true" value="{{infoSeguroVidaDta.NombreAsesor}}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-4 col-lg-3">
+                                <div class="form-group">
+                                    <label>Compañía aseguradora:</label>
+                                    <span class="text-danger"></span>
+                                    <input type="text" class="form-control" [attr.disabled]="true" value="{{infoSeguroVidaDta.CompaniaAseguradora}}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-header bg-morado" style="height: 40px;">
+                <h6 class="modal-title" style="margin-top: -7px;">Detalles</h6>
+            </div>
+            <div class="modal-body">
+                <div class="panel-body">
+                    <section class="container">
+                        <div class="ac-ap">
+                            <input class="ac-input-ap datosVida" id="ac-ap-50" name="ac-ap-50" type="checkbox" (click)="cerraraSegVida(1)" />
+                            <label class="ac-label-ap" for="ac-ap-50">Datos</label>
+
+                            <article class="ac-text-ap">
+                                <div class="col-xs-12 col-md-12 col-lg-12" id="NotHaveDataPreexistencia">
+                                    <br>
+                                    <div class="alert alert-secondary" role="alert">
+                                        No hay registros
+                                    </div>
+                                </div>
+                                <div class="table-responsive scrollTabla">
+                                    <table id="tablaIngresos" class="table table-hover" id="HaveDataPreexistencia">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <strong>Preexistencia</strong>
+                                                </th>
+                                                <th>
+                                                    <strong>Fecha preexistencia</strong>
+                                                </th>
+                                                <th>
+                                                    <strong>Fecha matricula</strong>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of PreexistenciaSeguroVida">
+                                                <td>{{item.PreexistenciaDescribe}}</td>
+                                                <td>{{item.dtmPreexistencia}}</td>
+                                                <td>{{item.dtmMatricula}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+                    <section class="container">
+                        <div class="ac-ap">
+                            <input class="ac-input-ap negociacionVida" id="ac-ap-40" name="ac-ap-40" type="checkbox" (click)="cerraraSegVida(2)" />
+                            <label class="ac-label-ap" for="ac-ap-40">Negociación</label>
+
+                            <article class="ac-text-ap">
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-md-12 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Tarifa:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="{{infoSeguroVidaDta.Tarifa}}" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                        <div class="col-xs-12 col-md-12 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Valor seguro:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" currencyMask value=" {{infoSeguroVidaDta.curCargo |  currency}}" style="text-align:right" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                        <div class="col-xs-12 col-md-12 col-lg-2">
+
+                                            <div class="form-group">
+                                                <label>Plazo:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="{{infoSeguroVidaDta.intPlazo}}" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                        <div class="col-xs-12 col-md-12 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Plazo días:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="365" />
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-md-12 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Periodo pago:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="{{infoSeguroVidaDta.Periodo}}" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                        <div class="col-xs-12 col-md-12 col-lg-2">
+
+                                            <div class="form-group">
+                                                <label>Número meses:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" currencyMask value="{{infoSeguroVidaDta.intMeses}}" />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+
+                                        <div class="col-xs-12 col-md-12 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Cuota:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value=" {{infoSeguroVidaDta.curCuota |  currency}}" style="text-align: right" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                        <div class="col-xs-12 col-md-12 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Valor total a pagar:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value=" {{infoSeguroVidaDta.valorTotal |  currency}}" style="text-align:right" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-md-12 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Forma pago:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="{{infoSeguroVidaDta.FormaPago}}" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                        <div class="col-xs-12 col-md-12 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Valor exento:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value=" {{infoSeguroVidaDta.curExento |  currency}}" style="text-align:right" />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+
+                                    </div>
+                                </div>
+
+                            </article>
+                        </div>
+                    </section>
+                    <section class="container">
+                        <div class="ac-ap">
+                            <input class="ac-input-ap saldosVida" id="ac-ap-41" name="ac-ap-41" type="checkbox" (click)="cerraraSegVida(3)" />
+                            <label class="ac-label-ap" for="ac-ap-41">Saldos</label>
+
+                            <article class="ac-text-ap">
+
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <div class="row">
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-12 col-lg-10">
+                                    <div class="row">
+
+                                        <div class="col-xs-12 col-md-3 col-lg-3">
+                                            <div class="form-group">
+                                                <label>Valor último cargo:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value=" {{infoSeguroVidaDta.curCargo |  currency}}" currencyMask style="text-align: right;" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                        <div class="col-xs-12 col-md-3 col-lg-3">
+                                            <div class="form-group">
+                                                <label>Saldo anterior:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value=" {{infoSeguroVidaDta.curSaldoAnterior |  currency}}" currencyMask style="text-align: right;" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+
+                                        <div class="col-xs-12 col-md-3 col-lg-3">
+                                            <div class="form-group">
+                                                <label>Saldo proyectado:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value=" {{infoSeguroVidaDta.curProyectado |  currency}}" currencyMask style="text-align: right;" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-12 col-lg-10">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-md-3 col-lg-3">
+                                            <div class="form-group">
+                                                <label>Abono en canje:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value=" {{infoSeguroVidaDta.curCanje |  currency}}" currencyMask style="text-align: right;" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                        <div class="col-xs-12 col-md-3 col-lg-3">
+                                            <div class="form-group">
+                                                <label>Saldo del período:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value=" {{infoSeguroVidaDta.curPeriodo |  currency}}" currencyMask style="text-align: right;" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                        <div class="col-xs-12 col-md-3 col-lg-3">
+                                            <div class="form-group">
+                                                <label>Capital mora:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value=" {{infoSeguroVidaDta.CapitalMora |  currency}} " currencyMask style="text-align: right;" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-12 col-lg-10">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-md-3 col-lg-3">
+                                            <div class="form-group">
+                                                <label>Cuota proyectada:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value=" {{infoSeguroVidaDta.curCuotaProyectada |  currency}}" currencyMask style="text-align: right;" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                        <div class="col-xs-12 col-md-3 col-lg-3">
+                                            <div class="form-group">
+                                                <label>Saldo por pagar:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value=" {{infoSeguroVidaDta.curEfectivo |  currency}}" currencyMask style="text-align: right;" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 col-md-12 col-lg-4" id="bordeSaldosSegVida">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-md-12 col-lg-12">
+                                            <div class="form-group">
+                                                <label>Cuotas pagas:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="{{infoSeguroVidaDta.intCuotasPagas}}" currencyMask />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-12 col-lg-12">
+                                            <div class="form-group">
+                                                <label>Cuotas pendientes:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="{{infoSeguroVidaDta.CuotasPendientes}}" currencyMask />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-12 col-lg-12">
+                                            <div class="form-group">
+                                                <label>Cuotas en mora:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="{{infoSeguroVidaDta.intCuotasMora}}" currencyMask />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <div class="row">
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+                    <section class="container">
+                        <div class="ac-ap">
+                            <input class="ac-input-ap beneficiariosVida" id="ac-ap-42" name="ac-ap-42" type="checkbox" (click)="cerraraSegVida(4)" />
+                            <label class="ac-label-ap" for="ac-ap-42">Beneficiarios</label>
+                            <article class="ac-text-ap">
+                                <div class="col-xs-12 col-md-12 col-lg-12" id="NotHaveBenefSeguroVida">
+                                    <br>
+                                    <div class="alert alert-secondary" role="alert">
+                                        No hay registros
+                                    </div>
+                                </div>
+                                <div class="table-responsive scrollTabla">
+                                    <table id="tablaIngresos" class="table table-hover" id="haveBenefSeguroVida">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <strong>Documento</strong>
+                                                </th>
+                                                <th>
+                                                    <strong>Nombre</strong>
+                                                </th>
+                                                <th>
+                                                    <strong>Parentesco</strong>
+                                                </th>
+                                                <th>
+                                                    <strong>Porcentaje</strong>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of BeneficiariosSeguroVida; let i = index" class="filBenefi_{{i}}" (click)="cambiarColorBeneficiario(i)">
+                                                <td>{{item.NumeroDocumento}}</td>
+                                                <td [ngClass]="{'columnNombre_InscritosExeMin': item.PrimerNombre.length < 16,
+                                                'columnNombre_InscritosExe': item.PrimerNombre.length >= 16 && item.PrimerNombre.length < 30,
+                                                'columnNombre_InscritosExex2': item.PrimerNombre.length >= 30 && item.PrimerNombre.length < 42,
+                                                'columnNombre_InscritosExex3': item.PrimerNombre.length >= 42}">{{item.PrimerNombre}}</td>
+                                                <td style="min-width: 220px;">{{item.Descripcion}}</td>
+                                                <td>{{item.Porcentaje}} %</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </article>
+                        </div>
+                    </section>
+                    <section class="container">
+                        <div class="ac-ap">
+                            <input class="ac-input-ap renovacionesVida" id="ac-ap-43" name="ac-ap-43" type="checkbox" (click)="cerraraSegVida(5)" />
+                            <label class="ac-label-ap" for="ac-ap-43">Renovaciones</label>
+
+                            <article class="ac-text-ap">
+                                <div class="col-xs-12 col-md-12 col-lg-12" id="NotHaveRenovaSegVida">
+                                    <br>
+                                    <div class="alert alert-secondary" role="alert">
+                                        No hay registros
+                                    </div>
+                                </div>
+                                <div class="table-responsive scrollTabla">
+                                    <div class="col-xs-12 col-md-8 col-lg-12" id="HaveRenovaSegVida">
+                                        <table id="tablaIngresos" class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <strong>Fecha renovación</strong>
+                                                    </th>
+                                                    <th style="text-align:center">
+                                                        <strong>Cuota renovación</strong>
+                                                    </th>
+                                                    <th style="text-align:center">
+                                                        <strong></strong>
+                                                    </th>
+                                                    <th style="text-align:center">
+                                                        <strong></strong>
+                                                    </th>
+                                                    <th style="text-align:center">
+                                                        <strong>Valor mora renovación</strong>
+                                                    </th>
+                                                    <th style="text-align:center">
+                                                        <strong></strong>
+                                                    </th>
+                                                    <th style="text-align:center">
+                                                        <strong></strong>
+                                                    </th>
+                                                    <th style="text-align:center">
+                                                        <strong>Saldo</strong>
+                                                    </th>
+                                                    <th style="text-align:center">
+                                                        <strong></strong>
+                                                    </th>
+                                                    <th style="text-align:center">
+                                                        <strong>Plazo renovación</strong>
+                                                    </th>
+                                                    <th>
+                                                        <strong></strong>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let item of RenovacionSeguroVida; let i = index" class="filRenovac_{{i}}" (click)="cambiarColorRenovacion(i)">
+                                                    <td style="min-width: 169px;">{{item.dtmFecha}}</td>
+                                                    <td style="text-align: right;">{{item.curCuota |  currency}}</td>
+                                                    <th>
+                                                        <strong></strong>
+                                                    </th>
+                                                    <th>
+                                                        <strong></strong>
+                                                    </th>
+                                                    <td style="text-align: right;">{{item.curMora |  currency}}</td>
+                                                    <th>
+                                                        <strong></strong>
+                                                    </th>
+                                                    <th>
+                                                        <strong></strong>
+                                                    </th>
+                                                    <th style="text-align: right;">
+                                                        {{item.curSaldo |  currency}}
+                                                    </th>
+                                                    <th>
+                                                        <strong></strong>
+                                                    </th>
+                                                    <td style="text-align: center;">{{item.intPlazo}}</td>
+                                                    <th>
+                                                        <strong></strong>
+                                                    </th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </article>
+                        </div>
+                    </section>
+                    <section class="container">
+                        <div class="ac-ap">
+                            <input class="ac-input-ap movimientosVida" id="ac-ap-45" name="ac-ap-45" type="checkbox" (click)="cerraraSegVida(6)" />
+                            <label class="ac-label-ap" for="ac-ap-45">Movimientos</label>
+                            <article class="ac-text-ap">
+                                <div class="col-xs-12 col-md-12 col-lg-12" id="NotHaveMovimientos">
+                                    <br>
+                                    <div class="alert alert-secondary" role="alert">
+                                        No hay registros
+                                    </div>
+                                </div>
+                                <div class="table-responsive scrollTabla" id="HaveMovimientos">
+                                    <table id="tablaIngresos" class="table table-hover">
+                                        <thead>
+                                            <tr class="encabezadoTablas">
+                                                <th>
+                                                    <strong>Fecha histórico</strong>
+                                                </th>
+                                                <th>
+                                                    <strong>Documento</strong>
+                                                </th>
+                                                <th>
+                                                    <strong>Nombre beneficiario</strong>
+                                                </th>
+                                                <th>
+                                                    <strong>Observación o tipo de movimiento</strong>
+                                                </th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr *ngFor="let item of HistoricoSeguroVida; let i = index" class="filMvtos_{{i}}" (click)="cambiarColorMvto(i)">
+                                                <td style="min-width:170px">{{item.dtmFecha}}</td>
+                                                <td>{{item.strDocumento}}</td>
+                                                <td [ngClass]="{'columnNombre_InscritosExeMin': item.strDescripcion.length < 16,
+                                              'columnNombre_InscritosExe': item.strDescripcion.length >= 16 && item.strDescripcion.length < 30,
+                                              'columnNombre_InscritosExex2': item.strDescripcion.length >= 30 && item.strDescripcion.length < 42,
+                                              'columnNombre_InscritosExex3': item.strDescripcion.length >= 42}">{{item.strDescripcion}}</td>
+                                                <td [ngClass]="{'columnNombre_InscritosExeMin': item.strObservacion.length < 16,
+                                              'columnNombre_InscritosExe': item.strObservacion.length >= 16 && item.strObservacion.length < 30,
+                                              'columnNombre_InscritosExex2': item.strObservacion.length >= 30 && item.strObservacion.length < 42,
+                                              'columnNombre_InscritosExex3': item.strObservacion.length >= 42}">{{item.strObservacion}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </article>
+                        </div>
+                    </section>
+                    <section class="container">
+                        <div class="ac-ap">
+                            <input class="ac-input-ap fechasVida" id="ac-ap-44" name="ac-ap-44" type="checkbox" (click)="cerraraSegVida(7)" />
+                            <label class="ac-label-ap" for="ac-ap-44">Fechas</label>
+
+                            <article class="ac-text-ap">
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-md-4 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Apertura:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="{{infoSeguroVidaDta.dtmMatricula}}" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+
+                                        <div class="col-xs-12 col-md-4 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Última transacción:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="{{infoSeguroVidaDta.dtmUltimaTrans}}" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                        <div class="col-xs-12 col-md-4 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Cancelación:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="{{infoSeguroVidaDta.dtmCancela}}" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                        <div class="col-xs-12 col-md-4 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Próxima renovación:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="{{infoSeguroVidaDta.dtmVencimiento}}" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-md-4 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Próximo pago:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="{{infoSeguroVidaDta.dtmProximoPago}}" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                        <div class="col-xs-12 col-md-4 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Último cargo:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="{{infoSeguroVidaDta.dtmUltimoCargo}}" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="ModelDetalleSeguroVehiculo" class="modal">
+    <div class="modal-dialog modal-dialog-xl">
+        <div class="modal-content modal-lg modal-xl">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal" (click)="cerrarAcordeonSeguroVehiculo()">&times;</button>
+                <h6 class="modal-title">Encabezado - Seguro de vehículo</h6>
+            </div>
+            <div class="modal-body">
+                <div class="panel-body">
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-4 col-lg-3">
+                                <div class="form-group">
+                                    <label>Cuenta:</label>
+                                    <span class="text-danger"></span>
+                                    <input type="text" class="form-control" [attr.disabled]="true" value="{{InfoSeguroVehiculo.strCuenta}}" />
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-4 col-lg-3">
+                                <div class="form-group">
+                                    <label>Producto:</label>
+                                    <span class="text-danger"></span>
+                                    <input type="text" class="form-control" [attr.disabled]="true" value="{{InfoSeguroVehiculo.DescripcionProducto}}" />
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-4 col-lg-3">
+                                <div class="form-group">
+                                    <label>Estado:</label>
+                                    <span class="text-danger"></span>
+                                    <input type="text" class="form-control" [attr.disabled]="true" value="{{InfoSeguroVehiculo.DescribeEstado}}" />
+
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-4 col-lg-3">
+                                <div class="form-group">
+                                    <label>Oficina producto:</label>
+                                    <span class="text-danger"></span>
+                                    <input type="text" class="form-control" [attr.disabled]="true" value="{{InfoSeguroVehiculo.DescribeOficina}}" />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-4 col-lg-3">
+                                <div class="form-group" *ngIf="!InfoSeguroVehiculo.validaJuridico">
+                                    <label>Edad:</label>
+                                    <span class="text-danger"></span>
+                                    <input type="text" class="form-control" [attr.disabled]="true" value="{{InfoSeguroVehiculo.edad}} años" />
+                                </div>
+                                <div class="form-group" *ngIf="InfoSeguroVehiculo.validaJuridico">
+                                    <label>Fecha constitución:</label>
+                                    <span class="text-danger"></span>
+                                    <input type="text" class="form-control" [attr.disabled]="true" value="{{InfoSeguroVehiculo.FechaConstitucion | date:'yyyy/MM/dd'}}" />
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-4 col-lg-3">
+                                <div class="form-group">
+                                    <label>Número orden:</label>
+                                    <span class="text-danger"></span>
+                                    <input type="text" class="form-control" [attr.disabled]="true" value="{{InfoSeguroVehiculo.lngCertificado}}" />
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-4 col-lg-3">
+                                <div class="form-group">
+                                    <label>Póliza:</label>
+                                    <span class="text-danger"></span>
+                                    <input type="text" class="form-control" [attr.disabled]="true" value="{{InfoSeguroVehiculo.lngPoliza}}" />
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-4 col-lg-3">
+                                <div class="form-group">
+                                    <label>Asesor:</label>
+                                    <span class="text-danger"></span>
+                                    <input type="text" class="form-control" [attr.disabled]="true" value="{{InfoSeguroVehiculo.NombreAsesor}}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-4 col-lg-3">
+                                <div class="form-group">
+                                    <label>Compañía aseguradora:</label>
+                                    <span class="text-danger"></span>
+                                    <input type="text" class="form-control" [attr.disabled]="true" value="{{InfoSeguroVehiculo.CompaniaAseguradora}}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-header bg-morado" style="height: 40px;">
+                <h6 class="modal-title" style="margin-top: -7px;">Detalles</h6>
+            </div>
+            <div class="modal-body">
+                <div class="panel-body">
+                    <section class="container">
+                        <div class="ac-ap">
+                            <input class="ac-input-ap datosVehiculo" id="ac-ap-100" name="ac-ap-100" type="checkbox" (click)="cerraraSegVehiculo(1)" />
+                            <label class="ac-label-ap" for="ac-ap-100">Datos</label>
+                            <article class="ac-text-ap">
+
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-md-12 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Marca vehículo:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="{{InfoSeguroVehiculo.Marca}}" currencyMask/>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                        <div class="col-xs-12 col-md-12 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Placa:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="{{InfoSeguroVehiculo.strPlaca}}" currencyMask/>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                        <div class="col-xs-12 col-md-12 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Modelo:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="{{InfoSeguroVehiculo.intModelo}}" currencyMask/>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-12 col-lg-1"></div>
+                                        <div class="col-xs-12 col-md-12 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Cobertura:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value=" {{InfoSeguroVehiculo.curCobertura |  currency}}" currencyMask style="text-align: right;" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <div class="row">
+
+                                        <div class="col-xs-12 col-md-12 col-lg-12">
+                                            <div class="form-group">
+                                                <label>Detalle del seguro:</label>
+                                                <span class="text-danger"></span>
+                                                <textarea class="form-control" style="height: 31px;" [attr.disabled]="true" currencyMask>{{InfoSeguroVehiculo.strObservacion}}</textarea>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+                    <section class="container">
+                        <div class="ac-ap">
+                            <input class="ac-input-ap negociacionViehiculo" id="ac-ap-101" name="ac-ap-101" type="checkbox" (click)="cerraraSegVehiculo(2)" />
+                            <label class="ac-label-ap" for="ac-ap-101">Negociación</label>
+                            <article class="ac-text-ap">
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-md-12 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Tarifa:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="{{InfoSeguroVehiculo.TarifaExequial}}" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                        <div class="col-xs-12 col-md-12 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Valor período:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" currencyMask value=" {{InfoSeguroVehiculo.curSeguro |  currency}}" style="text-align:right" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                        <div class="col-xs-12 col-md-12 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Plazo:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="{{InfoSeguroVehiculo.intPlazo}}" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                        <div class="col-xs-12 col-md-12 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Forma pago:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="{{InfoSeguroVehiculo.FormaPago}}" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-md-12 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Periodo pago:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="{{InfoSeguroVehiculo.Periodo}}" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                        <div class="col-xs-12 col-md-12 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Número meses:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" currencyMask value="{{InfoSeguroVehiculo.intPlazo}}" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                        <div class="col-xs-12 col-md-12 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Cuota:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value=" {{InfoSeguroVehiculo.curCuota |  currency}}" style="text-align: right" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                        <div class="col-xs-12 col-md-12 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Valor total a pagar:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value=" {{InfoSeguroVehiculo.valorTotal |  currency}}" style="text-align:right" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-md-12 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Valor exento:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value=" {{InfoSeguroVehiculo.curExento |  currency}}" style="text-align:right" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </article>
+                        </div>
+                    </section>
+                    <section class="container">
+                        <div class="ac-ap">
+                            <input class="ac-input-ap saldosVehiculo" id="ac-ap-102" name="ac-ap-102" type="checkbox" (click)="cerraraSegVehiculo(3)" />
+                            <label class="ac-label-ap" for="ac-ap-102">Saldos</label>
+
+                            <article class="ac-text-ap">
+
+
+                                <div class="col-xs-12 col-md-12 col-lg-10">
+                                    <div class="row">
+
+                                        <div class="col-xs-12 col-md-3 col-lg-3">
+                                            <div class="form-group">
+                                                <label>Valor último cargo:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value=" {{InfoSeguroVehiculo.curCargo |  currency}}" currencyMask style="text-align: right;" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                        <div class="col-xs-12 col-md-3 col-lg-3">
+                                            <div class="form-group">
+                                                <label>Saldo anterior:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value=" {{InfoSeguroVehiculo.curSaldoAnterior |  currency}}" currencyMask style="text-align: right;" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+
+                                        <div class="col-xs-12 col-md-3 col-lg-3">
+                                            <div class="form-group">
+                                                <label>Saldo proyectado:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value=" {{InfoSeguroVehiculo.curProyectado |  currency}}" currencyMask style="text-align: right;" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-12 col-lg-10">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-md-3 col-lg-3">
+                                            <div class="form-group">
+                                                <label>Abono en canje:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value=" {{InfoSeguroVehiculo.curCanje |  currency}}" currencyMask style="text-align: right;" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                        <div class="col-xs-12 col-md-3 col-lg-3">
+                                            <div class="form-group">
+                                                <label>Saldo del período:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value=" {{InfoSeguroVehiculo.curPeriodo |  currency}}" currencyMask style="text-align: right;" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                        <div class="col-xs-12 col-md-3 col-lg-3">
+                                            <div class="form-group">
+                                                <label>Capital mora:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value=" {{InfoSeguroVehiculo.CapitalMora |  currency}} " currencyMask style="text-align: right;" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-12 col-lg-10">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-md-3 col-lg-3">
+                                            <div class="form-group">
+                                                <label>Cuota proyectada:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value=" {{InfoSeguroVehiculo.curCuotaProyectada |  currency}}" currencyMask style="text-align: right;" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                        <div class="col-xs-12 col-md-3 col-lg-3">
+                                            <div class="form-group">
+                                                <label>Saldo por pagar:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value=" {{InfoSeguroVehiculo.curEfectivo |  currency}}" currencyMask style="text-align: right;" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 col-md-12 col-lg-4" id="bordeSaldosSegVehiculo">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-md-12 col-lg-12">
+                                            <div class="form-group">
+                                                <label>Cuotas pagas:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="{{InfoSeguroVehiculo.intCuotasPagas}}" currencyMask />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-12 col-lg-12">
+                                            <div class="form-group">
+                                                <label>Cuotas pendientes:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="{{InfoSeguroVehiculo.CuotasPendientes}}" currencyMask />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-12 col-lg-12">
+                                            <div class="form-group">
+                                                <label>Cuotas en mora:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="{{InfoSeguroVehiculo.intCuotasMora}}" currencyMask />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+                    <section class="container">
+                        <div class="ac-ap">
+                            <input class="ac-input-ap renovacionesVehiculo" id="ac-ap-105" name="ac-ap-105" type="checkbox" (click)="cerraraSegVehiculo(6)" />
+                            <label class="ac-label-ap" for="ac-ap-105">Renovaciones</label>
+
+                            <article class="ac-text-ap">
+                                <div class="col-xs-12 col-md-12 col-lg-12" id="NotHaveRenovaSegVehiculo">
+                                    <br>
+                                    <div class="alert alert-secondary" role="alert">
+                                        No hay registros
+                                    </div>
+                                </div>
+                                <div class="table-responsive scrollTabla">
+                                    <div class="col-xs-12 col-md-8 col-lg-12" id="HaveRenovaSegVehiculo">
+                                        <table id="tablaIngresos" class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <strong>Fecha renovación</strong>
+                                                    </th>
+                                                    <th style="text-align:center">
+                                                        <strong>Cuota renovación</strong>
+                                                    </th>
+                                                    <th style="text-align:center">
+                                                        <strong></strong>
+                                                    </th>
+                                                    <th style="text-align:center">
+                                                        <strong></strong>
+                                                    </th>
+                                                    <th style="text-align:center">
+                                                        <strong>Valor mora renovación</strong>
+                                                    </th>
+                                                    <th style="text-align:center">
+                                                        <strong></strong>
+                                                    </th>
+                                                    <th style="text-align:center">
+                                                        <strong></strong>
+                                                    </th>
+                                                    <th style="text-align:center">
+                                                        <strong>Saldo</strong>
+                                                    </th>
+                                                    <th style="text-align:center">
+                                                        <strong></strong>
+                                                    </th>
+                                                    <th style="text-align:center">
+                                                        <strong>Plazo renovación</strong>
+                                                    </th>
+                                                    <th>
+                                                        <strong></strong>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let item of RenovacionSeguroVehiculo; let i = index" class="filRenovac_{{i}}" (click)="cambiarColorRenovacion(i)">
+                                                    <td style="min-width:169px">{{item.dtmFecha}}</td>
+                                                    <td style="text-align: right;">{{item.curCuota |  currency}}</td>
+                                                    <th>
+                                                        <strong></strong>
+                                                    </th>
+                                                    <th>
+                                                        <strong></strong>
+                                                    </th>
+                                                    <td style="text-align: right;">{{item.curMora |  currency}}</td>
+                                                    <th>
+                                                        <strong></strong>
+                                                    </th>
+                                                    <th>
+                                                        <strong></strong>
+                                                    </th>
+                                                    <th style="text-align: right;">
+                                                        {{item.curSaldo |  currency}}
+                                                    </th>
+                                                    <th>
+                                                        <strong></strong>
+                                                    </th>
+                                                    <td style="text-align: center;">{{item.intPlazo}}</td>
+                                                    <th>
+                                                        <strong></strong>
+                                                    </th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </article>
+                        </div>
+                    </section>
+                    <section class="container">
+                        <div class="ac-ap">
+                            <input class="ac-input-ap movimientosVehiculo" id="ac-ap-106" name="ac-ap-106" type="checkbox" (click)="cerraraSegVehiculo(7)" />
+                            <label class="ac-label-ap" for="ac-ap-106">Movimientos</label>
+                            <article class="ac-text-ap">
+                                <div class="col-xs-12 col-md-12 col-lg-12" id="NotHaveMovimientosVehiculo">
+                                    <br>
+                                    <div class="alert alert-secondary" role="alert">
+                                        No hay registros
+                                    </div>
+                                </div>
+                                <div class="table-responsive scrollTabla" id="HaveMovimientosVehiculo">
+                                    <table id="tablaIngresos" class="table table-hover">
+                                        <thead>
+                                            <tr class="encabezadoTablas">
+                                                <th>
+                                                    <strong>Fecha histórico</strong>
+                                                </th>
+                                                <th>
+                                                    <strong>Documento</strong>
+                                                </th>
+                                                <th>
+                                                    <strong>Nombre beneficiario</strong>
+                                                </th>
+                                                <th>
+                                                    <strong>Observación o tipo de movimiento</strong>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of HistoricoSeguroVehiculo; let i = index" class="filMvtos_{{i}}" (click)="cambiarColorMvto(i)">
+                                                <td style="min-width:170px">{{item.dtmFecha}}</td>
+                                                <td>{{item.strDocumento}}</td>
+                                                <td [ngClass]="{'columnNombre_InscritosExeMin': item.strDescripcion.length < 16,
+                                                'columnNombre_InscritosExe': item.strDescripcion.length >= 16 && item.strDescripcion.length < 30,
+                                                'columnNombre_InscritosExex2': item.strDescripcion.length >= 30 && item.strDescripcion.length < 42,
+                                                'columnNombre_InscritosExex3': item.strDescripcion.length >= 42}">{{item.strDescripcion}}</td>
+                                                <td [ngClass]="{'columnNombre_InscritosExeMin': item.strObservacion.length < 16,
+                                                'columnNombre_InscritosExe': item.strObservacion.length >= 16 && item.strObservacion.length < 30,
+                                                'columnNombre_InscritosExex2': item.strObservacion.length >= 30 && item.strObservacion.length < 42,
+                                                'columnNombre_InscritosExex3': item.strObservacion.length >= 42}">{{item.strObservacion}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </article>
+                        </div>
+                    </section>
+                    <section class="container">
+                        <div class="ac-ap">
+                            <input class="ac-input-ap fechasVehiculo" id="ac-ap-107" name="ac-ap-107" type="checkbox" (click)="cerraraSegVehiculo(8)" />
+                            <label class="ac-label-ap" for="ac-ap-107">Fechas</label>
+
+                            <article class="ac-text-ap">
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-md-4 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Apertura:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="{{InfoSeguroVehiculo.dtmMatricula}}" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+
+                                        <div class="col-xs-12 col-md-4 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Última transacción:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="{{InfoSeguroVehiculo.dtmUltimaTrans}}" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                        <div class="col-xs-12 col-md-4 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Cancelación:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="{{InfoSeguroVehiculo.dtmCancela}}" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                        <div class="col-xs-12 col-md-4 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Próxima renovación:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="{{InfoSeguroVehiculo.dtmVencimiento}}" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-md-4 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Próximo pago:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="{{InfoSeguroVehiculo.dtmProximoPago}}" />
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                        <div class="col-xs-12 col-md-4 col-lg-2">
+                                            <div class="form-group">
+                                                <label>Último cargo:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true" value="{{InfoSeguroVehiculo.dtmUltimoCargo}}" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- fin de modales seguros -->
+
+<!-- Modales de extractos de exequiales  -->
+
+
+<div id="ModalSegurosVehiculoExt" class="modal">
+    <form [formGroup]="ExtactoSeguroVhi">
+        <div class="modal-dialog">
+            <div class="modal-content modal-lg" style="width: 1380px; left: -390px;">
+                <div class="modal-header bg-morado">
+                    <button type="button" class="close" data-dismiss="modal" (click)="ResetModal()">&times;</button>
+                    <h6 class="modal-title">Extracto o Movimiento</h6>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body">
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <div class="row" *ngIf="!validaForm">
+                                <div class="col-xs-12 col-md-4 col-lg-4">
+                                    <div class="form-group">
+                                        <label>Tipo de consulta:</label>
+                                        <span class="abligatorioY"> *</span>
+                                        <select class="form-control SelectedMovimiento_Seguro" formControlName="MovExtSelector" name="MovExtSelector" [(ngModel)]="valueSlect" (change)="opcionSelectedVhi(valueSlect)">
+                                            <option [selected]="selectedEstado === '-'" value="-">-- Seleccione --
+                                            </option>
+                                            <option *ngFor="let  itemContactos of SeleccionMovimientos"
+                                                [value]="itemContactos.value">{{itemContactos.selector}}
+                                            </option>
+                                        </select>
+
+                                        <span class="help-block validationSpan" *ngIf="SelectErroneo">
+                                            El tipo de consulta es obligatorio.
+                                        </span>
+                                    </div>
+
+                                </div>
+                                <div class="col-xs-12 col-md-4 col-lg-4">
+                                    <div class="form-group">
+                                        <label>Fecha Inicial:</label>
+                                        <span class="abligatorioY"> *</span>
+                                        <input type="date" class="form-control" name="FechaInicio" id="fechaInitSegVehiculo" value="{{fechaAperturaCuenta}}" min="{{fechaAperturaCuenta}}" max="{{fechaAperturaActualDisabled}}" formControlName="FechaInicio" [(ngModel)]="valueFechaInicial" (change)="opcionSelectedFechasVehiculo(1)"
+                                        />
+
+                                        <span class="help-block validationSpan" *ngIf="InicioVacida">
+                                            La fecha inicial es obligatoria.
+                                        </span>
+                                        <span class="help-block validationSpan" *ngIf="FechaMayorAmenor">
+                                            La fecha inicial debe ser menor a la fecha final.
+                                        </span>
+                                        <span class="help-block validationSpan" *ngIf="inicioNoValida">
+                                            La fecha inicial no valida.
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-4 col-lg-4">
+                                    <div class="form-group">
+                                        <label>Fecha Final:</label>
+                                        <span class="abligatorioY"> *</span>
+                                        <input type="date" class="form-control" name="FechaFin" id="fechaendSegVehiculo" value="{{fechaAperturaActualDisabled}}" min="{{fechaAperturaCuenta}}" max="{{fechaAperturaActualDisabled}}" formControlName="FechaFin" [(ngModel)]="valueFechaFinal" (change)="opcionSelectedFechasVehiculo(2)"
+                                        />
+                                        <span class="help-block validationSpan" *ngIf="FinVacida">
+                                            La fecha final es obligatoria.
+                                        </span>
+                                        <span class="help-block validationSpan" *ngIf="FechaMenorMayor">
+                                            La fecha final debe ser mayor a la fecha inicial.
+                                        </span>
+                                        <span class="help-block validationSpan" *ngIf="finNoValida">
+                                            La fecha final no valida.
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="validaForm">
+                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                    <div class="form-group">
+                                        <label>Tipo de consulta:</label>
+                                        <span class="abligatorioY"> *</span>
+                                        <span class="text-danger"></span>
+                                        <select class="form-control SelectedExtracto_Seguro" id="SelectedExtracto_Seguro" formControlName="MovExtSelector" name="MovExtSelector" [(ngModel)]="valueSlect" (change)="opcionSelectedVhi(valueSlect)">
+                                      <option value="-">-- Seleccione --</option>
+                                      <option *ngFor="let  itemContactos of SeleccionMovimientos"
+                                          [value]="itemContactos.value" [selected]="SeleccionExt === 2 && itemContactos.value==2">{{itemContactos.selector}}
+                                      </option>
+                                  </select>
+                                        <span class="help-block validationSpan" *ngIf="SelectErroneo">
+                                      El tipo de consulta es obligatorio.
+                                  </span>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-1 col-lg-1"></div>
+
+                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                    <div class="form-group">
+                                        <label>Año inicial:</label>
+                                        <span class="abligatorioY"> *</span>
+                                        <span class="text-danger"></span>
+                                        <select class="form-control yearInit_Seguro" formControlName="yearInit" id="yearInit_Seguro" [(ngModel)]="yearInit" (change)="opcionSelectedYearInit(yearInit)">
+                                      <option *ngFor="let  item of YearsxMes"
+                                          [value]="item.Year">{{item.Year}}
+                                      </option>
+                                  </select>
+
+                                        <span class="help-block validationSpan" *ngIf="validaAnoInicial">
+                                      El año inicial debe ser menor o igual al final.
+                                  </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                    <div class="form-group">
+                                        <label>Mes inicial:</label>
+                                        <span class="abligatorioY"> *</span>
+                                        <span class="text-danger"></span>
+                                        <select class="form-control MesInit_Seguro" formControlName="MesInit" id="MesInit_Seguro" [(ngModel)]="MesInit" (change)="MesSelected(MesInit)">
+                                      <option *ngFor="let  item of mesxYear"
+                                          [value]="item.idMes">{{item.DescripcionMes}}
+                                      </option>
+                                  </select>
+                                        <span class="help-block validationSpan" *ngIf="validaMesInicial">
+                                      El mes inicial debe ser menor o igual al final.
+                                  </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                    <div class="form-group">
+                                        <label>Año final:</label>
+                                        <span class="abligatorioY"> *</span>
+                                        <span class="text-danger"></span>
+                                        <select class="form-control yearEnd_Seguro" formControlName="yearEnd" id="yearEnd_Seguro" [(ngModel)]="yearEnd" (change)="opcionSelectedYearEnd(yearEnd)">
+                                      <option *ngFor="let  item of YearsxMes"
+                                          [value]="item.Year" >{{item.Year}}
+                                      </option>
+                                  </select>
+
+                                        <span class="help-block validationSpan" *ngIf="validaAnoFinal">
+                                      El año final debe ser mayor o igual al inicial.
+                                  </span>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                    <div class="form-group">
+                                        <label>Mes final:</label>
+                                        <span class="abligatorioY"> *</span>
+                                        <span class="text-danger"></span>
+                                        <select class="form-control MesEnd_Seguro" formControlName="MesEnd" id="MesEnd_Seguro" [(ngModel)]="MesEnd" (change)="MesSelectedEnd(MesEnd)">
+                                    <option *ngFor="let  item of mesxYearEnd"
+                                        [value]="item.idMes">{{item.DescripcionMes}}
+                                    </option>
+                                </select>
+                                        <span class="help-block validationSpan" *ngIf="validaMesFinal">
+                                            El mes final debe ser mayor o igual al inicial.
+                                      </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="IdTercero" formControlName="IdTercero" />
+                        <input type="hidden" name="intProducto" formControlName="intProducto" />
+                        <input type="hidden" name="intOficina" formControlName="intOficina" />
+                        <input type="hidden" name="consecutivo" formControlName="consecutivo" />
+                        <input type="hidden" name="NombreProducto" formControlName="NombreProducto" />
+                        <input type="hidden" name="TipoProducto" formControlName="TipoProducto" />
+                        <div class="col-xs-12 col-md-12 col-lg-12 text-right" *ngIf="!validaForm">
+                            <button type="button" class="btn Gt-btn-verde" (click)="ConsultarSegVehiculo()" [disabled]="ExtactoSeguroVhi.invalid">Consultar</button>&nbsp;
+                            <button type="button" class="btn Gt-btn-morado" (click)="Limpiar(0)">Limpiar</button>
+                        </div>
+                        <div class="col-xs-12 col-md-12 col-lg-12 text-right" *ngIf="validaForm">
+                            <button type="button" class="btn Gt-btn-verde" (click)="ConsultarExtractoVhi()" [disabled]="ExtactoSeguroVhi.invalid">Consultar</button>&nbsp;
+                            <button type="button" class="btn Gt-btn-morado" (click)="Limpiar(1)">Limpiar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body">
+
+                        <div class="col-xs-12 col-md-12 col-lg-12" id="message" *ngIf="HabilitaMensate == 1">
+                            <br>
+                            <div class="alert alert-secondary" role="alert">
+                                No hay registros
+                            </div>
+                        </div>
+
+                        <div>
+                            <object id="movimientosSegVehiculo" *ngIf="MovimientosVehiculo.length > 0"></object>
+                        </div>
+                        <div>
+                            <object id="ExtractosSegVehiculo" *ngIf="ExtractosVehiculo.length > 0"></object>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body">
+                        <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                            <button class="btn Gt-btn-verde " id="pdf" (click)="generarPDFSeguroVhi()" *ngIf="MovimientosVehiculo.length > 0 || ExtractosVehiculo.length >0">
+                            <i class="icon-download4"></i>&nbsp; PDF
+                        </button>&nbsp;
+                            <button class="btn Gt-btn-verde " *ngIf="MovimientosVehiculo.length > 0 || ExtractosVehiculo.length >0" (click)="generarEXCELSeguroVhi()">
+                            <i class="icon-download4"></i>&nbsp; EXCEL
+                        </button>&nbsp;
+                            <button class="btn Gt-btn-verde" *ngIf="ExtractosVehiculo.length > 0" (click)="SendEmailSegurosVhi()">
+                          <i class="icon-mail5"></i>&nbsp; ENVIAR AL CORREO
+                        </button>
+                        </div>
+                    </div>
+                </div>
+                <ngx-loading [show]="loading" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+                </ngx-loading>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="ModalSegurosExtVida" class="modal">
+    <form [formGroup]="ExtactoSeguro">
+        <div class="modal-dialog">
+            <div class="modal-content modal-lg" style="width: 1380px; left: -390px;">
+                <div class="modal-header bg-morado">
+                    <button type="button" class="close" data-dismiss="modal" (click)="ResetModal()">&times;</button>
+                    <h6 class="modal-title">Extracto o Movimiento</h6>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body">
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <div class="row" *ngIf="!validaForm">
+                                <div class="col-xs-12 col-md-4 col-lg-4">
+                                    <div class="form-group">
+                                        <label>Tipo de consulta:</label>
+                                        <span class="abligatorioY"> *</span>
+                                        <select class="form-control SelectedMovimiento_Seguro" formControlName="MovExtSelector" name="MovExtSelector" [(ngModel)]="valueSlect" (change)="opcionSelected(valueSlect)">
+                                            <option [selected]="selectedEstado === '-'" value="-">-- Seleccione --
+                                            </option>
+                                            <option *ngFor="let  itemContactos of SeleccionMovimientos"
+                                                [value]="itemContactos.value">{{itemContactos.selector}}
+                                            </option>
+                                        </select>
+
+                                        <span class="help-block validationSpan" *ngIf="SelectErroneo">
+                                            El tipo de consulta es obligatorio.
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-4 col-lg-4">
+                                    <div class="form-group">
+                                        <label>Fecha Inicial:</label>
+                                        <span class="abligatorioY"> *</span>
+                                        <input type="date" class="form-control" name="FechaInicio" id="fechaInitSegVida" value="{{fechaAperturaCuenta}}" min="{{fechaAperturaCuenta}}" max="{{fechaAperturaActualDisabled}}" formControlName="FechaInicio" [(ngModel)]="valueFechaInicial" (change)="opcionSelectedFechasVida(1)"
+                                        />
+                                        <span class="help-block validationSpan" *ngIf="InicioVacida">
+                                            La fecha inicial es obligatoria.
+                                        </span>
+                                        <span class="help-block validationSpan" *ngIf="FechaMayorAmenor">
+                                            La fecha inicial debe ser menor a la fecha final.
+                                        </span>
+                                        <span class="help-block validationSpan" *ngIf="inicioNoValida">
+                                            La fecha inicial no valida.
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-4 col-lg-4">
+                                    <div class="form-group">
+                                        <label>Fecha Final:</label>
+                                        <span class="abligatorioY"> *</span>
+                                        <input type="date" class="form-control" name="FechaFin" id="fechaendSegVida" value="{{fechaAperturaActualDisabled}}" min="{{fechaAperturaCuenta}}" max="{{fechaAperturaActualDisabled}}" formControlName="FechaFin" [(ngModel)]="valueFechaFinal" (change)="opcionSelectedFechasVida(2)"
+                                        />
+                                        <span class="help-block validationSpan" *ngIf="FinVacida">
+                                            La fecha final es obligatoria.
+                                        </span>
+                                        <span class="help-block validationSpan" *ngIf="FechaMenorMayor">
+                                            La fecha final debe ser mayor a la fecha inicial.
+                                        </span>
+                                        <span class="help-block validationSpan" *ngIf="finNoValida">
+                                            La fecha final no valida.
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="validaForm">
+                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                    <div class="form-group">
+                                        <label>Tipo de consulta:</label>
+                                        <span class="abligatorioY"> *</span>
+                                        <span class="text-danger"></span>
+                                        <select class="form-control SelectedExtracto_Seguro" id="SelectedExtracto_SeguroVida" formControlName="MovExtSelector" name="MovExtSelector" [(ngModel)]="valueSlect" (change)="opcionSelected(valueSlect)">
+                                        <option value="-">-- Seleccione --</option>
+                                        <option *ngFor="let  itemContactos of SeleccionMovimientos"
+                                            [value]="itemContactos.value" [selected]="SeleccionExt === 2 && itemContactos.value==2">{{itemContactos.selector}}
+                                        </option>
+                                    </select>
+                                        <span class="help-block validationSpan" *ngIf="SelectErroneo">
+                                        El tipo de consulta es obligatorio.
+                                    </span>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-1 col-lg-1"></div>
+
+                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                    <div class="form-group">
+                                        <label>Año inicial:</label>
+                                        <span class="abligatorioY"> *</span>
+                                        <span class="text-danger"></span>
+                                        <select class="form-control yearInit_Seguro" formControlName="yearInit" id="yearInit_Seguro" [(ngModel)]="yearInit" (change)="opcionSelectedYearInit(yearInit)">
+                                        <option *ngFor="let  item of YearsxMes"
+                                            [value]="item.Year">{{item.Year}}
+                                        </option>
+                                    </select>
+
+                                        <span class="help-block validationSpan" *ngIf="validaAnoInicial">
+                                        El año inicial debe ser menor o igual al final.
+                                    </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                    <div class="form-group">
+                                        <label>Mes inicial:</label>
+                                        <span class="abligatorioY"> *</span>
+                                        <span class="text-danger"></span>
+                                        <select class="form-control MesInit_Seguro" formControlName="MesInit" id="MesInit_Seguro" [(ngModel)]="MesInit" (change)="MesSelected(MesInit)">
+                                        <option *ngFor="let  item of mesxYear"
+                                            [value]="item.idMes">{{item.DescripcionMes}}
+                                        </option>
+                                    </select>
+                                        <span class="help-block validationSpan" *ngIf="validaMesInicial">
+                                        El mes inicial debe ser menor o igual al final.
+                                    </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                    <div class="form-group">
+                                        <label>Año final:</label>
+                                        <span class="abligatorioY"> *</span>
+                                        <span class="text-danger"></span>
+                                        <select class="form-control yearEnd_Seguro" formControlName="yearEnd" id="yearEnd_Seguro" [(ngModel)]="yearEnd" (change)="opcionSelectedYearEnd(yearEnd)">
+                                        <option *ngFor="let  item of YearsxMes"
+                                            [value]="item.Year" >{{item.Year}}
+                                        </option>
+                                    </select>
+
+                                        <span class="help-block validationSpan" *ngIf="validaAnoFinal">
+                                        El año final debe ser mayor o igual al inicial.
+                                    </span>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                    <div class="form-group">
+                                        <label>Mes final:</label>
+                                        <span class="abligatorioY"> *</span>
+                                        <span class="text-danger"></span>
+                                        <select class="form-control MesEnd_Seguro" formControlName="MesEnd" id="MesEnd_Seguro" [(ngModel)]="MesEnd" (change)="MesSelectedEnd(MesEnd)">
+                                      <option *ngFor="let  item of mesxYearEnd"
+                                          [value]="item.idMes">{{item.DescripcionMes}}
+                                      </option>
+                                  </select>
+                                        <span class="help-block validationSpan" *ngIf="validaMesFinal">
+                                              El mes final debe ser mayor o igual al inicial.
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="IdTercero" formControlName="IdTercero" />
+                        <input type="hidden" name="intProducto" formControlName="intProducto" />
+                        <input type="hidden" name="intOficina" formControlName="intOficina" />
+                        <input type="hidden" name="consecutivo" formControlName="consecutivo" />
+                        <input type="hidden" name="NombreProducto" formControlName="NombreProducto" />
+                        <input type="hidden" name="TipoProducto" formControlName="TipoProducto" />
+
+                        <div class="col-xs-12 col-md-12 col-lg-12 text-right" *ngIf="!validaForm">
+                            <button type="button" class="btn Gt-btn-verde" (click)="ConsultarSegVida()" [disabled]="ExtactoSeguro.invalid">Consultar</button>&nbsp;
+                            <button type="button" class="btn Gt-btn-morado" (click)="Limpiar(0)">Limpiar</button>
+                        </div>
+                        <div class="col-xs-12 col-md-12 col-lg-12 text-right" *ngIf="validaForm">
+                            <button type="button" class="btn Gt-btn-verde" (click)="ConsultarExtractoSeg()" [disabled]="ExtactoSeguro.invalid">Consultar</button>&nbsp;
+                            <button type="button" class="btn Gt-btn-morado" (click)="Limpiar(1)">Limpiar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body">
+
+                        <div class="col-xs-12 col-md-12 col-lg-12" id="message" *ngIf="HabilitaMensate == 1">
+                            <br>
+                            <div class="alert alert-secondary" role="alert">
+                                No hay registros
+                            </div>
+                        </div>
+
+                        <div>
+                            <object id="movimientosSegVida" *ngIf="MovimientosVida.length > 0"></object>
+                        </div>
+                        <div>
+                            <object id="extractosSegVida" *ngIf="ExtractosVida.length > 0"></object>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body">
+                        <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                            <button class="btn Gt-btn-verde " id="pdf" (click)="generarPDFSeguroVida()" *ngIf="MovimientosVida.length > 0 || ExtractosVida.length >0">
+                            <i class="icon-download4"></i>&nbsp; PDF
+                        </button>&nbsp;
+                            <button class="btn Gt-btn-verde " *ngIf="MovimientosVida.length > 0 || ExtractosVida.length >0" (click)="generarEXCELSeguroExequial()">
+                            <i class="icon-download4"></i>&nbsp; EXCEL
+                        </button>&nbsp;
+                            <button class="btn Gt-btn-verde" *ngIf="ExtractosVida.length > 0" (click)="SendEmailSeguros()">
+                          <i class="icon-mail5"></i>&nbsp; ENVIAR AL CORREO
+                        </button>
+                        </div>
+                    </div>
+                </div>
+                <ngx-loading [show]="loading" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+                </ngx-loading>
+            </div>
+        </div>
+    </form>
+</div>

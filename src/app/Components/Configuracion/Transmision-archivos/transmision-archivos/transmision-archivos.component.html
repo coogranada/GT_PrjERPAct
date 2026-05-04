@@ -1,0 +1,439 @@
+<div class="panel panel-white">
+    <div class="panel-heading">
+        <h6 class="panel-title">Datos</h6>
+        <div class="heading-elements">
+            <ul class="icons-list">
+                <li>
+                    <a data-toggle="modal" data-target="#ModalAyuda">
+                        <i class="icon-question6 " title="Ayuda" data-popup="tooltip" data-trigger="hover"
+                            data-placement="top"></i>
+                    </a>
+                </li>
+                <li>
+                    <a data-action="collapse"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <form [formGroup]="parametrosTransmisionForm" autocomplete="off">
+        <div class="panel-body">
+            <!-- Agrupación de Campos Generales -->
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <div class="col-xs-12 col-md-3 col-lg-3">
+                    <label><strong>Nombre sitio:</strong></label><span class="text-danger ObligatorioGrande"> *</span>
+                    <input type="text" class="form-control" formControlName="nombreSitio" maxlength="100" (blur)="borrarSiEspacios('nombreSitio')" />
+                    <span class="help-block validationSpan"
+                        *ngIf="parametrosTransmisionForm.controls['nombreSitio'].errors?.['required'] && (parametrosTransmisionForm.controls['nombreSitio'].dirty || parametrosTransmisionForm.controls['nombreSitio'].touched)">
+                        El nombre del sitio es obligatorio.
+                    </span>
+                </div>
+
+                <div class="col-xs-12 col-md-3 col-lg-3">
+                    <label><strong>Servidor:</strong></label><span class="text-danger ObligatorioGrande"> *</span>
+                    <input type="text" class="form-control" formControlName="servidor" maxlength="100" (blur)="borrarSiEspacios('servidor')"/>
+                    <span class="help-block validationSpan"
+                        *ngIf="parametrosTransmisionForm.controls['servidor'].errors?.['required'] && (parametrosTransmisionForm.controls['servidor'].dirty || parametrosTransmisionForm.controls['servidor'].touched)">
+                        El servidor es obligatorio.
+                    </span>
+                </div>
+
+                <div class="col-xs-12 col-md-3 col-lg-3">
+                    <label><strong>Protocolo:</strong></label><span class="text-danger ObligatorioGrande"> *</span>
+                    <select class="form-control" formControlName="protocolo" (change)="onChangeProtocol(1)">
+                        <option value="">-- Seleccione --</option>
+                        <option *ngFor="let protocolos of tiposProtocolos" [value]="protocolos.value">
+                            {{protocolos.descripcion}}
+                        </option>
+                    </select>
+                    <span class="help-block validationSpan"
+                        *ngIf="parametrosTransmisionForm.controls['protocolo'].errors?.['required'] && (parametrosTransmisionForm.controls['protocolo'].dirty || parametrosTransmisionForm.controls['protocolo'].touched)">
+                        El protocolo es obligatorio.
+                    </span>
+                </div>
+
+                <div class="col-xs-12 col-md-1 col-lg-1">
+                    <label><strong>Estado:</strong></label><span class="text-danger ObligatorioGrande"> *</span>
+                    <div class="text-center" style="width: 80%; justify-content: center; text-align: center;">
+                        <input class="check-ena" type="checkbox" formControlName="estado" style="margin-top: 10px;">
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-2 col-lg-2">
+                    <label><strong>¿Eliminar al subir?</strong></label><span class="text-danger ObligatorioGrande"> *</span>
+                    <div class="text-center" style="width: 80%; justify-content: center; text-align: center;">
+                        <input class="check-ena" type="checkbox" formControlName="eliminaArchivo" style="margin-top: 10px;">
+                    </div>
+                </div>
+
+
+
+            </div>
+            <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="vbleCifrado">
+                <div class="col-xs-12 col-md-3 col-lg-3 div-espacio">
+                    <label><strong>Cifrado:</strong></label>
+                    <select class="form-control" formControlName="cifrado" (change)="onChangeCifrado()">
+                        <option value="">Sin cifrado</option>
+                        <option *ngFor="let cifrados of tiposCifrado" [value]="cifrados.value">
+                            {{cifrados.descripcion}}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-xs-12 col-md-3 col-lg-3 div-espacio">
+                    <label><strong>GPG recipient</strong></label><span class="text-danger ObligatorioGrande"
+                        *ngIf="parametrosTransmisionForm.controls['cifrado'].value === 'GPG'"> *</span>
+                    <input #gpgRecipientInput type="text" class="form-control" formControlName="gpgRecipient" maxlength="100" (blur)="borrarSiEspacios('gpgRecipient')"/>
+                    <span class="help-block validationSpan"
+                        *ngIf="parametrosTransmisionForm.controls['cifrado'].value === 'GPG' && !parametrosTransmisionForm.controls['gpgRecipient'].value">
+                        Campo obligatorio para cifrado GPG.
+                    </span>
+                </div>
+
+            </div>
+            <!-- Fin Agrupación de Campos Opcionales -->
+
+            <!-- Agrupación de Campos Auth -->
+            <div class="col-xs-12 col-md-12 col-lg-12 contorno-rutas div-espacio1">
+                <span class="titulo">Autenticación</span>
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <label><strong>Usuario:</strong></label><span class="text-danger ObligatorioGrande"> *</span>
+                        <input type="text" class="form-control" formControlName="usuario" maxlength="50" (blur)="borrarSiEspacios('usuario')"/>
+                        <span class="help-block validationSpan"
+                            *ngIf="parametrosTransmisionForm.controls['usuario'].errors?.['required'] && (parametrosTransmisionForm.controls['usuario'].dirty || parametrosTransmisionForm.controls['usuario'].touched)">
+                            El usuario es obligatorio.
+                        </span>
+                    </div>
+
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <div class="input-container">
+                            <label><strong>Contraseña:</strong></label>
+                            <span id="imgContrasena" data-activo="showPassword" class="glyphicon glyphicon-eye-open"
+                                (click)="togglePasswordVisibility()">
+                            </span>
+                        </div>
+                        <input [type]="showPassword ? 'text' : 'password'" class="form-control"
+                            formControlName="contrasena" maxlength="50" (blur)="borrarSiEspacios('contrasena')"/>
+                    </div>
+
+
+
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <label><strong>Ruta Llave:</strong></label>
+                        <input type="text" class="form-control" formControlName="rutaLlave" maxlength="200" placeholder="\\servfs-1\sgfspl$\" (blur)="borrarSiEspacios('rutaLlave')"/>
+                    </div>
+
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <label><strong>Responsable:</strong></label>
+                        <input type="email" class="form-control" placeholder="usuario@dominio.com.co"
+                            formControlName="correoResponsable" maxlength="50" (blur)="borrarSiEspacios('correoResponsable')"/>
+                        <span class="help-block validationSpan"
+                            *ngIf="parametrosTransmisionForm.controls['correoResponsable'].errors?.['email']">
+                            El correo no es válido
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+            <!-- Fin Agrupación de Campos Auth -->
+
+
+            <!-- Agrupación de Campos Otros -->
+            <div class="col-xs-12 col-md-12 col-lg-12 contorno-rutas div-espacio1">
+                <span class="titulo">Ejecución</span>
+                <div class="col-xs-12 col-md-12 col-lg-12">
+
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <label><strong>Frecuencia:</strong></label><span class="text-danger ObligatorioGrande">
+                            *</span>
+                        <input type="number" readonly min="1" max="1" maxlength="1" placeholder="1" class="form-control"
+                            formControlName="frecuencia" />
+                    </div>
+
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <label><strong>Hora entrada:</strong></label><span class="text-danger ObligatorioGrande">
+                            *</span>
+                        <input type="time" class="form-control" formControlName="horaEntrada" />
+                        <span class="help-block validationSpan"
+                            *ngIf="parametrosTransmisionForm.controls['horaEntrada'].errors?.['required'] && (parametrosTransmisionForm.controls['horaEntrada'].dirty || parametrosTransmisionForm.controls['horaEntrada'].touched)">
+                            La hora de entrada es obligatoria.
+                        </span>
+                    </div>
+
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <label><strong>Hora salida:</strong></label><span class="text-danger ObligatorioGrande">
+                            *</span>
+                        <input type="time" class="form-control" formControlName="horaSalida" />
+                        <span class="help-block validationSpan"
+                            *ngIf="parametrosTransmisionForm.controls['horaSalida'].errors?.['required'] && (parametrosTransmisionForm.controls['horaSalida'].dirty || parametrosTransmisionForm.controls['horaSalida'].touched)">
+                            La hora de salida es obligatoria.
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+            <!-- Fin agrupación de Campos de ejecución -->
+
+            <!-- Agrupación de Campos de Rutas -->
+            <div class="col-xs-12 col-md-12 col-lg-12 contorno-rutas div-espacio1">
+                <span class="titulo">Rutas</span>
+
+                <div class="row" style="padding-left: 15px;">
+                    <div class="col-xs-12 col-md-6 col-lg-6">
+                        <label><strong>Ruta local entrada:</strong></label><span class="text-danger ObligatorioGrande"
+                            *ngIf="!parametrosTransmisionForm.controls['horaEntrada'].value.startsWith('00:00')">*</span>
+                        <input type="text" class="form-control" formControlName="rutaLocalEntrada" maxlength="200"  (blur)="borrarSiEspacios('rutaLocalEntrada')" />
+                        <span class="help-block validationSpan"
+                            *ngIf="!parametrosTransmisionForm.controls['horaEntrada'].value.startsWith('00:00') && !parametrosTransmisionForm.get('rutaLocalEntrada')?.value && parametrosTransmisionForm.get('rutaLocalEntrada')?.touched ">
+                            Ruta local de entrada obligatoria.
+                        </span>
+                    </div>
+
+                    <div class="col-xs-12 col-md-6 col-lg-6">
+                        <label><strong>Ruta remota salida:</strong></label><span class="text-danger ObligatorioGrande"
+                            *ngIf="!parametrosTransmisionForm.controls['horaEntrada'].value.startsWith('00:00')">*</span>
+                        <input type="text" class="form-control" formControlName="rutaRemotaSalida" maxlength="200" (blur)="borrarSiEspacios('rutaRemotaSalida')"/>
+                        <span class="help-block validationSpan"
+                            *ngIf="!parametrosTransmisionForm.controls['horaEntrada'].value.startsWith('00:00') && !parametrosTransmisionForm.get('rutaRemotaSalida')?.value && parametrosTransmisionForm.get('rutaRemotaSalida')?.touched">
+                            Ruta remota de salida obligatoria.
+                        </span>
+                    </div>
+
+
+                </div>
+
+
+                <div class="row" style="padding-left: 15px;">
+                    <div class="col-xs-12 col-md-6 col-lg-6 div-espacio" >
+                        <label><strong>Ruta local salida:</strong></label><span class="text-danger ObligatorioGrande"
+                            *ngIf="!parametrosTransmisionForm.controls['horaSalida'].value.startsWith('00:00')">*</span>
+                        <input type="text" class="form-control" formControlName="rutaLocalSalida" maxlength="200"  (blur)="borrarSiEspacios('rutaLocalSalida')" />
+                        <span class="help-block validationSpan"
+                            *ngIf="!parametrosTransmisionForm.controls['horaSalida'].value.startsWith('00:00') && !parametrosTransmisionForm.get('rutaLocalSalida')?.value && parametrosTransmisionForm.get('rutaLocalSalida')?.touched">
+                            Ruta local de salida obligatoria.
+                        </span>
+                    </div>
+
+                    <div class="col-xs-12 col-md-6 col-lg-6 div-espacio">
+                        <label><strong>Ruta remota entrada:</strong></label><span class="text-danger ObligatorioGrande"
+                            *ngIf="!parametrosTransmisionForm.controls['horaSalida'].value.startsWith('00:00')">*</span>
+                        <input type="text" class="form-control" formControlName="rutaRemotaEntrada" maxlength="500" (blur)="borrarSiEspacios('rutaRemotaEntrada')"/>
+                        <span class="help-block validationSpan"
+                            *ngIf="!parametrosTransmisionForm.controls['horaSalida'].value.startsWith('00:00') && !parametrosTransmisionForm.get('rutaRemotaEntrada')?.value && parametrosTransmisionForm.get('rutaRemotaEntrada')?.touched">
+                            Ruta remota de entrada obligatoria.
+                        </span>
+                    </div>
+
+
+                </div>
+            </div>
+            <!-- Fin Agrupación de Campos de Rutas -->
+
+
+            <div class="col-xs-12 col-md-12 col-lg-12" style="justify-items: end; padding: 1em;">
+                <div class="actions clearfix">
+                    <button class="btn Gt-btn-morado btn-icon legitRipple" (click)="limpiarFormulario()" type="button">
+                        LIMPIAR
+                    </button>&nbsp;
+
+                    <button class="btn Gt-btn-verde btn-icon legitRipple" type="submit"
+                        (click)="guardarParametroTransmision()" [disabled]="parametrosTransmisionForm.invalid"
+                        *ngIf="!vbleBtnactualizar">
+                        <i class=""></i>&nbsp; GUARDAR
+                    </button>&nbsp;
+
+                    <button class="btn Gt-btn-verde btn-icon legitRipple" type="submit"
+                        (click)="actualizarParametroTransmision()" [disabled]="parametrosTransmisionForm.invalid"
+                        *ngIf="vbleBtnactualizar">
+                        <i class=""></i>&nbsp; ACTUALIZAR
+                    </button>
+
+                </div>
+            </div>
+
+        </div>
+
+
+
+    </form>
+
+
+</div>
+
+
+<!-- Tabla parámetros de configuración -->
+<div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatos">
+    <div class="panel-body ">
+
+        <div class="table-responsive scrollTabla">
+            <table id="TablaParametros" class="table table-sm sticky-last-column ">
+                <thead class="text-center">
+                    <tr>
+                        <th><strong>Nombre sitio</strong></th>
+                        <th><strong>Servidor</strong></th>
+                        <th><strong>Activo</strong></th>
+                        <th><strong>Protocolo</strong></th>
+                        <th><strong>Cifrado</strong></th>
+                        <th><strong>Usuario</strong></th>
+                        <th><strong>Responsable</strong></th>
+                        <th><strong>Frecuencia</strong></th>
+                        <th><strong>Hora entrada</strong></th>
+                        <th><strong>Hora salida</strong></th>
+                        <th><strong>Ruta local entrada</strong></th>
+                        <th><strong>Ruta local salida</strong></th>
+                        <th><strong>Ruta remota entrada</strong></th>
+                        <th style="width: 250%;"><strong>Ruta remota salida</strong></th>
+                        <th><strong>GPG recipient</strong></th>
+                        <th><strong>Ruta llave</strong></th>
+                        <th><strong>Creado</strong></th>
+                        <th><strong>Eliminar al subir</strong></th>
+                        <th class="operacionFija"><strong>Opciones</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let parametro of parametrosTransm"
+                        [ngClass]="{'selected-row': selectedRow === parametro}" class="table-row"
+                        (click)="selectRow(parametro)">
+                        <td>{{parametro.IdParametro}} - {{parametro.NombreSitio}}</td>
+                        <td>{{parametro.Servidor}}</td>
+                        <td class="text-center"><input class="check-dis" type="checkbox"
+                                [checked]="parametro.Estado === 5"></td>
+                        <td class="text-center">{{parametro.Protocolo}}</td>
+                        <td class="text-center">{{parametro.Cifrado}}</td>
+                        <td>{{parametro.Usuario}}</td>
+                        <td>{{parametro.CorreoResponsable}}</td>
+                        <td class="text-center">{{parametro.Frecuencia}}</td>
+                        <td class="text-center">{{parametro.HoraEntrada}}</td>
+                        <td class="text-center">{{parametro.HoraSalida}}</td>
+                        <td>{{parametro.RutaLocalEntrada}}</td>
+                        <td>{{parametro.RutaLocalSalida}}</td>
+                        <td class="text-truncate">{{parametro.RutaRemotaEntrada}}</td>
+                        <td style="width: 250%;">{{parametro.RutaRemotaSalida}}</td>
+                        <td>{{parametro.GPGRecipient}}</td>
+                        <td>{{parametro.RutaLlave}}</td>
+                        <td>{{parametro.FechaCreacion | date:'yyyy/MM/dd'}}</td>
+                        <td class="text-center"><input class="check-dis" type="checkbox"
+                            [checked]="parametro.EliminaArchivo === 1"></td>
+                        <td class="operacionFija">
+                            <button class="btn Gt-btn-verde btn-icon legitRipple" (click)="selectRow(parametro)">
+                                <i class="icon-pencil"></i></button> &nbsp;
+                            <button class="btn Gt-btn-morado btn-icon legitRipple"
+                                (click)="obtenerHistorial(parametro.IdParametro)" data-toggle="modal"
+                                data-target="#ModalHistorial">
+                                <i class="glyphicon glyphicon-time"></i></button>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<ngx-loading [show]="loading"
+[config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+</ngx-loading>
+<!-- Fin Tabla -->
+
+
+<!-- Modal Ayuda -->
+<div id="ModalAyuda" class="modal fade">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title"><i class="icon-question6"></i> Ayuda</h6>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li>Todos los campos marcados con <span class="text-danger">*</span> son obligatorios.</li>
+                    <li>Para guardar la configuración debe presionar el botón "Guardar".</li>
+                    <li>Para actualizar la configuración se debe dar clic sobre el botón editar de la tabla.</li>
+                    <li>GPG Recipient es la persona o entidad a la que se le envía un mensaje cifrado usando GPG (GNU
+                        Privacy Guard). Este receptor tiene la clave privada necesaria para descifrar el mensaje.</li>
+                    <li>Las tareas que se programen para las 00:00:00 o 12:00:00 a.m. No se ejecutan.</li>
+                    <li>En caso no haber rutas específicas puede usar el comodín <span class="text-danger">/</span> para indicar que se utilizará el directorio raíz.</li>
+                    <li>Desde el historial de ejecuciones, solo se habilita la opción de reintentar ejecución manual, si la tarea presentó error y si está dentro de los últimos 5 días.</li>
+                    <li>Si se crea una nueva configuración o se modifica alguna hora de ejecución, se debe confirmar la <strong>programación de tareas</strong>.</li>
+                    <li>Si requiere crear un sitio que tenga especificado algún puerto, el puerto se indicará después de <span class="text-danger">:</span> dos puntos y seguido, ejemplo sftp.sitio.net:2244</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--  Fin Modal Ayuda -->
+
+<!-- Modal Historial -->
+<div id="ModalHistorial" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <!-- Botón para cerrar la modal -->
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+                <h6 class="modal-title">Historial de ejecuciones sitio: <strong>{{selectedTarea}}</strong></h6>
+            </div>
+            <div class="modal-body">
+
+                <div class="table-responsive scrollTabla">
+                    <table id="TablaHistorial" class="table table-sm sticky-last-column ">
+                        <thead class="text-center">
+                            <tr>
+                                <th><strong>Fecha ejecución</strong></th>
+                                <th><strong>Resultado</strong></th>
+                                <th><strong>Origen</strong></th>
+                                <th><strong>Tarea</strong></th>
+                                <th><strong>Equipo</strong></th>
+                                <th><strong>Detalle resultado</strong></th>
+                                <th class="operacionFija"><strong>Opciones</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let historialT of historialTransm" class="table-row1" [ngClass]="{'selected-row1': selectedRow1 === historialT}" class="table-row"
+                            (click)="selectRow1(historialT)">
+
+                                <td>{{historialT.FechaEjecucion | date:'yyyy/MM/dd hh:mm:ss a'}}</td>
+                                <td class="text-center">
+                                    <div class="btn-group" *ngIf="historialT.ResultadoEjecucion=='Exitoso'">
+                                        <span class="label label-success">{{historialT.ResultadoEjecucion}}</span>
+                                    </div>
+                                    <div class="btn-group" *ngIf="historialT.ResultadoEjecucion=='Error'">
+                                        <span
+                                            class="label label-danger">&nbsp;{{historialT.ResultadoEjecucion}}&nbsp;&nbsp;</span>
+                                    </div>
+                                </td>
+
+                                <td>{{historialT.Origen}}</td>
+                                <td>{{historialT.Tarea}}</td>
+                                <td>{{historialT.EquipoEjecucion}}</td>
+                                <td>{{historialT.DetalleResultado}}</td>
+
+                                <td class="operacionFija">
+                                    <button
+                                    *ngIf="historialT.ResultadoEjecucion === 'Error'"
+                                    [disabled]="!estaEnUltimos5Dias(historialT.FechaEjecucion)"
+                                    class="btn Gt-btn-verde btn-icon legitRipple"
+                                    (click)="reintentarEjecucion(historialT.JsonParametro)">
+                                    <i class="glyphicon" [ngClass]="estaEnUltimos5Dias(historialT.FechaEjecucion) ? 'glyphicon-repeat' : 'glyphicon-repeat'"></i>
+                                </button>
+                                
+                                <button
+                                    *ngIf="historialT.ResultadoEjecucion !== 'Error'"
+                                    disabled
+                                    class="btn Gt-btn-verde btn-icon legitRipple"
+                                    (click)="reintentarEjecucion(historialT.JsonParametro)">
+                                    <i class="glyphicon glyphicon-ok"></i>
+                                </button>
+                                
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fin modal Historial -->

@@ -1,0 +1,34 @@
+.letraGrande {
+    font-size: 11px;
+}
+
+.Capitalice {
+    text-transform: capitalize;
+}
+
+.CapitaliceMayus {
+    text-transform: uppercase !important;
+}
+
+.textGray {
+    color: #e6e6e6;
+}
+
+.paddingNaturales {
+    padding: 1px;
+}
+
+@media print {
+
+    .no-print,
+    .no-print * {
+        display: none !important;
+    }
+}
+
+.imgLogo {
+    visibility: visible !important;
+    display: inline-block !important;
+    width: 200px !important;
+    z-index: 9999;
+}

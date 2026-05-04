@@ -1,0 +1,565 @@
+<div class="col-xs-12 col-md-12 col-lg-12" *ngIf="DataAportes.length <= 0 && ValidadorCheck">
+    <br>
+    <div class="alert alert-secondary" role="alert">
+        No hay registros
+    </div>
+</div>
+
+<div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="DataAportes.length > 0 && ValidadorCheck">
+    <div class="col-xs-12 col-md-12 col-lg-12">
+        <div class="table-responsive scrollTabla">
+            <table id="tablaIngresos" class="table table-hover tablaAportes">
+                <thead>
+                    <tr>
+                        <th class="columnCuenta_aportes CuentaFija">
+                            <strong>Cuenta</strong>
+                        </th>
+                        <th class="columnProducto_aportes">
+                            <strong>Producto</strong>
+                        </th>
+                        <th class="columnEfectivo_aportes">
+                            <strong>Saldo efectivo</strong>
+                        </th>
+                        <th class="columnEstado_aportes">
+                            <strong>Estado</strong>
+                        </th>
+                        <th class="columnApertura_aportes">
+                            <strong>Fecha apertura</strong>
+                        </th>
+                        <th class="columnUltTrans_aportes">
+                            <strong>Última transacción</strong>
+                        </th>
+                        <th class="columnOpciones_aportes operacionFija">
+                            <strong>Opciones</strong>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let itemAportes of DataAportes; let i = index" class="filApo_{{itemAportes.lngIdCuenta}}" (click)="CambiarColor(itemAportes.lngIdCuenta,1)">
+                        <td class="columnCuenta_aportes CuentaFija strCuentaApo_{{itemAportes.lngIdCuenta}}">{{itemAportes.strCuenta}}</td>
+                        <td [ngClass]="{'columnProducto_aportes': itemAportes.NameProducto.length < 29,
+                        'columnProductoX2_aportes': itemAportes.NameProducto.length > 29 && itemAportes.NameProducto.length < 35,
+                        'columnProductoX3_aportes': itemAportes.NameProducto.length >= 35}">{{itemAportes.NameProducto}}</td>
+                        <td class="columnEfectivo_aportes">{{itemAportes.curEfectivo |  currency}}</td>
+                        <td class="columnEstado_aportes centerColumn">{{itemAportes.NameEstado}}</td>
+                        <td class="columnApertura_aportes centerColumn">{{itemAportes.dtmMatricula}}</td>
+                        <td class="columnUltTrans_aportes centerColumn">{{itemAportes.dtmUltimaTrans}}</td>
+                        <td class="columnOpciones_aportes">
+                            <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="MostrarDetalleAportes" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModelDetalleCuenta" (click)="DetalleAporte(itemAportes)">
+                                <i class="icon-eye2"></i>
+                            </button>&nbsp;
+                            <button class="btn Gt-btn-morado btn-icon legitRipple" *ngIf="MostrarExtractoAportes" data-toggle="modal" data-target="#ModalFormatosMovimientos" data-backdrop="static" data-keyboard="false" (click)="DetalleMovimiento(itemAportes)">
+                                <i class="icon-three-bars"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="col-xs-12 col-md-12 col-lg-12" *ngIf="DataAportesCancelados.length <= 0 && !ValidadorCheck">
+    <br>
+    <div class="alert alert-secondary" role="alert">
+        No hay registros
+    </div>
+</div>
+<div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="DataAportesCancelados.length > 0 && !ValidadorCheck">
+    <div class="col-xs-12 col-md-12 col-lg-12">
+        <div class="table-responsive scrollTabla">
+            <table id="tablaIngresos" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th class="columnCuenta_aportes CuentaFija">
+                            <strong>Cuenta</strong>
+                        </th>
+                        <th class="columnProducto_aportes">
+                            <strong>Producto</strong>
+                        </th>
+                        <th class="columnEfectivo_aportes">
+                            <strong>Saldo efectivo</strong>
+                        </th>
+                        <th class="columnEstado_aportes">
+                            <strong>Estado</strong>
+                        </th>
+                        <th class="columnApertura_aportes">
+                            <strong>Fecha apertura</strong>
+                        </th>
+                        <th class="columnUltTrans_aportes">
+                            <strong>Última transacción</strong>
+                        </th>
+                        <th class="columnOpciones_aportes">
+                            <strong>Opciones</strong>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let itemAportes of DataAportesCancelados; let i = index" class="filApo_{{itemAportes.lngIdCuenta}}" (click)="CambiarColor(itemAportes.lngIdCuenta,1)">
+                        <td class="columnCuenta_aportes CuentaFija strCuentaApo_{{itemAportes.lngIdCuenta}}">{{itemAportes.strCuenta}}</td>
+                        <td [ngClass]="{'columnProducto_aportes': itemAportes.NameProducto.length < 29,
+                        'columnProductoX2_aportes': itemAportes.NameProducto.length > 29 && itemAportes.NameProducto.length < 35,
+                        'columnProductoX3_aportes': itemAportes.NameProducto.length >= 35}">{{itemAportes.NameProducto}}</td>
+                        <td class="columnEfectivo_aportes">{{itemAportes.curEfectivo |  currency}}</td>
+                        <td class="columnEstado_aportes centerColumn">{{itemAportes.NameEstado}}</td>
+                        <td class="columnApertura_aportes centerColumn">{{itemAportes.dtmMatricula}}</td>
+                        <td class="centerColumn">{{itemAportes.dtmUltimaTrans}}</td>
+                        <td class="columnOpciones_aportes">
+                            <button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="MostrarDetalleAportes" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModelDetalleCuenta" (click)="DetalleAporte(itemAportes)">
+                                <i class="icon-eye2"></i>
+                            </button>&nbsp;
+                            <button class="btn Gt-btn-morado btn-icon legitRipple" *ngIf="MostrarExtractoAportes" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModalFormatosMovimientos" (click)="DetalleMovimiento(itemAportes)">
+                                <i class="icon-three-bars"></i>
+                            </button>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!--Detalle por cuenta-->
+
+<div id="ModelDetalleCuenta" class="modal">
+    <form method="get" [formGroup]="aportesForm">
+        <div class="modal-dialog modal-dialog-xl">
+            <div class="modal-content modal-lg modal-xl">
+                <div class="modal-header bg-morado">
+                    <button type="button" class="close" data-dismiss="modal" (click)="cerrarTodo()">&times;</button>
+                    <h6 class="modal-title">Encabezado aportes</h6>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body">
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-4 col-lg-3">
+                                    <div class="form-group">
+                                        <label>Cuenta:</label>
+                                        <span class="text-danger"></span>
+                                        <input type="text" class="form-control" [attr.disabled]="true" formControlName="Cuenta" />
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-4 col-lg-3">
+                                    <div class="form-group">
+                                        <label>Producto:</label>
+                                        <span class="text-danger"></span>
+                                        <input type="text" class="form-control" [attr.disabled]="true" formControlName="Producto" />
+
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-4 col-lg-3">
+                                    <div class="form-group">
+                                        <label>Estado:</label>
+                                        <span class="text-danger"></span>
+                                        <input type="text" class="form-control" [attr.disabled]="true" formControlName="Estado" />
+
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-4 col-lg-3">
+                                    <div class="form-group">
+                                        <label>Oficina producto:</label>
+                                        <span class="text-danger"></span>
+                                        <input type="text" class="form-control" [attr.disabled]="true" formControlName="Oficina" />
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-4 col-lg-3">
+                                    <div class="form-group">
+                                        <label>Operación permitida:</label>
+                                        <span class="text-danger"></span>
+                                        <input type="text" class="form-control" [attr.disabled]="true" formControlName="OperacionPermitida" />
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-4 col-lg-3">
+                                    <div class="form-group">
+                                        <label>Forma pago:</label>
+                                        <span class="text-danger"></span>
+                                        <input type="text" class="form-control" [attr.disabled]="true" formControlName="FormaPago" />
+
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-4 col-lg-3">
+                                    <div class="form-group">
+                                        <label>Asesor:</label>
+                                        <span class="text-danger"></span>
+                                        <input type="text" class="form-control" [attr.disabled]="true" formControlName="Asesor" />
+
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-4 col-lg-3">
+                                    <div class="form-group">
+                                        <label>Asesor externo:</label>
+                                        <span class="text-danger"></span>
+                                        <input type="text" class="form-control" [attr.disabled]="true" formControlName="AsesorExt" />
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-header bg-morado" style="height: 40px;">
+                    <h6 class="modal-title" style="margin-top: -7px;">Detalles</h6>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body">
+                        <section class="container">
+                            <div class="ac-ap">
+                                <input class="ac-input-ap SaldosAportes" id="ac-ap-1" name="ac-ap-1" type="checkbox" (click)="ValidaAcordeon1(1)" />
+                                <label class="ac-label-ap" for="ac-ap-1">Saldos</label>
+
+                                <article class="ac-text-ap">
+                                    <div class="col-xs-12 col-md-12 col-lg-12">
+                                        <div class="row">
+
+                                            <div class="col-xs-12 col-md-4 col-lg-3">
+                                                <div class="form-group">
+                                                    <label>Saldo efectivo:</label>
+                                                    <span class="text-danger"></span>
+                                                    <input type="text" class="form-control" [attr.disabled]="true" value="{{EfectivoCur |  currency}}" formControlName="SalfoEfectivo" currencyMask style="text-align: right;" />
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-md-4 col-lg-1"></div>
+
+                                            <div class="col-xs-12 col-md-4 col-lg-3">
+                                                <div class="form-group">
+                                                    <label>Saldo canje:</label>
+                                                    <span class="text-danger"></span>
+                                                    <input type="text" class="form-control" [attr.disabled]="true" value="{{CangeCur |  currency}}" formControlName="SaldoCanje" currencyMask style="text-align: right;" />
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-md-4 col-lg-1"></div>
+                                            <div class="col-xs-12 col-md-4 col-lg-3">
+                                                <div class="form-group">
+                                                    <label>Saldo total:</label>
+                                                    <span class="text-danger"></span>
+                                                    <input type="text" class="form-control" [attr.disabled]="true" value="{{SaldoTotalSum_ |  currency}}" formControlName="SaldoTotal" currencyMask style="text-align: right;" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                            </div>
+                        </section>
+                        <section class="container">
+                            <div class="ac-ap">
+                                <input class="ac-input-ap beneficiarioss" id="ac-ap-2" name="ac-ap-2" type="checkbox" (click)="ValidaAcordeon1(2)" />
+                                <label class="ac-label-ap" for="ac-ap-2">Beneficiarios</label>
+
+                                <article class="ac-text-ap">
+                                    <div class="table-responsive scrollTabla">
+                                        <div class="col-xs-12 col-md-12 col-lg-12" *ngIf=" dataBeneficiarios === null || dataBeneficiarios.length <= 0">
+                                            <br>
+                                            <div class="alert alert-secondary" role="alert">
+                                                No hay registros
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="dataBeneficiarios.length > 0 && dataBeneficiarios !== null">
+                                            <table id="tablaIngresos" class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+                                                            <strong>Documento</strong>
+                                                        </th>
+                                                        <th>
+                                                            <strong>Nombre</strong>
+                                                        </th>
+                                                        <th>
+                                                            <strong>Parentesco</strong>
+                                                        </th>
+                                                        <th>
+                                                            <strong>Porcentaje</strong>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody *ngFor="let itemDispo of dataBeneficiarios; let i = index">
+                                                    <tr>
+                                                        <td>{{itemDispo.NumeroDocumento}} </td>
+                                                        <td>{{itemDispo.PrimerNombre}} {{itemDispo.SegundoNombre}} {{itemDispo.PrimerApellido}} {{itemDispo.SegundoApellido}}
+                                                        </td>
+                                                        <td>{{itemDispo.Descripcion}}</td>
+                                                        <td>{{itemDispo.Porcentaje}} %</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </article>
+                            </div>
+                        </section>
+                        <section class="container">
+                            <div class="ac-ap">
+                                <input class="ac-input-ap fechass" id="ac-ap-3" name="ac-ap-3" type="checkbox" (click)="ValidaAcordeon1(3)" />
+                                <label class="ac-label-ap" for="ac-ap-3">Fechas</label>
+
+                                <article class="ac-text-ap">
+                                    <div class="col-xs-12 col-md-12 col-lg-12">
+                                        <div class="row">
+                                            <div class="col-xs-12 col-md-4 col-lg-3">
+                                                <div class="form-group">
+                                                    <label>Apertura:</label>
+                                                    <span class="text-danger"></span>
+                                                    <input type="text" class="form-control" [attr.disabled]="true" value="{{Matricule | date:'yyyy/MM/dd HH:mm:ss'}}" formControlName="FechaMatricula" />
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-md-4 col-lg-3">
+                                                <div class="form-group">
+                                                    <label>Última transacción:</label>
+                                                    <span class="text-danger"></span>
+                                                    <input type="text" class="form-control" [attr.disabled]="true" value="{{UltTrans | date:'yyyy/MM/dd HH:mm:ss'}}" formControlName="FechaUtlTransaccion" />
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-md-4 col-lg-3">
+                                                <div class="form-group">
+                                                    <label>Revalorización:</label>
+                                                    <span class="text-danger"></span>
+                                                    <input type="text" class="form-control" [attr.disabled]="true" value="{{FechRevaloriza | date:'yyyy/MM/dd HH:mm:ss'}}" formControlName="FechaRevalorizacion" />
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12 col-md-4 col-lg-3">
+                                                <div class="form-group">
+                                                    <label>Cancelación:</label>
+                                                    <span class="text-danger"></span>
+                                                    <input type="text" class="form-control" [attr.disabled]="true" value="{{FechCancela | date:'yyyy/MM/dd HH:mm:ss'}}" formControlName="FechaRetiro" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!--Fromatos por cuenta -->
+<div id="ModalFormatosMovimientos" class="modal">
+    <form [formGroup]="ExtactoAportes">
+        <div class="modal-dialog">
+            <div class="modal-content modal-lg" style="width: 1380px; left: -390px;">
+                <div class="modal-header bg-morado">
+                    <button type="button" class="close" data-dismiss="modal" (click)="ResetModal()">&times;</button>
+                    <h6 class="modal-title">Extracto o Movimiento</h6>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body">
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <div class="row" *ngIf="!validaForm">
+                                <div class="col-xs-12 col-md-4 col-lg-4">
+                                    <div class="form-group">
+                                        <label>Tipo de consulta:</label>
+                                        <span class="abligatorioY"> *</span>
+                                        <span class="text-danger"></span>
+                                        <select class="form-control" formControlName="MovExtSelector" id="SelectedMovimiento_Aportes" name="MovExtSelector" [(ngModel)]="valueSlect" (change)="opcionSelected(valueSlect)">
+                                            <option [selected]="selectedEstado === '-'" value="-">-- Seleccione --</option>
+                                            <option *ngFor="let  itemContactos of SeleccionMovimientos"
+                                                [value]="itemContactos.value">{{itemContactos.selector}}
+                                            </option>
+                                        </select>
+                                        <span class="help-block validationSpan" *ngIf="SelectErroneo">
+                                            El tipo de consulta es obligatorio.
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-4 col-lg-4">
+                                    <div class="form-group">
+                                        <label>Fecha Inicial:</label>
+                                        <span class="abligatorioY"> *</span>
+                                        <span class="text-danger"></span>
+                                        <input type="date" class="form-control" formControlName="FechaInicio" name="FechaInicio" id="fechaInit" value="{{fechaAperturaCuenta}}" min="{{fechaAperturaCuenta}}" max="{{fechaAperturaActualDisabled}}" [(ngModel)]="valueFechaInicial" (change)="opcionSelectedFechas(1)"
+                                        />
+                                        <span class="help-block validationSpan" *ngIf="InicioVacida">
+                                            La fecha inicial es obligatoria.
+                                        </span>
+                                        <span class="help-block validationSpan" *ngIf="FechaMayorAmenor">
+                                            La fecha inicial debe ser menor a la fecha final.
+                                        </span>
+                                        <span class="help-block validationSpan" *ngIf="inicioNoValida">
+                                            La fecha inicial no valida.
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-4 col-lg-4">
+                                    <div class="form-group">
+                                        <label>Fecha Final:</label>
+                                        <span class="abligatorioY"> *</span>
+                                        <span class="text-danger"></span>
+                                        <input type="date" class="form-control" formControlName="FechaFin" name="FechaFin" id="fechaend" value="{{fechaAperturaActualDisabled}}" min="{{fechaAperturaCuenta}}" max="{{fechaAperturaActualDisabled}}" [(ngModel)]="valueFechaFinal" (change)="opcionSelectedFechas(2)"
+                                        />
+                                        <span class="help-block validationSpan" *ngIf="FinVacida">
+                                            La fecha final es obligatoria.
+                                        </span>
+                                        <span class="help-block validationSpan" *ngIf="FechaMenorMayor">
+                                            La fecha final debe ser mayor a la fecha inicial.
+                                        </span>
+                                        <span class="help-block validationSpan" *ngIf="finNoValida">
+                                            La fecha final no valida.
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="validaForm">
+                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                    <div class="form-group">
+                                        <label>Tipo de consulta:</label>
+                                        <span class="abligatorioY"> *</span>
+                                        <span class="text-danger"></span>
+                                        <select class="form-control" formControlName="MovExtSelector" id="SelectedExtracto_Aportes" name="MovExtSelector" [(ngModel)]="valueSlect" (change)="opcionSelected(valueSlect)">
+                                          <option value="-">-- Seleccione --</option>
+                                          <option *ngFor="let  itemContactos of SeleccionMovimientos"
+                                              [value]="itemContactos.value" [selected]="SeleccionExt === 2 && itemContactos.value==2">{{itemContactos.selector}}
+                                          </option>
+                                      </select>
+
+                                        <span class="help-block validationSpan" *ngIf="SelectErroneo">
+                                          El tipo de consulta es obligatorio.
+                                      </span>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-1 col-lg-1"></div>
+                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                    <div class="form-group">
+                                        <label>Año inicial:</label>
+                                        <span class="abligatorioY"> *</span>
+                                        <span class="text-danger"></span>
+                                        <select class="form-control" formControlName="yearInit" id="yearInit_Aportes" [(ngModel)]="yearInit" (change)="opcionSelectedYearInit(yearInit)">
+                                        <option *ngFor="let  item of YearsxMes"
+                                            [value]="item.Year">{{item.Year}}
+                                        </option>
+                                    </select>
+
+                                        <span class="help-block validationSpan" *ngIf="validaAnoInicial">
+                                        El año inicial debe ser menor o igual al final.
+                                    </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                    <div class="form-group">
+                                        <label>Mes inicial:</label>
+                                        <span class="abligatorioY"> *</span>
+                                        <span class="text-danger"></span>
+                                        <select class="form-control" formControlName="MesInit" id="MesInit_Aportes" [(ngModel)]="MesInit" (change)="MesSelected(MesInit)">
+                                      <option *ngFor="let  item of mesxYear"
+                                          [value]="item.idMes">{{item.DescripcionMes}}
+                                      </option>
+                                      </select>
+                                        <span class="help-block validationSpan" *ngIf="validaMesInicial">
+                                        El mes inicial debe ser menor o igual al final.
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                    <div class="form-group">
+                                        <label>Año final:</label>
+                                        <span class="abligatorioY"> *</span>
+                                        <span class="text-danger"></span>
+                                        <select class="form-control" formControlName="yearEnd" id="yearEnd_Aportes" [(ngModel)]="yearEnd" (change)="opcionSelectedYearEnd(yearEnd)">
+                                        <option *ngFor="let  item of YearsxMes"
+                                            [value]="item.Year" >{{item.Year}}
+                                        </option>
+                                    </select>
+
+                                        <span class="help-block validationSpan" *ngIf="validaAnoFinal">
+                                        El año final debe ser mayor o igual al inicial.
+                                    </span>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-xs-12 col-md-2 col-lg-2">
+                                    <div class="form-group">
+                                        <label>Mes final:</label>
+                                        <span class="abligatorioY"> *</span>
+                                        <span class="text-danger"></span>
+                                        <select class="form-control" formControlName="MesEnd" id="MesEndt_Aportes" [(ngModel)]="MesEnd" (change)="MesSelectedEnd(MesEnd)">
+                                      <option *ngFor="let  item of mesxYearEnd"
+                                          [value]="item.idMes">{{item.DescripcionMes}}
+                                      </option>
+                                  </select>
+                                        <span class="help-block validationSpan" *ngIf="validaMesFinal">
+                                        El mes final debe ser mayor o igual al inicial.
+                                  </span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <input type="hidden" name="IdTercero" formControlName="IdTercero" id="IdTercero_Aportes" />
+                        <input type="hidden" name="consecutivo" formControlName="consecutivo" id="consecutivo_Aportes" />
+                        <input type="hidden" name="NumeroCuenta" formControlName="NumeroCuenta" id="NumeroCuenta_Aportes" />
+                        <input type="hidden" name="Usuario" formControlName="Usuario" />
+                        <input type="hidden" name="Oficina" formControlName="Oficina" />
+                        <input type="hidden" name="NombreProducto" formControlName="NombreProducto" />
+                        <input type="hidden" name="TipoProducto" formControlName="TipoProducto" />
+                        <div class="col-xs-12 col-md-12 col-lg-12 text-right" *ngIf="!validaForm">
+                            <button type="button" class="btn Gt-btn-verde" (click)="Consultar()">Consultar</button>&nbsp;
+                            <button type="button" class="btn Gt-btn-morado" (click)="Limpiar()">Limpiar</button>
+                        </div>
+                        <div class="col-xs-12 col-md-12 col-lg-12 text-right" *ngIf="validaForm">
+                            <button type="button" class="btn Gt-btn-verde" (click)="ConsultarExtracto()">Consultar</button>&nbsp;
+                            <button type="button" class="btn Gt-btn-morado" (click)="Limpiar(1)">Limpiar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body">
+
+                        <div class="col-xs-12 col-md-12 col-lg-12" id="message" *ngIf="HabilitaMensate == 1">
+                            <br>
+                            <div class="alert alert-secondary" role="alert">
+                                No hay registros
+                            </div>
+                        </div>
+
+                        <div>
+                            <object id="movimientosDtosAporte" *ngIf="Movimientos.length > 0"></object>
+                        </div>
+                        <div>
+                            <object id="extractosDtosAporte" *ngIf="Extractos.length > 0"></object>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body">
+                        <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                            <button class="btn Gt-btn-verde " (click)="generarPDF()" id="pdf" *ngIf="Extractos.length > 0 || Movimientos.length >0">
+                              <i class="icon-download4"></i>&nbsp; PDF
+                            </button>&nbsp;
+                            <button class="btn Gt-btn-verde " (click)="generarEXCEL()" *ngIf="Extractos.length > 0 || Movimientos.length >0">
+                              <i class="icon-download4"></i>&nbsp; EXCEL
+                            </button>&nbsp;
+                            <button class="btn Gt-btn-verde" *ngIf="Extractos.length > 0" (click)="SendEmail()">
+                              <i class="icon-mail5"></i>&nbsp; ENVIAR AL CORREO
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <ngx-loading [show]="loading" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+                </ngx-loading>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--Modulo completo de aportes-->
+<div id="ModalModuloAportes" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg" style="
+    width: 210%;
+    height: 1000px;
+    margin-left: -50%;">
+            <div class="modal-body">
+
+            </div>
+        </div>
+    </div>
+</div>

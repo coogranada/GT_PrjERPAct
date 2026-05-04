@@ -1,0 +1,755 @@
+<form>
+    <div class="content">
+        <!-- Form horizontal -->
+        <div class="panel panel-flat">
+
+            <div class="panel-body">
+                <br>
+                <div class="form-group">
+                    <div class="col-xs-12 col-md-4 col-lg-4">
+
+                    </div>
+                    <div class="col-xs-12 col-md-4 col-lg-4" align="center">
+                        <div class="form-group">
+                            <label>Seleccione tipo de gestión:</label>
+                            <span class="abligatorioY"> *</span>
+                            <select class="form-control" name="MovExtSelector" id="SeleccionGestion" [(ngModel)]="valueSlect" (change)="opcionSelected(valueSlect)">
+                                <option value="-" [selected]="true" style="text-align: center;">--- Seleccione ---</option>
+                                <option value="3">Gestionar logo coogranada</option>
+                                <option value="1">Gestionar email del certificado saldos y retenciones</option>
+                                <option value="2">Gestionar email del certificado retenciones en la fuente</option>
+                                <option value="4">Gestionar email de extractos</option>
+                            </select>
+                            <span class="help-block validationCertificate" *ngIf="showMsg1">
+                                El tipo de consulta es obligatorio.
+                            </span>
+                        </div>
+                        <button class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" id="ModalGestionEmailSaldosBtn" style="display: none" data-target="#ModalGestionEmailSaldos">
+                    </button>
+                        <button class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" id="ModalGestionEmailCertificadosBtn" style="display: none" data-target="#ModalGestionEmailCertificados">
+                    </button>
+                        <button class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" id="ModalGestionLogoBtn" style="display: none" data-target="#ModalGestionLogo">
+                    </button>
+                        <button class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" id="ModalGestionTDBtn" style="display: none" data-target="#ModalGestionTD">
+                    </button>
+                    </div>
+                    <div class="col-xs-12 col-md-4 col-lg-4">
+
+                    </div>
+                </div>
+                <!-- </fieldset> -->
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat">
+        <br>
+        <!-- <div class="alert alert-secondary" role="alert">
+            Aún no hay nada para mostrar.
+        </div> -->
+        <div class="col-xs-12 col-md-12 col-lg-12">
+            <div class="table-responsive scrollTabla">
+                <table id="tablaIngresos" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>
+                                <strong>Gestión</strong>
+                            </th>
+                            <th>
+                                <strong>Opciones</strong>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Certificado saldos y retenciones</td>
+                            <td>
+                                <button class="btn Gt-btn-verde btn-icon legitRipple" (click)="ValidaPlantillaSaldos()">
+                                <i class="icon-eye2"></i>
+                            </button>&nbsp;
+                                <button class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#PrevisualizacionSaldos" style="display: none;" id="AbrirPlantillaSaldos">
+                            </button>
+                                <button class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#EditarSaldos">
+                               <i class="icon-pencil"></i>
+                            </button>&nbsp;
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Certificado retenciones en la fuente</td>
+                            <td>
+                                <button class="btn Gt-btn-verde btn-icon legitRipple" (click)="ValidaPlantillaRetenciones()">
+                             <i class="icon-eye2"></i>
+                            </button>&nbsp;
+                                <button class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#PrevisualizacionRetenciones" style="display: none;" id="AbrirCertificadoRetenciones">
+                            </button>
+                                <button class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#EditarRetenciones">
+                                <i class="icon-pencil"></i>
+                            </button>&nbsp;
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Extractos</td>
+                            <td>
+                                <button class="btn Gt-btn-verde btn-icon legitRipple" (click)="ValidaPlantillaTD()">
+                           <i class="icon-eye2"></i>
+                          </button>&nbsp;
+                                <button class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#PrevisualizacionTD" style="display: none;" id="AbrirCertificadoTD">
+                              </button>
+                                <button class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#EditarTD">
+                              <i class="icon-pencil"></i>
+                          </button>&nbsp;
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+
+
+
+<!-- modales para lña gestión de email -->
+
+<div id="ModalGestionEmailSaldos" class="modal propertyModal">
+    <div class="modal-dialog modal-dialog-xl">
+        <div class="modal-content modal-lg modalCertificadoSaldos">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal" id="cerrarModalSaldosX" (click)="ResetSelect()">X</button>
+                <h5 class="modal-title" style="text-align: center;">Gestionar email del certificado saldos y retenciones</h5>
+            </div>
+            <div class="modal-body">
+                <h3 style="text-align: center;"><strong>Bloque {{IdBloque}}</strong></h3>
+                <!-- <form style="padding: 20px;"> -->
+                    <div class="form-group" id="TituloEmailSaldos">
+                        <label>Ingresa el título:</label>
+                        <span class="abligatorioY"> *</span>
+                        <input type="text" class="form-control" name="Titulo" id="TituloMailSaldos">
+                        <span class="help-block validateYearC" *ngIf="TituloValida">
+                                    El título es obligatorio.
+                                </span>
+                    </div>
+                    <div class="form-group">
+                        <label>Ingresa la descripción:</label>
+                        <span class="abligatorioY"> *</span>
+                        <textarea class="form-control" name="Titulo" id="DescripcionMailSaldos"></textarea>
+                        <span class="help-block validateYearC" *ngIf="DescripcionValida">
+                                    La descripción es obligatoria.
+                                </span>
+                    </div>
+                    <div class="form-group">
+                        <label *ngIf="IdBloque == 1 || IdBloque == 3">Seleccione imagen (600 x 400 tamaño recomendado):</label>
+                        <label *ngIf="IdBloque == 2">Seleccione imagen (115 x 115 tamaño recomendado):</label>
+                        <span class="abligatorioY"> *</span>
+                        <br><br>
+                        <input type="file" class="file-styled" class="form-control-file" accept="image/gif,image/jpeg,image/jpg,image/png" (change)="handleFileSelect($event)" id="imgSaldosMail">
+                        <span class="help-block validateYearC" *ngIf="Base64Valida">
+                                    La imagen es obligatoria.
+                                </span>
+                    </div>
+                <!-- </form> -->
+            </div>
+
+            <div class="modal-body">
+                <div class="panel-body">
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                                <button class="btn Gt-btn-verde" id="btnContinuar" (click)="Continuar()">Continuar</button>&nbsp;
+                                <button *ngIf="IdBloque>1" class="btn Gt-btn-verde" id="btnOminitir" (click)="OmitirMD()">Omitir</button>&nbsp;
+                                <button class="btn Gt-btn-verde" id="btnGuardar" style="display: none;" (click)="Guardar()">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="EditarSaldos" class="modal propertyModal">
+    <div class="modal-dialog modal-dialog-xl">
+        <div class="modal-content modal-lg modalCertificadoSaldos">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal" id="cerrarModalSaldosEdit" (click)="cerrarModalSaldosEdit()">X</button>
+                <h5 class="modal-title" style="text-align: center;">Editar email del certificado saldos y retenciones</h5>
+            </div>
+
+            <div class="modal-body">
+                <!-- <form style="padding: 20px;"> -->
+                    <select class="form-control" name="valueSlectEdit" id="SeleccionGestionEdit" [(ngModel)]="valueSlectEdit" (change)="opcionSelectedEdit(valueSlectEdit)">
+                                <option value="-" [selected]="true" style="text-align: center;">--- Seleccione bloque ---</option>
+                                <option value="1" style="text-align: center;">Bloque 1</option>
+                                <option value="2" style="text-align: center;">Bloque 2</option>
+                                <option value="3" style="text-align: center;">Bloque 3</option>
+                          </select>
+                    <br>
+                    <div class="form-group" id="TituloEmailSaldosEdit" style="display:none">
+                        <label>Ingresa el título:</label>
+                        <span class="abligatorioY"> *</span>
+                        <input type="text" class="form-control" name="Titulo" id="TituloMailSaldosEdit">
+                        <span class="help-block validateYearC" *ngIf="ValidaTituloEditar">
+                                    El título es obligatorio.
+                                </span>
+                    </div>
+
+                    <div class="form-group" id="DescripcionMailSaldosEdit_" style="display:none">
+                        <label>Ingresa la descripción:</label>
+                        <span class="abligatorioY"> *</span>
+                        <textarea class="form-control" name="Titulo" id="DescripcionMailSaldosEdit"></textarea>
+                        <span class="help-block validateYearC" *ngIf="ValidaDescripcionEditar">
+                                    La descripción es obligatoria.
+                                </span>
+                    </div>
+                    <div class="form-group" id="imgSaldosMailEdit_" style="display:none">
+                        <label *ngIf="valueSlectEdit == '1' || valueSlectEdit == '3'">Seleccione imagen (600 x 400 tamaño recomendado):</label>
+                        <label *ngIf="valueSlectEdit == '2'">Seleccione imagen (115 x 115 tamaño recomendado):</label>
+                        <span class="abligatorioY"> *</span>
+                        <br><br>
+                        <input type="file" class="file-styled" class="form-control-file" accept="image/gif,image/jpeg,image/jpg,image/png" (change)="handleFileSelectEdit($event)" id="imgSaldosMailEdit">
+                        <span class="help-block validateYearC" *ngIf="ValidaBase64Editar">
+                                    La imagen es obligatoria.
+                                </span>
+                    </div>
+                <!-- </form> -->
+            </div>
+            <div class="modal-body">
+                <div class="panel-body">
+                    <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                        <input type="submit" class="btn Gt-btn-verde" style="display: none;" value="Actualizar" id="btnActualizarSaldos" (click)="ActualizarSaldos()" /> &nbsp;
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="EditarRetenciones" class="modal propertyModal">
+    <div class="modal-dialog modal-dialog-xl">
+        <div class="modal-content modal-lg modalCertificadoSaldos">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal" id="cerrarModalRetencionsEdit" (click)="cerrarModalSaldosEdit()">X</button>
+                <h5 class="modal-title" style="text-align: center;">Editar email del certificado saldos y retenciones</h5>
+            </div>
+
+            <div class="modal-body">
+                <!-- <form style="padding: 20px;"> -->
+                    <select class="form-control" name="valueSlectEditRetencions" id="SeleccionGestionEditRetencions" [(ngModel)]="valueSlectEditRetencions" (change)="opcionSelectedEditRetenciones(valueSlectEditRetencions)">
+                                <option value="-" [selected]="true" style="text-align: center;">--- Seleccione bloque ---</option>
+                                <option value="1" style="text-align: center;">Bloque 1</option>
+                                <option value="2" style="text-align: center;">Bloque 2</option>
+                                <option value="3" style="text-align: center;">Bloque 3</option>
+                          </select>
+                    <br>
+                    <div class="form-group" id="TituloEmailRetencionsEdit" style="display:none">
+                        <label>Ingresa el título:</label>
+                        <span class="abligatorioY"> *</span>
+                        <input type="text" class="form-control" name="Titulo" id="TituloMailRetencionsEdit">
+                        <span class="help-block validateYearC" *ngIf="ValidaTituloEditarR">
+                                    El título es obligatorio.
+                                </span>
+                    </div>
+
+                    <div class="form-group" id="DescripcionMailRetencuionsEdit_" style="display:none">
+                        <label>Ingresa la descripción:</label>
+                        <span class="abligatorioY"> *</span>
+                        <textarea class="form-control" name="Titulo" id="DescripcionMailRetencionsEdit"></textarea>
+                        <span class="help-block validateYearC" *ngIf="ValidaDescripcionEditarR">
+                                    La descripción es obligatoria.
+                                </span>
+                    </div>
+                    <div class="form-group" id="imgSaldosMailEditRetencions_" style="display:none">
+                        <label *ngIf="valueSlectEditRetencions == '1' || valueSlectEditRetencions == '3'">Seleccione imagen (600 x 400 tamaño recomendado):</label>
+                        <label *ngIf="valueSlectEditRetencions == '2'">Seleccione imagen (115 x 115 tamaño recomendado):</label>
+                        <span class="abligatorioY"> *</span>
+                        <br><br>
+                        <input type="file" class="file-styled" class="form-control-file" accept="image/gif,image/jpeg,image/jpg,image/png" (change)="handleFileSelectEditRetencions($event)" id="imgSaldosMailRetencions">
+                        <span class="help-block validateYearC" *ngIf="ValidaBase64EditarR">
+                                    La imagen es obligatoria.
+                                </span>
+                    </div>
+                <!-- </form> -->
+            </div>
+            <div class="modal-body">
+                <div class="panel-body">
+                    <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                        <input type="submit" class="btn Gt-btn-verde" style="display: none;" value="Actualizar" id="btnActualizarRetencions" (click)="ActualizarRetenciones()" /> &nbsp;
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="EditarTD" class="modal propertyModal">
+    <div class="modal-dialog modal-dialog-xl">
+        <div class="modal-content modal-lg modalCertificadoSaldos">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal" id="cerrarModalTDEdit" (click)="cerrarModalSaldosEdit()">X</button>
+                <h5 class="modal-title" style="text-align: center;">Editar plantilla extractos</h5>
+            </div>
+
+            <div class="modal-body">
+                <!-- <form style="padding: 20px;"> -->
+                    <select class="form-control" name="SeleccionGestionEditTD" id="SeleccionGestionEditTD" [(ngModel)]="valueSlectEditTD" (change)="opcionSelectedEditTD(valueSlectEditTD)">
+                              <option value="-" [selected]="true" style="text-align: center;">--- Seleccione bloque ---</option>
+                              <option value="1" style="text-align: center;">Bloque 1</option>
+                              <option value="2" style="text-align: center;">Bloque 2</option>
+                              <option value="3" style="text-align: center;">Bloque 3</option>
+                        </select>
+                    <br>
+                    <div class="form-group" id="TituloEmailTDEdit" style="display:none">
+                        <label>Ingresa el título:</label>
+                        <span class="abligatorioY"> *</span>
+                        <input type="text" class="form-control" name="Titulo" id="TituloMailTDEdit">
+                        <span class="help-block validateYearC" *ngIf="ValidaTituloEditarR">
+                                  El título es obligatorio.
+                              </span>
+                    </div>
+
+                    <div class="form-group" id="DescripcionMailTDEdit_" style="display:none">
+                        <label>Ingresa la descripción:</label>
+                        <span class="abligatorioY"> *</span>
+                        <textarea class="form-control" name="Titulo" id="DescripcionMailTDEdit"></textarea>
+                        <span class="help-block validateYearC" *ngIf="ValidaDescripcionEditarR">
+                                  La descripción es obligatoria.
+                              </span>
+                    </div>
+                    <div class="form-group" id="imgSaldosMailEditTD_" style="display:none">
+                        <label *ngIf="valueSlectEditTD == '1' || valueSlectEditTD == '3'">Seleccione imagen (600 x 400 tamaño recomendado):</label>
+                        <label *ngIf="valueSlectEditTD == '2'">Seleccione imagen (115 x 115 tamaño recomendado):</label>
+                        <span class="abligatorioY"> *</span>
+                        <br><br>
+                        <input type="file" class="file-styled" class="form-control-file" accept="image/gif,image/jpeg,image/jpg,image/png" (change)="handleFileSelectTD($event)" id="imgMailTD_">
+                        <span class="help-block validateYearC" *ngIf="ValidaBase64EditarR">
+                                  La imagen es obligatoria.
+                        </span>
+                    </div>
+                <!-- </form> -->
+            </div>
+            <div class="modal-body">
+                <div class="panel-body">
+                    <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                        <input type="submit" class="btn Gt-btn-verde" style="display: none;" value="Actualizar" id="btnActualizarTD" (click)="ActualizarTD()" /> &nbsp;
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="ModalGestionEmailCertificados" class="modal propertyModal">
+    <div class="modal-dialog modal-dialog-xl">
+        <div class="modal-content modal-lg modalCertificadoSaldos">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal" id="cerrarModalRetenciones" (click)="ResetSelect()">X</button>
+                <h5 class="modal-title" style="text-align: center;">Gestionar email del certificado retenciones en la fuente</h5>
+            </div>
+            <div class="modal-body">
+                <h3 style="text-align: center;"><strong>Bloque {{IdBloqueCertificado}}</strong></h3>
+                <form [formGroup]="EmailFormCertificate" style="padding: 20px;">
+                    <div class="form-group" id="TituloEmailCertificado">
+                        <label>Ingresa el título:</label>
+                        <span class="abligatorioY"> *</span>
+                        <input type="text" class="form-control" name="Titulo" formControlName="Titulo" id="TituloMailCertificado">
+                        <span class="help-block validateYearC" *ngIf="TituloValida">
+                                    El título es obligatorio.
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Ingresa la descripción:</label>
+                        <span class="abligatorioY"> *</span>
+                        <textarea class="form-control" name="Titulo" formControlName="Titulo" id="DescripcionMailCertificado"></textarea>
+                        <span class="help-block validateYearC" *ngIf="DescripcionValida">
+                                    La descripción es obligatoria.
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <label *ngIf="IdBloqueCertificado == 1 || IdBloqueCertificado == 3">Seleccione imagen (600 x 400 tamaño recomendado):</label>
+                        <label *ngIf="IdBloqueCertificado == 2">Seleccione imagen (115 x 115 tamaño recomendado):</label>
+                        <span class="abligatorioY"> *</span>
+                        <br><br>
+                        <input type="file" class="file-styled" class="form-control-file" accept="image/gif,image/jpeg,image/jpg,image/png" formControlName="Base64String" (change)="handleFileSelectCertifi($event)" id="imgMailCertificado">
+                        <span class="help-block validateYearC" *ngIf="Base64Valida">
+                                    La imagen es obligatoria.
+                        </span>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-body">
+                <div class="panel-body">
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                                <button class="btn Gt-btn-verde" id="btnContinuarCertificado" (click)="ContinuarCertificados()">Continuar</button>&nbsp;
+                                <button *ngIf="IdBloqueCertificado>1" class="btn Gt-btn-verde" id="btnOminitir" (click)="OmitirMD()">Omitir</button>&nbsp;
+                                <button class="btn Gt-btn-verde" id="btnGuardarCertificado" style="display: none;" (click)="GuardarCertificado()">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="ModalGestionTD" class="modal propertyModal">
+    <div class="modal-dialog modal-dialog-xl">
+        <div class="modal-content modal-lg modalCertificadoSaldos">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal" id="cerrarModalTD" (click)="ResetSelect()">X</button>
+                <h5 class="modal-title" style="text-align: center;">Gestionar email de extractos</h5>
+            </div>
+            <div class="modal-body">
+                <h3 style="text-align: center;"><strong>Bloque {{IdBloqueTD}}</strong></h3>
+                <form [formGroup]="EmailFormTD" style="padding: 20px;">
+                    <div class="form-group" id="TituloEmailTD">
+                        <label>Ingresa el título:</label>
+                        <span class="abligatorioY"> *</span>
+                        <input type="text" class="form-control" name="Titulo" formControlName="Titulo" id="TituloMailTD">
+                        <span class="help-block validateYearC" *ngIf="TituloValida">
+                                  El título es obligatorio.
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Ingresa la descripción:</label>
+                        <span class="abligatorioY"> *</span>
+                        <textarea class="form-control" name="Titulo" formControlName="Titulo" id="DescripcionMailTD"></textarea>
+                        <span class="help-block validateYearC" *ngIf="DescripcionValida">
+                                  La descripción es obligatoria.
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <label *ngIf="IdBloqueTD == 1 || IdBloqueTD == 3">Seleccione imagen (600 x 400 tamaño recomendado):</label>
+                        <label *ngIf="IdBloqueTD == 2">Seleccione imagen (115 x 115 tamaño recomendado):</label>
+                        <span class="abligatorioY"> *</span>
+                        <br><br>
+                        <input type="file" class="file-styled" class="form-control-file" accept="image/gif,image/jpeg,image/jpg,image/png" formControlName="Base64String" (change)="handleFileSelectTD($event)" id="imgMailTD">
+                        <span class="help-block validateYearC" *ngIf="Base64Valida">
+                                  La imagen es obligatoria.
+                        </span>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-body">
+                <div class="panel-body">
+                    <div class="col-xs-12 col-md-12 col-lg-12">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                                <button class="btn Gt-btn-verde" id="btnContinuarTD" (click)="ContinuarTD()">Continuar</button>&nbsp;
+                                <!-- style="top:13px;height: 35px;width: 200px;" -->
+                                <button *ngIf="IdBloqueTD>1" class="btn Gt-btn-verde" id="btnOminitir" (click)="OmitirMD()">Omitir</button>&nbsp;
+                                <!-- style="top:13px;height: 35px;width: 200px;"  -->
+                                <button class="btn Gt-btn-verde" id="btnGuardarTD" style="display: none;" (click)="GuardarTD()">Guardar</button>
+                                <!-- top:13px;height: 35px;width: 200px; -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="ModalGestionLogo" class="modal propertyModal">
+    <div class="modal-dialog modal-dialog-xl">
+        <div class="modal-content modal-lg modalCertificadoSaldos">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal" id="cerrarModalLogo" (click)="ResetSelect()">X</button>
+                <h5 class="modal-title" style="text-align: center;">Gestionar logo coogranada</h5>
+            </div>
+            <div class="modal-body">
+                <h3 style="text-align: center;"><strong>Logo coogranada</strong></h3>
+                <form style="padding: 20px;">
+                    <div class="form-group">
+                        <label>Seleccione imagen (350 x 110 tamaño recomendado):</label>
+                        <span class="abligatorioY"> *</span>
+                        <br><br>
+                        <input type="file" class="file-styled" class="form-control-file" accept="image/gif,image/jpeg,image/jpg,image/png" (change)="handleFileSelectLogo($event)" id="imgMailLogo">
+                        <span class="help-block validateYearC" *ngIf="ValdiaLogoBs64">
+                                    El logo es obligatorio.
+                                </span>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-body">
+                <div class="panel-body">
+                    <div class="col-xs-12 col-md-12 col-lg-12 text-right">
+                        <input type="submit" class="btn Gt-btn-verde" value="Guardar" id="btnGuardarLogo" (click)="GuardarLogo()" /> &nbsp;
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="PrevisualizacionSaldos" class="modal propertyModal">
+    <div class="modal-dialog modal-dialog-xl">
+        <div class="modal-content modal-lg modalCertificadoSaldos">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal" id="cerrarPlantillaMailSaldos">X</button>
+                <h5 class="modal-title" style="text-align: center;">Gestionar email del certificado saldos y retenciones</h5>
+            </div>
+
+            <div class="modal-body">
+                <!-- style='margin:0;padding:0;word-spacing:normal;background-color:#FFFFFF;' -->
+                <div role='article' aria-roledescription='email' lang='en' style='text-size-adjust:100%;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;background-color:#FFFFFF;'>
+                    <table role='presentation' style='width:100%;border:none;border-spacing:0;'>
+                        <tr>
+                            <td align='center' style='padding:0;'>
+                                <table role='presentation' style='width:94%;max-width:600px;border:none;border-spacing:0;text-align:left;font-family:Arial,sans-serif;font-size:16px;line-height:22px;color:#363636;'>
+                                    <tr>
+                                        <td style='padding:40px 30px 30px 30px;text-align:center;font-size:24px;font-weight:bold;'>
+                                            <a href='' style='text-decoration:none;'><img src='data:image/png;base64,{{Logo}}' width='165' alt='Logo' style='width:65%;height:auto;border:none;text-decoration:none;color:#ffffff;'>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style='padding:30px;background-color:#ffffff;'>
+                                            <h1 style='margin-top:0;margin-bottom:16px;font-size:26px;line-height:32px;font-weight:bold;letter-spacing:-0.02em;'>{{EmailxBloques.TituloB1}}</h1>
+                                            <p style='margin:0;'>{{EmailxBloques.DescripcionB1}}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style='padding:0;font-size:24px;line-height:28px;font-weight:bold;'>
+                                            <a href='' style='text-decoration:none;'><img src='data:image/png;base64,{{EmailxBloques.Base64StringB1}}' width='600' alt='' style='width:100%;height:auto;display:block;border:none;text-decoration:none;color:#363636;'></a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td *ngIf="EmailxBloques.DescripcionB2 != null && EmailxBloques.DescripcionB2 != undefined && EmailxBloques.DescripcionB2 !=''" style='padding:35px 30px 11px 30px;font-size:0;background-color:#ffffff;border-bottom:1px solid #f0f0f5;border-color:rgba(201,201,207,.35);'>
+                                            <div class='col-sml' style='display:inline-block;width:100%;max-width:145px;vertical-align:top;text-align:left;font-family:Arial,sans-serif;font-size:14px;color:#363636;'>
+                                                <img src='data:image/png;base64,{{EmailxBloques.Base64StringB2}}' width='115' alt='' style='width:80%;max-width:115px;margin-bottom:20px;'>
+                                            </div>
+                                            <div class='col-lge' style='display:inline-block;width:100%;max-width:395px;vertical-align:top;padding-bottom:20px;font-family:Arial,sans-serif;font-size:16px;line-height:22px;color:#363636;'>
+                                                <p style='margin-top:0;margin-bottom:12px;'>{{EmailxBloques.DescripcionB2}}</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td *ngIf="EmailxBloques.DescripcionB3 != null && EmailxBloques.DescripcionB3 != undefined && EmailxBloques.DescripcionB3 !=''" style='padding:30px;font-size:24px;line-height:28px;font-weight:bold;background-color:#ffffff;border-bottom:1px solid #f0f0f5;border-color:rgba(201,201,207,.35);'>
+                                            <a href='' style='text-decoration:none;'><img src='data:image/png;base64,{{EmailxBloques.Base64StringB3}}' width='540' alt='' style='width:100%;height:auto;border:none;text-decoration:none;color:#363636;'></a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td *ngIf="EmailxBloques.DescripcionB3 != null && EmailxBloques.DescripcionB3 != undefined && EmailxBloques.DescripcionB3 !=''" style='padding:30px;background-color:#ffffff;'>
+                                            <p style='margin:0;'>{{EmailxBloques.DescripcionB3}}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style='padding:30px;text-align:center;font-size:12px;background-color:#FFFFFF;color:#FFFFFF;'>
+                                            <p style='margin:0 0 8px 0;'>
+                                                <a href='https://www.facebook.com/coogranada' style='text-decoration:none;' target='_blank'>
+                                                    <img src='https://img.icons8.com/fluency/48/000000/facebook.png' width='40' height='40' alt='f' style='display:inline-block;color:#FFFFFF'>
+                                                </a>
+                                                <a href='https://www.instagram.com/coogranada' style='text-decoration:none;' target='_blank'>
+                                                    <img src='https://img.icons8.com/fluency/48/000000/instagram-new.png' width='40' height='40' alt='t' style='display:inline-block;color:#FFFFFF;'>
+                                                </a>
+                                                <a href='https://www.youtube.com/user/Coogranada1963' style='text-decoration:none;' target='_blank'>
+                                                    <img src='https://img.icons8.com/color/48/000000/youtube-play.png' width='40' height='40' alt='t' style='display:inline-block;color:#FFFFFF;'>
+                                                </a>
+                                                <a href='https://twitter.com/coogranada' style='text-decoration:none;' target='_blank'>
+                                                    <img src='https://img.icons8.com/fluency/48/000000/twitter.png' width='40' height='40' alt='t' style='display:inline-block;color:#FFFFFF;'>
+                                                </a>
+                                                <a href='http://www.coogranada.coop/radio/' style='text-decoration:none;' target='_blank'>
+                                                    <img src='https://img.icons8.com/cute-clipart/64/000000/radio.png' width='40' height='40' alt='t' style='display:inline-block;color:#FFFFFF;'>
+                                                </a>
+                                                <a href='https://www.linkedin.com/company/coogranada' style='text-decoration:none;' target='_blank'>
+                                                    <img src='https://img.icons8.com/fluency/48/000000/linkedin.png' width='40' height='40' alt='t' style='display:inline-block;color:#FFFFFF;'>
+                                                </a>
+                                            </p>
+                                            <p style='margin:0;font-size:14px;line-height:20px;'><a href="https://www.coogranada.coop/" style="text-decoration: none;color: #333333" target="_blank">&reg; Coogranada {{YearNow}}</a></p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="PrevisualizacionRetenciones" class="modal propertyModal">
+
+    <div class="modal-dialog modal-dialog-xl">
+        <div class="modal-content modal-lg modalCertificadoSaldos">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal" id="cerrarPlantMailCertificados">X</button>
+                <h5 class="modal-title" style="text-align: center;">Gestionar email del certificado retenciones en la fuente</h5>
+            </div>
+
+            <div class="modal-body">
+                <div role='article' aria-roledescription='email' lang='en' style='text-size-adjust:100%;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;background-color:#FFFFFF;'>
+                    <table role='presentation' style='width:100%;border:none;border-spacing:0;'>
+                        <tr>
+                            <td align='center' style='padding:0;'>
+                                <table role='presentation' style='width:94%;max-width:600px;border:none;border-spacing:0;text-align:left;font-family:Arial,sans-serif;font-size:16px;line-height:22px;color:#363636;'>
+                                    <tr>
+                                        <td style='padding:40px 30px 30px 30px;text-align:center;font-size:24px;font-weight:bold;'>
+                                            <a href='' style='text-decoration:none;'><img src='data:image/png;base64,{{Logo}}' width='165' alt='Logo' style='width:65%;height:auto;border:none;text-decoration:none;color:#ffffff;'>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style='padding:30px;background-color:#ffffff;'>
+                                            <h1 style='margin-top:0;margin-bottom:16px;font-size:26px;line-height:32px;font-weight:bold;letter-spacing:-0.02em;'>{{EmailxBloquesCertificado.TituloB1}}</h1>
+                                            <p style='margin:0;'>{{EmailxBloquesCertificado.DescripcionB1}}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style='padding:0;font-size:24px;line-height:28px;font-weight:bold;'>
+                                            <a href='' style='text-decoration:none;'><img src='data:image/png;base64,{{EmailxBloquesCertificado.Base64StringB1}}' width='600' alt='' style='width:100%;height:auto;display:block;border:none;text-decoration:none;color:#363636;'></a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td *ngIf="EmailxBloquesCertificado.DescripcionB2 != null && EmailxBloquesCertificado.DescripcionB2 != undefined && EmailxBloquesCertificado.DescripcionB2 != ''" style='padding:35px 30px 11px 30px;font-size:0;background-color:#ffffff;border-bottom:1px solid #f0f0f5;border-color:rgba(201,201,207,.35);'>
+                                            <div class='col-sml' style='display:inline-block;width:100%;max-width:145px;vertical-align:top;text-align:left;font-family:Arial,sans-serif;font-size:14px;color:#363636;'>
+                                                <img src='data:image/png;base64,{{EmailxBloquesCertificado.Base64StringB2}}' width='115' alt='' style='width:80%;max-width:115px;margin-bottom:20px;'>
+                                            </div>
+                                            <div class='col-lge' style='display:inline-block;width:100%;max-width:395px;vertical-align:top;padding-bottom:20px;font-family:Arial,sans-serif;font-size:16px;line-height:22px;color:#363636;'>
+                                                <p style='margin-top:0;margin-bottom:12px;'>{{EmailxBloquesCertificado.DescripcionB2}}</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td *ngIf="EmailxBloquesCertificado.DescripcionB3 != null && EmailxBloquesCertificado.DescripcionB3 != undefined && EmailxBloquesCertificado.DescripcionB3 != ''" style='padding:30px;font-size:24px;line-height:28px;font-weight:bold;background-color:#ffffff;border-bottom:1px solid #f0f0f5;border-color:rgba(201,201,207,.35);'>
+                                            <a href='' style='text-decoration:none;'><img src='data:image/png;base64,{{EmailxBloquesCertificado.Base64StringB3}}' width='540' alt='' style='width:100%;height:auto;border:none;text-decoration:none;color:#363636;'></a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td *ngIf="EmailxBloquesCertificado.DescripcionB3 != null && EmailxBloquesCertificado.DescripcionB3 != undefined && EmailxBloquesCertificado.DescripcionB3 != ''" style='padding:30px;background-color:#ffffff;'>
+                                            <p style='margin:0;'>{{EmailxBloquesCertificado.DescripcionB3}}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style='padding:30px;text-align:center;font-size:12px;background-color:#FFFFFF;color:#FFFFFF;'>
+                                            <p style='margin:0 0 8px 0;'>
+                                                <a href='https://www.facebook.com/coogranada' style='text-decoration:none;' target='_blank'>
+                                                    <img src='https://img.icons8.com/fluency/48/000000/facebook.png' width='40' height='40' alt='f' style='display:inline-block;color:#FFFFFF'>
+                                                </a>
+                                                <a href='https://www.instagram.com/coogranada' style='text-decoration:none;' target='_blank'>
+                                                    <img src='https://img.icons8.com/fluency/48/000000/instagram-new.png' width='40' height='40' alt='t' style='display:inline-block;color:#FFFFFF;'>
+                                                </a>
+                                                <a href='https://www.youtube.com/user/Coogranada1963' style='text-decoration:none;' target='_blank'>
+                                                    <img src='https://img.icons8.com/color/48/000000/youtube-play.png' width='40' height='40' alt='t' style='display:inline-block;color:#FFFFFF;'>
+                                                </a>
+                                                <a href='https://twitter.com/coogranada' style='text-decoration:none;' target='_blank'>
+                                                    <img src='https://img.icons8.com/fluency/48/000000/twitter.png' width='40' height='40' alt='t' style='display:inline-block;color:#FFFFFF;'>
+                                                </a>
+                                                <a href='http://www.coogranada.coop/radio/' style='text-decoration:none;' target='_blank'>
+                                                    <img src='https://img.icons8.com/cute-clipart/64/000000/radio.png' width='40' height='40' alt='t' style='display:inline-block;color:#FFFFFF;'>
+                                                </a>
+                                                <a href='https://www.linkedin.com/company/coogranada' style='text-decoration:none;' target='_blank'>
+                                                    <img src='https://img.icons8.com/fluency/48/000000/linkedin.png' width='40' height='40' alt='t' style='display:inline-block;color:#FFFFFF;'>
+                                                </a>
+                                            </p>
+                                            <p style='margin:0;font-size:14px;line-height:20px;'><a href="https://www.coogranada.coop/" style="text-decoration: none;color: #333333" target="_blank">&reg; Coogranada {{YearNow}}</a></p>
+
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="PrevisualizacionTD" class="modal propertyModal">
+
+    <div class="modal-dialog modal-dialog-xl">
+        <div class="modal-content modal-lg modalCertificadoSaldos">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal" id="cerrarPlantMailTD">X</button>
+                <h5 class="modal-title" style="text-align: center;">Visualizar plantilla email de extractos</h5>
+            </div>
+
+            <div class="modal-body">
+                <!-- style='margin:0;padding:0;word-spacing:normal;background-color:#FFFFFF;' -->
+                <div role='article' aria-roledescription='email' lang='en' style='text-size-adjust:100%;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;background-color:#FFFFFF;'>
+                    <table role='presentation' style='width:100%;border:none;border-spacing:0;'>
+                        <tr>
+                            <td align='center' style='padding:0;'>
+                                <table role='presentation' style='width:94%;max-width:600px;border:none;border-spacing:0;text-align:left;font-family:Arial,sans-serif;font-size:16px;line-height:22px;color:#363636;'>
+                                    <tr>
+                                        <td style='padding:40px 30px 30px 30px;text-align:center;font-size:24px;font-weight:bold;'>
+                                            <a href='' style='text-decoration:none;'><img src='data:image/png;base64,{{Logo}}' width='165' alt='Logo' style='width:65%;height:auto;border:none;text-decoration:none;color:#ffffff;'>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style='padding:30px;background-color:#ffffff;'>
+                                            <h1 style='margin-top:0;margin-bottom:16px;font-size:26px;line-height:32px;font-weight:bold;letter-spacing:-0.02em;'>{{EmailxBloquesTD.TituloB1}}</h1>
+                                            <p style='margin:0;'>{{EmailxBloquesTD.DescripcionB1}}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style='padding:0;font-size:24px;line-height:28px;font-weight:bold;'>
+                                            <a href='' style='text-decoration:none;'><img src='data:image/png;base64,{{EmailxBloquesTD.Base64StringB1}}' width='600' alt='' style='width:100%;height:auto;display:block;border:none;text-decoration:none;color:#363636;'></a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td *ngIf="EmailxBloquesTD.DescripcionB2 != null && EmailxBloquesTD.DescripcionB2 != undefined && EmailxBloquesTD.DescripcionB2 != '' " style='padding:35px 30px 11px 30px;font-size:0;background-color:#ffffff;border-bottom:1px solid #f0f0f5;border-color:rgba(201,201,207,.35);'>
+                                            <div class='col-sml' style='display:inline-block;width:100%;max-width:145px;vertical-align:top;text-align:left;font-family:Arial,sans-serif;font-size:14px;color:#363636;'>
+                                                <img src='data:image/png;base64,{{EmailxBloquesTD.Base64StringB2}}' width='115' alt='' style='width:80%;max-width:115px;margin-bottom:20px;'>
+                                            </div>
+                                            <div class='col-lge' style='display:inline-block;width:100%;max-width:395px;vertical-align:top;padding-bottom:20px;font-family:Arial,sans-serif;font-size:16px;line-height:22px;color:#363636;'>
+                                                <p style='margin-top:0;margin-bottom:12px;'>{{EmailxBloquesTD.DescripcionB2}}</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td *ngIf="EmailxBloquesTD.DescripcionB3 != null && EmailxBloquesTD.DescripcionB3 != undefined && EmailxBloquesTD.DescripcionB3 != ''" style='padding:30px;font-size:24px;line-height:28px;font-weight:bold;background-color:#ffffff;border-bottom:1px solid #f0f0f5;border-color:rgba(201,201,207,.35);'>
+                                            <a href='' style='text-decoration:none;'><img src='data:image/png;base64,{{EmailxBloquesTD.Base64StringB3}}' width='540' alt='' style='width:100%;height:auto;border:none;text-decoration:none;color:#363636;'></a>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="EmailxBloquesTD.DescripcionB3 != null && EmailxBloquesTD.DescripcionB3 != undefined && EmailxBloquesTD.DescripcionB3 != ''">
+                                        <td style='padding:30px;background-color:#ffffff;'>
+                                            <p style='margin:0;'>{{EmailxBloquesTD.DescripcionB3}}</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style='padding:30px;text-align:center;font-size:12px;background-color:#FFFFFF;color:#FFFFFF;'>
+                                            <p style='margin:0 0 8px 0;'>
+                                                <a href='https://www.facebook.com/coogranada' style='text-decoration:none;' target='_blank'>
+                                                    <img src='https://img.icons8.com/fluency/48/000000/facebook.png' width='40' height='40' alt='f' style='display:inline-block;color:#FFFFFF'>
+                                                </a>
+                                                <a href='https://www.instagram.com/coogranada' style='text-decoration:none;' target='_blank'>
+                                                    <img src='https://img.icons8.com/fluency/48/000000/instagram-new.png' width='40' height='40' alt='t' style='display:inline-block;color:#FFFFFF;'>
+                                                </a>
+                                                <a href='https://www.youtube.com/user/Coogranada1963' style='text-decoration:none;' target='_blank'>
+                                                    <img src='https://img.icons8.com/color/48/000000/youtube-play.png' width='40' height='40' alt='t' style='display:inline-block;color:#FFFFFF;'>
+                                                </a>
+                                                <a href='https://twitter.com/coogranada' style='text-decoration:none;' target='_blank'>
+                                                    <img src='https://img.icons8.com/fluency/48/000000/twitter.png' width='40' height='40' alt='t' style='display:inline-block;color:#FFFFFF;'>
+                                                </a>
+                                                <a href='http://www.coogranada.coop/radio/' style='text-decoration:none;' target='_blank'>
+                                                    <img src='https://img.icons8.com/cute-clipart/64/000000/radio.png' width='40' height='40' alt='t' style='display:inline-block;color:#FFFFFF;'>
+                                                </a>
+                                                <a href='https://www.linkedin.com/company/coogranada' style='text-decoration:none;' target='_blank'>
+                                                    <img src='https://img.icons8.com/fluency/48/000000/linkedin.png' width='40' height='40' alt='t' style='display:inline-block;color:#FFFFFF;'>
+                                                </a>
+                                            </p>
+                                            <p style='margin:0;font-size:14px;line-height:20px;'><a href="https://www.coogranada.coop/" style="text-decoration: none;color: #333333" target="_blank">&reg; Coogranada {{YearNow}}</a></p>
+
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- fin de modales para la gestión  -->

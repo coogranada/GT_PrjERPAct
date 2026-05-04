@@ -1,0 +1,129 @@
+<div class="panel-body">
+    <form [formGroup]="cambiarInfoCreditoForm">
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label class="bold">Sistema:</label>
+                    <input *ngIf="!esCambiarSistema" type="text" class="form-control" formControlName="sistema">
+                    <select *ngIf="esCambiarSistema" formControlName="sistemaSelect" class="form-control input__border">
+                        <option *ngFor="let sis of sistemas" [ngValue]="sis.id">
+                            {{ sis.descripcion }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label class="bold">Periodo capital:</label>
+                    <input *ngIf="!(esCambiarSistema)" type="text" class="form-control" formControlName="periodoCapital">
+                    <select *ngIf="esCambiarSistema" formControlName="periodoCapitalSelect" class="form-control input__border">
+                        <option [ngValue]="null">-- Seleccione --</option>
+                        <option *ngFor="let p of periodosPagoCapital" [ngValue]="p.IdFrecuenciaPago">
+                            {{ p.DescripcionFrecuenciaPago }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label class="bold">Periodo interés:</label>
+                    <input *ngIf="!(esCambiarSistema)" type="text" class="form-control" formControlName="periodoInteres">
+                    <select *ngIf="esCambiarSistema" formControlName="periodoInteresSelect" class="form-control input__border">
+                        <option [ngValue]="null">-- Seleccione --</option>
+                        <option *ngFor="let p of periodosPagoInteres" [ngValue]="p.IdFrecuenciaPago">
+                            {{ p.DescripcionFrecuenciaPago }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label class="bold">Monto:</label>
+                    <input type="text" class="form-control" formControlName="monto" currencyMask [options]="currencyOptions">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label class="bold">Tasa nominal:</label>
+                    <input #inputTasaNominal type="text" appPorcentajeDirectiva class="form-control input__border text-right" formControlName="tasaNominal" maxlength="7">
+                    <span *ngIf="cambiarInfoCreditoForm.controls.tasaNominal.invalid" class="help-block">Tasa no es válida.</span>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label class="bold">Tasa efectiva:</label>
+                    <input type="text" appPorcentajeDirectiva class="form-control text-right" formControlName="tasaEfectiva" maxlength="7">
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label class="bold">Plazo:</label>
+                    <input *ngIf="!usaSelectPlazo" #plazo type="text" class="form-control input__border" formControlName="plazo" maxlength="3">
+                    
+                    <select *ngIf="usaSelectPlazo" formControlName="plazoSelect" class="form-control input__border">
+                        <option *ngFor="let p of plazos" [ngValue]="p">
+                            {{ p }}
+                        </option>
+                    </select>
+                    <span *ngIf="cambiarInfoCreditoForm.controls.plazo.invalid" class="help-block">Plazo no es válido.</span>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label class="bold">Cuota:</label>
+                    <input type="text" class="form-control" formControlName="cuota" currencyMask [options]="currencyOptions">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label class="bold">Indicador:</label>
+                    <input type="text" class="form-control" formControlName="siglaIndicador">
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label class="bold">Puntos:</label>
+                    <input #inputPuntos type="text" class="form-control input__border" formControlName="puntos" currencyMask [options]="percentOptions">
+                    <span *ngIf="cambiarInfoCreditoForm.controls.puntos.invalid" class="help-block">Puntos no válidos.</span>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label class="bold">Periodo de gracia:</label>
+                    <input type="text" class="form-control" formControlName="periodoGracia">
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <!-- vacío para mantener alineac -->
+            </div>
+        </div>
+
+        <div class="row pt-20 form-group-flex flex-end">
+            <button type="button" class="cancelar btn btn-default legitRipple" (click)="onCancelar()">Cancelar</button>
+            <button *ngIf="btnCalcularVisible" class="btn Gt-btn-morado" (click)="onCalcular()" [disabled]="btnCalcularBloqueado">Calcular</button>
+            <button class="btn Gt-btn-verde" (click)="onActualizar()" [disabled]="btnActualizarBloqueado">Actualizar</button>   
+        </div>
+
+    </form>
+
+    <div class="loader-overlay" *ngIf="loading">
+        <div class="spinner"></div>
+    </div>
+
+</div>
+

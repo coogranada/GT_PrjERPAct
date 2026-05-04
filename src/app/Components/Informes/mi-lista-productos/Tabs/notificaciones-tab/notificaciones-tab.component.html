@@ -1,0 +1,34 @@
+<div class="col-xs-12 col-md-12 col-lg-12" *ngIf="ListNotificacionesMisPro.length <= 0">
+    <br>
+    <div class="alert alert-secondary" role="alert">
+        No hay registros
+    </div>
+</div>
+<div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="ListNotificacionesMisPro.length > 0">
+    <div class="table-responsive scrollTabla">
+        <table id="tablaIngresos" class="table table-hover">
+            <thead>
+                <tr class="encabezadoTablasNotidy">
+                    <th class="CuentaFija">
+                        <strong>Observación</strong>
+                    </th>
+                    <th>
+                        <strong>Descripción</strong>
+                    </th>
+                    <th>
+                        <strong>Fecha</strong>
+                    </th>
+                </tr>
+            </thead>
+            <tbody *ngFor="let itemAportes of ListNotificacionesMisPro; let i = index">
+                <tr *ngIf="itemAportes.Observacion != null && itemAportes.Observacion != ''" class="filNoti_{{i}}" (click)="CambiarColor(i)">
+                    <td class="CuentaFija strDes{{i}}">{{itemAportes.Dscripcion}}</td>
+                    <td [ngClass]="{'ObservacionNotix1': itemAportes.Observacion.length <= 29,
+                    'ObservacionNotix2': itemAportes.Observacion.length > 29 && itemAportes.Observacion.length < 40,
+                   'ObservacionNotix3': itemAportes.Observacion.length >= 40}">{{itemAportes.Observacion}}</td>
+                    <td style="min-width: 180px;">{{itemAportes.Fecha}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,109 @@
+<button type="button" class="btn Gt-btn-morado" data-toggle="modal" style="visibility:hidden" data-target="#ModalGestion" #AbrirSolicitud>Abrir <i class="icon-play3 position-right"></i>
+</button>
+
+<!-- Modal ModalGestion -->
+<div id="ModalGestion" class="modal fade">
+    <div class="modal-dialog modalGestion">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close doNotPrint" data-dismiss="modal">&times;</button>
+            </div>
+            <form method="get" [formGroup]="SolicitudGestionForm">
+                <div class="modal-body" id="ModalReporteComisiones">
+                    <div class="col-sm-12 col-xs-12 col-lg-12">
+                        <div class="col-sm-12 col-xs-12 col-lg-12 text-right">
+                            <p class="text-bold" id="rptFecha"></p>
+                            <div class=" bg-morado col-sm-12 col-xs-12 col-lg-12 content-group text-center tablaConciliacionComisiones">
+                                <h6 class="text-bold">Solicitud de gestión.</h6>
+                            </div>
+                        </div>
+                        <!--Datos-->
+
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <div class="col-xs-12 col-md-5 col-lg-5">
+                                <label>Operación:</label><span class="text-danger"> *</span>
+                                <select class="form-control" formControlName="IdOperacion" (change)="OperacionSeleccionada()" name="select" id="slOperacion">       
+                                      <option [selected]="true" value='-'>-- Seleccione --</option>              
+                                    <option *ngFor="let operacion of ListaOperaciones"  [ngValue]="operacion">{{operacion.Descripcion}}</option>
+                                </select>
+                                <span class="help-block validationSpan" *ngIf="SolicitudGestionForm.controls['IdOperacion'].errors?.['required'] && (SolicitudGestionForm.controls['IdOperacion'].dirty || SolicitudGestionForm.controls['IdOperacion'].touched) || SolicitudGestionForm.controls['IdOperacion'].value === '-'">
+                               La operación es obligatoria. </span>
+                            </div>
+                            <div class=" col-xs-12 col-md-1 col-lg-1">
+                            </div>
+                            <div class="col-xs-12 col-md-5 col-lg-5">
+                                <label>Enviar a:</label><span class="text-danger"> *</span>
+                                <input [attr.disabled]="EnviarA" ngui-auto-complete formControlName="IdUsuarioRecibe" [source]="UsuariosAutorizados" value-property-name="IdUsuarios" display-property-name="Nombre" list-formatter="Nombre" class="form-control" (blur)="ValidarSeleccionUsuario()">
+                                <span class="help-block validationSpan" *ngIf="SolicitudGestionForm.controls['IdUsuarioRecibe'].errors?.['required'] && (SolicitudGestionForm.controls['IdUsuarioRecibe'].dirty || SolicitudGestionForm.controls['IdUsuarioRecibe'].touched)">
+                               El usuario es obligatorio.  </span>
+                            </div>
+
+                        </div>
+                        <div class="col-xs-12 col-md-12 col-lg-12"><br /></div>
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <div class="col-xs-12 col-md-5 col-lg-5">
+                                <label>Cuenta:</label>
+                                <input type="text" [attr.disabled]="Cuenta" formControlName="Cuenta" class="form-control text-capitalize" id="txtCuenta" />
+                            </div>
+                            <div class="col-xs-12 col-md-1 col-lg-1">
+                            </div>
+                            <div class="col-xs-12 col-md-5 col-lg-5">
+                                <label>Documento:</label>
+                                <input type="text" [attr.disabled]="Documento" formControlName="Documento" class="form-control text-capitalize" id="txtDocumento" />
+                            </div>
+                        </div>
+
+
+                        <div class="col-xs-12 col-md-12 col-lg-12"><br /></div>
+
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <div class="col-xs-12 col-md-5 col-lg-5">
+                                <label>Usuario solicita:</label><span class="text-danger"> *</span>
+                                <input [attr.disabled]="UsuarioSolicita" type="text" formControlName="UsuarioSolicita" class="form-control text-lowercase" id="txtUsuarioSolicita" />
+                                <span class="help-block validationSpan" *ngIf="SolicitudGestionForm.controls['UsuarioSolicita'].errors?.['required'] && (SolicitudGestionForm.controls['UsuarioSolicita'].dirty || SolicitudGestionForm.controls['UsuarioSolicita'].touched)">
+                                El usuario es obligatorio. </span>
+                            </div>
+                            <div class="col-xs-12 col-md-1 col-lg-1">
+                            </div>
+                            <div class="col-xs-12 col-md-5 col-lg-5">
+                                <label>Estado:</label><span class="text-danger"> *</span>
+                                <select [attr.disabled]="Estado" class="form-control" formControlName="IdEstado" name="select" id="slEstado">                 
+                                    <option *ngFor="let estado of ListaEstados"  [ngValue]="estado">{{estado.Valor}}</option>
+                                </select>
+                                <span class="help-block validationSpan" *ngIf="SolicitudGestionForm.controls['IdEstado'].errors?.['required'] && (SolicitudGestionForm.controls['IdEstado'].dirty || SolicitudGestionForm.controls['IdEstado'].touched)">
+                                El estado es obligatorio. </span>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-md-12 col-lg-12"><br /></div>
+
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <div class="col-xs-11 col-md-11 col-lg-11">
+                                <label>Observación:</label>
+                                <textarea rows="4" formControlName="Observacion" cols="4" id="txtObservacion" class="form-control"></textarea>
+                            </div>
+                            <div class="col-xs-12 col-md-1 col-lg-1">
+                            </div>
+                        </div>
+                        <!--Fin Datos-->
+
+
+                        <div class="col-sm-12 col-xs-12 col-lg-12 text-right">
+                            <div class="col-sm-12 col-xs-12 col-lg-12"><br /><br /></div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <input type="submit" id="btnEnviar" class="btn Gt-btn-verde" value="Enviar" [disabled]="!SolicitudGestionForm.valid" (click)="Enviar()" />
+                    <button type="button" class="btn Gt-btn-morado doNotPrint" data-dismiss="modal" #CerrarSolicitud (click)="cerrarModal()">Cerrar</button>
+                </div>
+                <ngx-loading [show]="loading" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+                </ngx-loading>
+            </form>
+        </div>
+    </div>
+</div>
+<!--/ Fin ModalGestion-->
+<!-- </form> -->

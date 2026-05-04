@@ -1,0 +1,17 @@
+.textBlod {
+   color: #565656;
+    font-weight: bold;
+}
+
+.textBigRed {
+    font-size: 25px !important;
+    color: #D84315;
+    margin-top: -5px !important;
+    margin-left: 6px;
+    position: absolute;
+
+}
+
+.hiddenText { 
+ color: white;
+}

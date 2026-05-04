@@ -1,0 +1,254 @@
+<div class="col-xs-12 col-md-12 col-lg-12">
+    <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="MostarResumenCodeudor"><br>
+        <div class="col-xs-12 col-md-4 col-lg-10"></div>
+        <div class="col-xs-12 col-md-4 col-lg-2">
+            <button class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-backdrop="static" data-keyboard="false"  (click)="ConsultaResumen()">
+                Ver Resumen
+            </button>&nbsp;
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <div class="col-xs-12 col-md-12 col-lg-12">
+        <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="ActivosCodeudores.length<=0 && ValidadaActivo  && !ActivaCargando">
+            <br>
+            <div class="alert alert-secondary" role="alert">
+                No hay registros
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="CanceladosCodeudores.length<=0 && !ValidadaActivo && !ActivaCargando">
+            <br>
+            <div class="alert alert-secondary" role="alert">
+                No hay registros
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="ActivaCargando">
+            <br>
+            <div class="alert alert-secondary" role="alert">
+                Cargando...
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="ActivosCodeudores.length>0 && ValidadaActivo">
+            <div class="table-responsive scrollTabla">
+
+                <table class="table table-hover">
+                    <thead class="encabezadoTablasCoodeudores">
+                        <tr>
+                            <th class="CuentaCodeudores CuentaFija">
+                                <strong>Cuenta</strong>
+                            </th>
+                            <th class="NombreProdCodeudores">
+                                <strong>Producto</strong>
+                            </th>
+                            <th class="NumDocCodeudores">
+                                <strong>Documento titular</strong>
+                            </th>
+                            <th class="NumTitularCodeudores">
+                                <strong>Titular</strong>
+                            </th>
+                            <th class="SaldoCodeudores">
+                                <strong>Saldo</strong>
+                            </th>
+                            <th class="curCuotaCodeudores">
+                                <strong>Cuota</strong>
+                            </th>
+                            <th style="text-align: center;">
+                                <strong>Pagas</strong>
+                            </th>
+                            <th style="text-align: center;">
+                                <strong>Mora</strong>
+                            </th>
+                            <th class="dtmMatriculaCodeudores centerColumn">
+                                <strong>Fecha matricula</strong>
+                            </th>
+                            <th class="dtmMatriculaCodeudores centerColumn">
+                                <strong>Ult. Transacción</strong>
+                            </th>
+                            <th style="text-align: center;">
+                                <strong>A</strong>
+                            </th>
+                            <th style="text-align: center;">
+                                <strong>B</strong>
+                            </th>
+                            <th style="text-align: center;">
+                                <strong>C</strong>
+                            </th>
+                            <th style="text-align: center;">
+                                <strong>D</strong>
+                            </th>
+                            <th style="text-align: center;">
+                                <strong>E</strong>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of ActivosCodeudores" class="filcODE_{{item.lngIdCuenta}}" (click)="CambiarColor(item.lngIdCuenta)">
+                            <td class="CuentaCodeudores CuentaFija strCuentaCode_{{item.lngIdCuenta}}">{{item.Cuenta}}</td>
+                            <td [ngClass]="{'NombreProdCodeudores': item.NombreProducto.length < 18,
+                            'NombreProdCodeudoresX2': item.NombreProducto.length >= 18 && item.NombreProducto.length < 26,
+                            'NombreProdCodeudoresX3': item.NombreProducto.length >= 26}">{{item.NombreProducto}}</td>
+                            <td class="NumDocCodeudores">{{item.NumeroDocumento}}</td>
+                            <td [ngClass]="{'NumTitularCodeudores': item.NombreTitular.length < 32,
+                            'NumTitularCodeudoresX2': item.NombreTitular.length >= 32 && item.NombreTitular.length < 43,
+                            'NumTitularCodeudoresX3': item.NombreTitular.length >= 43,
+                            'NumTitularCodeudoresX4': item.NombreTitular.length >= 80}">{{item.NombreTitular}}</td>
+                            <td [ngClass]="{'SaldoCodeudores': item.curSaldo <= 0,
+                            'SaldoCodeudoresX2': item.curSaldo > 0}"> {{item.curSaldo |  currency}}</td>
+                            <td [ngClass]="{'curCuotaCodeudores': item.curCuota <= 0,
+                            'curCuotaCodeudoresx2': item.curCuota > 0}"> {{item.curCuota |  currency}}</td>
+                            <td style="text-align: center;">{{item.intCuotasPagas}}</td>
+                            <td style="text-align: center;">{{item.intCuotasMora}}</td>
+                            <td class="dtmMatriculaCodeudores centerColumn">{{item.dtmMatricula}}</td>
+                            <td class="dtmultimTrasCodeudores centerColumn">{{item.dtmUltimaTrans}}</td>
+                            <td style="text-align: center;">{{item.A}}</td>
+                            <td style="text-align: center;">{{item.B}}</td>
+                            <td style="text-align: center;">{{item.C}}</td>
+                            <td style="text-align: center;">{{item.D}}</td>
+                            <td style="text-align: center;">{{item.E}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="CanceladosCodeudores.length>0  && !ValidadaActivo">
+            <div class="table-responsive scrollTabla">
+                <br>
+                <table class="table table-hover">
+                    <thead class="encabezadoTablasCoodeudores">
+                        <tr>
+                            <th class="CuentaCodeudores CuentaFija">
+                                <strong>Cuenta</strong>
+                            </th>
+                            <th class="NombreProdCodeudores">
+                                <strong>Producto</strong>
+                            </th>
+                            <th class="NumDocCodeudores">
+                                <strong>Documento titular</strong>
+                            </th>
+                            <th class="NumTitularCodeudores">
+                                <strong>Titular</strong>
+                            </th>
+                            <th class="SaldoCodeudores">
+                                <strong>Saldo</strong>
+                            </th>
+                            <th class="curCuotaCodeudores">
+                                <strong>Cuota</strong>
+                            </th>
+                            <th style="text-align: center;">
+                                <strong>Pagas</strong>
+                            </th>
+                            <th style="text-align: center;">
+                                <strong>Mora</strong>
+                            </th>
+                            <th class="dtmMatriculaCodeudores">
+                                <strong>Fecha matricula</strong>
+                            </th>
+                            <th class="dtmMatriculaCodeudores">
+                                <strong>Ult. Transacción</strong>
+                            </th>
+                            <th style="text-align: center;">
+                                <strong>A</strong>
+                            </th>
+                            <th style="text-align: center;">
+                                <strong>B</strong>
+                            </th>
+                            <th style="text-align: center;">
+                                <strong>C</strong>
+                            </th>
+                            <th style="text-align: center;">
+                                <strong>D</strong>
+                            </th>
+                            <th style="text-align: center;">
+                                <strong>E</strong>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of CanceladosCodeudores" class="filcODE_{{item.lngIdCuenta}}" (click)="CambiarColor(item.lngIdCuenta)">
+                            <td class="CuentaCodeudores CuentaFija strCuentaCode_{{item.lngIdCuenta}}">{{item.Cuenta}}</td>
+                            <td [ngClass]="{'NombreProdCodeudores': item.NombreProducto.length < 18,
+                        'NombreProdCodeudoresX2': item.NombreProducto.length >= 18 && item.NombreProducto.length < 26,
+                        'NombreProdCodeudoresX3': item.NombreProducto.length >= 26}">{{item.NombreProducto}}</td>
+                            <td class="NumDocCodeudores">{{item.NumeroDocumento}}</td>
+                            <td [ngClass]="{'NumTitularCodeudores': item.NombreTitular.length < 32,
+                        'NumTitularCodeudoresX2': item.NombreTitular.length >= 32 && item.NombreTitular.length < 43,
+                        'NumTitularCodeudoresX3': item.NombreTitular.length >= 43}">{{item.NombreTitular}}</td>
+                            <td [ngClass]="{'SaldoCodeudores': item.curSaldo <= 0,
+                        'SaldoCodeudoresX2': item.curSaldo > 0}"> {{item.curSaldo |  currency}}</td>
+                            <td [ngClass]="{'curCuotaCodeudores': item.curCuota <= 0,
+                        'curCuotaCodeudoresx2': item.curCuota > 0}"> {{item.curCuota |  currency}}</td>
+                            <td style="text-align: center;">{{item.intCuotasPagas}}</td>
+                            <td style="text-align: center;">{{item.intCuotasMora}}</td>
+                            <td class="dtmMatriculaCodeudores">{{item.dtmMatricula}}</td>
+                            <td class="dtmultimTrasCodeudores">{{item.dtmUltimaTrans}}</td>
+                            <td style="text-align: center;">{{item.A}}</td>
+                            <td style="text-align: center;">{{item.B}}</td>
+                            <td style="text-align: center;">{{item.C}}</td>
+                            <td style="text-align: center;">{{item.D}}</td>
+                            <td style="text-align: center;">{{item.E}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+<input type="hidden" #ModalCalificacionCodeudor data-toggle="modal" data-target="#ModalCalificacionCodeudor"
+    data-popup="tooltip" data-trigger="hover" data-placement="top">
+
+    <!-- modal calificaciones -->
+    <div id="ModalCalificacionCodeudor" class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content modal-lg modal-lg" style="width: 1000px; left: -190px;">
+                <div class="modal-header bg-morado">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h6 class="modal-title">Total Créditos</h6>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body">
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-2 col-lg-3">
+                                    <div class="form-group">
+                                        <label>Comercial</label>
+                                        <span class="text-danger"></span>
+                                        <input type="text" class="form-control" value=" {{CreditoComercial |  currency}}" [attr.disabled]="true" currencyMask />
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-2 col-lg-3">
+                                    <div class="form-group">
+                                        <label>Consumo</label>
+                                        <span class="text-danger"></span>
+                                        <input type="text" class="form-control" value=" {{CreditoConsumo |  currency}}" [attr.disabled]="true" currencyMask />
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-2 col-lg-3">
+                                    <div class="form-group">
+                                        <label>Vivienda</label>
+                                        <span class="text-danger"></span>
+                                        <input type="text" class="form-control" value=" {{CreditoVivienda |  currency}}" [attr.disabled]="true" currencyMask />
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-2 col-lg-3">
+                                    <div class="form-group">
+                                        <label>Microcrédito empresarial</label>
+                                        <span class="text-danger"></span>
+                                        <input type="text" class="form-control" value=" {{MicroCreditoEmpresarial |  currency}}" [attr.disabled]="true" currencyMask />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end modal calificaciones -->
+</div>

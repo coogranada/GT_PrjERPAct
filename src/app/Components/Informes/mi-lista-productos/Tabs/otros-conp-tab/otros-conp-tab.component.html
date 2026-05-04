@@ -1,0 +1,46 @@
+<div class="col-xs-12 col-md-12 col-lg-12" *ngIf="ListTagOtrosConcep.length <= 0">
+    <br>
+    <div class="alert alert-secondary" role="alert">
+        No hay registros
+    </div>
+</div>
+<div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="ListTagOtrosConcep.length > 0">
+    <div class="col-xs-12 col-md-12 col-lg-12">
+        <div class="table-responsive scrollTabla">
+            <table id="tablaIngresos" class="table table-hover">
+                <thead>
+                    <tr class="encabezadoTablasOtros">
+                        <th class="CuentaFija">
+                            <strong>Transacción</strong>
+                        </th>
+                        <th>
+                            <strong>Descripción</strong>
+                        </th>
+                        <th>
+                            <strong>Saldo</strong>
+                        </th>
+                        <th>
+                            <strong>Cuota</strong>
+                        </th>
+                        <th style="text-align: center;">
+                            <strong>Plazo</strong>
+                        </th>
+                        <th>
+                            <strong>Valor Pagado</strong>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let itemAportes of ListTagOtrosConcep; let i = index" class="filOtrs{{i}}" (click)="CambiarColor(i)">
+                        <td class="CuentaFija strcuentaConta{{i}}">{{itemAportes.Transaccion}}</td>
+                        <td style="min-width: 270px;">{{itemAportes.Descripcion}}</td>
+                        <td style="min-width: 165px;"> {{itemAportes.Valorsaldo |  currency}}</td>
+                        <td style="min-width: 165px;"> {{itemAportes.ValorCuota |  currency}}</td>
+                        <td style="text-align: center;">{{itemAportes.Plazo}}</td>
+                        <td style="min-width: 165px;"> {{itemAportes.ValorPagado |  currency}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

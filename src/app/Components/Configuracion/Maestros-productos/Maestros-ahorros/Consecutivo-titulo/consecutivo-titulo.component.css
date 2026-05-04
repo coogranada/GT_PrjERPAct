@@ -1,0 +1,527 @@
+/* thead tr th {
+    position: sticky;
+    top: 15px;
+    z-index: 10;
+    background-color: #ffffff;
+} */
+
+.table-responsive {
+    height: auto;
+    overflow: scroll;
+}
+
+.gris {
+    background: rgba(160, 0, 87, 0.20) !important;
+}
+
+
+/* seguro exequial */
+
+.columnCuenta_SegExequial {
+    min-width: 163px;
+}
+
+.columnProducto_SegExequial {
+    min-width: 200px;
+}
+
+.columnEfectivo_SegExequial {
+    min-width: 168px;
+}
+
+.columnCuota_SegExequial {
+    min-width: 168px;
+}
+
+.columnEstado_SegExequial {
+    min-width: 105px;
+}
+
+.columnApertura_SegExequial {
+    min-width: 148px;
+}
+
+.columntransaccion_SegExequial {
+    min-width: 167px;
+}
+
+.columnOpciones_SegExequial {
+    min-width: 118px;
+}
+
+.columnProductoX2_Con {
+    min-width: 333px !important;
+}
+
+.columnProductoX3_Con {
+    min-width: 350px !important;
+}
+
+
+/* fin seg exequial */
+
+.abligatorioY {
+    font-size: 25px !important;
+    color: #D84315;
+    margin-top: -5px !important;
+    margin-left: 6px;
+    position: absolute;
+}
+
+.ac-label-cn {
+    font-weight: 700;
+    position: relative;
+    padding: .5em 1em;
+    margin-bottom: .5em;
+    display: block;
+    cursor: pointer;
+    background-color: #d8d8d8;
+    ;
+    transition: background-color .15s ease-in-out;
+}
+
+.ac-input-cn:checked+label,
+.ac-label-cn:hover {
+    background: rgb(185 111 151);
+    color: rgb(63, 63, 63);
+}
+
+.ac-label-cn:after,
+.ac-input-cn:checked+.ac-label-cn:after {
+    content: "+";
+    position: absolute;
+    display: block;
+    right: 0;
+    top: 0;
+    width: 2em;
+    height: 100%;
+    line-height: 2.25em;
+    text-align: center;
+    background-color: #e5e5e5;
+    transition: background-color .15s ease-in-out;
+}
+
+.ac-label-cn:hover:after,
+.ac-input-cn:checked+.ac-label-cn:after {
+    background-color: #b5b5b5;
+}
+
+.ac-input-cn:checked+.ac-label-cn:after {
+    content: "-";
+}
+
+.ac-input-cn {
+    display: none;
+}
+
+.ac-text-cn,
+.ac-sub-text-cn {
+    opacity: 0;
+    height: 0;
+    margin-bottom: .5em;
+    transition: opacity .5s ease-in-out;
+    overflow: hidden;
+}
+
+.ac-input-cn:checked~.ac-text-cn,
+.ac-sub-cn .ac-input-cn:checked~.ac-sub-text-cn {
+    opacity: 1;
+    height: auto;
+}
+
+.ac-sub-cn .ac-label-cn {
+    background: none;
+    font-weight: 600;
+    padding: .5em 2em;
+    margin-bottom: 0;
+}
+
+.ac-sub-cn .ac-label-cn:checked {
+    background: none;
+    border-bottom: 1px solid whitesmoke;
+}
+
+#bordeSaldosSegExequial {
+    border: 3px rgb(227, 227, 227);
+    border-style: dashed;
+    border-radius: 22px;
+    /* padding: 15px; */
+    width: 12%;
+    height: 22%;
+    margin-top: 1%;
+    margin-left: 59%;
+    bottom: 26%;
+    position: fixed;
+}
+
+.CuentaFija {
+    position: sticky !important;
+    left: 0;
+    background: #fff;
+    z-index: 0;
+}
+
+thead{
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 1;
+}
+
+#bordeSaldosConvenios {
+    border: 3px rgb(227, 227, 227);
+    border-style: dashed;
+    border-radius: 22px;
+    /* padding: 15px; */
+    width: 12%;
+    height: 22%;
+    margin-top: 1%;
+    margin-left: 59%;
+    bottom: 26%;
+    position: fixed;
+}
+
+object {
+    width: 100%;
+    height: 1000px;
+    border: none;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    overflow: hidden;
+}
+
+.container {
+    width: 100%;
+    margin: 10px auto;
+}
+
+.ac-sub-cn .ac-label-cn:after,
+.ac-sub-cn .ac-input-cn:checked+.ac-label-cn:after {
+    left: 0;
+    background: none;
+}
+
+.ac-sub-cn .ac-input-cn:checked+label,
+.ac-sub-cn .ac-label-cn:hover {
+    background: none;
+}
+
+.ac-sub-text-cn {
+    padding: 0 1em 0 2em;
+}
+
+.ac-label-ap {
+    font-weight: 700;
+    position: relative;
+    padding: .5em 1em;
+    margin-bottom: .5em;
+    display: block;
+    cursor: pointer;
+    background-color: whiteSmoke;
+    transition: background-color .15s ease-in-out;
+}
+
+.ac-input-ap:checked+label,
+.ac-label-ap:hover {
+    background: rgb(185 111 151);
+    color: rgb(63, 63, 63);
+}
+
+.ac-label-ap:after,
+.ac-input-ap:checked+.ac-label-ap:after {
+    content: "+";
+    position: absolute;
+    display: block;
+    right: 0;
+    top: 0;
+    width: 2em;
+    height: 100%;
+    line-height: 2.25em;
+    text-align: center;
+    background-color: #e5e5e5;
+    transition: background-color .15s ease-in-out;
+}
+
+.ac-label-ap:hover:after,
+.ac-input-ap:checked+.ac-label-ap:after {
+    background-color: #b5b5b5;
+}
+
+.ac-input-ap {
+    display: none;
+}
+
+.ac-text-ap,
+.ac-sub-text-ap {
+    opacity: 0;
+    height: 0;
+    margin-bottom: .5em;
+    transition: opacity .5s ease-in-out;
+    overflow: hidden;
+}
+
+.ac-input-ap:checked~.ac-text-ap,
+.ac-sub-ap .ac-input-ap:checked~.ac-sub-text-ap {
+    opacity: 1;
+    height: auto;
+}
+
+.ac-input-ap:checked+.ac-label-ap:after {
+    content: "-";
+}
+
+.ac-sub-ap .ac-label-ap {
+    background: none;
+    font-weight: 600;
+    padding: .5em 2em;
+    margin-bottom: 0;
+}
+
+.ac-sub-ap .ac-label-ap:checked {
+    background: none;
+    border-bottom: 1px solid whitesmoke;
+}
+
+.ac-sub-ap .ac-label-ap:after,
+.ac-sub-ap .ac-input-ap:checked+.ac-label-ap:after {
+    left: 0;
+    background: none;
+}
+
+.ac-sub-ap .ac-input-ap:checked+label,
+.ac-sub-ap .ac-label-ap:hover {
+    background: none;
+}
+
+.ac-sub-text-ap {
+    padding: 0 1em 0 2em;
+}
+
+.ac-label {
+    font-weight: 700;
+    position: relative;
+    padding: .5em 1em;
+    margin-bottom: .5em;
+    display: block;
+    cursor: pointer;
+    background-color: #d8d8d8;
+    transition: background-color .15s ease-in-out;
+}
+
+.ac-input:checked+label,
+.ac-label:hover {
+    background: rgb(185 111 151);
+    color: rgb(63, 63, 63);
+}
+
+.columnNombre_InscritosExe {
+    min-width: 242px;
+}
+
+.tipDoc {
+    min-width: 180px;
+}
+
+.tipDocx2 {
+    min-width: 300px;
+}
+
+.columnParentesco_InscritosExe {
+    min-width: 220px;
+}
+
+.encabezadoTablas {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #ffffff;
+}
+
+.columnNombre_InscritosExeMin {
+    min-width: 150px;
+}
+
+.columnNombre_InscritosExex2 {
+    min-width: 308px;
+}
+
+.columnNombre_InscritosExex3 {
+    min-width: 400px;
+}
+
+.columnDtmMatricula_InscritosExe {
+    min-width: 159px;
+}
+
+.ac-label:after,
+.ac-input:checked+.ac-label:after {
+    content: "+";
+    position: absolute;
+    display: block;
+    right: 0;
+    top: 0;
+    width: 2em;
+    height: 100%;
+    line-height: 2.25em;
+    text-align: center;
+    background-color: #e5e5e5;
+    transition: background-color .15s ease-in-out;
+}
+
+.ac-label:hover:after,
+.ac-input:checked+.ac-label:after {
+    background-color: #b5b5b5;
+}
+
+.ac-input:checked+.ac-label:after {
+    content: "-";
+}
+
+.ac-input {
+    display: none;
+}
+
+.ac-text,
+.ac-sub-text {
+    opacity: 0;
+    height: 0;
+    margin-bottom: .5em;
+    transition: opacity .5s ease-in-out;
+    overflow: hidden;
+}
+
+.ac-input:checked~.ac-text,
+.ac-sub .ac-input:checked~.ac-sub-text {
+    opacity: 1;
+    height: auto;
+}
+
+.ac-sub .ac-label {
+    background: none;
+    font-weight: 600;
+    padding: .5em 2em;
+    margin-bottom: 0;
+}
+
+.ac-sub .ac-label:checked {
+    background: none;
+    border-bottom: 1px solid whitesmoke;
+}
+
+.ac-sub .ac-label:after,
+.ac-sub .ac-input:checked+.ac-label:after {
+    left: 0;
+    background: none;
+}
+
+.ac-sub .ac-input:checked+label,
+.ac-sub .ac-label:hover {
+    background: none;
+}
+
+.ac-sub-text {
+    padding: 0 1em 0 2em;
+}
+
+.ac-text-ap,
+.ac-sub-text-ap {
+    opacity: 0;
+    height: 0;
+    margin-bottom: .5em;
+    transition: opacity .5s ease-in-out;
+    overflow: hidden;
+}
+
+.ac-input-ap:checked~.ac-text-ap,
+.ac-sub-ap .ac-input-ap:checked~.ac-sub-text-ap {
+    opacity: 1;
+    height: auto;
+}
+
+.ac-sub-ap .ac-label-ap {
+    background: none;
+    font-weight: 600;
+    padding: .5em 2em;
+    margin-bottom: 0;
+}
+
+.ac-sub-ap .ac-label-ap:checked {
+    background: none;
+    border-bottom: 1px solid whitesmoke;
+}
+
+.ac-sub-ap .ac-label-ap:after,
+.ac-sub-ap .ac-input-ap:checked+.ac-label-ap:after {
+    left: 0;
+    background: none;
+}
+
+.ac-sub-ap .ac-input-ap:checked+label,
+.ac-sub-ap .ac-label-ap:hover {
+    background: none;
+}
+
+.ac-sub-text-ap {
+    padding: 0 1em 0 2em;
+}
+
+
+/* Convenios */
+
+.columnCuenta_Convenio {
+    min-width: 163px;
+}
+
+.columnProducto_Convenio {
+    min-width: 200px;
+}
+
+.columnEfectivo_Convenio {
+    min-width: 168px;
+}
+
+.columnCuota_Convenio {
+    min-width: 168px;
+}
+
+.columnEstado_Convenio {
+    min-width: 105px;
+}
+
+.columnApertura_Convenio {
+    min-width: 148px;
+}
+
+.columntransaccion_Convenio {
+    min-width: 167px;
+}
+
+.columnOpciones_Convenio {
+    min-width: 118px;
+}
+
+.modal-xl {
+    width: 80% !important;
+    margin-left: 170px;
+}
+
+.modal-dialog-xl {
+    width: 100% !important;
+}
+
+@media (max-width: 767px) {
+    .modal-xl {
+        width: 95% !important;
+        margin-left: 1%;
+    }
+    .modal-dialog-xl {
+        width: 99% !important;
+    }
+}
+
+.scrollTablaConvenios {
+    max-height: 500px;
+    overflow-y: scroll;
+}

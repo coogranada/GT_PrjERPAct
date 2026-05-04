@@ -1,0 +1,189 @@
+<form method="get" [formGroup]="historialFrom">
+    <div class="col-xs-12 col-md-3 col-lg-3" id="FechasTablas" style="margin-top: 40px; padding: 11px 11px 11px 11px;">
+        <div class="form-group">
+            <label class="textNegrilla">Fecha creación</label>
+            <span class="grande"> </span>
+            <input type="datetime" class="form-control" formControlName="FechaCreacion" [attr.disabled]="bloquearHistoria" />
+        </div>
+
+        <div class="form-group">
+            <!--Fecha modificacion-->
+            <label class="textNegrilla">Fecha actualización</label>
+            <span class="grande"> </span>
+            <input type="datetime" class="form-control" formControlName="FechaActualizacion" [attr.disabled]="bloquearHistoria" />
+        </div>
+
+        <div class="form-group">
+            <!--Fecha retiro-->
+            <label class="textNegrilla">Fecha retiro</label>
+            <span class="grande"> </span>
+            <input type="datetime" class="form-control" formControlName="FechaRetiro" [attr.disabled]="bloquearHistoria" />
+        </div>
+
+        <div class="form-group">
+            <!--Fecha solicitud retiro-->
+            <label class="textNegrilla">Fecha solicitud de retiro</label>
+            <span class="grande"> </span>
+            <input type="datetime" class="form-control" formControlName="FechaSolicitudRetiro" [attr.disabled]="bloquearHistoria" />
+        </div>
+        <!--Fecha reingreso-->
+        <div class="form-group">
+            <span class="grande"> </span>
+            <input type="submit" class="btn Gt-btn-morado" value="Ver trazabilidad" data-toggle="modal" data-target="#ModalTrasabilidadAsociado" (click)="CargarTrasabilidad()" />
+        </div>
+    </div>
+    <div class="col-xs-12 col-md-9 col-lg-9" id="HitorialTablas">
+        <label class="textNegrilla">Historial tratamiento</label>
+        <!--tratamiento log-->
+        <div class="table-responsive scrollTablaHistorial panel panel-default" *ngIf="dataTratamientoLog.length > 0">
+            <table id="tablaLogSeguro" class="table table-hover">
+                <thead>
+                    <tr>
+
+                        <th>
+                            <strong>Nombre usuario</strong>
+                        </th>
+                        <th>
+                            <strong>Fecha de aceptación</strong>
+                        </th>
+                        <th>
+                            <strong>Fecha de no aceptación</strong>
+                        </th>
+                        <th>
+                            <strong>Respuesta</strong>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let logTratamiento of dataTratamientoLog; let i = index">
+                    <tr class="filLogTrata_{{i}}" (click)="CambiarColor(i,1)">
+                        <td>
+                            {{logTratamiento.IdAsesor}}
+                        </td>
+                        <td *ngIf="logTratamiento.FechaAceptacion === null">
+                            N/A
+                        </td>
+                        <td *ngIf="logTratamiento.FechaAceptacion !== null">
+                            {{logTratamiento.FechaAceptacion}}
+                        </td>
+                        <td *ngIf="logTratamiento.fechaNoAceptacion === null">
+                            N/A
+                        </td>
+                        <td *ngIf="logTratamiento.fechaNoAceptacion !== null">
+                            {{logTratamiento.fechaNoAceptacion}}
+                        </td>
+                        <td>
+                            {{logTratamiento.Acepto}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div *ngIf="dataTratamientoLog.length <= 0" class="alert alert-secondary" role="alert">
+            No hay registros
+        </div>
+        <br>
+
+        <label class="textNegrilla">Historial solicitud retiro</label>
+        <!--retiros log-->
+        <div class="table-responsive scrollTablaHistorial panel panel-default" *ngIf="dataRetirosLog.length > 0">
+            <table id="tablaLogSeguro" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th class="column_NombreU">
+                            <strong>Nombre usuario</strong>
+                        </th>
+                        <th class="column_FechaR">
+                            <strong>Fecha del retiro</strong>
+                        </th>
+                        <th class="column_Motivo">
+                            <strong>Motivo del retiro</strong>
+                        </th>
+                        <th class="column_DesResp">
+                            <strong>Descripción y/o Respuesta</strong>
+                        </th>
+                        <th>
+                            <strong>Opciones </strong>
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody *ngFor="let logRetiro of dataRetirosLog; let i = index">
+                    <tr class="filLogRet_{{i}}" (click)="CambiarColor(i,2)">
+                        <td class="column_NombreU columnNomnbreU :logRetiro.IdAsesor.length = 25">
+                            {{logRetiro.IdAsesor}}
+                        </td>
+                        <td class="column_FechaR columnFechaRet : logRetiro.FechaRetiro.length = 25">
+                            {{logRetiro.FechaRetiro}}
+                        </td>
+                        <td class="column_Motivo columnMotivo : logRetiro.FechaRetiro.length = 25">
+                            {{logRetiro.MotivoRetiro}}
+                        </td>
+                        <td class="column_DesResp columnDesResp : logRetiro.FechaRetiro.length = 25">
+                            {{logRetiro.Descripcion}}
+                        </td>
+                        <td>
+                            <button type="button" *ngIf="mostrarReimprimir && logRetiro.Descripcion !== 'Solicitud de retiro cancelada'" class="btn Gt-btn-verde btn-icon legitRipple" (click)="AbrirReimprimir(logRetiro.IdRetiroLog)">
+              <i class="icon-file-text3"></i></button> &nbsp;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div *ngIf="dataRetirosLog.length <= 0" class="alert alert-secondary" role="alert">
+            No hay registros
+        </div>
+        <br>
+
+        <label class="textNegrilla">Historial reingreso</label>
+        <!--reingresos log-->
+        <div class="table-responsive scrollTablaHistorial panel panel-default" *ngIf="dataReingresosLog.length > 0">
+            <table id="tablaLogSeguro" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>
+                            <strong>Nombre usuario</strong>
+                        </th>
+                        <th>
+                            <strong>Fecha del reingreso</strong>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let logReingreso of dataReingresosLog; let i = index">
+                    <tr class="filLogRein_{{i}}" (click)="CambiarColor(i,3)">
+                        <td>
+                            {{logReingreso.IdAsesor}}
+                        </td>
+                        <td>
+                            {{logReingreso.FechaReingreso}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div *ngIf="dataReingresosLog.length <= 0" class="alert alert-secondary" role="alert">
+            No hay registros
+        </div>
+    </div>
+</form>
+<!--Botones modal-->
+<button type="button" style="visibility:hidden" #ModalTrasabilidadAsociado class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#ModalTrasabilidadAsociado">
+  <i class="icon-search4"></i>
+</button>
+<!-- Modal de trazabilidad-->
+
+<div id="ModalTrasabilidadAsociado" class="modal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Trazabilidad</h6>
+            </div>
+            <div class="modal-body">
+                <app-trazabilidad *ngIf="condicion"></app-trazabilidad>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal" (click)="ResetTrasabilidad()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

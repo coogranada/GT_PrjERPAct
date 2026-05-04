@@ -1,0 +1,76 @@
+@media print {
+    .doNotPrint {
+        display: none !important;
+    }
+}
+
+.navigation-main ul {
+    display: block !important;
+  }
+  
+  .navigation-main li ul {
+    display: block !important;  /* Evita el colapso */
+  }
+  
+  /* También puedes eliminar el comportamiento de acordeón de colapso */
+ 
+
+  /* Iconos que indican si el submenú está abierto o cerrado */
+  .icon-arrow-down, .icon-arrow-up {
+    margin-left: auto;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  /* Estilo del submenú (se oculta cuando el menú no está abierto) */
+  
+  
+  ul.ng-trigger {
+    transition: height 30s ease;
+  }
+  
+  /* Mostrar el submenú cuando está abierto */
+  ul[ngIf="isUsuarioMenuOpen"] {
+    display: block;
+  }
+  
+
+  .custom-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1051;
+  }
+  
+  .custom-modal {
+    background-color: white;
+    width: 65%;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 6px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  }
+  
+  .custom-modal-header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+  }
+  
+  .close-btn {
+    font-size: 1.5rem;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+  }
+  
+  .custom-modal-body {
+    padding: 1rem;
+  }
+  

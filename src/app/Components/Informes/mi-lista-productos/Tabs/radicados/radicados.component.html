@@ -1,0 +1,580 @@
+<div class="col-xs-12 col-md-12 col-lg-12" *ngIf="MostrarResumenRadicado"><br>
+    <div class="col-xs-12 col-md-4 col-lg-10"></div>
+    <div class="col-xs-12 col-md-4 col-lg-2">
+        <button class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-backdrop="static" data-keyboard="false" (click)="ConsultaResumen()">
+            Ver Resumen
+        </button>&nbsp;
+    </div>
+</div>
+<br>
+<br>
+<br>
+<br>
+<div class="col-xs-12 col-md-12 col-lg-12" *ngIf="Radicado.length <=0">
+    <br>
+    <div class="alert alert-secondary" role="alert">
+        No hay registros
+    </div>
+</div>
+<div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="Radicado.length >0">
+    <div class="table-responsive scrollTabla">
+        <table id="tablaIngresos" class="table table-hover tablaRadicados sticky-last-column">
+            <thead class="encabezadoTablasRadicados">
+                <tr>
+                    <th class="radicadoFijo">
+                        <strong>Radicado</strong>
+                    </th>
+                    <th>
+                        <strong>Producto</strong>
+                    </th>
+                    <th>
+                        <strong>Línea</strong>
+                    </th>
+                    <th style="text-align: left;">
+                        <strong>Estado</strong>
+                    </th>
+                    <th>
+                        <strong>Oficina</strong>
+                    </th>
+                    <th class="operacionFija">
+                        <strong>Opciones</strong>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of Radicado" class="filRadica_{{item.Radicado}}" (click)="CambiarColor(item.Radicado)">
+                    <th class="radicadoFijo intRadicado_{{item.Radicado}}">{{item.Radicado}}</th>
+                    <th [ngClass]="{'NombreProdRadicado': item.NombreProducto.length < 13,
+                    'NombreProdRadicadoX2': item.NombreProducto.length >= 14 && item.NombreProducto.length < 24,
+                    'NombreProdRadicadoX3': item.NombreProducto.length >= 24}">{{item.NombreProducto}}</th>
+                    <th [ngClass]="{'NombreLineaRadicado': item.NombreLinea.length < 22,
+                    'NombreLineaRadicadoX2': item.NombreLinea.length > 21 && item.NombreLinea.length < 33,
+                    'NombreLineaRadicadoX3': item.NombreLinea.length >= 33}">{{item.NombreLinea}}</th>
+                    <th class="EstadoRadicado ">{{item.Estado}}</th>
+                    <th [ngClass]="{'OficinaRadicado': item.Oficina.length < 15,
+                    'OficinaRadicadoX2': item.Oficina.length >= 15}">{{item.Oficina}}</th>
+                    <td class="operacionFija">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn Gt-btn-verde btn-icon legitRipple" *ngIf="MostarDetalleRadicado" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#ModelDetalleRadicado" (click)="DetalleRadicados(item)">
+                            <i class="icon-eye2"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+
+
+<div id="ModelGenerarFicha" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Generar Ficha</h6>
+            </div>
+
+            <div class="modal-body">
+                <div class="panel-body">
+                    <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="Radicado.length < 0 || Radicado.length == 0">
+                        <br>
+                        <div class="alert alert-secondary" role="alert">
+                            No hay registros
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="Radicado.length > 0 ">
+                        <div class="table-responsive scrollTabla" id="pdfTable" #pdfTable>
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th><strong>Id</strong></th>
+                                        <th><strong>Name</strong></th>
+                                        <th><strong>Email</strong></th>
+                                        <th><strong>Phone</strong></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let user of Radicado">
+                                        <th>{{user.id}}</th>
+                                        <td>{{user.name}}</td>
+                                        <td>{{user.email}}</td>
+                                        <td>{{user.phone}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="panel-body">
+                    <div class="col-xs-12 col-md-12 col-lg-4"></div>
+                    <div class="col-xs-12 col-md-12 col-lg-4"></div>
+                    <div class="col-xs-12 col-md-12 col-lg-2">
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-2">
+                        <span tooltip="Exportar a excel" placement="top" show-delay="500" *ngIf="Radicado.length > 0">
+                            <button class="btn Gt-btn-verde btn-block" >
+                                <!-- <i class="icon-file-excel"></i>&nbsp;  EXCEL -->
+                                <i class="icon-download4"></i>&nbsp; EXCEL
+
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="ModelDetalleRadicado" class="modal">
+    <app-radicado-detalle *ngIf="!cargandoDatos && detalleRadicado" [radicadoData]="detalleRadicado"></app-radicado-detalle>
+</div>
+<input type="hidden" #ModalCalificacionRadicados data-toggle="modal" data-target="#ModalCalificacionRadicados" data-popup="tooltip"
+    data-trigger="hover" data-placement="top">
+
+<div id="ModalCalificacionRadicados" class="modal">
+    <form>
+        <div class="modal-dialog">
+            <div class="modal-content modal-lg modal-lg" style="width: 1330px; left: -350px;">
+                <div class="modal-header bg-morado">
+                    <button type="button" class="close" data-dismiss="modal" (click)="Limpiar()">&times;</button>
+                    <h6 class="modal-title">Total Créditos</h6>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body">
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="LstResumenCalificaciones.length <=0">
+                                <br>
+                                <div class="alert alert-secondary" role="alert">
+                                    No hay registros
+                                </div>
+                            </div>
+                            <div class="table-responsive scrollTabla bordesTablas" *ngIf="LstResumenCalificaciones.length >0">
+                                <table class="table table-hover">
+                                    <thead class="encabezadoTablasRadicados">
+                                        <tr>
+                                            <th><strong>Cuenta</strong></th>
+                                            <th style="text-align: center;"><strong>Monto</strong></th>
+                                            <th style="text-align: center;"><strong>Saldo</strong></th>
+                                            <th style="text-align: center;"><strong>Cuota</strong></th>
+                                            <th style="text-align: center;"><strong>Plazo en períodos</strong></th>
+                                            <th style="text-align: center;"><strong>Estado</strong></th>
+                                            <th><strong>Fecha apertura</strong></th>
+                                            <th><strong>Fecha cancela</strong></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngFor="let itemCalificaciones of LstResumenCalificaciones; let i = index">
+                                        <tr class="Califi_{{i}}" (click)="SeleccionaCalificacion(i,itemCalificaciones.lngIdCuenta)">
+                                            <td class="columnCuenta_tblcrecomercial">{{itemCalificaciones.strCuenta}}</td>
+                                            <td [ngClass]="{'Saldox1': itemCalificaciones.curInicial <= 0,
+                                          'Saldox2': itemCalificaciones.curInicial > 0}" style="text-align: right;">{{itemCalificaciones.curInicial |  currency}}</td>
+                                            <td [ngClass]="{'Saldox1': itemCalificaciones.curEfectivo <= 0,
+                                          'Saldox2': itemCalificaciones.curEfectivo > 0}" style="text-align: right;">{{itemCalificaciones.curEfectivo |  currency}}</td>
+                                            <td [ngClass]="{'Saldox1': itemCalificaciones.curCuota <= 0,
+                                          'Saldox2': itemCalificaciones.curCuota > 0}" style="text-align: right;">{{itemCalificaciones.curCuota |  currency}}</td>
+                                            <td style="text-align: center;min-width: 140px;">{{itemCalificaciones.Periodo}}</td>
+                                            <td style="text-align: center;">{{itemCalificaciones.Estado}}</td>
+                                            <td style="min-width: 170px;">{{itemCalificaciones.dtmMatricula}}</td>
+                                            <td style="min-width: 170px;">{{itemCalificaciones.dtmCancela}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <br>
+                        </div>
+                        <div class="col-xs-12 col-md-12 col-lg-12" style=" border-bottom: 1px solid rgb(160, 0, 87);"></div>
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <br>
+                        </div>
+                        <div class="col-xs-12 col-md-9 col-lg-9">
+                            <div class="table-responsive scrollTabla bordesTablas">
+                                <label><strong>Calificación del crédito</strong></label>
+                                <table class="table table-hover" *ngIf="CalificaAnualmente12Mes != 0">
+                                    <thead>
+                                        <tr class="encabezadoTablas" *ngIf="this.MesActual ==1">
+                                            <th style="text-align: center;"><strong>Diciembre</strong></th>
+                                            <th style="text-align: center;"><strong>Noviembre</strong></th>
+                                            <th style="text-align: center;"><strong>Octubre</strong></th>
+                                            <th style="text-align: center;"><strong>Septiembre</strong></th>
+                                            <th style="text-align: center;"><strong>Agosto</strong></th>
+                                            <th style="text-align: center;"><strong>Julio</strong></th>
+                                            <th style="text-align: center;"><strong>Junio</strong></th>
+                                            <th style="text-align: center;"><strong>Mayo</strong></th>
+                                            <th style="text-align: center;"><strong>Abril</strong></th>
+                                            <th style="text-align: center;"><strong>Marzo</strong></th>
+                                            <th style="text-align: center;"><strong>Febrero</strong></th>
+                                            <th style="text-align: center;"><strong>Enero</strong></th>
+                                        </tr>
+                                        <tr class="encabezadoTablas" *ngIf="this.MesActual ==2">
+                                            <th style="text-align: center;"><strong>Enero</strong></th>
+                                            <th style="text-align: center;"><strong>Diciembre</strong></th>
+                                            <th style="text-align: center;"><strong>Noviembre</strong></th>
+                                            <th style="text-align: center;"><strong>Octubre</strong></th>
+                                            <th style="text-align: center;"><strong>Septiembre</strong></th>
+                                            <th style="text-align: center;"><strong>Agosto</strong></th>
+                                            <th style="text-align: center;"><strong>Julio</strong></th>
+                                            <th style="text-align: center;"><strong>Junio</strong></th>
+                                            <th style="text-align: center;"><strong>Mayo</strong></th>
+                                            <th style="text-align: center;"><strong>Abril</strong></th>
+                                            <th style="text-align: center;"><strong>Marzo</strong></th>
+                                            <th style="text-align: center;"><strong>Febrero</strong></th>
+                                        </tr>
+                                        <tr class="encabezadoTablas" *ngIf="this.MesActual ==3">
+                                            <th style="text-align: center;"><strong>Febrero</strong></th>
+                                            <th style="text-align: center;"><strong>Enero</strong></th>
+                                            <th style="text-align: center;"><strong>Diciembre</strong></th>
+                                            <th style="text-align: center;"><strong>Noviembre</strong></th>
+                                            <th style="text-align: center;"><strong>Octubre</strong></th>
+                                            <th style="text-align: center;"><strong>Septiembre</strong></th>
+                                            <th style="text-align: center;"><strong>Agosto</strong></th>
+                                            <th style="text-align: center;"><strong>Julio</strong></th>
+                                            <th style="text-align: center;"><strong>Junio</strong></th>
+                                            <th style="text-align: center;"><strong>Mayo</strong></th>
+                                            <th style="text-align: center;"><strong>Abril</strong></th>
+                                            <th style="text-align: center;"><strong>Marzo</strong></th>
+                                        </tr>
+                                        <tr class="encabezadoTablas" *ngIf="this.MesActual ==4">
+                                            <th style="text-align: center;"><strong>Marzo</strong></th>
+                                            <th style="text-align: center;"><strong>Febrero</strong></th>
+                                            <th style="text-align: center;"><strong>Enero</strong></th>
+                                            <th style="text-align: center;"><strong>Diciembre</strong></th>
+                                            <th style="text-align: center;"><strong>Noviembre</strong></th>
+                                            <th style="text-align: center;"><strong>Octubre</strong></th>
+                                            <th style="text-align: center;"><strong>Septiembre</strong></th>
+                                            <th style="text-align: center;"><strong>Agosto</strong></th>
+                                            <th style="text-align: center;"><strong>Julio</strong></th>
+                                            <th style="text-align: center;"><strong>Junio</strong></th>
+                                            <th style="text-align: center;"><strong>Mayo</strong></th>
+                                            <th style="text-align: center;"><strong>Abril</strong></th>
+                                        </tr>
+                                        <tr class="encabezadoTablas" *ngIf="this.MesActual == 5">
+                                            <th style="text-align: center;"><strong>Abril</strong></th>
+                                            <th style="text-align: center;"><strong>Marzo</strong></th>
+                                            <th style="text-align: center;"><strong>Febrero</strong></th>
+                                            <th style="text-align: center;"><strong>Enero</strong></th>
+                                            <th style="text-align: center;"><strong>Diciembre</strong></th>
+                                            <th style="text-align: center;"><strong>Noviembre</strong></th>
+                                            <th style="text-align: center;"><strong>Octubre</strong></th>
+                                            <th style="text-align: center;"><strong>Septiembre</strong></th>
+                                            <th style="text-align: center;"><strong>Agosto</strong></th>
+                                            <th style="text-align: center;"><strong>Julio</strong></th>
+                                            <th style="text-align: center;"><strong>Junio</strong></th>
+                                            <th style="text-align: center;"><strong>Mayo</strong></th>
+                                        </tr>
+                                        <tr class="encabezadoTablas" *ngIf="this.MesActual == 6">
+                                            <th style="text-align: center;"><strong>Mayo</strong></th>
+                                            <th style="text-align: center;"><strong>Abril</strong></th>
+                                            <th style="text-align: center;"><strong>Marzo</strong></th>
+                                            <th style="text-align: center;"><strong>Febrero</strong></th>
+                                            <th style="text-align: center;"><strong>Enero</strong></th>
+                                            <th style="text-align: center;"><strong>Diciembre</strong></th>
+                                            <th style="text-align: center;"><strong>Noviembre</strong></th>
+                                            <th style="text-align: center;"><strong>Octubre</strong></th>
+                                            <th style="text-align: center;"><strong>Septiembre</strong></th>
+                                            <th style="text-align: center;"><strong>Agosto</strong></th>
+                                            <th style="text-align: center;"><strong>Julio</strong></th>
+                                            <th style="text-align: center;"><strong>Junio</strong></th>
+                                        </tr>
+                                        <tr class="encabezadoTablas" *ngIf="this.MesActual == 7">
+                                            <th style="text-align: center;"><strong>Junio</strong></th>
+                                            <th style="text-align: center;"><strong>Mayo</strong></th>
+                                            <th style="text-align: center;"><strong>Abril</strong></th>
+                                            <th style="text-align: center;"><strong>Marzo</strong></th>
+                                            <th style="text-align: center;"><strong>Febrero</strong></th>
+                                            <th style="text-align: center;"><strong>Enero</strong></th>
+                                            <th style="text-align: center;"><strong>Diciembre</strong></th>
+                                            <th style="text-align: center;"><strong>Noviembre</strong></th>
+                                            <th style="text-align: center;"><strong>Octubre</strong></th>
+                                            <th style="text-align: center;"><strong>Septiembre</strong></th>
+                                            <th style="text-align: center;"><strong>Agosto</strong></th>
+                                            <th style="text-align: center;"><strong>Julio</strong></th>
+                                        </tr>
+                                        <tr class="encabezadoTablas" *ngIf="this.MesActual == 8">
+                                            <th style="text-align: center;"><strong>Julio</strong></th>
+                                            <th style="text-align: center;"><strong>Junio</strong></th>
+                                            <th style="text-align: center;"><strong>Mayo</strong></th>
+                                            <th style="text-align: center;"><strong>Abril</strong></th>
+                                            <th style="text-align: center;"><strong>Marzo</strong></th>
+                                            <th style="text-align: center;"><strong>Febrero</strong></th>
+                                            <th style="text-align: center;"><strong>Enero</strong></th>
+                                            <th style="text-align: center;"><strong>Diciembre</strong></th>
+                                            <th style="text-align: center;"><strong>Noviembre</strong></th>
+                                            <th style="text-align: center;"><strong>Octubre</strong></th>
+                                            <th style="text-align: center;"><strong>Septiembre</strong></th>
+                                            <th style="text-align: center;"><strong>Agosto</strong></th>
+                                        </tr>
+                                        <tr class="encabezadoTablas" *ngIf="this.MesActual == 9">
+                                            <th style="text-align: center;"><strong>Agosto</strong></th>
+                                            <th style="text-align: center;"><strong>Julio</strong></th>
+                                            <th style="text-align: center;"><strong>Junio</strong></th>
+                                            <th style="text-align: center;"><strong>Mayo</strong></th>
+                                            <th style="text-align: center;"><strong>Abril</strong></th>
+                                            <th style="text-align: center;"><strong>Marzo</strong></th>
+                                            <th style="text-align: center;"><strong>Febrero</strong></th>
+                                            <th style="text-align: center;"><strong>Enero</strong></th>
+                                            <th style="text-align: center;"><strong>Diciembre</strong></th>
+                                            <th style="text-align: center;"><strong>Noviembre</strong></th>
+                                            <th style="text-align: center;"><strong>Octubre</strong></th>
+                                            <th style="text-align: center;"><strong>Septiembre</strong></th>
+                                        </tr>
+                                        <tr class="encabezadoTablas" *ngIf="this.MesActual == 10">
+                                            <th style="text-align: center;"><strong>Septiembre</strong></th>
+                                            <th style="text-align: center;"><strong>Agosto</strong></th>
+                                            <th style="text-align: center;"><strong>Julio</strong></th>
+                                            <th style="text-align: center;"><strong>Junio</strong></th>
+                                            <th style="text-align: center;"><strong>Mayo</strong></th>
+                                            <th style="text-align: center;"><strong>Abril</strong></th>
+                                            <th style="text-align: center;"><strong>Marzo</strong></th>
+                                            <th style="text-align: center;"><strong>Febrero</strong></th>
+                                            <th style="text-align: center;"><strong>Enero</strong></th>
+                                            <th style="text-align: center;"><strong>Diciembre</strong></th>
+                                            <th style="text-align: center;"><strong>Noviembre</strong></th>
+                                            <th style="text-align: center;"><strong>Octubre</strong></th>
+                                        </tr>
+                                        <tr class="encabezadoTablas" *ngIf="this.MesActual == 11">
+                                            <th style="text-align: center;"><strong>Octubre</strong></th>
+                                            <th style="text-align: center;"><strong>Septiembre</strong></th>
+                                            <th style="text-align: center;"><strong>Agosto</strong></th>
+                                            <th style="text-align: center;"><strong>Julio</strong></th>
+                                            <th style="text-align: center;"><strong>Junio</strong></th>
+                                            <th style="text-align: center;"><strong>Mayo</strong></th>
+                                            <th style="text-align: center;"><strong>Abril</strong></th>
+                                            <th style="text-align: center;"><strong>Marzo</strong></th>
+                                            <th style="text-align: center;"><strong>Febrero</strong></th>
+                                            <th style="text-align: center;"><strong>Enero</strong></th>
+                                            <th style="text-align: center;"><strong>Diciembre</strong></th>
+                                            <th style="text-align: center;"><strong>Noviembre</strong></th>
+                                        </tr>
+                                        <tr class="encabezadoTablas" *ngIf="this.MesActual == 12">
+                                            <th style="text-align: center;"><strong>Noviembre</strong></th>
+                                            <th style="text-align: center;"><strong>Octubre</strong></th>
+                                            <th style="text-align: center;"><strong>Septiembre</strong></th>
+                                            <th style="text-align: center;"><strong>Agosto</strong></th>
+                                            <th style="text-align: center;"><strong>Julio</strong></th>
+                                            <th style="text-align: center;"><strong>Junio</strong></th>
+                                            <th style="text-align: center;"><strong>Mayo</strong></th>
+                                            <th style="text-align: center;"><strong>Abril</strong></th>
+                                            <th style="text-align: center;"><strong>Marzo</strong></th>
+                                            <th style="text-align: center;"><strong>Febrero</strong></th>
+                                            <th style="text-align: center;"><strong>Enero</strong></th>
+                                            <th style="text-align: center;"><strong>Diciembre</strong></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngIf="this.MesActual ==1">
+                                            <td style="text-align: center;">{{Diciembre}}</td>
+                                            <td style="text-align: center;">{{Noviembre}}</td>
+                                            <td style="text-align: center;">{{Octubre}}</td>
+                                            <td style="text-align: center;">{{Septiembre}}</td>
+                                            <td style="text-align: center;">{{Agosto}}</td>
+                                            <td style="text-align: center;">{{Julio}}</td>
+                                            <td style="text-align: center;">{{Junio}}</td>
+                                            <td style="text-align: center;">{{Mayo}}</td>
+                                            <td style="text-align: center;">{{Abril}}</td>
+                                            <td style="text-align: center;">{{Marzo}}</td>
+                                            <td style="text-align: center;">{{Febrero}}</td>
+                                            <td style="text-align: center;">{{Enero}}</td>
+                                        </tr>
+                                        <tr *ngIf="this.MesActual ==2">
+                                            <td style="text-align: center;">{{Enero}}</td>
+                                            <td style="text-align: center;">{{Diciembre}}</td>
+                                            <td style="text-align: center;">{{Noviembre}}</td>
+                                            <td style="text-align: center;">{{Octubre}}</td>
+                                            <td style="text-align: center;">{{Septiembre}}</td>
+                                            <td style="text-align: center;">{{Agosto}}</td>
+                                            <td style="text-align: center;">{{Julio}}</td>
+                                            <td style="text-align: center;">{{Junio}}</td>
+                                            <td style="text-align: center;">{{Mayo}}</td>
+                                            <td style="text-align: center;">{{Abril}}</td>
+                                            <td style="text-align: center;">{{Marzo}}</td>
+                                            <td style="text-align: center;">{{Febrero}}</td>
+                                        </tr>
+                                        <tr *ngIf="this.MesActual == 3">
+                                            <td style="text-align: center;">{{Febrero}}</td>
+                                            <td style="text-align: center;">{{Enero}}</td>
+                                            <td style="text-align: center;">{{Diciembre}}</td>
+                                            <td style="text-align: center;">{{Noviembre}}</td>
+                                            <td style="text-align: center;">{{Octubre}}</td>
+                                            <td style="text-align: center;">{{Septiembre}}</td>
+                                            <td style="text-align: center;">{{Agosto}}</td>
+                                            <td style="text-align: center;">{{Julio}}</td>
+                                            <td style="text-align: center;">{{Junio}}</td>
+                                            <td style="text-align: center;">{{Mayo}}</td>
+                                            <td style="text-align: center;">{{Abril}}</td>
+                                            <td style="text-align: center;">{{Marzo}}</td>
+                                        </tr>
+                                        <tr *ngIf="this.MesActual == 4">
+                                            <td style="text-align: center;">{{Marzo}}</td>
+                                            <td style="text-align: center;">{{Febrero}}</td>
+                                            <td style="text-align: center;">{{Enero}}</td>
+                                            <td style="text-align: center;">{{Diciembre}}</td>
+                                            <td style="text-align: center;">{{Noviembre}}</td>
+                                            <td style="text-align: center;">{{Octubre}}</td>
+                                            <td style="text-align: center;">{{Septiembre}}</td>
+                                            <td style="text-align: center;">{{Agosto}}</td>
+                                            <td style="text-align: center;">{{Julio}}</td>
+                                            <td style="text-align: center;">{{Junio}}</td>
+                                            <td style="text-align: center;">{{Mayo}}</td>
+                                            <td style="text-align: center;">{{Abril}}</td>
+                                        </tr>
+                                        <tr *ngIf="this.MesActual == 5">
+                                            <td style="text-align: center;">{{Abril}}</td>
+                                            <td style="text-align: center;">{{Marzo}}</td>
+                                            <td style="text-align: center;">{{Febrero}}</td>
+                                            <td style="text-align: center;">{{Enero}}</td>
+                                            <td style="text-align: center;">{{Diciembre}}</td>
+                                            <td style="text-align: center;">{{Noviembre}}</td>
+                                            <td style="text-align: center;">{{Octubre}}</td>
+                                            <td style="text-align: center;">{{Septiembre}}</td>
+                                            <td style="text-align: center;">{{Agosto}}</td>
+                                            <td style="text-align: center;">{{Julio}}</td>
+                                            <td style="text-align: center;">{{Junio}}</td>
+                                            <td style="text-align: center;">{{Mayo}}</td>
+                                        </tr>
+                                        <tr *ngIf="this.MesActual == 6">
+                                            <td style="text-align: center;">{{Mayo}}</td>
+                                            <td style="text-align: center;">{{Abril}}</td>
+                                            <td style="text-align: center;">{{Marzo}}</td>
+                                            <td style="text-align: center;">{{Febrero}}</td>
+                                            <td style="text-align: center;">{{Enero}}</td>
+                                            <td style="text-align: center;">{{Diciembre}}</td>
+                                            <td style="text-align: center;">{{Noviembre}}</td>
+                                            <td style="text-align: center;">{{Octubre}}</td>
+                                            <td style="text-align: center;">{{Septiembre}}</td>
+                                            <td style="text-align: center;">{{Agosto}}</td>
+                                            <td style="text-align: center;">{{Julio}}</td>
+                                            <td style="text-align: center;">{{Junio}}</td>
+                                        </tr>
+                                        <tr *ngIf="this.MesActual == 7">
+                                            <td style="text-align: center;">{{Junio}}</td>
+                                            <td style="text-align: center;">{{Mayo}}</td>
+                                            <td style="text-align: center;">{{Abril}}</td>
+                                            <td style="text-align: center;">{{Marzo}}</td>
+                                            <td style="text-align: center;">{{Febrero}}</td>
+                                            <td style="text-align: center;">{{Enero}}</td>
+                                            <td style="text-align: center;">{{Diciembre}}</td>
+                                            <td style="text-align: center;">{{Noviembre}}</td>
+                                            <td style="text-align: center;">{{Octubre}}</td>
+                                            <td style="text-align: center;">{{Septiembre}}</td>
+                                            <td style="text-align: center;">{{Agosto}}</td>
+                                            <td style="text-align: center;">{{Julio}}</td>
+                                        </tr>
+                                        <tr *ngIf="this.MesActual == 8">
+                                            <td style="text-align: center;">{{Julio}}</td>
+                                            <td style="text-align: center;">{{Junio}}</td>
+                                            <td style="text-align: center;">{{Mayo}}</td>
+                                            <td style="text-align: center;">{{Abril}}</td>
+                                            <td style="text-align: center;">{{Marzo}}</td>
+                                            <td style="text-align: center;">{{Febrero}}</td>
+                                            <td style="text-align: center;">{{Enero}}</td>
+                                            <td style="text-align: center;">{{Diciembre}}</td>
+                                            <td style="text-align: center;">{{Noviembre}}</td>
+                                            <td style="text-align: center;">{{Octubre}}</td>
+                                            <td style="text-align: center;">{{Septiembre}}</td>
+                                            <td style="text-align: center;">{{Agosto}}</td>
+                                        </tr>
+                                        <tr *ngIf="this.MesActual == 9">
+                                            <td style="text-align: center;">{{Agosto}}</td>
+                                            <td style="text-align: center;">{{Julio}}</td>
+                                            <td style="text-align: center;">{{Junio}}</td>
+                                            <td style="text-align: center;">{{Mayo}}</td>
+                                            <td style="text-align: center;">{{Abril}}</td>
+                                            <td style="text-align: center;">{{Marzo}}</td>
+                                            <td style="text-align: center;">{{Febrero}}</td>
+                                            <td style="text-align: center;">{{Enero}}</td>
+                                            <td style="text-align: center;">{{Diciembre}}</td>
+                                            <td style="text-align: center;">{{Noviembre}}</td>
+                                            <td style="text-align: center;">{{Octubre}}</td>
+                                            <td style="text-align: center;">{{Septiembre}}</td>
+                                        </tr>
+                                        <tr *ngIf="this.MesActual == 10">
+                                            <td style="text-align: center;">{{Septiembre}}</td>
+                                            <td style="text-align: center;">{{Agosto}}</td>
+                                            <td style="text-align: center;">{{Julio}}</td>
+                                            <td style="text-align: center;">{{Junio}}</td>
+                                            <td style="text-align: center;">{{Mayo}}</td>
+                                            <td style="text-align: center;">{{Abril}}</td>
+                                            <td style="text-align: center;">{{Marzo}}</td>
+                                            <td style="text-align: center;">{{Febrero}}</td>
+                                            <td style="text-align: center;">{{Enero}}</td>
+                                            <td style="text-align: center;">{{Diciembre}}</td>
+                                            <td style="text-align: center;">{{Noviembre}}</td>
+                                            <td style="text-align: center;">{{Octubre}}</td>
+                                        </tr>
+                                        <tr *ngIf="this.MesActual == 11">
+                                            <td style="text-align: center;">{{Octubre}}</td>
+                                            <td style="text-align: center;">{{Septiembre}}</td>
+                                            <td style="text-align: center;">{{Agosto}}</td>
+                                            <td style="text-align: center;">{{Julio}}</td>
+                                            <td style="text-align: center;">{{Junio}}</td>
+                                            <td style="text-align: center;">{{Mayo}}</td>
+                                            <td style="text-align: center;">{{Abril}}</td>
+                                            <td style="text-align: center;">{{Marzo}}</td>
+                                            <td style="text-align: center;">{{Febrero}}</td>
+                                            <td style="text-align: center;">{{Enero}}</td>
+                                            <td style="text-align: center;">{{Diciembre}}</td>
+                                            <td style="text-align: center;">{{Noviembre}}</td>
+                                        </tr>
+                                        <tr *ngIf="this.MesActual == 12">
+                                            <td style="text-align: center;">{{Noviembre}}</td>
+                                            <td style="text-align: center;">{{Octubre}}</td>
+                                            <td style="text-align: center;">{{Septiembre}}</td>
+                                            <td style="text-align: center;">{{Agosto}}</td>
+                                            <td style="text-align: center;">{{Julio}}</td>
+                                            <td style="text-align: center;">{{Junio}}</td>
+                                            <td style="text-align: center;">{{Mayo}}</td>
+                                            <td style="text-align: center;">{{Abril}}</td>
+                                            <td style="text-align: center;">{{Marzo}}</td>
+                                            <td style="text-align: center;">{{Febrero}}</td>
+                                            <td style="text-align: center;">{{Enero}}</td>
+                                            <td style="text-align: center;">{{Diciembre}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="CalificaAnualmente12Mes == 0">
+                                    <br>
+                                    <div class="alert alert-secondary" role="alert">
+                                        No hay registros
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-3 col-lg-3">
+                            <div class="table-responsive scrollTabla bordesTablas">
+                                <label><strong>Análisis</strong></label>
+                                <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="ResumenAnual.length <= 0">
+                                    <br>
+                                    <div class="alert alert-secondary" role="alert">
+                                        No hay registros
+                                    </div>
+                                </div>
+                                <table class="table table-hover" *ngIf="ResumenAnual.length > 0">
+                                    <thead>
+                                        <tr class="encabezadoTablas">
+                                            <th style="text-align: center;"><strong>Calificación</strong></th>
+                                            <th style="text-align: center;min-width: 110px;"><strong>Nro. veces</strong></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngFor="let item of ResumenAnual; let i = index">
+                                        <tr class="ahoCalidd_{{i}}" (click)="cambiacolorAnalisis(i)">
+                                            <td style="text-align: center;">{{item.strCumplimiento}}</td>
+                                            <td style="text-align: center;">{{item.NroVeces}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>

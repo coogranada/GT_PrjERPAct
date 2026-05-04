@@ -1,0 +1,65 @@
+<div class="panel panel-white">
+    <div class="panel-heading doNotPrint">
+        <h6 class="panel-title">Tipo  {{NombreOperacion}}</h6>
+        <div class="heading-elements">
+            <ul class="icons-list">
+                <li>
+                    <a data-toggle="modal" data-target="#ModalAyuda">
+                        <i class="icon-question6 " title="Ayuda" data-popup="tooltip" data-trigger="hover" data-placement="top"></i>
+                    </a>
+                </li>
+                <li>
+                    <a data-action="collapse"></a>
+
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="panel-body doNotPrint">
+        <form method="get">
+            <div class="col-xs-12 col-md-12 col-lg-12" id="Operacion">
+                <div class="row">
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <label class="textNegrilla">Operación:</label>
+                            <span class="grande"> *</span>
+                            <select class="form-control" id="select" name="select" [(ngModel)]="valueSlectOperacion" (change)="opcionSelected()" (blur)="operacionBlur()">
+                          <option value="0" selected="true" >--Seleccione-- </option>
+                          <option *ngFor="let item of Operaciones"  [value]="item.IdOperaciones">
+                            {{item.ERP_tblOperacion.Descripcion}}
+                          </option>
+                        </select>
+                            <span class="help-block validationSpan" *ngIf="!validaOperacion">
+                          La operación es obligatoria.
+                      </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div  *ngIf="valueSlectOperacion == 91">
+    <app-log-generales></app-log-generales>
+</div>
+<div  *ngIf="valueSlectOperacion == 92">
+    <app-log-gestion-clientes></app-log-gestion-clientes>
+</div>
+<div *ngIf="valueSlectOperacion == 93">
+    <app-log-mis-productos></app-log-mis-productos>
+</div>
+<div *ngIf="valueSlectOperacion == 94">
+    <app-log-asesoria></app-log-asesoria>
+</div>
+<div *ngIf="valueSlectOperacion == 95">
+    <app-log-banner></app-log-banner>
+</div>
+<div *ngIf="valueSlectOperacion == 108">
+    <app-log-ficha-analisis></app-log-ficha-analisis>
+</div>
+<div *ngIf="valueSlectOperacion == 113">
+    <app-log-productos-virtuales></app-log-productos-virtuales>
+</div>
+<div *ngIf="valueSlectOperacion == 114">
+    <app-log-autenticacion-erp></app-log-autenticacion-erp>
+</div>

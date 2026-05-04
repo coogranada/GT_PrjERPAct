@@ -1,0 +1,631 @@
+/* thead tr th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+} */
+
+body {
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+h1 {
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+h3 {
+    margin-top: 0;
+    font-weight: 300;
+}
+
+.container {
+    width: 100%;
+    margin: 10px auto;
+}
+
+
+/**  */
+
+.ac-label {
+    font-weight: 700;
+    position: relative;
+    padding: .5em 1em;
+    width: 98%;
+    margin-bottom: .5em;
+    display: block;
+    cursor: pointer;
+    background-color: #d8d8d8;
+    transition: background-color .15s ease-in-out;
+}
+
+.ac-input:checked+label,
+.ac-label:hover {
+    background: rgb(185 111 151);
+    color: rgb(63, 63, 63);
+}
+
+.ac-label:after,
+.ac-input:checked+.ac-label:after {
+    content: "+";
+    position: absolute;
+    display: block;
+    right: 0;
+    top: 0;
+    width: 2em;
+    height: 100%;
+    line-height: 2.25em;
+    text-align: center;
+    background-color: #e5e5e5;
+    transition: background-color .15s ease-in-out;
+}
+
+.ac-label:hover:after,
+.ac-input:checked+.ac-label:after {
+    background-color: #b5b5b5;
+}
+
+.ac-input:checked+.ac-label:after {
+    content: "-";
+}
+
+.ac-input {
+    display: none;
+}
+
+.ac-text,
+.ac-sub-text {
+    opacity: 0;
+    height: 0;
+    margin-bottom: .5em;
+    transition: opacity .5s ease-in-out;
+    overflow: hidden;
+}
+
+.ac-input:checked~.ac-text,
+.ac-sub .ac-input:checked~.ac-sub-text {
+    opacity: 1;
+    height: auto;
+}
+
+.ac-sub .ac-label {
+    background: none;
+    font-weight: 600;
+    padding: .5em 2em;
+    margin-bottom: 0;
+}
+
+.ac-sub .ac-label:checked {
+    background: none;
+    border-bottom: 1px solid whitesmoke;
+}
+
+.ac-sub .ac-label:after,
+.ac-sub .ac-input:checked+.ac-label:after {
+    left: 0;
+    background: none;
+}
+
+.ac-sub .ac-input:checked+label,
+.ac-sub .ac-label:hover {
+    background: none;
+}
+
+.ac-sub-text {
+    padding: 0 1em 0 2em;
+}
+
+
+/* */
+
+.ac-label-cr {
+    font-weight: 700;
+    position: relative;
+    padding: .5em 1em;
+    margin-bottom: .5em;
+    display: block;
+    cursor: pointer;
+    background-color: whiteSmoke;
+    transition: background-color .15s ease-in-out;
+}
+
+.ac-input-cr:checked+label,
+.ac-label-cr:hover {
+    background: rgb(185 111 151);
+    color: rgb(63, 63, 63);
+}
+
+.ac-label-cr:after,
+.ac-input-cr:checked+.ac-label-cr:after {
+    content: "+";
+    position: absolute;
+    display: block;
+    right: 0;
+    top: 0;
+    width: 2em;
+    height: 100%;
+    line-height: 2.25em;
+    text-align: center;
+    background-color: #e5e5e5;
+    transition: background-color .15s ease-in-out;
+}
+
+.ac-label-cr:hover:after,
+.ac-input-cr:checked+.ac-label-cr:after {
+    background-color: #b5b5b5;
+}
+
+.ac-input-cr:checked+.ac-label-cr:after {
+    content: "-";
+}
+
+.ac-input-cr {
+    display: none;
+}
+
+.ac-input {
+    display: none;
+}
+
+.ac-text,
+.ac-sub-text {
+    opacity: 0;
+    height: 0;
+    margin-bottom: .5em;
+    transition: opacity .5s ease-in-out;
+    overflow: hidden;
+}
+
+.ac-text-cr,
+.ac-sub-text-cr {
+    opacity: 0;
+    height: 0;
+    margin-bottom: .5em;
+    transition: opacity .5s ease-in-out;
+    overflow: hidden;
+}
+
+.ac-input-cr:checked~.ac-text-cr,
+.ac-sub-cr .ac-input-cr:checked~.ac-sub-text-cr {
+    opacity: 1;
+    height: auto;
+}
+
+.ac-sub-cr .ac-label-cr {
+    background: none;
+    font-weight: 600;
+    padding: .5em 2em;
+    margin-bottom: 0;
+}
+
+.ac-sub-cr .ac-label-cr:checked {
+    background: none;
+    border-bottom: 1px solid whitesmoke;
+}
+
+.ac-sub-cr .ac-label-cr:after,
+.ac-sub-cr .ac-input-cr:checked+.ac-label-cr:after {
+    left: 0;
+    background: none;
+}
+
+.ac-sub-cr .ac-input-cr:checked+label,
+.ac-sub-cr .ac-label-cr:hover {
+    background: none;
+}
+
+.ac-sub-text-cr {
+    padding: 0 1em 0 2em;
+}
+
+.modal-xl {
+    width: 80% !important;
+    margin-left: 120px;
+}
+
+.modal-dialog-xl {
+    width: 100% !important;
+}
+
+#ModalAnalisis {
+    display: none;
+    z-index: 10000;
+}
+
+#ModalFormatosMovimientosCr {
+    display: none;
+    /* z-index: 10000; */
+}
+
+.curCuotaCartera {
+    min-width: 90px;
+}
+
+.curCuotaCarterax2 {
+    min-width: 170px;
+}
+
+#borde {
+    border: 3px rgb(227, 227, 227);
+    border-style: dashed;
+    border-radius: 22px;
+    padding: 9px;
+    width: 101%;
+}
+
+@media (max-width: 767px) {
+    .modal-xl {
+        width: 95% !important;
+        margin-left: 1%;
+    }
+    .modal-dialog-xl {
+        width: 99% !important;
+    }
+}
+
+
+/* .TablaCalificaciones th {
+    float: left;
+    background-color: white;
+    position: static;
+    top: 0%;
+    z-index: 10;
+} */
+
+
+/* #TablaProvisiones th {
+    background-color: white;
+    position: sticky;
+    top: 0%;
+    z-index: 10;
+} */
+
+.radioB {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    /* create custom radiobutton appearance */
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    padding: 6px;
+    /* background-color only for content */
+    background-clip: content-box;
+    border: 2px solid #bbbbbb;
+    background-color: #e7e6e7;
+    border-radius: 50%;
+}
+
+#cols3 .col-md-2 {
+    margin-bottom: 30px;
+    padding: 10px;
+    margin: 1%;
+}
+
+#cols3 .col-md-3 {
+    margin-bottom: 30px;
+    padding: 10px;
+    margin: 1%;
+}
+
+#cols4 .col-md-2 {
+    margin-bottom: 30px;
+    padding-right: 4px;
+    margin-right: 0.5;
+}
+
+#tasas .form-control::after {
+    content: '%';
+}
+
+
+/* appearance for checked radiobutton */
+
+.radioB:checked {
+    background-color: rgb(160, 0, 87);
+}
+
+#marginbuton {
+    margin-left: 3%;
+}
+
+.reducirTamano {
+    border-top: 0px;
+    padding: 7px 15px;
+}
+
+.reducirTamanoResumen {
+    border-top: 0px;
+    padding: 0px 17px;
+}
+
+.ReduceTamanoEncabeza {
+    border-top: 0px;
+    padding: 7.5px 20px;
+}
+
+object {
+    width: 100%;
+    height: 1000px;
+    border: none;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    overflow: hidden;
+}
+
+.objetpdf {
+    width: 100%;
+    top: -10px;
+}
+
+.columnProducto_DifHij {
+    min-width: 237px;
+}
+
+.columnProducto_DifHijX2 {
+    min-width: 288px;
+}
+
+.columnProducto_DifHijX3 {
+    min-width: 333px;
+}
+
+.abligatorioY {
+    font-size: 25px !important;
+    color: #D84315;
+    margin-top: -5px !important;
+    margin-left: 6px;
+    position: absolute;
+}
+
+.bordesTablas {
+    max-height: 280px;
+    border-bottom: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
+
+#bordeSaldosCartera {
+    border: 3px rgb(227, 227, 227);
+        border-style: dashed;
+        border-radius: 22px;
+        padding: 15px;
+        width: 12%;
+        height: 20%;
+        margin-top: -1%;
+        margin-left: 59%;
+        /* bottom: 24%; */
+        position: fixed;
+}
+
+
+/*tamaño de tablas*/
+
+.CuentaFija {
+    position: sticky !important;
+    left: 0;
+    background: #fff;
+}
+
+
+/*Tabla credito comecial */
+
+.scrollTablaCartera {
+    max-height: 500px;
+    overflow-y: scroll;
+}
+
+.encabezadoTablas {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #ffffff;
+}
+
+.columnCuenta_tblcrecomercial {
+    min-width: 163px;
+}
+
+.Saldox1 {
+    min-width: 90px;
+}
+
+.Saldox2 {
+    min-width: 180px;
+}
+
+.columnLinea_tblcrecomercial {
+    min-width: 290px;
+}
+
+.columnLineaX2_tblcrecomercial {
+    min-width: 333px !important;
+}
+
+.columnLineaX3_tblcrecomercial {
+    min-width: 450px !important;
+}
+
+.columnSaldo_tblcrecomercial {
+    min-width: 165px;
+}
+
+.columnCuota_tblcrecomercial {
+    min-width: 15px;
+}
+
+.columnopciones_tblcrecomercial {
+    min-width: 30px;
+}
+
+.columnFechas_tblcrecomercial {
+    min-width: 169px;
+}
+
+.columnEstado_tblcrecomercial {
+    min-width: 150px;
+}
+
+
+/*Tabla credito Consumo */
+
+.columnCuenta_tblcreConsumo {
+    min-width: 163px;
+}
+
+.columnLinea_tblcreConsumo {
+    min-width: 280px;
+}
+
+.columnLineaX2_tblcreConsumo {
+    min-width: 333px !important;
+}
+
+.columnLineaX3_tblcreConsumo {
+    min-width: 300px !important;
+}
+
+.columnSaldo_tblcreConsumo {
+    min-width: 165px;
+}
+
+.columnCuota_tblConsumo {
+    min-width: 15px;
+}
+
+.columnopciones_tblConsumo {
+    min-width: 30px;
+}
+
+.columnFechas_tblConsumo {
+    min-width: 169px;
+}
+.columnEstado_tblConsumo{
+    min-width: 150px;
+}
+
+/* Tabla Microcrédito empresarial */
+
+.columnCuenta_tblcreMicroEmp {
+    min-width: 163px;
+}
+
+.columnLinea_tblcreMicroEmp {
+    min-width: 290px;
+}
+
+.columnLineaX2_tblcreMicroEmp {
+    min-width: 333px !important;
+}
+
+.columnLineaX3_tblcreMicroEmp {
+    min-width: 600px !important;
+}
+
+.columnLinea_tblcreMicroEmp {
+    min-width: 220px;
+}
+
+.columnSaldo_tblcreMicroEmp {
+    min-width: 165px;
+}
+
+.columnCuota_tblcreMicroEmp {
+    min-width: 15px;
+}
+
+.columnopciones_tblcreMicroEmp {
+    min-width: 30px;
+}
+
+.columnFechas_tblcreMicroEmp {
+    min-width: 169px;
+}
+.columnEstado_tblcreMicroEmp {
+    min-width: 150px;
+}
+
+
+/* Tabla Credito de vivienda*/
+
+.columnCuenta_tblcreVivienda {
+    min-width: 163px;
+}
+
+.columnLinea_tblcreVivienda {
+    min-width: 290px;
+}
+
+.columnLinea_tblcreViviendaX2 {
+    min-width: 333px !important;
+}
+
+.columnLinea_tblcreViviendaX3 {
+    min-width: 600px !important;
+}
+
+.columnSaldo_tblcreVivienda {
+    min-width: 165px;
+}
+
+.columnCuota_tblcreVivienda {
+    min-width: 15px;
+}
+
+.columnopciones_tblcreVivienda {
+    min-width: 30px;
+}
+
+.columnFechas_tblcreVivienda {
+    min-width: 169px;
+}
+.columnEstado_tblcreVivienda {
+    min-width: 150px;
+}
+
+.table th {
+    font-weight: bold;
+}
+
+.table tbody tr {
+    height: 45px !important;
+}
+
+.table td {
+    vertical-align: middle;
+    padding: 1px 5px 0;
+    white-space: nowrap;
+}
+
+
+
+.sticky-last-column td:last-child {
+    position: sticky;
+    right: 0;
+    z-index: 1;
+    text-align: center;
+}
+
+.sticky-last-column-consumo td:last-child {
+    position: sticky;
+    right: 0;
+    z-index: 1;
+    text-align: left;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.operacionFija {
+    position: sticky !important;
+    right: 0;
+    background: #fff;
+    z-index: 1; 
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    min-width: 30px;
+}
+
+.centerColumn{
+    text-align: center !important;
+    align-items: center;
+}

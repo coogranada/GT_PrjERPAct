@@ -1,0 +1,137 @@
+/* You can add global styles to this file, and also import other style files */
+:root {
+  --color-verde-institucional: rgb(38, 144, 81);
+  --width-base: calc(100% / 12);
+  --col-smaller-1-2: calc(var(--width-base) - 2%);
+  --col-wider-1-2: calc(var(--width-base) + 2%);
+  --col-smaller-1-3: calc(var(--width-base) - 3%);
+  --col-wider-1-3: calc(var(--width-base) + 3%);
+  --col-smaller-1-4: calc(var(--width-base) - 4%);
+  --col-wider-1-4: calc(var(--width-base) + 4%);
+  --col-smaller-2-1: calc((var(--width-base) * 2) - 1%);
+  --col-wider-2-1: calc((var(--width-base) * 2) + 1%);
+  --col-smaller-2-4: calc((var(--width-base) * 2) - 4%);
+  --col-wider-2-4: calc((var(--width-base) * 2) + 4%);
+  --col-smaller-3-4: calc((var(--width-base) * 3) - 4%);
+  --col-wider-3-4: calc((var(--width-base) * 3) + 4%);
+}
+
+.form-group-flex {
+  display: flex;
+  gap: 1rem;
+}
+
+.flex-end {
+  justify-content: end;
+}
+
+.col-lg-1-5 {
+  width: calc(var(--width-base) * 1.5);
+}
+
+.col-lg-2-5 {
+  width: calc(var(--width-base) * 2.5);
+}
+
+.col-lg-3-5 {
+  width: calc(var(--width-base) * 3.5);
+}
+ 
+.pr-0 {
+  padding-right: 0;
+}
+
+/* Estilo para notificaciones de éxito */
+.success {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  /* Estilo para notificaciones de error */
+  .error {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  /* Estilo para notificaciones de advertencia */
+  .warn {
+    background-color: #ff9800;
+    color: white;
+  }
+  
+  /* Estilo para notificaciones de información */
+  .info {
+    background-color: #2196f3;
+    color: white;
+  }
+
+  *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  .toast-bottom-right {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+  }
+
+  
+/* Estilos generales para las notificaciones */
+.toast-success, .toast-error, .toast-warning {
+  border-radius: 0px !important;  
+  display: flex;
+  flex-direction: column-reverse; 
+}
+
+/* Estilo para el mensaje */
+.toast-success .toast-title,
+.toast-error .toast-title,
+.toast-warning .toast-title {
+  font-size: 16px !important; 
+  font-weight: normal !important; 
+  margin: 0 !important;  
+  padding: 0 !important; 
+  line-height: 1.2 !important; 
+}
+
+/* Estilo para el titulo */
+.toast-success .toast-message,
+.toast-error .toast-message,
+.toast-warning .toast-message {
+  font-size: 20px !important;  
+}
+
+
+/* Estilo para el ícono */
+.toast-success .toast-icon,
+.toast-error .toast-icon,
+.toast-warning .toast-icon {
+  order: 2!important; 
+  margin-left: 10px!important;  
+}
+
+
+
+.toast-success,
+.toast-error,
+.toast-warning {
+  background-color: rgba(0, 0, 0, 0) !important;
+}
+
+/* Estilos específicos para cada tipo de notificación */
+.toast-success {
+  background-color: #8bc34a !important;  
+  color: white;
+}
+
+.toast-error {
+  background-color: #ca2a3d !important; 
+  color: white;
+}
+
+.toast-warning {
+  background-color: #ffdb5b !important; 
+  color: #4f4f46 !important;
+}

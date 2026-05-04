@@ -1,0 +1,555 @@
+<div class="panel panel-white">
+    <div class="panel-heading">
+        <h6 class="panel-title">Datos</h6>
+        <div class="heading-elements">
+            <ul class="icons-list">
+                <li>
+                    <a data-toggle="modal" data-target="#ModalAyuda">
+                        <i class="icon-question6 " title="Ayuda" data-popup="tooltip" data-trigger="hover"
+                            data-placement="top"></i>
+                    </a>
+                </li>
+                <li>
+                    <a data-action="collapse"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <form [formGroup]="parametrosArchivosForm" autocomplete="off">
+        <div class="panel-body">
+            <!-- Agrupación de Campos Generales -->
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <div class="col-xs-12 col-md-3 col-lg-3">
+                    <label><strong>Nombre tarea:</strong></label><span class="text-danger ObligatorioGrande"> *</span>
+                    <input type="text" class="form-control" formControlName="nombreTarea" maxlength="30"
+                        (blur)="borrarSiEspacios('nombreTarea')" />
+                    <span class="help-block validationSpan"
+                        *ngIf="parametrosArchivosForm.controls['nombreTarea'].errors?.['required'] && (parametrosArchivosForm.controls['nombreTarea'].dirty || parametrosArchivosForm.controls['nombreTarea'].touched)">
+                        El nombre de la tarea es obligatorio.
+                    </span>
+                </div>
+
+                <div class="col-xs-12 col-md-3 col-lg-3">
+                    <label><strong>Nombre SP:</strong></label><span class="text-danger ObligatorioGrande"> *</span>
+                    <input type="text" class="form-control" formControlName="nombreSP" maxlength="100"
+                        (blur)="borrarSiEspacios('nombreSP')" />
+                    <span class="help-block validationSpan"
+                        *ngIf="parametrosArchivosForm.controls['nombreSP'].errors?.['required'] && (parametrosArchivosForm.controls['nombreSP'].dirty || parametrosArchivosForm.controls['nombreSP'].touched)">
+                        El nombre del SP es obligatorio.
+                    </span>
+                </div>
+                <div class="col-xs-12 col-md-1 col-lg-1">
+                    <label><strong>Estado:</strong></label><span class="text-danger ObligatorioGrande"> *</span>
+                    <div class="text-center" style="width: 80%; justify-content: center; text-align: center;">
+                        <input class="check-ena" type="checkbox" formControlName="estado" style="margin-top: 10px;">
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-5 col-lg-5">
+                </div>
+
+
+
+            </div>
+            <!-- Fin Agrupación de Campos Opcionales -->
+
+            <!-- Agrupación de Campos Auth -->
+            <div class="col-xs-12 col-md-12 col-lg-12 contorno-rutas div-espacio1">
+                <span class="titulo">Parámetros</span>
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <label><strong>Día inicial:</strong></label><span class="text-danger ObligatorioGrande">
+                            *</span>
+                        <input type="date" class="form-control" formControlName="diaInicial" />
+                        <span class="help-block validationSpan"
+                            *ngIf="parametrosArchivosForm.controls['diaInicial'].errors?.['required'] && (parametrosArchivosForm.controls['diaInicial'].dirty || parametrosArchivosForm.controls['diaInicial'].touched)">
+                            Día inicial es obligatorio.
+                        </span>
+                    </div>
+
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <label><strong>Día final:</strong></label><span class="text-danger ObligatorioGrande"> *</span>
+                        <input type="date" class="form-control" formControlName="diaFinal" />
+                        <span class="help-block validationSpan"
+                            *ngIf="parametrosArchivosForm.controls['diaFinal'].errors?.['required'] && (parametrosArchivosForm.controls['diaFinal'].dirty || parametrosArchivosForm.controls['diaFinal'].touched)">
+                            Día final es obligatorio.
+                        </span>
+                    </div>
+
+
+                    <div class="col-xs-12 col-md-2 col-lg-2">
+                        <label><strong>Formato fecha:</strong></label><span class="text-danger ObligatorioGrande">
+                            *</span>
+                        <input type="text" class="form-control" formControlName="formatoFecha" maxlength="15"
+                            (blur)="borrarSiEspacios('formatoFecha')" />
+                        <span class="help-block validationSpan"
+                            *ngIf="parametrosArchivosForm.controls['formatoFecha'].errors?.['required'] && (parametrosArchivosForm.controls['formatoFecha'].dirty || parametrosArchivosForm.controls['formatoFecha'].touched)">
+                            Formato de fecha obligatorio.
+                        </span>
+                    </div>
+
+                    <div class="col-xs-12 col-md-2 col-lg-2">
+                        <label><strong>Separador:</strong></label><span class="text-danger ObligatorioGrande"> *</span>
+                        <select class="form-control" formControlName="separador" name="separador" id="separador">
+                            <option value=",">,</option>
+                            <option value=";">;</option>
+                            <option value="|">|</option>
+                        </select>
+                        <span class="help-block validationSpan"
+                            *ngIf="parametrosArchivosForm.controls['separador'].errors?.['required'] && (parametrosArchivosForm.controls['separador'].dirty || parametrosArchivosForm.controls['separador'].touched)">
+                            Separador es obligatorio.
+                        </span>
+                    </div>
+
+                    <div class="col-xs-12 col-md-2 col-lg-2">
+                        <label><strong>Tipo archivo:</strong></label><span class="text-danger ObligatorioGrande">
+                            *</span>
+                        <select class="form-control" formControlName="tipoDeArchivo" name="tipoDeArchivo"
+                            id="tipoDeArchivo">
+                            <option value=".TXT">.TXT</option>
+                            <option value=".txt">.txt</option>
+                            <option value=".csv">.csv</option>
+                        </select>
+                        <span class="help-block validationSpan"
+                            *ngIf="parametrosArchivosForm.controls['tipoDeArchivo'].errors?.['required'] && (parametrosArchivosForm.controls['tipoDeArchivo'].dirty || parametrosArchivosForm.controls['tipoDeArchivo'].touched)">
+                            Tipo archivo obligatorio.
+                        </span>
+                    </div>
+
+                </div>
+                <div class="col-xs-12 col-md-12 col-lg-12">
+
+                    <div class="col-xs-12 col-md-3 col-lg-3 div-espacio1">
+                        <label><strong>Nombre salida:</strong></label><span class="text-danger ObligatorioGrande">
+                            *</span>
+                        <input type="text" class="form-control" formControlName="nombreSalida" maxlength="20"
+                            (blur)="borrarSiEspacios('nombreSalida')" />
+                        <span class="help-block validationSpan"
+                            *ngIf="parametrosArchivosForm.controls['nombreSalida'].errors?.['required'] && (parametrosArchivosForm.controls['nombreSalida'].dirty || parametrosArchivosForm.controls['nombreSalida'].touched)">
+                            Nombre salida es obligatorio.
+                        </span>
+                    </div>
+
+                    <div class="col-xs-12 col-md-5 col-lg-5 div-espacio1">
+                        <label><strong>Ruta local salida:</strong></label><span class="text-danger ObligatorioGrande">
+                            *</span>
+                        <input type="text" class="form-control" formControlName="rutaLocalSalida" maxlength="150"
+                            (blur)="borrarSiEspacios('rutaLocalSalida')" />
+                        <span class="help-block validationSpan"
+                            *ngIf="!parametrosArchivosForm.controls['rutaLocalSalida'].value.startsWith('00:00') && !parametrosArchivosForm.get('rutaLocalSalida')?.value && parametrosArchivosForm.get('rutaLocalSalida')?.touched">
+                            Ruta local de salida obligatoria.
+                        </span>
+                    </div>
+
+                    <div class="col-xs-12 col-md-4 col-lg-4 div-espacio1">
+                        <label><strong>Correo responsable:</strong></label>
+                        <input type="email" class="form-control" placeholder="usuario@dominio.com.co" formControlName="correoResponsable" maxlength="200"
+                            (blur)="borrarSiEspacios('correoResponsable')" />
+                            <span class="help-block validationSpan"
+                            *ngIf="parametrosArchivosForm.controls['correoResponsable'].errors?.['email']">
+                            El correo no es válido
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+            <!-- Fin Agrupación de Campos Auth -->
+
+
+            <!-- Agrupación de Campos Otros -->
+            <div class="col-xs-12 col-md-12 col-lg-12 contorno-rutas div-espacio1">
+                <span class="titulo">Ejecución</span>
+                <div class="col-xs-12 col-md-12 col-lg-12">
+
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <label><strong>Frecuencia:</strong></label><span class="text-danger ObligatorioGrande">
+                            *</span>
+                        <select class="form-control" name="frecuencia" id="frecuencia" formControlName="frecuencia">
+                            <option value="1">1</option>
+                            <option value="30">30</option>
+                        </select>
+                        <span class="help-block validationSpan"
+                            *ngIf="parametrosArchivosForm.controls['frecuencia'].errors?.['required'] && (parametrosArchivosForm.controls['frecuencia'].dirty || parametrosArchivosForm.controls['frecuencia'].touched)">
+                            frecuencia es obligatoria.
+                        </span>
+                    </div>
+
+                    <div class="col-xs-12 col-md-3 col-lg-3">
+                        <label><strong>Hora generación:</strong></label><span class="text-danger ObligatorioGrande">
+                            *</span>
+                        <input type="time" class="form-control" formControlName="horaGenera" />
+                        <span class="help-block validationSpan"
+                            *ngIf="parametrosArchivosForm.controls['horaGenera'].errors?.['required'] && (parametrosArchivosForm.controls['horaGenera'].dirty || parametrosArchivosForm.controls['horaGenera'].touched)">
+                            La hora de generación es obligatoria.
+                        </span>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+            <!-- Fin agrupación de Campos de ejecución -->
+
+            <div class="col-xs-12 col-md-12 col-lg-12" style="justify-items: end; padding: 1em;">
+                <div class="actions clearfix">
+                    <button class="btn Gt-btn-morado btn-icon legitRipple" (click)="limpiarFormulario()" type="button">
+                        LIMPIAR
+                    </button>&nbsp;
+
+                    <button class="btn Gt-btn-verde btn-icon legitRipple" type="submit"
+                        (click)="guardarParametroArchivos()" [disabled]="parametrosArchivosForm.invalid"
+                        *ngIf="!vbleBtnactualizar">
+                        <i class=""></i>&nbsp; GUARDAR
+                    </button>&nbsp;
+
+                    <button class="btn Gt-btn-verde btn-icon legitRipple" type="submit"
+                        (click)="actualizarParametroTransmision()" [disabled]="parametrosArchivosForm.invalid"
+                        *ngIf="vbleBtnactualizar">
+                        <i class=""></i>&nbsp; ACTUALIZAR
+                    </button>&nbsp;&nbsp;
+
+                    <button class="btn Gt-btn-verde btn-icon legitRipple" type="submit" (click)="getIdsSeleccionados()"
+                        data-toggle="modal" data-target="#ModalMasivo" *ngIf="vbleBtnactualizarMasivo">
+                        <i class=""></i>&nbsp; ACTUALIZAR MASIVO
+                    </button>&nbsp;
+
+                </div>
+            </div>
+
+        </div>
+
+
+
+    </form>
+
+
+</div>
+
+
+<!-- Tabla parámetros de configuración -->
+<div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelDatos">
+    <div class="panel-body ">
+
+        <div class="table-responsive scrollTabla">
+            <table id="TablaParametros" class="table table-sm sticky-last-column ">
+                <thead class="text-center">
+                    <tr>
+                        <th><strong>Nombre tarea</strong></th>
+                        <th><strong>Nombre SP</strong></th>
+                        <th><strong>Activo</strong></th>
+                        <th><strong>Hora genera</strong></th>
+                        <th><strong>Día inicial</strong></th>
+                        <th><strong>Día final</strong></th>
+                        <th><strong>Nombre salida</strong></th>
+                        <th><strong>Formato fecha</strong></th>
+                        <th><strong>Tipo archivo</strong></th>
+                        <th><strong>Separador</strong></th>
+                        <th><strong>Frec.</strong></th>
+                        <th><strong>Ruta local salida</strong></th>
+                        <th><strong>Última generación</strong></th>
+                        <th><strong>Matrícula</strong></th>
+                        <th><strong>Retiro</strong></th>
+                        <th><strong>Responsable</strong></th>
+                        <th class="operacionFija">
+                            <strong>Opciones</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+                                class="check-ena" type="checkbox" [(ngModel)]="allSelected"
+                                (change)="toggleAllCheckboxes()"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let parametro of parametrosArchivos"
+                        [ngClass]="{'selected-row': selectedRow === parametro}" class="table-row"
+                        (click)="selectRow(parametro)">
+                        <td>{{parametro.IdParametrosArchivos}} - {{parametro.NombreTarea}}</td>
+                        <td>{{parametro.NombreSP}}</td>
+                        <td class="text-center">
+                            <input class="check-dis" type="checkbox" [checked]="parametro.Estado === true">
+
+                        </td>
+                        <td class="text-center">{{parametro.HoraGenera}}</td>
+                        <td class="text-center">{{parametro.DiaInicial | date:'yyyy/MM/dd'}}</td>
+                        <td class="text-center">{{parametro.DiaFinal | date:'yyyy/MM/dd'}}</td>
+                        <td>{{parametro.NombreSalida}}</td>
+                        <td>{{parametro.FormatoFecha}}</td>
+                        <td class="text-center">{{parametro.TipoDeArchivo}}</td>
+                        <td class="text-center">{{parametro.Separador}}</td>
+                        <td class="text-center">{{parametro.Frecuencia}}</td>
+                        <td>{{parametro.RutaLocalSalida}}</td>
+                        <td>{{parametro.UltFechaGeneracion| date:'yyyy/MM/dd HH:mm:ss'}}</td>
+                        <td>{{parametro.FechaMatricula | date:'yyyy/MM/dd'}}</td>
+                        <td>{{parametro.FechaRetiro | date:'yyyy/MM/dd'}}</td>
+                        <td>{{parametro.CorreoResponsable}}</td>
+                        <td class="operacionFija">
+                            <button class="btn Gt-btn-verde btn-icon legitRipple" (click)="selectRow(parametro)" (click)="IrArriba()">
+                                <i class="icon-pencil"></i></button> &nbsp;
+                            <button class="btn Gt-btn-morado btn-icon legitRipple"
+                                (click)="obtenerHistorial(parametro.IdParametrosArchivos, parametro.NombreTarea)"
+                                data-toggle="modal" data-target="#ModalHistorial">
+                                <i class="glyphicon glyphicon-time"></i></button>
+                            &nbsp;
+                            <input class="check-ena" type="checkbox" [checked]="false" [(ngModel)]="parametro.selected"
+                                (change)="checkIfAllSelected()">
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<ngx-loading [show]="loading"
+    [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
+</ngx-loading>
+<!-- Fin Tabla -->
+
+
+<!-- Modal Ayuda -->
+<div id="ModalAyuda" class="modal fade">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title"><i class="icon-question6"></i> Ayuda</h6>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li>Todos los campos marcados con <span class="text-danger">*</span> son obligatorios.</li>
+                    <li>Para guardar la configuración debe presionar el botón "Guardar".</li>
+                    <li>Para actualizar la configuración se debe dar clic sobre el botón editar de la tabla.</li>
+                    <li>Desde el historial de ejecuciones, solo se habilita la opción de reintentar ejecución manual, si
+                        la tarea presentó error y si está dentro de los últimos 5 días.</li>
+                    <li>Si se crea una nueva configuración o se modifica alguna hora de ejecución, se debe confirmar la
+                        <strong>programación de tareas</strong>.
+                    </li>
+                    <li>Al momento de indicar formatos de fecha, tener en cuenta que la palabra reservada MM (en
+                        mayúscula), se refiere al mes, mientras que mm (en minúscula), se refiere a los minutos.
+                    </li>
+                    <li>Para este módulo, en <strong>nombre de salida</strong> la palabra <strong>FF</strong>, tiene el
+                        mismo efecto que escibir <strong>ddMMyyyy</strong>.
+                    </li>
+
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--  Fin Modal Ayuda -->
+
+<!-- Modal Historial -->
+<div id="ModalHistorial" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <!-- Botón para cerrar la modal -->
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+                <h6 class="modal-title">Historial de ejecuciones tarea: <strong>{{selectedTarea}}</strong></h6>
+            </div>
+            <div class="modal-body">
+
+                <div class="table-responsive scrollTabla">
+                    <table id="TablaHistorial" class="table table-sm sticky-last-column ">
+                        <thead class="text-center">
+                            <tr>
+                                <th><strong>Fecha ejecución</strong></th>
+                                <th><strong>Resultado</strong></th>
+                                <th><strong>Origen</strong></th>
+                                <th><strong>Equipo</strong></th>
+                                <th><strong>Detalle resultado</strong></th>
+                                <th class="operacionFija"><strong>Opciones</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let historialT of historialArchivos" class="table-row1"
+                                [ngClass]="{'selected-row1': selectedRow1 === historialT}" class="table-row"
+                                (click)="selectRow1(historialT)">
+
+                                <td>{{historialT.FechaEjecucion | date:'yyyy/MM/dd hh:mm:ss a'}}</td>
+                                <td class="text-center">
+                                    <div class="btn-group" *ngIf="historialT.Resultado=='Exitoso'">
+                                        <span class="label label-success">{{historialT.Resultado}}</span>
+                                    </div>
+                                    <div class="btn-group" *ngIf="historialT.Resultado=='Error'">
+                                        <span
+                                            class="label label-danger">&nbsp;{{historialT.Resultado}}&nbsp;&nbsp;</span>
+                                    </div>
+                                </td>
+
+                                <td>{{historialT.Origen}}</td>
+                                <td>{{historialT.EquipoEjecucion}}</td>
+                                <td>{{historialT.DetalleResultado}}</td>
+
+                                <td class="operacionFija">
+                                    <button *ngIf="historialT.Resultado === 'Error'"
+                                        [disabled]="!estaEnUltimos5Dias(historialT.FechaEjecucion)"
+                                        class="btn Gt-btn-verde btn-icon legitRipple"
+                                        (click)="reintentarEjecucion(historialT.JsonParametro)">
+                                        <i class="glyphicon"
+                                            [ngClass]="estaEnUltimos5Dias(historialT.FechaEjecucion) ? 'glyphicon-repeat' : 'glyphicon-repeat'"></i>
+                                    </button>
+
+                                    <button *ngIf="historialT.Resultado !== 'Error'" disabled
+                                        class="btn Gt-btn-verde btn-icon legitRipple"
+                                        (click)="reintentarEjecucion(historialT.JsonParametro)">
+                                        <i class="glyphicon glyphicon-ok"></i>
+                                    </button>
+
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fin modal Historial -->
+
+<!-- Modal Masivo -->
+<div id="ModalMasivo" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <!-- Botón para cerrar la modal -->
+                <button type="button" class="close" class="close" data-dismiss="modal" #ModalMasivoC aria-label="Close">&times;</button>
+                <h6 class="modal-title">Actualizar masivamente</h6>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-5 col-md-5 col-lg-5">
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <label><strong>Seleccione campo para actualizar:</strong></label><span class="text-danger ObligatorioGrande"> *</span>
+                            <select class="form-control"  name="campoActualiza" id="campoActualiza" (change)="changeCampoActualiza($event)">
+                                <option value="0">--Seleccione--</option>
+                                <option value="1">Hora genera</option>
+                                <option value="2">Frecuencia</option>
+                                <option value="3">Día inicial</option>
+                                <option value="4">Día final</option>
+                                <option value="5">Estado</option>
+                                <option value="6">Separador</option>
+                                <option value="7">Ruta local salida</option>
+                                <option value="8">Formato fecha</option>
+                            </select>
+                            <span class="help-block validationSpan"
+                                *ngIf="parametrosArchivosForm.controls['separador'].errors?.['required'] && (parametrosArchivosForm.controls['separador'].dirty || parametrosArchivosForm.controls['separador'].touched)">
+                                separador es obligatorio.
+                            </span>
+                        </div>
+                        
+                        <div *ngIf="this.campoSelected === '1'" class="col-xs-12 col-md-12 col-lg-12">
+                            <br>
+                            <div class="col-xs-12 col-md-12 col-lg-12">
+                                <label><strong>Hora generación:</strong></label><span class="text-danger ObligatorioGrande">
+                                    *</span>
+                                <input type="time" class="form-control" id="time1"  />
+                            </div>
+                        </div>
+
+                        <div *ngIf="this.campoSelected === '2'" class="col-xs-12 col-md-12 col-lg-12">
+                           <br>
+                            <div class="col-xs-12 col-md-12 col-lg-12">
+                                <label><strong>Frecuencia:</strong></label><span class="text-danger ObligatorioGrande">
+                                    *</span>
+                                <select class="form-control" name="frecuencia1" id="frecuencia1">
+                                    <option value="">--Seleccione--</option>
+                                    <option value="1">1</option>
+                                    <option value="30">30</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div *ngIf="this.campoSelected === '3'" class="col-xs-12 col-md-12 col-lg-12">
+                           <br>
+                            <div class="col-xs-12 col-md-12 col-lg-12">
+                                <label><strong>Día inicial:</strong></label><span class="text-danger ObligatorioGrande">
+                                    *</span>
+                                <input type="date" class="form-control" id="diaInicial1" name="diaInicial1" #diaInicial1 />
+                            </div>
+                        </div>
+
+                        <div *ngIf="this.campoSelected === '4'" class="col-xs-12 col-md-12 col-lg-12">
+                           <br>
+                            <div class="col-xs-12 col-md-12 col-lg-12">
+                                <label><strong>Día Final:</strong></label><span class="text-danger ObligatorioGrande">
+                                    *</span>
+                                <input type="date" class="form-control" name="diaFinal1" id="diaFinal1" #diaFinal1  />
+                            </div>
+                        </div>
+
+                        <div *ngIf="this.campoSelected === '5'" class="col-xs-12 col-md-12 col-lg-12">
+                            <br>
+                            <label><strong>Estado:</strong></label><span class="text-danger ObligatorioGrande"> *</span>
+                            <div class="text-center" style="width: 80%; justify-content: center; text-align: center;">
+                                <input class="check-ena" id="checkEstado1" type="checkbox"  style="margin-top: 10px;">
+                            </div>
+                         </div>
+
+                         <div *ngIf="this.campoSelected === '6'" class="col-xs-12 col-md-12 col-lg-12">
+                            <br>
+                            <label><strong>Separador:</strong></label><span class="text-danger ObligatorioGrande"> *</span>
+                            <select class="form-control" name="separador1" id="separador1">
+                                <option value="">--Seleccione--</option>
+                                <option value=",">,</option>
+                                <option value=";">;</option>
+                                <option value="|">|</option>
+                            </select>
+                         </div>
+
+                         <div *ngIf="this.campoSelected === '7'" class="col-xs-12 col-md-12 col-lg-12">
+                            <br>
+                            <div class="col-xs-12 col-md-12 col-lg-12">
+                                <label><strong>Ruta local salida:</strong></label><span class="text-danger ObligatorioGrande">
+                                    *</span>
+                                <input type="text" class="form-control" id="rutaLocalSalidaMasivo"  />
+                            </div>
+                        </div>
+
+                        <div *ngIf="this.campoSelected === '8'" class="col-xs-12 col-md-12 col-lg-12">
+                            <br>
+                            <div class="col-xs-12 col-md-12 col-lg-12">
+                                <label><strong>Formato fecha:</strong></label><span class="text-danger ObligatorioGrande">
+                                    *</span>
+                                <input type="text" class="form-control" id="formatoFechaMasivo"  />
+                            </div>
+                        </div>
+
+                        <div *ngIf="this.campoSelected !== '0'" class="col-xs-12 col-md-12 col-lg-12">
+                            <br>
+                            <button class="btn Gt-btn-verde btn-icon legitRipple" (click)="actualizarMasivo()"
+                             >
+                            <i class=""></i>&nbsp; ACTUALIZAR
+                        </button>&nbsp;
+                        </div>
+
+                    </div>
+                    <div class="col-7 col-md-7 col-lg-7">
+                        <div class="table-responsive">
+                            <table id="TablaHistorial" class="table table-sm table-bordered sticky-last-column">
+                                <thead>
+                                    <tr>
+                                        <th><strong>Tareas para actualizar</strong></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let parametroFil of parametrosArchivosF" class="table-row1"
+                                        [ngClass]="{'selected-row2': selectedRow2 === parametroFil}" class="table-row"
+                                        (click)="selectRow2(parametroFil)">
+                                        <td style="text-align: left;">{{parametroFil.IdParametrosArchivos}} - {{parametroFil.NombreTarea}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+<!-- Fin modal Historial -->
