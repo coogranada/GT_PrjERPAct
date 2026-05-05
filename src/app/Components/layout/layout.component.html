@@ -2,11 +2,14 @@
     <!-- Main navbar -->
     <div class="navbar navbar-inverse Gt-ColorMorado navbar-fixed-top">
         <div class="navbar-header">
-            <a class="navbar-brand" [routerLink]="['/']"><img src="../../../assets/images/GT/logo-coogranada-blanco.png"
-                    alt="" align="right"></a>
+            <a class="navbar-brand" [routerLink]="['/']"><img src="../../../assets/images/GT/logo-coogranada-blanco.png" alt=""
+                    aling="right"></a>
             <ul class="nav navbar-nav visible-xs-block">
-                <li><a data-toggle="collapse" data-target="#navbar-mobile"><i class="icon-collaboration"></i></a></li>
-                <li><a class="sidebar-mobile-main-toggle"><i class="icon-paragraph-justify3"></i></a></li>
+                <li>
+                    <a class="sidebar-control sidebar-main-toggle" (click)="toggleSidebar()">
+                        <i class="icon-paragraph-justify3"></i>
+                    </a>
+                </li>
             </ul>
         </div>
         <div class="navbar-collapse collapse" id="navbar-mobile">
@@ -78,7 +81,7 @@
     </div>
     <!-- /main navbar -->
     <!-- Page container -->
-    <div class="page-container" style="padding-bottom: 0px;">
+    <div class="page-container" style="padding-bottom: 0px;" [class.sidebar-collapsed]="isSidebarCollapsed">
         <!-- Page content -->
         <div class="page-content">
             <!-- Main sidebar -->
