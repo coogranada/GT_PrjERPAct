@@ -4199,7 +4199,7 @@ CalcularSimularPago(){
     const datosUsuario = JSON.parse(window.atob(data ?? ""));
 
     if (datosUsuario?.NumeroOficina != this.gestionCreditoForm.get('NumeroOficina')?.value) {
-      // return ERROR_MESSAGES.OTRA_OFICINA;
+      return ERROR_MESSAGES.OTRA_OFICINA;
     }
 
     if(this.creditoEsTasaVariable() && !this.DatosForm.get('Indicador')?.value) {
