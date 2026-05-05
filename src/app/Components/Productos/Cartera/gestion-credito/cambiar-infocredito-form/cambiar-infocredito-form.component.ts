@@ -4,19 +4,19 @@ import { FormControl, FormGroup, ɵInternalFormsSharedModule, ReactiveFormsModul
 import { CalcularDatosRequest, ICambiarInfoCreditoForm, PeriodoPago, ResultCalcularCambioDatos } from '../../../../../Models/Productos/cartera/gestion-credito.model';
 import { CarteraService } from '../../../../../Services/Productos/cartera.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { NgxCurrencyDirective } from 'ngx-currency';
 import { PeriodoPagoEnum, TipoSistemas } from '../../../../../Models/Productos/cartera/gestion-credito.enum';
 import { ToastrService } from 'ngx-toastr';
 import { ConfiguracionNotificacion } from '../../../../../../environments/config.noticaciones';
 import { CommonModule } from '@angular/common';
 import { ERROR_MESSAGES, PERIODOS_MESES, SISTEMAS } from '../../../../../utils/constants';
-import { firstValueFrom, of, switchMap, tap } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { PorcentajeDirective } from '../../../../shared/directives/porcentaje.directive';
 import { diferenciaEnMeses } from '../../../../../utils/helpers';
+import { CurrencyMaskModule } from 'ng2-currency-mask';
 
 @Component({
   selector: 'app-cambiar-infocredito-form',
-  imports: [ɵInternalFormsSharedModule, ReactiveFormsModule, NgxCurrencyDirective, CommonModule, PorcentajeDirective],
+  imports: [ɵInternalFormsSharedModule, ReactiveFormsModule, CommonModule, CurrencyMaskModule, PorcentajeDirective],
   templateUrl: './cambiar-infocredito-form.component.html',
   styleUrl: './cambiar-infocredito-form.component.css'
 })
@@ -287,26 +287,6 @@ export class CambiarInfoCreditoForm {
           },
           error: err => console.error(err)
         });
-
-        // const getPeriodos$ = this.periodosPago.length === 0
-        //   ? this.carteraService.getPeriodosPago()
-        //   : of(this.periodosPago);
-
-        // getPeriodos$.pipe(
-        //   tap(periodos => this.periodosPago = periodos),
-        //   switchMap(() =>
-        //     this.carteraService.getNuevoPlazo(this.context.detalleCredito.Encabezado.IdCuenta)
-        //   )
-        // ).subscribe({
-        //   next: result => {
-        //     this.loading = false;
-        //     const hoy = new Date();
-        //     const plazoFaltanteMeses = diferenciaEnMeses(hoy, this.context.detalleCredito.fechaVencimiento);
-        //     this.aplicarMaximoPeriodoCapital(plazoFaltanteMeses);
-        //     this.aplicarReglasSistema();
-        //   },
-        //   error: err => console.error(err)
-        // });
         break;
 
     }
@@ -341,6 +321,16 @@ export class CambiarInfoCreditoForm {
       this.notif.warning('Advertencia', 'Debe cambiar cuota.', ConfiguracionNotificacion.configRightTop);
       return false;
     }
+    return true;
+  }
+
+  private validarCambiarPlazo(): boolean {
+    const plazoOriginal = this.context.datosFormData.Plazo;
+    const plazo = this.plazoSeleccionado;
+    if (plazoOriginal == plazo) {
+      this.notif.warning('Advertencia', 'Debe cambiar plazo.', ConfiguracionNotificacion.configRightTop);
+      return false;
+    };
     return true;
   }
 
@@ -443,7 +433,7 @@ export class CambiarInfoCreditoForm {
   }
 
   async calcularDatosAlCambiarPlazo() {
-    const plazo = this.cambiarInfoCreditoForm.controls.plazo.value;
+    const plazo = this.plazoSeleccionado;
     if (plazo == null) return;
     const result = await this.getDatosCalculados({ plazo });
     if (!result) return;
@@ -464,6 +454,7 @@ export class CambiarInfoCreditoForm {
         await this.calcularDatosAlCambiarCuota();
         break;
       case Novedad.CambiarPlazo:
+        if (!this.validarCambiarPlazo()) return;
         await this.calcularDatosAlCambiarPlazo();
         break;
       case Novedad.CambiarSistema:
@@ -487,18 +478,10 @@ export class CambiarInfoCreditoForm {
         if (!this.validarCambiarCuotaAlActualizar()) return;
         break;
       case Novedad.CambiarPlazo:
-        const plazoOriginal = this.context.datosFormData.Plazo;
-        const plazo = this.usaSelectPlazo
-          ? this.cambiarInfoCreditoForm.controls.plazoSelect.value
-          : this.cambiarInfoCreditoForm.controls.plazo.value;
-        if (plazoOriginal == plazo) {
-          this.notif.warning('Advertencia', 'Debe cambiar plazo.', ConfiguracionNotificacion.configRightTop);
-          return
-        };
-
-        if (this.esCuotaVariable() && plazo) {
+        if (!this.validarCambiarPlazo()) return;
+        if (this.esCuotaVariable() && this.plazoSeleccionado) {
           const { idCuenta } = this.dtoParaCalcular;
-          this.dtoParaCalcular = { idNovedad: Novedad.CambiarPlazo, idCuenta, plazo };
+          this.dtoParaCalcular = { idNovedad: Novedad.CambiarPlazo, idCuenta, plazo: this.plazoSeleccionado };
         }
 
         break;
