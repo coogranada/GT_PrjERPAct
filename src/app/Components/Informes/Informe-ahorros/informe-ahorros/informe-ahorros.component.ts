@@ -16,14 +16,14 @@ import { TablaVirtualComponent } from '../../../Tabla-virtual/tabla-virtual/tabl
 import { InformePerfilService } from '../../../../Services/Maestros/informes-perfiles';
 import { GeneralesService } from '../../../../Services/Productos/generales.service';
 import { ExceljsService } from '../../../../Services/General/exceljs.service';
-import { MonedaDirectivaDirective } from '../../../shared/directives/moneda-directiva.directive';
+import { ShareComponentModule } from '../../../../Modules/share-component.module';
 
 
 @Component({
   selector: 'app-informe-ahorros',
   templateUrl: './informe-ahorros.component.html',
   styleUrl: './informe-ahorros.component.css',
-  providers: [OperacionesService, ModuleValidationService, InformePerfilService, GeneralesService, MonedaDirectivaDirective],
+  providers: [OperacionesService, ModuleValidationService, InformePerfilService, GeneralesService, ShareComponentModule],
   standalone: false
 })
 

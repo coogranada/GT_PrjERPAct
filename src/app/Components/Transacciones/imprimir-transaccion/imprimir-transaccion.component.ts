@@ -3,15 +3,15 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { TransaccionesCajaService } from '../../../Services/Transacciones/TransaccionesCaja.service';
 import { AlertService } from '../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../Services/shared/loading.service';
-import { SoloNumeroDirective } from '../../shared/directives/solo-numero.directive';
 import { Title } from '@angular/platform-browser';
+import { ShareComponentModule } from '../../../Modules/share-component.module';
 
 @Component({
   selector: 'app-imprimir-transaccion',
   templateUrl: './imprimir-transaccion.component.html',
   styleUrl: './imprimir-transaccion.component.css',
   standalone: false,
-  providers: [SoloNumeroDirective]
+  providers: [ShareComponentModule]
 })
 export class ImprimirTransaccionComponent implements OnDestroy {
 

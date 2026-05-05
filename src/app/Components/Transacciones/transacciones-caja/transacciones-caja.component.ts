@@ -8,10 +8,9 @@ import { LoadingService } from '../../../Services/shared/loading.service';
 import { ValidadoraService } from '../../../Services/Transacciones/Validadora/Validadora.service';
 import { DisponiblesService } from '../../../Services/Productos/disponible.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { MonedaDirectivaDirective } from '../../shared/directives/moneda-directiva.directive';
 import { LoginService } from '../../../Services/Login/login.service';
 import { lastValueFrom } from 'rxjs';
-import { SoloNumeroDirective } from '../../shared/directives/solo-numero.directive';
+import { ShareComponentModule } from '../../../Modules/share-component.module';
 
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -21,7 +20,7 @@ const ColorSecundario = 'rgb(13,165,80,0.7)';
   templateUrl: './transacciones-caja.component.html',
   styleUrls: ['./transacciones-caja.component.css'],
   standalone: false,
-  providers: [DisponiblesService, MonedaDirectivaDirective, LoginService, SoloNumeroDirective]
+  providers: [DisponiblesService, LoginService, ShareComponentModule]
 })
 export class TransaccionesCajaComponent implements OnInit {
 
