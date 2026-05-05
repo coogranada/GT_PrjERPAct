@@ -11,6 +11,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { LoginService } from '../../../Services/Login/login.service';
 import { lastValueFrom } from 'rxjs';
 import { ShareComponentModule } from '../../../Modules/share-component.module';
+import { ModuleValidationService } from '../../../Services/Enviroment/moduleValidation.service';
 
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -20,9 +21,11 @@ const ColorSecundario = 'rgb(13,165,80,0.7)';
   templateUrl: './transacciones-caja.component.html',
   styleUrls: ['./transacciones-caja.component.css'],
   standalone: false,
-  providers: [DisponiblesService, LoginService, ShareComponentModule]
+  providers: [DisponiblesService, LoginService, ShareComponentModule, ModuleValidationService]
 })
 export class TransaccionesCajaComponent implements OnInit {
+
+  public Modulo = 87;
 
   @ViewChild('ModalCondiciones', { static: true }) private ModalCondiciones!: ElementRef;
   @ViewChild('ModalOtrasTransacciones', { static: true }) private ModalOtrasTransacciones!: ElementRef;
@@ -123,11 +126,12 @@ export class TransaccionesCajaComponent implements OnInit {
 
   //#endregion
 
-  constructor(private fb: FormBuilder, private transaccionesCajaService: TransaccionesCajaService, private notif: AlertService, private router: Router, private loading: LoadingService, private validadoraService: ValidadoraService, private DisponiblesServices: DisponiblesService, private sanitizer: DomSanitizer, private loginService: LoginService) { }
+  constructor(private fb: FormBuilder, private transaccionesCajaService: TransaccionesCajaService, private notif: AlertService, private router: Router, private loading: LoadingService, private validadoraService: ValidadoraService, private DisponiblesServices: DisponiblesService, private sanitizer: DomSanitizer, private loginService: LoginService, private moduleValidationService: ModuleValidationService) { }
 
   //#region "Inicialización"
   ngOnInit() {
-
+    this.moduleValidationService.ValidatePermissionsModule(this.Modulo);
+    
     let data = localStorage.getItem('Data');
     let DataUser = JSON.parse(window.atob(data == null ? "" : data));
     if (DataUser != null) {

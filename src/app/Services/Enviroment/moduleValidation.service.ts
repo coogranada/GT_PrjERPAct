@@ -27,7 +27,7 @@ export class ModuleValidationService {
                     }
                 });
                 if (!this.moduleValid) {
-                    this.router.navigate(['#/']);
+                    this.router.navigate(['/']);
                 }
             } else {
                 this.router.navigate(['/Login']);
@@ -53,7 +53,7 @@ export class ModuleValidationService {
                 }
             });
             if (!this.moduleValidComp) {
-                this.router.navigate(['#/']);
+                this.router.navigate(['/']);
             }
         }
     }

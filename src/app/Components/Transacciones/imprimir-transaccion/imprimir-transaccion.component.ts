@@ -5,19 +5,22 @@ import { AlertService } from '../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../Services/shared/loading.service';
 import { Title } from '@angular/platform-browser';
 import { ShareComponentModule } from '../../../Modules/share-component.module';
+import { ModuleValidationService } from '../../../Services/Enviroment/moduleValidation.service';
 
 @Component({
   selector: 'app-imprimir-transaccion',
   templateUrl: './imprimir-transaccion.component.html',
   styleUrl: './imprimir-transaccion.component.css',
   standalone: false,
-  providers: [ShareComponentModule]
+  providers: [ShareComponentModule, ModuleValidationService]
 })
 export class ImprimirTransaccionComponent implements OnDestroy {
 
   @ViewChild('RadioBTransaccion', { static: true }) private RadioBTransaccion!: ElementRef;
 
   formBusqueda!: FormGroup;
+
+  public Modulo = 88;
 
   public pdfTransBase64: string = "";
   public UsuarioActual: string = "";
@@ -30,9 +33,10 @@ export class ImprimirTransaccionComponent implements OnDestroy {
 
 
 
-  constructor(private fb: FormBuilder, private transaccionesCajaService: TransaccionesCajaService, private notif: AlertService, private loading: LoadingService, private title: Title) { }
+  constructor(private fb: FormBuilder, private transaccionesCajaService: TransaccionesCajaService, private notif: AlertService, private loading: LoadingService, private title: Title,  private moduleValidationService: ModuleValidationService) { }
 
   ngOnInit() {
+    this.moduleValidationService.ValidatePermissionsModule(this.Modulo);
     this.VolverArriba();
     this.title.setTitle(this.TituloOriginal)
 
@@ -57,7 +61,7 @@ export class ImprimirTransaccionComponent implements OnDestroy {
 
 
     if (transaccion) {
-      document.title = `Transacción ${transaccion}`;
+      document.title = `TR_ ${transaccion}`;
     } else {
       document.title = 'Coogranada – Cooperativa de Ahorro y Crédito';
     }
@@ -78,8 +82,8 @@ export class ImprimirTransaccionComponent implements OnDestroy {
     this.limpiarCampos();
     this.limpiarImpresion();
     if (i == false) {
-      this.formBusqueda = this.fb.group({
-        oficinaI: [this.OficinaActualN]
+      this.formBusqueda.patchValue({
+        oficinaI: this.OficinaActualN
       });
     }
   }
