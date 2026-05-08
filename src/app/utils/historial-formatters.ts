@@ -236,36 +236,33 @@ export const formateadoresPorOperacion: Record<number, FormateadorOperacion> = {
   },
   134: (registro) => {
     if (!registro?.Detalles) return registro;
-  
+
     let detalles: any;
     try {
       detalles = JSON.parse(registro.Detalles);
     } catch {
       return registro;
     }
-  
-    const anterior = detalles.Anterior?.Garantias ?? [];
+
+    const anteriorGarantias = detalles.Anterior?.Garantias ?? [];
+    const actualGarantias = detalles.Actualiza?.Garantias ?? [];
     const agregadas = detalles.Actualiza?.Agregadas ?? [];
     const eliminadas = detalles.Actualiza?.Eliminadas ?? [];
-  
+
     const formatear = (lista: any[]) =>
       lista.length
         ? lista
-            .map(g => `Id: ${g.Id} - Tipo: ${g.Tipo} - Valor: ${g.ValorCobertura}`)
-            .join(' | ')
+            .map(g => `(Id: ${g.Id} - Tipo: ${g.Tipo} - Cobertura: ${g.ValorCobertura})`)
+            .join(' - ')
         : 'Ninguna';
-  
+
     return {
       ...registro,
       Detalles: `
-        <strong>Anterior:</strong>
-        ${formatear(anterior)}
-    
-        | <strong>Agregadas:</strong>
-        ${formatear(agregadas)}
-    
-        | <strong>Eliminadas:</strong>
-        ${formatear(eliminadas)}
+        <strong>Anterior:</strong> ${formatear(anteriorGarantias)}
+        | <strong>Actual:</strong> ${formatear(actualGarantias)}
+        | <strong>Agregadas:</strong> ${formatear(agregadas)}
+        | <strong>Eliminadas:</strong> ${formatear(eliminadas)}
       `
     };
   },

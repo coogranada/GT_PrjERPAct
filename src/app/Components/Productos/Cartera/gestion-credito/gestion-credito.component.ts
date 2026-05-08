@@ -1279,7 +1279,8 @@ export class GestionCreditoComponent {
   private construirLogCambioGarantia() {
     const formatear = (lista: GarantiaRealAsignada[]) =>
       lista.map(g => ({
-        Id: g.Consecutivo,
+        IdInterno: g.Consecutivo,
+        Id: g.Matricula,
         Tipo: g.Tipo,
         ValorCobertura: g.Cobertura
       }));
@@ -1289,6 +1290,7 @@ export class GestionCreditoComponent {
         Garantias: formatear(this.garantiasRealesAsignadasInicial)
       },
       Actualiza: {
+        Garantias: formatear(this.garantiasRealesAsignadas),
         Agregadas: formatear(this.garantiasAgregar),
         Eliminadas: formatear(this.garantiasEliminar)
       }
@@ -1343,6 +1345,8 @@ export class GestionCreditoComponent {
     
     const jsonLog = this.construirLogCambioGarantia();
 
+    console.log(jsonLog, '🤠🤠');
+    
     this.loading.show();
 
     this.carteraService.cambiarGarantias(dto)
@@ -1353,6 +1357,7 @@ export class GestionCreditoComponent {
           this.notif.warning('Advertencia', res.Mensaje);
           return;
         }
+        this.guardarLogGestionCredito(jsonLog);
         this.notif.success('Exitoso', 'El cambio de garantía se realizó correctamente');
         this.cerrarModalYRefrescarCambiarGarantia();
       },
@@ -1402,7 +1407,6 @@ export class GestionCreditoComponent {
     this.mostrarGarantiasCodeudor = false;
     this.mostrarDetalleGarantia = false;
   }
-
 
   onClickEliminarGarantia(index: number, event?: Event) {
     this.mostrarDetalleGarantia = false;
@@ -1514,7 +1518,7 @@ export class GestionCreditoComponent {
       this.openCambiarGarantiasModal.nativeElement.click();
     }
   });
-}
+  }
 
   onClickCerrarModalGarantias() {
     this.garantiasForm.reset();
@@ -1528,7 +1532,6 @@ export class GestionCreditoComponent {
     this. mostrarGarantiasCodeudor = false;
     this.mostrarDetalleGarantia = false
   }
-
 
   onClickAgregarGarantia(index: number, tipo: 'codeudor' | 'deudor', event?: Event) {
 
@@ -1821,6 +1824,7 @@ export class GestionCreditoComponent {
   //Inicio cambioFormaPago
   habilitarCambioFormaPago() {
     if (!this.cambiarFormaPago) return;
+    if(this.validarSigla('CTD', 'No se puede realizar esta operación, tarjeta débito.')) return;
 
     const control = this.gestionCreditoForm.get('IdFormaPago');
     if (!control) return;
@@ -1881,6 +1885,11 @@ export class GestionCreditoComponent {
       );
       return;
     }
+
+    if(this.validarSigla('CROT', 'No se puede realizar esta operación, crédito rotativo.')) {
+      this.gestionCreditoForm.get('IdFormaPago')?.setValue(this.formaPagoInicial);
+      return;
+    } 
   
     this.carteraService.obtenerConvenioNomina(idTercero).subscribe({
       next: (tieneConvenio) => {
@@ -2209,6 +2218,10 @@ export class GestionCreditoComponent {
 
   //Inicio InclusionExclusion
   confirmarInclusionExclusion(): void {
+
+    if (this.gestionCreditoForm.get('Sigla')?.value === 'CTD') 
+      if (!this.validarCreditoPadre()) return;
+
     const estaSinCobertura = this.gestionCreditoForm.get('estaSinCobertura')?.value;
 
     const texto = estaSinCobertura
