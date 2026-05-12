@@ -42,6 +42,7 @@ import { ShareComponentModule } from './share-component.module';
 import { RadicadoDetalleComponent } from '../Components/Informes/mi-lista-productos/Tabs/radicados/radicado-detalle/radicado-detalle.component';
 import { InformePersonasNaturalesComponent } from '../Components/Informes/informe-clientes/informe-personas-naturales/informe-personas-naturales/informe-personas-naturales.component';
 import { InformePersonasJuridicasComponent } from '../Components/Informes/informe-clientes/informe-personas-juridicas/informe-personas-juridicas/informe-personas-juridicas.component';
+import { LogRecaudoOlivosComponent } from '../Components/Informes/log-auditoria/log-recaudo-olivos/log-recaudo-olivos.component';
 
 @NgModule({
   declarations: [
@@ -80,6 +81,7 @@ import { InformePersonasJuridicasComponent } from '../Components/Informes/inform
     LogGestionClientesComponent,
     LogMisProductosComponent,
     LogProductosVirtualesComponent,
+    LogRecaudoOlivosComponent,
     RadicadoDetalleComponent
   ],
   imports: [
