@@ -596,7 +596,7 @@ export class AportesComponent implements OnInit {
     }
   }
   CambiarRelacionJuridico(payload: any) {        
-    this.JuridicosService.CambiarRelacion(this.dataObjet.LngTercero, "15", this.dataObjet.NumeroDocumento, this.dataUser.Usuario, this.dataObjet.IdObjetoSocial).subscribe(x => {
+    this.JuridicosService.CambiarRelacion(this.dataObjet.LngTercero, "15", this.dataObjet.NumeroDocumento, this.dataUser.Usuario, this.dataObjet.IdObjetoSocial, this.dataUser.IdOficina).subscribe(x => {
       console.log(x)
     });
   }

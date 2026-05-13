@@ -6125,6 +6125,7 @@ export class DisponiblesComponent implements OnInit {
           }
         );
       } else if (this.DisponibleOperacionFrom.get('Codigo')?.value === '38') {  // Cambiar medio pago
+        const operacion = this.DisponibleOperacionFrom.get('Codigo')?.value;
         const mediopago: string = `${this.DisponibleForm.get('IdMedioPago')?.value ?? ''}`;
         const numeroTarjeta: string = `${this.DisponibleForm.get('NumeroTarjeta')?.value ?? ''}`;
         const numeroPagare: string = `${this.DisponibleForm.get('NumeroPagare')?.value ?? ''}`;
@@ -6305,8 +6306,8 @@ export class DisponiblesComponent implements OnInit {
                 this.inputEstado = false;
                 this.BloquearFormaPago = false;
                 this.bloquearbtnActalizar = false;
-                this.BloquearCanales = false;
-                this.Guardarlog(MedioPagoLog);
+                this.BloquearCanales = false;                
+                this.Guardarlog(MedioPagoLog, operacion);
                 this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
                 this.BuscarPorCuenta();
                 this.itemsDataObejct = [];
