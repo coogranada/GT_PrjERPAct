@@ -70,6 +70,8 @@ export class LogAuditoriaComponent implements OnInit {
             this.Operaciones.push(element);
           else if (element.IdOperaciones == 114) // Log Autenticacion ERP
             this.Operaciones.push(element);
+          else if (element.IdOperaciones == 141) // Log Recaudo Olivos
+            this.Operaciones.push(element);
         });
       },
       (err) => {
