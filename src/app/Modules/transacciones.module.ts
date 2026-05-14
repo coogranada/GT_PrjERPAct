@@ -8,12 +8,11 @@ import { ConcatWithSpacePipe } from '../Pipes/utilidades/concatWithSpace.pipe';
 import { TipoDocumentoPipe } from '../Pipes/utilidades/tipo-documento.pipe';
 import { TransaccionesCajaComponent } from '../Components/Transacciones/transacciones-caja/transacciones-caja.component';
 import { TransaccionesRoutingModule } from '../Routes/transacciones-routing.module';
-import { MonedaDirectivaDirective } from '../Components/shared/directives/moneda-directiva.directive';
 import { ImprimirTransaccionComponent } from '../Components/Transacciones/imprimir-transaccion/imprimir-transaccion.component';
 
 @NgModule({
   declarations: [
-    TransaccionesCajaComponent, MonedaDirectivaDirective, ImprimirTransaccionComponent
+    TransaccionesCajaComponent, ImprimirTransaccionComponent
   ],
   imports: [
     CommonModule,

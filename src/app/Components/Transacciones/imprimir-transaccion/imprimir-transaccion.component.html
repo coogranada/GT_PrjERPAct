@@ -17,58 +17,91 @@
     </div>
     <div class="panel-body doNotPrint">
         <div class="col-xs-12 col-md-12 col-lg-12">
-            <div class="row">
-                <div class="col-lg-2 col-md-2 col-sm-2">
-                    <div class="form-group">
-                        <label><strong>Número Transacción:</strong></label>
-                        <input type="text" class="form-control" placeholder="">
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-3">
-                    <div class="form-group">
-                        <label><strong>Libro:</strong></label>
+            <div class="panel panel-white">
+                <div>
+                    <div>
+                        <div class="col-md-3 text-center">
+                            <div class="row">
+                                <div class="col-xs-7">
+                                    <label class="radio-custom">
+                                        <input type="radio" class="radioB" name="tipoTransaccion" value="0"
+                                            (click)="seleccionBusqueda(true)" #RadioBTransaccion>
+                                        <span>Transacción</span>
+                                    </label>
+                                </div>
 
-                        <div class="row">
-                            <div class="col-lg-4 col-md-4 col-sm-4">
-                                <input type="text" class="form-control">
-                            </div>
-
-                            <div class="col-lg-8 col-md-8 col-sm-8">
-                                <input type="text" class="form-control">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-4 col-sm-4">
-                    <div class="form-group">
-                        <label><strong>Cuenta:</strong></label>
-
-                        <div class="row">
-                            <div class="col-lg-2 col-md-2 col-sm-2">
-                                <input type="text" class="form-control">
-                            </div>
-
-                            <div class="col-lg-3 col-md-3 col-sm-3">
-                                <input type="text" class="form-control">
-                            </div>
-
-                            <div class="col-lg-5 col-md-5 col-sm-5">
-                                <input type="text" class="form-control">
-                            </div>
-
-                            <div class="col-lg-2 col-md-2 col-sm-2">
-                                <input type="text" class="form-control">
+                                <div class="col-xs-5">
+                                    <label class="radio-custom">
+                                        <input type="radio" class="radioB" name="tipoTransaccion" value="1"
+                                            (change)="seleccionBusqueda(false)">
+                                        <span>Cuenta</span>
+                                    </label>
+                                </div>
                             </div>
                         </div>
+                        <div class="col-md-9 text-center">
+                            <form autocomplete="off" id="form" [formGroup]="formBusqueda">
+                                <div class="row fila-busqueda">
+
+                                    <!-- COLUMNA CAMPOS -->
+                                    <div class="col-md-6">
+
+                                        <!-- BUSQUEDA POR TRANSACCIÓN -->
+                                        <ng-container *ngIf="vbleBusqTransa">
+                                            <input type="text" class="form-control" tooltip="Transacción"
+                                                id="SelectBuscar" placement="top" formControlName="transaccion"
+                                                maxlength="20" placeholder="Transacción" appSoloNumero
+                                                (keyup.enter)="generarImpresion1()" />
+                                        </ng-container>
+
+                                        <!-- BUSQUEDA POR CUENTA -->
+                                        <ng-container *ngIf="!vbleBusqTransa">
+                                            <div class="fila-busqueda cuentas">
+                                                <input type="text" class="form-control cuenta-corta" maxlength="3"
+                                                    formControlName="oficinaI" appSoloNumero placeholder="000" />
+
+                                                <input type="text" class="form-control cuenta-corta" maxlength="3"
+                                                    formControlName="producto" appSoloNumero placeholder="000" />
+
+                                                <input type="text" class="form-control cuenta-larga" maxlength="7"
+                                                    formControlName="consecutivo" appSoloNumero placeholder="0000000" />
+
+                                                <input type="text" class="form-control cuenta-corta" maxlength="1"
+                                                    formControlName="digito" appSoloNumero placeholder="0"
+                                                    (keyup.enter)="generarImpresion1()" />
+                                            </div>
+                                        </ng-container>
+
+                                    </div>
+
+                                    <!-- COLUMNA SELECT -->
+                                    <div class="col-md-3">
+                                        <select class="form-control campo-documento" formControlName="libro">
+                                            <option value="1">COLGAAP</option>
+                                            <option value="2">NIIF</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- COLUMNA BOTÓN -->
+                                    <div class="col-md-1 d-flex align-items-center">
+                                        <button type="button" class="btn Gt-btn-verde btn-icon btn-buscar"
+                                            (click)="generarImpresion1()">
+                                            <i class="glyphicon glyphicon-search"></i>
+                                        </button>
+                                    </div>
+                                    <!-- COLUMNA BOTÓN -->
+                                    <div class="col-md-1 d-flex align-items-center">
+                                        <button type="button" class="btn Gt-btn-verde btn-icon btn-buscar"
+                                            [disabled]="!enableDescTransa" (click)="descargarPdf()">
+                                            <i class="icon-download4"></i>
+                                            &nbsp;PDF
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
                     </div>
-                </div>
-                <div class="col-lg-2 col-md-2 col-sm-2">
-                </div>
-                <div class="col-lg-1 col-md-1 col-sm-1">
-                    <br>
-                    <button type="button" class="btn Gt-btn-verde btn-icon btn-buscar" (click)="generarImpresion1()">
-                        <i class="glyphicon glyphicon-search"></i> 
-                    </button>
                 </div>
             </div>
         </div>

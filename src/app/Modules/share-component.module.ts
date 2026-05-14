@@ -7,10 +7,12 @@ import { NguiAutoCompleteModule } from '@ngui/auto-complete';
 import { TagInputModule } from 'ngx-chips';
 import { TablaVirtualComponent } from '../Components/Tabla-virtual/tabla-virtual/tabla-virtual.component';
 import { LoadingComponent } from '../Components/shared/loading/Components/shared/loading/loading/loading.component';
+import { MonedaDirectivaDirective } from '../Components/shared/directives/moneda-directiva.directive';
+import { SoloNumeroDirective } from '../Components/shared/directives/solo-numero.directive';
 
 
 @NgModule({
-  declarations: [SolicitudesGestionesComponent, TablaVirtualComponent, LoadingComponent],
+  declarations: [SolicitudesGestionesComponent, TablaVirtualComponent, LoadingComponent, MonedaDirectivaDirective, SoloNumeroDirective],
   imports: [
     CommonModule,
     FormsModule,
@@ -23,7 +25,9 @@ import { LoadingComponent } from '../Components/shared/loading/Components/shared
   ],exports:[
     SolicitudesGestionesComponent,
     TablaVirtualComponent,
-    LoadingComponent
+    LoadingComponent,
+    MonedaDirectivaDirective,
+    SoloNumeroDirective
   ]
 })
 export class ShareComponentModule { }

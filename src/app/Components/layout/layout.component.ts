@@ -25,6 +25,7 @@ export class LayoutComponent implements OnInit,OnDestroy {
 
   //#region Declaracion variables
  public isModalOpen: boolean = false;
+ public isSidebarCollapsed: boolean = false;
 
 
   private PassJs = new PassEncriptJs();
@@ -38,6 +39,7 @@ export class LayoutComponent implements OnInit,OnDestroy {
   public rutaPaginaActual: string = "";
   public FechaActual: any;
 
+  
   /* Usuarios */
   public GestionesOperaciones = false;
   /* Fin Usuarios */
@@ -402,10 +404,6 @@ export class LayoutComponent implements OnInit,OnDestroy {
     this.isProductosMenuOpen = !this.isProductosMenuOpen;
     this.toggleCloseMenu(4);
   }
-  toggleTransaccionesMenu(){
-    this.isTransaccionesMenuOpen = !this.isTransaccionesMenuOpen;
-    this.toggleCloseMenu(4); //Duda
-  }
   toggleProductosAhorrosMenu() {
     this.isProductosAhorrosMenuOpen = !this.isProductosAhorrosMenuOpen;
     this.toggleCloseMenu(4, 1);
@@ -448,6 +446,10 @@ export class LayoutComponent implements OnInit,OnDestroy {
   toggleAuditoriaMenu(){
     this.isAuditoriaOpen = !this.isAuditoriaOpen;
     this.toggleCloseMenu(7);
+  }
+  toggleTransaccionesMenu(){
+    this.isTransaccionesMenuOpen = !this.isTransaccionesMenuOpen;
+    this.toggleCloseMenu(8);
   }
   toggleCloseMenu(id : number, opcion : number = 0) {
     if(id != 1)this.isUsuarioMenuOpen = false;
@@ -499,6 +501,9 @@ export class LayoutComponent implements OnInit,OnDestroy {
       this.isUtilidadesOpen = false;
     if(id != 7)
       this.isAuditoriaOpen = false;
+    if (id !== 8) {
+      this.isTransaccionesMenuOpen = false;
+    }
   }
   public timeout() {
     let datauser: string | null = localStorage.getItem('Data');
@@ -1195,5 +1200,10 @@ export class LayoutComponent implements OnInit,OnDestroy {
     this.closeModal();
   }
   
+  
+toggleSidebar() {
+  this.isSidebarCollapsed = !this.isSidebarCollapsed;
+}
+
 }
 

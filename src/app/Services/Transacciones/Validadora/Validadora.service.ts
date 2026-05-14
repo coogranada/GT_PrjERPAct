@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class ValidadoraService {
 
-  private apiUrl = 'http://localhost:5000/print';
+  private apiUrl = 'http://localhost:5001/print';
 
   constructor(private http: HttpClient) { }
 

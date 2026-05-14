@@ -25,7 +25,7 @@ export class MonedaDirectivaDirective implements AfterViewInit {
   }
 
   private formatear(valor: number) {
-    return new Intl.NumberFormat('es-CO', {
+    return new Intl.NumberFormat('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     }).format(valor);

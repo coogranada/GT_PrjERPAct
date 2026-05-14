@@ -73,13 +73,9 @@ export class TransaccionesCajaService {
         return this._http.post<any>(this.url, Solicitud);
     }
 
-    GenerarPDFTransaccion(Transaccion: number, Usuario: string, Oficina: string): Observable<any> {
-        this.url = this.environment.Url + '/GenerarPDFTransaccion?transaccion=' + Transaccion + '&usuario=' + Usuario + "&oficina=" + Oficina;
-        const headers = new HttpHeaders({
-            'Content-Type': 'application/json'
-        });
-
-        return this._http.post(this.url, null, { headers });
+    GenerarPDFTransaccion(data: any): Observable<any> {
+        this.url = `${this.environment.Url}/GenerarPDFTransaccion`;
+        return this._http.post<any>(this.url, data);
     }
 
     ObtenerTransaccionxPerfil(IdPerfil: any): Observable<any> {

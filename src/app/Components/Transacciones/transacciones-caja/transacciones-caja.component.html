@@ -58,15 +58,15 @@
                                             <div *ngIf="!vbleDocCuenta" class="fila-busqueda">
 
                                                 <input type="text" class="form-control cuenta-corta" maxlength="3"
-                                                    formControlName="cuenta1" placeholder="000" inputmode="numeric" />
+                                                    formControlName="cuenta1" placeholder="000" appSoloNumero />
                                                 <input type="text" class="form-control cuenta-corta" maxlength="3"
-                                                    formControlName="cuenta2" placeholder="000" inputmode="numeric"
+                                                    formControlName="cuenta2" placeholder="000" appSoloNumero
                                                     #cuenta2 />
                                                 <input type="text" class="form-control cuenta-larga" maxlength="7"
-                                                    formControlName="cuenta3" placeholder="0000000" inputmode="numeric"
+                                                    formControlName="cuenta3" placeholder="0000000" appSoloNumero
                                                     #cuenta3 />
                                                 <input type="text" class="form-control cuenta-corta" maxlength="1"
-                                                    formControlName="cuenta4" placeholder="0" inputmode="numeric"
+                                                    formControlName="cuenta4" placeholder="0" appSoloNumero
                                                     #cuenta4 />
 
                                                 <button type="button" class="btn Gt-btn-verde btn-icon btn-buscar"
@@ -321,7 +321,7 @@
                                                                 <input type="text" class="form-control" placeholder=""
                                                                     [(ngModel)]="OtraTransaccionCodigo"
                                                                     (blur)="buscarCodigoOtraTransaccion()"
-                                                                    (input)="limpiarcamposOtraTransa('codigo')">
+                                                                    (input)="limpiarcamposOtraTransa('codigo')" appSoloNumero>
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-6 col-md-6 col-sm-6">

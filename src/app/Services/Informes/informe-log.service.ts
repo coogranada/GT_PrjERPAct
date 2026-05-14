@@ -112,6 +112,12 @@ export class InformeLogService {
     Filtros = this.GetOrderAlf(Filtros);
     return Filtros;
   }
+  GetFiltrosRecaudoOlivos(): Filtro[] {
+    let Filtros: Filtro[] = [];
+    this.CrateFiltrosRecaudoOlivos(Filtros);
+    Filtros = this.GetOrderAlf(Filtros);
+    return Filtros;
+  }
   CrateFiltrosBanners(Filtros: Filtro[]) {
     this.AddFiltro(Filtros, 22, "Usuario");
   }
@@ -143,6 +149,11 @@ export class InformeLogService {
   CrateFiltrosAutenticacionErp(Filtros: Filtro[]) {
     this.AddFiltro(Filtros, 3, "Oficina");
     this.AddFiltro(Filtros, 4, "Usuario");
+  }
+  CrateFiltrosRecaudoOlivos(Filtros: Filtro[]) {
+    this.AddFiltro(Filtros, 1, "Fecha");
+    this.AddFiltro(Filtros, 4, "Usuario");
+    this.AddFiltro(Filtros, 3, "Oficina");
   }
   GetCampos() {
     let Campos: Campo[] = [];
