@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { EnvironmentService } from '../Enviroment/enviroment.service';
 import { Observable, retry } from 'rxjs';
 import { TipoBusquedaResumen } from '../../Models/Productos/cartera/gestion-credito.enum';
-import { ActualizarPagareCupoDto, ActualizarPagareDto, CalcularDatosRequest, CambiarCalificacionDto, CambiarFormaPagoDto, CambiarGarantiaDto, CambiarGarantiasRequestDto, CambiarLineaCreditoDto, CuentaCarteraDetalle, CuentaCarteraResumen, CuentaFormateada, CupoInfo, DebitoAutomaticoCreditoDto, DetalleGarantiaCreditoDto, Diferido, GarantiaDisponible, GarantiaRealAsignada, GarantiasResponse, HistorialOperacion, LineaCambioListDto, ManejarSeguroCreditoDto, ObservacionRadicado, ObtenerCodeudorBasicoModel, PersonaNaturalBusquedaDto, Provision, ResultadoOperacionDto, ResultCalcularCambioDatos, UltimaCalificacionDto } from '../../Models/Productos/cartera/gestion-credito.model';
+import { ActualizarPagareCupoDto, ActualizarPagareDto, BaseRequestAlCalcular, CalcularDatosRequest, CambiarCalificacionDto, CambiarFormaPagoDto, CambiarGarantiaDto, CambiarGarantiasRequestDto, CambiarLineaCreditoDto, CuentaCarteraDetalle, CuentaCarteraResumen, CuentaFormateada, CupoInfo, DebitoAutomaticoCreditoDto, DetalleGarantiaCreditoDto, Diferido, GarantiaDisponible, GarantiaRealAsignada, GarantiasResponse, HistorialOperacion, LineaCambioListDto, ManejarSeguroCreditoDto, ObservacionRadicado, ObtenerCodeudorBasicoModel, PeriodoPago, PersonaNaturalBusquedaDto, Provision, ReesRelResponse, ResultadoOperacionDto, ResultCalcularCambioDatos, UltimaCalificacionDto } from '../../Models/Productos/cartera/gestion-credito.model';
 import { buildParams } from '../../utils/helpers';
 
 @Injectable({
@@ -46,9 +46,9 @@ export class CarteraService {
         this.url = `${this.environment.Url}/ObteneCobrosCartera?lngCuenta=${IdCuenta}`;
         return this._http.get<any>(this.url);
     }
-    getReestructuracionReliquidacion(IdCuenta: number): Observable<any> {
+    getReestructuracionReliquidacion(IdCuenta: number) {
         this.url = `${this.environment.Url}/BuscarReestructuracionReliquidacion?IdCuenta=${IdCuenta}`;
-        return this._http.get<any>(this.url);
+        return this._http.get<ReesRelResponse>(this.url);
     }
 
     // CALCULAR CUOTA
@@ -152,9 +152,9 @@ export class CarteraService {
         return this._http.get<number[]>(this.url);
     }
 
-    getPeriodosPago(): Observable<any> {
+    getPeriodosPago() {
         this.url = `${this.environment.Url}/ObtenerFrecuenciaPagoTermino?intPlazo=720`;
-        return this._http.get<any>(this.url);
+        return this._http.get<PeriodoPago[]>(this.url);
     }
 
     calcularCambioDatos(dto: CalcularDatosRequest) {
@@ -167,8 +167,23 @@ export class CarteraService {
         return this._http.get<ResultCalcularCambioDatos>(this.url, { params });
     }
 
+    calcularCambioReestructuracion(dto: CalcularDatosRequest) {
+        const params = buildParams({
+            ...dto,
+            rawError: true
+        });
+
+        this.url = `${this.environment.Url}/CalcularCambioReestructuracion`;
+        return this._http.get<ResultCalcularCambioDatos>(this.url, { params });
+    }
+
     actualizarCredito(dto: CalcularDatosRequest): Observable<void> {
         this.url = `${this.environment.Url}/ActualizarCredito`;
+        return this._http.post<void>(this.url, dto);
+    } 
+
+    actualizarCreditoReest(dto: CalcularDatosRequest & { acta: number }): Observable<void> {
+        this.url = `${this.environment.Url}/ActualizarCreditoReestructuracion`;
         return this._http.post<void>(this.url, dto);
     } 
 

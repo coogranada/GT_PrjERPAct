@@ -73,7 +73,11 @@
                             {{ p }}
                         </option>
                     </select>
-                    <span *ngIf="cambiarInfoCreditoForm.controls.plazo.invalid" class="help-block">Plazo no es válido.</span>
+                    <span *ngIf="context.operacion === '135' && cambiarInfoCreditoForm.controls.plazo.invalid" class="help-block">Plazo no es válido.</span>
+                    <span *ngIf="context.operacion === '140' &&  cambiarInfoCreditoForm.controls.plazo.hasError('min')" class="help-block">
+                        Plazo debe ser mayor.
+                    </span>
+
                 </div>
             </div>
 
@@ -86,14 +90,14 @@
         </div>
 
         <div class="row">
-            <div class="col-sm-3">
+            <div class="col-sm-3" [hidden]="!esTasaVariable()">
                 <div class="form-group">
                     <label class="bold">Indicador:</label>
                     <input type="text" class="form-control" formControlName="siglaIndicador">
                 </div>
             </div>
 
-            <div class="col-sm-3">
+            <div class="col-sm-3" [hidden]="!esTasaVariable()">
                 <div class="form-group">
                     <label class="bold">Puntos:</label>
                     <input #inputPuntos type="text" class="form-control input__border" formControlName="puntos" currencyMask [options]="percentOptions">
@@ -104,12 +108,23 @@
             <div class="col-sm-3">
                 <div class="form-group">
                     <label class="bold">Periodo de gracia:</label>
-                    <input type="text" class="form-control" formControlName="periodoGracia">
+                    <input type="text" class="form-control input__border" formControlName="periodoGracia" maxlength="3">
+                    <span *ngIf="cambiarInfoCreditoForm.controls.periodoGracia.invalid" class="help-block">Periodo gracia no es válido.</span>
+                </div>
+            </div>
+            
+            <div class="col-sm-3" [hidden]="context.operacion !== '140'">
+                <div class="form-group">
+                    <label class="bold">Acta:</label>
+                    <input type="text" appSoloNumero class="form-control input__border" formControlName="acta" maxlength="20">
                 </div>
             </div>
 
-            <div class="col-sm-3">
-                <!-- vacío para mantener alineac -->
+            <div class="col-sm-3" [hidden]="context.operacion !== '140'">
+                <div class="form-group">
+                    <label class="bold">Número reestructuraciones:</label>
+                    <input type="text" class="form-control" formControlName="reestrucutradoIndicador">
+                </div>
             </div>
         </div>
 

@@ -3,7 +3,7 @@ import { ControlContainer, FormControl, FormGroup, Validators } from '@angular/f
 import { OperacionesService } from '../../../../Services/Maestros/operaciones.service';
 import { FormaPagoEnum, Tabs, TipoBusquedaResumen, TipoSistemas } from '../../../../Models/Productos/cartera/gestion-credito.enum';
 import { CarteraService } from '../../../../Services/Productos/cartera.service';
-import { ActualizarPagareDto, CalcularCuota, CambiarCalificacionDto, CambiarFormaPagoDto, CambiarLineaCreditoDto, CodeudorDraft, CuentaCarteraDetalle, CuentaCarteraResumen, CuentaFormateada, DebitoAutomaticoCreditoDto, Diferido, FechasCredito, GarantiaDisponible, GarantiaPersonalCod, GarantiaReal, HistorialOperacion, LineaCambioListDto, LogCambiarCodeudores, ManejarSeguroCreditoDto, ObservacionRadicado, Provision, Referencia, ResultadoOperacionDto, CambiarInfoCreditoLog, CambiarGarantiaDto, CambiarGarantiasRequestDto, DetalleGarantiaCreditoDto, GarantiaRealAsignada, ObtenerCodeudorBasicoModel } from '../../../../Models/Productos/cartera/gestion-credito.model';
+import { ActualizarPagareDto, CalcularCuota, CambiarCalificacionDto, CambiarFormaPagoDto, CambiarLineaCreditoDto, CodeudorDraft, CuentaCarteraDetalle, CuentaCarteraResumen, CuentaFormateada, DebitoAutomaticoCreditoDto, Diferido, FechasCredito, GarantiaDisponible, GarantiaPersonalCod, GarantiaReal, HistorialOperacion, LineaCambioListDto, LogCambiarCodeudores, ManejarSeguroCreditoDto, ObservacionRadicado, Provision, Referencia, ResultadoOperacionDto, CambiarInfoCreditoLog, CambiarGarantiaDto, CambiarGarantiasRequestDto, DetalleGarantiaCreditoDto, GarantiaRealAsignada, ObtenerCodeudorBasicoModel, PeriodoPago } from '../../../../Models/Productos/cartera/gestion-credito.model';
 import { catchError, concatMap, finalize, firstValueFrom, forkJoin, Observable, of, switchMap, tap } from 'rxjs';
 import { MiListaProductosService } from '../../../../Services/Informes/mi-lista-productos.service';
 import { ToastrService } from 'ngx-toastr';
@@ -75,6 +75,7 @@ export class GestionCreditoComponent {
   public BloquearTimbrarMensaje = false;
   public EnableExoneradaGMF: boolean = false;
   public EnableExentaGMF: boolean = false;
+  periodosPago: PeriodoPago[] = [];
 
   //pagare
   public cambiarPagare: boolean = false;
@@ -850,8 +851,11 @@ export class GestionCreditoComponent {
           this.gestionCreditoOperacionForm.get('Codigo')?.reset();
           return;
         }
+        if(this.periodosPago.length === 0) this.periodosPago = await this.getPeriodosPago() ?? [];
         this.cambiarInfoCreditoContext = this.buildCambiarInfoCreditoContext();
         this.estaAbiertoModalCambios = true;
+      } else if (operacionCodigo === '140') { //Reesructurar
+        await this.habilitarReestructurar();
       } else if (operacionCodigo === '21') {
         this.habilitarCambioFormaPago();
       } else if (operacionCodigo === '133') {
@@ -1820,6 +1824,31 @@ export class GestionCreditoComponent {
     }, 200);
   }
   //Fin calificacion
+
+  private async habilitarReestructurar() {
+    await this.BuscarSaldosCartera();
+    const error = this.validarEdicionCredito(this.gestionCreditoOperacionForm.get('Codigo')?.value);
+    if (error) {
+      this.notif.warning('Advertencia', error, ConfiguracionNotificacion.configRightTop);
+      this.gestionCreditoOperacionForm.get('Codigo')?.reset();
+      return;
+    }
+
+    if(this.periodosPago.length === 0) this.periodosPago = await this.getPeriodosPago() ?? [];
+    this.cambiarInfoCreditoContext = this.buildCambiarInfoCreditoContext();
+    this.estaAbiertoModalCambios = true;
+  }
+
+  private async getPeriodosPago(): Promise<PeriodoPago[] | null> {
+    try {
+      return await firstValueFrom(
+        this.carteraService.getPeriodosPago()
+      );
+    } catch (error) {
+      console.error('Error al obtener periodos pago:', error);
+      return null;
+    }
+  }
 
   //Inicio cambioFormaPago
   habilitarCambioFormaPago() {
@@ -3897,12 +3926,6 @@ CalcularSimularPago(){
 
     this.loading.show();
     forkJoin({
-      radicados: this.miListaProductosService.GetRadicados(idTercero).pipe(
-        catchError(error => {
-          console.error('Error al obtener radicados:', error);
-          return of(null);
-        })
-      ),
       detalleRadicado: this.miListaProductosService.GetDetalleRadicados(radicado, this.gestionCreditoForm.get('TipoCliente')?.value).pipe(
         catchError(error => {
           console.error('Error al obtener detalle del radicado:', error);
@@ -3915,7 +3938,7 @@ CalcularSimularPago(){
           return of(null);
         })
       )
-    }).subscribe(({ radicados, detalleRadicado, encabezadoMiLista }) => {
+    }).subscribe(({ detalleRadicado, encabezadoMiLista }) => {
       this.loading.hide();
       if (detalleRadicado && this.encabezadoRadicado) {
         this.encabezadoRadicado.apertura = this.encabezadoRadicado.Apertura;
@@ -4244,14 +4267,16 @@ CalcularSimularPago(){
       return ERROR_MESSAGES.TASA_USURA;
     }
 
-    if (operacionId !== Operacion.CambiarSistema) {
+    if (operacionId !== Operacion.CambiarSistema && operacionId !== Operacion.ReestructurarCambioPlazo) {
       const idPeriodoInteres = this.DatosForm.get('IdPeriodoInteres')?.value;
       const idPeriodoCapital = this.DatosForm.get('IdPeriodoCapital')?.value;
       const periodosValidosParaCambio = this.validarPeriodos(fechaVencimiento, idPeriodoInteres, idPeriodoCapital);
       if (!periodosValidosParaCambio) {
         return ERROR_MESSAGES.PERIODOS_NO_CUMPLEN;
       }
-    } else {
+    }
+
+    if (operacionId === Operacion.CambiarSistema) {
       const hoy = new Date();
       const dias = diferenciaEnDias(hoy, fechaVencimiento);
       if (dias < 30) return ERROR_MESSAGES.PERIODOS_NO_CUMPLEN;
@@ -4351,9 +4376,15 @@ CalcularSimularPago(){
 
   private buildCambiarInfoCreditoContext(): CambiarInfoCreditoContext {
     return {
-      detalleCredito: {...this.detalleCuenta, monto: this.carteraInfo.Monto, cuota: this.carteraInfo.Cuota, fechaVencimiento: new Date(this.gestionCreditoForm.get('fechaVencimiento')?.value?.trim()) },
+      detalleCredito: {
+        ...this.detalleCuenta,
+        monto: this.carteraInfo.Monto,
+        cuota: this.carteraInfo.Cuota,
+        fechaVencimiento: new Date(this.gestionCreditoForm.get('fechaVencimiento')?.value?.trim()),
+      },
       datosFormData: this.DatosForm.getRawValue(),
-      operacion: this.gestionCreditoOperacionForm.get('Codigo')?.value
+      operacion: this.gestionCreditoOperacionForm.get('Codigo')?.value,
+      periodosPago: this.periodosPago
     };
   }
   // Fin Cambiar tasa

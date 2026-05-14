@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, Injectable, Input, Output, ViewChild } from '@angular/core';
 import { CambiarInfoCreditoContext, Novedad, Operacion } from '../../../../../Models/Productos/cartera/cambiar-tasa-context';
 import { FormControl, FormGroup, ɵInternalFormsSharedModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CalcularDatosRequest, ICambiarInfoCreditoForm, PeriodoPago, ResultCalcularCambioDatos } from '../../../../../Models/Productos/cartera/gestion-credito.model';
+import { CalcularDatosAlCambiarTasa, CalcularDatosReeliquidacion, CalcularDatosRequest, ConPlazo, ConTasa, ICambiarInfoCreditoForm, PeriodoPago, ResultCalcularCambioDatos } from '../../../../../Models/Productos/cartera/gestion-credito.model';
 import { CarteraService } from '../../../../../Services/Productos/cartera.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PeriodoPagoEnum, TipoSistemas } from '../../../../../Models/Productos/cartera/gestion-credito.enum';
@@ -9,14 +9,15 @@ import { ToastrService } from 'ngx-toastr';
 import { ConfiguracionNotificacion } from '../../../../../../environments/config.noticaciones';
 import { CommonModule } from '@angular/common';
 import { ERROR_MESSAGES, PERIODOS_MESES, SISTEMAS } from '../../../../../utils/constants';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, switchMap, tap } from 'rxjs';
 import { PorcentajeDirective } from '../../../../shared/directives/porcentaje.directive';
 import { diferenciaEnMeses } from '../../../../../utils/helpers';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
+import { ShareComponentModule } from '../../../../../Modules/share-component.module';
 
 @Component({
   selector: 'app-cambiar-infocredito-form',
-  imports: [ɵInternalFormsSharedModule, ReactiveFormsModule, CommonModule, CurrencyMaskModule, PorcentajeDirective],
+  imports: [ɵInternalFormsSharedModule, ReactiveFormsModule, CommonModule, CurrencyMaskModule, PorcentajeDirective, ShareComponentModule],
   templateUrl: './cambiar-infocredito-form.component.html',
   styleUrl: './cambiar-infocredito-form.component.css'
 })
@@ -56,7 +57,7 @@ export class CambiarInfoCreditoForm {
 
   dtoParaCalcular: CalcularDatosRequest | null = null;
   datosCalculados: ResultCalcularCambioDatos | null = null;
-  idNovedad: number | undefined = undefined;
+  idNovedad: Novedad | undefined = undefined;
   plazos: number[] = [];
   sistemas = SISTEMAS;
   periodosPago: PeriodoPago[] = [];
@@ -70,7 +71,7 @@ export class CambiarInfoCreditoForm {
   }
 
   get btnCalcularVisible(): boolean {
-    return [Operacion.CambiarTasa, Operacion.CambiarPlazo, Operacion.CambiarSistema].includes(this.context.operacion);
+    return [Operacion.CambiarTasa, Operacion.CambiarPlazo, Operacion.CambiarSistema, Operacion.ReestructurarCambioPlazo].includes(this.context.operacion);
   }
 
   get btnActualizarBloqueado(): boolean {
@@ -80,11 +81,16 @@ export class CambiarInfoCreditoForm {
   }
 
   get esCambiarSistema(): boolean {
-    return this.context.operacion === Operacion.CambiarSistema;
+    return this.context.operacion === Operacion.CambiarSistema
+      || (
+        this.context.operacion === Operacion.ReestructurarCambioPlazo
+        && !this.esTasaVariable()
+      );
   }
 
+
   get usaSelectPlazo(): boolean {
-    return this.context.operacion === Operacion.CambiarPlazo &&
+    return (this.context.operacion === Operacion.CambiarPlazo || this.context.operacion === Operacion.ReestructurarCambioPlazo) &&
       this.context.datosFormData.IdPeriodoCapital !== PeriodoPagoEnum.AlVencimiento &&
       this.esCuotaVariable();
   }
@@ -114,6 +120,7 @@ export class CambiarInfoCreditoForm {
   ) { }
 
   ngOnInit() {
+    this.periodosPago = this.context.periodosPago;
     const maxTasaNominal = this.context.detalleCredito.Encabezado.TasaLinea;
     let tasaNominal = this.context.datosFormData.TasaPactada;
     let tasaEfectiva = this.context.datosFormData.EfectivaPactada;
@@ -138,10 +145,17 @@ export class CambiarInfoCreditoForm {
       indicador: new FormControl({ value: this.context.datosFormData.Indicador, disabled: true }),
       siglaIndicador: new FormControl({ value: this.context.datosFormData.SiglaIndicador, disabled: true }),
       puntos: new FormControl({ value: this.context.datosFormData.Puntos, disabled: true }, [Validators.min(0), Validators.max(99)]),
-      periodoGracia: new FormControl({ value: this.context.datosFormData.PeriodoGracia, disabled: true })
+      periodoGracia: new FormControl({ value: this.context.datosFormData.PeriodoGracia, disabled: true }, [Validators.min(0), Validators.max(99)]),
+      reestrucutradoIndicador: new FormControl({ value: 0, disabled: true }),
+      acta: new FormControl<number | null>(null)
     });
 
     this.habilitarCampos(this.context.operacion);
+
+    this.cambiarInfoCreditoForm.controls.acta?.valueChanges.subscribe(() => {
+      // Evitar que marque dirty el form para que el boton calcular no se habilite
+      this.cambiarInfoCreditoForm.controls.acta?.markAsPristine();
+    });
 
     const plazoInputControl = this.cambiarInfoCreditoForm.controls.plazo;
     plazoInputControl.valueChanges.subscribe(valor => {
@@ -152,10 +166,19 @@ export class CambiarInfoCreditoForm {
       }
     });
 
-
     const sistemaControl = this.cambiarInfoCreditoForm.controls.sistemaSelect;
     sistemaControl.valueChanges.subscribe(idSistema => {
       this.aplicarReglasSistema(idSistema);
+      if (this.context.operacion === Operacion.ReestructurarCambioPlazo) {
+        const perGraciaControl = this.cambiarInfoCreditoForm.controls.periodoGracia;
+        perGraciaControl.setValue(this.context.datosFormData.PeriodoGracia, { emitEvent: false }); //Valor original
+        // if(this.plazoCalculado) plazoInputControl.setValue(this.plazoCalculado); 
+        perGraciaControl.enable();
+        if (idSistema && this.esCuotaVariable(idSistema)) {
+          perGraciaControl.setValue(0, { emitEvent: false });
+          perGraciaControl.disable();
+        }
+      }
     });
 
     const periodoCapitalControl = this.cambiarInfoCreditoForm.controls.periodoCapitalSelect;
@@ -163,6 +186,15 @@ export class CambiarInfoCreditoForm {
       const periodoInteres = this.cambiarInfoCreditoForm.controls.periodoInteresSelect;
       if (!this.periodosPagoInteres.some(p => p.IdFrecuenciaPago === periodoInteres.value)) {
         periodoInteres.reset(null);
+      }
+    });
+
+    const perGraciaControl = this.cambiarInfoCreditoForm.controls.periodoGracia;
+    perGraciaControl.valueChanges.subscribe(valor => {
+      if (valor == null) return;
+      const soloNumeros = +valor.toString().replace(/[^0-9]/g, '');
+      if (valor !== soloNumeros) {
+        perGraciaControl.setValue(soloNumeros, { emitEvent: false });
       }
     });
 
@@ -177,15 +209,14 @@ export class CambiarInfoCreditoForm {
     return idTipoSistema === TipoSistemas.CuotaFijaTasaVariable || idTipoSistema === TipoSistemas.CuotaVariableTasaVariable;
   }
 
-  esCuotaVariable() {
-    const idTipoSistema = this.context.datosFormData.IdSistema;
-    return idTipoSistema === TipoSistemas.CuotaVariable || idTipoSistema === TipoSistemas.CuotaVariableTasaVariable;
+  esCuotaVariable(idSistema = this.context.datosFormData.IdSistema) {
+    return idSistema === TipoSistemas.CuotaVariable || idSistema === TipoSistemas.CuotaVariableTasaVariable;
   }
 
   private aplicarReglasSistema(idSistema: number | null = this.context.datosFormData.IdSistema): void {
     const { periodoCapitalSelect, periodoInteresSelect } = this.cambiarInfoCreditoForm.controls;
 
-    if (idSistema === TipoSistemas.CuotaFija) {
+    if (idSistema === TipoSistemas.CuotaFija) { //No es necesario validar el Cuota Fija Tasa Variable porque esos no se permiten cambiar sistema.
       periodoCapitalSelect.setValue(PeriodoPagoEnum.Mes, { emitEvent: false });
       periodoCapitalSelect.disable({ emitEvent: false });
 
@@ -199,8 +230,10 @@ export class CambiarInfoCreditoForm {
       periodoInteresSelect.reset(null);
       periodoInteresSelect.enable({ emitEvent: false });
 
-      if (this.context.datosFormData.IdSistema === TipoSistemas.CuotaFija) {
-        this.sistemas = this.sistemas.filter(sis => sis.id === TipoSistemas.CuotaVariable);
+      if (this.context.operacion == Operacion.ReestructurarCambioPlazo) {
+        periodoCapitalSelect.setValue(this.context.datosFormData.IdPeriodoCapital, { emitEvent: false });
+        periodoInteresSelect.setValue(this.context.datosFormData.IdPeriodoInteres, { emitEvent: false });
+
       }
     }
   }
@@ -216,24 +249,27 @@ export class CambiarInfoCreditoForm {
     });
   }
 
+  private habilitarEdicionTasa() {
+    if (this.context.datosFormData.Indicador?.trim()) {
+      this.cambiarInfoCreditoForm.controls.puntos.enable();
+      setTimeout(() => {
+        this.inputPuntos.nativeElement.focus();
+        this.inputPuntos.nativeElement.setSelectionRange(0, 0);
+      });
+    } else {
+      this.cambiarInfoCreditoForm.controls.tasaNominal.enable();
+      setTimeout(() => {
+        this.inputTasaNominal.nativeElement.focus();
+        this.inputTasaNominal.nativeElement.setSelectionRange(0, 0);
+      });
+    }
+  }
+
   habilitarCampos(operacion: Operacion) {
     switch (operacion) {
       case Operacion.CambiarTasa:
         this.idNovedad = Novedad.CambiarTasa;
-        if (this.context.datosFormData.Indicador?.trim()) {
-          this.cambiarInfoCreditoForm.controls.puntos.enable();
-          setTimeout(() => {
-            this.inputPuntos.nativeElement.focus();
-            this.inputPuntos.nativeElement.setSelectionRange(0, 0);
-          });
-        } else {
-          this.cambiarInfoCreditoForm.controls.tasaNominal.enable();
-          setTimeout(() => {
-            this.inputTasaNominal.nativeElement.focus();
-            this.inputTasaNominal.nativeElement.setSelectionRange(0, 0);
-          });
-        }
-
+        this.habilitarEdicionTasa();
         break;
       case Operacion.CambiarCuota:
         this.idNovedad = Novedad.CambiarCuota;
@@ -276,17 +312,60 @@ export class CambiarInfoCreditoForm {
         this.idNovedad = Novedad.CambiarSistema;
         this.loading = true;
 
-        this.carteraService.getPeriodosPago().subscribe({
-          next: periodos => {
+        this.loading = false;
+        const hoy = new Date();
+        const plazoFaltanteMeses = diferenciaEnMeses(hoy, this.context.detalleCredito.fechaVencimiento);
+        this.aplicarMaximoPeriodoCapital(plazoFaltanteMeses);
+        this.aplicarReglasSistema();
+        break;
+
+      case Operacion.ReestructurarCambioPlazo:
+        this.idNovedad = Novedad.CambiarPlazo;
+        const idCuenta = this.context.detalleCredito.Encabezado.IdCuenta;
+        this.periodosPagoCapital = this.periodosPago;
+
+        this.loading = true;
+        this.carteraService.getReestructuracionReliquidacion(idCuenta).pipe(
+          tap(result => {
+            if (result?.Reestructuracion && result.Reestructuracion.length) {
+              result.Reestructuracion.sort((a, b) => b.Contador - a.Contador);
+              const contadorReestructuracion = result.Reestructuracion[0].Contador;
+              this.cambiarInfoCreditoForm.controls.reestrucutradoIndicador.setValue(contadorReestructuracion);
+            }
+          }),
+          switchMap(() =>
+            this.carteraService.getNuevoPlazo(idCuenta)
+          )
+        ).subscribe({
+          next: plazos => {
             this.loading = false;
-            this.periodosPago = periodos;
-            const hoy = new Date();
-            const plazoFaltanteMeses = diferenciaEnMeses(hoy, this.context.detalleCredito.fechaVencimiento);
-            this.aplicarMaximoPeriodoCapital(plazoFaltanteMeses);
             this.aplicarReglasSistema();
+
+
+            plazos.sort((a, b) => b - a);
+            this.plazoCalculado = plazos[0]; // -> No necesario?
+            const plazoControl = this.cambiarInfoCreditoForm.controls.plazo;
+            plazoControl.addValidators([Validators.min(plazos[0] + 1)]);
+            plazoControl.setValue(plazos[0]);
+            plazoControl.enable();
+            this.inputPlazo.nativeElement.select();
+
+            const plazoFaltanteMeses = diferenciaEnMeses(new Date(), this.context.detalleCredito.fechaVencimiento);
+            
+            console.log({ plazoFaltanteMeses });
+
+            if (!this.esCuotaVariable()) this.cambiarInfoCreditoForm.controls.periodoGracia.enable();
+
           },
           error: err => console.error(err)
         });
+
+
+
+
+
+
+
         break;
 
     }
@@ -358,7 +437,49 @@ export class CambiarInfoCreditoForm {
     return true;
   }
 
-  private async getDatosCalculados(valor?: Partial<CalcularDatosRequest>) {
+  private validarReestructurar() {
+    const {
+      IdPeriodoCapital: idPerCapOriginal,
+      IdPeriodoInteres: idPerIntOriginal,
+      IdSistema: idSisOriginal,
+      PeriodoGracia: perGraciaOriginal,
+      Plazo: plazoOriginal
+    } = this.context.datosFormData;
+    const idPerCap = this.cambiarInfoCreditoForm.controls.periodoCapitalSelect.value;
+    const idPerInt = this.cambiarInfoCreditoForm.controls.periodoInteresSelect.value;
+    const idSistema = this.cambiarInfoCreditoForm.controls.sistemaSelect.value;
+    const periodoGracia = this.cambiarInfoCreditoForm.controls.periodoGracia.value;
+    const plazo = this.cambiarInfoCreditoForm.controls.plazo.value;
+
+    if (!this.esTasaVariable()) {
+
+      if (!idSistema) {
+        this.notif.warning('Advertencia', 'Debe seleccionar sistema.', ConfiguracionNotificacion.configRightTop);
+        return false;
+      }
+
+      if (!idPerCap || !idPerInt) {
+        this.notif.warning('Advertencia', 'Debe seleccionar periodos.', ConfiguracionNotificacion.configRightTop);
+        return false;
+      }
+    }
+
+    // if (
+    //   idSisOriginal == idSistema 
+    //   && idPerCapOriginal == idPerCap 
+    //   && idPerIntOriginal == idPerInt 
+    //   && perGraciaOriginal == periodoGracia
+    //   && plazoOriginal == plazo
+    // ) {
+    //   this.notif.warning('Advertencia', 'Debe cambiar datos.', ConfiguracionNotificacion.configRightTop);
+    //   return false;
+    // }
+
+    return true;
+  }
+
+
+  private async getDatosCalculados(valor?: CalcularDatosReeliquidacion) {
     const idCuenta = this.context.detalleCredito.Encabezado.IdCuenta;
     const idNovedad = this.idNovedad;
     if (!idCuenta || !idNovedad) return;
@@ -368,6 +489,32 @@ export class CambiarInfoCreditoForm {
     try {
       this.loading = true;
       const result = await firstValueFrom(this.carteraService.calcularCambioDatos(this.dtoParaCalcular));
+      this.loading = false;
+      this.datosCalculados = result;
+      return result;
+    } catch (error: any) {
+      console.log(error);
+      this.loading = false;
+      const mensajeError = ERROR_MESSAGES[error.ErrorCode as keyof typeof ERROR_MESSAGES]
+      if (error?.ErrorCode && mensajeError) {
+        this.notif.warning('Advertencia', mensajeError, ConfiguracionNotificacion.configRightTop);
+      } else {
+        this.notif.error('Error', 'Ocurrió un error inesperado', ConfiguracionNotificacion.configRightTop);
+      }
+
+      return null;
+    }
+  }
+
+  private async getDatosCalculadosReest(valor: ConPlazo | ConTasa) {
+    const idCuenta = this.context.detalleCredito.Encabezado.IdCuenta;
+    const idNovedad = this.idNovedad;
+    if (!idCuenta || !idNovedad) return;
+    this.dtoParaCalcular = { idCuenta, idNovedad, ...valor };
+    
+    try {
+      this.loading = true;
+      const result = await firstValueFrom(this.carteraService.calcularCambioReestructuracion(this.dtoParaCalcular));
       this.loading = false;
       this.datosCalculados = result;
       return result;
@@ -416,9 +563,15 @@ export class CambiarInfoCreditoForm {
 
     if (value == null) return;
 
-    if (key === 'tasaNominal') value = value / 100;
+    let valorDisparadorDelCambio: CalcularDatosAlCambiarTasa | null = null;
 
-    const valorDisparadorDelCambio = { [key]: value };
+    if (key === 'tasaNominal') {
+      value = value / 100;
+      valorDisparadorDelCambio = { tasaNominal: value }
+    } else {
+      valorDisparadorDelCambio = { puntos: value }
+    }
+
     const result = await this.getDatosCalculados(valorDisparadorDelCambio);
     if (!result) return;
     this.mapearDatosCalculados(['cuota', 'plazo', 'monto', 'periodoGracia', 'tasaEfectiva', 'tasaNominal']);
@@ -443,21 +596,37 @@ export class CambiarInfoCreditoForm {
     if (this.esCuotaVariable()) this.yaCalculoPlazoCuotaVariable = true;
   }
 
-  async onCalcular() {
-    if (!this.idNovedad) return;
+  async calcularDatosPlazoRestructuracion() {
+    const idSistema = this.cambiarInfoCreditoForm.controls.sistemaSelect.value!;
+    const idPeriodoCapital = this.cambiarInfoCreditoForm.controls.periodoCapitalSelect.value!;
+    const idPeriodoInteres = this.cambiarInfoCreditoForm.controls.periodoInteresSelect.value!;
+    const periodoGracia = this.cambiarInfoCreditoForm.controls.periodoGracia.value!;
 
-    switch (this.idNovedad) {
-      case Novedad.CambiarTasa:
+    let datosParaCalcular: ConPlazo = { plazo: this.plazoSeleccionado!, periodoGracia };
+
+    if(!this.esTasaVariable()) datosParaCalcular = { ...datosParaCalcular, idSistema, idPeriodoCapital, idPeriodoInteres };
+
+    const result = await this.getDatosCalculadosReest(datosParaCalcular);
+    if (!result) return;
+    this.mapearDatosCalculados(['cuota', 'monto']);
+    this.btnActualizarBloqueadoManual = false;
+  }
+
+  async onCalcular() {
+    if (!this.context.operacion) return;
+
+    switch (this.context.operacion) {
+      case Operacion.CambiarTasa:
         await this.calcularDatosAlCambiarTasa();
         break;
-      case Novedad.CambiarCuota:
+      case Operacion.CambiarCuota:
         await this.calcularDatosAlCambiarCuota();
         break;
-      case Novedad.CambiarPlazo:
+      case Operacion.CambiarPlazo:
         if (!this.validarCambiarPlazo()) return;
         await this.calcularDatosAlCambiarPlazo();
         break;
-      case Novedad.CambiarSistema:
+      case Operacion.CambiarSistema:
         if (!this.validarCambioSistema()) return;
         const idSistema = this.cambiarInfoCreditoForm.controls.sistemaSelect.value!;
         const idPeriodoCapital = this.cambiarInfoCreditoForm.controls.periodoCapitalSelect.value!;
@@ -467,17 +636,43 @@ export class CambiarInfoCreditoForm {
         this.mapearDatosCalculados(['cuota', 'plazo', 'monto', 'periodoGracia']);
         this.btnActualizarBloqueadoManual = false;
         break;
+      case Operacion.ReestructurarCambioPlazo:
+        if (!this.validarReestructurar()) return;
+        await this.calcularDatosPlazoRestructuracion();
+        break;
     }
   }
 
   onActualizar() {
     if (!this.dtoParaCalcular) return;
 
-    switch (this.idNovedad) {
-      case Novedad.CambiarCuota:
+    if (this.context.operacion === Operacion.ReestructurarCambioPlazo) {
+      const acta = this.cambiarInfoCreditoForm.controls.acta.value;
+      if (!acta) {
+        this.notif.warning('Advertencia', 'Debe diligenciar acta.', ConfiguracionNotificacion.configRightTop);
+        return;
+      }
+      this.loading = true;
+      this.carteraService.actualizarCreditoReest({ ...this.dtoParaCalcular, acta }).subscribe({
+        next: () => {
+          this.finalizar.emit(this.idNovedad);
+          this.loading = false;
+          this.close.emit();
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error)
+          this.loading = false;
+        }
+      });
+
+      return;
+    }
+
+    switch (this.context.operacion) {
+      case Operacion.CambiarCuota:
         if (!this.validarCambiarCuotaAlActualizar()) return;
         break;
-      case Novedad.CambiarPlazo:
+      case Operacion.CambiarPlazo:
         if (!this.validarCambiarPlazo()) return;
         if (this.esCuotaVariable() && this.plazoSeleccionado) {
           const { idCuenta } = this.dtoParaCalcular;
