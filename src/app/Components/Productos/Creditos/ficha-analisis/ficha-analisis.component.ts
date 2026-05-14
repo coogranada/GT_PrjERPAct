@@ -3062,100 +3062,143 @@ export class FichaAnalisisComponent implements OnInit {
 
   }
 
-  CargarIngresoData(i: number, index: number) {
-    let tipoOcupa;
-    let lista;
+CargarIngresoData(i: number, index: number) {
+  let tipoOcupa: boolean | undefined;
+  let lista: any;
+  if (i === 1) {
+    tipoOcupa = this.resultadoInfoRadicado?.[0]?.TipoOcupacion;
+    this.tipoOcupa = tipoOcupa ?? null;
 
-    if (i == 1) {
-      tipoOcupa = this.resultadoInfoRadicado[0].TipoOcupacion;
-      this.tipoOcupa = tipoOcupa;
-      lista = JSON.parse(this.resultadoInfoRadicado[0].ProductValueList);
-    } else if (i == 2) {
-      tipoOcupa = this.codSelected[index].TipoOcupacion;
-      this.tipoOcupaCod = tipoOcupa;
-      lista = JSON.parse(this.codSelected[index].ProductValueList);
+    const productValue = this.resultadoInfoRadicado?.[0]?.ProductValueList;
+    if (!productValue) {
+      console.warn('ProductValueList no disponible (i=1)');
+      return;
     }
 
+    try {
+      lista = JSON.parse(productValue);
+    } catch {
+      console.error('Error parseando ProductValueList (i=1)');
+      return;
+    }
 
-    //INDEPENDIENTE
-    if (tipoOcupa === true) {
-      const valorMedio = + lista[0][0]?.value * 1000;
-      const valorMin = + lista[0][1]?.value * 1000;
-      const valorMax = + lista[0][2]?.value * 1000;
+  } else if (i === 2) {
+    tipoOcupa = this.codSelected?.[index]?.TipoOcupacion;
+    this.tipoOcupaCod = tipoOcupa ?? null;
 
-      if (i == 1) {
-        this.FichaAnalisisDataForm.get("IngresoMinimoData")?.setValue(valorMin);
-        this.FichaAnalisisDataForm.get("IngresoMedioData")?.setValue(valorMedio);
-        this.FichaAnalisisDataForm.get("IngresoMaximoData")?.setValue(valorMax);
-      } else if (i == 2) {
-        this.CodeudorForm.get("IngresoMinimoDataCod")?.setValue(valorMin);
-        this.CodeudorForm.get("IngresoMedioDataCod")?.setValue(valorMedio);
-        this.CodeudorForm.get("IngresoMaximoDataCod")?.setValue(valorMax);
-        this.codSelected[index].IngresoMinimoData = valorMin;
-        this.codSelected[index].IngresoMedioData = valorMedio;
-        this.codSelected[index].IngresoMaximoData = valorMax;
-      }
-      //DEPENDIENTE
-    } else if (tipoOcupa === false) {
-      let valorIngreso;
+    const productValue = this.codSelected?.[index]?.ProductValueList;
+    if (!productValue) {
+      console.warn('ProductValueList no disponible (i=2)');
+      return;
+    }
 
-      if (i == 1) {
-        valorIngreso = this.resultadoInfoRadicado[0].ValorIngreso;
-      } else if (i == 2) {
-        valorIngreso = this.codSelected[index].ValorIngreso;
-      }
-
-
-      const cleanedString = valorIngreso.replace(/\\r\\n/g, '').replace(/\\"/g, '"');
-
-      let listaI = [];
-      try {
-        listaI = JSON.parse(cleanedString);
-      } catch (error) {
-        console.error('Error al parsear JSON:', error);
-      }
-
-      //      this.dataValorIngreso = [];
-      //      this.dataValorIngresoCod = [];
-
-      listaI.aportantes.forEach((aportante: any) => {
-
-        const numeroIdentificacion = aportante.numero_identificacion_aportante;
-        const razonSocial = aportante.razon_social_aportante;
-        const descripcionCotizante = aportante.descripcion_cotizante_persona_natural;
-
-        const ingresoTotalUltMes = listaI.indicadores.ingreso_total_ult_mes;
-        const promedioIngresosCotizante = listaI.resumen_general_ingresos.promedio_ingresos_cotizante;
-        const promedioUltTresMeses = listaI.indicadores.promedio_ult_tres_meses;
-
-        const rowData = {
-          numeroIdentificacion,
-          razonSocial,
-          descripcionCotizante,
-          ingresoTotalUltMes,
-          promedioIngresosCotizante,
-          promedioUltTresMeses
-        };
-
-        if (i == 1) {
-          this.dataValorIngreso.push(rowData);
-          this.FichaAnalisisDataForm.get("ValorIngresoData")?.setValue(promedioUltTresMeses);
-          this.FichaAnalisisDataForm.get("SalarioTotalData")?.setValue(ingresoTotalUltMes);
-          this.FichaAnalisisDataForm.get("PromedioIngresoData")?.setValue(promedioIngresosCotizante);
-        } else if (i == 2) {
-          this.dataValorIngresoCod.push(rowData);
-          this.codSelected[index].EmpleadorData = this.dataValorIngresoCod;
-          this.CodeudorForm.get("ValorIngresoDataCod")?.setValue(promedioUltTresMeses);
-          this.CodeudorForm.get("SalarioTotalDataCod")?.setValue(ingresoTotalUltMes);
-          this.CodeudorForm.get("PromedioIngresoDataCod")?.setValue(promedioIngresosCotizante);
-          this.codSelected[index].ValorIngresoData = promedioUltTresMeses;
-          this.codSelected[index].SalarioTotalData = ingresoTotalUltMes;
-          this.codSelected[index].PromedioIngresoData = promedioIngresosCotizante;
-        }
-
-      });
+    try {
+      lista = JSON.parse(productValue);
+    } catch {
+      console.error('Error parseando ProductValueList (i=2)');
+      return;
     }
   }
+
+  if (tipoOcupa === undefined || !lista) {
+    console.warn('Tipo de ocupación o lista inválidos');
+    return;
+  }
+  if (tipoOcupa === true) {
+    const valorMedio = +(lista?.[0]?.[0]?.value ?? 0) * 1000;
+    const valorMin   = +(lista?.[0]?.[1]?.value ?? 0) * 1000;
+    const valorMax   = +(lista?.[0]?.[2]?.value ?? 0) * 1000;
+
+    if (i === 1) {
+      this.FichaAnalisisDataForm.get('IngresoMinimoData')?.setValue(valorMin);
+      this.FichaAnalisisDataForm.get('IngresoMedioData')?.setValue(valorMedio);
+      this.FichaAnalisisDataForm.get('IngresoMaximoData')?.setValue(valorMax);
+    } else if (i === 2) {
+      this.CodeudorForm.get('IngresoMinimoDataCod')?.setValue(valorMin);
+      this.CodeudorForm.get('IngresoMedioDataCod')?.setValue(valorMedio);
+      this.CodeudorForm.get('IngresoMaximoDataCod')?.setValue(valorMax);
+
+      this.codSelected[index].IngresoMinimoData = valorMin;
+      this.codSelected[index].IngresoMedioData  = valorMedio;
+      this.codSelected[index].IngresoMaximoData = valorMax;
+    }
+
+  // ===============================
+  // DEPENDIENTE
+  // ===============================
+  } else if (tipoOcupa === false) {
+
+    let valorIngreso: string | null | undefined;
+
+    if (i === 1) {
+      valorIngreso = this.resultadoInfoRadicado?.[0]?.ValorIngreso;
+    } else if (i === 2) {
+      valorIngreso = this.codSelected?.[index]?.ValorIngreso;
+    }
+
+    if (!valorIngreso) {
+      console.warn('ValorIngreso vacío o null');
+      return;
+    }
+
+    const cleanedString = valorIngreso
+      .replace(/\\r\\n/g, '')
+      .replace(/\\"/g, '"');
+
+    let listaI: any;
+    try {
+      listaI = JSON.parse(cleanedString);
+    } catch (error) {
+      console.error('Error al parsear ValorIngreso JSON:', error);
+      return;
+    }
+
+    if (!Array.isArray(listaI?.aportantes)) {
+      console.warn('aportantes no es un array o no existe', listaI);
+      return;
+    }
+
+    listaI.aportantes.forEach((aportante: any) => {
+
+      const numeroIdentificacion = aportante?.numero_identificacion_aportante ?? '';
+      const razonSocial          = aportante?.razon_social_aportante ?? '';
+      const descripcionCotizante = aportante?.descripcion_cotizante_persona_natural ?? '';
+
+      const ingresoTotalUltMes        = listaI?.indicadores?.ingreso_total_ult_mes ?? 0;
+      const promedioIngresosCotizante = listaI?.resumen_general_ingresos?.promedio_ingresos_cotizante ?? 0;
+      const promedioUltTresMeses      = listaI?.indicadores?.promedio_ult_tres_meses ?? 0;
+
+      const rowData = {
+        numeroIdentificacion,
+        razonSocial,
+        descripcionCotizante,
+        ingresoTotalUltMes,
+        promedioIngresosCotizante,
+        promedioUltTresMeses
+      };
+
+      if (i === 1) {
+        this.dataValorIngreso.push(rowData);
+        this.FichaAnalisisDataForm.get('ValorIngresoData')?.setValue(promedioUltTresMeses);
+        this.FichaAnalisisDataForm.get('SalarioTotalData')?.setValue(ingresoTotalUltMes);
+        this.FichaAnalisisDataForm.get('PromedioIngresoData')?.setValue(promedioIngresosCotizante);
+
+      } else if (i === 2) {
+        this.dataValorIngresoCod.push(rowData);
+        this.codSelected[index].EmpleadorData = this.dataValorIngresoCod;
+
+        this.CodeudorForm.get('ValorIngresoDataCod')?.setValue(promedioUltTresMeses);
+        this.CodeudorForm.get('SalarioTotalDataCod')?.setValue(ingresoTotalUltMes);
+        this.CodeudorForm.get('PromedioIngresoDataCod')?.setValue(promedioIngresosCotizante);
+
+        this.codSelected[index].ValorIngresoData   = promedioUltTresMeses;
+        this.codSelected[index].SalarioTotalData   = ingresoTotalUltMes;
+        this.codSelected[index].PromedioIngresoData = promedioIngresosCotizante;
+      }
+
+    });
+  }
+}
 
   AlertaEdad() {
     if (this.resultadoInfoRadicado[0].Nacimiento === "" || this.resultadoInfoRadicado[0].Nacimiento === undefined) {

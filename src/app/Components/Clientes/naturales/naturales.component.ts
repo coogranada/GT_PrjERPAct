@@ -808,6 +808,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     { id: 5, name: 'Adjuntar representante legal' },
     { id: 6, name: 'Adjuntar tutor' },
     { id: 7, name: 'Tercero autorizado' },
+    { id: 8, name: 'Tercero general' },
   ]
   procesosWorkManager: any[] = [];
   public tiposDocumento = [

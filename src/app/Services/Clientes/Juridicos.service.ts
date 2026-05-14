@@ -83,14 +83,15 @@ export class JuridicosService {
         .set('asesor', asesor);
         return this._http.get<any>(this.url,{params: params });
     } 
-    CambiarRelacion(juridico: string, info: string, docu: string, asesor: string, objeto: string): Observable<any> {
+    CambiarRelacion(juridico: string, info: string, docu: string, asesor: string, objeto: string, IdOficina: number): Observable<any> {
         this.url = `${this.environment.Url}/CambiarRelacionJuridico`;
         const params = new HttpParams()
         .set('juridico', juridico)
         .set('info', info)
         .set('docu', docu)
         .set('asesor', asesor)
-        .set('objeto', objeto);
+        .set('objeto', objeto)
+        .set('IdOficina', IdOficina);
         return this._http.get<any>(this.url,{params: params });
     } 
     CambiarRazonSocial(juridico: string, info: string,  doc: string, asesor: string): Observable<any> {

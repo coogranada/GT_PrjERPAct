@@ -225,12 +225,21 @@ export class AppComponent implements OnInit {
     }
   }
   TimerRefresToken() {
-    var token: string | null = this.Security.GetToken();
-     if (token != null && token != ""){
-       this.loginService.GetToken(this.resulStore.intlngTercero).subscribe((x : any) => {
-         var res = x;
-         localStorage.setItem('token', res.token);
-       });
-     } 
+  const token: string | null = this.Security.GetToken();
+
+  if (!token) {
+    return;
+  }
+
+  if (!this.resulStore || !this.resulStore.intlngTercero) {
+    console.warn('resulStore no disponible, se omite refresco de token');
+    return;
+  }
+
+  this.loginService
+    .GetToken(this.resulStore.intlngTercero)
+    .subscribe((x: any) => {
+      localStorage.setItem('token', x.token);
+    });
   }
 }

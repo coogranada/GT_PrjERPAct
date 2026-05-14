@@ -1408,6 +1408,9 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
   }
 
   CambiarRelacion() {
+    this.loading = true;
+    let data = localStorage.getItem('Data');
+    const resultPerfil = JSON.parse(window.atob(data == null ? ""  : data));
     if (this.cambioRelacionEdit) {
       if (this.relacionAnterior !== this.infoJuridicoFrom.value.Relacion ) {
         const juridico = this.infoJuridicoFrom.value.IdJuridico;
@@ -1415,8 +1418,9 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
         const docum = this.infoJuridicoFrom.value.Nit;
         const asesor = this.userConect.Usuario;
         const objeto = this.infoJuridicoFrom.get('ObjetoSocial')?.value;
+        const IdOficina = resultPerfil.NumeroOficina;
         this.GuardarLog('Cambio de relacion: ' + relacion + ' juridico : ' + juridico, this.OperacionActual, 0, juridico,12);
-        this.juridicoService.CambiarRelacion(juridico, relacion, docum, asesor, objeto).subscribe(
+        this.juridicoService.CambiarRelacion(juridico, relacion, docum, asesor, objeto, IdOficina).subscribe(
           result => {
             if (result) {
               this.mostrarSiguiente = false;
@@ -1426,6 +1430,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
               this.bloquearRelacion = true;
               this.emitEventResetOperacion.emit(true);
               this.notif.onSuccess('Exitoso', 'El cambio de relación se realizó correctamente.');
+              this.loading = false;
               this.IrArriba();
               $('#OperacionMarcada').val(1);
               $('#ProDescripcionOpe').val(1);
@@ -1438,10 +1443,11 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
           });
       } else {
         this.notif.onWarning('Advertencia', 'Debe seleccionar una relación diferente.');
-        
+        this.loading = false;
       }
     } else {
       this.notif.onWarning('Advertencia', 'Debe seleccionar una relación diferente.');
+      this.loading = false;
     }
   }
 
