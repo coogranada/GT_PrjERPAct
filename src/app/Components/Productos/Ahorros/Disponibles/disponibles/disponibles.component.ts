@@ -1746,7 +1746,7 @@ export class DisponiblesComponent implements OnInit {
         this.BloquearBuscar = false;
       }
     } else if (this.DisponibleOperacionFrom.get('Codigo')?.value === '73') {  // Adicionar y/o  eliminar  garantias
-      console.log('❤️❤️❤️❤️');
+      
       
       if (this.DisponibleForm.get('IdOficina')?.value !== null
         && this.DisponibleForm.get('IdOficina')?.value !== undefined
@@ -2165,9 +2165,100 @@ export class DisponiblesComponent implements OnInit {
           ConfiguracionNotificacion.configRightTop);
         this.DisponibleOperacionFrom.get('Codigo')?.reset();
       }
+    } else if (this.DisponibleOperacionFrom.get('Codigo')?.value === '142') {  // Autorización enrolamiento alternativo APP
+      if (this.DisponibleForm.get('IdOficina')?.value !== null
+        && this.DisponibleForm.get('IdOficina')?.value !== undefined
+        && this.DisponibleForm.get('IdOficina')?.value !== ''
+        && this.DisponibleForm.get('IdProductoCuenta')?.value !== null
+        && this.DisponibleForm.get('IdProductoCuenta')?.value !== undefined
+        && this.DisponibleForm.get('IdProductoCuenta')?.value !== ''
+        && this.DisponibleForm.get('IdConsecutivo')?.value !== null
+        && this.DisponibleForm.get('IdConsecutivo')?.value !== undefined
+        && this.DisponibleForm.get('IdConsecutivo')?.value !== ''
+        && this.DisponibleForm.get('IdDigito')?.value !== null
+        && this.DisponibleForm.get('IdDigito')?.value !== undefined
+        && this.DisponibleForm.get('IdDigito')?.value !== ''
+      ) {
+        if (this.DisponibleForm.get('IdEstado')?.value !== 25 && this.DisponibleForm.get('IdEstado')?.value !== 10) {
+            const IdTercero = this.DisponibleForm.get('LngTercero')?.value
+            this.DisponiblesServices.ValidaFechaActualiza(IdTercero).subscribe(
+              result => {
+                const fechaHoyString = new DatePipe('en-CO').transform(new Date(), 'yyyy/MM/dd');
+                const fechaActualizaString = new DatePipe('en-CO').transform(result.FechaActualizacion, 'yyyy/MM/dd');
+
+                const fechaHoy = new Date(fechaHoyString == null ? "" : fechaHoyString);
+                const fechaActualiza = new Date(fechaActualizaString == null ? "" : fechaActualizaString);
+                const diferenciaEnDias = this.calcularDiferenciaEnDias(fechaHoy, fechaActualiza);
+
+                if (diferenciaEnDias <= 180) {
+                  this.GenerarAutorizacionErolamiento();
+                  this.BloquearOperacionPermitida = false;
+                  this.selectOperacionPermitada = true;
+                  this.inputOperacionPermitada = false;
+                  this.DescriTipoFirma = true;
+                  this.operacionEscogida = '/Autorización enrolamiento alternativo APP';
+                  this.BloquearAsociado = false;
+                  this.BloquaerProducto = false;
+                  this.BloquearEstado = false;
+                  this.bloquearConsultaCuenta = false;
+                  this.BloquearBuscar = false;
+                  this.btnActualizar = true;
+                  this.btnGuardar = true;
+                  this.BloquearAsesorExterno = false;
+                  this.BloquearMedioPago = false;
+                  this.bloquearbtnActalizar = false;
+                  this.inputEstado = false;
+                  this.selectEstado = true;
+                  this.btnActualizarCanales = true;
+                  this.BloquearConvenio = false;
+                  this.BloquearNumeroTarjeta = false;
+                  this.BloquearCanales = false;
+                  this.BloquearPagare = false;
+                  this.BloquearDiaCortePlazo = false;
+                  this.BloquearRadicado = false;
+                  this.BloquearLinea = false;
+                  this.BloquearPuntos = false;
+                  this.BloquearGarantiaReal = false;             
+                  this.devolverTab(2);
+                  this.tab2.nativeElement.click();
+                  $('#saldos').removeClass('activar');
+                  $('#saldos').removeClass('active');
+                  $('#historial').removeClass('activar');
+                  $('#historial').removeClass('active');
+                  $('#autorizados').removeClass('activar');
+                  $('#autorizados').removeClass('active');
+                  $('#cupo').removeClass('activar');
+                  $('#cupo').removeClass('active');
+                  $('#tarjeta').addClass('activar');
+                  $('#tarjeta').addClass('active');
+                  $('#libreta').removeClass('activar');
+                  $('#libreta').removeClass('active');
+                } else {
+                  this.notif.warning('Advertencia', 'Asociado debe actualizar datos.', ConfiguracionNotificacion.configRightTop);
+                  this.DisponibleOperacionFrom.get('Codigo')?.reset();
+                }
+              },
+            )         
+        } else {
+          this.notif.warning('Advertencia', 'Cuenta no se puede editar, estado no valido.', ConfiguracionNotificacion.configRightTop);
+          this.DisponibleOperacionFrom.get('Codigo')?.reset();
+        }
+
+
+      } else {
+        this.notif.warning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.',
+        ConfiguracionNotificacion.configRightTop);
+        this.DisponibleOperacionFrom.get('Codigo')?.reset();
+      }
     }
     this.ResetValorSeleccionado();
   } 
+
+  GenerarAutorizacionErolamiento(){
+    this.Guardarlog({});
+    this.NovedadesAhorrosPDF('Autorización enrolamiento alternativo APP');
+    this.DisponibleOperacionFrom.get('Codigo')?.reset();
+  }
 
   calcularDiferenciaEnDias(fechaInicio: Date, fechaFin: Date): number {
     let FechaActualiza = formatDate(new Date(fechaFin), 'yyyy,MM,dd', 'en');
