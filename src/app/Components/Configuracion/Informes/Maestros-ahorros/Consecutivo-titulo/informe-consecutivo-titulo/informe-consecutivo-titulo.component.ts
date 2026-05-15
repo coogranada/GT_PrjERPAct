@@ -71,7 +71,7 @@ export class InformeConsecutivoTituloComponent implements OnInit {
     this.Operaciones();
     this.OperacionesFiltro();
     this.ObtenerOficinas();
-    this.ObtenerEstados();
+    // this.ObtenerEstados();
     const FechaActual = new Date();
     this.FechaActual = new DatePipe('en-CO').transform(FechaActual, 'yyyy-MM-dd');
   }
@@ -326,7 +326,7 @@ export class InformeConsecutivoTituloComponent implements OnInit {
     }
   }
   DocumentoSeleccionado(Iddocumento : string) {
-    this.ObtenerUsuarios(Iddocumento);
+    // this.ObtenerUsuarios(Iddocumento);
   }
   ProductoSeleccionado(Idproducto : string) {
     this.consecutivoOperacionFrom.get('IdDocumentos')?.reset();

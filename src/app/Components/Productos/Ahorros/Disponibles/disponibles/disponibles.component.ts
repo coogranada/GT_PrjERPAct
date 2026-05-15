@@ -4556,7 +4556,7 @@ export class DisponiblesComponent implements OnInit {
               }
               // fin notificador  
               // liberar tarjeta o libreta
-              if (this.DisponibleForm.get('IdMedioPago')?.value == 10 ||  this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 60 ||  this.DisponibleForm.get('IdMedioPago')?.value == 70){
+              if (this.DisponibleForm.get('IdMedioPago')?.value == 0 || this.DisponibleForm.get('IdMedioPago')?.value == 10 ||  this.DisponibleForm.get('IdMedioPago')?.value == 50){
                 swal.fire({
                   title: '¿Desea liberar tarjeta y/o libreta de cuenta anulada?',
                   icon: 'question',
@@ -4570,7 +4570,12 @@ export class DisponiblesComponent implements OnInit {
                 }).then((result) => {
                   if (result.isConfirmed) {
                     const medioPago = this.DisponibleForm.get('IdMedioPago')?.value;
-                    const NumeroTarjeta = this.DisponibleForm.get('Inicial')?.value;
+                    let NumeroTarjeta = 0;
+                    if(medioPago == 10  || medioPago == 50 ){
+                      NumeroTarjeta = this.DisponibleForm.get('NumeroTarjeta')?.value; 
+                    } else if(medioPago == 0){
+                      NumeroTarjeta = this.DisponibleForm.get('Inicial')?.value; 
+                    }                   
                     switch (medioPago) {
                       case 50:
                       case 10:
@@ -4591,8 +4596,6 @@ export class DisponiblesComponent implements OnInit {
                         );
                         break;
                     }
-                  } else{
-                    // crear log de la anulacion de tarjeta y de libreta
                   }
                 });
               }                       
