@@ -4556,7 +4556,7 @@ export class DisponiblesComponent implements OnInit {
               }
               // fin notificador  
               // liberar tarjeta o libreta
-              if (this.DisponibleForm.get('IdMedioPago')?.value !== 10 && this.DisponibleForm.get('IdMedioPago')?.value !== 50 &&  this.DisponibleForm.get('IdMedioPago')?.value !== 60 && this.DisponibleForm.get('IdMedioPago')?.value !== 70){
+              if (this.DisponibleForm.get('IdMedioPago')?.value == 10 ||  this.DisponibleForm.get('IdMedioPago')?.value == 50 || this.DisponibleForm.get('IdMedioPago')?.value == 60 ||  this.DisponibleForm.get('IdMedioPago')?.value == 70){
                 swal.fire({
                   title: '¿Desea liberar tarjeta y/o libreta de cuenta anulada?',
                   icon: 'question',
@@ -4591,6 +4591,8 @@ export class DisponiblesComponent implements OnInit {
                         );
                         break;
                     }
+                  } else{
+                    // crear log de la anulacion de tarjeta y de libreta
                   }
                 });
               }                       
