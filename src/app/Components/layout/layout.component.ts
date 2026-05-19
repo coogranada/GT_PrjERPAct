@@ -566,13 +566,17 @@ export class LayoutComponent implements OnInit,OnDestroy {
     });
 
     // // Start watch when time is up.
-    this.userIdle.onTimeout().subscribe(() => {
-      console.log("Show");
 
-      this.AbrirModalBanner?.nativeElement.click();
-      this.restart();
-      this.boolBannner = false;
-    });
+this.userIdle.onTimeout().subscribe(() => {
+  console.log("Show");
+
+  if (!this.isModalOpen) {
+    this.AbrirModalBanner?.nativeElement.click();
+  }
+
+  this.boolBannner = false;
+})
+
 
     // this.bnIdle.startWatching(60).subscribe((isTimedOut: boolean) => {
     //   this.AbrirModalBanner.nativeElement.click();
