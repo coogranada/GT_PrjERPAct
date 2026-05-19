@@ -66,6 +66,7 @@ export interface GestionCreditoEncabezado {
   FechaMatricula: string;
   IdLinea: number;
   TasaLinea: number;
+  PlazoMaximoLinea: number | null;
 }
 
 export interface SeguroHipotecario {

@@ -147,11 +147,6 @@ export class CarteraService {
         return this._http.get<number[]>(this.url);
     }
 
-    getPlazoFaltanteEnMeses(idCuenta: number) {
-        this.url = `${this.environment.Url}/GetPlazoFaltanteEnMeses?idCuenta=${idCuenta}&rawError=true`;
-        return this._http.get<number[]>(this.url);
-    }
-
     getPeriodosPago() {
         this.url = `${this.environment.Url}/ObtenerFrecuenciaPagoTermino?intPlazo=720`;
         return this._http.get<PeriodoPago[]>(this.url);
