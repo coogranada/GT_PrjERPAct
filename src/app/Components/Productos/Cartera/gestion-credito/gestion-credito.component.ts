@@ -869,9 +869,9 @@ export class GestionCreditoComponent {
 
   //Inicio cambiar garantias
   
-  obtenerPorcentaje(respaldo: number, cobertura: number): number {
+  obtenerPorcentaje(disponible: number, cobertura: number): number {
     if (!cobertura || cobertura <= 0) { return 0; }
-      return (respaldo / cobertura) * 100;
+      return (disponible / cobertura) * 100;
   }
 
   obtenerEstado(respaldo: number, cobertura: number): string {
@@ -3129,7 +3129,7 @@ export class GestionCreditoComponent {
             ConfiguracionNotificacion.configRightTop
           );
         } else {
-          // this.getHistorial();
+          this.getHistorial();
         }
       },
       error: () => {
