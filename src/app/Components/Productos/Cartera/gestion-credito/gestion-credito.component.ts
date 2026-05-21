@@ -2248,8 +2248,12 @@ export class GestionCreditoComponent {
   //Inicio InclusionExclusion
   confirmarInclusionExclusion(): void {
 
-    if (this.gestionCreditoForm.get('Sigla')?.value === 'CTD') 
-      if (!this.validarCreditoPadre()) return;
+    if(this.validarSigla('CROT', 'No se puede realizar esta operación, crédito rotativo.'))
+      return;
+
+    if(this.validarSigla('CTD', 'No se puede realizar esta operación, tarjeta débito.'))
+      return;
+
 
     const estaSinCobertura = this.gestionCreditoForm.get('estaSinCobertura')?.value;
 
