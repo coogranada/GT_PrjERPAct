@@ -1349,8 +1349,6 @@ export class GestionCreditoComponent {
     
     const jsonLog = this.construirLogCambioGarantia();
 
-    console.log(jsonLog, '🤠🤠');
-    
     this.loading.show();
 
     this.carteraService.cambiarGarantias(dto)
@@ -1362,7 +1360,7 @@ export class GestionCreditoComponent {
           return;
         }
         this.guardarLogGestionCredito(jsonLog);
-        this.notif.success('Exitoso', 'El cambio de garantía se realizó correctamente');
+        this.notif.success('Exitoso', 'El cambio de garantía se realizó correctamente.');
         this.cerrarModalYRefrescarCambiarGarantia();
       },
       error: () => {
@@ -1426,15 +1424,6 @@ export class GestionCreditoComponent {
     const hayCodeudorSeleccionado = !!this.codeudorSeleccionadoId;
     const esMismoCodeudor = garantia.IdTercero === this.codeudorSeleccionadoId;
     const idCuenta = this.gestionCreditoForm.get('IdCuenta')?.value?.toString().trim();
-
-    console.log(
-      garantia,
-      esDeudor,
-      hayCodeudorSeleccionado,
-      esMismoCodeudor,
-      idCuenta, '🤠🤠'
-    );
-    
 
     let valorRespaldaDisponible = 0;
     let grupoGarantiaNuevo = '';
@@ -2309,9 +2298,10 @@ export class GestionCreditoComponent {
       next: (resp) => {
         if (resp.Exitoso) {
           this.notif.success('Exitoso', 
-            'El cambio de inclusión/exclusión de seguro se realizó correctamente', 
+            'El cambio de inclusión/exclusión de seguro se realizó correctamente.', 
             ConfiguracionNotificacion.configRightTop
           );
+          this.getDeducibles();
           this.cuotaTabBloqueado = false;
           this.guardarLogGestionCredito(jsonLog);
           this.gestionCreditoForm.get('estaSinCobertura')?.setValue(valorActual === 1);
@@ -2429,7 +2419,7 @@ export class GestionCreditoComponent {
       },
       error: () => {
         this.loading.hide();
-        this.notif.error('Error', 'Error al obtener las líneas');
+        this.notif.error('Error', 'Error al obtener las líneas.');
       }
     });
   }
@@ -3139,7 +3129,7 @@ export class GestionCreditoComponent {
       error: () => {
         this.notif.error(
           'Error',
-          'Error al registrar el log',
+          'Error al registrar el log.',
           ConfiguracionNotificacion.configRightTop
         );
       }
