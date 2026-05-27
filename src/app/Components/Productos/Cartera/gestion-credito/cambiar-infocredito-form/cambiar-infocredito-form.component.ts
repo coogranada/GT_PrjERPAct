@@ -332,7 +332,7 @@ export class CambiarInfoCreditoForm {
     }
   }
 
-  habilitarCampos(operacion: Operacion) {
+    habilitarCampos(operacion: Operacion) {
     switch (operacion) {
       case Operacion.CambiarTasa:
         this.idNovedad = Novedad.CambiarTasa;
@@ -345,10 +345,10 @@ export class CambiarInfoCreditoForm {
 
       case Operacion.CambiarPlazo:
         this.idNovedad = Novedad.CambiarPlazo;
-        this.loading.show();
+        this.loading.show()
         this.carteraService.getNuevoPlazo(this.context.detalleCredito.Encabezado.IdCuenta).subscribe({
           next: (result) => {
-            this.loading.hide();
+            this.loading.hide()
             if (!result) return;
             this.plazos = result;
             if (this.usaSelectPlazo) {
@@ -370,16 +370,16 @@ export class CambiarInfoCreditoForm {
           },
           error: (error: HttpErrorResponse) => {
             console.log(error)
-            this.loading.hide();
+            this.loading.hide()
           }
         })
 
         break;
       case Operacion.CambiarSistema:
         this.idNovedad = Novedad.CambiarSistema;
-        this.loading.show();
+        this.loading.show()
 
-        this.loading.hide();
+        this.loading.hide()
         const hoy = new Date();
         const plazoFaltanteMeses = diferenciaEnMeses(hoy, this.context.detalleCredito.fechaVencimiento);
         this.aplicarMaximoPeriodoCapital(plazoFaltanteMeses);
@@ -391,23 +391,17 @@ export class CambiarInfoCreditoForm {
         const idCuenta = this.context.detalleCredito.Encabezado.IdCuenta;
         this.periodosPagoCapital = this.periodosPago;
 
-        this.loading.show();
+        this.loading.show()
         this.carteraService.getReestructuracionReliquidacion(idCuenta).subscribe({
           next: result => {
-            this.loading = false;
+            this.loading.hide()
 
             if (result?.Reestructuracion && result.Reestructuracion.length) {
               result.Reestructuracion.sort((a, b) => b.Contador - a.Contador);
               const contadorReestructuracion = result.Reestructuracion[0].Contador;
               this.cambiarInfoCreditoForm.controls.reestrucutradoIndicador.setValue(contadorReestructuracion);
             }
-          }),
-          switchMap(() =>
-            this.carteraService.getNuevoPlazo(idCuenta)
-          )
-        ).subscribe({
-          next: plazos => {
-            this.loading.hide();
+
             this.aplicarReglasSistema();
             this.aplicarReglasPeriodosPlazo(this.context.datosFormData.IdPeriodoCapital, this.context.datosFormData.IdPeriodoInteres);
             const plazoControl = this.cambiarInfoCreditoForm.controls.plazo;
@@ -419,13 +413,6 @@ export class CambiarInfoCreditoForm {
           },
           error: err => console.error(err)
         });
-
-
-
-
-
-
-
         break;
 
     }
