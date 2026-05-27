@@ -26,7 +26,7 @@ export const ERROR_MESSAGES: Record<ErrorCode, string> = {
     [ErrorCode.CUPO_TARJETA_DEBITO]: 'No se puede realizar esta operación, tarjeta débito.',
     [ErrorCode.INTERESES_AL_DIA]: 'Debe ponerse al día con los intereses.',
     [ErrorCode.CUENTA_CANCELADA]: 'Cuenta no se puede editar, estado no válido.',
-    [ErrorCode.CUENTA_VENCIDA]: 'Cuenta no se puede editar, estado no válido.',
+    [ErrorCode.CUENTA_VENCIDA]: 'Cuenta no se puede editar, crédito vencido.',
     [ErrorCode.TASA_USURA]: 'Las tasas de la línea no cumplen con las condiciones.',
     [ErrorCode.PERIODOS_NO_CUMPLEN]: 'Periodos no cumplen con las condiciones.',
     [ErrorCode.SALDO_MONTO_NO_CUMPLE]: 'No puede cambiar cuota. Crédito no cumple con las condiciones.',

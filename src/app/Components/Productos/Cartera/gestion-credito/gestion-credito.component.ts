@@ -1349,8 +1349,6 @@ export class GestionCreditoComponent {
     
     const jsonLog = this.construirLogCambioGarantia();
 
-    console.log(jsonLog, '🤠🤠');
-    
     this.loading.show();
 
     this.carteraService.cambiarGarantias(dto)
@@ -1362,7 +1360,7 @@ export class GestionCreditoComponent {
           return;
         }
         this.guardarLogGestionCredito(jsonLog);
-        this.notif.success('Exitoso', 'El cambio de garantía se realizó correctamente');
+        this.notif.success('Exitoso', 'El cambio de garantía se realizó correctamente.');
         this.cerrarModalYRefrescarCambiarGarantia();
       },
       error: () => {
@@ -1426,15 +1424,6 @@ export class GestionCreditoComponent {
     const hayCodeudorSeleccionado = !!this.codeudorSeleccionadoId;
     const esMismoCodeudor = garantia.IdTercero === this.codeudorSeleccionadoId;
     const idCuenta = this.gestionCreditoForm.get('IdCuenta')?.value?.toString().trim();
-
-    console.log(
-      garantia,
-      esDeudor,
-      hayCodeudorSeleccionado,
-      esMismoCodeudor,
-      idCuenta, '🤠🤠'
-    );
-    
 
     let valorRespaldaDisponible = 0;
     let grupoGarantiaNuevo = '';
@@ -2248,8 +2237,12 @@ export class GestionCreditoComponent {
   //Inicio InclusionExclusion
   confirmarInclusionExclusion(): void {
 
-    if (this.gestionCreditoForm.get('Sigla')?.value === 'CTD') 
-      if (!this.validarCreditoPadre()) return;
+    if(this.validarSigla('CROT', 'No se puede realizar esta operación, crédito rotativo.'))
+      return;
+
+    if(this.validarSigla('CTD', 'No se puede realizar esta operación, tarjeta débito.'))
+      return;
+
 
     const estaSinCobertura = this.gestionCreditoForm.get('estaSinCobertura')?.value;
 
@@ -2305,9 +2298,10 @@ export class GestionCreditoComponent {
       next: (resp) => {
         if (resp.Exitoso) {
           this.notif.success('Exitoso', 
-            'El cambio de inclusión/exclusión de seguro se realizó correctamente', 
+            'El cambio de inclusión/exclusión de seguro se realizó correctamente.', 
             ConfiguracionNotificacion.configRightTop
           );
+          this.getDeducibles();
           this.cuotaTabBloqueado = false;
           this.guardarLogGestionCredito(jsonLog);
           this.gestionCreditoForm.get('estaSinCobertura')?.setValue(valorActual === 1);
@@ -2425,7 +2419,7 @@ export class GestionCreditoComponent {
       },
       error: () => {
         this.loading.hide();
-        this.notif.error('Error', 'Error al obtener las líneas');
+        this.notif.error('Error', 'Error al obtener las líneas.');
       }
     });
   }
@@ -3135,7 +3129,7 @@ export class GestionCreditoComponent {
       error: () => {
         this.notif.error(
           'Error',
-          'Error al registrar el log',
+          'Error al registrar el log.',
           ConfiguracionNotificacion.configRightTop
         );
       }
@@ -4250,7 +4244,7 @@ CalcularSimularPago(){
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
 
-    if (fechaVencimiento < hoy) {
+    if (operacionId !== Operacion.ReestructurarCambioPlazo && fechaVencimiento < hoy) {
       return ERROR_MESSAGES.CUENTA_VENCIDA;
     }
 
@@ -4330,7 +4324,7 @@ CalcularSimularPago(){
     }
   }
 
-  async onFinalizarActualizacionCredito(idNovedad: number) {
+  async onFinalizarActualizacionCredito({idNovedad, idOperacion}: { idNovedad: number; idOperacion: string }) {
     const Anterior = this.getDatosLogAlCambiarInfoCredito();
     await this.buscarCuentaDetalle(this.detalleCuenta.Encabezado.IdCuenta);
     await this.getHistorial();
@@ -4340,7 +4334,14 @@ CalcularSimularPago(){
     const TASAS_KEYS: (keyof CambiarInfoCreditoLog)[] = ['TasaEfectiva', 'TasaNominal', 'TasaPeriodica', 'Puntos', 'FechaCambioTasa'];
     const SISTEMA_KEYS: (keyof CambiarInfoCreditoLog)[] = ['Sistema', 'PeriodoCapital', 'PeriodoInteres'];
 
-    if (idNovedad === Novedad.CambiarTasa) {
+    if (idOperacion === Operacion.ReestructurarCambioPlazo) {
+      const logCambiarPlazo = {
+        Anterior: omit(Anterior, TASAS_KEYS),
+        Actualiza: omit(Actualiza, TASAS_KEYS)
+      };
+      this.guardarLogGestionCredito(logCambiarPlazo, Operacion.ReestructurarCambioPlazo);
+      novedad = 'La reestructuración';
+    } else if (idNovedad === Novedad.CambiarTasa) {
       const logCambiarTasa = { Anterior: omit(Anterior, SISTEMA_KEYS), Actualiza: omit(Actualiza, SISTEMA_KEYS) };
       this.guardarLogGestionCredito(logCambiarTasa, Operacion.CambiarTasa);
       novedad = 'El cambio de tasa';
@@ -4353,8 +4354,6 @@ CalcularSimularPago(){
       this.guardarLogGestionCredito(logCambiarCuota, Operacion.CambiarCuota);
       novedad = 'El cambio de la cuota';
     } else if (idNovedad === Novedad.CambiarPlazo) {
-      const omitTasas = ({ TasaEfectiva, TasaNominal, TasaPeriodica, Puntos, ...rest }: any) => rest;
-
       const logCambiarPlazo = {
         Anterior: omit(Anterior, TASAS_KEYS),
         Actualiza: omit(Actualiza, TASAS_KEYS)
@@ -4370,6 +4369,7 @@ CalcularSimularPago(){
       novedad = 'El cambio de sistema';
     }
 
+    this.gestionCreditoOperacionForm.get('Codigo')?.reset();
     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     this.notif.success('Exitoso', `${novedad} se realizó correctamente.`, ConfiguracionNotificacion.configRightTop);
   }

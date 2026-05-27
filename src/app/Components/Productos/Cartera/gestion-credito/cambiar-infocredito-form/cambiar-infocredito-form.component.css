@@ -33,3 +33,7 @@
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+.help-block-grey {
+  font-size: 12px;
+}

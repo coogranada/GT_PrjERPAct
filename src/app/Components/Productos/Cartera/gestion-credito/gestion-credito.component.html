@@ -2709,12 +2709,12 @@
                                                         <td>{{ itemReliquida.Cuota | currency }}</td>
                                                         <td class="text-center">{{ itemReliquida.CuotaLibranza ?? 0 | currency }}</td>
                                                         <td class="text-center">{{ itemReliquida.Plazo }}</td>
-                                                        <td class="text-center">{{ itemReliquida.Tasa }} %</td>
+                                                        <td class="text-center">{{ itemReliquida.Tasa | number:'1.4-4' }} %</td>
                                                         <td class="text-center">{{ itemReliquida.TasaNominal | number:'1.4-4' }} %</td>
                                                         <td class="text-center">{{ itemReliquida.Puntos ?? 0 | number:'1.4-4' }} %</td>
                                                         <td class="text-center">{{ itemReliquida.PeriodoGracia ?? 0 }}</td>
                                                         <td style="min-width: 135px;">{{ itemReliquida.FechaInicioGracia | date:'yyyy/MM/dd HH:mm:ss' }}</td>
-                                                        <td>{{ itemReliquida.Fecha }}</td>
+                                                        <td>{{ itemReliquida.Fecha | date:'yyyy/MM/dd HH:mm:ss' }}</td>
                                                         <td>{{ itemReliquida.Novedad.includes('Disminuir Cuota') ? 'Cambio de Cuota' : itemReliquida.Novedad }}</td>                                                    
                                                     </tr>
                                                 </tbody>
