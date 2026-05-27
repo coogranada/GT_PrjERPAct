@@ -67,17 +67,26 @@
                 <div class="form-group">
                     <label class="bold">Plazo:</label>
                     <input *ngIf="!usaSelectPlazo" #plazo type="text" class="form-control input__border" formControlName="plazo" maxlength="3">
-                    
+                    <span *ngIf="context.operacion === '140' && esCuotaVariable(this.cambiarInfoCreditoForm.controls.sistemaSelect.value!) && periodoInteresMeses" class="help-block-grey">Equivale a {{ this.cambiarInfoCreditoForm.controls.plazo.value! * periodoInteresMeses }} meses</span>
+
                     <select *ngIf="usaSelectPlazo" formControlName="plazoSelect" class="form-control input__border">
                         <option *ngFor="let p of plazos" [ngValue]="p">
                             {{ p }}
                         </option>
                     </select>
                     <span *ngIf="context.operacion === '135' && cambiarInfoCreditoForm.controls.plazo.invalid" class="help-block">Plazo no es válido.</span>
-                    <span *ngIf="context.operacion === '140' &&  cambiarInfoCreditoForm.controls.plazo.hasError('min')" class="help-block">
-                        Plazo debe ser mayor.
+                    <span *ngIf="context.operacion === '140' && (cambiarInfoCreditoForm.controls.plazo.hasError('min') || cambiarInfoCreditoForm.controls.plazo.hasError('max'))" class="help-block">
+                        Plazo mínimo: {{ plazoMinimo }} <br> Plazo máximo: {{ plazoMaximo }}
                     </span>
 
+                     <span *ngIf="context.operacion === '140' 
+                            && esCuotaVariable(this.cambiarInfoCreditoForm.controls.sistemaSelect.value!)
+                            && !plazoEsMultiploExacto && !cambiarInfoCreditoForm.controls.plazo.hasError('min') 
+                            && !cambiarInfoCreditoForm.controls.plazo.hasError('max')
+                            && periodoCapitalMeses
+                            && periodoInteresMeses && periodoCapitalMeses" class="help-block">
+                        Plazo en meses debe ser multiplo del periodo capital ({{ periodoCapitalMeses }})
+                    </span>
                 </div>
             </div>
 
