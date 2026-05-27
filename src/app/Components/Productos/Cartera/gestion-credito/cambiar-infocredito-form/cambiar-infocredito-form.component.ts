@@ -306,7 +306,7 @@ export class CambiarInfoCreditoForm {
     this.plazoMaximo = maximoPeriodoInteres;
     validators.push(Validators.max(this.plazoMaximo));
 
-    const plazoFaltanteMeses = diferenciaEnMeses(new Date(), this.context.detalleCredito.fechaVencimiento);
+    const plazoFaltanteMeses = Math.max(diferenciaEnMeses(new Date(), this.context.detalleCredito.fechaVencimiento), 0);
     const minimoMeses = Math.ceil((plazoFaltanteMeses + 1) / periodoCapitalMeses) * periodoCapitalMeses;
     const minimoPeriodosInteres = minimoMeses / periodoInteresMeses;
 
