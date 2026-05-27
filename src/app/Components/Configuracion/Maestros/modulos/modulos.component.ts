@@ -3,13 +3,13 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ModulosService } from '../../../../Services/Maestros/modulos.service';
 import { GeneralesService } from '../../../../../app/Services/Productos/generales.service';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { ModuleValidationService } from '../../../../../app/Services/Enviroment/moduleValidation.service';
 import { fromEvent } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { LoginService } from '../../../../../app/Services/Login/login.service';
 import { AlertService } from '../../../../Services/Alert/alert.service';
+import { LoadingService } from '../../../../Services/shared/loading.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -28,10 +28,6 @@ export class ModulosComponent implements OnInit {
   { value: '3', descripcion: 'Activo' },
   { value: '4', descripcion: 'Inactivo' }];
   public modulosForm!: FormGroup;
-
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
-  public loading  : boolean = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour : string = ColorPrimario;
   public secondaryColour : string = ColorSecundario;
   private CodModulo : number = 7;
@@ -41,8 +37,10 @@ export class ModulosComponent implements OnInit {
   btnActualizar : boolean = true;
 
   constructor(private modulosService: ModulosService, private notif: AlertService,
-    private generalesService: GeneralesService, private moduleValidationService: ModuleValidationService,
-    private el: ElementRef, private loginService: LoginService, private router: Router) {
+    private generalesService: GeneralesService, 
+    private moduleValidationService: ModuleValidationService,
+    private el: ElementRef, private loginService: LoginService, private router: Router,
+    private loading: LoadingService) {
     this.modulosModel = new ModulosModel();
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
@@ -68,27 +66,27 @@ export class ModulosComponent implements OnInit {
     this.IrArriba();
   }
   ObtenerModulos() {
-    this.loading = true;
+    this.loading.show();
     this.modulosService.getModulos().subscribe(result => {
-        this.loading = false;
+        this.loading.hide();
         this.dataModulosResult = result;
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notif.onDanger('Error', errorMessage);
         console.log(errorMessage);
       });
   }
   GuardarModulos() {
-    this.loading = true;
+    this.loading.show();
     if (this.modulosForm.value.idEstado === '0') {
       this.notif.onWarning('Advertencia', 'Debe seleccionar un estado válido para realizar el registro.');
     } else {
       this.GuardarLog(this.modulosForm.value, 96, 0, 0, 7);// GUARDAR
       this.modulosService.setModulos(this.modulosForm.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           console.log(result);
           if (result) {
             this.resetForm();
@@ -99,7 +97,7 @@ export class ModulosComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           this.notif.onDanger('Error', errorMessage);
           console.log(errorMessage);
@@ -107,14 +105,14 @@ export class ModulosComponent implements OnInit {
     }
   }
   ActualizarModulos() {
-    this.loading = true;
+    this.loading.show();
     if (this.modulosForm.value.idEstado === '0') {
       this.notif.onWarning('Advertencia', 'Debe seleccionar un estado válido para realizar el registro.');
     } else {
       console.log(this.modulosForm);
       this.GuardarLog(this.modulosForm.value, 97, 0, 0, 7); //ACTUALIZAR
       this.modulosService.updateModulos(this.modulosForm.value).subscribe( result => {
-          this.loading = false;
+          this.loading.hide();
           console.log(result);
           if (result) {
             this.isdisabledUpdate = true;
@@ -126,7 +124,7 @@ export class ModulosComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           this.notif.onDanger('Error', errorMessage);
           console.log(errorMessage);
@@ -143,10 +141,10 @@ export class ModulosComponent implements OnInit {
     this.modulosForm.get('idModulo')?.setValue(datos.IdModulo);
   }
   GuardarLog(form : any, operacion : number, cuenta : number, tercero : number, modulo : number) {
-    this.loading = true;
+    this.loading.show();
     this.generalesService.Guardarlog(form, operacion, cuenta, tercero, modulo).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         console.log(result);
       });
   }

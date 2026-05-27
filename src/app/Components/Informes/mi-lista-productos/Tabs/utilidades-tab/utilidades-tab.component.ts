@@ -10,9 +10,9 @@ import {
   LogMisProductos,
   DatosProductos
 } from "../../../../../Models/Informes/MisProductos/mis-producto.model";
-import { NgxLoadingComponent } from 'ngx-loading';
 import swal from "sweetalert2";
 import { AlertService } from '../../../../../Services/Alert/alert.service';
+import { LoadingService } from '../../../../../Services/shared/loading.service';
 
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -24,8 +24,6 @@ const ColorSecundario = 'rgb(13,165,80,0.7)';
   standalone: false
 })
 export class UtilidadesTabComponent implements OnInit, DoCheck {
-  @ViewChild("ngxLoading", { static: false })
-  ngxLoadingComponent!: NgxLoadingComponent;
   public FormUtilidades!: FormGroup;
   public idTerceroCertificate: any;
   public yearGravable: any;
@@ -34,7 +32,6 @@ export class UtilidadesTabComponent implements OnInit, DoCheck {
   public certificadoSaldos = new CertificadoSaldos();
   public DataEmailSaldos = new DataEmailSaldos();
   public DataEmailCertificado = new DataEmailCertificado();
-  public loading = false;
   public loadingPdfSaldos = false;
   public loadingPdfCertificate = false;
   public showMsg1: Boolean = false;
@@ -68,7 +65,8 @@ export class UtilidadesTabComponent implements OnInit, DoCheck {
   public validaCertificadoRetenciones: any;
   constructor(
     private MiListaProductosService: MiListaProductosService,
-    private notif: AlertService
+    private notif: AlertService,
+    private loading: LoadingService
   ) {}
 
   ngOnInit() {
@@ -177,19 +175,19 @@ export class UtilidadesTabComponent implements OnInit, DoCheck {
 
         if (opcionSel == "0") {
           this.yearGravable = yearSel;
-          this.loading = true;
+          this.loading.show();
           this.MiListaProductosService.getCertificadoSaldos(
             yearSel,
             this.idTerceroCertificate
           ).subscribe(
             (result) => {
               if (result.TipoAlerta == 2) {
-                this.loading = false;
+                this.loading.hide();
                 this.notif.onWarning(
                   "Advertencia",
                   "El año ingresado no es valido.");
               } else if (result.TipoAlerta == 3) {
-                this.loading = false;
+                this.loading.hide();
                 this.notif.onWarning(
                   "Advertencia",
                   "No se encontró registro.");
@@ -200,7 +198,7 @@ export class UtilidadesTabComponent implements OnInit, DoCheck {
                 let datas = localStorage.getItem("Data")
                 var dataUser = JSON.parse(window.atob(datas == null ? "" : datas));
                 var idTerceroUsuario = dataUser.lngTercero;
-                this.loading = true;
+                this.loading.show();
                 var Oficina = dataUser.Oficina;
 
                 this.MiListaProductosService.getCertificadoSaldosPdf(
@@ -226,10 +224,10 @@ export class UtilidadesTabComponent implements OnInit, DoCheck {
                     document.querySelector("object")!.name = "Certificado";
                     document.querySelector("object")!.type = "application/pdf";
                     $("#abrirModalCertificate").click();
-                    this.loading = false;
+                    this.loading.hide();
                   },
                   (errorp) => {
-                    this.loading = false;
+                    this.loading.hide();
                     this.notif.onDanger(
                       "Error",
                       errorp);
@@ -264,7 +262,7 @@ export class UtilidadesTabComponent implements OnInit, DoCheck {
 
             },
             (error) => {
-              this.loading = false;
+              this.loading.hide();
               this.notif.onDanger(
                 "Error.",
                 error);
@@ -275,7 +273,7 @@ export class UtilidadesTabComponent implements OnInit, DoCheck {
         if (opcionSel == "1") {
           this.showMsg3 = false;
           this.showMsg4 = false;
-          this.loading = true;
+          this.loading.show();
           this.yearGravable = yearSel;
           if (
             this.codigoAnexo == undefined ||
@@ -293,12 +291,12 @@ export class UtilidadesTabComponent implements OnInit, DoCheck {
             (result) => {
               var anexo = this.codigoAnexo;
               if (result.TipoAlerta == 2) {
-                this.loading = false;
+                this.loading.hide();
                 this.notif.onWarning(
                   "Advertencia",
                   "El año ingresado no es valido.");
               } else if (result.TipoAlerta == 3) {
-                this.loading = false;
+                this.loading.hide();
                 this.notif.onWarning(
                   "Advertencia",
                   "No se encontró registro.");
@@ -312,7 +310,7 @@ export class UtilidadesTabComponent implements OnInit, DoCheck {
                 var idTerceroUsuario = dataUser.lngTercero;
                 var Oficina = dataUser.Oficina;
 
-                this.loading = true;
+                this.loading.show();
                 this.MiListaProductosService.getCertificadoRetencionPdf(
                   yearSel,
                   this.idTerceroCertificate,
@@ -337,7 +335,7 @@ export class UtilidadesTabComponent implements OnInit, DoCheck {
                     document.querySelector("object")!.name = "Certificado";
                     document.querySelector("object")!.type = "application/pdf";
                     $("#abrirModalCertificateRetenciones").click();
-                    this.loading = false;
+                    this.loading.hide();
                   },
                   (errorP) => {
                     this.loadingPdfCertificate = false;
@@ -384,7 +382,7 @@ export class UtilidadesTabComponent implements OnInit, DoCheck {
 
             },
             (error) => {
-              this.loading = false;
+              this.loading.hide();
               this.notif.onDanger(
                 "Error.",
                 error);
@@ -394,7 +392,7 @@ export class UtilidadesTabComponent implements OnInit, DoCheck {
         }
       }
     } else {
-      this.loading = false;
+      this.loading.hide();
       this.notif.onWarning(
         "Advertencia",
         "Debe buscar un asociado para realizar esta consulta.");

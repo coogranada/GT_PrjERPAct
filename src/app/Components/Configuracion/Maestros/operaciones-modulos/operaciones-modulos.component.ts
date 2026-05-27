@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import Swal from 'sweetalert2';
 import { OperacionesModulosService } from '../../../../Services/Maestros/operaciones-modulos.service';
 import { ModuleValidationService } from '../../../../Services/Enviroment/moduleValidation.service';
@@ -10,6 +9,7 @@ import { map } from 'rxjs/operators';
 import { LoginService } from '../../../../Services/Login/login.service';
 import { Router } from '@angular/router';
 import { AlertService } from '../../../../Services/Alert/alert.service';
+import { LoadingService } from '../../../../Services/shared/loading.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -38,15 +38,14 @@ export class OperacionesModulosComponent implements OnInit {
   public arrayForm: any;
   public compareUndefined = undefined;
   private CodModulo = 50;
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
   public DatosUsuario : any = {};
   constructor(private operacionesModulosService: OperacionesModulosService,
-    private notificacion: AlertService, private moduleValidationService: ModuleValidationService, private generalesService: GeneralesService,
-    private el: ElementRef, private loginService: LoginService, private router: Router) {
+    private notificacion: AlertService, private moduleValidationService: ModuleValidationService, 
+    private generalesService: GeneralesService,
+    private el: ElementRef, private loginService: LoginService,
+     private router: Router, private loading: LoadingService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -71,40 +70,40 @@ export class OperacionesModulosComponent implements OnInit {
     this.IrArriba();
   }
   ObtenerModulos() {
-    this.loading = true;
+    this.loading.show();
     this.operacionesModulosService.ObtenerModulos().subscribe((result : any[]) => {
-        this.loading = false;
+        this.loading.hide();
         console.log(result);
         this.ListaModulos = result;
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notificacion.onDanger('Error', errorMessage);
         console.log(errorMessage);
       });
   }
   OperacionesDenegadas(PModulo : number) {
-    this.loading = true;
+    this.loading.show();
     this.operacionesModulosService.ObtenerOperacionesDenegadas(PModulo).subscribe((result : any[]) => {
-        this.loading = false;
+        this.loading.hide();
         this.ListaOperacionesDenegadas = result;
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorJson = JSON.parse(error._body);
         this.notificacion.onDanger('Error', errorJson);
         console.log(error);
       });
   }
   OperacionesPermitidas(PModulo : number) {
-    this.loading = true;
+    this.loading.show();
     this.operacionesModulosService.ObtenerOperacionesPermitidas(PModulo).subscribe((result : any[]) => {
-        this.loading = false;
+        this.loading.hide();
         this.ListaOperacionesPermitidas = result;
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notificacion.onDanger('Error', errorMessage);
         console.log(errorMessage);
@@ -152,14 +151,14 @@ export class OperacionesModulosComponent implements OnInit {
     }
   }
   Agregar() {
-    this.loading = true;
+    this.loading.show();
     this.arrayRemove = this.arrayAddOperacion[0];
     this.arrayForm = this.operacionesFrom.value;
     this.operacionesFrom.get('IdOperacion')?.setValue(this.arrayRemove.IdOperacion);
     this.GuardarLog(this.operacionesFrom.value, 98, 0, 0, 50); //AGREGAR
     this.operacionesModulosService.Guardar(this.operacionesFrom.value).subscribe((result : any) => {
         if (result) {
-          this.loading = false;
+          this.loading.hide();
           this.operacionesFrom.get('IdModulo')?.setValue(this.arrayForm.IdModulo);
           this.ObtenerPermitidosDenegados();          
           this.notificacion.onSuccess('Exitoso', 'La operación se guardó correctamente.');
@@ -167,7 +166,7 @@ export class OperacionesModulosComponent implements OnInit {
           this.notificacion.onWarning('Advertencia', 'Ocurrió un error al guardar la operación.');
         }
       },error => {
-        this.loading = false;
+        this.loading.hide();
         const errorJson = JSON.parse(error._body);
         this.notificacion.onDanger('Error', errorJson);
         console.log(error);
@@ -185,7 +184,7 @@ export class OperacionesModulosComponent implements OnInit {
     let _Mensaje = '';
 
     this.operacionesModulosService.ObtenerUsuarios(_idmodulo, this.arrayRemove.IdOperacion).subscribe((result : any[]) => {
-        this.loading = false;
+        this.loading.hide();
         if (result !== null && result.length > 0) {
           result.forEach((element : any) => {
             if (_usuarios !== '') {
@@ -226,7 +225,7 @@ export class OperacionesModulosComponent implements OnInit {
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorJson = JSON.parse(error._body);
         this.notificacion.onDanger('Error', errorJson);
         console.log(error);
@@ -247,7 +246,7 @@ export class OperacionesModulosComponent implements OnInit {
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorJson = JSON.parse(error._body);
         this.notificacion.onDanger('Error', errorJson);
         console.log(error);
@@ -280,10 +279,10 @@ export class OperacionesModulosComponent implements OnInit {
     return false;
   }
   GuardarLog(form : any, operacion : number, cuenta : number, tercero : number, modulo : number) {
-    this.loading = true;
+    this.loading.show();
     this.generalesService.Guardarlog(form, operacion, cuenta, tercero, modulo).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         console.log(result);
       });
   }

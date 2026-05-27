@@ -2,12 +2,12 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { PermisosService } from '../../../../../../Services/Maestros/permiso.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { OperacionesModulosService } from '../../../../../../Services/Maestros/operaciones-modulos.service';
 import { ConfiguracionNotificacion } from '../../../../../../../environments/config.noticaciones';
 import { ConfiguracionInformesService } from '../../../../../../Services/Informes/configuracion-informes.service';
 import { InformePerfilService } from '../../../../../../Services/Maestros/informes-perfiles';
 import swal from 'sweetalert2';
+import { LoadingService } from '../../../../../../Services/shared/loading.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 
@@ -20,12 +20,8 @@ const ColorSecundario = 'rgb(13,165,80,0.7)';
 })
 
 export class PermisosInformesComponent implements OnInit {
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
   @ViewChild('ModalMasivoC', { static: true }) private modalMasivoC!: ElementRef;
   @ViewChild('ModalMasivoCerrar', { static: true }) private modalMasivoCerrar!: ElementRef
-
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
 
@@ -45,8 +41,11 @@ export class PermisosInformesComponent implements OnInit {
 
   public permisosForm!: FormGroup;
 
-  constructor(private permisosService: PermisosService, private notif: ToastrService, private operacionesModulosService: OperacionesModulosService,
-    private configuracionInformesS: ConfiguracionInformesService, private InformePerfilS: InformePerfilService
+  constructor(private permisosService: PermisosService, private notif: ToastrService, 
+    private operacionesModulosService: OperacionesModulosService,
+    private configuracionInformesS: ConfiguracionInformesService, 
+    private InformePerfilS: InformePerfilService,
+    private loading: LoadingService
   ) { }
 
   ngOnInit(): void {
@@ -293,7 +292,7 @@ export class PermisosInformesComponent implements OnInit {
 
       if (columnasSeleccionadas.length === 0) {
         this.notif.warning('Advertencia', 'Debe seleccionar al menos un perfil para aplicar la configuración.', ConfiguracionNotificacion.configRightTop);
-        this.loading = false;
+        this.loading.hide();
         return;
       }
 
@@ -319,24 +318,24 @@ export class PermisosInformesComponent implements OnInit {
   }
 
   copiarPermisoInformes(columnasSeleccionadas: any){
-    this.loading = true;
+    this.loading.show();
     this.InformePerfilS.CopiarPermisosInformes(columnasSeleccionadas, this.selectedPerfil).subscribe(
       (respuesta) => {
         this.obtenerInformesDenegados();
         this.obtenerInformesPermitidos();
         this.accion = 0;
-        this.loading = false;
+        this.loading.hide();
         this.notif.success('Exitoso', 'Permisos actualizados correctamente', ConfiguracionNotificacion.configRightTopNoClose);
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         let mensaje = 'Ha ocurrido un error inesperado.';
         try {
           if (error && error.Mensaje) {
             mensaje = error.Mensaje;
           }
         } catch (e) {
-        this.loading = false;
+        this.loading.hide();
           console.error('Error al parsear el mensaje del backend:', e);
         }
         this.notif.warning("Advertencia", mensaje, ConfiguracionNotificacion.configRightTop);

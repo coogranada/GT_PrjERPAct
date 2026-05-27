@@ -3,13 +3,13 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { TipoUsuarioModel } from '../../../../Models/Maestros/tipoUsuario.model';
 import { GeneralesService } from '../../../../../app/Services/Productos/generales.service';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { ModuleValidationService } from '../../../../../app/Services/Enviroment/moduleValidation.service';
 import { fromEvent } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { LoginService } from '../../../../../app/Services/Login/login.service';
 import { AlertService } from '../../../../Services/Alert/alert.service';
+import { LoadingService } from '../../../../Services/shared/loading.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -28,10 +28,6 @@ export class TipoUsuariosComponent implements OnInit {
   { value: '4', descripcion: 'Inactivo' }];
   public tipoForm!: FormGroup;
   public isdisabledUpdate = true;
-
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
-  public loading : boolean = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour : string = ColorPrimario;
   public secondaryColour : string = ColorSecundario;
   private CodModulo : number = 6;
@@ -41,8 +37,10 @@ export class TipoUsuariosComponent implements OnInit {
   btnActualizar : boolean = true;
 
   constructor(private tipoService: TipoUsuariosService, private notif: AlertService,
-    private generalesService: GeneralesService, private moduleValidationService: ModuleValidationService,
-    private el: ElementRef, private loginService: LoginService, private router: Router) {
+    private generalesService: GeneralesService, 
+    private moduleValidationService: ModuleValidationService,
+    private el: ElementRef, private loginService: LoginService, 
+    private router: Router, private loading: LoadingService) {
     this.tipoModel = new TipoUsuarioModel();
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
@@ -67,27 +65,27 @@ export class TipoUsuariosComponent implements OnInit {
     this.IrArriba();
   }
   ObtenerTipo() {
-    this.loading = true;
+    this.loading.show();
     this.tipoService.getTipoUsuario().subscribe((result : any[]) => {
-        this.loading = false;
+        this.loading.hide();
         this.dataTipoResult = result;
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notif.onDanger('Error', errorMessage);
         console.log(errorMessage);
       });
   }
   GuardarTipo() {
-    this.loading = true;
+    this.loading.show();
     if (this.tipoForm.value.idEstado === '0') {
       this.notif.onWarning('Advertencia', 'Debe seleccionar un estado.');
     } else {
       this.GuardarLog(this.tipoForm.value, 96, 0, 0, 6); // GUARDAR
       this.tipoService.setTipoUsuario(this.tipoForm.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           if (result) {
             this.resetForm();
             this.notif.onSuccess('Exitoso', 'El tipo de usuario se guardó correctamente.');
@@ -97,7 +95,7 @@ export class TipoUsuariosComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           this.notif.onDanger('Error', errorMessage);
           console.log(errorMessage);
@@ -105,14 +103,14 @@ export class TipoUsuariosComponent implements OnInit {
     }
   }
   ActualizarTipos() {
-    this.loading = true;
+    this.loading.show();
     if (this.tipoForm.value.idEstado === '0') {
       this.notif.onWarning('Advertencia', 'Debe seleccionar un estado.');
     } else {
       this.GuardarLog(this.tipoForm.value, 97, 0, 0,6); // ACTUALIZAR
       this.tipoService.updateTipoUsuario(this.tipoForm.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           if (result) {
             this.isdisabledUpdate = true;
             this.resetForm();
@@ -123,7 +121,7 @@ export class TipoUsuariosComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           this.notif.onDanger('Error', errorMessage);
           console.log(errorMessage);
@@ -140,10 +138,10 @@ export class TipoUsuariosComponent implements OnInit {
     this.tipoForm.get('IdTipoUsuario')?.setValue(datos.IdTipoUsuario);
   }
   GuardarLog(form : any, operacion : number, cuenta : number, tercero : number, modulo : number) {
-    this.loading = true;
+    this.loading.show();
     this.generalesService.Guardarlog(form, operacion, cuenta, tercero, modulo).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         console.log(result);
       });
   }

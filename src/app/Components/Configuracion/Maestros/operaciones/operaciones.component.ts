@@ -7,13 +7,13 @@ import { PermisosModel } from '../../../../Models/Maestros/permisos.model';
 import { EstadosOperacionesService } from '../../../../Services/Maestros/estados-operaciones.service';
 import Swal from 'sweetalert2';
 import { GeneralesService } from '../../../../Services/Productos/generales.service';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { ModuleValidationService } from '../../../../Services/Enviroment/moduleValidation.service';
 import { reduce, map } from 'rxjs/operators';
 import { fromEvent } from 'rxjs';
 import { Router } from '@angular/router';
 import { LoginService } from '../../../../Services/Login/login.service';
 import { AlertService } from '../../../../Services/Alert/alert.service';
+import { LoadingService } from '../../../../Services/shared/loading.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -41,10 +41,6 @@ export class OperacionesComponent implements OnInit {
   public arrayRemove: any;
   public arrayForm: any;
   public compareUndefined = undefined;
-
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
   private CodModulo = 42;
@@ -54,7 +50,8 @@ export class OperacionesComponent implements OnInit {
     private notif: AlertService,
     private generalesService: GeneralesService,
     private moduleValidationService: ModuleValidationService, private el: ElementRef,
-    private loginService: LoginService, private router: Router) {
+    private loginService: LoginService, private router: Router,
+    private loading: LoadingService) {
     this.permisosModel = new PermisosModel();
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
@@ -80,58 +77,58 @@ export class OperacionesComponent implements OnInit {
     this.IrArriba();
   }
   ObtenerPerfiles() {
-    this.loading = true;
+    this.loading.show();
     this.permisosService.getPerfiles().subscribe((result : any[]) => {
-        this.loading = false;
+        this.loading.hide();
         this.dataPerfil = result;
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notif.onDanger('Error', errorMessage);
         console.log(errorMessage);
       });
   }
   ObtenerModulosPermitidos() {
-    this.loading = true;
+    this.loading.show();
     this.operacionesFrom.get('IdModulo')?.reset();
     this.dataDenegadas = [];
     this.datapermitidas = [];
     this.permisosModel.IdPerfil = this.operacionesFrom.get('IdPerfil')?.value;
     this.permisosService.getPermitidos(this.permisosModel).subscribe((result : any[]) => {
-        this.loading = false;
+        this.loading.hide();
         console.log(result);
         this.dataModulos = result;
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notif.onDanger('Error', errorMessage);
         console.log(errorMessage);
       });
   }
   OperacionesDenegadas() {
-    this.loading = true;
+    this.loading.show();
     this.operacionesService.OperacionesDenegadasPerfil(this.operacionesFrom.value).subscribe((result : any[]) => {
-        this.loading = false;
+        this.loading.hide();
         this.dataDenegadas = result;
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notif.onDanger('Error', errorMessage);
         console.log(errorMessage);
       });
   }
   OperacionesPermitidas() {
-    this.loading = true;
+    this.loading.show();
     this.operacionesService.OperacionesPermitidasPerfil(this.operacionesFrom.value).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.datapermitidas = result;
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notif.onDanger('Error', errorMessage);
         console.log(errorMessage);
@@ -174,7 +171,7 @@ export class OperacionesComponent implements OnInit {
     }
   }
   sendPermisos() {
-    this.loading = true;
+    this.loading.show();
     const _IdPerfil = this.operacionesFrom.get('IdPerfil')?.value;
     const _IdModulo = this.operacionesFrom.get('IdModulo')?.value;
     this.arrayRemove = this.arrayAddOperacion[0];
@@ -184,7 +181,7 @@ export class OperacionesComponent implements OnInit {
     let _Mensaje = '';
     this.operacionesService.ObtenerUsuarios(_IdPerfil, _IdModulo, _IdOperacion).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         if (result !== null && result.length > 0) {
           result.forEach((element: any) => {
             if (_usuarios !== '') {
@@ -231,7 +228,7 @@ export class OperacionesComponent implements OnInit {
                   }
                 },
                 error => {
-                  this.loading = false;
+                  this.loading.hide();
                   const errorMessage = <any>error;
                   this.notif.onDanger('Error', errorMessage);
                   console.log(errorMessage);
@@ -247,14 +244,14 @@ export class OperacionesComponent implements OnInit {
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notif.onDanger('Error', errorMessage);
         console.log(errorMessage);
       });
   }
   AgregarOperacion() {
-    this.loading = true;
+    this.loading.show();
     this.arrayRemove = this.arrayAddOperacion[0];
     this.arrayForm = this.operacionesFrom.value;
     this.operacionesFrom.get('IdOperaciones')?.setValue(this.arrayRemove.IdOperacion);
@@ -262,7 +259,7 @@ export class OperacionesComponent implements OnInit {
     this.operacionesService.GuardarOperacionXPerfil(this.operacionesFrom.value).subscribe(
       result => {
         if (result) {
-          this.loading = false;
+          this.loading.hide();
           this.operacionesFrom.get('IdOperaciones')?.setValue(this.arrayForm.IdOperaciones);
           this.operacionesFrom.get('IdOperacionesPerfil')?.setValue(this.arrayForm.IdOperacionesPerfil);
           this.operacionesFrom.get('IdPerfil')?.setValue(this.arrayForm.IdPerfil);
@@ -274,7 +271,7 @@ export class OperacionesComponent implements OnInit {
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         this.notif.onDanger('Error', error);
         console.error('sendPermisos' + error);
       });
@@ -327,10 +324,10 @@ export class OperacionesComponent implements OnInit {
     this.bloqueoEliminar = true;
   }
   GuardarLog(form : any, operacion : number, cuenta : number, tercero : number, modulo : number) {
-    this.loading = true;
+    this.loading.show();
     this.generalesService.Guardarlog(form, operacion, cuenta, tercero, modulo).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         console.log(result);
       }
     );

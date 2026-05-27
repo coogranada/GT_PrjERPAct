@@ -12,9 +12,9 @@ import { GeneralesService } from '../../../../../Services/Productos/generales.se
 import { ClientesService } from '../../../../../Services/Clientes/clientes.service';
 import { OperacionesModel } from '../../../../../Models/Maestros/operaciones.model';
 import { OperacionesService } from '../../../../../Services/Maestros/operaciones.service';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { AlertService } from '../../../../../Services/Alert/alert.service';
 import { RegimenTributario } from '../../../../../Models/Clientes/Juridicos/RegimenTributario';
+import { LoadingService } from '../../../../../Services/shared/loading.service';
 
 declare var $: any;
 const PrimaryWhite = 'rgb(13,165,80)';
@@ -29,10 +29,6 @@ const SecondaryGrey = 'rgb(13,165,80,0.7)';
     standalone : false
 })
 export class InfoJuridicosComponent implements OnInit, AfterViewInit {
-
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = PrimaryWhite;
   public secondaryColour = SecondaryGrey;
 
@@ -166,7 +162,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
   constructor(private clientesGetListService: ClientesGetListService, private notif: AlertService,
     private recursosGeneralesService: RecursosGeneralesService, private juridicoService: JuridicosService,
     private generalesService: GeneralesService, private formBuilder: FormBuilder, private clientesService: ClientesService,
-    private operacionesService: OperacionesService) { }
+    private operacionesService: OperacionesService, private loading: LoadingService) { }
 
   ngOnInit() {
     let data = localStorage.getItem('Data');
@@ -1133,54 +1129,54 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
   }
 
   CambiarNit() {
-    this.loading=true;
+    this.loading.show();
     const info = this.infoJuridicoFrom.get('Nit')?.value;
     if (info === this.NitConsultado) {
       this.notif.onWarning('Advertencia', 'Debe ingresar un nit diferente.');
-      this.loading = false;
+      this.loading.hide();
     } else {
       const juridico = this.infoJuridicoFrom.value.IdJuridico;
       if (info !== null && info !== undefined && info !== '') {
         if (info.trim() !== "") {
           this.GuardarLog('Cambio de Nit: ' + info + ' juridico : ' + juridico, this.OperacionActual, 0, juridico,12);
-          this.loading=true;
+          this.loading.show();
           this.juridicoService.CambiarNit(juridico, info, this.userConect.Usuario).subscribe(
             result => {
               if (result) {
-                this.loading=true;
+                this.loading.show();
                 this.mostrarSiguiente = false;
                 this.mostrarActualizar = false;
                 this.mostrarCambiar = false;
                 this.mostrarNuevoInfo = false;
                 this.bloquearNit = true;
-                this.loading=true;
+                this.loading.show();
                 this.emitEventResetOperacion.emit(true);
                 this.notif.onSuccess('Exitoso', 'El cambio de nit se realizó correctamente.');
                 this.IrArriba();
-                this.loading = false;
+                this.loading.hide();
                 $('#OperacionMarcada').val(1);
                 $('#ProDescripcionOpe').val(1);
 
               }else{
-                this.loading = false;
+                this.loading.hide();
                 console.error('Error al realizar la actualizacion - juridicos: ' + result);
                 this.notif.onDanger('Error', 'No se pudo realizar la actualización - Error ');
               }
               this.desbloquearTabs();
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               console.error('Error al realizar la actualizacion - juridicos: ' + error);
               this.notif.onDanger('Error', 'No se pudo realizar la actualización - Error ');
             });
         } else {
-          this.loading = false;
+          this.loading.hide();
           this.IrArriba();
           this.infoJuridicoFrom.get('Nit')?.reset();
           this.notif.onWarning('Advertencia', 'Debe ingresar un valor valido.');
         }
       } else {
-        this.loading = false;
+        this.loading.hide();
         this.IrArriba();
         this.notif.onWarning('Advertencia', 'El campo Nit es obligatorio.');
       }
@@ -1188,7 +1184,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
   }
 
   CambiarRazonSocial() {
-    this.loading = true;
+    this.loading.show();
     const juridico = this.infoJuridicoFrom.value.IdJuridico;
     var info = this.infoJuridicoFrom.get('RazonSocial')?.value;
     var docu = this.infoJuridicoFrom.get('Nit')?.value;
@@ -1200,7 +1196,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
           // if (this.infoJuridicoFrom.valid) {
             this.GuardarLog('Cambio de razon social: ' + info + ' juridico : ' + juridico,
               this.OperacionActual, 0, juridico,12);
-          this.loading = true;
+          this.loading.show();
           this.juridicoService.CambiarRazonSocial(juridico, info, docu, this.userConect.Usuario).subscribe(
             result => {
                 if (result) {
@@ -1214,42 +1210,42 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
                   this.IrArriba();
                   $('#OperacionMarcada').val(1);
                   $('#ProDescripcionOpe').val(1);
-                  this.loading = false;
+                  this.loading.hide();
                   this.desbloquearTabs();
                 }
               },
             error => {
-                this.loading = false;
+                this.loading.hide();
                 console.error('Error al realizar la actualizacion - juridicos: ' + error);
                 this.notif.onDanger('Error', 'No se pudo realizar la actualización - Error ');
               });         
         } else {
-          this.loading = false;
+          this.loading.hide();
           this.IrArriba();
           this.infoJuridicoFrom.get('RazonSocial')?.reset();
           this.notif.onWarning('Advertencia', 'Debe ingresar una razón social diferente.');
         }
       } else {
-        this.loading = false;
+        this.loading.hide();
         this.IrArriba();
         this.infoJuridicoFrom.get('RazonSocial')?.reset();
         this.notif.onWarning('Advertencia', 'Debe ingresar un valor valido.');
       }
     } else {
-      this.loading = false;
+      this.loading.hide();
       this.IrArriba();
       this.notif.onWarning('Advertencia', 'Debe ingresar la razón social.');
     }
   }
 
   CambiarEstado() {
-    this.loading = true;
+    this.loading.show();
     const juridico = this.infoJuridicoFrom.value.IdJuridico;
     this.estadoSeleccion = this.infoJuridicoFrom.get('Estado')?.value;
     if (this.estadoSeleccion !== null && this.estadoSeleccion !== undefined) {
         if (this.AnteriorEstadoSeleccion.IdEstado !== this.estadoSeleccion.IdEstado) {
           this.GuardarLog('Cambio de estado: ' + this.estadoSeleccion.IdEstado + ' juridico : ' + juridico, this.OperacionActual, 0, juridico,12);
-          this.loading = true;
+          this.loading.show();
           this.juridicoService.CambiarEstado(juridico, this.estadoSeleccion.IdEstado, this.userConect.lngTercero, '').subscribe(
             result => {
               if (result) {
@@ -1263,7 +1259,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
                       this.emitEventResetOperacion.emit(true);
                       this.notif.onSuccess('Exitoso', 'El cambio de estado se realizó correctamente.');
                       this.IrArriba();
-                      this.loading = false;
+                      this.loading.hide();
                     this.generalesService.AgregarDisabled('estadoJur');
                     $('#OperacionMarcada').val(1);
                     $('#ProDescripcionOpe').val(1);
@@ -1279,7 +1275,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
                     this.IrArriba();
                     this.AbrirDescripcion.nativeElement.click();
                     this.generalesService.AgregarDisabled('estadoJur');
-                    this.loading = false;
+                    this.loading.hide();
                     $('#OperacionMarcada').val(1);
                     $('#ProDescripcionOpe').val(1);
                   }
@@ -1287,22 +1283,22 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
                 this.desbloquearTabs();
               },
             error => {
-              this.loading = false;
+              this.loading.hide();
                 console.error('Error al realizar la actualización - juridicos: ' + error);
                 this.notif.onDanger('Error', 'No se pudo realizar la actualización - Error ');
               });
         } else {
-          this.loading = false;
+          this.loading.hide();
         this.notif.onWarning('Advertencia', 'Debe seleccionar un estado para esta operación.');
         }
     } else {
-      this.loading = false;
+      this.loading.hide();
       this.notif.onWarning('Advertencia', 'Debe seleccionar un estado valido.');
     }
   }
 
   CambiarAsesor() {
-    this.loading = true;
+    this.loading.show();
     const juridico = this.infoJuridicoFrom.value.IdJuridico;
     const info = this.infoJuridicoFrom.get('CodigoAsesor')?.value;
     const infoName = this.infoJuridicoFrom.get('NombreAsesor')?.value;
@@ -1312,7 +1308,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
         this.GuardarLog('Cambio de asesor: ' + info + ' juridico : ' + juridico, this.OperacionActual, 0, juridico,12);
         this.juridicoService.CambiarAsesor(juridico, info, this.userConect.lngTercero).subscribe(
           result => {
-            this.loading = false;
+            this.loading.hide();
             if (result) {
               this.mostrarSiguiente = false;
               this.mostrarActualizar = false;
@@ -1330,22 +1326,22 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
             }
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             console.error('Error al realizar la actualizacion - juridicos: ' + error);
             this.notif.onDanger('Error', 'No se pudo realizar la actualizacion - Error: ' + error);
           });
       } else {
-        this.loading = false;
+        this.loading.hide();
         this.notif.onWarning('Advertencia', 'Debe seleccionar un asesor valido.');
       }
     } else {
-      this.loading = false;
+      this.loading.hide();
       this.notif.onWarning('Advertencia', 'Debe seleccionar un asesor diferente.');
     }
   }
 
   CambiarAsesorExterno() {
-    this.loading = true;
+    this.loading.show();
     if (this.CodEditAsesorExt) {
       const juridico = this.infoJuridicoFrom.value.IdJuridico;
       const info = this.infoJuridicoFrom.get('CodigoAsesorExt')?.value;
@@ -1353,7 +1349,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
         this.GuardarLog('Cambio de asesor externo: ' + info + ' juridico : ' + juridico, this.OperacionActual, 0, juridico,12);
         this.juridicoService.CambiarAsesorExterno(juridico, (info == "" || info == null ? "0" : info), this.userConect.lngTercero).subscribe(
           result => {
-            this.loading = false;
+            this.loading.hide();
             if (result) {
               this.mostrarSiguiente = false;
               this.mostrarActualizar = false;
@@ -1372,7 +1368,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
             }
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             console.error('Error al realizar la actualizacion - juridicos: ' + error);
             this.notif.onDanger('Error', 'No se pudo realizar la actualizacion - Error: ' + error);
           });
@@ -1408,7 +1404,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
   }
 
   CambiarRelacion() {
-    this.loading = true;
+    this.loading.show();
     let data = localStorage.getItem('Data');
     const resultPerfil = JSON.parse(window.atob(data == null ? ""  : data));
     if (this.cambioRelacionEdit) {
@@ -1430,7 +1426,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
               this.bloquearRelacion = true;
               this.emitEventResetOperacion.emit(true);
               this.notif.onSuccess('Exitoso', 'El cambio de relación se realizó correctamente.');
-              this.loading = false;
+              this.loading.hide();
               this.IrArriba();
               $('#OperacionMarcada').val(1);
               $('#ProDescripcionOpe').val(1);
@@ -1443,11 +1439,11 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
           });
       } else {
         this.notif.onWarning('Advertencia', 'Debe seleccionar una relación diferente.');
-        this.loading = false;
+        this.loading.hide();
       }
     } else {
       this.notif.onWarning('Advertencia', 'Debe seleccionar una relación diferente.');
-      this.loading = false;
+      this.loading.hide();
     }
   }
 

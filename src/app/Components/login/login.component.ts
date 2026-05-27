@@ -2,8 +2,7 @@ import { LoginService } from '../../Services/Login/login.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { ConfiguracionNotificacion } from '../../../environments/config.noticaciones';
-import Swal from 'sweetalert2';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
+import Swal from 'sweetalert2';;
 import { EnvironmentService } from '../../Services/Enviroment/enviroment.service';
 import { SessionUser } from '../../Models/Login/login.model';
 import { DatePipe } from '@angular/common';
@@ -16,6 +15,7 @@ const PrimaryWhite = 'rgb(13,165,80)';
 const SecondaryGrey = 'rgb(13,165,80,0.7)';
 import { detectIncognito } from "detectincognitojs";
 import { Router } from '@angular/router';
+import { LoadingService } from '../../Services/shared/loading.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -25,20 +25,18 @@ import { Router } from '@angular/router';
 })
   
 export class LoginComponent implements OnInit {
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent! : NgxLoadingComponent;
   loginFrom! : FormGroup;
   isLoginError = false;
   dataUser : any;
   public FechaActual = Date.now();
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = PrimaryWhite;
   public secondaryColour = SecondaryGrey;
   public  SessionUser = new SessionUser();
   constructor(private loginService: LoginService, private notif: AlertService,
     private environment: EnvironmentService,private usuariosServices: UsuariosService,
     private clientesGetListService: ClientesGetListService,private route : Router,
-    private oficinasService: OficinasService, private webSocket : WebSocketService) {}
+    private oficinasService: OficinasService, private webSocket : WebSocketService,
+    private loading: LoadingService) {}
 
   ngOnInit() {
     this.validateForm();
@@ -155,10 +153,10 @@ export class LoginComponent implements OnInit {
   isAuthenticated() {
     localStorage.removeItem('token');
     const now: Date = new Date();
-    this.loading = true;
+    this.loading.show();
     this.loginService.userAuthentication(this.loginFrom.value).subscribe(
       (data: any) => {
-        this.loading = false;
+        this.loading.hide();
         localStorage.setItem('Data', window.btoa(JSON.stringify(data)));
         this.dataUser = data;
         this.SessionUser.Estado = true;
@@ -210,7 +208,7 @@ export class LoginComponent implements OnInit {
                   }
                 });
             }else {
-              this.loading = false;
+              this.loading.hide();
               localStorage.setItem('userName', window.btoa(JSON.stringify(this.dataUser.Usuario)));
               this.isLoginError = false;
               this.clientesGetListService.GetParentescos().subscribe(
@@ -283,7 +281,7 @@ export class LoginComponent implements OnInit {
             }
           });
       }, (error : any )  => {
-        this.loading = false;
+        this.loading.hide();
          if (error.TipoAlerta == "Error") {
            Swal.fire({
              title: 'Advertencia',

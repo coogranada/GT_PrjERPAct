@@ -133,12 +133,6 @@
             <button *ngIf="btnCalcularVisible" class="btn Gt-btn-morado" (click)="onCalcular()" [disabled]="btnCalcularBloqueado">Calcular</button>
             <button class="btn Gt-btn-verde" (click)="onActualizar()" [disabled]="btnActualizarBloqueado">Actualizar</button>   
         </div>
-
     </form>
-
-    <div class="loader-overlay" *ngIf="loading">
-        <div class="spinner"></div>
-    </div>
-
 </div>
 

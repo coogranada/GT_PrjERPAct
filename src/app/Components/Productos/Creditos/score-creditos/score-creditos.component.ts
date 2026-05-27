@@ -3,13 +3,13 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, Validators, ValidatorFn, AbstractControl } from '../../../../../../node_modules/@angular/forms';
 import { WindowRef } from '../../../../Services/Enviroment/WindowRef.service';
 import { EnvironmentService } from '../../../../Services/Enviroment/enviroment.service';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { ModuleValidationService } from '../../../../Services/Enviroment/moduleValidation.service';
 import { fromEvent } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { LoginService } from '../../../../Services/Login/login.service';
 import { AlertService } from '../../../../Services/Alert/alert.service';
+import { LoadingService } from '../../../../Services/shared/loading.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -29,10 +29,6 @@ export class ScoreCreditosComponent implements OnInit {
   public dataReporte: any;
   public DatosUsuario : any;
   public bOrigenDatos : boolean | null = false;
-
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
   private CodModulo = 27;
@@ -44,7 +40,8 @@ export class ScoreCreditosComponent implements OnInit {
 
   constructor(private soreSimuladorService: ScoreSimuladorService, private winRef: WindowRef, private notif: AlertService,
     private envirment: EnvironmentService, private moduleValidationService: ModuleValidationService, private el: ElementRef,
-    private loginService: LoginService, private router: Router) {
+    private loginService: LoginService, private router: Router,
+    private loading: LoadingService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -89,13 +86,13 @@ export class ScoreCreditosComponent implements OnInit {
     this.DatosUsuario = JSON.parse(window.atob(data == null ? "" : data));
   }
   ObtenerCodigosInformacionacion() {
-    this.loading = true;
+    this.loading.show();
     this.soreSimuladorService.ObtenerCodigosInformacionacion().subscribe(
       result => {
-        this.dataCodigosInfo = result; this.loading = false;
+        this.dataCodigosInfo = result; this.loading.hide();
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorParse = JSON.parse(error._body);
         this.notif.onDanger('Error', errorParse.Mensaje);
         console.error('ObtenerCodigosInformacionacion - Tipo Alerta: ' + errorParse.TipoAlerta + ' - Mensaje: ' + errorParse.Mensaje);
@@ -104,13 +101,13 @@ export class ScoreCreditosComponent implements OnInit {
   }
 
   ObtenerMotivosConsulta() {
-    this.loading = true;
+    this.loading.show();
     this.soreSimuladorService.ObtenerMotivosConsulta().subscribe(
       result => {
-        this.dataMotivoConsulta = result; this.loading = false;
+        this.dataMotivoConsulta = result; this.loading.hide();
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         this.notif.onDanger('Error', error);
         console.error('ObtenerMotivosConsulta - ' + error);
       }
@@ -118,13 +115,13 @@ export class ScoreCreditosComponent implements OnInit {
   }
 
   ObtenerTiposIdentificacion() {
-    this.loading = true;
+    this.loading.show();
     this.soreSimuladorService.ObtenerTiposIdentificacion().subscribe(
       result => {
-        this.dataTipoIdentificacion = result; this.loading = false;
+        this.dataTipoIdentificacion = result; this.loading.hide();
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         this.notif.onDanger('Error', error);
         console.error('ObtenerTiposIdentificacion - ' + error);
       }
@@ -132,7 +129,7 @@ export class ScoreCreditosComponent implements OnInit {
   }
 
   ConsultarScore() {
-    this.loading = true;
+    this.loading.show();
     console.log(this.ScoreForm.value);
 
     this.ScoreForm.get('UsuarioOrigCons')?.setValue(this.DatosUsuario.userName);
@@ -152,7 +149,7 @@ export class ScoreCreditosComponent implements OnInit {
     this.ScoreForm.get('UsuariosDto')?.setValue(this.DatosUsuario);
     this.soreSimuladorService.ConsultarScore(this.ScoreForm.value).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         if (result.TipoAlerta === 'Error') {
           this.notif.onDanger('Error', result.Mensaje);
         } else {
@@ -164,7 +161,7 @@ export class ScoreCreditosComponent implements OnInit {
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         this.notif.onDanger('Error', error);
         console.error('ObtenerTiposIdentificacion - ' + error);
       }

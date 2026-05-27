@@ -4,8 +4,8 @@ import { OperacionesService } from '../../../../../../Services/Maestros/operacio
 import { InformeConsecutivoTituloService } from '../../../../../../Services/Configuracion/Informe-Consecutivo-Titulo.service';
 import { GeneralesService } from '../../../../../../Services/Productos/generales.service';
 import { DatePipe } from '@angular/common';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { AlertService } from '../../../../../../Services/Alert/alert.service';
+import { LoadingService } from '../../../../../../Services/shared/loading.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -18,10 +18,7 @@ declare var $: any;
 })
 export class InformeConsecutivoTituloComponent implements OnInit {
   [x: string]: any;
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
   public Informes: any[] = [];
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
   public InformeconsecutivoFrom!: FormGroup;
@@ -58,13 +55,12 @@ export class InformeConsecutivoTituloComponent implements OnInit {
 
   private emitEventTitulo: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  constructor(private operacionesService: OperacionesService, private ConsecutivotituloService: InformeConsecutivoTituloService,private generalesService: GeneralesService, private notif: AlertService) {
-    // const obs = fromEvent(this.el.nativeElement, 'click').pipe(
-    //   map((e: any) => {
-    //     this.moduleValidationService.validarLocalPermisos(this.CodModulo);
-    //   })
-    // );
-    // obs.subscribe((resulr) => console.log(resulr));
+  constructor(private operacionesService: OperacionesService, 
+    private ConsecutivotituloService: InformeConsecutivoTituloService,
+    private generalesService: GeneralesService, 
+    private notif: AlertService,
+    private loading: LoadingService) {
+
   }
   ngOnInit() {
     this.ValidateForm();
@@ -372,7 +368,7 @@ export class InformeConsecutivoTituloComponent implements OnInit {
     }
   }
   GenerarInforme() {
-    this.loading = true;
+    this.loading.show();
     this.Informes.length = 0;
 
     const FechaInicial = this.consecutivoOperacionFrom.get('FechaInicial')?.value;
@@ -390,7 +386,7 @@ export class InformeConsecutivoTituloComponent implements OnInit {
       
       this.ConsecutivotituloService.GetInformeLogConsecutivos(this.consecutivoOperacionFrom.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           this.Informes.length = 1;
           $("#modalAbrir").click();
           $("#InformeoBJECT").show();
@@ -409,7 +405,7 @@ export class InformeConsecutivoTituloComponent implements OnInit {
           document.querySelector("object")!.type = "application/pdf";
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           this.notif.onDanger('Error', errorMessage);
           console.log(errorMessage);
@@ -418,7 +414,7 @@ export class InformeConsecutivoTituloComponent implements OnInit {
     }
   }
   BuscarInforme() {
-    this.loading = true;
+    this.loading.show();
 
     const FechaInicial = this.consecutivoOperacionFrom.get('FechaInicial')?.value;
     const FechaFinal = this.consecutivoOperacionFrom.get('FechaFinal')?.value;
@@ -437,7 +433,7 @@ export class InformeConsecutivoTituloComponent implements OnInit {
             if (result.length > 0) {
               this.GenerarInforme();
             } else {
-              this.loading = false;
+              this.loading.hide();
               this.notif.onWarning('Advertencia', 'No se encontraron títulos relacionados con estas fechas.');
               this.consecutivoOperacionFrom.get('FechaInicial')?.reset();
               this.consecutivoOperacionFrom.get('FechaFinal')?.reset();
@@ -446,7 +442,7 @@ export class InformeConsecutivoTituloComponent implements OnInit {
             }
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             this.notif.onDanger('Error', errorMessage);
             console.log(errorMessage);
@@ -455,7 +451,7 @@ export class InformeConsecutivoTituloComponent implements OnInit {
   }
 
   GenerarInformeResumen() {
-    this.loading = true;
+    this.loading.show();
     this.Informes.length = 0;
 
     const FechaInicial = this.consecutivoOperacionFrom.get('FechaInicial')?.value;
@@ -473,7 +469,7 @@ export class InformeConsecutivoTituloComponent implements OnInit {
       if (this.consecutivoOperacionFrom.get('IdModulo')?.value === "19" || this.consecutivoOperacionFrom.get('IdModulo')?.value === "20" || this.consecutivoOperacionFrom.get('IdModulo')?.value === "25") {
         this.ConsecutivotituloService.ObtenerInformeTituloTerminoNuevo(this.consecutivoOperacionFrom.value).subscribe(
           result => {
-            this.loading = false;
+            this.loading.hide();
             this.Informes.length = 1;
             $("#modalAbrir").click();
             $("#InformeoBJECT").show();
@@ -491,7 +487,7 @@ export class InformeConsecutivoTituloComponent implements OnInit {
             document.querySelector("object")!.type = "application/pdf";
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             this.notif.onDanger('Error', errorMessage);
             console.log(errorMessage);
@@ -517,10 +513,10 @@ export class InformeConsecutivoTituloComponent implements OnInit {
               document.querySelector("object")!.data = url;
               document.querySelector("object")!.name = "Informes";
               document.querySelector("object")!.type = "application/pdf";
-              this.loading = false;
+              this.loading.hide();
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               this.notif.onDanger('Error', errorMessage);
               console.log(errorMessage);
@@ -545,10 +541,10 @@ export class InformeConsecutivoTituloComponent implements OnInit {
               document.querySelector("object")!.data = url;
               document.querySelector("object")!.name = "Informes";
               document.querySelector("object")!.type = "application/pdf";
-              this.loading = false;
+              this.loading.hide();
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               this.notif.onDanger('Error', errorMessage);
               console.log(errorMessage);
@@ -558,7 +554,7 @@ export class InformeConsecutivoTituloComponent implements OnInit {
       }
     } else {
       this.notif.onWarning('Advertencia', 'Debe diligenciar todos los campos.');
-      this.loading = false;
+      this.loading.hide();
     }
   }
 
@@ -606,10 +602,10 @@ export class InformeConsecutivoTituloComponent implements OnInit {
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
           downloadLink.click();
-          this.loading = false;
+          this.loading.hide();
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           this.notif.onDanger('Error', errorMessage);
           console.log(errorMessage);
@@ -628,10 +624,10 @@ export class InformeConsecutivoTituloComponent implements OnInit {
             downloadLink.href = linkSource;
             downloadLink.download = fileName;
             downloadLink.click();
-            this.loading = false;
+            this.loading.hide();
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             this.notif.onDanger('Error', errorMessage);
             console.log(errorMessage);
@@ -649,10 +645,10 @@ export class InformeConsecutivoTituloComponent implements OnInit {
             downloadLink.href = linkSource;
             downloadLink.download = fileName;
             downloadLink.click();
-            this.loading = false;
+            this.loading.hide();
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             this.notif.onDanger('Error', errorMessage);
             console.log(errorMessage);
@@ -681,7 +677,7 @@ export class InformeConsecutivoTituloComponent implements OnInit {
     );
   }
   clickEXCEL() {
-    this.loading = true;
+    this.loading.show();
     if(this.consecutivoOperacionFrom.get('Codigo')?.value === "81") { this.excelInforme(); }
     else if (this.consecutivoOperacionFrom.get('Codigo')?.value === "82") { this.excelResumen() }
   }
@@ -698,10 +694,10 @@ export class InformeConsecutivoTituloComponent implements OnInit {
         downloadLink.href = linkSource;
         downloadLink.download = fileName;
         downloadLink.click();
-        this.loading = false;
+        this.loading.hide();
       },
       (error) => {
-        this.loading = false;
+        this.loading.hide();
         console.log(error);
       }
     );
@@ -718,10 +714,10 @@ export class InformeConsecutivoTituloComponent implements OnInit {
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
           downloadLink.click();
-          this.loading = false;
+          this.loading.hide();
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           this.notif.onDanger('Error', errorMessage);
           console.log(errorMessage);
@@ -740,10 +736,10 @@ export class InformeConsecutivoTituloComponent implements OnInit {
             downloadLink.href = linkSource;
             downloadLink.download = fileName;
             downloadLink.click();
-            this.loading = false;
+            this.loading.hide();
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             this.notif.onDanger('Error', errorMessage);
             console.log(errorMessage);
@@ -761,10 +757,10 @@ export class InformeConsecutivoTituloComponent implements OnInit {
             downloadLink.href = linkSource;
             downloadLink.download = fileName;
             downloadLink.click();
-            this.loading = false;
+            this.loading.hide();
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             this.notif.onDanger('Error', errorMessage);
             console.log(errorMessage);

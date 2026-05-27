@@ -6,12 +6,12 @@ import { DatePipe, formatDate } from '@angular/common';
 import swal from 'sweetalert2';
 import { GeneralesService } from '../../../../../Services/Productos/generales.service';
 import { ModuleValidationService } from '../../../../../Services/Enviroment/moduleValidation.service';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { map } from 'rxjs/operators';
 import { fromEvent } from 'rxjs';
 import { CuentaModel } from '../../../../../Models/Productos/cuenta.model';
 import { Replace } from '../../../../../Pipes/utilidades/replace.pipe';
 import { AlertService } from '../../../../../Services/Alert/alert.service';
+import { LoadingService } from '../../../../../Services/shared/loading.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -38,11 +38,8 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
   @ViewChild('CerrarDebito', { static: true }) private CerrarDebito!: ElementRef;
   @ViewChild('tab1', { static: true }) private tab1!: ElementRef;
   @ViewChild('tab3', { static: true }) private tab3!: ElementRef;
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
   @ViewChild('AbrirSolicitudGestion', { static: true }) private AbrirSolicitudGestion!: ElementRef;
   @ViewChild('asesorExterno', { static: true }) private asesorExterno!: ElementRef;
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
   public CuentaSolicitud: CuentaModel = new CuentaModel();
@@ -211,7 +208,8 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
     private notif: AlertService,
     private operacionesService: OperacionesService,
     private generalesService: GeneralesService,
-    private moduleValidationService: ModuleValidationService, private el: ElementRef) {
+    private moduleValidationService: ModuleValidationService, 
+    private el: ElementRef, private loading: LoadingService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -238,7 +236,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
       result => {
         const GetOperacion = Number(localStorage.getItem('EsGestion'));
         if (GetOperacion === 1) {
-          this.loading = true;
+          this.loading.show();
           let datagest = localStorage.getItem('DataGest');
           this.dataGestionOperacion = JSON.parse(datagest == null ? "" : datagest);
           this.contractualFrom.get('IdCuenta')?.setValue(this.dataGestionOperacion.IdCuenta);
@@ -753,11 +751,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
       this.generalesService.Guardarlog(this.contractualFrom.value, 13,
       this.contractualFrom.get('IdCuenta')?.value, this.contractualFrom.get('LngTercero')?.value, 20).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           console.log(result);
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
@@ -1295,10 +1293,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
         && this.contractualFrom.get('DescripcionProducto')?.value !== '') {
         Descripcion = this.contractualFrom.get('DescripcionProducto')?.value;
       }
-      this.loading = true;
+      this.loading.show();
       this.ContractualServices.getBuscarProducto(IdProducto, Descripcion).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           if (result.length === 0) {
             this.notif.onWarning('Advertencia', 'No se encontró el producto.');
             this.contractualFrom.get('IdProducto')?.reset();
@@ -1358,7 +1356,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
@@ -1376,10 +1374,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
         && this.contractualFrom.get('DescripcionProducto')?.value !== '') {
         Descripcion = this.contractualFrom.get('DescripcionProducto')?.value;
       }
-      this.loading = true;
+      this.loading.show();
       this.ContractualServices.getBuscarProducto(IdProducto, Descripcion).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           if (result.length === 0) {
             this.notif.onWarning('Advertencia', 'No se encontró el producto.');
             this.contractualFrom.get('IdProducto')?.reset();
@@ -1431,7 +1429,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
@@ -1472,10 +1470,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
     if (IdAsesor === '*' && NombreAsesor === '*') {
       this.notif.onWarning('Advertencia', 'Debe ingresar el documento o el nombre del asesor.');
     } else {
-      this.loading = true;
+      this.loading.show();
       this.ContractualServices.getBuscarAsesor(IdAsesor, NombreAsesor).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           if (result.length === 1) {
             this.MapearDatosAsesor(result);
           } else if (result.length > 1) {
@@ -1486,7 +1484,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
@@ -1553,7 +1551,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
   BuscarAsociado() {  
     this.ContractualServices.getBuscarAsesor(this.contractualFrom.get('IdAsesor')?.value, '*').subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         if (result.length === 1) {
           this.MapearDatosAsesor(result);
           this.Asociado();
@@ -1586,10 +1584,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
         }
         if (this.contractualFrom.get('DocumentoAsesor')?.value !== this.contractualFrom.get('NumeroDocumento')?.value) {
 
-          this.loading = true;
+          this.loading.show();
           this.ContractualServices.BuscarAsociado(Documento, Nombre).subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               if (result.length === 0) {
                 this.notif.onWarning('Advertencia', 'No se encontró el asociado.');
               } else if (result.length === 1) {
@@ -1673,7 +1671,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
               }
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               console.log(errorMessage);
             }
@@ -1707,10 +1705,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
         }
         if (this.contractualFrom.get('DocumentoAsesor')?.value === this.contractualFrom.get('NumeroDocumento')?.value) {
 
-          this.loading = true;
+          this.loading.show();
           this.ContractualServices.BuscarAsociado(Documento, Nombre).subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               if (result.length === 0) {
                 this.notif.onWarning('Advertencia', 'No se encontró el asociado.');
               } else if (result.length === 1) {
@@ -1782,7 +1780,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
               }
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               console.log(errorMessage);
             }
@@ -1809,10 +1807,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
     ) {
       Nombre = this.contractualFrom.get('Nombre')?.value;
     }
-    this.loading = true;
+    this.loading.show();
     this.ContractualServices.BuscarAsociado(Documento, Nombre).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.dataObjet = undefined;
         console.log("persona",result)
         if (result.length === 0) {
@@ -1875,7 +1873,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -1915,10 +1913,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
       this.BloquearFormaPago = false;
       this.BloquearAsociado = false;
       this.BloquearBuscar = false;
-      this.loading = true;
+      this.loading.show();
       this.ContractualServices.getBuscarCuenta(this.contractualFrom.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
             if (result !== null) {
             this.ResetValorSeleccionado(1);
             this.MapearDatosCuenta(result);
@@ -1938,7 +1936,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
             this.itemsSend.CuentaAhorros = this.contractualFrom.get('CuentaDestino')?.value;
             this.itemsSend.Sorteo = this.contractualFrom.get('Sorteo')?.value;
           } else {
-            this.loading = false;
+            this.loading.hide();
             this.notif.onWarning('Advertencia', 'La cuenta no existe.');
             this.clearTitulares();
             this.contractualFrom.get('IdOficina')?.reset();
@@ -1951,7 +1949,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
           this.notif.onWarning('Advertencia', 'La cuenta no existe.');
@@ -1984,11 +1982,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
     );
   }
   BuscarDatosCuenta(IdOficina : number, IdProductoCuenta : number, IdConsecutivo : number, IdDigito : number) {
-    this.loading = true;
+    this.loading.show();
     this.ContractualServices.getBuscarCuenta
       ({ 'IdOficina': IdOficina, 'IdProductoCuenta': IdProductoCuenta, 'IdConsecutivo': IdConsecutivo,  'IdDigito': IdDigito }).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           this.MapearDatosCuenta(result);
           this.btnCambiarEstado = true;
           this.btnActualizar = true;
@@ -2037,7 +2035,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
@@ -2057,6 +2055,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
         this.contractualFrom.get('LngTercero')?.setValue(this.dataObjet.LngTercero);
         this.contractualFrom.get('NumeroDocumento')?.setValue(this.dataObjet[0].NumeroDocumento);
         this.contractualFrom.get('TipoDocumento')?.setValue(this.dataObjet[0].TipoDocumento);
+        this.contractualFrom.get('IdTipoDocumento')?.setValue(this.dataObjet[0].IdTipoDocumento);
 
         this.contractualFrom.get('Nombre')?.setValue(this.dataObjet[0].PrimerApellido + ' ' + this.dataObjet[0].SegundoApellido +
           ' ' + this.dataObjet[0].PrimerNombre + ' ' + this.dataObjet[0].SegundoNombre);
@@ -2192,6 +2191,8 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
         this.contractualFrom.get('LngTercero')?.setValue(this.dataObjet.LngTercero);
         this.contractualFrom.get('NumeroDocumento')?.setValue(this.dataObjet.NumeroDocumento);
         this.contractualFrom.get('TipoDocumento')?.setValue(this.dataObjet.TipoDocumento);
+        this.contractualFrom.get('IdTipoDocumento')?.setValue(this.dataObjet.IdTipoDocumento);
+
         this.contractualFrom.get('Nombre')?.setValue(this.dataObjet.PrimerApellido + ' ' + this.dataObjet.SegundoApellido +
           ' ' + this.dataObjet.PrimerNombre + ' ' + this.dataObjet.SegundoNombre);
         this.contractualFrom.get('IdAsesor')?.setValue(this.dataObjet.IdAsesor);
@@ -2333,7 +2334,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           }
       this.bloquearConsultaCuenta = false;
     } else {
-      this.loading = false;
+      this.loading.hide();
       this.notif.onWarning('Advertencia', 'La cuenta no existe.');
       this.clearCampos();
       this.dataObjet = undefined;
@@ -2379,10 +2380,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
     
   }
   BuscarCuentaPorDocumento() {
-      this.loading = true;
+      this.loading.show();
       this.ContractualServices.getBuscarPorDocumento(this.contractualFrom.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           if (result.length === 0) {
             this.notif.onWarning('Advertencia', 'No se encontró registro.');
             this.clearFrom();
@@ -2420,17 +2421,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
       );
   }
   BuscarCuentaPorNombre() {
-        this.loading = true;
+        this.loading.show();
         this.ContractualServices.getBuscarPorNombre(this.contractualFrom.value).subscribe(
           result => {
-            this.loading = false;
+            this.loading.hide();
             if (result.length === 0) {
               this.notif.onWarning('Advertencia', 'No se encontró registro.');
               this.clearFrom();
@@ -2467,7 +2468,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
             }
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             console.log(errorMessage);
           }
@@ -2501,10 +2502,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
       || this.AsesorFrom.get('strNombre')?.value !== null
       && this.AsesorFrom.get('strNombre')?.value !== undefined
       && this.AsesorFrom.get('strNombre')?.value !== '') {
-        this.loading = true;
+        this.loading.show();
       this.ContractualServices.getBuscarAsesorExterno(this.AsesorFrom.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           if (result.length === 1) {
             this.AsesorFrom.get('strCodigo')?.setValue(result[0].intIdAsesor);
             this.AsesorFrom.get('strNombre')?.setValue(result[0].Nombre);
@@ -2524,7 +2525,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           this.notif.onWarning('Advertencia', 'El valor ingresado no tiene el formato correcto');
           const errorMessage = <any>error;
           console.log(errorMessage);
@@ -2601,17 +2602,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
   }
   }
   ValidarSorteo() {
-    this.loading = true;
+    this.loading.show();
     this.ContractualServices.getValidarSorteo(this.contractualFrom.value).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         if (result.Mensaje !== undefined || result.Mensaje !== null) {
           this.notif.onWarning('Advertencia', result.Mensaje);
           this.contractualFrom.get('Sorteo')?.reset();
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -2750,11 +2751,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                             this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                            this.loading = true;
+                                                            this.loading.show();
                                                             this.btnGuardar = true;
                                                             this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                             result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -2787,16 +2788,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                                             },
                                                             error => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             const errorMessage = <any>error;
                                                             console.log(errorMessage);
                                                             });
                                                         } else {
-                                                            this.loading = true;
+                                                            this.loading.show();
                                                             this.btnGuardar = true;
                                                             this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                             result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -2828,7 +2829,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.DebitoAutomaticoFrom.reset();
                                                             },
                                                             error => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             const errorMessage = <any>error;
                                                             console.log(errorMessage);
                                                             });
@@ -2844,11 +2845,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                         result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -2880,16 +2881,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.DebitoAutomaticoFrom.reset();
                                                         },
                                                         error => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             const errorMessage = <any>error;
                                                             console.log(errorMessage);
                                                         });
                                                     } else {
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                         result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -2921,7 +2922,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.DebitoAutomaticoFrom.reset();
                                                         },
                                                         error => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             const errorMessage = <any>error;
                                                             console.log(errorMessage);
                                                         });
@@ -2943,11 +2944,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                     this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                    this.loading = true;
+                                                    this.loading.show();
                                                     this.btnGuardar = true;
                                                     this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                     result => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                         this.Bloquear = false;
@@ -2979,17 +2980,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.DebitoAutomaticoFrom.reset();
                                                     },
                                                     error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                     }
                                                     );
                                                 } else {
-                                                    this.loading = true;
+                                                    this.loading.show();
                                                     this.btnGuardar = true;
                                                     this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                     result => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                         this.Bloquear = false;
@@ -3021,7 +3022,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.DebitoAutomaticoFrom.reset();
                                                     },
                                                     error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                     }
@@ -3036,11 +3037,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                 this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                this.loading = true;
+                                                this.loading.show();
                                                 this.btnGuardar = true;
                                                 this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                     result => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                     this.Bloquear = false;
@@ -3072,17 +3073,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.DebitoAutomaticoFrom.reset();
                                                     },
                                                     error => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     const errorMessage = <any>error;
                                                     console.log(errorMessage);
                                                     }
                                                 );
                                                 } else {
-                                                this.loading = true;
+                                                this.loading.show();
                                                 this.btnGuardar = true;
                                                 this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                     result => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                     this.Bloquear = false;
@@ -3114,7 +3115,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.DebitoAutomaticoFrom.reset();
                                                     },
                                                     error => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     const errorMessage = <any>error;
                                                     console.log(errorMessage);
                                                     });
@@ -3142,11 +3143,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                 this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                this.loading = true;
+                                                this.loading.show();
                                                 this.btnGuardar = true;
                                                 this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                 result => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                     this.Bloquear = false;
@@ -3180,17 +3181,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.itemsDataObejct = [];
                                                 },
                                                 error => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     const errorMessage = <any>error;
                                                     console.log(errorMessage);
                                                 }
                                                 );
                                             } else {
-                                                this.loading = true;
+                                                this.loading.show();
                                                 this.btnGuardar = true;
                                                 this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                 result => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                     this.Bloquear = false;
@@ -3240,7 +3241,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                                 },
                                                 error => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     const errorMessage = <any>error;
                                                     console.log(errorMessage);
                                                 }
@@ -3258,11 +3259,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                             this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                            this.loading = true;
+                                            this.loading.show();
                                             this.btnGuardar = true;
                                             this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                 result => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                 this.Bloquear = false;
@@ -3295,17 +3296,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.itemsDataObejct = [];
                                                 },
                                                 error => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 const errorMessage = <any>error;
                                                 console.log(errorMessage);
                                                 }
                                             );
                                             } else {
-                                            this.loading = true;
+                                            this.loading.show();
                                             this.btnGuardar = true;
                                             this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                 result => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                 this.Bloquear = false;
@@ -3338,7 +3339,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.itemsDataObejct = [];
                                                 },
                                                 error => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 const errorMessage = <any>error;
                                                 console.log(errorMessage);
                                                 }
@@ -3359,11 +3360,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                             this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                            this.loading = true;
+                                            this.loading.show();
                                             this.btnGuardar = true;
                                             this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                 result => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                 this.Bloquear = false;
@@ -3395,17 +3396,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.DebitoAutomaticoFrom.reset();
                                                 },
                                                 error => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 const errorMessage = <any>error;
                                                 console.log(errorMessage);
                                                 }
                                             );
                                             } else {
-                                            this.loading = true;
+                                            this.loading.show();
                                             this.btnGuardar = true;
                                             this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                 result => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                 this.Bloquear = false;
@@ -3437,7 +3438,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.DebitoAutomaticoFrom.reset();
                                                 },
                                                 error => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 const errorMessage = <any>error;
                                                 console.log(errorMessage);
                                                 }
@@ -3454,11 +3455,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                             this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                            this.loading = true;
+                                            this.loading.show();
                                             this.btnGuardar = true;
                                             this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                             result => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                 this.Bloquear = false;
@@ -3490,17 +3491,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.DebitoAutomaticoFrom.reset();
                                             },
                                             error => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 const errorMessage = <any>error;
                                                 console.log(errorMessage);
                                             }
                                             );
                                         } else {
-                                            this.loading = true;
+                                            this.loading.show();
                                             this.btnGuardar = true;
                                             this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                             result => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                 this.Bloquear = false;
@@ -3532,7 +3533,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.DebitoAutomaticoFrom.reset();
                                             },
                                             error => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 const errorMessage = <any>error;
                                                 console.log(errorMessage);
                                             });
@@ -3567,11 +3568,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                             this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                            this.loading = true;
+                                            this.loading.show();
                                             this.btnGuardar = true;
                                             this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                             result => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                 this.Bloquear = false;
@@ -3603,17 +3604,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.DebitoAutomaticoFrom.reset();
                                             },
                                             error => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 const errorMessage = <any>error;
                                                 console.log(errorMessage);
                                             }
                                             );
                                         } else {
-                                            this.loading = true;
+                                            this.loading.show();
                                             this.btnGuardar = true;
                                             this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                             result => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                 this.Bloquear = false;
@@ -3645,7 +3646,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.DebitoAutomaticoFrom.reset();
                                             },
                                             error => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 const errorMessage = <any>error;
                                                 console.log(errorMessage);
                                             }
@@ -3660,11 +3661,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                             result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -3696,17 +3697,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.DebitoAutomaticoFrom.reset();
                                             },
                                             error => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             const errorMessage = <any>error;
                                             console.log(errorMessage);
                                             }
                                         );
                                         } else {
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                             result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -3739,7 +3740,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.itemsDataObejct = [];
                                             },
                                             error => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             const errorMessage = <any>error;
                                             console.log(errorMessage);
                                             });
@@ -3761,11 +3762,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                             result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -3797,17 +3798,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.DebitoAutomaticoFrom.reset();
                                             },
                                             error => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             const errorMessage = <any>error;
                                             console.log(errorMessage);
                                             }
                                         );
                                         } else {
-                                            this.loading = true;
+                                            this.loading.show();
                                             this.btnGuardar = true;
                                             this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                             result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -3839,7 +3840,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.DebitoAutomaticoFrom.reset();
                                             },
                                                 error => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 const errorMessage = <any>error;
                                                 console.log(errorMessage);
                                             });
@@ -3855,11 +3856,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                         result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -3891,16 +3892,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.DebitoAutomaticoFrom.reset();
                                         },
                                         error => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             const errorMessage = <any>error;
                                             console.log(errorMessage);
                                         });
                                     } else {
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                         result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -3932,7 +3933,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.DebitoAutomaticoFrom.reset();
                                         },
                                         error => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             const errorMessage = <any>error;
                                             console.log(errorMessage);
                                         }
@@ -3961,11 +3962,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                 this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                this.loading = true;
+                                                this.loading.show();
                                                 this.btnGuardar = true;
                                                 this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                 result => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                 this.Bloquear = false;
@@ -3998,17 +3999,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.itemsDataObejct = [];
                                                 },
                                                 error => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     const errorMessage = <any>error;
                                                     console.log(errorMessage);
                                                 }
                                             );
                                             } else {
-                                                this.loading = true;
+                                                this.loading.show();
                                                 this.btnGuardar = true;
                                                 this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                 result => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                 this.Bloquear = false;
@@ -4041,7 +4042,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.itemsDataObejct = [];
                                                 },
                                                     error => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     const errorMessage = <any>error;
                                                     console.log(errorMessage);
                                                 });
@@ -4057,11 +4058,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                             this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                            this.loading = true;
+                                            this.loading.show();
                                             this.btnGuardar = true;
                                             this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                             result => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                 this.Bloquear = false;
@@ -4094,16 +4095,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.itemsDataObejct = [];
                                             },
                                             error => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 const errorMessage = <any>error;
                                                 console.log(errorMessage);
                                             });
                                         } else {
-                                            this.loading = true;
+                                            this.loading.show();
                                             this.btnGuardar = true;
                                             this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                             result => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                 this.BloquearDatoTitular = false;
@@ -4127,7 +4128,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.itemsDataObejct = [];
                                             },
                                             error => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 const errorMessage = <any>error;
                                                 console.log(errorMessage);
                                             });
@@ -4149,11 +4150,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                             this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                            this.loading = true;
+                                            this.loading.show();
                                             this.btnGuardar = true;
                                             this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                             result => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                 this.Bloquear = false;
@@ -4185,16 +4186,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.DebitoAutomaticoFrom.reset();
                                             },
                                             error => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 const errorMessage = <any>error;
                                                 console.log(errorMessage);
                                             });
                                         } else {
-                                            this.loading = true;
+                                            this.loading.show();
                                             this.btnGuardar = true;
                                             this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                             result => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                 this.Bloquear = false;
@@ -4226,7 +4227,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.DebitoAutomaticoFrom.reset();
                                             },
                                             error => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 const errorMessage = <any>error;
                                                 console.log(errorMessage);
                                             });
@@ -4242,11 +4243,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                         result => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                         this.Bloquear = false;
@@ -4278,16 +4279,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.DebitoAutomaticoFrom.reset();
                                         },
                                             error => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             const errorMessage = <any>error;
                                             console.log(errorMessage);
                                         });
                                     } else {
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                         result => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                         this.Bloquear = false;
@@ -4319,7 +4320,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.DebitoAutomaticoFrom.reset();
                                         },
                                             error => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             const errorMessage = <any>error;
                                             console.log(errorMessage);
                                         });
@@ -4378,11 +4379,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                     this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                                     this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                                    this.loading = true;
+                                                                    this.loading.show();
                                                                     this.btnGuardar = true;
                                                                     this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                                     result => {
-                                                                    this.loading = false;
+                                                                    this.loading.hide();
                                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                                     this.Bloquear = false;
@@ -4415,17 +4416,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                     this.itemsDataObejct = [];
                                                                     },
                                                                         error => {
-                                                                        this.loading = false;
+                                                                        this.loading.hide();
                                                                         const errorMessage = <any>error;
                                                                         console.log(errorMessage);
                                                                     }
                                                                 );
                                                                 } else {
-                                                                    this.loading = true;
+                                                                    this.loading.show();
                                                                     this.btnGuardar = true;
                                                                     this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                                     result => {
-                                                                    this.loading = false;
+                                                                    this.loading.hide();
                                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                                     this.Bloquear = false;
@@ -4458,7 +4459,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                     this.itemsDataObejct = [];
                                                                     },
                                                                         error => {
-                                                                        this.loading = false;
+                                                                        this.loading.hide();
                                                                         const errorMessage = <any>error;
                                                                         console.log(errorMessage);
                                                                     });
@@ -4474,11 +4475,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                                 this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                                this.loading = true;
+                                                                this.loading.show();
                                                                 this.btnGuardar = true;
                                                                 this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                                 result => {
-                                                                    this.loading = false;
+                                                                    this.loading.hide();
                                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                                     this.Bloquear = false;
@@ -4511,16 +4512,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                     this.itemsDataObejct = [];
                                                                 },
                                                                 error => {
-                                                                    this.loading = false;
+                                                                    this.loading.hide();
                                                                     const errorMessage = <any>error;
                                                                     console.log(errorMessage);
                                                                 });
                                                             } else {
-                                                                this.loading = true;
+                                                                this.loading.show();
                                                                 this.btnGuardar = true;
                                                                 this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                                 result => {
-                                                                    this.loading = false;
+                                                                    this.loading.hide();
                                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                                     this.Bloquear = false;
@@ -4553,7 +4554,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                     this.itemsDataObejct = [];
                                                                 },
                                                                 error => {
-                                                                    this.loading = false;
+                                                                    this.loading.hide();
                                                                     const errorMessage = <any>error;
                                                                     console.log(errorMessage);
                                                                 });
@@ -4575,11 +4576,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                             this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                            this.loading = true;
+                                                            this.loading.show();
                                                             this.btnGuardar = true;
                                                             this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                             result => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                                 this.Bloquear = false;
@@ -4611,17 +4612,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.DebitoAutomaticoFrom.reset();
                                                             },
                                                             error => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 const errorMessage = <any>error;
                                                                 console.log(errorMessage);
                                                             }
                                                             );
                                                         } else {
-                                                            this.loading = true;
+                                                            this.loading.show();
                                                             this.btnGuardar = true;
                                                             this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                             result => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                                 this.Bloquear = false;
@@ -4653,7 +4654,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.DebitoAutomaticoFrom.reset();
                                                             },
                                                             error => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 const errorMessage = <any>error;
                                                                 console.log(errorMessage);
                                                             });
@@ -4667,11 +4668,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                             this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                            this.loading = true;
+                                                            this.loading.show();
                                                             this.btnGuardar = true;
                                                             this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                                 result => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                                 this.Bloquear = false;
@@ -4703,17 +4704,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.DebitoAutomaticoFrom.reset();
                                                             },
                                                                 error => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 const errorMessage = <any>error;
                                                                 console.log(errorMessage);
                                                             }
                                                         );
                                                         } else {
-                                                            this.loading = true;
+                                                            this.loading.show();
                                                             this.btnGuardar = true;
                                                             this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                                 result => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                                 this.Bloquear = false;
@@ -4745,7 +4746,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.DebitoAutomaticoFrom.reset();
                                                             },
                                                             error => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             const errorMessage = <any>error;
                                                             console.log(errorMessage);
                                                             });
@@ -4773,11 +4774,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                                 this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                                this.loading = true;
+                                                                this.loading.show();
                                                                 this.btnGuardar = true;
                                                                 this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                                 result => {
-                                                                    this.loading = false;
+                                                                    this.loading.hide();
                                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                                     this.Bloquear = false;
@@ -4811,16 +4812,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                     this.itemsDataObejct = [];
                                                                 },
                                                                 error => {
-                                                                    this.loading = false;
+                                                                    this.loading.hide();
                                                                     const errorMessage = <any>error;
                                                                     console.log(errorMessage);
                                                                 });
                                                             } else {
-                                                                this.loading = true;
+                                                                this.loading.show();
                                                                 this.btnGuardar = true;
                                                                 this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                                 result => {
-                                                                    this.loading = false;
+                                                                    this.loading.hide();
                                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                                     this.Bloquear = false;
@@ -4853,7 +4854,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                     this.itemsDataObejct = [];
                                                                 },
                                                                 error => {
-                                                                    this.loading = false;
+                                                                    this.loading.hide();
                                                                     const errorMessage = <any>error;
                                                                     console.log(errorMessage);
                                                                 }
@@ -4870,11 +4871,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                             this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                            this.loading = true;
+                                                            this.loading.show();
                                                             this.btnGuardar = true;
                                                             this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                                 result => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                                 this.Bloquear = false;
@@ -4907,16 +4908,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.itemsDataObejct = [];
                                                             },
                                                                 error => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 const errorMessage = <any>error;
                                                                 console.log(errorMessage);
                                                             });
                                                         } else {
-                                                            this.loading = true;
+                                                            this.loading.show();
                                                             this.btnGuardar = true;
                                                             this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                                 result => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                                 this.Bloquear = false;
@@ -4949,7 +4950,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.itemsDataObejct = [];
                                                             },
                                                                 error => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 const errorMessage = <any>error;
                                                                 console.log(errorMessage);
                                                             });
@@ -4971,11 +4972,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                     this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                    this.loading = true;
+                                                    this.loading.show();
                                                     this.btnGuardar = true;
                                                     this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                         result => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                         this.Bloquear = false;
@@ -5007,16 +5008,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.DebitoAutomaticoFrom.reset();
                                                         },
                                                         error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                         });
                                                     } else {
-                                                    this.loading = true;
+                                                    this.loading.show();
                                                     this.btnGuardar = true;
                                                     this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                         result => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                         this.Bloquear = false;
@@ -5051,7 +5052,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                                         },
                                                         error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                         }
@@ -5068,11 +5069,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                         result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -5104,16 +5105,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.DebitoAutomaticoFrom.reset();
                                                         },
                                                         error => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             const errorMessage = <any>error;
                                                             console.log(errorMessage);
                                                         });
                                                     } else {
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                         result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -5145,7 +5146,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.DebitoAutomaticoFrom.reset();
                                                         },
                                                         error => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             const errorMessage = <any>error;
                                                             console.log(errorMessage);
                                                         });
@@ -5181,11 +5182,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                             this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                            this.loading = true;
+                                                            this.loading.show();
                                                             this.btnGuardar = true;
                                                             this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                             result => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                                 this.Bloquear = false;
@@ -5218,16 +5219,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.itemsDataObejct = [];
                                                             },
                                                             error => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 const errorMessage = <any>error;
                                                                 console.log(errorMessage);
                                                             });
                                                         } else {
-                                                            this.loading = true;
+                                                            this.loading.show();
                                                             this.btnGuardar = true;
                                                             this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                             result => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                                 this.Bloquear = false;
@@ -5260,7 +5261,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.itemsDataObejct = [];
                                                             },
                                                             error => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 const errorMessage = <any>error;
                                                                 console.log(errorMessage);
                                                             });
@@ -5276,11 +5277,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                             result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -5313,16 +5314,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.itemsDataObejct = [];
                                                         },
                                                             error => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             const errorMessage = <any>error;
                                                             console.log(errorMessage);
                                                         });
                                                     } else {
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                             result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -5355,7 +5356,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.itemsDataObejct = [];
                                                         },
                                                             error => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             const errorMessage = <any>error;
                                                             console.log(errorMessage);
                                                         });
@@ -5377,11 +5378,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                             result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -5413,16 +5414,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.DebitoAutomaticoFrom.reset();
                                                         },
                                                             error => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             const errorMessage = <any>error;
                                                             console.log(errorMessage);
                                                         });
                                                     } else {
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                             result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -5469,7 +5470,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.itemsSend.Sorteo = this.contractualFrom.get('Sorteo')?.value;
                                                         },
                                                             error => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             const errorMessage = <any>error;
                                                             console.log(errorMessage);
                                                         });
@@ -5485,11 +5486,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                     this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                    this.loading = true;
+                                                    this.loading.show();
                                                     this.btnGuardar = true;
                                                     this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                     result => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                         this.Bloquear = false;
@@ -5521,16 +5522,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.DebitoAutomaticoFrom.reset();
                                                     },
                                                     error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                     });
                                                 } else {
-                                                    this.loading = true;
+                                                    this.loading.show();
                                                     this.btnGuardar = true;
                                                     this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                     result => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                         this.Bloquear = false;
@@ -5562,7 +5563,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.DebitoAutomaticoFrom.reset();
                                                     },
                                                     error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                     });
@@ -5590,11 +5591,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                             this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                            this.loading = true;
+                                                            this.loading.show();
                                                             this.btnGuardar = true;
                                                             this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                                 result => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                                 this.Bloquear = false;
@@ -5627,17 +5628,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.itemsDataObejct = [];
                                                             },
                                                             error => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 const errorMessage = <any>error;
                                                                 console.log(errorMessage);
                                                             }
                                                         );
                                                         } else {
-                                                            this.loading = true;
+                                                            this.loading.show();
                                                             this.btnGuardar = true;
                                                             this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                                 result => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                                 this.Bloquear = false;
@@ -5670,7 +5671,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.itemsDataObejct = [];
                                                             },
                                                             error => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 const errorMessage = <any>error;
                                                                 console.log(errorMessage);
                                                             });
@@ -5686,11 +5687,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                         result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -5723,17 +5724,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.itemsDataObejct = [];
                                                         },
                                                         error => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             const errorMessage = <any>error;
                                                             console.log(errorMessage);
                                                         }
                                                         );
                                                     } else {
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                         result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -5766,7 +5767,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.itemsDataObejct = [];
                                                         },
                                                         error => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             const errorMessage = <any>error;
                                                             console.log(errorMessage);
                                                         });
@@ -5788,11 +5789,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                         result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -5824,16 +5825,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.DebitoAutomaticoFrom.reset();
                                                         },
                                                         error => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             const errorMessage = <any>error;
                                                             console.log(errorMessage);
                                                         });
                                                     } else {
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                         result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -5865,7 +5866,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.DebitoAutomaticoFrom.reset();
                                                         },
                                                         error => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             const errorMessage = <any>error;
                                                             console.log(errorMessage);
                                                         });
@@ -5881,11 +5882,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                     this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                    this.loading = true;
+                                                    this.loading.show();
                                                     this.btnGuardar = true;
                                                     this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                         result => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                         this.Bloquear = false;
@@ -5917,16 +5918,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.DebitoAutomaticoFrom.reset();
                                                     },
                                                     error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                     });
                                                 } else {
-                                                    this.loading = true;
+                                                    this.loading.show();
                                                     this.btnGuardar = true;
                                                     this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                         result => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                         this.Bloquear = false;
@@ -5958,7 +5959,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.DebitoAutomaticoFrom.reset();
                                                     },
                                                     error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                     });
@@ -6002,11 +6003,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                     this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                    this.loading = true;
+                                                    this.loading.show();
                                                     this.btnGuardar = true;
                                                     this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                         result => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                         this.Bloquear = false;
@@ -6038,16 +6039,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.DebitoAutomaticoFrom.reset();
                                                         },
                                                         error => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             const errorMessage = <any>error;
                                                             console.log(errorMessage);
                                                         });
                                                     } else {
-                                                    this.loading = true;
+                                                    this.loading.show();
                                                     this.btnGuardar = true;
                                                     this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                         result => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                         this.Bloquear = false;
@@ -6079,7 +6080,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.DebitoAutomaticoFrom.reset();
                                                         },
                                                         error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                         });
@@ -6095,11 +6096,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                     this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                    this.loading = true;
+                                                    this.loading.show();
                                                     this.btnGuardar = true;
                                                     this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                     result => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                         this.Bloquear = false;
@@ -6131,16 +6132,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.DebitoAutomaticoFrom.reset();
                                                     },
                                                     error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                     });
                                                 } else {
-                                                    this.loading = true;
+                                                    this.loading.show();
                                                     this.btnGuardar = true;
                                                     this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                     result => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                         this.Bloquear = false;
@@ -6172,7 +6173,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.DebitoAutomaticoFrom.reset();
                                                     },
                                                     error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                     });
@@ -6194,11 +6195,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                     this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                    this.loading = true;
+                                                    this.loading.show();
                                                     this.btnGuardar = true;
                                                     this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                     result => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                         this.Bloquear = false;
@@ -6230,16 +6231,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.DebitoAutomaticoFrom.reset();
                                                     },
                                                     error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                     });
                                                 } else {
-                                                    this.loading = true;
+                                                    this.loading.show();
                                                     this.btnGuardar = true;
                                                     this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                     result => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                         this.Bloquear = false;
@@ -6271,7 +6272,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.DebitoAutomaticoFrom.reset();
                                                     },
                                                     error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                     });
@@ -6287,11 +6288,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                     this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                    this.loading = true;
+                                                    this.loading.show();
                                                     this.btnGuardar = true;
                                                     this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                     result => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                     this.Bloquear = false;
@@ -6324,16 +6325,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                                     },
                                                     error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                     });
                                                 } else {
-                                                    this.loading = true;
+                                                    this.loading.show();
                                                     this.btnGuardar = true;
                                                     this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                     result => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                     this.Bloquear = false;
@@ -6365,7 +6366,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.DebitoAutomaticoFrom.reset();
                                                     },
                                                     error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                     });
@@ -6395,11 +6396,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                     this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                    this.loading = true;
+                                                    this.loading.show();
                                                     this.btnGuardar = true;
                                                     this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                     result => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                         this.Bloquear = false;
@@ -6433,16 +6434,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.itemsDataObejct = [];
                                                     },
                                                     error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                     });
                                                 } else {
-                                                    this.loading = true;
+                                                    this.loading.show();
                                                     this.btnGuardar = true;
                                                     this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                     result => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                         this.Bloquear = false;
@@ -6476,7 +6477,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.itemsDataObejct = [];
                                                     },
                                                     error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                     });
@@ -6492,11 +6493,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                 this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                this.loading = true;
+                                                this.loading.show();
                                                 this.btnGuardar = true;
                                                 this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                     result => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                     this.Bloquear = false;
@@ -6529,16 +6530,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.itemsDataObejct = [];
                                                     },
                                                     error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                     });
                                                 } else {
-                                                this.loading = true;
+                                                this.loading.show();
                                                 this.btnGuardar = true;
                                                 this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                     result => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                     this.Bloquear = false;
@@ -6571,7 +6572,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.itemsDataObejct = [];
                                                     },
                                                     error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                     });
@@ -6593,11 +6594,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                 this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                this.loading = true;
+                                                this.loading.show();
                                                 this.btnGuardar = true;
                                                 this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                     result => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                     this.Bloquear = false;
@@ -6629,16 +6630,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.DebitoAutomaticoFrom.reset();
                                                     },
                                                     error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                     });
                                                 } else {
-                                                this.loading = true;
+                                                this.loading.show();
                                                 this.btnGuardar = true;
                                                 this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                     result => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                     this.Bloquear = false;
@@ -6670,7 +6671,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.DebitoAutomaticoFrom.reset();
                                                     },
                                                     error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                     });
@@ -6686,11 +6687,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                 this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                this.loading = true;
+                                                this.loading.show();
                                                 this.btnGuardar = true;
                                                 this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                 result => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                     this.Bloquear = false;
@@ -6722,16 +6723,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.DebitoAutomaticoFrom.reset();
                                                 },
                                                 error => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     const errorMessage = <any>error;
                                                     console.log(errorMessage);
                                                 } );
                                             } else {
-                                                this.loading = true;
+                                                this.loading.show();
                                                 this.btnGuardar = true;
                                                 this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                 result => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                     this.Bloquear = false;
@@ -6763,7 +6764,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.DebitoAutomaticoFrom.reset();
                                                 },
                                                 error => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     const errorMessage = <any>error;
                                                     console.log(errorMessage);
                                                 });
@@ -6796,11 +6797,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                     this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                    this.loading = true;
+                                                    this.loading.show();
                                                     this.btnGuardar = true;
                                                     this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                     result => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                         this.Bloquear = false;
@@ -6832,16 +6833,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.DebitoAutomaticoFrom.reset();
                                                     },
                                                     error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                     });
                                                 } else {
-                                                    this.loading = true;
+                                                    this.loading.show();
                                                     this.btnGuardar = true;
                                                     this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                     result => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                         this.Bloquear = false;
@@ -6873,7 +6874,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.DebitoAutomaticoFrom.reset();
                                                     },
                                                     error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                     });
@@ -6887,11 +6888,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                             this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                            this.loading = true;
+                                            this.loading.show();
                                             this.btnGuardar = true;
                                             this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                 result => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                 this.Bloquear = false;
@@ -6923,16 +6924,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.DebitoAutomaticoFrom.reset();
                                                 },
                                                 error => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     const errorMessage = <any>error;
                                                     console.log(errorMessage);
                                                 });
                                             } else {
-                                                this.loading = true;
+                                                this.loading.show();
                                                 this.btnGuardar = true;
                                                 this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                 result => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                 this.Bloquear = false;
@@ -6965,7 +6966,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.itemsDataObejct = [];
                                                 },
                                                 error => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     const errorMessage = <any>error;
                                                     console.log(errorMessage);
                                                 });
@@ -6987,11 +6988,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                             this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                            this.loading = true;
+                                            this.loading.show();
                                             this.btnGuardar = true;
                                             this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                 result => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                 this.Bloquear = false;
@@ -7023,16 +7024,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.DebitoAutomaticoFrom.reset();
                                                 },
                                                 error => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     const errorMessage = <any>error;
                                                     console.log(errorMessage);
                                                 });
                                             } else {
-                                                this.loading = true;
+                                                this.loading.show();
                                                 this.btnGuardar = true;
                                                 this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                 result => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                 this.Bloquear = false;
@@ -7064,7 +7065,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.DebitoAutomaticoFrom.reset();
                                                 },
                                                 error => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     const errorMessage = <any>error;
                                                     console.log(errorMessage);
                                                 });
@@ -7080,11 +7081,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                             this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                            this.loading = true;
+                                            this.loading.show();
                                             this.btnGuardar = true;
                                             this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                             result => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                 this.Bloquear = false;
@@ -7131,16 +7132,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.itemsSend.Sorteo = this.contractualFrom.get('Sorteo')?.value;
                                             },
                                             error => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 const errorMessage = <any>error;
                                                 console.log(errorMessage);
                                             });
                                         } else {
-                                            this.loading = true;
+                                            this.loading.show();
                                             this.btnGuardar = true;
                                             this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                             result => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                 this.Bloquear = false;
@@ -7172,7 +7173,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.DebitoAutomaticoFrom.reset();
                                             },
                                             error => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 const errorMessage = <any>error;
                                                 console.log(errorMessage);
                                             });
@@ -7200,11 +7201,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                     this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                    this.loading = true;
+                                                    this.loading.show();
                                                     this.btnGuardar = true;
                                                     this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                     result => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                     this.Bloquear = false;
@@ -7237,16 +7238,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.itemsDataObejct = [];
                                                     },
                                                     error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                     });
                                                 } else {
-                                                    this.loading = true;
+                                                    this.loading.show();
                                                     this.btnGuardar = true;
                                                     this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                     result => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                     this.Bloquear = false;
@@ -7279,7 +7280,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.itemsDataObejct = [];
                                                     },
                                                     error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                     });
@@ -7296,11 +7297,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                 this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                this.loading = true;
+                                                this.loading.show();
                                                 this.btnGuardar = true;
                                                 this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                 result => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                     this.Bloquear = false;
@@ -7333,16 +7334,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.itemsDataObejct = [];
                                                 },
                                                 error => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     const errorMessage = <any>error;
                                                     console.log(errorMessage);
                                                 });
                                             } else {
-                                                this.loading = true;
+                                                this.loading.show();
                                                 this.btnGuardar = true;
                                                 this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                 result => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                     this.BloquearDatoTitular = false;
@@ -7366,7 +7367,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.itemsDataObejct = [];
                                                 },
                                                 error => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     const errorMessage = <any>error;
                                                     console.log(errorMessage);
                                                 });
@@ -7388,11 +7389,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                 this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                this.loading = true;
+                                                this.loading.show();
                                                 this.btnGuardar = true;
                                                 this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                 result => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                     this.Bloquear = false;
@@ -7424,16 +7425,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.DebitoAutomaticoFrom.reset();
                                                 },
                                                 error => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     const errorMessage = <any>error;
                                                     console.log(errorMessage);
                                                 });
                                             } else {
-                                                this.loading = true;
+                                                this.loading.show();
                                                 this.btnGuardar = true;
                                                 this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                 result => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                     this.Bloquear = false;
@@ -7465,7 +7466,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.DebitoAutomaticoFrom.reset();
                                                 },
                                                 error => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     const errorMessage = <any>error;
                                                     console.log(errorMessage);
                                                 });
@@ -7481,11 +7482,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                             result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -7517,16 +7518,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.DebitoAutomaticoFrom.reset();
                                             },
                                             error => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 const errorMessage = <any>error;
                                                 console.log(errorMessage);
                                             });
                                         } else {
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                             result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -7558,7 +7559,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.DebitoAutomaticoFrom.reset();
                                             },
                                             error => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 const errorMessage = <any>error;
                                                 console.log(errorMessage);
                                             });
@@ -7618,11 +7619,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                             this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                            this.loading = true;
+                                                            this.loading.show();
                                                             this.btnGuardar = true;
                                                             this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                                 result => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                                 this.Bloquear = false;
@@ -7655,16 +7656,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.itemsDataObejct = [];
                                                                 },
                                                                 error => {
-                                                                    this.loading = false;
+                                                                    this.loading.hide();
                                                                     const errorMessage = <any>error;
                                                                     console.log(errorMessage);
                                                                 });
                                                             } else {
-                                                            this.loading = true;
+                                                            this.loading.show();
                                                             this.btnGuardar = true;
                                                             this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                                 result => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                                 this.Bloquear = false;
@@ -7697,7 +7698,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.itemsDataObejct = [];
                                                                 },
                                                                 error => {
-                                                                    this.loading = false;
+                                                                    this.loading.hide();
                                                                     const errorMessage = <any>error;
                                                                     console.log(errorMessage);
                                                                 });
@@ -7713,11 +7714,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                             this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                            this.loading = true;
+                                                            this.loading.show();
                                                             this.btnGuardar = true;
                                                             this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                             result => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                                 this.Bloquear = false;
@@ -7752,17 +7753,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                                             },
                                                             error => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 const errorMessage = <any>error;
                                                                 console.log(errorMessage);
                                                             }
                                                             );
                                                         } else {
-                                                            this.loading = true;
+                                                            this.loading.show();
                                                             this.btnGuardar = true;
                                                             this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                             result => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                                 this.Bloquear = false;
@@ -7798,7 +7799,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                                             },
                                                             error => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 const errorMessage = <any>error;
                                                                 console.log(errorMessage);
                                                             }
@@ -7821,11 +7822,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                                 this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                                this.loading = true;
+                                                                this.loading.show();
                                                                 this.btnGuardar = true;
                                                                 this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                                 result => {
-                                                                    this.loading = false;
+                                                                    this.loading.hide();
                                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                                     this.Bloquear = false;
@@ -7857,16 +7858,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                     this.DebitoAutomaticoFrom.reset();
                                                                 },
                                                                 error => {
-                                                                    this.loading = false;
+                                                                    this.loading.hide();
                                                                     const errorMessage = <any>error;
                                                                     console.log(errorMessage);
                                                                 });
                                                             } else {
-                                                                this.loading = true;
+                                                                this.loading.show();
                                                                 this.btnGuardar = true;
                                                                 this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                                 result => {
-                                                                    this.loading = false;
+                                                                    this.loading.hide();
                                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                                     this.Bloquear = false;
@@ -7898,7 +7899,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                     this.DebitoAutomaticoFrom.reset();
                                                                 },
                                                                 error => {
-                                                                    this.loading = false;
+                                                                    this.loading.hide();
                                                                     const errorMessage = <any>error;
                                                                     console.log(errorMessage);
                                                                 });
@@ -7914,11 +7915,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                             result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -7950,16 +7951,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.DebitoAutomaticoFrom.reset();
                                                             },
                                                             error => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 const errorMessage = <any>error;
                                                                 console.log(errorMessage);
                                                             });
                                                         } else {
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                             result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -7991,7 +7992,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.DebitoAutomaticoFrom.reset();
                                                             },
                                                             error => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 const errorMessage = <any>error;
                                                                 console.log(errorMessage);
                                                             });
@@ -8019,11 +8020,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                                 this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                                this.loading = true;
+                                                                this.loading.show();
                                                                 this.btnGuardar = true;
                                                                 this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                                 result => {
-                                                                    this.loading = false;
+                                                                    this.loading.hide();
                                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                                     this.Bloquear = false;
@@ -8057,16 +8058,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                     this.itemsDataObejct = [];
                                                                 },
                                                                 error => {
-                                                                    this.loading = false;
+                                                                    this.loading.hide();
                                                                     const errorMessage = <any>error;
                                                                     console.log(errorMessage);
                                                                 });
                                                             } else {
-                                                                this.loading = true;
+                                                                this.loading.show();
                                                                 this.btnGuardar = true;
                                                                 this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                                 result => {
-                                                                    this.loading = false;
+                                                                    this.loading.hide();
                                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                                     this.Bloquear = false;
@@ -8100,7 +8101,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                     this.itemsDataObejct = [];
                                                                 },
                                                                 error => {
-                                                                    this.loading = false;
+                                                                    this.loading.hide();
                                                                     const errorMessage = <any>error;
                                                                     console.log(errorMessage);
                                                                 });
@@ -8116,11 +8117,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                             result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -8153,16 +8154,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.itemsDataObejct = [];
                                                             },
                                                             error => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 const errorMessage = <any>error;
                                                                 console.log(errorMessage);
                                                             });
                                                         } else {
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                             result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -8195,7 +8196,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.itemsDataObejct = [];
                                                             },
                                                             error => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 const errorMessage = <any>error;
                                                                 console.log(errorMessage);
                                                             });
@@ -8217,11 +8218,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                             result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -8253,16 +8254,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.DebitoAutomaticoFrom.reset();
                                                             },
                                                             error => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 const errorMessage = <any>error;
                                                                 console.log(errorMessage);
                                                             });
                                                         } else {
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                             result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -8294,7 +8295,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.DebitoAutomaticoFrom.reset();
                                                             },
                                                             error => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 const errorMessage = <any>error;
                                                                 console.log(errorMessage);
                                                             });
@@ -8310,11 +8311,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                         result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -8346,16 +8347,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.DebitoAutomaticoFrom.reset();
                                                         },
                                                         error => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             const errorMessage = <any>error;
                                                             console.log(errorMessage);
                                                         });
                                                     } else {
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                         result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -8387,7 +8388,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.DebitoAutomaticoFrom.reset();
                                                         },
                                                         error => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             const errorMessage = <any>error;
                                                             console.log(errorMessage);
                                                         });
@@ -8422,11 +8423,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                                 this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                                this.loading = true;
+                                                                this.loading.show();
                                                                 this.btnGuardar = true;
                                                                 this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                                 result => {
-                                                                    this.loading = false;
+                                                                    this.loading.hide();
                                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                                     this.Bloquear = false;
@@ -8459,16 +8460,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                     this.itemsDataObejct = [];
                                                                 },
                                                                 error => {
-                                                                    this.loading = false;
+                                                                    this.loading.hide();
                                                                     const errorMessage = <any>error;
                                                                     console.log(errorMessage);
                                                                 });
                                                             } else {
-                                                                this.loading = true;
+                                                                this.loading.show();
                                                                 this.btnGuardar = true;
                                                                 this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                                 result => {
-                                                                    this.loading = false;
+                                                                    this.loading.hide();
                                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                                     this.Bloquear = false;
@@ -8501,7 +8502,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                     this.itemsDataObejct = [];
                                                                 },
                                                                 error => {
-                                                                    this.loading = false;
+                                                                    this.loading.hide();
                                                                     const errorMessage = <any>error;
                                                                     console.log(errorMessage);
                                                                 });
@@ -8517,11 +8518,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                             result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -8554,16 +8555,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.itemsDataObejct = [];
                                                             },
                                                             error => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 const errorMessage = <any>error;
                                                                 console.log(errorMessage);
                                                             });
                                                         } else {
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                             result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -8596,7 +8597,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.itemsDataObejct = [];
                                                             },
                                                             error => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 const errorMessage = <any>error;
                                                                 console.log(errorMessage);
                                                             });
@@ -8618,11 +8619,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                             result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -8654,16 +8655,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.DebitoAutomaticoFrom.reset();
                                                             },
                                                             error => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 const errorMessage = <any>error;
                                                                 console.log(errorMessage);
                                                             });
                                                         } else {
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                             result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -8695,7 +8696,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.DebitoAutomaticoFrom.reset();
                                                             },
                                                             error => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 const errorMessage = <any>error;
                                                                 console.log(errorMessage);
                                                             });
@@ -8711,11 +8712,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                         result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -8746,16 +8747,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.Guardarlog(itemsLogApertura);
                                                         },
                                                         error => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             const errorMessage = <any>error;
                                                             console.log(errorMessage);
                                                         });
                                                     } else {
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                         result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -8787,7 +8788,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.DebitoAutomaticoFrom.reset();
                                                         },
                                                         error => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             const errorMessage = <any>error;
                                                             console.log(errorMessage);
                                                         });
@@ -8815,11 +8816,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                             result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -8852,16 +8853,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.itemsDataObejct = [];
                                                             },
                                                             error => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 const errorMessage = <any>error;
                                                                 console.log(errorMessage);
                                                             });
                                                         } else {
-                                                            this.loading = true;
+                                                            this.loading.show();
                                                             this.btnGuardar = true;
                                                             this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                             result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -8894,7 +8895,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.itemsDataObejct = [];
                                                             },
                                                             error => {
-                                                                this.loading = false;
+                                                                this.loading.hide();
                                                                 const errorMessage = <any>error;
                                                                 console.log(errorMessage);
                                                             });
@@ -8908,11 +8909,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                         result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -8945,16 +8946,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.itemsDataObejct = [];
                                                         },
                                                         error => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             const errorMessage = <any>error;
                                                             console.log(errorMessage);
                                                         });
                                                     } else {
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                         result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -8987,7 +8988,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.itemsDataObejct = [];
                                                         },
                                                         error => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             const errorMessage = <any>error;
                                                             console.log(errorMessage);
                                                         });
@@ -9009,11 +9010,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                         result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -9045,16 +9046,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.DebitoAutomaticoFrom.reset();
                                                         },
                                                         error => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             const errorMessage = <any>error;
                                                             console.log(errorMessage);
                                                         });
                                                     } else {
-                                                        this.loading = true;
+                                                        this.loading.show();
                                                         this.btnGuardar = true;
                                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                         result => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                             this.Bloquear = false;
@@ -9086,7 +9087,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.DebitoAutomaticoFrom.reset();
                                                         },
                                                         error => {
-                                                            this.loading = false;
+                                                            this.loading.hide();
                                                             const errorMessage = <any>error;
                                                             console.log(errorMessage);
                                                         });
@@ -9102,11 +9103,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                 this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                this.loading = true;
+                                                this.loading.show();
                                                 this.btnGuardar = true;
                                                 this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                     result => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                     this.Bloquear = false;
@@ -9138,16 +9139,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.DebitoAutomaticoFrom.reset();
                                                     },
                                                     error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                     });
                                                 } else {
-                                                this.loading = true;
+                                                this.loading.show();
                                                 this.btnGuardar = true;
                                                 this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                     result => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                     this.Bloquear = false;
@@ -9179,7 +9180,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.DebitoAutomaticoFrom.reset();
                                                     },
                                                     error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                     });
@@ -9256,11 +9257,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                     this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                    this.loading = true;
+                                                    this.loading.show();
                                                     this.btnGuardar = true;
                                                     this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                     result => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                         this.Bloquear = false;
@@ -9292,16 +9293,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.DebitoAutomaticoFrom.reset();
                                                     },
                                                     error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                     });
                                                 } else {
-                                                    this.loading = true;
+                                                    this.loading.show();
                                                     this.btnGuardar = true;
                                                     this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                     result => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                         this.Bloquear = false;
@@ -9333,7 +9334,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.DebitoAutomaticoFrom.reset();
                                                     },
                                                     error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                     });
@@ -9349,11 +9350,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                             this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                            this.loading = true;
+                                            this.loading.show();
                                             this.btnGuardar = true;
                                             this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                 result => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                 this.Bloquear = false;
@@ -9385,16 +9386,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.DebitoAutomaticoFrom.reset();
                                                 },
                                                 error => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     const errorMessage = <any>error;
                                                     console.log(errorMessage);
                                                 });
                                             } else {
-                                            this.loading = true;
+                                            this.loading.show();
                                             this.btnGuardar = true;
                                             this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                 result => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                 this.Bloquear = false;
@@ -9426,7 +9427,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.DebitoAutomaticoFrom.reset();
                                                 },
                                                 error => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     const errorMessage = <any>error;
                                                     console.log(errorMessage);
                                                 });
@@ -9448,11 +9449,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                             this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                            this.loading = true;
+                                            this.loading.show();
                                             this.btnGuardar = true;
                                             this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                 result => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                 this.Bloquear = false;
@@ -9484,16 +9485,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.DebitoAutomaticoFrom.reset();
                                                 },
                                                 error => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     const errorMessage = <any>error;
                                                     console.log(errorMessage);
                                                 });
                                             } else {
-                                            this.loading = true;
+                                            this.loading.show();
                                             this.btnGuardar = true;
                                             this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                 result => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                 this.Bloquear = false;
@@ -9525,7 +9526,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.DebitoAutomaticoFrom.reset();
                                                 },
                                                 error => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     const errorMessage = <any>error;
                                                     console.log(errorMessage);
                                                 });
@@ -9539,11 +9540,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                             this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                            this.loading = true;
+                                            this.loading.show();
                                             this.btnGuardar = true;
                                             this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                             result => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                 this.Bloquear = false;
@@ -9575,16 +9576,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.DebitoAutomaticoFrom.reset();
                                             },
                                             error => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 const errorMessage = <any>error;
                                                 console.log(errorMessage);
                                             });
                                         } else {
-                                            this.loading = true;
+                                            this.loading.show();
                                             this.btnGuardar = true;
                                             this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                             result => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                 this.Bloquear = false;
@@ -9616,7 +9617,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.DebitoAutomaticoFrom.reset();
                                             },
                                             error => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 const errorMessage = <any>error;
                                                 console.log(errorMessage);
                                             });
@@ -9645,11 +9646,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                             this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                            this.loading = true;
+                                            this.loading.show();
                                             this.btnGuardar = true;
                                             this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                 result => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                 this.Bloquear = false;
@@ -9682,17 +9683,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.itemsDataObejct = [];
                                                 },
                                                 error => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     const errorMessage = <any>error;
                                                     console.log(errorMessage);
                                                 }
                                             );
                                             } else {
-                                            this.loading = true;
+                                            this.loading.show();
                                             this.btnGuardar = true;
                                             this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                 result => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                 this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                 this.Bloquear = false;
@@ -9740,7 +9741,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.itemsSend.Sorteo = this.contractualFrom.get('Sorteo')?.value;
                                                 },
                                                 error => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   const errorMessage = <any>error;
                                                   console.log(errorMessage);
                                                 });
@@ -9756,11 +9757,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                           this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                           this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                          this.loading = true;
+                                          this.loading.show();
                                           this.btnGuardar = true;
                                           this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                           result => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                               this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                               this.Bloquear = false;
@@ -9793,16 +9794,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.itemsDataObejct = [];
                                           },
                                           error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                           });
                                       } else {
-                                          this.loading = true;
+                                          this.loading.show();
                                           this.btnGuardar = true;
                                           this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                           result => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                               this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                               this.Bloquear = false;
@@ -9835,7 +9836,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.itemsDataObejct = [];
                                           },
                                           error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                           });
@@ -9855,11 +9856,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                     this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                     this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                    this.loading = true;
+                                    this.loading.show();
                                     this.btnGuardar = true;
                                     this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                     result => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                         this.Bloquear = false;
@@ -9894,17 +9895,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                     },
                                     error => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         const errorMessage = <any>error;
                                         console.log(errorMessage);
                                     }
                                     );
                                 } else {
-                                    this.loading = true;
+                                    this.loading.show();
                                     this.btnGuardar = true;
                                     this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                     result => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                         this.Bloquear = false;
@@ -9939,7 +9940,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                     },
                                     error => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         const errorMessage = <any>error;
                                         console.log(errorMessage);
                                     }
@@ -9956,11 +9957,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                 this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                 this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                this.loading = true;
+                                this.loading.show();
                                 this.btnGuardar = true;
                                 this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                     result => {
-                                    this.loading = false;
+                                    this.loading.hide();
                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                     this.Bloquear = false;
@@ -9996,17 +9997,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                     },
                                     error => {
-                                    this.loading = false;
+                                    this.loading.hide();
                                     const errorMessage = <any>error;
                                     console.log(errorMessage);
                                     }
                                 );
                                 } else {
-                                this.loading = true;
+                                this.loading.show();
                                 this.btnGuardar = true;
                                 this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                     result => {
-                                    this.loading = false;
+                                    this.loading.hide();
                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                     this.Bloquear = false;
@@ -10041,7 +10042,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                     },
                                     error => {
-                                    this.loading = false;
+                                    this.loading.hide();
                                     const errorMessage = <any>error;
                                     console.log(errorMessage);
                                     }
@@ -10077,11 +10078,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                       this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                       this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                      this.loading = true;
+                                      this.loading.show();
                                       this.btnGuardar = true;
                                       this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                           result => {
-                                          this.loading = false;
+                                          this.loading.hide();
                                           this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                           this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                           this.Bloquear = false;
@@ -10113,16 +10114,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                           this.DebitoAutomaticoFrom.reset();
                                           },
                                           error => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             const errorMessage = <any>error;
                                             console.log(errorMessage);
                                           });
                                       } else {
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                           result => {
-                                          this.loading = false;
+                                          this.loading.hide();
                                           this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                           this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                           this.Bloquear = false;
@@ -10154,7 +10155,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                           this.DebitoAutomaticoFrom.reset();
                                           },
                                           error => {
-                                          this.loading = false;
+                                          this.loading.hide();
                                           const errorMessage = <any>error;
                                           console.log(errorMessage);
                                           });
@@ -10168,11 +10169,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                       this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                       this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                      this.loading = true;
+                                      this.loading.show();
                                       this.btnGuardar = true;
                                       this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                       result => {
-                                          this.loading = false;
+                                          this.loading.hide();
                                           this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                           this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                           this.Bloquear = false;
@@ -10204,16 +10205,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                           this.DebitoAutomaticoFrom.reset();
                                       },
                                       error => {
-                                          this.loading = false;
+                                          this.loading.hide();
                                           const errorMessage = <any>error;
                                           console.log(errorMessage);
                                       });
                                   } else {
-                                      this.loading = true;
+                                      this.loading.show();
                                       this.btnGuardar = true;
                                       this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                       result => {
-                                          this.loading = false;
+                                          this.loading.hide();
                                           this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                           this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                           this.Bloquear = false;
@@ -10246,7 +10247,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                           this.itemsDataObejct = [];
                                       },
                                       error => {
-                                          this.loading = false;
+                                          this.loading.hide();
                                           const errorMessage = <any>error;
                                           console.log(errorMessage);
                                       });
@@ -10268,11 +10269,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                     this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                     this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                    this.loading = true;
+                                    this.loading.show();
                                     this.btnGuardar = true;
                                     this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                     result => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                         this.Bloquear = false;
@@ -10304,16 +10305,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.DebitoAutomaticoFrom.reset();
                                     },
                                     error => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         const errorMessage = <any>error;
                                         console.log(errorMessage);
                                     });
                                 } else {
-                                    this.loading = true;
+                                    this.loading.show();
                                     this.btnGuardar = true;
                                     this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                     result => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                         this.Bloquear = false;
@@ -10345,7 +10346,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.DebitoAutomaticoFrom.reset();
                                     },
                                     error => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         const errorMessage = <any>error;
                                         console.log(errorMessage);
                                     });
@@ -10361,11 +10362,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                               this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                               this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                              this.loading = true;
+                              this.loading.show();
                               this.btnGuardar = true;
                               this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                   result => {
-                                  this.loading = false;
+                                  this.loading.hide();
                                   this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                   this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                   this.Bloquear = false;
@@ -10397,16 +10398,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                   this.DebitoAutomaticoFrom.reset();
                                   },
                                   error => {
-                                    this.loading = false;
+                                    this.loading.hide();
                                     const errorMessage = <any>error;
                                     console.log(errorMessage);
                                   });
                               } else {
-                              this.loading = true;
+                              this.loading.show();
                               this.btnGuardar = true;
                               this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                   result => {
-                                  this.loading = false;
+                                  this.loading.hide();
                                   this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                   this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                   this.Bloquear = false;
@@ -10438,7 +10439,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                   this.DebitoAutomaticoFrom.reset();
                                   },
                                   error => {
-                                    this.loading = false;
+                                    this.loading.hide();
                                     const errorMessage = <any>error;
                                     console.log(errorMessage);
                                   }
@@ -10468,11 +10469,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                   this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                   this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                  this.loading = true;
+                                  this.loading.show();
                                   this.btnGuardar = true;
                                   this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                   result => {
-                                      this.loading = false;
+                                      this.loading.hide();
                                       this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                       this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                       this.Bloquear = false;
@@ -10512,17 +10513,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                   },
                                   error => {
-                                      this.loading = false;
+                                      this.loading.hide();
                                       const errorMessage = <any>error;
                                       console.log(errorMessage);
                                   }
                                   );
                               } else {
-                                  this.loading = true;
+                                  this.loading.show();
                                   this.btnGuardar = true;
                                   this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                   result => {
-                                      this.loading = false;
+                                      this.loading.hide();
                                       this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                       this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                       this.Bloquear = false;
@@ -10559,7 +10560,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                   },
                                   error => {
-                                      this.loading = false;
+                                      this.loading.hide();
                                       const errorMessage = <any>error;
                                       console.log(errorMessage);
                                   }
@@ -10577,11 +10578,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                               this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                               this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                              this.loading = true;
+                              this.loading.show();
                               this.btnGuardar = true;
                               this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                   result => {
-                                  this.loading = false;
+                                  this.loading.hide();
                                   this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                   this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                   this.Bloquear = false;
@@ -10619,17 +10620,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                   },
                                   error => {
-                                  this.loading = false;
+                                  this.loading.hide();
                                   const errorMessage = <any>error;
                                   console.log(errorMessage);
                                   }
                               );
                               } else {
-                              this.loading = true;
+                              this.loading.show();
                               this.btnGuardar = true;
                               this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                   result => {
-                                  this.loading = false;
+                                  this.loading.hide();
                                   this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                   this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                   this.BloquearDatoTitular = false;
@@ -10656,7 +10657,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                   },
                                   error => {
-                                  this.loading = false;
+                                  this.loading.hide();
                                   const errorMessage = <any>error;
                                   console.log(errorMessage);
                                   }
@@ -10679,11 +10680,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                               this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                               this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                              this.loading = true;
+                              this.loading.show();
                               this.btnGuardar = true;
                               this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                   result => {
-                                  this.loading = false;
+                                  this.loading.hide();
                                   this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                   this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                   this.Bloquear = false;
@@ -10720,17 +10721,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                   },
                                   error => {
-                                  this.loading = false;
+                                  this.loading.hide();
                                   const errorMessage = <any>error;
                                   console.log(errorMessage);
                                   }
                               );
                               } else {
-                              this.loading = true;
+                              this.loading.show();
                               this.btnGuardar = true;
                               this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                   result => {
-                                  this.loading = false;
+                                  this.loading.hide();
                                   this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                   this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                   this.Bloquear = false;
@@ -10767,7 +10768,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                   },
                                   error => {
-                                  this.loading = false;
+                                  this.loading.hide();
                                   const errorMessage = <any>error;
                                   console.log(errorMessage);
                                   }
@@ -10784,11 +10785,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                               this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                               this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                              this.loading = true;
+                              this.loading.show();
                               this.btnGuardar = true;
                               this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                               result => {
-                                  this.loading = false;
+                                  this.loading.hide();
                                   this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                   this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                   this.Bloquear = false;
@@ -10820,17 +10821,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                   this.DebitoAutomaticoFrom.reset();
                               },
                               error => {
-                                  this.loading = false;
+                                  this.loading.hide();
                                   const errorMessage = <any>error;
                                   console.log(errorMessage);
                               }
                               );
                           } else {
-                              this.loading = true;
+                              this.loading.show();
                               this.btnGuardar = true;
                               this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                               result => {
-                                  this.loading = false;
+                                  this.loading.hide();
                                   this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                   this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                   this.Bloquear = false;
@@ -10865,7 +10866,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                               },
                               error => {
-                                  this.loading = false;
+                                  this.loading.hide();
                                   const errorMessage = <any>error;
                                   console.log(errorMessage);
                               }
@@ -10925,11 +10926,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                               this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                              this.loading = true;
+                                              this.loading.show();
                                               this.btnGuardar = true;
                                               this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                               result => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                   this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                   this.Bloquear = false;
@@ -10963,16 +10964,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.itemsDataObejct = [];
                                               },
                                               error => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   const errorMessage = <any>error;
                                                   console.log(errorMessage);
                                               });
                                           } else {
-                                              this.loading = true;
+                                              this.loading.show();
                                               this.btnGuardar = true;
                                               this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                               result => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                   this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                   this.Bloquear = false;
@@ -11005,7 +11006,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.itemsDataObejct = [];
                                               },
                                               error => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   const errorMessage = <any>error;
                                                   console.log(errorMessage);
                                               });
@@ -11021,11 +11022,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                             result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -11058,16 +11059,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.itemsDataObejct = [];
                                             },
                                             error => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             const errorMessage = <any>error;
                                             console.log(errorMessage);
                                             });
                                         } else {
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                             result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -11100,7 +11101,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.itemsDataObejct = [];
                                             },
                                             error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                             });
@@ -11122,11 +11123,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                             result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -11158,16 +11159,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.DebitoAutomaticoFrom.reset();
                                             },
                                             error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                             });
                                         } else {
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                             result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -11199,7 +11200,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.DebitoAutomaticoFrom.reset();
                                             },
                                             error => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             const errorMessage = <any>error;
                                             console.log(errorMessage);
                                             });
@@ -11213,11 +11214,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                         result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -11249,16 +11250,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.DebitoAutomaticoFrom.reset();
                                         },
                                         error => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             const errorMessage = <any>error;
                                             console.log(errorMessage);
                                         });
                                     } else {
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                         result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -11290,7 +11291,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.DebitoAutomaticoFrom.reset();
                                         },
                                         error => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             const errorMessage = <any>error;
                                             console.log(errorMessage);
                                         });
@@ -11318,11 +11319,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                           this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                           this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                          this.loading = true;
+                                          this.loading.show();
                                           this.btnGuardar = true;
                                           this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                               result => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                               this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                               this.Bloquear = false;
@@ -11355,16 +11356,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.itemsDataObejct = [];
                                               },
                                               error => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 const errorMessage = <any>error;
                                                 console.log(errorMessage);
                                               });
                                           } else {
-                                          this.loading = true;
+                                          this.loading.show();
                                           this.btnGuardar = true;
                                           this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                               result => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                               this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                               this.Bloquear = false;
@@ -11397,7 +11398,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.itemsDataObejct = [];
                                               },
                                               error => {
-                                                this.loading = false;
+                                                this.loading.hide();
                                                 const errorMessage = <any>error;
                                                 console.log(errorMessage);
                                               });
@@ -11414,11 +11415,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                           this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                           this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                          this.loading = true;
+                                          this.loading.show();
                                           this.btnGuardar = true;
                                           this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                           result => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                               this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                               this.Bloquear = false;
@@ -11451,16 +11452,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.itemsDataObejct = [];
                                           },
                                           error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                           });
                                       } else {
-                                          this.loading = true;
+                                          this.loading.show();
                                           this.btnGuardar = true;
                                           this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                           result => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                               this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                               this.Bloquear = false;
@@ -11493,7 +11494,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.itemsDataObejct = [];
                                           },
                                           error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                           });
@@ -11515,11 +11516,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                           this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                           this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                          this.loading = true;
+                                          this.loading.show();
                                           this.btnGuardar = true;
                                           this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                           result => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                               this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                               this.Bloquear = false;
@@ -11551,16 +11552,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.DebitoAutomaticoFrom.reset();
                                           },
                                           error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                           });
                                       } else {
-                                          this.loading = true;
+                                          this.loading.show();
                                           this.btnGuardar = true;
                                           this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                           result => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                               this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                               this.Bloquear = false;
@@ -11592,7 +11593,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.DebitoAutomaticoFrom.reset();
                                           },
                                           error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                           });
@@ -11608,11 +11609,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                       this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                       this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                      this.loading = true;
+                                      this.loading.show();
                                       this.btnGuardar = true;
                                       this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                         result => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                         this.Bloquear = false;
@@ -11644,16 +11645,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.DebitoAutomaticoFrom.reset();
                                         },
                                         error => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         const errorMessage = <any>error;
                                         console.log(errorMessage);
                                         });
                                     } else {
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                         result => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                         this.Bloquear = false;
@@ -11685,7 +11686,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.DebitoAutomaticoFrom.reset();
                                         },
                                         error => {
-                                          this.loading = false;
+                                          this.loading.hide();
                                           const errorMessage = <any>error;
                                           console.log(errorMessage);
                                         });
@@ -11720,11 +11721,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                             result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -11757,16 +11758,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.itemsDataObejct = [];
                                             },
                                             error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                             });
                                         } else {
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                             result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -11799,7 +11800,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.itemsDataObejct = [];
                                             },
                                             error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                             });
@@ -11815,11 +11816,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                           this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                           this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                          this.loading = true;
+                                          this.loading.show();
                                           this.btnGuardar = true;
                                           this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                           result => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                               this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                               this.Bloquear = false;
@@ -11852,16 +11853,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.itemsDataObejct = [];
                                           },
                                           error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                           });
                                       } else {
-                                          this.loading = true;
+                                          this.loading.show();
                                           this.btnGuardar = true;
                                           this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                           result => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                               this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                               this.Bloquear = false;
@@ -11894,7 +11895,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.itemsDataObejct = [];
                                           },
                                           error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                           });
@@ -11916,11 +11917,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                           this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                           this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                          this.loading = true;
+                                          this.loading.show();
                                           this.btnGuardar = true;
                                           this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                           result => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                               this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                               this.Bloquear = false;
@@ -11952,16 +11953,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.DebitoAutomaticoFrom.reset();
                                           },
                                           error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                           });
                                       } else {
-                                          this.loading = true;
+                                          this.loading.show();
                                           this.btnGuardar = true;
                                           this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                           result => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                               this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                               this.Bloquear = false;
@@ -12008,7 +12009,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.itemsSend.Sorteo = this.contractualFrom.get('Sorteo')?.value;
                                           },
                                           error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                           });
@@ -12024,11 +12025,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                     this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                     this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                    this.loading = true;
+                                    this.loading.show();
                                     this.btnGuardar = true;
                                     this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                         result => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                         this.Bloquear = false;
@@ -12060,16 +12061,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.DebitoAutomaticoFrom.reset();
                                         },
                                         error => {
-                                          this.loading = false;
+                                          this.loading.hide();
                                           const errorMessage = <any>error;
                                           console.log(errorMessage);
                                         });
                                     } else {
-                                    this.loading = true;
+                                    this.loading.show();
                                     this.btnGuardar = true;
                                     this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                         result => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                         this.Bloquear = false;
@@ -12101,7 +12102,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.DebitoAutomaticoFrom.reset();
                                         },
                                         error => {
-                                          this.loading = false;
+                                          this.loading.hide();
                                           const errorMessage = <any>error;
                                           console.log(errorMessage);
                                         });
@@ -12129,11 +12130,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                       this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                       this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                      this.loading = true;
+                                      this.loading.show();
                                       this.btnGuardar = true;
                                       this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                       result => {
-                                          this.loading = false;
+                                          this.loading.hide();
                                           this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                           this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                           this.Bloquear = false;
@@ -12166,17 +12167,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                           this.itemsDataObejct = [];
                                       },
                                       error => {
-                                          this.loading = false;
+                                          this.loading.hide();
                                           const errorMessage = <any>error;
                                           console.log(errorMessage);
                                       }
                                       );
                                   } else {
-                                      this.loading = true;
+                                      this.loading.show();
                                       this.btnGuardar = true;
                                       this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                       result => {
-                                          this.loading = false;
+                                          this.loading.hide();
                                           this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                           this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                           this.Bloquear = false;
@@ -12211,7 +12212,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                       },
                                       error => {
-                                          this.loading = false;
+                                          this.loading.hide();
                                           const errorMessage = <any>error;
                                           console.log(errorMessage);
                                       }
@@ -12229,11 +12230,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                   this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                   this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                  this.loading = true;
+                                  this.loading.show();
                                   this.btnGuardar = true;
                                   this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                       result => {
-                                      this.loading = false;
+                                      this.loading.hide();
                                       this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                       this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                       this.Bloquear = false;
@@ -12270,17 +12271,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                       },
                                       error => {
-                                      this.loading = false;
+                                      this.loading.hide();
                                       const errorMessage = <any>error;
                                       console.log(errorMessage);
                                       }
                                   );
                                   } else {
-                                  this.loading = true;
+                                  this.loading.show();
                                   this.btnGuardar = true;
                                   this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                       result => {
-                                      this.loading = false;
+                                      this.loading.hide();
                                       this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                       this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                       this.Bloquear = false;
@@ -12315,7 +12316,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                       },
                                       error => {
-                                      this.loading = false;
+                                      this.loading.hide();
                                       const errorMessage = <any>error;
                                       console.log(errorMessage);
                                       }
@@ -12338,11 +12339,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                     this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                     this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                    this.loading = true;
+                                    this.loading.show();
                                     this.btnGuardar = true;
                                     this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                         result => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                         this.Bloquear = false;
@@ -12374,16 +12375,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.DebitoAutomaticoFrom.reset();
                                         },
                                         error => {
-                                          this.loading = false;
+                                          this.loading.hide();
                                           const errorMessage = <any>error;
                                           console.log(errorMessage);
                                         });
                                     } else {
-                                    this.loading = true;
+                                    this.loading.show();
                                     this.btnGuardar = true;
                                     this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                         result => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                         this.Bloquear = false;
@@ -12415,7 +12416,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.DebitoAutomaticoFrom.reset();
                                         },
                                         error => {
-                                          this.loading = false;
+                                          this.loading.hide();
                                           const errorMessage = <any>error;
                                           console.log(errorMessage);
                                         });
@@ -12431,11 +12432,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                     this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                     this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                    this.loading = true;
+                                    this.loading.show();
                                     this.btnGuardar = true;
                                     this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                     result => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                         this.Bloquear = false;
@@ -12467,16 +12468,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.DebitoAutomaticoFrom.reset();
                                     },
                                     error => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         const errorMessage = <any>error;
                                         console.log(errorMessage);
                                     });
                                 } else {
-                                    this.loading = true;
+                                    this.loading.show();
                                     this.btnGuardar = true;
                                     this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                     result => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                         this.Bloquear = false;
@@ -12508,7 +12509,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.DebitoAutomaticoFrom.reset();
                                     },
                                     error => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         const errorMessage = <any>error;
                                         console.log(errorMessage);
                                     });
@@ -12549,11 +12550,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                               this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                              this.loading = true;
+                                              this.loading.show();
                                               this.btnGuardar = true;
                                               this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                               result => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                   this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                   this.Bloquear = false;
@@ -12585,16 +12586,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.DebitoAutomaticoFrom.reset();
                                               },
                                               error => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   const errorMessage = <any>error;
                                                   console.log(errorMessage);
                                               });
                                           } else {
-                                              this.loading = true;
+                                              this.loading.show();
                                               this.btnGuardar = true;
                                               this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                               result => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                   this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                   this.Bloquear = false;
@@ -12626,7 +12627,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.DebitoAutomaticoFrom.reset();
                                               },
                                               error => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   const errorMessage = <any>error;
                                                   console.log(errorMessage);
                                               });
@@ -12642,11 +12643,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                             result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -12678,16 +12679,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.DebitoAutomaticoFrom.reset();
                                             },
                                             error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                             });
                                         } else {
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                             result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -12719,7 +12720,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.DebitoAutomaticoFrom.reset();
                                             },
                                             error => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             const errorMessage = <any>error;
                                             console.log(errorMessage);
                                             });
@@ -12741,11 +12742,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                             result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -12777,16 +12778,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.DebitoAutomaticoFrom.reset();
                                             },
                                             error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                             });
                                         } else {
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                             result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -12818,7 +12819,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.DebitoAutomaticoFrom.reset();
                                             },
                                             error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                             });
@@ -12834,11 +12835,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                         result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -12870,16 +12871,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.DebitoAutomaticoFrom.reset();
                                         },
                                         error => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             const errorMessage = <any>error;
                                             console.log(errorMessage);
                                         });
                                     } else {
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                         result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -12911,7 +12912,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.DebitoAutomaticoFrom.reset();
                                         },
                                         error => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             const errorMessage = <any>error;
                                             console.log(errorMessage);
                                         });
@@ -12940,11 +12941,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                     this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                     this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                    this.loading = true;
+                                    this.loading.show();
                                     this.btnGuardar = true;
                                     this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                         result => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                         this.Bloquear = false;
@@ -12981,17 +12982,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                         },
                                         error => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         const errorMessage = <any>error;
                                         console.log(errorMessage);
                                         }
                                     );
                                     } else {
-                                    this.loading = true;
+                                    this.loading.show();
                                     this.btnGuardar = true;
                                     this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                         result => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                         this.Bloquear = false;
@@ -13027,7 +13028,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                         },
                                         error => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         const errorMessage = <any>error;
                                         console.log(errorMessage);
                                         }
@@ -13045,11 +13046,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                     this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                     this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                    this.loading = true;
+                                    this.loading.show();
                                     this.btnGuardar = true;
                                     this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                     result => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                         this.Bloquear = false;
@@ -13086,17 +13087,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                     },
                                     error => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         const errorMessage = <any>error;
                                         console.log(errorMessage);
                                     }
                                     );
                                 } else {
-                                    this.loading = true;
+                                    this.loading.show();
                                     this.btnGuardar = true;
                                     this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                     result => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                         this.Bloquear = false;
@@ -13131,7 +13132,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                     },
                                     error => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         const errorMessage = <any>error;
                                         console.log(errorMessage);
                                     }
@@ -13154,11 +13155,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                     this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                     this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                    this.loading = true;
+                                    this.loading.show();
                                     this.btnGuardar = true;
                                     this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                     result => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                         this.Bloquear = false;
@@ -13191,17 +13192,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                     },
                                     error => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         const errorMessage = <any>error;
                                         console.log(errorMessage);
                                     }
                                     );
                                 } else {
-                                    this.loading = true;
+                                    this.loading.show();
                                     this.btnGuardar = true;
                                     this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                     result => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                         this.Bloquear = false;
@@ -13235,7 +13236,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                     },
                                     error => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         const errorMessage = <any>error;
                                         console.log(errorMessage);
                                     }
@@ -13252,11 +13253,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                 this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                 this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                this.loading = true;
+                                this.loading.show();
                                 this.btnGuardar = true;
                                 this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                     result => {
-                                    this.loading = false;
+                                    this.loading.hide();
                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                     this.Bloquear = false;
@@ -13291,17 +13292,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                     },
                                     error => {
-                                    this.loading = false;
+                                    this.loading.hide();
                                     const errorMessage = <any>error;
                                     console.log(errorMessage);
                                     }
                                 );
                                 } else {
-                                this.loading = true;
+                                this.loading.show();
                                 this.btnGuardar = true;
                                 this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                     result => {
-                                    this.loading = false;
+                                    this.loading.hide();
                                     this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                     this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                     this.Bloquear = false;
@@ -13335,7 +13336,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                     },
                                     error => {
-                                    this.loading = false;
+                                    this.loading.hide();
                                     const errorMessage = <any>error;
                                     console.log(errorMessage);
                                     }
@@ -13369,11 +13370,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                             result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -13405,16 +13406,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.DebitoAutomaticoFrom.reset();
                                             },
                                             error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                             });
                                         } else {
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                             result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -13446,7 +13447,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.DebitoAutomaticoFrom.reset();
                                             },
                                             error => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             const errorMessage = <any>error;
                                             console.log(errorMessage);
                                             });
@@ -13460,11 +13461,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                         result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -13496,16 +13497,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.DebitoAutomaticoFrom.reset();
                                         },
                                         error => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             const errorMessage = <any>error;
                                             console.log(errorMessage);
                                         });
                                     } else {
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                         result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -13538,7 +13539,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.itemsDataObejct = [];
                                         },
                                         error => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             const errorMessage = <any>error;
                                             console.log(errorMessage);
                                         });
@@ -13560,11 +13561,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                         result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -13596,16 +13597,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.DebitoAutomaticoFrom.reset();
                                         },
                                         error => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             const errorMessage = <any>error;
                                             console.log(errorMessage);
                                         });
                                     } else {
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                         result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -13637,7 +13638,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.DebitoAutomaticoFrom.reset();
                                         },
                                         error => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             const errorMessage = <any>error;
                                             console.log(errorMessage);
                                         });
@@ -13653,11 +13654,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                   this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                   this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                  this.loading = true;
+                                  this.loading.show();
                                   this.btnGuardar = true;
                                   this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                       result => {
-                                      this.loading = false;
+                                      this.loading.hide();
                                       this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                       this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                       this.Bloquear = false;
@@ -13704,16 +13705,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                       this.itemsSend.Sorteo = this.contractualFrom.get('Sorteo')?.value;
                                       },
                                       error => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         const errorMessage = <any>error;
                                         console.log(errorMessage);
                                       });
                                   } else {
-                                  this.loading = true;
+                                  this.loading.show();
                                   this.btnGuardar = true;
                                   this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                       result => {
-                                      this.loading = false;
+                                      this.loading.hide();
                                       this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                       this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                       this.Bloquear = false;
@@ -13745,7 +13746,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                       this.DebitoAutomaticoFrom.reset();
                                       },
                                       error => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         const errorMessage = <any>error;
                                         console.log(errorMessage);
                                       });
@@ -13774,11 +13775,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                         result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -13812,17 +13813,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.itemsDataObejct = [];
                                         },
                                         error => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             const errorMessage = <any>error;
                                             console.log(errorMessage);
                                         }
                                         );
                                     } else {
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                         result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -13855,7 +13856,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.itemsDataObejct = [];
                                         },
                                         error => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             const errorMessage = <any>error;
                                             console.log(errorMessage);
                                         });
@@ -13871,11 +13872,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                   this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                   this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                  this.loading = true;
+                                  this.loading.show();
                                   this.btnGuardar = true;
                                   this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                       result => {
-                                      this.loading = false;
+                                      this.loading.hide();
                                       this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                       this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                       this.Bloquear = false;
@@ -13908,16 +13909,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                       this.itemsDataObejct = [];
                                       },
                                       error => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         const errorMessage = <any>error;
                                         console.log(errorMessage);
                                       });
                                   } else {
-                                  this.loading = true;
+                                  this.loading.show();
                                   this.btnGuardar = true;
                                   this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                       result => {
-                                      this.loading = false;
+                                      this.loading.hide();
                                       this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                       this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                       this.BloquearDatoTitular = false;
@@ -13941,7 +13942,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                       this.itemsDataObejct = [];
                                       },
                                       error => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         const errorMessage = <any>error;
                                         console.log(errorMessage);
                                       });
@@ -13963,11 +13964,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                   this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                   this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                  this.loading = true;
+                                  this.loading.show();
                                   this.btnGuardar = true;
                                   this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                       result => {
-                                      this.loading = false;
+                                      this.loading.hide();
                                       this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                       this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                       this.Bloquear = false;
@@ -13999,16 +14000,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                       this.DebitoAutomaticoFrom.reset();
                                       },
                                       error => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         const errorMessage = <any>error;
                                         console.log(errorMessage);
                                       });
                                   } else {
-                                  this.loading = true;
+                                  this.loading.show();
                                   this.btnGuardar = true;
                                   this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                       result => {
-                                      this.loading = false;
+                                      this.loading.hide();
                                       this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                       this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                       this.Bloquear = false;
@@ -14040,7 +14041,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                       this.DebitoAutomaticoFrom.reset();
                                       },
                                       error => {
-                                        this.loading = false;
+                                        this.loading.hide();
                                         const errorMessage = <any>error;
                                         console.log(errorMessage);
                                       });
@@ -14056,11 +14057,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                   this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                   this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                  this.loading = true;
+                                  this.loading.show();
                                   this.btnGuardar = true;
                                   this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                   result => {
-                                      this.loading = false;
+                                      this.loading.hide();
                                       this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                       this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                       this.Bloquear = false;
@@ -14092,16 +14093,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                       this.DebitoAutomaticoFrom.reset();
                                   },
                                   error => {
-                                      this.loading = false;
+                                      this.loading.hide();
                                       const errorMessage = <any>error;
                                       console.log(errorMessage);
                                   });
                               } else {
-                                  this.loading = true;
+                                  this.loading.show();
                                   this.btnGuardar = true;
                                   this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                   result => {
-                                      this.loading = false;
+                                      this.loading.hide();
                                       this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                       this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                       this.Bloquear = false;
@@ -14133,7 +14134,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                       this.DebitoAutomaticoFrom.reset();
                                   },
                                   error => {
-                                      this.loading = false;
+                                      this.loading.hide();
                                       const errorMessage = <any>error;
                                       console.log(errorMessage);
                                   });
@@ -14193,11 +14194,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                                     this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                                    this.loading = true;
+                                                    this.loading.show();
                                                     this.btnGuardar = true;
                                                     this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                     result => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                         this.Bloquear = false;
@@ -14231,16 +14232,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.itemsDataObejct = [];
                                                     },
                                                     error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                     });
                                                 } else {
-                                                    this.loading = true;
+                                                    this.loading.show();
                                                     this.btnGuardar = true;
                                                     this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                     result => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                         this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                         this.Bloquear = false;
@@ -14273,7 +14274,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.itemsDataObejct = [];
                                                     },
                                                     error => {
-                                                        this.loading = false;
+                                                        this.loading.hide();
                                                         const errorMessage = <any>error;
                                                         console.log(errorMessage);
                                                     });
@@ -14289,11 +14290,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                               this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                              this.loading = true;
+                                              this.loading.show();
                                               this.btnGuardar = true;
                                               this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                   result => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                   this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                   this.Bloquear = false;
@@ -14326,16 +14327,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.itemsDataObejct = [];
                                                   },
                                                   error => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   const errorMessage = <any>error;
                                                   console.log(errorMessage);
                                                   });
                                               } else {
-                                              this.loading = true;
+                                              this.loading.show();
                                               this.btnGuardar = true;
                                               this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                   result => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                   this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                   this.Bloquear = false;
@@ -14368,7 +14369,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.itemsDataObejct = [];
                                                   },
                                                   error => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   const errorMessage = <any>error;
                                                   console.log(errorMessage);
                                                   });
@@ -14390,11 +14391,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                               this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                              this.loading = true;
+                                              this.loading.show();
                                               this.btnGuardar = true;
                                               this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                   result => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                   this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                   this.Bloquear = false;
@@ -14426,16 +14427,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.DebitoAutomaticoFrom.reset();
                                                   },
                                                   error => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   const errorMessage = <any>error;
                                                   console.log(errorMessage);
                                                   });
                                               } else {
-                                              this.loading = true;
+                                              this.loading.show();
                                               this.btnGuardar = true;
                                               this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                   result => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                   this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                   this.Bloquear = false;
@@ -14467,7 +14468,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.DebitoAutomaticoFrom.reset();
                                                   },
                                                   error => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   const errorMessage = <any>error;
                                                   console.log(errorMessage);
                                                   });
@@ -14483,11 +14484,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                               this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                              this.loading = true;
+                                              this.loading.show();
                                               this.btnGuardar = true;
                                               this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                               result => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                   this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                   this.Bloquear = false;
@@ -14519,16 +14520,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.DebitoAutomaticoFrom.reset();
                                               },
                                               error => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   const errorMessage = <any>error;
                                                   console.log(errorMessage);
                                               });
                                           } else {
-                                              this.loading = true;
+                                              this.loading.show();
                                               this.btnGuardar = true;
                                               this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                               result => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                   this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                   this.Bloquear = false;
@@ -14560,7 +14561,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.DebitoAutomaticoFrom.reset();
                                               },
                                               error => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   const errorMessage = <any>error;
                                                   console.log(errorMessage);
                                               });
@@ -14588,11 +14589,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                           this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                           this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                          this.loading = true;
+                                          this.loading.show();
                                           this.btnGuardar = true;
                                           this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                               result => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                               this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                               this.Bloquear = false;
@@ -14629,17 +14630,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                               },
                                               error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                               }
                                           );
                                           } else {
-                                          this.loading = true;
+                                          this.loading.show();
                                           this.btnGuardar = true;
                                           this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                               result => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                               this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                               this.Bloquear = false;
@@ -14675,7 +14676,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                               },
                                               error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                               }
@@ -14693,11 +14694,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                           this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                           this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                          this.loading = true;
+                                          this.loading.show();
                                           this.btnGuardar = true;
                                           this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                           result => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                               this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                               this.Bloquear = false;
@@ -14731,17 +14732,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                           },
                                           error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                           }
                                           );
                                       } else {
-                                          this.loading = true;
+                                          this.loading.show();
                                           this.btnGuardar = true;
                                           this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                           result => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                               this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                               this.Bloquear = false;
@@ -14774,7 +14775,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.itemsDataObejct = [];
                                           },
                                           error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                           }
@@ -14797,11 +14798,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                           this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                           this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                          this.loading = true;
+                                          this.loading.show();
                                           this.btnGuardar = true;
                                           this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                           result => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                               this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                               this.Bloquear = false;
@@ -14833,17 +14834,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.DebitoAutomaticoFrom.reset();
                                           },
                                           error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                           }
                                           );
                                       } else {
-                                          this.loading = true;
+                                          this.loading.show();
                                           this.btnGuardar = true;
                                           this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                           result => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                               this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                               this.Bloquear = false;
@@ -14876,7 +14877,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                           },
                                           error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                           }
@@ -14893,11 +14894,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                       this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                       this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                      this.loading = true;
+                                      this.loading.show();
                                       this.btnGuardar = true;
                                       this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                           result => {
-                                          this.loading = false;
+                                          this.loading.hide();
                                           this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                           this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                           this.Bloquear = false;
@@ -14930,17 +14931,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                           },
                                           error => {
-                                          this.loading = false;
+                                          this.loading.hide();
                                           const errorMessage = <any>error;
                                           console.log(errorMessage);
                                           }
                                       );
                                       } else {
-                                      this.loading = true;
+                                      this.loading.show();
                                       this.btnGuardar = true;
                                       this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                           result => {
-                                          this.loading = false;
+                                          this.loading.hide();
                                           this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                           this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                           this.Bloquear = false;
@@ -14974,7 +14975,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                           },
                                           error => {
-                                          this.loading = false;
+                                          this.loading.hide();
                                           const errorMessage = <any>error;
                                           console.log(errorMessage);
                                           }
@@ -15010,11 +15011,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                               this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                              this.loading = true;
+                                              this.loading.show();
                                               this.btnGuardar = true;
                                               this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                                   result => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                   this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                   this.Bloquear = false;
@@ -15047,16 +15048,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.itemsDataObejct = [];
                                                   },
                                                   error => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     const errorMessage = <any>error;
                                                     console.log(errorMessage);
                                                   });
                                               } else {
-                                              this.loading = true;
+                                              this.loading.show();
                                               this.btnGuardar = true;
                                               this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                                   result => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                   this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                   this.Bloquear = false;
@@ -15089,7 +15090,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.itemsDataObejct = [];
                                                   },
                                                   error => {
-                                                    this.loading = false;
+                                                    this.loading.hide();
                                                     const errorMessage = <any>error;
                                                     console.log(errorMessage);
                                                   });
@@ -15105,11 +15106,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                               this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                              this.loading = true;
+                                              this.loading.show();
                                               this.btnGuardar = true;
                                               this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                               result => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                   this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                   this.Bloquear = false;
@@ -15142,16 +15143,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.itemsDataObejct = [];
                                               },
                                               error => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   const errorMessage = <any>error;
                                                   console.log(errorMessage);
                                               });
                                           } else {
-                                              this.loading = true;
+                                              this.loading.show();
                                               this.btnGuardar = true;
                                               this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                               result => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                   this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                   this.Bloquear = false;
@@ -15184,7 +15185,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.itemsDataObejct = [];
                                               },
                                               error => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   const errorMessage = <any>error;
                                                   console.log(errorMessage);
                                               });
@@ -15206,11 +15207,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                               this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                              this.loading = true;
+                                              this.loading.show();
                                               this.btnGuardar = true;
                                               this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                               result => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                   this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                   this.Bloquear = false;
@@ -15242,16 +15243,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.DebitoAutomaticoFrom.reset();
                                               },
                                               error => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   const errorMessage = <any>error;
                                                   console.log(errorMessage);
                                               });
                                           } else {
-                                              this.loading = true;
+                                              this.loading.show();
                                               this.btnGuardar = true;
                                               this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                               result => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                   this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                   this.Bloquear = false;
@@ -15283,7 +15284,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.DebitoAutomaticoFrom.reset();
                                               },
                                               error => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   const errorMessage = <any>error;
                                                   console.log(errorMessage);
                                               });
@@ -15299,11 +15300,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                             result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -15334,17 +15335,17 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.Guardarlog(itemsLogApertura);
                                             },
                                             error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                             }
                                         );
                                         } else {
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                             result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -15377,7 +15378,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
                                             },
                                             error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                             });
@@ -15405,11 +15406,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                               this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                              this.loading = true;
+                                              this.loading.show();
                                               this.btnGuardar = true;
                                               this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                               result => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                   this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                   this.Bloquear = false;
@@ -15443,16 +15444,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.itemsDataObejct = [];
                                               },
                                               error => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   const errorMessage = <any>error;
                                                   console.log(errorMessage);
                                               });
                                           } else {
-                                              this.loading = true;
+                                              this.loading.show();
                                               this.btnGuardar = true;
                                               this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                               result => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                                   this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                                   this.Bloquear = false;
@@ -15485,7 +15486,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.itemsDataObejct = [];
                                               },
                                               error => {
-                                                  this.loading = false;
+                                                  this.loading.hide();
                                                   const errorMessage = <any>error;
                                                   console.log(errorMessage);
                                               });
@@ -15499,11 +15500,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                             result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -15536,16 +15537,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.itemsDataObejct = [];
                                             },
                                             error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                             });
                                         } else {
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                             result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -15578,7 +15579,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.itemsDataObejct = [];
                                             },
                                             error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                             });
@@ -15600,11 +15601,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                             result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -15636,16 +15637,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.DebitoAutomaticoFrom.reset();
                                             },
                                             error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                             });
                                         } else {
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                             result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -15677,7 +15678,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.DebitoAutomaticoFrom.reset();
                                             },
                                             error => {
-                                              this.loading = false;
+                                              this.loading.hide();
                                               const errorMessage = <any>error;
                                               console.log(errorMessage);
                                             });
@@ -15693,11 +15694,11 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
                                         this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractualConDebito(this.GuardarContractualConDebito).subscribe(
                                         result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -15729,16 +15730,16 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.DebitoAutomaticoFrom.reset();
                                         },
                                         error => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             const errorMessage = <any>error;
                                             console.log(errorMessage);
                                         });
                                     } else {
-                                        this.loading = true;
+                                        this.loading.show();
                                         this.btnGuardar = true;
                                         this.ContractualServices.getGuardarContractual(this.contractualFrom.value).subscribe(
                                         result => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                                             this.contractualFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                                             this.Bloquear = false;
@@ -15770,7 +15771,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.DebitoAutomaticoFrom.reset();
                                         },
                                         error => {
-                                            this.loading = false;
+                                            this.loading.hide();
                                             const errorMessage = <any>error;
                                             console.log(errorMessage);
                                         });
@@ -15849,10 +15850,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
           this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-          this.loading = true;
+          this.loading.show();
           this.ContractualServices.getActualizarContractual(this.GuardarContractualConDebito).subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               this.Bloquear = false;
               this.BloquearNegociacion = false;
               this.BloquearNroTitulo = false;
@@ -15893,7 +15894,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
               this.BuscarPorCuenta();
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               console.log(errorMessage);
             }
@@ -15932,10 +15933,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
               this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
               this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-              this.loading = true;
+              this.loading.show();
               this.ContractualServices.getActualizarContractual(this.GuardarContractualConDebito).subscribe(
                 result => {
-                  this.loading = false;
+                  this.loading.hide();
                   this.Bloquear = false;
                   this.BloquearNroTitulo = false;
                   this.BloquearNegociacion = false;
@@ -15987,7 +15988,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                   );
                 },
                 error => {
-                  this.loading = false;
+                  this.loading.hide();
                   const errorMessage = <any>error;
                   console.log(errorMessage);
                 }
@@ -16021,10 +16022,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
             this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
             this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
 
-            this.loading = true;
+            this.loading.show();
             this.ContractualServices.getActualizarContractual(this.GuardarContractualConDebito).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 this.Bloquear = false;
                 this.BloquearNegociacion = false;
                 this.BloquearCuotaMes = false;
@@ -16075,7 +16076,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                 );
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 console.log(errorMessage);
               }
@@ -16096,10 +16097,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                 this.btnActualizarTitulares = false;
                 this.dataTitulareslist = this.dataObjetTitulares;
                 this.contractualFrom.get('Titulares')?.setValue(this.dataTitulareslist);
-                this.loading = true;
+                this.loading.show();
             this.ContractualServices.getActualizarTitulares(this.contractualFrom.value).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 this.Bloquear = false;
                 this.BloquearNroTitulo = false;
                 this.BloquearNegociacion = false;
@@ -16164,7 +16165,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                 this.contractualOperacionFrom.get('Codigo')?.reset();
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 console.log(errorMessage);
               }
@@ -16176,10 +16177,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
             this.btnActualizarTitulares = false;
             this.dataTitulareslist = this.dataObjetTitulares;
             this.contractualFrom.get('Titulares')?.setValue(this.dataTitulareslist);
-            this.loading = true;
+            this.loading.show();
             this.ContractualServices.getActualizarTitulares(this.contractualFrom.value).subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               this.Bloquear = false;
               this.BloquearNroTitulo = false;
               this.BloquearNegociacion = false;
@@ -16244,7 +16245,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
               this.contractualOperacionFrom.get('Codigo')?.reset();
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               console.log(errorMessage);
             }
@@ -16266,10 +16267,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
             this.datoAsesorExterno = +this.AsesorFrom.get('strCodigo')?.value;
 
-            this.loading = true;
+            this.loading.show();
             this.ContractualServices.getEditarAsesorExterno(this.contractualFrom.value).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 this.Bloquear = false;
                 this.BloquearNroTitulo = false;
                 this.BloquearNegociacion = false;
@@ -16301,7 +16302,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                 this.contractualOperacionFrom.get('Codigo')?.reset();
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 console.log(errorMessage);
               });
@@ -16314,10 +16315,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
             this.datoAsesorExterno = +this.AsesorFrom.get('strCodigo')?.value;
 
-            this.loading = true;
+            this.loading.show();
             this.ContractualServices.getEditarAsesorExterno(this.contractualFrom.value).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 this.Bloquear = false;
                 this.BloquearNegociacion = false;
                 this.BloquearCuotaMes = false;
@@ -16348,7 +16349,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                 this.contractualOperacionFrom.get('Codigo')?.reset();
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 console.log(errorMessage);
               });
@@ -16381,7 +16382,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
             this.log.PuntosAdicionalesActualiza = PuntosAdicionales;
             if (TasaEfectivaSin === Suma) {
 
-              this.loading = true;
+              this.loading.show();
 
               var TasaEfectivaSin = this.contractualFrom.get('TasaEfectiva')?.value;
               TasaEfectivaSin = TasaEfectivaSin.replace("%", "");
@@ -16396,7 +16397,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
               
               this.ContractualServices.getActualizarTasaContractual(this.GuardarContractualConDebito).subscribe(
                 result => {
-                  this.loading = false;
+                  this.loading.hide();
                   this.Bloquear = false;
                   this.BloquearNroTitulo = false;
                   this.BloquearNegociacion = false;
@@ -16439,7 +16440,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                   this.BuscarPorCuenta();
                 },
                 error => {
-                  this.loading = false;
+                  this.loading.hide();
                   const errorMessage = <any>error;
                   console.log(errorMessage);
                 }
@@ -16457,13 +16458,13 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           && this.contractualFrom.get('NroTitulo')?.value !== undefined
           && this.contractualFrom.get('NroTitulo')?.value !== '') {
           if (this.contractualFrom.get('NroTitulo')?.value !== this.contractualFrom.get('NroTituloAnterior')?.value) {
-            this.loading = true;
+            this.loading.show();
             this.log.NumeroTituloActualiza = this.contractualFrom.get('NroTitulo')?.value == null ? "" : this.contractualFrom.get('NroTitulo')?.value;
           this.GuardarContractualConDebito.ContractualFrom = this.contractualFrom.value;
           this.GuardarContractualConDebito.DebitoAutomaticoFrom = this.DebitoAutomaticoFrom.value;
           this.ContractualServices.ActualizarNroTitulo(this.GuardarContractualConDebito).subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               this.Bloquear = false;
               this.BloquearNroTitulo = false;
               this.BloquearNegociacion = false;
@@ -16503,7 +16504,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
               this.BuscarPorCuenta();
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               console.log(errorMessage);
             }
@@ -16863,14 +16864,14 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
     if (this.contractualFrom.get('NumeroDocumento')?.value !== null
       && this.contractualFrom.get('NumeroDocumento')?.value !== undefined
       && this.contractualFrom.get('NumeroDocumento')?.value !== '') {
-        this.loading = true;
+        this.loading.show();
       this.ContractualServices.getBuscarCuentaDisponible(this.contractualFrom.value).subscribe(
         result => {
           if (result.length >= 1) {
             this.resultCuentaNegociacion = result;
             setTimeout(() => {
               this.contractualFrom.get('IdCuentaDestino')?.setValue(this.dataObjet?.IdCuentaDestino);
-              this.loading = false;
+              this.loading.hide();
             });
           } else if (result.Mensaje !== undefined || result.Mensaje !== null) {
             this.notif.onWarning('Advertencia', result.Mensaje);
@@ -16881,7 +16882,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
@@ -16898,10 +16899,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
       && this.contractualFrom.get('DocumentoTitular')?.value !== '') {
       if (this.contractualFrom.get('NumeroDocumento')?.value !== this.contractualFrom.get('DocumentoTitular')?.value.trim()) {
         if (this.dataObjet === undefined) {
-          this.loading = true;
+          this.loading.show();
           this.ContractualServices.BuscarTitular(this.contractualFrom.get('DocumentoTitular')?.value, '*').subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               if (result === null) {
                 this.notif.onWarning('Advertencia', 'No se encontró el titular.');
               } else {
@@ -16916,7 +16917,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
               }
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               console.log(errorMessage);
             }
@@ -16933,10 +16934,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
             this.notif.onWarning('Advertencia', 'El autorizado ya fue ingresado.');
             this.clearTitulares();
           } else {
-            this.loading = true;
+            this.loading.show();
             this.ContractualServices.BuscarTitular(this.contractualFrom.get('DocumentoTitular')?.value, '*').subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 if (result === null) {
                   this.notif.onWarning('Advertencia', 'No se encontró el titular.');
                 } else {
@@ -16951,7 +16952,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                 }
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 console.log(errorMessage);
               }
@@ -16972,10 +16973,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
       if (this.contractualFrom.get('NumeroDocumento')?.value !== this.contractualFrom.get('DocumentoTitular')?.value) {
         if (this.dataObjet === undefined) {
-          this.loading = true;
+          this.loading.show();
           this.ContractualServices.BuscarTitular('*', this.contractualFrom.get('NombreTitular')?.value).subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               if (result.length === 0) {
                 this.notif.onWarning('Advertencia', 'No se encontró el titular.');
               } else if (result.length === 1) {
@@ -16993,7 +16994,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
               }
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               console.log(errorMessage);
             }
@@ -17010,10 +17011,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
             this.notif.onWarning('Advertencia', 'El autorizado ya fue ingresado.');
             this.clearTitulares();
           } else {
-            this.loading = true;
+            this.loading.show();
             this.ContractualServices.BuscarTitular('*', this.contractualFrom.get('NombreTitular')?.value).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 if (result.length === 0) {
                   this.notif.onWarning('Advertencia', 'No se encontró el titular.');
                 } else if (result.length === 1) {
@@ -17032,7 +17033,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                 }
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 console.log(errorMessage);
               }
@@ -17181,10 +17182,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
   }
   BuscarTitularModal(Documento = '*') {
     const Nombre = '*';
-    this.loading = true;
+    this.loading.show();
     this.ContractualServices.BuscarTitular(Documento, Nombre).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         if (result === null) {
             this.notif.onWarning('Advertencia', 'No se encontró el titular.');
         } else {
@@ -17204,7 +17205,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
       }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -17349,14 +17350,14 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
     if (this.contractualFrom.get('Plazo')?.value !== ''
       && this.contractualFrom.get('Plazo')?.value !== undefined
       && this.contractualFrom.get('Plazo')?.value !== null) {
-      this.loading = true;
+      this.loading.show();
       this.ContractualServices.ObtenerTasa(this.contractualFrom.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           this.MapearTasa(result);
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
@@ -17432,7 +17433,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
     );
   }
   ObtenerTasaNominal() {
-    this.loading = true;
+    this.loading.show();
     const objectComplet = this.AdicionarPuntosFrom.value.AdicionarPunto;
     const puntosAdd = this.AdicionarPuntosFrom.value.AdicionarPunto.PuntosAdicionales;
     this.contractualFrom.get('AdicionarP')?.setValue(puntosAdd);
@@ -17441,13 +17442,13 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
     this.contractualFrom.get('TasaEfectiva')?.setValue(Number(TasaEfectivaSin));
     this.ContractualServices.getObtenerTasaNominal(this.contractualFrom.value).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.AdicionarPuntosFrom.get('AdicionarPunto')?.setValue(objectComplet);
         const numberNominal = this.returnFormatNum((result.TasaNominal));
         this.contractualFrom.get('TasaNominal')?.setValue(numberNominal + "%");
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -17468,7 +17469,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
       OficinaPdf: this.dataUser.Oficina
     }
      this.linkPdf = "";
-     this.loading = true;
+     this.loading.show();
      document.querySelector("object")!.data = "";
      document.querySelector("object")!.name = "";
      document.querySelector("object")!.type = "";
@@ -17484,10 +17485,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
          document.querySelector("object")!.data = url;
          document.querySelector("object")!.name = "Impresion";
          document.querySelector("object")!.type = "application/pdf";
-         this.loading = false;
+         this.loading.hide();
        },
        error => {
-         this.loading = false
+         this.loading.hide();
          const errorMessage = <any>error;
          this.notif.onDanger('Error', errorMessage);
          console.log(errorMessage);
@@ -17517,8 +17518,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
       this.contractualFrom.get('IdProducto')?.reset();
     } else if (Datos === 'NumeroDocumento') {
       this.contractualFrom.get('Nombre')?.reset();
+      this.contractualFrom.get('IdTipoDocumento')?.reset();
     } else if (Datos === 'Nombre') {
       this.contractualFrom.get('NumeroDocumento')?.reset();
+      this.contractualFrom.get('IdTipoDocumento')?.reset();
     } else if (Datos === 'strCodigo') {
       this.contractualFrom.get('strNombre')?.reset();
     } else if (Datos === 'strNombre') {
@@ -17681,15 +17684,15 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
         if (object == null)
             object = this.contractualFrom.value;
 
-    this.loading = true;
+    this.loading.show();
     if (this.contractualOperacionFrom.get('Codigo')?.value === '10') {
       this.generalesService.GuardarlogProductos(object, this.contractualOperacionFrom.get('Codigo')?.value,
       this.contractualFrom.get('IdCuenta')?.value, this.contractualFrom.get('LngTercero')?.value, 20, this.contractualFrom.get('NumeroDocumento')?.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         });
@@ -17698,10 +17701,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
         this.contractualFrom.get('IdCuenta')?.value, this.contractualFrom.get('LngTercero')?.value, 20,
         this.contractualFrom.get('NumeroDocumento')?.value,this.contractualFrom.get('IdObseCambioEstado')?.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         });
@@ -17731,10 +17734,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
     ) {
       Nombre = this.DebitoAutomaticoFrom.get('NombreDebito')?.value;
     }
-    this.loading = true;
+    this.loading.show();
     this.ContractualServices.BuscarAsociadoDebito(Documento, Nombre).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         if (result.length === 0) {
           this.notif.onWarning('Advertencia', 'No se encontró el asociado.');
           this.resultCuentaDebito = undefined;
@@ -17772,7 +17775,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -17782,10 +17785,10 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
     if (this.DebitoAutomaticoFrom.get('DocumentoDebito')?.value !== null
       && this.DebitoAutomaticoFrom.get('DocumentoDebito')?.value !== undefined
       && this.DebitoAutomaticoFrom.get('DocumentoDebito')?.value !== '') {
-        this.loading = true;
+        this.loading.show();
       this.ContractualServices.getBuscarCuentaDebito(this.DebitoAutomaticoFrom.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           if (result.length >= 1) {
             this.resultCuentaDebito = result;
             this.DebitoAutomaticoFrom.get('IdOficinaDebito')?.setValue(result[0].IdOficina);
@@ -17800,7 +17803,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         }

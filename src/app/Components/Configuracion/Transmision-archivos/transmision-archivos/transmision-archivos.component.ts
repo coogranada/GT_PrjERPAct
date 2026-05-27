@@ -1,12 +1,12 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators, ValidatorFn, AbstractControl, FormBuilder } from '@angular/forms';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { GeneralesService } from '../../../../Services/Productos/generales.service';
 import { TransmisionArchivosService } from '../../../../Services/Configuracion/Transmision-archivos.service';
 import { ParametrosTransmisionData } from '../../../../Models/Configuracion/Transmision-archivos.model';
 import { ToastrService } from 'ngx-toastr';
 import { ConfiguracionNotificacion } from '../../../../../environments/config.noticaciones'
 import swal from 'sweetalert2';
+import { LoadingService } from '../../../../Services/shared/loading.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 
@@ -20,15 +20,12 @@ const ColorSecundario = 'rgb(13,165,80,0.7)';
   standalone: false
 })
 export class TransmisionArchivosComponent implements OnInit {
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
-  @ViewChild('gpgRecipientInput') gpgRecipientInput: ElementRef | undefined;
 
+  @ViewChild('gpgRecipientInput') gpgRecipientInput: ElementRef | undefined;
   selectedRow: any = null;
   selectedRow1: any = null;
   initialValues: any = {};
   parametrosTransm: ParametrosTransmisionData[] = [];
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
   public parametrosTransmisionForm!: FormGroup;
@@ -50,7 +47,8 @@ export class TransmisionArchivosComponent implements OnInit {
     private TransmisionArchivosServices: TransmisionArchivosService,
     private fb: FormBuilder,
     private generalesService: GeneralesService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private loading: LoadingService
   ) { }
 
   togglePasswordVisibility() {
@@ -243,14 +241,14 @@ export class TransmisionArchivosComponent implements OnInit {
       } else {
         this.parametrosTransmisionForm.get('eliminaArchivo')?.patchValue(0);
       }
-      this.loading = true;
+      this.loading.show();
       this.TransmisionArchivosServices.GuardarParametrosTransmision(this.parametrosTransmisionForm.value).subscribe(
         (response) => {
           this.toastr.success('Exitoso', 'Configuración guardada correctamente.', ConfiguracionNotificacion.configRightTop);
           this.obtenerConfiguracion();
           this.limpiarFormulario();
           this.IrAbajo();
-          this.loading = false;
+          this.loading.hide();
           //Actualizar hora ejecución
           swal.fire({
           title: '<strong> ¿Desea que se programen nuevamente las tareas? </strong>',
@@ -271,7 +269,7 @@ export class TransmisionArchivosComponent implements OnInit {
         },        
         (error) => {
           this.toastr.warning('Advertencia', error.message, ConfiguracionNotificacion.configRightTop);
-          this.loading = false;
+          this.loading.hide();
         }
       );
     }
@@ -306,7 +304,7 @@ export class TransmisionArchivosComponent implements OnInit {
         this.parametrosTransmisionForm.get('eliminaArchivo')?.patchValue(0);
       }
 
-      this.loading = true;
+      this.loading.show();
       if (result) {
         this.TransmisionArchivosServices.ActualizarParametrosTransmision(this.parametrosTransmisionForm.value).subscribe(
           (response) => {
@@ -314,11 +312,11 @@ export class TransmisionArchivosComponent implements OnInit {
             this.obtenerConfiguracion();
             this.limpiarFormulario();
             this.IrAbajo();
-            this.loading = false;
+            this.loading.hide();
           },
           (error) => {
             this.toastr.error('Error', 'Error al actualizar los datos ' + error, ConfiguracionNotificacion.configRightTop);
-            this.loading = false;
+            this.loading.hide();
           }
         );
         //Actualizar hora ejecución
@@ -336,14 +334,14 @@ export class TransmisionArchivosComponent implements OnInit {
         }).then((results) => {
           if (results.value) {
             this.actualizarHoraEjecucion();
-            this.loading = false;
+            this.loading.hide();
           }
         });
       } else {
         this.limpiarFormulario();
         this.IrAbajo();
         this.toastr.warning('Advertencia', 'No se han detectado cambios para actualizar.', ConfiguracionNotificacion.configRightTop);
-        this.loading = false;
+        this.loading.hide();
       }
     }
   }
@@ -419,50 +417,50 @@ export class TransmisionArchivosComponent implements OnInit {
 
   ejecutarSFTP(parametro: ParametrosTransmisionData) {
     try {
-      this.loading = true;
+      this.loading.show();
       this.TransmisionArchivosServices.EjecutarSFTP(parametro).subscribe(
         (response) => {
-          this.loading = false;
+          this.loading.hide();
           this.toastr.success('Exitoso', response, ConfiguracionNotificacion.configRightTop);
         },
         (error) => {
           if (error.status === 400) {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = error.error;
             this.toastr.warning('Advertencia', errorMessage, ConfiguracionNotificacion.configRightTop);
           } else {
-            this.loading = false;
+            this.loading.hide();
             this.toastr.warning('Advertencia', error.message, ConfiguracionNotificacion.configRightTop);
           }
         }
       );
     } catch (error) {
-      this.loading = false;
+      this.loading.hide();
       this.toastr.error('Error', '' + error, ConfiguracionNotificacion.configRightTop);
     }
   }
 
   ejecutarSFTPGPG(parametro: ParametrosTransmisionData) {
     try {
-      this.loading = true;
+      this.loading.show();
       this.TransmisionArchivosServices.EjecutarSFTPGPG(parametro).subscribe(
         (response) => {
-          this.loading = false;
+          this.loading.hide();
           this.toastr.success('Exitoso', response, ConfiguracionNotificacion.configRightTop);
         },
         (error) => {
           if (error.status === 400) {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = error.error;
             this.toastr.warning('Advertencia', errorMessage, ConfiguracionNotificacion.configRightTop);
           } else {
-            this.loading = false;
+            this.loading.hide();
             this.toastr.warning('Advertencia', error.message, ConfiguracionNotificacion.configRightTop);
           }
         }
       );
     } catch (error) {
-      this.loading = false;
+      this.loading.hide();
       this.toastr.error('Error', '' + error, ConfiguracionNotificacion.configRightTop);
     }
 
@@ -470,25 +468,25 @@ export class TransmisionArchivosComponent implements OnInit {
 
   ejecutarGRAPH(parametro: ParametrosTransmisionData) {
     try {
-      this.loading = true;
+      this.loading.show();
       this.TransmisionArchivosServices.EjecutarGRAPH(parametro).subscribe(
         (response) => {
-          this.loading = false;
+          this.loading.hide();
           this.toastr.success('Exitoso', response, ConfiguracionNotificacion.configRightTop);
         },
         (error) => {
           if (error.status === 400) {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = error._body ? JSON.parse(error._body) : '.';
             this.toastr.warning('Advertencia', errorMessage, ConfiguracionNotificacion.configRightTop);
           } else {
-            this.loading = false;
+            this.loading.hide();
             this.toastr.warning('Error', error, ConfiguracionNotificacion.configRightTop);
           }
         }
       );
     } catch (error) {
-      this.loading = false;
+      this.loading.hide();
       this.toastr.error('Error', '' + error, ConfiguracionNotificacion.configRightTop);
     }
   }

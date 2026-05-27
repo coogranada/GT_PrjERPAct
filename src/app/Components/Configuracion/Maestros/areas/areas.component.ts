@@ -2,7 +2,6 @@ import { AreasService } from '../../../../Services/Maestros/areas.service';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { GeneralesService } from '../../../../../app/Services/Productos/generales.service';
-import { NgxLoadingComponent, NgxLoadingModule, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { ModuleValidationService } from '../../../../../app/Services/Enviroment/moduleValidation.service';
 import { fromEvent } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -10,6 +9,7 @@ import { Router } from '@angular/router';
 import { LoginService } from '../../../../../app/Services/Login/login.service';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AlertService } from '../../../../Services/Alert/alert.service';
+import { LoadingService } from '../../../../Services/shared/loading.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -30,10 +30,6 @@ export class AreasComponent implements OnInit {
   { value: '3', descripcion: 'Activo' },
   { value: '4', descripcion: 'Inactivo' }];
   public dataAreaResult: any[] = [];
-
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
-  public loading : boolean = false;
-  public ngxLoadingAnimationTypes : any = ngxLoadingAnimationTypes;
   public primaryColour : string = ColorPrimario;
   public secondaryColour : string = ColorSecundario;
   private CodModulo = 2;
@@ -44,7 +40,8 @@ export class AreasComponent implements OnInit {
 
   constructor(private areasService: AreasService, private notif: AlertService,
     private generalesService: GeneralesService, private moduleValidationService: ModuleValidationService,
-    private el: ElementRef, private loginService: LoginService, private router: Router) {
+    private el: ElementRef, private loginService: LoginService, private router: Router,
+    private loading: LoadingService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -69,25 +66,25 @@ export class AreasComponent implements OnInit {
     this.IrArriba();
   }
   ObtenerArea() {
-    this.loading = true;
+    this.loading.show();
     this.areasService.getArea().subscribe((result : any[]) => {
-        this.loading = false;
+        this.loading.hide();
         this.dataAreaResult = result;
       },(error : any) => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notif.onDanger('Error', errorMessage);
         console.log(errorMessage);
       });
   }
   GuardarArea() {
-    this.loading = true;
+    this.loading.show();
     if (this.areasFrom.value.idEstado === '0') {
       this.notif.onWarning('Advertencia', 'Debe seleccionar un estado.');
     } else {
       this.GuardarLog(this.areasFrom.value, 96, 0, 0,2); // GUARDAR
       this.areasService.setAreas(this.areasFrom.value).subscribe((result : any) => {
-          this.loading = false;
+          this.loading.hide();
           console.log("g",result)
           if (result) {
             this.resetForm();
@@ -98,7 +95,7 @@ export class AreasComponent implements OnInit {
             this.notif.onDanger('Advertencia', 'Ocurrió un error al guardar el área.');
           }
         },(error : any ) => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           this.notif.onDanger('Error', errorMessage);
           console.log();
@@ -106,13 +103,13 @@ export class AreasComponent implements OnInit {
     }
   }
   ActualizarArea() {
-    this.loading = true;
+    this.loading.show();
     if (this.areasFrom.value.idEstado === '0') {
       this.notif.onWarning('Advertencia', 'Debe seleccionar un estado.');
     } else {
       this.GuardarLog(this.areasFrom.value, 97, 0, 0,2); // ACTUALIZAR
       this.areasService.updateAreas(this.areasFrom.value).subscribe((result : any) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(result);
           if (result) {
             this.isdisabledUpdate = true;
@@ -123,7 +120,7 @@ export class AreasComponent implements OnInit {
             this.notif.onDanger('Advertencia', 'Ocurrió un error al actualizar el área.');
           }
         }, (error : any) => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           this.notif.onDanger('Error', errorMessage);
           console.log(errorMessage);
@@ -140,11 +137,11 @@ export class AreasComponent implements OnInit {
     this.areasFrom.get('idEstado')?.setValue(datos.IdEstado);
   }
   GuardarLog(formulario : any, operacion : number, cuenta : number, tercero : number, modulo : number) {
-    this.loading = true;
+    this.loading.show();
     this.generalesService.Guardarlog(formulario, operacion, cuenta, tercero, modulo).subscribe(
       result => {
         console.log(result);
-        this.loading = false;
+        this.loading.hide();
       });
   }
   resetForm() {

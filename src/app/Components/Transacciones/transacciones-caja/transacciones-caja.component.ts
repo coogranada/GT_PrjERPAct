@@ -689,14 +689,14 @@ export class TransaccionesCajaComponent implements OnInit {
         next: (result: any) => {
           if (result.length === 0) {
             this.notif.onWarning('Advertencia', 'No se encontró información.');
-            this.loading2 = false;
+            this.loading.hide(); 
             return;
           }
 
           this.ListDocumentosBusqueda = result;
-          this.loading2 = false;
+          this.loading.hide(); 
         }, error: (err) => {
-          this.loading2 = false;
+          this.loading.hide(); 
           console.log('error búsqueda nombre personas: ' + err);
           this.ListDocumentosBusqueda = [];
           this.notif.onWarning('Advertencia', 'No se encontró información.');

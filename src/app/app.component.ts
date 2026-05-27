@@ -9,6 +9,7 @@ import { OficinasService } from './Services/Maestros/oficinas.service';
 import { SecurityService } from './Services/Auth/security.service';
 import { GestionesService  } from './Services/Gestiones/gestiones.service';
 import { AlertService } from './Services/Alert/alert.service';
+import { HttpErrorResponse } from '@angular/common/http';
 declare var $: any;
   
 @Component({
@@ -20,226 +21,155 @@ declare var $: any;
     GestionesService, RecursosGeneralesService, OficinasService,
     ClientesGetListService,SecurityService]
 })
-
-
 export class AppComponent implements OnInit {
-  public now = Date.now();
-  title = 'app';
-  public sub : any = null;
-  public subscription : any = null;
-  public secondsDisplay : any = null;
-  public minutesDisplay : any = null;
-  public idUsuario : any = null;
-  public resulStore : any = null;
-  public moduloActivo : any = null;
-  public DataUser : any = null;;
-  private validarModulo : boolean = false;
 
-  public DatosUsuario : any = null;
-  @Output() permisosEmit: EventEmitter<any> = new EventEmitter();
-  // @ViewChild('btnModalBanner', { static: true }) private AbrirModalBanner: ElementRef;
-  @ViewChild('btnModelaBannerCloset', { static: true }) private CerrarModalBanner: ElementRef | null = null;
-  idLesState = 'Not stared';
-  timedOut = false;
-  lastPing?: Date | null = null;
-  idleState : string = "";
-//#endregion
-  
+  public resulStore: any = null;
+
   constructor(
     private loginService: LoginService,
     private router: Router,
     private notif: AlertService,
     private location: PlatformLocation,
     private clientesGetListService: ClientesGetListService,
-    private Security: SecurityService) {
-
-    if (localStorage.getItem('Data') !== null) {
-      let data : string | null = localStorage.getItem('Data');
-      if(data != null)
-        this.resulStore = JSON.parse(window.atob(data));
-    } else {
-      this.router.navigateByUrl('/Login');
-      localStorage.clear();
-    }
+    private Security: SecurityService
+  ) {
+    this.loadUserFromStorage();
   }
-  ngOnInit() {
 
+  ngOnInit(): void {
     if (!navigator.onLine) {
       this.handleOffline();
     }
 
+    this.initializeCatalogs();
+    this.setupTokenRefresh();
+    this.handleNavigationChanges();
+    this.blockDevTools();
+  }
+
+  // STORAGE
+  private loadUserFromStorage(): void {
+    const data = localStorage.getItem('Data');
+
+    if (!data) {
+      this.logout();
+      return;
+    }
+
+    try {
+      this.resulStore = JSON.parse(atob(data));
+    } catch {
+      this.logout();
+    }
+  }
+
+  private saveToStorage(key: string, data: any): void {
+    localStorage.setItem(key, btoa(JSON.stringify(data)));
+  }
+
+  private logout(): void {
+    localStorage.clear();
+    this.router.navigateByUrl('/Login');
+  }
+
+
+  private fetchAndStore(serviceCall: any, key: string, transform?: (data: any) => any): void {
+    serviceCall.subscribe({
+      next: (result: any) => {
+        const finalData = transform ? transform(result) : result;
+        this.saveToStorage(key, finalData);
+      },
+      
+      error: (error: HttpErrorResponse) => {
+      this.notif.onDanger('Error', error.message);
+      console.error(error);
+      }
+    });
+  }
+
+  private initializeCatalogs(): void {
     this.GetCargos();
     this.GetEstadosSeguro();
     this.GetLetra();
     this.GetSeguros();
     this.GetTipoEmpleo();
-    setInterval(() => {
-      this.TimerRefresToken();
-    },3600000);
-    
+  }
+
+  GetLetra(): void {
+    this.fetchAndStore(this.clientesGetListService.GetLetras(), 'letras');
+  }
+
+  GetCargos(): void {
+    this.fetchAndStore(this.clientesGetListService.GetCargos(), 'cargos');
+  }
+
+  GetEstadosSeguro(): void {
+    this.fetchAndStore(this.clientesGetListService.GetEstadosSeguro(), 'estadoSeguro');
+  }
+
+  GetTipoEmpleo(): void {
+    this.fetchAndStore(this.clientesGetListService.GetTipoEmpleo(), 'empleo');
+  }
+
+  GetSeguros(): void {
+    this.fetchAndStore(
+      this.clientesGetListService.GetSeguros(),
+      'seguros',
+      (result: any[]) => result.filter(x => x.Clase !== 20)
+    );
+  }
+
+  // TOKEN
+  private setupTokenRefresh(): void {
+    setInterval(() => this.refreshToken(), 3600000);
+  }
+
+  private refreshToken(): void {
+    const token = this.Security.GetToken();
+
+    if (!token || !this.resulStore?.intlngTercero) return;
+
+    this.loginService
+      .GetToken(this.resulStore.intlngTercero)
+      .subscribe({
+        next: (x: any) => {
+          localStorage.setItem('token', x.token);
+        },
+        error: (err) => console.error('Error refrescando token', err)
+      });
+  }
+
+
+  // NAVEGACION
+  private handleNavigationChanges(): void {
     this.location.onPopState(() => {
-      let data : string | null = localStorage.getItem('Data');
-      this.resulStore = JSON.parse(window.atob(data == null ? "" : data));
-      if (this.resulStore === undefined || this.resulStore === null || this.resulStore === '') {
-        this.router.navigateByUrl('/Login');
-        localStorage.clear();
-      }
+      this.loadUserFromStorage();
     });
+  }
 
-    /* Descomentar cuando se publique en pruebas y produccion  Metodo que bloquea el f12 y el pegar o control shif i*/
-    $(document).keydown(function (event : any) {
-      if (event.keyCode === 123) { // Prevent F12
-        return false;
-      } else if (event.ctrlKey && event.shiftKey && event.keyCode === 73) { // Prevent Ctrl+Shift+I
-        return false;
-      }
-      return true;
-    });
-    // Metodo que previene el click derecho del mouse en la apliacion
-    $(document).on('contextmenu',  { passive: true },function (e : any) {
-      e.preventDefault();
-    });
-   }
-
+  // OFFLINE
   @HostListener('window:offline', [])
-  onOffline() {
+  onOffline(): void {
     this.handleOffline();
   }
 
-  handleOffline() {
+  private handleOffline(): void {
     location.reload();
   }
-  validacionUsuarios() {
-    if (localStorage.getItem('Data') !== null && localStorage.getItem('Data') !== undefined) {
-      let data : string | null = localStorage.getItem('Data');
-      this.resulStore = JSON.parse(window.atob(data == null ? "" : data));
-      if (this.resulStore === null) {
-        localStorage.removeItem('userName');
-        this.router.navigateByUrl('/Login');
-        localStorage.removeItem('userName');
-        localStorage.removeItem('dataUserConect');
-        localStorage.removeItem('TerceroNatura');
-        localStorage.removeItem('IdModuloActivo');
-        localStorage.removeItem('Permisos');
-      }
-    } else {
-      localStorage.removeItem('userName');
-      this.router.navigateByUrl('/Login');
-      localStorage.removeItem('userName');
-      localStorage.removeItem('dataUserConect');
-      localStorage.removeItem('TerceroNatura');
-      localStorage.removeItem('IdModuloActivo');
-      localStorage.removeItem('Permisos');
-    }
-  }
-  GetLetra() {
-    this.clientesGetListService.GetLetras().subscribe(
-      result => {
-        // this.letraEmit.emit(result);
-        // this.dataLetras = result;
-        localStorage.setItem('letras', window.btoa(JSON.stringify(result)));
-      },
-      error => {
-        const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
-        console.error(errorMessage);
-      }
-    );
-  }
-  GetCargos() {
-    this.clientesGetListService.GetCargos().subscribe(
-      result => {
-        // this.dataCargos = result;
-        localStorage.setItem('cargos', window.btoa(JSON.stringify(result)));
-      },
-      error => {
-        const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
-        console.error(errorMessage);
-      }
-    );
-  }
-  GetSeguros() {
-    const dataSeguros : any[] = [];
-    this.clientesGetListService.GetSeguros().subscribe(
-      result => {
-        result.forEach((element : any) => {
-          if (element.Clase !== 20) {
-            dataSeguros.push(element);
-          }
-        });
-        // this.dataSeguros = dataSeguros;
-        localStorage.setItem('seguros', window.btoa(JSON.stringify(dataSeguros)));
-      },
-      error => {
-        const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
-        console.error(errorMessage);
-      }
-    );
-  }
-  GetEstadosSeguro() {
-    this.clientesGetListService.GetEstadosSeguro().subscribe(
-      result => {
-        localStorage.setItem('estadoSeguro', window.btoa(JSON.stringify(result)));
-      },
-      error => {
-        const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
-        console.error(errorMessage);
-      }
-    );
-  }
-  GetTipoEmpleo() {
-    this.clientesGetListService.GetTipoEmpleo().subscribe(
-      result => {
-         localStorage.setItem('empleo', window.btoa(JSON.stringify(result)));
-      },
-      error => {
-        const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
-        console.error(errorMessage);
-      }
-    );
-  }
-  public reset(event: any) {
-    event.resetEvent;
-  } 
-  ValidarPermisosAModulos() {
-    if (this.resulStore !== null && this.resulStore !== undefined) {
-      this.loginService.ObtenerPermisoUsuario(this.resulStore.IdUsuario).subscribe(
-        result => {
-          if (result !== null && result !== undefined && result !== '') {
-            result.forEach((element : any)=> {
-              if (window.location.href.includes(element.Descripcion)) {
-                this.validarModulo = true;
-              } else {
-                this.validarModulo = false;
-              }
-            });
-            if (!this.validarModulo) {
-              this.router.navigateByUrl('/');
-            }
-          }
-        });
-    }
-  }
-  TimerRefresToken() {
-  const token: string | null = this.Security.GetToken();
 
-  if (!token) {
-    return;
-  }
 
-  if (!this.resulStore || !this.resulStore.intlngTercero) {
-    console.warn('resulStore no disponible, se omite refresco de token');
-    return;
-  }
+  // SEGURIDAD UI
+  private blockDevTools(): void {
+    $(document).keydown((event: any) => {
+      if (event.keyCode === 123) return false;
+      if (event.ctrlKey && event.shiftKey && event.keyCode === 73) return false;
+      return true;
+    });
 
-  this.loginService
-    .GetToken(this.resulStore.intlngTercero)
-    .subscribe((x: any) => {
-      localStorage.setItem('token', x.token);
+    $(document).on('contextmenu', { passive: true }, (e: any) => {
+      e.preventDefault();
     });
   }
 }
+
+

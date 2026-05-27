@@ -3,7 +3,6 @@ import { FormGroup, FormControl, Validators, ValidatorFn, AbstractControl } from
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
 import { ConfiguracionNotificacion } from '../../../../environments/config.noticaciones';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { ModuleValidationService } from '../../../Services/Enviroment/moduleValidation.service';
 import { OperacionesService } from '../../../Services/Maestros/operaciones.service';
 import { fromEvent } from 'rxjs';
@@ -11,6 +10,7 @@ import { map } from 'rxjs/operators';
 import { LoginService } from '../../../Services/Login/login.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { LoadingService } from '../../../Services/shared/loading.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 
@@ -41,18 +41,13 @@ export class CrearNotificacionesComponent implements OnInit {
   public bPanelDatosActivacion: any;
   public bConsultar: any;
   public resultOperaciones: any;
-
   dataUser: any;
-
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
   private CodModulo = 40;
   constructor(private crearNotificacionesService: CrearNotificacionesService, private notificacion: ToastrService,
     private moduleValidationService: ModuleValidationService, private el: ElementRef, private loginService: LoginService,
-    private operacionesService: OperacionesService,private router: Router) {
+    private operacionesService: OperacionesService,private router: Router, private loading: LoadingService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -122,7 +117,7 @@ export class CrearNotificacionesComponent implements OnInit {
   }
 
   ObtenerCuentas() {
-    this.loading = true;
+    this.loading.show();
     this.crearNotificacionesService.ObtenerCuentas(this.notificacionesFrom.get('Documento')?.value.trim()).subscribe(
       result => {
         if (this.ListadoCuentas !== null && this.ListadoCuentas.length === 0) {
@@ -152,10 +147,10 @@ export class CrearNotificacionesComponent implements OnInit {
             }
           );
         } 
-        this.loading = false;
+        this.loading.hide();
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorJson = JSON.parse(error._body);
         this.notificacion.error('Error', errorJson, ConfiguracionNotificacion.configRightTop);
         console.log(error);
@@ -164,7 +159,7 @@ export class CrearNotificacionesComponent implements OnInit {
   }
 
   ObtenerTarjeta() {
-    this.loading = true;
+    this.loading.show();
     this.bTipoNotificacion = null;
     this.ListadoEstado = [];
     this.ListadoTipoNotificaciones = [];
@@ -174,7 +169,7 @@ export class CrearNotificacionesComponent implements OnInit {
     this.bTipoNotificacion = null;
     this.crearNotificacionesService.ObtenerTarjeta(this.notificacionesFrom.get('NumeroCuenta')?.value).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         if (result === null) {
           this.notificacionesFrom.get('NumeroTarjeta')?.setValue('');
         } else {
@@ -183,7 +178,7 @@ export class CrearNotificacionesComponent implements OnInit {
         this.ObtenerTipoNotificaciones();
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorJson = JSON.parse(error._body);
         this.notificacion.error('Error', errorJson, ConfiguracionNotificacion.configRightTop);
         console.log(error);
@@ -192,11 +187,11 @@ export class CrearNotificacionesComponent implements OnInit {
   }
 
   ObtenerTipoNotificaciones() {
-    this.loading = true;
+    this.loading.show();
     const _NumTarjeta = this.notificacionesFrom.get('NumeroTarjeta')?.value;
     this.crearNotificacionesService.ObtenerTipoNotificaciones().subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         if (result === null || result.length === 0) {
           this.notificacion.warning('Advertencia', 'No se encontró información.', ConfiguracionNotificacion.configRightTop);
         } else {
@@ -216,7 +211,7 @@ export class CrearNotificacionesComponent implements OnInit {
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorJson = JSON.parse(error._body);
         this.notificacion.error('Error', errorJson, ConfiguracionNotificacion.configRightTop);
         console.log(error);
@@ -225,14 +220,14 @@ export class CrearNotificacionesComponent implements OnInit {
   }
 
   ObtenerEstados() {
-    this.loading = true;
+    this.loading.show();
     this.bEstado = null;
     this.notificacionesFrom.get('Estado')?.setValue('-');
     const _tipoNotificacion = this.notificacionesFrom.get('TipoNotificacion')?.value;
     if (_tipoNotificacion === '5' || _tipoNotificacion === '6' || _tipoNotificacion === '7') {
       this.crearNotificacionesService.ObtenerEstadosTarjetas().subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           this.ListadoEstado = result;
           if (this.ListadoEstado === null && this.ListadoEstado.length === 0) {
             this.notificacion.warning('Advertencia', 'No se encontró información.', ConfiguracionNotificacion.configRightTop);
@@ -243,7 +238,7 @@ export class CrearNotificacionesComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorJson = JSON.parse(error._body);
           this.notificacion.error('Error', errorJson, ConfiguracionNotificacion.configRightTop);
           console.log(error);
@@ -252,14 +247,14 @@ export class CrearNotificacionesComponent implements OnInit {
     } else {
       this.crearNotificacionesService.ObtenerEstadosCuentas().subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           this.ListadoEstado = result;
           if (this.ListadoEstado === null && this.ListadoEstado.length === 0) {
             this.notificacion.warning('Advertencia', 'No se encontró información.', ConfiguracionNotificacion.configRightTop);
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorJson = JSON.parse(error._body);
           this.notificacion.error('Error', errorJson, ConfiguracionNotificacion.configRightTop);
           console.log(error);
@@ -269,7 +264,7 @@ export class CrearNotificacionesComponent implements OnInit {
   }
 
   CrearNotificacion() {
-    this.loading = true;
+    this.loading.show();
     this.notificacionesFrom.get('Usuario')?.setValue(this.DatosUsuario.Usuario);
     if (this.notificacionesFrom.get('ActualizaSaldo')?.value === 'Si') {
       this.notificacionesFrom.get('ActualizaSaldo')?.setValue(1);
@@ -281,14 +276,14 @@ export class CrearNotificacionesComponent implements OnInit {
 
       this.crearNotificacionesService.CrearNotificacion(this.notificacionesFrom.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           if (result.Mensaje.includes('notificacion creada correctamente')) {
             this.notificacion.success('Exitoso', 'La notificación se guardó correctamente.', ConfiguracionNotificacion.configRightTop);
             this.Limpiar();
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorJson = JSON.parse(error._body);
           this.notificacion.error('Error', errorJson, ConfiguracionNotificacion.configRightTop);
           console.log(error);
@@ -304,21 +299,21 @@ export class CrearNotificacionesComponent implements OnInit {
         
         this.crearNotificacionesService.CrearNotificacion(this.notificacionesFrom.value).subscribe(
           result => {
-            this.loading = false;
+            this.loading.hide();
             if (result.Mensaje.includes('notificacion creada correctamente')) {
               this.notificacion.success('Exitoso', 'La notificación se guardó correctamente.', ConfiguracionNotificacion.configRightTop);
               this.Limpiar();
             }
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             const errorJson = JSON.parse(error._body);
             this.notificacion.error('Error', errorJson, ConfiguracionNotificacion.configRightTop);
             console.log(error);
           }
         );
       } else {
-        this.loading = false;
+        this.loading.hide();
         this.notificacion.warning('Advertencia', 'La cuenta seleccionada no tiene número de tarjeta asignada', ConfiguracionNotificacion.configRightTop);        
       }
 

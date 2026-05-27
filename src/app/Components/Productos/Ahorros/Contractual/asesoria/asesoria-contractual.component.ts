@@ -6,12 +6,12 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { OperacionesService } from '../../../../../Services/Maestros/operaciones.service';
 import { GeneralesService } from '../../../../../Services/Productos/generales.service';
 import { AsesoriaContractualService } from '../../../../../Services/Productos/asesoriaContractual.service';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { DatePipe, formatDate } from '@angular/common';
 import swal from 'sweetalert2';
 import { AlertService } from '../../../../../Services/Alert/alert.service';
 import { ClientesGetListService } from '../../../../../Services/Clientes/clientesGetList.service';
 import { LogDataOnEditAsesorExterno, LogDataOnEditAsesoria } from '../../../../../Models/Productos/asesoria-contractual.model';
+import { LoadingService } from '../../../../../Services/shared/loading.service';
 declare var $: any;
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -25,7 +25,6 @@ const ColorSecundario = 'rgb(13,165,80,0.7)';
 })
 export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
   [x: string]: any;
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
   @ViewChild('ModalContractual', { static: true }) private ModalContractual!: ElementRef;
   @ViewChild('ModalAsesores', { static: true }) private ModalAsesores!: ElementRef;
   @ViewChild('ModalAsesoresExterno', { static: true }) private ModalAsesoresExterno!: ElementRef;
@@ -38,8 +37,6 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
   @ViewChild('codigoAsesorExterno') codigoAsesorExternoRef!: ElementRef;
 
   private emitEventContractual: EventEmitter<boolean> = new EventEmitter<boolean>();
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
 
@@ -115,7 +112,8 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
     private notif: AlertService,
     private operacionesService: OperacionesService,
     private generalesService: GeneralesService,
-    private moduleValidationService: ModuleValidationService, private el: ElementRef) {
+    private moduleValidationService: ModuleValidationService, private el: ElementRef,
+    private loading: LoadingService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -410,10 +408,10 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
         && this.asesoriacontractualFrom.get('DescripcionProducto')?.value !== '') {
         Descripcion = this.asesoriacontractualFrom.get('DescripcionProducto')?.value;
       }
-      this.loading = true;
+      this.loading.show();
       this.AsesoriaContractualServices.BuscarProducto(IdProducto, Descripcion).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           if (result.length === 0) {
             this.notif.onWarning('Alerta', 'No se encontró registro.');
             this.asesoriacontractualFrom.get('IdProducto')?.reset();
@@ -473,7 +471,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
@@ -542,10 +540,10 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
     if (IdAsesor === '*' && NombreAsesor === '*') {
       this.notif.onWarning('Alerta', 'Debe ingresar el documento o el nombre del asesor.');
     } else {
-      this.loading = true;
+      this.loading.show();
       this.AsesoriaContractualServices.BuscarAsesor(IdAsesor, NombreAsesor).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           if (result.length === 1) {
             this.MapearDatosAsesor(result);
           } else if (result.length > 1) {
@@ -556,7 +554,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
@@ -581,10 +579,10 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
       || this.AsesorFrom.get('strNombre')?.value !== null
       && this.AsesorFrom.get('strNombre')?.value !== undefined
       && this.AsesorFrom.get('strNombre')?.value !== '') {
-      this.loading = true;
+      this.loading.show();
       this.AsesoriaContractualServices.BuscarAsesorExterno(this.AsesorFrom.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           if (result.length === 1) {
             this.AsesorFrom.get('strCodigo')?.setValue(result[0].intIdAsesor);
             this.AsesorFrom.get('strNombre')?.setValue(result[0].Nombre);
@@ -603,7 +601,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           this.notif.onWarning('Advertencia', 'El valor ingresado no tiene el formato correcto');
           const errorMessage = <any>error;
           console.log(errorMessage);
@@ -763,10 +761,10 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
         return;
       }
 
-      this.loading = true;
+      this.loading.show();
       this.AsesoriaContractualServices.ObtenerTasa(this.asesoriacontractualFrom.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           if(result.TasaEfectiva !== 0){
             this.MapearTasa(result);
             this.obtenerintereses();
@@ -777,7 +775,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
          
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
@@ -807,7 +805,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
         || this.asesoriacontractualFrom.get('ValorPlan')?.value !== ''
         && this.asesoriacontractualFrom.get('ValorPlan')?.value !== undefined
         && this.asesoriacontractualFrom.get('ValorPlan')?.value !== null) {
-        this.loading = true;
+        this.loading.show();
 
      
       this.asesoriacontractualFrom.get('TasaEfectiva')?.setValue(this.dataTasaEfectiva);
@@ -815,7 +813,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
         
         this.AsesoriaContractualServices.ObtenerInteresesSemilla(this.asesoriacontractualFrom.value).subscribe(
           result => {
-            this.loading = false;
+            this.loading.hide();
             this.asesoriacontractualFrom.get('InteresBruto')?.setValue(result.toFixed(0));
             this.obtenerRetencion();
             const TasaNominal = this.returnFormatNum(this.asesoriacontractualFrom.get('TasaNominal')?.value);
@@ -826,7 +824,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
             this.asesoriacontractualFrom.get('TasaEfectiva')?.setValue(TasaEfectivaFinal);
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             console.log(errorMessage);
           }
@@ -839,14 +837,14 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
         || this.asesoriacontractualFrom.get('CuotaMes')?.value !== ''
         && this.asesoriacontractualFrom.get('CuotaMes')?.value !== undefined
         && this.asesoriacontractualFrom.get('CuotaMes')?.value !== null) {
-        this.loading = true;
+        this.loading.show();
 
         this.asesoriacontractualFrom.get('TasaEfectiva')?.setValue(this.dataTasaEfectiva);
         this.asesoriacontractualFrom.get('TasaNominal')?.setValue(this.dataTasaNominal);
 
         this.AsesoriaContractualServices.ObtenerIntereses(this.asesoriacontractualFrom.value).subscribe(
           result => {
-            this.loading = false;
+            this.loading.hide();
             this.asesoriacontractualFrom.get('InteresBruto')?.setValue(result.toFixed(0));
             this.obtenerRetencion();
             const TasaNominal = this.returnFormatNum(this.asesoriacontractualFrom.get('TasaNominal')?.value);
@@ -858,7 +856,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
 
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             console.log(errorMessage);
           }
@@ -870,14 +868,14 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
     if (this.asesoriacontractualFrom.get('InteresBruto')?.value !== ''
       && this.asesoriacontractualFrom.get('InteresBruto')?.value !== undefined
       && this.asesoriacontractualFrom.get('InteresBruto')?.value !== null) {
-      this.loading = true;
+      this.loading.show();
 
       this.asesoriacontractualFrom.get('TasaEfectiva')?.setValue(this.dataTasaEfectiva);
         this.asesoriacontractualFrom.get('TasaNominal')?.setValue(this.dataTasaNominal);
 
       this.AsesoriaContractualServices.ObtenerRetencion(this.asesoriacontractualFrom.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           this.asesoriacontractualFrom.get('Retencion')?.setValue(result.toFixed(0));
           if (result === 0) {
             const interesBruto = this.asesoriacontractualFrom.get('InteresBruto')?.value;
@@ -890,7 +888,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
           this.asesoriacontractualFrom.get('TotalInteres')?.setValue(Math.round(this.asesoriacontractualFrom.get('TotalInteres')?.value));
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
@@ -996,10 +994,10 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
       NumeroAsesoria = this.asesoriacontractualFrom.get('NumeroAsesoria')?.value;
     }
     if (Documento !== '*' || Nombre !== '*' || NumeroAsesoria !== '*') {
-      this.loading = true;
+      this.loading.show();
       this.AsesoriaContractualServices.BuscarAsesoria(Documento, Nombre, NumeroAsesoria).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           if (result.length === 0) {
             this.notif.onWarning('Alerta', 'No se encontró registro.');
             this.ClearForm();
@@ -1032,7 +1030,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
@@ -1046,6 +1044,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
       this.showDecimals = true;
       if (result.length >= 1) {
         this.dataObjet = result;
+        this.asesoriacontractualFrom.get('IdTipoDocumento')?.setValue(this.dataObjet[0].IdTipoDocumento);
         this.asesoriacontractualFrom.get('NumeroAsesoria')?.setValue(this.dataObjet[0].NumeroAsesoria);
         this.asesoriacontractualFrom.get('NumeroDocumento')?.setValue(this.dataObjet[0].NumeroDocumento);
         this.asesoriacontractualFrom.get('Nombre')?.setValue(this.dataObjet[0].PrimerApellido + ' ' + this.dataObjet[0].SegundoApellido +
@@ -1113,6 +1112,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
         this.items.Cuota = this.asesoriacontractualFrom.get('CuotaMes')?.value;
       } else {
         this.dataObjet = result;
+        this.asesoriacontractualFrom.get('IdTipoDocumento')?.setValue(this.dataObjet.IdTipoDocumento);
         this.asesoriacontractualFrom.get('NumeroAsesoria')?.setValue(this.dataObjet.NumeroAsesoria);
         this.asesoriacontractualFrom.get('NumeroDocumento')?.setValue(this.dataObjet.NumeroDocumento);
         this.asesoriacontractualFrom.get('Nombre')?.setValue(this.dataObjet.PrimerApellido + ' ' + this.dataObjet.SegundoApellido +
@@ -1220,10 +1220,10 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
     ) {
       Nombre = this.asesoriacontractualFrom.get('Nombre')?.value;
     }
-    this.loading = true;
+    this.loading.show();
     this.AsesoriaContractualServices.BuscarAsesoria(Documento, '*', NumeroAsesoria).subscribe( // verificar y corregir
       result => {
-        this.loading = false;
+        this.loading.hide();
         if (result.length === 0) {
           this.notif.onWarning('Advertencia', 'No se encontró registro.');
           this.ClearForm();
@@ -1242,7 +1242,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -1261,10 +1261,10 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
             return;
           }
 
-          this.loading = true;
+          this.loading.show();
           this.AsesoriaContractualServices.BuscarNombreXDocumento(Documento).subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               if (result.NumeroDocumento === null) {
                 this.clientesGetListService.GetTipoDocumento().subscribe(
                   result => {
@@ -1285,6 +1285,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
                 this.asesoriacontractualFrom.get('Nombre')?.reset();
                 this.datoRelacion = 15;
               } else if (result.NumeroDocumento) {
+                 this.asesoriacontractualFrom.get('IdTipoDocumento')?.setValue(result.TipoDocumento);
                 this.asesoriacontractualFrom.get('NumeroDocumento')?.setValue(result.NumeroDocumento);
                 this.asesoriacontractualFrom.get('Nombre')?.setValue(result.PrimerApellido + ' ' + result.SegundoApellido +
                   ' ' + result.PrimerNombre + ' ' + result.SegundoNombre);
@@ -1331,7 +1332,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
               }
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               console.log(errorMessage);
             }
@@ -1345,10 +1346,10 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
         && this.asesoriacontractualFrom.get('Nombre')?.value !== undefined
         && this.asesoriacontractualFrom.get('Nombre')?.value !== '') {
           Nombre = this.asesoriacontractualFrom.get('Nombre')?.value;
-          this.loading = true;
+          this.loading.show();
           this.AsesoriaContractualServices.BuscarNombreXNombre(Nombre).subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               if (result.length === 0) {
                 this.notif.onWarning('Advertencia', 'No se encontró registro.');
               } else if (result.length === 1) {
@@ -1364,7 +1365,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
               }
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               console.log(errorMessage);
             }
@@ -1372,10 +1373,10 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
       }
   }
   BuscarNombreModal(Documento = '*') {
-    this.loading = true;
+    this.loading.show();
     this.AsesoriaContractualServices.BuscarNombreXDocumento(Documento).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         if (result === null) {
           this.notif.onWarning('Advertencia', 'No se encontraron datos.');
           this.creacionFrom.get('PrimerNombre')?.reset();
@@ -1387,6 +1388,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
           this.asesoriacontractualFrom.get('Nombre')?.reset();
           this.datoRelacion = 15;
         } else if (result.NumeroDocumento) {
+          this.asesoriacontractualFrom.get('IdTipoDocumento')?.setValue(result.TipoDocumento);
           this.asesoriacontractualFrom.get('NumeroDocumento')?.setValue(result.NumeroDocumento);
           this.asesoriacontractualFrom.get('Nombre')?.setValue(result.PrimerApellido + ' ' + result.SegundoApellido +
             ' ' + result.PrimerNombre + ' ' + result.SegundoNombre);
@@ -1432,7 +1434,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -1477,10 +1479,10 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
 
             this.datoAsesorExterno = +this.AsesorFrom.get('strCodigo')?.value;
 
-            this.loading = true;
+            this.loading.show();
             this.AsesoriaContractualServices.EditarAsesorExterno(this.asesoriacontractualFrom.value).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 this.Bloquear = false;
                 this.BloquearValorTotal = false;
                 this.BloquearCuotaMes = false;
@@ -1503,7 +1505,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
                 this.ObtenerHistorial();
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 console.log(errorMessage);
               });
@@ -1514,11 +1516,11 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
 
             this.datoAsesorExterno = +this.AsesorFrom.get('strCodigo')?.value;
 
-            this.loading = true;
+            this.loading.show();
             this.AsesoriaContractualServices.EditarAsesorExterno(this.asesoriacontractualFrom.value).subscribe(
               result => {
-                this.loading = false;
-                this.loading = false;
+                this.loading.hide();
+                this.loading.hide();
                 this.Bloquear = false;
                 this.BloquearValorTotal = false;
                 this.BloquearCuotaMes = false;
@@ -1541,7 +1543,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
                 this.ObtenerHistorial();
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 console.log(errorMessage);
               });
@@ -1564,7 +1566,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
           || this.asesoriacontractualFrom.get('Plazo')?.value !== this.datoPlazo
           || this.asesoriacontractualFrom.get('CuotaMes')?.value !== this.datoCuotaMes) {
 
-          this.loading = true;
+          this.loading.show();
           
           var TasaEfectivaSin = this.asesoriacontractualFrom.get('TasaEfectiva')?.value;
           TasaEfectivaSin = TasaEfectivaSin.replace("%", "");
@@ -1576,7 +1578,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
           
             this.AsesoriaContractualServices.ActualizarAsesoriaContractual(this.asesoriacontractualFrom.value).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 this.Bloquear = false;
                 this.BloquearValorTotal = false;
                 this.BloquearCuotaMes = false;
@@ -1616,7 +1618,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
                 this.ObtenerHistorial();
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 console.log(errorMessage);
               }
@@ -1659,7 +1661,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
           const Valor = this.asesoriacontractualFrom.get('ValorPlan')?.value;
           this.asesoriacontractualFrom.get('CuotaMes')?.setValue(Valor / Plazo);
         }
-      this.loading = true;
+      this.loading.show();
 
       this.asesoriacontractualFrom.get('TasaEfectiva')?.setValue(this.dataTasaEfectiva);
       this.asesoriacontractualFrom.get('TasaNominal')?.setValue(this.dataTasaNominal);
@@ -1701,7 +1703,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
           Object.keys(logAsesoria).forEach(key => {
             if(logAsesoria[key] === null) logAsesoria[key] = '';
           });
-          this.loading = false;
+          this.loading.hide();
           this.Bloquear = false;
           this.BloquearValorTotal = false;
           this.BloquearBuscar = false;
@@ -1723,7 +1725,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
           this.ObtenerHistorial();
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
@@ -1752,7 +1754,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
             const Valor = this.asesoriacontractualFrom.get('ValorPlan')?.value;
             this.asesoriacontractualFrom.get('CuotaMes')?.setValue(Valor / Plazo);
           }
-          this.loading = true;
+          this.loading.show();
           this.asesoriacontractualFrom.get('TasaEfectiva')?.setValue(this.dataTasaEfectiva);
           this.asesoriacontractualFrom.get('TasaNominal')?.setValue(this.dataTasaNominal);
 
@@ -1794,7 +1796,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
               Object.keys(logAsesoria).forEach(key => {
                 if(logAsesoria[key] === null) logAsesoria[key] = '';
               });
-              this.loading = false;
+              this.loading.hide();
               this.Bloquear = false;
               this.BloquearValorTotal = false;
               this.BloquearCuotaMes = false;
@@ -1816,7 +1818,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
               this.ObtenerHistorial();
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               console.log(errorMessage);
             }
@@ -1831,11 +1833,11 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
     this.generalesService.GuardarlogAsesoria(objLog, operationNumber, currentDate, 60, this.asesoriacontractualFrom.get('NumeroAsesoria')?.value)
       .subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           this.ObtenerHistorial()
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         });
@@ -1918,7 +1920,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
     let byteArray = null;
     let newBolb = null;
     let url = null;
-    this.loading = true;
+    this.loading.show();
     let itemsSend: any = {
       TituliDoc: "FORMATO DE ASESORÍA DE CONTRACTUAL",
       NumeroAsesoria: this.asesoriacontractualFrom.get('NumeroAsesoria')?.value,
@@ -1957,10 +1959,10 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
         document.querySelector("object")!.data = url;
         document.querySelector("object")!.name = "Impresion";
         document.querySelector("object")!.type = "application/pdf";
-        this.loading = false;
+        this.loading.hide();
       },
       error => {
-        this.loading = false
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notif.onDanger('Error', errorMessage);
         console.log(errorMessage);

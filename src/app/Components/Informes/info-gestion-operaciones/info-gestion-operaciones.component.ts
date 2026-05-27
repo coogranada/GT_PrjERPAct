@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { LoginService } from '../../../Services/Login/login.service';
 import { ModulosService } from '../../../Services/Maestros/modulos.service';
 import { AlertService } from '../../../Services/Alert/alert.service';
+import { LoadingService } from '../../../Services/shared/loading.service';
 // import moment = require('moment');
 
 @Component({
@@ -21,7 +22,6 @@ import { AlertService } from '../../../Services/Alert/alert.service';
 })
 export class InfoGestionOperacionesComponent implements OnInit {
   //#region Declaracion de variables
-  public loading = false;
   public ListaGestiones : any[] = [];
   public Gestiones : any;
   public GestionesPendientes = [] = [];
@@ -45,7 +45,9 @@ export class InfoGestionOperacionesComponent implements OnInit {
   public dataTrasabilidad : any[] = [];
   //#endregion fin
   constructor(private gestionesService: GestionesService, private notificacion: AlertService,
-    private excelService: ExcelService, private loginService: LoginService, private router: Router, private modulosService: ModulosService) {
+    private excelService: ExcelService, private loginService: LoginService, private router: Router,
+     private modulosService: ModulosService,
+     private loading: LoadingService) {
       let data = localStorage.getItem('Data');
       this.DatosUsuario = JSON.parse(window.atob(data == null ? "" : data));
    }
@@ -67,11 +69,11 @@ export class InfoGestionOperacionesComponent implements OnInit {
     // this.GestionesGestionadas = [];
     // this.GestionesEnviadasPendientes = [];
     // this.GestionesEnviadasGestionadas = [];
-    this.loading = true;
+    this.loading.show();
 
     this.gestionesService.ObtenerAll().subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
 
         this.ListaGestiones = result;
         if (this.ListaGestiones === null || this.ListaGestiones === undefined) {
@@ -79,7 +81,7 @@ export class InfoGestionOperacionesComponent implements OnInit {
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorJson = JSON.parse(error._body);
         this.notificacion.onDanger('Error', errorJson);
         console.log(error);
@@ -99,12 +101,12 @@ export class InfoGestionOperacionesComponent implements OnInit {
   ObtenerUsuariosAutorizadosAll() {
     this.gestionesService.ObtenerAll().subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.ListaGestiones = result;
-        this.loading = true;
+        this.loading.show();
         this.gestionesService.ObtenerUsuariosAutorizadosAll().subscribe(
           resultUsuarios => {
-            this.loading = false;
+            this.loading.hide();
             this.UsuariosAutorizados = resultUsuarios;
             resultUsuarios.forEach((elementUser : any) => {
               this.ListaGestiones.forEach(elementGestion => {
@@ -143,7 +145,7 @@ export class InfoGestionOperacionesComponent implements OnInit {
 
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             const errorJson = JSON.parse(error._body);
             this.notificacion.onDanger('Error', errorJson);
             console.log(error);
@@ -165,7 +167,7 @@ export class InfoGestionOperacionesComponent implements OnInit {
     const final = this.InfoGestionesOperacionesForm.controls["FechaFinal"].value;
 
     this.gestionesService.ObtenerAll().subscribe((result : any)=> {
-        this.loading = false;
+        this.loading.hide();
         this.ListaGestiones = result;
         if (this.ListaGestiones === null || this.ListaGestiones === undefined) {
           this.notificacion.onWarning('Advertencia', 'No se encontró registro.');
@@ -274,7 +276,7 @@ export class InfoGestionOperacionesComponent implements OnInit {
         return null;
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorJson = JSON.parse(error._body);
         this.notificacion.onDanger('Error', errorJson);
         console.log(error);
@@ -533,14 +535,14 @@ export class InfoGestionOperacionesComponent implements OnInit {
   }
 
   GetModulo() {
-    this.loading = true;
+    this.loading.show();
     this.modulosService.getModulos().subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.dataModulos = result;
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.error(errorMessage);
       }
@@ -553,14 +555,14 @@ export class InfoGestionOperacionesComponent implements OnInit {
   }
 
   AbrirTrazabilidad(opera : string) {
-    this.loading = true;
+    this.loading.show();
     this.gestionesService.GetTrazabilidad(opera).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.dataTrasabilidad = result;
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.error(errorMessage);
       }

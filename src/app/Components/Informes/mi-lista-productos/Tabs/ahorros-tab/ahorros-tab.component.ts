@@ -21,8 +21,8 @@ import {
 import moment from 'moment';
 import swal from "sweetalert2";
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { NgxLoadingComponent } from 'ngx-loading';
 import { AlertService } from '../../../../../Services/Alert/alert.service';
+import { LoadingService } from '../../../../../Services/shared/loading.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 @Component({
@@ -33,8 +33,6 @@ const ColorSecundario = 'rgb(13,165,80,0.7)';
   standalone: false
 })
 export class AhorrosTabComponent implements OnInit {
-  @ViewChild("ngxLoading", { static: false })
-  ngxLoadingComponent!: NgxLoadingComponent;
   //#region Variables Bloqueo
   private resultDataStore : any = {};
 
@@ -115,7 +113,6 @@ export class AhorrosTabComponent implements OnInit {
   public fechaAperturaActualDisabled: any;
   public TipoAlerta: any;
   public consecutivo: any;
-  public loading = false;
   public loadingtwo: Boolean = false;
   public validaMail: Boolean = false;
   public NombrePersonaExtracto: any;
@@ -229,7 +226,8 @@ export class AhorrosTabComponent implements OnInit {
   constructor(
     private operacionesService: OperacionesService,
     private notif: AlertService,
-    private MiListaProductosService: MiListaProductosService
+    private MiListaProductosService: MiListaProductosService,
+    private loading: LoadingService
   ) {}
 
   ngOnInit() {
@@ -618,7 +616,7 @@ export class AhorrosTabComponent implements OnInit {
       this.validaMesFinal = false;
       this.SelectErroneo = false;
 
-      this.loading = true;
+      this.loading.show();
       let data = localStorage.getItem("Data");
       var dataLocalStorage = JSON.parse(window.atob(data == null ? "" : data));
       this.ExtractoDisponible.get("yearInit")?.setValue(yearInicial);
@@ -632,7 +630,7 @@ export class AhorrosTabComponent implements OnInit {
         this.ExtractoDisponible.value
       ).subscribe(
       (result) => {
-        this.loading = false;
+        this.loading.hide();
         this.MapearEncabezadoTabla(result, 1);
        //#region Guarda log
        let data = localStorage.getItem("Data");
@@ -654,7 +652,7 @@ export class AhorrosTabComponent implements OnInit {
         //#endregion
       },
       (error) => {
-        this.loading = false;
+        this.loading.hide();
         console.log(error);
       }
       );
@@ -1725,7 +1723,7 @@ export class AhorrosTabComponent implements OnInit {
   }
 
   ObtenerHistorial(idOficina : string, idProducto : string, consecutivo : string, digito : string) {
-    this.loading = true;
+    this.loading.show();
     this.MiListaProductosService.ObtenerHistorial(
       idOficina,
       idProducto,
@@ -1733,11 +1731,11 @@ export class AhorrosTabComponent implements OnInit {
       digito
     ).subscribe(
       (result) => {
-        this.loading = false;
+        this.loading.hide();
         this.dataHistorialDisponible = result;
       },
       (error) => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -2085,7 +2083,7 @@ export class AhorrosTabComponent implements OnInit {
         this.Cupo.CuentaCupo = result;
       },
       (error) => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -2584,12 +2582,12 @@ export class AhorrosTabComponent implements OnInit {
       ) {
         this.ExtactoAportes.get("FechaInicio")?.setValue(FechaInicio);
         this.ExtactoAportes.get("FechaFin")?.setValue(FechaFin);
-        this.loading = true;
+        this.loading.show();
         this.MiListaProductosService.getExtracto(
           this.ExtactoAportes.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             this.MapearEncabezadoTabla(result, 2);
               //#region Guarda log
               let data = localStorage.getItem("Data");
@@ -2611,7 +2609,7 @@ export class AhorrosTabComponent implements OnInit {
               // #endregion
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -2622,12 +2620,12 @@ export class AhorrosTabComponent implements OnInit {
       ) {
         this.ExtactoAportes.get("FechaInicio")?.setValue(FechaInicio);
         this.ExtactoAportes.get("FechaFin")?.setValue(FechaFin);
-        this.loading = true;
+        this.loading.show();
         this.MiListaProductosService.getMovimiento(
           this.ExtactoAportes.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             this.MapearEncabezadoTablaMov(result, 2);
             //#region Guarda log
             let data = localStorage.getItem("Data");
@@ -2649,7 +2647,7 @@ export class AhorrosTabComponent implements OnInit {
             // #endregion
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -2699,7 +2697,7 @@ export class AhorrosTabComponent implements OnInit {
       this.validaMesInicial = false;
       this.validaMesFinal = false;
       this.SelectErroneo = false;
-      this.loading = true;
+      this.loading.show();
       let data = localStorage.getItem("Data");
       var dataLocalStorage = JSON.parse(window.atob(data == null ? "" : data));
       this.ExtactoAportes.get("yearInit")?.setValue(yearInicial);
@@ -2713,7 +2711,7 @@ export class AhorrosTabComponent implements OnInit {
         this.ExtactoAportes.value
       ).subscribe(
       (result) => {
-        this.loading = false;
+        this.loading.hide();
         this.MapearEncabezadoTabla(result, 2);
           //#region Guarda log
           let data = localStorage.getItem("Data");
@@ -2735,7 +2733,7 @@ export class AhorrosTabComponent implements OnInit {
           // #endregion
       },
       (error) => {
-        this.loading = false;
+        this.loading.hide();
         console.log(error);
       }
       );
@@ -2743,7 +2741,7 @@ export class AhorrosTabComponent implements OnInit {
   }
 
   SendEmail() {
-    this.loading = true;
+    this.loading.show();
     this.validaMail = true;
     // this.ValidaPlantillaMail();
     // setTimeout(() => {
@@ -2752,7 +2750,7 @@ export class AhorrosTabComponent implements OnInit {
   }
 
   SendEmailContactual() {
-    this.loading = true;
+    this.loading.show();
     this.validaMail = true;
     // this.ValidaPlantillaMail();
     // setTimeout(() => {
@@ -2761,7 +2759,7 @@ export class AhorrosTabComponent implements OnInit {
   }
 
   SendEmailATermino() {
-    this.loading = true;
+    this.loading.show();
     this.validaMail = true;
     // this.ValidaPlantillaMail();
     // setTimeout(() => {
@@ -2771,10 +2769,10 @@ export class AhorrosTabComponent implements OnInit {
 
   SendMailAhorros() {
     if (this.validaMail == true) {
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.sendMailProductos(this.ExtractoDisponible.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           this.Response(result);
 
           var Tercero = Number($("#TerceroPrincipal").val());
@@ -2799,7 +2797,7 @@ export class AhorrosTabComponent implements OnInit {
 
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           swal.fire({
             title: "Error",
             text: "",
@@ -2814,7 +2812,7 @@ export class AhorrosTabComponent implements OnInit {
         }
       )
     } else {
-      this.loading = false;
+      this.loading.hide();
       swal.fire({
         title: "Info",
         text: "",
@@ -2832,10 +2830,10 @@ export class AhorrosTabComponent implements OnInit {
 
   SendMailContractual() {
     if (this.validaMail == true) {
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.sendMailProductos(this.ExtactoAportes.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           this.Response(result);
 
           var Tercero = Number($("#TerceroPrincipal").val());
@@ -2858,7 +2856,7 @@ export class AhorrosTabComponent implements OnInit {
           // #endregion
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           swal.fire({
             title: "Error",
             text: "",
@@ -2873,7 +2871,7 @@ export class AhorrosTabComponent implements OnInit {
         }
       )
     } else {
-      this.loading = false;
+      this.loading.hide();
       swal.fire({
         title: "Info",
         text: "",
@@ -2891,10 +2889,10 @@ export class AhorrosTabComponent implements OnInit {
 
   SendMailAtermino() {
     if (this.validaMail == true) {
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.sendMailProductos(this.ExtractoAtermino.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           this.Response(result);
 
           var Tercero = Number($("#TerceroPrincipal").val());
@@ -2917,7 +2915,7 @@ export class AhorrosTabComponent implements OnInit {
           // #endregion
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           swal.fire({
             title: "Error",
             text: "",
@@ -2932,7 +2930,7 @@ export class AhorrosTabComponent implements OnInit {
         }
       )
     } else {
-      this.loading = false;
+      this.loading.hide();
       swal.fire({
         title: "Info",
         text: "",
@@ -3053,7 +3051,7 @@ export class AhorrosTabComponent implements OnInit {
       this.validaMesFinal = false;
       this.SelectErroneo = false;
 
-      this.loading = true;
+      this.loading.show();
       let data = localStorage.getItem("Data");
       var dataLocalStorage = JSON.parse(window.atob(data == null ? "" : data));
       this.ExtractoAtermino.get("yearInit")?.setValue(yearInicial);
@@ -3063,12 +3061,12 @@ export class AhorrosTabComponent implements OnInit {
       this.ExtractoAtermino.get("Usuario")?.setValue(dataLocalStorage.Usuario);
       this.ExtractoAtermino.get("Oficina")?.setValue(dataLocalStorage.Oficina);
 
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.getExtracto(
         this.ExtractoAtermino.value
       ).subscribe(
         (result) => {
-          this.loading = false;
+          this.loading.hide();
           this.MapearEncabezadoTabla(result, 3);
           //#region Guarda log
           let data = localStorage.getItem("Data");
@@ -3090,7 +3088,7 @@ export class AhorrosTabComponent implements OnInit {
           // #endregion
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
@@ -3163,12 +3161,12 @@ export class AhorrosTabComponent implements OnInit {
       ) {
         this.ExtractoDisponible.get("FechaInicio")?.setValue(FechaInicio);
         this.ExtractoDisponible.get("FechaFin")?.setValue(FechaFin);
-        this.loading = true;
+        this.loading.show();
         this.MiListaProductosService.getExtracto(
           this.ExtractoDisponible.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             this.MapearEncabezadoTabla(result, 1);
             //#region Guarda log
             let data = localStorage.getItem("Data");
@@ -3190,7 +3188,7 @@ export class AhorrosTabComponent implements OnInit {
             // #endregion
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -3201,12 +3199,12 @@ export class AhorrosTabComponent implements OnInit {
       ) {
         this.ExtractoDisponible.get("FechaInicio")?.setValue(FechaInicio);
         this.ExtractoDisponible.get("FechaFin")?.setValue(FechaFin);
-        this.loading = true;
+        this.loading.show();
         this.MiListaProductosService.getMovimiento(
           this.ExtractoDisponible.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             this.MapearEncabezadoTablaMov(result, 1);
             //#region Guarda log
             let data = localStorage.getItem("Data");
@@ -3228,7 +3226,7 @@ export class AhorrosTabComponent implements OnInit {
             // #endregion
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -3302,12 +3300,12 @@ export class AhorrosTabComponent implements OnInit {
       ) {
         this.ExtractoAtermino.get("FechaInicio")?.setValue(FechaInicio);
         this.ExtractoAtermino.get("FechaFin")?.setValue(FechaFin);
-        this.loading = true;
+        this.loading.show();
         this.MiListaProductosService.getExtracto(
           this.ExtractoAtermino.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             this.MapearEncabezadoTabla(result, 3);
             //#region Guarda log
             let data = localStorage.getItem("Data");
@@ -3329,7 +3327,7 @@ export class AhorrosTabComponent implements OnInit {
             // #endregion
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -3340,12 +3338,12 @@ export class AhorrosTabComponent implements OnInit {
       ) {
         this.ExtractoAtermino.get("FechaInicio")?.setValue(FechaInicio);
         this.ExtractoAtermino.get("FechaFin")?.setValue(FechaFin);
-        this.loading = true;
+        this.loading.show();
         this.MiListaProductosService.getMovimiento(
           this.ExtractoAtermino.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             this.MapearEncabezadoTablaMov(result, 3);
             //#region Guarda log
             let data = localStorage.getItem("Data");
@@ -3367,7 +3365,7 @@ export class AhorrosTabComponent implements OnInit {
             // #endregion
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -3392,14 +3390,14 @@ export class AhorrosTabComponent implements OnInit {
       this.MovimientoDisponibleDtos.length = 0;
       this.MovimientoAtermino.length = 0;
     } else {
-      this.loading = true;
+      this.loading.show();
       if (pdfTipo == 1) {
         $("#movimientosDtosDisponible").show();
         this.MiListaProductosService.GenerarPDFMovimientoAportes(
           this.ExtractoDisponible.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             const pdfinBase64 = result.FileStream._buffer;
             const byteArray = new Uint8Array(
               atob(pdfinBase64)
@@ -3414,7 +3412,7 @@ export class AhorrosTabComponent implements OnInit {
             // document.getElementById("movimientosDtosDisponible").type = "application/pdf";
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -3425,7 +3423,7 @@ export class AhorrosTabComponent implements OnInit {
           this.ExtactoAportes.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             const pdfinBase64 = result.FileStream._buffer;
             const byteArray = new Uint8Array(
               atob(pdfinBase64)
@@ -3439,7 +3437,7 @@ export class AhorrosTabComponent implements OnInit {
             document.getElementById("movimientosDtos")?.setAttribute("name", "Extracto");
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -3450,7 +3448,7 @@ export class AhorrosTabComponent implements OnInit {
           this.ExtractoAtermino.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             const pdfinBase64 = result.FileStream._buffer;
             const byteArray = new Uint8Array(
               atob(pdfinBase64)
@@ -3464,7 +3462,7 @@ export class AhorrosTabComponent implements OnInit {
             document.getElementById("MovimientoAterminoId")?.setAttribute("name", "movimiento");
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -3511,14 +3509,14 @@ export class AhorrosTabComponent implements OnInit {
     } else {
       this.HabilitaMensate = 0;
       this.NoRegistros = 1;
-      this.loading = true;
+      this.loading.show();
       if (tipoPdf == 1) {
         $("#extractosDtosDisponible").show();
         this.MiListaProductosService.GenerarPdfAhorroDisponible(
           this.ExtractoDisponible.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             const pdfinBase64 = result.FileStream._buffer;
             const byteArray = new Uint8Array(
               atob(pdfinBase64)
@@ -3532,7 +3530,7 @@ export class AhorrosTabComponent implements OnInit {
             document.getElementById("extractosDtosDisponible")?.setAttribute("name", "movimiento");
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -3543,7 +3541,7 @@ export class AhorrosTabComponent implements OnInit {
           this.ExtactoAportes.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             const pdfinBase64 = result.FileStream._buffer;
             const byteArray = new Uint8Array(
               atob(pdfinBase64)
@@ -3557,7 +3555,7 @@ export class AhorrosTabComponent implements OnInit {
             document.getElementById("extractosDtos")?.setAttribute("name", "movimiento");
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -3568,7 +3566,7 @@ export class AhorrosTabComponent implements OnInit {
           this.ExtractoAtermino.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             const pdfinBase64 = result.FileStream._buffer;
             const byteArray = new Uint8Array(
               atob(pdfinBase64)
@@ -3582,7 +3580,7 @@ export class AhorrosTabComponent implements OnInit {
             document.getElementById("extractosDtosAtermino")?.setAttribute("name", "movimiento");
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -3709,12 +3707,12 @@ export class AhorrosTabComponent implements OnInit {
     var select1 = Number($(".SelectedMovimiento_Ahorro").val());
     if (select1 == 1) {
       //pdf movimiento
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarPDFMovimientoAportes(
         this.ExtractoDisponible.value
       ).subscribe(
         (result) => {
-          this.loading = false;
+          this.loading.hide();
           var baseg4 = result.FileStream;
           const linkSource = `data:application/pdf;base64,${baseg4._buffer}`;
           const downloadLink = document.createElement("a");
@@ -3724,7 +3722,7 @@ export class AhorrosTabComponent implements OnInit {
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
@@ -3732,13 +3730,13 @@ export class AhorrosTabComponent implements OnInit {
     var select = Number($(".SelectedExtracto_Ahorro").val());
     if (select == 2) {
       //pdf Extracto
-      this.loading = true;
+      this.loading.show();
 
       this.MiListaProductosService.GenerarPdfAhorroDisponible(
         this.ExtractoDisponible.value
       ).subscribe(
         (result) => {
-          this.loading = false;
+          this.loading.hide();
 
           var baseg4 = result.FileStream;
           const linkSource = `data:application/pdf;base64,${baseg4._buffer}`;
@@ -3749,7 +3747,7 @@ export class AhorrosTabComponent implements OnInit {
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
 
           console.log(error);
         }
@@ -3762,12 +3760,12 @@ export class AhorrosTabComponent implements OnInit {
     var select1 = Number($(".SelectedMovimiento_Ahorro").val());
     if (select1 == 1) {
       //pdf movimiento
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarPdfMvtoAtermino(
         this.ExtractoAtermino.value
       ).subscribe(
         (result) => {
-          this.loading = false;
+          this.loading.hide();
           var baseg4 = result.FileStream;
           const linkSource = `data:application/pdf;base64,${baseg4._buffer}`;
           const downloadLink = document.createElement("a");
@@ -3777,7 +3775,7 @@ export class AhorrosTabComponent implements OnInit {
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
@@ -3785,13 +3783,13 @@ export class AhorrosTabComponent implements OnInit {
     var select = Number($(".SelectedExtracto_Ahorro").val());
     if (select== 2) {
       //pdf Extracto
-      this.loading = true;
+      this.loading.show();
 
       this.MiListaProductosService.GenerarPdfAhorrTermino(
         this.ExtractoAtermino.value
       ).subscribe(
         (result) => {
-          this.loading = false;
+          this.loading.hide();
 
           var baseg4 = result.FileStream;
           const linkSource = `data:application/pdf;base64,${baseg4._buffer}`;
@@ -3802,7 +3800,7 @@ export class AhorrosTabComponent implements OnInit {
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
 
           console.log(error);
         }
@@ -3814,12 +3812,12 @@ export class AhorrosTabComponent implements OnInit {
     var select1 = Number($(".SelectedMovimiento_Ahorro").val());
     if (select1 == 1) {
       //pdf movimiento
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarPdfMovimientoContractual(
         this.ExtactoAportes.value
       ).subscribe(
         (result) => {
-          this.loading = false;
+          this.loading.hide();
           var baseg4 = result.FileStream;
           const linkSource = `data:application/pdf;base64,${baseg4._buffer}`;
           const downloadLink = document.createElement("a");
@@ -3829,7 +3827,7 @@ export class AhorrosTabComponent implements OnInit {
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
@@ -3837,12 +3835,12 @@ export class AhorrosTabComponent implements OnInit {
     var select = Number($(".SelectedExtracto_Ahorro").val());
     if (select == 2) {
       //pdf Extracto
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarPdfAhorro(
         this.ExtactoAportes.value
       ).subscribe(
         (result) => {
-          this.loading = false;
+          this.loading.hide();
           var baseg4 = result.FileStream;
           const linkSource = `data:application/pdf;base64,${baseg4._buffer}`;
           const downloadLink = document.createElement("a");
@@ -3852,7 +3850,7 @@ export class AhorrosTabComponent implements OnInit {
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
 
           console.log(error);
         }
@@ -3863,7 +3861,7 @@ export class AhorrosTabComponent implements OnInit {
   generarEXCELDisponible(): void {
     var select1 = Number($(".SelectedMovimiento_Ahorro").val());
     if (select1 == 1) {
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarXlsMovimientosContractuales(
         this.ExtractoDisponible.value
       ).subscribe(
@@ -3874,23 +3872,23 @@ export class AhorrosTabComponent implements OnInit {
           const fileName = "Movimiento_" + this.NumeroDocumento + ".xlsx";
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
-          this.loading = false;
+          this.loading.hide();
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
     }
     var sel = Number($(".SelectedExtracto_Ahorro").val());
     if (sel == 2) {
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarXlsxAhorroDisponible(
         this.ExtractoDisponible.value
       ).subscribe(
         (result) => {
-          this.loading = false;
+          this.loading.hide();
           var baseg4 = result;
           const linkSource = `data:application/xlsx;base64,${baseg4}`;
           const downloadLink = document.createElement("a");
@@ -3900,7 +3898,7 @@ export class AhorrosTabComponent implements OnInit {
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
@@ -3910,7 +3908,7 @@ export class AhorrosTabComponent implements OnInit {
   generarEXCELAhoTermino(): void {
     var select1 = Number($(".SelectedMovimiento_Ahorro").val());
     if (select1 == 1) {
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarXlsMovimientosContractuales(
         this.ExtractoAtermino.value
       ).subscribe(
@@ -3921,23 +3919,23 @@ export class AhorrosTabComponent implements OnInit {
           const fileName = "Movimiento_" + this.NumeroDocumento + ".xlsx";
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
-          this.loading = false;
+          this.loading.hide();
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
     }
     var select = Number($(".SelectedExtracto_Ahorro").val());
     if (select== 2) {
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarXlsxAhorroTermino(
         this.ExtractoAtermino.value
       ).subscribe(
         (result) => {
-          this.loading = false;
+          this.loading.hide();
           var baseg4 = result;
           const linkSource = `data:application/xlsx;base64,${baseg4}`;
           const downloadLink = document.createElement("a");
@@ -3947,7 +3945,7 @@ export class AhorrosTabComponent implements OnInit {
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
@@ -3957,7 +3955,7 @@ export class AhorrosTabComponent implements OnInit {
   generarEXCEL(): void {
     var select1 = Number($(".SelectedMovimiento_Ahorro").val());
     if (select1 == 1) {
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarXlsMovimientosContractuales(
         this.ExtactoAportes.value
       ).subscribe(
@@ -3968,23 +3966,23 @@ export class AhorrosTabComponent implements OnInit {
           const fileName = "Movimiento_" + this.NumeroDocumento + ".xlsx";
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
-          this.loading = false;
+          this.loading.hide();
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
     }
     var select = Number($(".SelectedExtracto_Ahorro").val());
     if (select == 2) {
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarXlsxAhorro(
         this.ExtactoAportes.value
       ).subscribe(
         (result) => {
-          this.loading = false;
+          this.loading.hide();
           var baseg4 = result;
           const linkSource = `data:application/xlsx;base64,${baseg4}`;
           const downloadLink = document.createElement("a");
@@ -3994,7 +3992,7 @@ export class AhorrosTabComponent implements OnInit {
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );

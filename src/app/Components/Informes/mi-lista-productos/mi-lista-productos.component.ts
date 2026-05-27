@@ -19,7 +19,6 @@ import { TotalesModel } from '../../../Models/Productos/General.models';
 import { ContabilidadTabComponent } from './Tabs/contabilidad-tab/contabilidad-tab.component';
 import { OtrosConpTabComponent } from './Tabs/otros-conp-tab/otros-conp-tab.component'
 import { NotificacionesTabComponent } from './Tabs/notificaciones-tab/notificaciones-tab.component'
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { RadicadosComponent } from './Tabs/radicados/radicados.component';
 import { GeneralesService } from '../../../Services/Productos/generales.service';
 import { formatDate, registerLocaleData } from '@angular/common';
@@ -29,6 +28,7 @@ import {
   DatosProductos,
 } from "../../../Models/Informes/MisProductos/mis-producto.model";
 import { AlertService } from '../../../Services/Alert/alert.service';
+import { LoadingService } from '../../../Services/shared/loading.service';
 
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -101,8 +101,6 @@ export class MiListaProductosComponent implements OnInit {
   public OpcionAnalisisCuenta: boolean = false;
 
   private moduloLocal = 69;
-  public loading = false;
-  public loading2 = false;
   public infoTrue = false;
   public linkPdf: any;
   public primaryColour = ColorPrimario;
@@ -123,7 +121,6 @@ export class MiListaProductosComponent implements OnInit {
   @ViewChild('contabilidadComponent', { static: false }) contabilidadComponent!: ContabilidadTabComponent;
   @ViewChild('notificacionesTabComponent', { static: false }) notificacionesTabComponent!: NotificacionesTabComponent;
   @ViewChild('BuscarAsociados', { static: true }) private BuscarAsociados!: ElementRef;
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
   @ViewChild("radicadoComponent", { static: false })radicadoComponent!: RadicadosComponent;
   @ViewChild("coodeudorTabComponent", { static: false })coodeudorTabComponent!: CoodeudorTabComponent;
   @ViewChild('utilidadesComponent', { static: false }) utilidadesComponent!: UtilidadesTabComponent;
@@ -138,6 +135,7 @@ export class MiListaProductosComponent implements OnInit {
     private MiListaProductosService: MiListaProductosService,
     private operacionesService: OperacionesService,
     private generalesService: GeneralesService,
+    private loading: LoadingService
   ) {}
 
   ngOnInit() {
@@ -1412,24 +1410,24 @@ export class MiListaProductosComponent implements OnInit {
   }
 
   EstadoCuenta(Tercero : string) {
-    this.loading = true;
+    this.loading.show();
     let datas = localStorage.getItem("Data");
     var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
 
         this.MiListaProductosService.GetEstadoCuenta(this.validaEstadoCuenta,Tercero).subscribe(
           result => {
             if (result.EstadoCuenta.length !== 0) {
-              this.loading = false;
+              this.loading.hide();
               this.infoTrue = result.validaInformacion;
               if (this.infoTrue) {
                 // muestra modal
-                this.loading2 = true;
+                this.loading.show(); 
                 $("#BotonEstadoCuenta").click();
                 this.MiListaProductosService.GenerarPDFEstadoCuenta(
                   this.validaEstadoCuenta, Tercero, dataLocalStorage.Oficina
                 ).subscribe(
                   (result) => {
-                    this.loading2 = false;
+                    this.loading.hide();
                     const pdfinBase64 = result.FileStream._buffer;
                     this.linkPdf = pdfinBase64;
                     const byteArray = new Uint8Array(atob(pdfinBase64).split("").map((char) => char.charCodeAt(0)));
@@ -1456,23 +1454,23 @@ export class MiListaProductosComponent implements OnInit {
 
                   },
                   (error) => {
-                    this.loading2 = false;
+                    this.loading.hide();
                     console.log(error);
                   }
                 );
 
               } else {
-                this.loading = false;
+                this.loading.hide();
                 this.notif.onWarning('Advertencia', 'No se encontraron productos y/o saldos contables');
               }
             } else {
-              this.loading = false;
+              this.loading.hide();
               this.notif.onWarning('Advertencia', 'No se encontraron productos y/o saldos contables');
             }
           
           },  
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           this.notif.onDanger("Error", errorMessage);
         }
@@ -1492,24 +1490,24 @@ export class MiListaProductosComponent implements OnInit {
   }
 
   AnalisisCuenta(Tercero : string) {
-    this.loading = true;
+    this.loading.show();
     let datas = localStorage.getItem("Data");
     var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
 
           this.MiListaProductosService.GetAnalisisCuenta(this.validaEstadoCuenta,Tercero).subscribe(
             result => {
               if (result.AnalisisCuentaCartera.length !== 0) {
-                this.loading = false;
+                this.loading.hide();
                 this.infoTrue = result.validaInformacion;
                 if (this.infoTrue) {
                   // muestra modal
-                  this.loading2 = true;
+                  this.loading.show();
                   $("#BotonEstadoCuenta").click();
                   this.MiListaProductosService.GenerarPDFAnalisisCuenta(
                     this.validaEstadoCuenta, Tercero, dataLocalStorage.Oficina
                   ).subscribe(
                     (result) => {
-                      this.loading2 = false;
+                      this.loading.hide();
                       const pdfinBase64 = result.FileStream._buffer;
                       this.linkPdf = pdfinBase64;
                       const byteArray = new Uint8Array(atob(pdfinBase64).split("").map((char) => char.charCodeAt(0)));
@@ -1536,23 +1534,23 @@ export class MiListaProductosComponent implements OnInit {
                       // #endregion
                     },
                     (error) => {
-                      this.loading2 = false;
+                      this.loading.hide();
                       console.log(error);
                     }
                   );
                 } else {
-                  this.loading = false;
+                  this.loading.hide();
                   this.notif.onWarning('Advertencia', 'No se encontraron productos y/o saldos contables');
                 }  
               } else {
-                this.loading = false;
+                this.loading.hide();
                 this.notif.onWarning('Advertencia', 'No se encontraron productos y/o saldos contables');
 
               }
                      
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           this.notif.onDanger("Error", errorMessage);
         }
@@ -1590,7 +1588,7 @@ export class MiListaProductosComponent implements OnInit {
   }
 
   SendEmail() {
-    this.loading2 = true;
+    this.loading.show();
 
     if (this.OpcionEstadoCuenta) {
         let datas = localStorage.getItem("Data");
@@ -1603,7 +1601,7 @@ export class MiListaProductosComponent implements OnInit {
 
       this.MiListaProductosService.sendMailCartera(Tercero, "Coogranada", dataLocalStorage.Oficina,NombreEstadoCuenta,"EC",null,null,null,this.validaEstadoCuenta).subscribe(
         result => {
-          this.loading2 = false;
+          this.loading.hide();
           this.Response(result);
 
           //#region Guarda log
@@ -1625,7 +1623,7 @@ export class MiListaProductosComponent implements OnInit {
           
         },
         error => {
-          this.loading2 = false;
+          this.loading.hide();
           swal.fire({
             title: "Error",
             text: "",
@@ -1650,7 +1648,7 @@ export class MiListaProductosComponent implements OnInit {
 
       this.MiListaProductosService.sendMailCartera(Tercero, "Coogranada", dataLocalStorage.Oficina,NombreEstadoCuenta,"AC",null,null,null,this.validaEstadoCuenta).subscribe(
         result => {
-          this.loading2 = false;
+          this.loading.hide();
           this.Response(result);
 
           //#region Guarda log
@@ -1673,7 +1671,7 @@ export class MiListaProductosComponent implements OnInit {
 
         },
         error => {
-          this.loading2 = false;
+          this.loading.hide(); 
           swal.fire({
             title: "Error",
             text: "",
@@ -1694,7 +1692,7 @@ export class MiListaProductosComponent implements OnInit {
 
 
   generarEXCEL(): void {
-    this.loading2 = true;
+    this.loading.show();
     var Tercero = Number($("#TerceroPrincipal").val());
     if (this.OpcionEstadoCuenta) {
       this.MiListaProductosService.CenerarXLSXCuentas(
@@ -1708,11 +1706,11 @@ export class MiListaProductosComponent implements OnInit {
           const fileName = "EstadoCuenta_" + NumeroDocumento + ".xlsx";
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
-          this.loading2 = false;
+          this.loading.hide(); 
           downloadLink.click();
         },
         (error) => {
-          this.loading2 = false;
+          this.loading.hide(); 
           console.log(error);
         }
       );
@@ -1728,11 +1726,11 @@ export class MiListaProductosComponent implements OnInit {
           const fileName = "AnalisisCuenta_" + NumeroDocumento + ".xlsx";
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
-          this.loading2 = false;
+          this.loading.hide(); 
           downloadLink.click();
         },
         (error) => {
-          this.loading2 = false;
+          this.loading.hide(); 
           console.log(error);
         }
       );
@@ -1754,7 +1752,7 @@ export class MiListaProductosComponent implements OnInit {
     }
     downloadLink.href = linkSource;
     downloadLink.download = fileName;
-    this.loading = false;
+    this.loading.hide();
     downloadLink.click();
   }
 
@@ -1921,7 +1919,7 @@ export class MiListaProductosComponent implements OnInit {
   //Busca por nombre
 
   BuscarNaturalAllName() {
-    this.loading = true;
+    this.loading.show();
     const strNombreBusqueda = this.misProductosFrom.get("Nombre").value;
     if (
       strNombreBusqueda === "" ||
@@ -1929,13 +1927,13 @@ export class MiListaProductosComponent implements OnInit {
       strNombreBusqueda === undefined
     ) {
       //this.disableForm = true;
-      this.loading = false;
+      this.loading.hide();
     } else {
       this.MiListaProductosService.BuscarNaturalesAllNombre(strNombreBusqueda).subscribe(
         result => {
 
           if (result.length > 0) {
-            this.loading = false;
+            this.loading.hide();
             this.dataTercero = result;
             this.BuscarAsociados.nativeElement.click();
             this.btnLupa = true;
@@ -1944,7 +1942,7 @@ export class MiListaProductosComponent implements OnInit {
             this.disbaleEstadodeCuenta = null;
 
           } else {
-            this.loading = false;
+            this.loading.hide();
             this.notif.onWarning('Advertencia', 'No se encontró  registro');
             this.btnLupa = false;
             this.btnBorrador = true;

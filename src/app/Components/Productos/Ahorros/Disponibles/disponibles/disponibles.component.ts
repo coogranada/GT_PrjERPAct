@@ -10,9 +10,9 @@ import { OperacionesService } from '../../../../../Services/Maestros/operaciones
 import { ModuleValidationService } from '../../../../..//Services/Enviroment/moduleValidation.service';
 import { fromEvent } from 'rxjs';
 import { map, count } from 'rxjs/operators';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { GeneralesService } from '../../../../../Services/Productos/generales.service';
 import moment from "moment";
+import { LoadingService } from '../../../../../Services/shared/loading.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var Tiff: any;
@@ -52,11 +52,6 @@ export class DisponiblesComponent implements OnInit {
   @ViewChild('tab3', { static: true }) private tab3!: ElementRef;
   @ViewChild('tab5', { static: true }) private tab5!: ElementRef;
   @ViewChild('tab6', { static: true }) private tab6!: ElementRef;
-
-
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
   public ColorAnterior: any;
@@ -248,7 +243,8 @@ export class DisponiblesComponent implements OnInit {
     private notif: ToastrService,
     private operacionesService: OperacionesService,
     private generalesService: GeneralesService,
-    private moduleValidationService: ModuleValidationService, private el: ElementRef) {
+    private moduleValidationService: ModuleValidationService, private el: ElementRef,
+    private loading: LoadingService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -2309,7 +2305,7 @@ export class DisponiblesComponent implements OnInit {
   }
   
   ImpresionRegistroFrima() {
-    this.loading = true;
+    this.loading.show();
     let itemsSendCertificado: any = {};
     let autorizados: any[] = [];
     if(this.dataObjetTitulares.length > 0)
@@ -2352,14 +2348,14 @@ export class DisponiblesComponent implements OnInit {
         html.data = url;
         html.name ="Registro firma";
         html.type =  "application/pdf";
-        this.loading = false;
+        this.loading.hide();
         this.Guardarlog({},"25")
       },
       error => {
         const errorMessage = <any>error;
         this.notif.error('Error', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
         console.error(errorMessage);
-        this.loading = false;
+        this.loading.hide();
       });
   }
   CloseModal() {
@@ -2412,10 +2408,10 @@ export class DisponiblesComponent implements OnInit {
     this.BloquearAsociado = false;
     this.BloquearBuscar = false;
     this.bloquearConsultaCuenta = false;
-    this.loading = true;
+    this.loading.show();
     this.DisponiblesServices.BuscarCuenta(this.DisponibleForm.value).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         if (result !== null) {
           this.ResetValorSeleccionado(1);
           this.MapearDatosCuenta(result);
@@ -2484,7 +2480,7 @@ export class DisponiblesComponent implements OnInit {
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
         this.notif.warning('Advertencia', 'La cuenta no existe.', ConfiguracionNotificacion.configRightTop);
@@ -2503,11 +2499,11 @@ export class DisponiblesComponent implements OnInit {
     if (this.DisponibleForm.get('BuscarDocumento')?.value !== null
       && this.DisponibleForm.get('BuscarDocumento')?.value !== undefined
       && this.DisponibleForm.get('BuscarDocumento')?.value !== '') {
-      this.loading = true;
+      this.loading.show();
       
       this.DisponiblesServices.BuscarPorDocumento({BuscarNombre : "",BuscarDocumento : this.DisponibleForm.controls["BuscarDocumento"].value}).subscribe(
         result => {
-          this.loading = false;          
+          this.loading.hide();          
           if (result.length === 0) {
             this.notif.warning('Advertencia', 'No se encontró registro.', ConfiguracionNotificacion.configRightTop);
             this.clearFrom();
@@ -2595,7 +2591,7 @@ export class DisponiblesComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
@@ -2603,10 +2599,10 @@ export class DisponiblesComponent implements OnInit {
     }
   }
   BuscarCuentaPorNombre() {
-    this.loading = true;
+    this.loading.show();
     this.DisponiblesServices.BuscarPorNombre(this.DisponibleForm.value).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.DisponibleForm.get('BuscarNombre')?.reset();
         if (result.length > 1) {
 
@@ -2714,12 +2710,12 @@ export class DisponiblesComponent implements OnInit {
      }
   }
   async BuscarDatosCuenta(IdOficina : string, IdProductoCuenta : string, IdConsecutivo : string, IdDigito : string) {
-    this.loading = true;
+    this.loading.show();
     this.ResetValorSeleccionado(1);
     try{
     const result = await this.DisponiblesServices.BuscarCuenta
       ({ 'IdOficina': IdOficina, 'IdProductoCuenta': IdProductoCuenta, 'IdConsecutivo': IdConsecutivo, 'IdDigito': IdDigito }).toPromise()
-          this.loading = false;
+          this.loading.hide();
           this.MapearDatosCuenta(result);;
           this.BloquearBtnRegistroFirma = true;
           this.btnActualizar = true;
@@ -2782,7 +2778,7 @@ export class DisponiblesComponent implements OnInit {
               this.itemsSendRegistro.CodicionesAutorizado2 = null;
             }
         }catch(error) {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           this.notif.error('Error', errorMessage);
           console.error(errorMessage);
@@ -2811,6 +2807,8 @@ export class DisponiblesComponent implements OnInit {
         this.DisponibleForm.get('TelefonoDisponible')?.setValue(this.dataObjet[0].TelefonoDisponible);
         this.DisponibleForm.get('DireccionDisponible')?.setValue(this.dataObjet[0].DireccionDisponible);
         this.DisponibleForm.get('TipoDocumento')?.setValue(this.dataObjet[0].TipoDocumento);
+        this.DisponibleForm.get('IdTipoDocumento')?.setValue(this.dataObjet[0].IdTipoDocumento);
+
         this.DisponibleForm.get('NumeroDocumento')?.setValue(this.dataObjet[0].NumeroDocumento);
         this.DisponibleForm.get('Nombre')?.setValue(this.dataObjet[0].PrimerApellido + ' ' + this.dataObjet[0].SegundoApellido +
           ' ' + this.dataObjet[0].PrimerNombre + ' ' + this.dataObjet[0].SegundoNombre);
@@ -3109,6 +3107,8 @@ export class DisponiblesComponent implements OnInit {
         this.DisponibleForm.get('TelefonoDisponible')?.setValue(this.dataObjet.TelefonoDisponible);
         this.DisponibleForm.get('DireccionDisponible')?.setValue(this.dataObjet.DireccionDisponible);
         this.DisponibleForm.get('TipoDocumento')?.setValue(this.dataObjet.TipoDocumento);
+        this.DisponibleForm.get('IdTipoDocumento')?.setValue(this.dataObjet.IdTipoDocumento);
+
         this.DisponibleForm.get('NumeroDocumento')?.setValue(this.dataObjet.NumeroDocumento);
         this.DisponibleForm.get('Nombre')?.setValue(this.dataObjet.PrimerApellido + ' ' + this.dataObjet.SegundoApellido +
           ' ' + this.dataObjet.PrimerNombre + ' ' + this.dataObjet.SegundoNombre);
@@ -3432,7 +3432,7 @@ export class DisponiblesComponent implements OnInit {
   BuscarAsociado() {
     this.DisponiblesServices.BuscarAsesor(this.DisponibleForm.get('IdAsesor')?.value, '*').subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         if (result.length === 1) {
           this.MapearDatosAsesor(result);
           this.Asociado();
@@ -3462,10 +3462,10 @@ export class DisponiblesComponent implements OnInit {
         }
         if (this.DisponibleForm.get('DocumentoAsesor')?.value !== this.DisponibleForm.get('NumeroDocumento')?.value) {
 
-          this.loading = true;
+          this.loading.show();
           this.DisponiblesServices.BuscarAsociado(Documento, Nombre).subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               if (result.length === 0) {               
                       this.BloquaerProducto = false;
                       this.BloquearFormaPago = false;
@@ -3600,7 +3600,7 @@ export class DisponiblesComponent implements OnInit {
               }
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               console.log(errorMessage);
             }
@@ -3632,10 +3632,10 @@ export class DisponiblesComponent implements OnInit {
         }
         if (this.DisponibleForm.get('DocumentoAsesor')?.value === this.DisponibleForm.get('NumeroDocumento')?.value) {
 
-          this.loading = true;
+          this.loading.show();
           this.DisponiblesServices.BuscarAsociado(Documento, Nombre).subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               if (result.length === 0) {
                 this.notif.warning('Advertencia', 'No se encontró el asociado.', ConfiguracionNotificacion.configRightTop);
               } else if (result.length === 1) {
@@ -3709,7 +3709,7 @@ export class DisponiblesComponent implements OnInit {
               }
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               console.log(errorMessage);
             }
@@ -3757,10 +3757,10 @@ export class DisponiblesComponent implements OnInit {
         && this.DisponibleForm.get('DescripcionProducto')?.value !== '') {
         Descripcion = this.DisponibleForm.get('DescripcionProducto')?.value;
       }
-      this.loading = true;
+      this.loading.show();
       this.DisponiblesServices.BuscarProducto(IdProducto, Descripcion).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           if (result.length === 0) {
             this.notif.warning('Advertencia', 'No se encontró el producto.', ConfiguracionNotificacion.configRightTop);
             this.DisponibleForm.get('IdProducto')?.reset();
@@ -3869,7 +3869,7 @@ export class DisponiblesComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
@@ -3887,10 +3887,10 @@ export class DisponiblesComponent implements OnInit {
         && this.DisponibleForm.get('DescripcionProducto')?.value !== '') {
         Descripcion = this.DisponibleForm.get('DescripcionProducto')?.value;
       }
-      this.loading = true;
+      this.loading.show();
       this.DisponiblesServices.BuscarProducto(IdProducto, Descripcion).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           if (result.length === 0) {
             this.notif.warning('Advertencia', 'No se encontró el producto.', ConfiguracionNotificacion.configRightTop);
             this.DisponibleForm.get('IdProducto')?.reset();
@@ -3907,7 +3907,7 @@ export class DisponiblesComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
@@ -3995,7 +3995,7 @@ export class DisponiblesComponent implements OnInit {
     );
   }
   ObtenerEstado() {
-    this.loading = true;
+    this.loading.show();
     let datas = localStorage.getItem('Data');
     this.dataUser = JSON.parse(window.atob(datas == null ? "" : datas));
     const arrayExample = {
@@ -4009,7 +4009,7 @@ export class DisponiblesComponent implements OnInit {
         $('#SelectEstadoCuenta').focus().select();
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -4151,7 +4151,7 @@ export class DisponiblesComponent implements OnInit {
       || this.AsesorFrom.get('strNombre')?.value !== null
       && this.AsesorFrom.get('strNombre')?.value !== undefined
       && this.AsesorFrom.get('strNombre')?.value !== '') {
-      this.loading = true;
+      this.loading.show();
       this.DisponiblesServices.BuscarAsesorExterno(this.AsesorFrom.value).subscribe(
         result => {
           if (result.length === 1) {
@@ -4170,10 +4170,10 @@ export class DisponiblesComponent implements OnInit {
           } else if (this.DisponibleOperacionFrom.get('Codigo')?.value === '10'|| this.DisponibleOperacionFrom.get('Codigo')?.value === '40') {
             this.btnGuardar = false;
           }
-          this.loading = false;
+          this.loading.hide();
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           this.notif.warning('Advertencia', 'El valor ingresado no tiene el formato correcto.',
             ConfiguracionNotificacion.configRightTopNoClose);
           const errorMessage = <any>error;
@@ -4190,7 +4190,7 @@ export class DisponiblesComponent implements OnInit {
       this.AsesorFrom.get('strCodigo')?.setValue('');
       this.AsesorFrom.get('strNombre')?.setValue('');
     }
-    this.loading = true;
+    this.loading.show();
     this.DisponiblesServices.BuscarAsesorExterno(this.AsesorFrom.value).subscribe(
       result => {
         if (result.length > 1) {
@@ -4216,10 +4216,10 @@ export class DisponiblesComponent implements OnInit {
             this.notif.warning('Advertencia', 'No se encontró el asesor externo.', ConfiguracionNotificacion.configRightTop);
           }
         }
-        this.loading = false;
+        this.loading.hide();
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         this.notif.warning('Advertencia', 'El valor ingresado no tiene el formato correcto.', ConfiguracionNotificacion.configRightTopNoClose);
         const errorMessage = <any>error;
         console.log(errorMessage);
@@ -4948,7 +4948,7 @@ export class DisponiblesComponent implements OnInit {
   }
   GenerarCertificado(){
     if(this.CertificadoFrom.get('SaldoCertificado')?.value == 1 || this.CertificadoFrom.get('SaldoCertificado')?.value == 2 || this.CertificadoFrom.get('SaldoCertificado')?.value == 3) {
-      this.loading = true;
+      this.loading.show();
       let itemsSendCertificado: any = {};
       itemsSendCertificado.MedioPago = (this.DisponibleForm.get('IdMedioPago')?.value);
       itemsSendCertificado.Documento = this.DisponibleForm.get('NumeroDocumento')?.value;
@@ -4983,7 +4983,7 @@ export class DisponiblesComponent implements OnInit {
           html.data = url;
           html.name ="Certificado cuenta";
           html.type =  "application/pdf";
-          this.loading = false;
+          this.loading.hide();
           this.Guardarlog({},"79")
           this.CertificadoFrom.get('SaldoCertificado')?.setValue(0);           
         },
@@ -4991,13 +4991,13 @@ export class DisponiblesComponent implements OnInit {
           const errorMessage = <any>error;
           this.notif.error('Error', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
           console.error(errorMessage);
-          this.loading = false;
+          this.loading.hide();
         });
     } else
       this.notif.warning('Advertencia', 'Debe seleccionar una opción.', ConfiguracionNotificacion.configRightTop);
   }
   generarCertificadoCuenta() {
-    this.loading = true;
+    this.loading.show();
     var NumeroDocumento = this.DisponibleForm.get('Cuenta')?.value;
     const linkSource = `data:application/pdf;base64,${this.linkPdf}`;
     const downloadLink = document.createElement("a");
@@ -5005,7 +5005,7 @@ export class DisponiblesComponent implements OnInit {
     downloadLink.href = linkSource;
     downloadLink.download = fileName;
     downloadLink.click();
-    this.loading = false;
+    this.loading.hide();
   }
   NombreArchivoCertificadoCuenta(NumeroDocumento : string,pdf : string) { 
     let fileName: string = "";
@@ -5018,7 +5018,7 @@ export class DisponiblesComponent implements OnInit {
     return fileName;
   }
   SendEmail() {
-    this.loading = true;
+    this.loading.show();
     let itemsSendCertificado: any = {};
     itemsSendCertificado.MedioPago = (this.DisponibleForm.get('IdMedioPago')?.value);
     itemsSendCertificado.Documento = this.DisponibleForm.get('NumeroDocumento')?.value;
@@ -5038,14 +5038,14 @@ export class DisponiblesComponent implements OnInit {
     itemsSendCertificado.UsuarioERP = dataLocalStorage.IdUsuario;
     this.DisponiblesServices.SendMailPDFCertificado(itemsSendCertificado).subscribe(
       result => { 
-        this.loading = false;
+        this.loading.hide();
         this.ResponseEmail(result);
       },
       error => {
         const errorMessage = <any>error;
         this.notif.error('Error', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
         console.error(errorMessage);
-        this.loading = false;
+        this.loading.hide();
        });
   }
   ResponseEmail(obj : any) {
@@ -5192,7 +5192,7 @@ export class DisponiblesComponent implements OnInit {
 
           this.DisponiblesServices.GuardarDisponible(this.DisponibleForm.value).subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               this.BloquearDatoAutorizado = false;
               this.BloquearDatoAutorizadoBtn2 = false;
               this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
@@ -5257,7 +5257,7 @@ export class DisponiblesComponent implements OnInit {
             },
             error => {
               this.isSaving = false;
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               console.log(errorMessage);
             }
@@ -5283,7 +5283,7 @@ export class DisponiblesComponent implements OnInit {
             } else {
               this.DisponiblesServices.GuardarDisponible(this.DisponibleForm.value).subscribe(
                 result => {
-                  this.loading = false;
+                  this.loading.hide();
                   this.BloquearDatoAutorizado = false;
                   this.BloquearDatoAutorizadoBtn2 = false;
                   this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
@@ -5352,7 +5352,7 @@ export class DisponiblesComponent implements OnInit {
                 },
                 error => {
                   this.isSaving = false;
-                  this.loading = false;
+                  this.loading.hide();
                   const errorMessage = <any>error;
                   console.log(errorMessage);
                 }
@@ -5372,7 +5372,7 @@ export class DisponiblesComponent implements OnInit {
 
         this.DisponiblesServices.GuardarDisponible(this.DisponibleForm.value).subscribe(
           result => {
-            this.loading = false;
+            this.loading.hide();
             this.BloquearDatoAutorizado = false;
             this.BloquearDatoAutorizadoBtn2 = false;
             this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
@@ -5438,7 +5438,7 @@ export class DisponiblesComponent implements OnInit {
           },
           error => {
             this.isSaving = false;
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             console.log(errorMessage);
           }
@@ -5464,7 +5464,7 @@ export class DisponiblesComponent implements OnInit {
           } else {
             this.DisponiblesServices.GuardarDisponible(this.DisponibleForm.value).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 this.BloquearDatoAutorizado = false;
                 this.BloquearDatoAutorizadoBtn2 = false;
                 this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
@@ -5533,7 +5533,7 @@ export class DisponiblesComponent implements OnInit {
               },
               error => {
                 this.isSaving = false;
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 console.log(errorMessage);
               }
@@ -5573,11 +5573,11 @@ export class DisponiblesComponent implements OnInit {
           if (this.dataObjetTitulares.length !== 0) {
             this.dataTitulareslist = this.dataObjetTitulares;
             this.DisponibleForm.get('Titulares')?.setValue(this.dataTitulareslist);
-            this.loading = true;
+            this.loading.show();
             this.DisponiblesServices.ActualizarTitulares(this.DisponibleForm.value).subscribe(
               result => {
                 this.VolverArriba(10);
-                this.loading = false;
+                this.loading.hide();
                 this.clearTitulares();
                 this.BloquearAutorizadoTituloInput(1);
                 this.BloquearDatoAutorizadoBtn2 = false;
@@ -5625,7 +5625,7 @@ export class DisponiblesComponent implements OnInit {
                 this.DisponibleOperacionFrom.get('Codigo')?.reset();
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 console.log(errorMessage);
               }
@@ -5636,10 +5636,10 @@ export class DisponiblesComponent implements OnInit {
         } else {
           this.dataTitulareslist = this.dataObjetTitulares
           this.DisponibleForm.get('Titulares')?.setValue(this.dataTitulareslist);
-          this.loading = true;
+          this.loading.show();
           this.DisponiblesServices.ActualizarTitulares(this.DisponibleForm.value).subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               this.clearTitulares();
               this.VolverArriba(10);
               this.BloquearAutorizadoTituloInput(1);
@@ -5688,7 +5688,7 @@ export class DisponiblesComponent implements OnInit {
               this.DisponibleOperacionFrom.get('Codigo')?.reset();
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               console.log(errorMessage);
             }
@@ -5706,10 +5706,10 @@ export class DisponiblesComponent implements OnInit {
             this.dataAsesor = this.AsesorFrom.get('strCodigo')?.value;
             this.DisponibleForm.get('IdAsesorExterno')?.setValue(this.dataAsesor);
 
-            this.loading = true;
+            this.loading.show();
             this.DisponiblesServices.EditarAsesorExterno(this.DisponibleForm.value).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 this.BloquearAsociado = false;
                 this.notif.success('Exitoso', 'El cambio asesor externo se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
                 this.btnGuardar = true;
@@ -5733,7 +5733,7 @@ export class DisponiblesComponent implements OnInit {
                 this.DisponibleOperacionFrom.get('Codigo')?.reset();
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 console.log(errorMessage);
               });
@@ -5744,10 +5744,10 @@ export class DisponiblesComponent implements OnInit {
             this.dataAsesor = this.AsesorFrom.get('strCodigo')?.value;
             this.DisponibleForm.get('IdAsesorExterno')?.setValue(this.dataAsesor);
 
-            this.loading = true;
+            this.loading.show();
             this.DisponiblesServices.EditarAsesorExterno(this.DisponibleForm.value).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 this.BloquearAsociado = false;
                 this.notif.success('Exitoso', 'El cambio asesor externo se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
                 this.btnGuardar = true;
@@ -5770,7 +5770,7 @@ export class DisponiblesComponent implements OnInit {
                 this.DisponibleOperacionFrom.get('Codigo')?.reset();
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 console.log(errorMessage);
               });
@@ -5802,10 +5802,10 @@ export class DisponiblesComponent implements OnInit {
             this.DisponibleForm.get('Talonarios')?.setValue(this.dataLibretalist);
           }
 
-          this.loading = true;
+          this.loading.show();
           this.DisponiblesServices.ActualizarDisponible(this.DisponibleForm.value).subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               this.BloquearAsociado = false;
               this.notif.success('Exitoso', 'El cambio de forma de pago se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
               this.btnGuardar = true;
@@ -5828,7 +5828,7 @@ export class DisponiblesComponent implements OnInit {
               this.BloquearMedioPago = false;
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               console.log(errorMessage);
             }
@@ -5843,10 +5843,10 @@ export class DisponiblesComponent implements OnInit {
           if (this.DisponibleForm.get('Inicial')?.value !== null
             && this.DisponibleForm.get('Inicial')?.value !== undefined
             && this.DisponibleForm.get('Inicial')?.value !== '') {
-            this.loading = true;
+            this.loading.show();
             this.DisponiblesServices.ActualizarLibretaTarjeta(this.DisponibleForm.value).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 this.BloquearAsociado = false;
                 this.notif.success('Exitoso', 'El cambio de libreta o tarjeta se realizó correctamente.',
                   ConfiguracionNotificacion.configRightTop);
@@ -5879,7 +5879,7 @@ export class DisponiblesComponent implements OnInit {
                 this.DisponibleOperacionFrom.get('Codigo')?.reset();
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 console.log(errorMessage);
               }
@@ -5889,7 +5889,7 @@ export class DisponiblesComponent implements OnInit {
           if (this.DisponibleForm.get('NumeroTarjeta')?.value !== null
             && this.DisponibleForm.get('NumeroTarjeta')?.value !== undefined
             && this.DisponibleForm.get('NumeroTarjeta')?.value !== '') {
-            this.loading = true;
+            this.loading.show();
             let data: string | null = localStorage.getItem('Data');
             this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
             this.DisponibleForm.get('IdUsuarioERP')?.setValue(this.dataUser.IdUsuario);
@@ -5909,7 +5909,7 @@ export class DisponiblesComponent implements OnInit {
             // fin notificador 
             this.DisponiblesServices.ActualizarLibretaTarjeta(this.DisponibleForm.value).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 this.BloquearAsociado = false;
                 this.notif.success('Exitoso', 'El cambio de libreta o tarjeta se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
                 this.BloquearNumeroTarjeta = false;
@@ -5939,7 +5939,7 @@ export class DisponiblesComponent implements OnInit {
                 this.DisponibleOperacionFrom.get('Codigo')?.reset();
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 console.log(errorMessage);
               }
@@ -5954,10 +5954,10 @@ export class DisponiblesComponent implements OnInit {
           if (this.DisponibleForm.get('Inicial')?.value !== null
             && this.DisponibleForm.get('Inicial')?.value !== undefined
             && this.DisponibleForm.get('Inicial')?.value !== '') {
-            this.loading = true;
+            this.loading.show();
             this.DisponiblesServices.ActualizarLibretaTarjetaSinCobro(this.DisponibleForm.value).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 this.BloquearAsociado = false;
                 this.notif.success('Exitoso', 'Cambio de libreta o tarjeta se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
                 this.BloquearNumeroTarjeta = false;
@@ -5987,7 +5987,7 @@ export class DisponiblesComponent implements OnInit {
                 this.DisponibleOperacionFrom.get('Codigo')?.reset();
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 console.log(errorMessage);
               }
@@ -5997,7 +5997,7 @@ export class DisponiblesComponent implements OnInit {
           if (this.DisponibleForm.get('NumeroTarjeta')?.value !== null
             && this.DisponibleForm.get('NumeroTarjeta')?.value !== undefined
             && this.DisponibleForm.get('NumeroTarjeta')?.value !== '' || this.TipoNovedad != "") {              
-            this.loading = true;
+            this.loading.show();
             let data: string | null = localStorage.getItem('Data');
             this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
             this.DisponibleForm.get('IdUsuarioERP')?.setValue(this.dataUser.IdUsuario);
@@ -6017,7 +6017,7 @@ export class DisponiblesComponent implements OnInit {
             // fin notificador 
             this.DisponiblesServices.ActualizarLibretaTarjetaSinCobro(this.DisponibleForm.value).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 this.BloquearAsociado = false;
                 this.notif.success('Exitoso', 'Cambio de libreta o tarjeta se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
                 this.BloquearNumeroTarjeta = false;
@@ -6046,7 +6046,7 @@ export class DisponiblesComponent implements OnInit {
                 this.DisponibleOperacionFrom.get('Codigo')?.reset();
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 console.log(errorMessage);
               }
@@ -6068,10 +6068,10 @@ export class DisponiblesComponent implements OnInit {
             this.DisponibleForm.get('Talonarios')?.setValue(this.dataLibretalist);
           }
 
-          this.loading = true;
+          this.loading.show();
           this.DisponiblesServices.ActualizarOperacionPermitida(this.DisponibleForm.value).subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               this.BloquearAsociado = false;
               this.notif.success('Exitoso', 'El cambio de operacion permitida se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
               this.btnGuardar = true;
@@ -6113,7 +6113,7 @@ export class DisponiblesComponent implements OnInit {
               this.BloquearOperacionPermitida = false;
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               console.log(errorMessage);
             }
@@ -6131,10 +6131,10 @@ export class DisponiblesComponent implements OnInit {
           this.dataCanaleslist = this.dataObjetC.Canales;
           this.DisponibleForm.get('Canales')?.setValue(this.dataCanaleslist);
         }
-        this.loading = true;
+        this.loading.show();
         this.DisponiblesServices.ActualizarCanales(this.DisponibleForm.value).subscribe(
           result => {
-            this.loading = false;
+            this.loading.hide();
             this.showBtnCanalesActualizar = false;
             this.BloquearAsociado = false;
             this.notif.success('Exitoso', 'La edición de canales se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
@@ -6215,7 +6215,7 @@ export class DisponiblesComponent implements OnInit {
 
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             console.log(errorMessage);
           }
@@ -6302,13 +6302,13 @@ export class DisponiblesComponent implements OnInit {
               return;
             }
 
-            this.loading = true;
+            this.loading.show();
             payload.FechaCambioPlazo = 'NULL';
             payload.FechaRediferir = 'NULL';
            
             this.DisponiblesServices.ActualizarMedioPago(payload).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 this.BloquearAsociado = false;
                 this.BloquearDiaCortePlazo = false;
                 this.BloquearMedioPago = false;
@@ -6356,7 +6356,7 @@ export class DisponiblesComponent implements OnInit {
             // fin notificador
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 console.log(errorMessage);
               }
@@ -6380,7 +6380,7 @@ export class DisponiblesComponent implements OnInit {
             && this.DisponibleForm.get('IdPlazo')?.value !== null
             && this.DisponibleForm.get('IdPlazo')?.value != '0'
             && this.DisponibleForm.get('IdPlazo')?.value !== undefined) {
-            this.loading = true;
+            this.loading.show();
             const fechaActual = new Date();
             const formatoFecha = fechaActual.getFullYear() + '/' + 
                      String(fechaActual.getMonth() + 1).padStart(2, '0') + '/' + 
@@ -6390,7 +6390,7 @@ export class DisponiblesComponent implements OnInit {
             payload.FechaRediferir = formatoFecha;
             this.DisponiblesServices.ActualizarMedioPago(payload).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 this.BloquearAsociado = false;
                 this.BloquearDiaCortePlazo = false;
                 this.BloquearMedioPago = false;
@@ -6439,7 +6439,7 @@ export class DisponiblesComponent implements OnInit {
                 // fin notificador
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 console.log(errorMessage);
               }
@@ -6518,7 +6518,7 @@ export class DisponiblesComponent implements OnInit {
         }, 1200);
       }
       } else if (this.DisponibleOperacionFrom.get('Codigo')?.value === '34') {  // Asignar cupo 
-        this.loading = true;
+        this.loading.show();
         let payload: any = this.DisponibleForm.value;
         payload.Real = this.ListGarantiasRealesAgregadas;
         payload.Codeudor = this.dataObjetCd;
@@ -6527,7 +6527,7 @@ export class DisponiblesComponent implements OnInit {
         this.DisponiblesServices.AsignarCupo(payload).subscribe(
           result => {
             this.AsignarCupo = true;
-            this.loading = false;
+            this.loading.hide();
             this.BloquearAsociado = false;
             this.notif.success('Exitoso', 'El asignar cupo se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
             this.btnGuardar = true;
@@ -6555,17 +6555,17 @@ export class DisponiblesComponent implements OnInit {
             this.BloquearPagare = false;
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             console.log(errorMessage);
           }
         );
         
       } else if (this.DisponibleOperacionFrom.get('Codigo')?.value === '75') {  // Activar cuenta
-        this.loading = true;
+        this.loading.show();
         this.DisponiblesServices.ActivarCuenta(this.DisponibleForm.get('IdCuenta')?.value).subscribe(
           result => {
-            this.loading = false;
+            this.loading.hide();
             this.BloquearAsociado = false;
             this.notif.success('Exitoso', 'Activación cuenta se realizó correctamente', ConfiguracionNotificacion.configRightTop);
             this.btnGuardar = true;
@@ -6585,7 +6585,7 @@ export class DisponiblesComponent implements OnInit {
             this.DisponibleOperacionFrom.get('Codigo')?.reset();
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             console.log(errorMessage);
           });
@@ -6605,7 +6605,7 @@ export class DisponiblesComponent implements OnInit {
           this.btnActualizar = true;
           return;
         }
-        this.loading = true;
+        this.loading.show();
         this.EnableExoneradaGMF = false;
         this.btnActualizar = true;
         let payload: any = {
@@ -6613,7 +6613,7 @@ export class DisponiblesComponent implements OnInit {
           blnExoneradaGMF : this.DisponibleForm.get('ExoneradaGmf')?.value
         }
         this.DisponiblesServices.MarcarODesmarcarGMF(payload).subscribe(( x: any) => {
-          this.loading = false;
+          this.loading.hide();
           this.BuscarPorCuenta();
           this.notif.success('Exitoso', 'Se marca/desmarca GMF correctamente.', ConfiguracionNotificacion.configRightTop);
           this.Guardarlog({ExoneradaGMFActualiza : this.DisponibleForm.get('ExoneradaGmf')?.value});
@@ -6622,7 +6622,7 @@ export class DisponiblesComponent implements OnInit {
           }, 1000);
           this.DisponibleOperacionFrom.get('Codigo')?.reset();
          }, error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         })
@@ -6631,7 +6631,7 @@ export class DisponiblesComponent implements OnInit {
           this.notif.warning('Advertencia','Debe cambiar timbrar mensaje.', ConfiguracionNotificacion.configRightTop);
           return;
         }
-        this.loading = true;
+        this.loading.show();
         this.BloquearTimbrarMensaje = false;
         this.btnActualizar = true;
         let payload: any = {
@@ -6639,7 +6639,7 @@ export class DisponiblesComponent implements OnInit {
           TimbrarMensajeBln : this.DisponibleForm.get('TibrarComentario')?.value
         }
         this.DisponiblesServices.TimbrarMensaje(payload).subscribe(( x: any) => {
-          this.loading = false;
+          this.loading.hide();
           this.notif.success('Exitoso', 'Se editó timbrar mensaje correctamente.', ConfiguracionNotificacion.configRightTop);
           this.Guardarlog({TimbrarMensajeActualiza  : this.DisponibleForm.get('TibrarComentario')?.value});
           setTimeout(() => {
@@ -6647,7 +6647,7 @@ export class DisponiblesComponent implements OnInit {
           }, 1000);
           this.DisponibleOperacionFrom.get('Codigo')?.reset();
          }, error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         })
@@ -6657,7 +6657,7 @@ export class DisponiblesComponent implements OnInit {
           return;
         };
         console.log("ExoCobroHasta",this.DisponibleForm.get('ExoCobroHasta')?.value)
-         this.loading = true;
+         this.loading.show();
          this.BloquearExoCobroHasta = false;
          this.btnActualizar = true;
         let payload: any = {
@@ -6670,7 +6670,7 @@ export class DisponiblesComponent implements OnInit {
           payload.Empty = false;
 
          this.DisponiblesServices.ExoneraCuotaManejoHasta(payload).subscribe(( x: any) => {
-           this.loading = false;
+           this.loading.hide();
            let log: any = {
              ExoneradoCuotaManejoAnterior: this.ExoCobroHastaOld == null ? "" : this.ExoCobroHastaOld,
              ExoneradoCuotaManejoActualiza  : this.DisponibleForm.get('ExoCobroHasta')?.value == null ? "" : this.DisponibleForm.get('ExoCobroHasta')?.value
@@ -6683,7 +6683,7 @@ export class DisponiblesComponent implements OnInit {
            }, 1000);
            this.DisponibleOperacionFrom.get('Codigo')?.reset();
           }, error => {
-           this.loading = false;
+           this.loading.hide();
            const errorMessage = <any>error;
            console.log(errorMessage);
         })
@@ -6701,7 +6701,7 @@ export class DisponiblesComponent implements OnInit {
           this.btnActualizar = true;
           return;
         }
-        this.loading = true;
+        this.loading.show();
         this.EnableExentaGMF = false;
         this.btnActualizar = true;
         let payload: any = {
@@ -6709,7 +6709,7 @@ export class DisponiblesComponent implements OnInit {
           blnExenta : this.DisponibleForm.get('Exenta')?.value
         }
         this.DisponiblesServices.MarcarODesmarcarExentoGMF(payload).subscribe(( x: any) => {
-          this.loading = false;
+          this.loading.hide();
           this.notif.success('Exitoso', 'Se marca/desmarca exento GMF correctamente.', ConfiguracionNotificacion.configRightTop);
           this.Guardarlog({ExentoGMFActualiza : this.DisponibleForm.get('Exenta')?.value});
           setTimeout(() => {
@@ -6717,7 +6717,7 @@ export class DisponiblesComponent implements OnInit {
           }, 1000);
           this.DisponibleOperacionFrom.get('Codigo')?.reset();
          }, error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         })
@@ -6784,10 +6784,10 @@ export class DisponiblesComponent implements OnInit {
     }
   }
   ActivarCuenta() {
-    this.loading = true;
+    this.loading.show();
     this.DisponiblesServices.ActivarCuenta(this.DisponibleForm.get('IdCuenta')?.value).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.BloquearAsociado = false;
         this.notif.success('Exitoso', 'Activación cuenta se realizó correctamente', ConfiguracionNotificacion.configRightTop);
         this.btnGuardar = true;
@@ -6808,7 +6808,7 @@ export class DisponiblesComponent implements OnInit {
         this.DisponibleOperacionFrom.get('Codigo')?.reset();
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
       });
@@ -6834,7 +6834,7 @@ export class DisponiblesComponent implements OnInit {
   }
 
   showPdf() {
-    this.loading = true;
+    this.loading.show();
     const NumeroDocumento = this.DisponibleForm.get('NumeroDocumento')?.value;
     let NumeroCuenta: string = this.DisponibleForm.get('Cuenta')?.value;
     NumeroCuenta = NumeroCuenta.replace(/-/g, "");
@@ -6847,7 +6847,7 @@ export class DisponiblesComponent implements OnInit {
     this.converted_image = "";
     this.DisponiblesServices.DescargarRegistroFirmas(NumeroDocumento, NumeroCuenta).subscribe(
       result => {
-        this.loading = false;        
+        this.loading.hide();        
         let base64: string[] = result.split("$$//");
         if (base64.length == 2) {
             this.base64Data = base64[1];
@@ -6896,9 +6896,9 @@ export class DisponiblesComponent implements OnInit {
         }
         else
           this.notif.warning('Advertencia',result +".", ConfiguracionNotificacion.configRightTop);
-        this.loading = false;
+        this.loading.hide();
       }, error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notif.error('Error', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
         console.log(errorMessage);
@@ -6978,7 +6978,7 @@ export class DisponiblesComponent implements OnInit {
     let byteArray = null;
     let newBolb = null;
     let url = null;
-    this.loading = true;
+    this.loading.show();
     html.data = "";
     html.name = "";
     html.type = "";
@@ -6993,10 +6993,10 @@ export class DisponiblesComponent implements OnInit {
         html.data = url;
         html.name ="Impresion";
         html.type =  "application/pdf";
-        this.loading = false;
+        this.loading.hide();
       },
       error => {
-        this.loading = false
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notif.error('Error', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
         console.log(errorMessage);
@@ -7478,7 +7478,7 @@ export class DisponiblesComponent implements OnInit {
         this.cuentaPadreAnterior = result;
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -7526,7 +7526,7 @@ export class DisponiblesComponent implements OnInit {
     this.DisponibleForm.get('IdPlazo')?.setValue(Datos.IdPlazo);
   }
   CancelarCupo() {
-    this.loading = true;
+    this.loading.show();
     this.ValidarDisponibles();
     setTimeout(() => {
       this.resultMedioPago = [...this.resultMedioPagoOriginal]; // reseteo el campo medios pago para que luego de guardar setee correctamente 
@@ -7596,7 +7596,7 @@ export class DisponiblesComponent implements OnInit {
       setTimeout(() => {
         this.BuscarPorCuenta();
         this.ObtenerHistorial();
-        this.loading = true;
+        this.loading.show();
       }, 1200);
     }, err => { })
   }
@@ -7811,10 +7811,10 @@ export class DisponiblesComponent implements OnInit {
       && this.DisponibleForm.get('DocumentoTitular')?.value !== '') {
       if (this.DisponibleForm.get('NumeroDocumento')?.value !== this.DisponibleForm.get('DocumentoTitular')?.value.trim()) {
         if (this.dataObjetTitulares.length == 0) {
-          this.loading = true;
+          this.loading.show();
           this.DisponiblesServices.BuscarTitular(this.DisponibleForm.get('DocumentoTitular')?.value, '*').subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               if (result === null) {
                 this.notif.warning('Alerta', 'No se encontró el registro.', ConfiguracionNotificacion.configRightTop);
                 this.DisponibleForm.get('DocumentoTitular')?.reset();
@@ -7865,7 +7865,7 @@ export class DisponiblesComponent implements OnInit {
               }
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               this.notif.warning('Alerta', 'Número de documento incorrecto.', ConfiguracionNotificacion.configRightTop);
            }
           );
@@ -7882,10 +7882,10 @@ export class DisponiblesComponent implements OnInit {
             this.DisponibleForm.get('DocumentoTitular')?.reset();
             this.clearTitulares();
           } else {
-            this.loading = true;
+            this.loading.show();
             this.DisponiblesServices.BuscarTitular(this.DisponibleForm.get('DocumentoTitular')?.value, '*').subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 if (result === null) {
                   this.notif.warning('Alerta', 'No se encontró el registro.', ConfiguracionNotificacion.configRightTop);
                   this.DisponibleForm.get('DocumentoTitular')?.reset();
@@ -7936,7 +7936,7 @@ export class DisponiblesComponent implements OnInit {
                 } 
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 this.notif.warning('Alerta', 'Número de documento incorrecto.', ConfiguracionNotificacion.configRightTop);
               }
             );
@@ -7956,11 +7956,11 @@ export class DisponiblesComponent implements OnInit {
       && this.DisponibleForm.get('NombreTitular')?.value !== undefined
       && this.DisponibleForm.get('NombreTitular')?.value !== '') {
         if (this.dataObjetTitulares.length == 0) {
-          this.loading = true;
+          this.loading.show();
           this.DisponiblesServices.BuscarTitular('*', this.DisponibleForm.get('NombreTitular')?.value).subscribe(
             result => {
               
-              this.loading = false;
+              this.loading.hide();
               if (result.length === 0) {
                 this.DisponibleForm.get('NombreTitular')?.setValue("");
                 this.notif.warning('Alerta', 'No se encontró el registro.', ConfiguracionNotificacion.configRightTop);
@@ -8023,7 +8023,7 @@ export class DisponiblesComponent implements OnInit {
               }
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               this.notif.error('Error', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
               console.log(errorMessage);
@@ -8031,10 +8031,10 @@ export class DisponiblesComponent implements OnInit {
           );
         
       } else {
-            this.loading = true;
+            this.loading.show();
             this.DisponiblesServices.BuscarTitular('*', this.DisponibleForm.get('NombreTitular')?.value).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 if (result.length === 0 || result === null) {
                   this.DisponibleForm.get('NombreTitular')?.setValue("");
                   this.notif.warning('Alerta', 'No se encontró el registro.', ConfiguracionNotificacion.configRightTop);
@@ -8108,7 +8108,7 @@ export class DisponiblesComponent implements OnInit {
                 }
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 this.notif.error('Error', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
                 console.log(errorMessage);
@@ -8117,10 +8117,10 @@ export class DisponiblesComponent implements OnInit {
       }
     // if (this.DisponibleForm.get('NumeroDocumento')?.value !== this.DisponibleForm.get('DocumentoTitular')?.value) {
     //   if (this.dataObjet === undefined) {
-    //     this.loading = true;
+    //     this.loading.show();
     //     this.DisponiblesServices.BuscarTitular('*', this.DisponibleForm.get('NombreTitular')?.value).subscribe(
     //       result => {
-    //         this.loading = false;
+    //         this.loading.hide();
     //         if (result.length === 0) {
     //           this.notif.warning('Alerta', 'No se encontró el titular.', ConfiguracionNotificacion.configRightTop);
     //         } else if (result.length === 1) {
@@ -8138,7 +8138,7 @@ export class DisponiblesComponent implements OnInit {
     //         }
     //       },
     //       error => {
-    //         this.loading = false;
+    //         this.loading.hide();
     //         const errorMessage = <any>error;
     //         console.log(errorMessage);
     //       }
@@ -8155,10 +8155,10 @@ export class DisponiblesComponent implements OnInit {
     //       this.notif.warning('Advertencia', 'El titular ya fue ingresado.', ConfiguracionNotificacion.configRightTop);
     //       this.clearTitulares();
     //     } else {
-    //       this.loading = true;
+    //       this.loading.show();
     //       this.DisponiblesServices.BuscarTitular('*', this.DisponibleForm.get('NombreTitular')?.value).subscribe(
     //         result => {
-    //           this.loading = false;
+    //           this.loading.hide();
     //           if (result.length === 0) {
     //             this.notif.warning('Alerta', 'No se encontró el titular.', ConfiguracionNotificacion.configRightTop);
     //           } else if (result.length === 1) {
@@ -8176,7 +8176,7 @@ export class DisponiblesComponent implements OnInit {
     //           }
     //         },
     //         error => {
-    //           this.loading = false;
+    //           this.loading.hide();
     //           const errorMessage = <any>error;
     //           console.log(errorMessage);
     //         }
@@ -8191,10 +8191,10 @@ export class DisponiblesComponent implements OnInit {
   }
   BuscarTitularModal(Documento = '*') {
     const Nombre = '*';
-    this.loading = true;
+    this.loading.show();
     this.DisponiblesServices.BuscarTitular(Documento, Nombre).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         if (result === null) {
           this.notif.warning('Alerta', 'No se encontró el registro.', ConfiguracionNotificacion.configRightTop);
         } else if (result.IdRelacion === 10) {
@@ -8259,7 +8259,7 @@ export class DisponiblesComponent implements OnInit {
         } 
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notif.error('Error', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
         console.log(errorMessage);
@@ -8267,10 +8267,10 @@ export class DisponiblesComponent implements OnInit {
     );
     // let Nombre = '*';
     // Nombre = this.DisponibleForm.get('NombreTitular')?.value;
-    // this.loading = true;
+    // this.loading.show();
     // this.DisponiblesServices.BuscarTitular(Documento, Nombre).subscribe(
     //   result => {
-    //     this.loading = false;
+    //     this.loading.hide();
     //     if (result === null) {
     //         this.notif.warning('Alerta', 'No se encontró el titular.', ConfiguracionNotificacion.configRightTop);
     //     } else {
@@ -8290,7 +8290,7 @@ export class DisponiblesComponent implements OnInit {
     //   }
     //   },
     //   error => {
-    //     this.loading = false;
+    //     this.loading.hide();
     //     const errorMessage = <any>error;
     //     console.log(errorMessage);
     //   }
@@ -8479,12 +8479,12 @@ export class DisponiblesComponent implements OnInit {
   const IdProductoCuenta = this.DisponibleForm.get('IdProductoCuenta')?.value;
   const IdConsecutivo = this.DisponibleForm.get('IdConsecutivo')?.value;
   const IdDigito = this.DisponibleForm.get('IdDigito')?.value;
-  this.loading = true;
+  this.loading.show();
   this.DisponiblesServices.ObtenerHistorial
     ({ 'IdOficina': IdOficina, 'IdProductoCuenta': IdProductoCuenta, 'IdConsecutivo': IdConsecutivo, 'IdDigito': IdDigito }).subscribe(
       result => {
         console.log("historial",result)
-        this.loading = false;
+        this.loading.hide();
         this.dataHistorial = result;
         let operaciones: number[] = [];
         this.dataHistorial.forEach(( element: any) => {
@@ -8510,7 +8510,7 @@ export class DisponiblesComponent implements OnInit {
         });  
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -8528,8 +8528,10 @@ export class DisponiblesComponent implements OnInit {
       this.DisponibleForm.get('IdProducto')?.reset();
     } else if (Datos === 'NumeroDocumento') {
       this.DisponibleForm.get('Nombre')?.reset();
+      this.DisponibleForm.get('IdTipoDocumento')?.reset();
     } else if (Datos === 'Nombre') {
       this.DisponibleForm.get('NumeroDocumento')?.reset();
+      this.DisponibleForm.get('IdTipoDocumento')?.reset();
     } else if (Datos === 'BuscarDocumento') {
       this.DisponibleForm.get('BuscarNombre')?.reset();
     } else if (Datos === 'BuscarNombre') {
@@ -8656,15 +8658,15 @@ export class DisponiblesComponent implements OnInit {
     if (operacion == null)
       operacion = this.DisponibleOperacionFrom.get('Codigo')?.value;
 
-    this.loading = true;
+    this.loading.show();
     if (this.DisponibleOperacionFrom.get('Codigo')?.value === '10' || this.DisponibleOperacionFrom.get('Codigo')?.value === '40') {
       this.generalesService.GuardarlogProductos(objet,operacion,this.DisponibleForm.get('IdCuenta')?.value, this.DisponibleForm.get('LngTercero')?.value, 38).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           console.log(result);
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         });
@@ -8672,12 +8674,12 @@ export class DisponiblesComponent implements OnInit {
       this.generalesService.GuardarlogTerminoDisponibles(objet, operacion,
       this.DisponibleForm.get('IdCuenta')?.value, this.DisponibleForm.get('LngTercero')?.value, 38,this.DisponibleForm.value.IdObseCambioEstado).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           console.log(result);
           this.ObtenerHistorial();
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         });
@@ -9019,25 +9021,25 @@ export class DisponiblesComponent implements OnInit {
         html.data = url;
         html.name = "Reglamento Ahorro Programado Vivienda";
         html.type = "application/pdf";
-        this.loading = false;
+        this.loading.hide();
       },
       error => {
         const errorMessage = <any>error;
         this.notif.error('Error', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
         console.error(errorMessage);
-        this.loading = false;
+        this.loading.hide();
       });
   }
 
   generarReglamentoVivienda() {
-    this.loading = true;
+    this.loading.show();
     const linkSource = `data:application/pdf;base64,${this.linkPdf}`;
     const downloadLink = document.createElement("a");
     let fileName: string ="REGLAMENTO AHORRO PROGRAMADO PARA VIVIENDA.pdf";
     downloadLink.href = linkSource;
     downloadLink.download = fileName;
     downloadLink.click();
-    this.loading = false;
+    this.loading.hide();
   }
   GenerarReglamentoTarjeta() {
     $("#ImpresionReglamentoTarjetaDisponible").show();
@@ -9066,26 +9068,26 @@ export class DisponiblesComponent implements OnInit {
         html.data = url;
         html.name = "Reglamento Tarjeta Débito";
         html.type = "application/pdf";
-        this.loading = false;
+        this.loading.hide();
         this.DisponibleOperacionFrom.get('Codigo')?.reset();
       },
       error => {
         const errorMessage = <any>error;
         this.notif.error('Error', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
         console.error(errorMessage);
-        this.loading = false;
+        this.loading.hide();
       });
   }
 
   generarReglamentoTarjeta() {
-    this.loading = true;
+    this.loading.show();
     const linkSource = `data:application/pdf;base64,${this.linkPdf}`;
     const downloadLink = document.createElement("a");
     let fileName: string ="REGLAMENTO TARJETA DEBITO.pdf";
     downloadLink.href = linkSource;
     downloadLink.download = fileName;
     downloadLink.click();
-    this.loading = false;
+    this.loading.hide();
   }
 
   mostrarBotonPDF(historial: any): boolean {

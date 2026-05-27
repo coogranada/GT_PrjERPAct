@@ -7,11 +7,11 @@ import { TerminoAhorrosService } from '../../../../../Services/Productos/termino
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { GeneralesService } from '../../../../../Services/Productos/generales.service';
 import { DatePipe, formatDate } from '@angular/common';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import swal from 'sweetalert2';
 import { AlertService } from '../../../../../Services/Alert/alert.service';
 import { DisponiblesService } from '../../../../../Services/Productos/disponible.service';
 import { ConfiguracionNotificacion } from '../../../../../../environments/config.noticaciones';
+import { LoadingService } from '../../../../../Services/shared/loading.service';
 declare var $: any;
 
 @Component({
@@ -30,7 +30,8 @@ export class TerminoComponent implements OnInit {
     private operacionesService: OperacionesService,
     private TerminoService: TerminoAhorrosService,
     private generalesService: GeneralesService,
-    private DisponiblesServices: DisponiblesService) {
+    private DisponiblesServices: DisponiblesService,
+    private loading: LoadingService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -57,11 +58,6 @@ export class TerminoComponent implements OnInit {
   @ViewChild('tab6', { static: true }) private tab6!: ElementRef;
   @ViewChild('tab7', { static: true }) private tab7!: ElementRef;
   @ViewChild('ModalBuscarPersonasCesionTitulo', { static: true }) private ModalBuscarPersonasCesionTitulo!: ElementRef;
-
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
-
   public TerminoOperacionForm!: FormGroup;
   public TerminoForm!: FormGroup;
   public AsesorForm!: FormGroup;
@@ -304,18 +300,18 @@ export class TerminoComponent implements OnInit {
       'IdPerfil': this.dataUser.idPerfilUsuario,
       'IdModulo': '19'
     };
-    this.loading = true;
+    this.loading.show();
     this.operacionesService.ObtenerEstadosXOperacionesData(arrayExample).subscribe(
       result => {
         setTimeout(() => {
           this.resultEstados = result;
           this.TerminoForm.get('IdEstado')?.setValue("0");
           $('#SelectEstadoCuenta').focus().select();
-          this.loading = false;
+          this.loading.hide();
         }, 1000);
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notif.onDanger('Error', errorMessage);
         console.log(errorMessage);
@@ -798,7 +794,7 @@ export class TerminoComponent implements OnInit {
         if (this.TerminoForm.get('IdEstado')?.value !== 25 && this.TerminoForm.get('IdEstado')?.value !== 10 && this.TerminoForm.get('IdEstado')?.value !== 45) {
           if (this.itemsSend.Telefono == null) {
             this.notif.onWarning('Advertencia', 'Debe actualizar teléfono de contacto.');
-            this.loading = false;
+            this.loading.hide();
             return;
           }
           
@@ -1414,18 +1410,18 @@ export class TerminoComponent implements OnInit {
       && this.TerminoForm.get('IdDigito')?.value !== ''
       && this.TerminoForm.get('IdDigito')?.value !== undefined
       && this.TerminoForm.get('IdDigito')?.value !== null) {
-      this.loading = true;
+      this.loading.show();
       this.TerminoService.BuscarCuenta(this.TerminoForm.value).subscribe(
         result => {
           if (result !== null) {
-            this.loading = false;
+            this.loading.hide();
             this.bloquearBuscar = false;
             this.bloquearCuenta = false;
             this.ResetValorSeleccionado(1);
             this.MapearDatosCuenta(result);
             resolve('');
           } else {
-            this.loading = false;
+            this.loading.hide();
             this.notif.onWarning('Advertencia', 'La cuenta no existe.');
             this.TerminoForm.get('IdOficina')?.reset();
             this.TerminoForm.get('IdProductoCuenta')?.reset();
@@ -1437,7 +1433,7 @@ export class TerminoComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           this.notif.onWarning('Advertencia', 'La cuenta no es valida.');
           this.TerminoForm.get('IdOficina')?.reset();
           this.TerminoForm.get('IdProductoCuenta')?.reset();
@@ -1468,6 +1464,8 @@ export class TerminoComponent implements OnInit {
         this.TerminoForm.get('IdUsuarioSGF')?.setValue(this.dataUser.IdUsuarioSGF);
         this.TerminoForm.get('LngTercero')?.setValue(this.dataObjet.LngTercero);
         this.TerminoForm.get('TipoDocumento')?.setValue(this.dataObjet.TipoDocumento);
+        this.TerminoForm.get('IdTipoDocumento')?.setValue(this.dataObjet.IdTipoDocumento);
+
         this.TerminoForm.get('NumeroDocumento')?.setValue(this.dataObjet.NumeroDocumento);
         this.TerminoForm.get('Nombre')?.setValue(this.dataObjet.PrimerApellido + ' ' + this.dataObjet.SegundoApellido +
           ' ' + this.dataObjet.PrimerNombre + ' ' + this.dataObjet.SegundoNombre);
@@ -1715,6 +1713,9 @@ export class TerminoComponent implements OnInit {
         this.TerminoForm.get('IdUsuarioSGF')?.setValue(this.dataUser.IdUsuarioSGF);
         this.TerminoForm.get('LngTercero')?.setValue(this.dataObjet.LngTercero);
         this.TerminoForm.get('TipoDocumento')?.setValue(this.dataObjet.TipoDocumento);
+        this.TerminoForm.get('IdTipoDocumento')?.setValue(this.dataObjet.IdTipoDocumento);
+        this.TerminoForm.get('IdTipoDocumento')?.setValue(this.dataObjet.IdTipoDocumento);
+        
         this.TerminoForm.get('NumeroDocumento')?.setValue(this.dataObjet.NumeroDocumento);
         this.TerminoForm.get('Nombre')?.setValue(this.dataObjet.PrimerApellido + ' ' + this.dataObjet.SegundoApellido +
           ' ' + this.dataObjet.PrimerNombre + ' ' + this.dataObjet.SegundoNombre);
@@ -1975,10 +1976,10 @@ export class TerminoComponent implements OnInit {
     }
   }
   BuscarCuentaPorAsociado() {
-    this.loading = true;
+    this.loading.show();
     this.TerminoService.BuscarPorAsociado(this.TerminoForm.value).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.TerminoForm.get('BuscarNombre')?.reset();
         if (result.length > 0) {
           this.dataAsociados = result;
@@ -2089,7 +2090,7 @@ export class TerminoComponent implements OnInit {
       
     this.TerminoService.BuscarAsesor(this.TerminoForm.get('IdAsesor')?.value, '*').subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         if (result.length === 1) {
           this.MapearDatosAsesor(result);
           this.Asociado();
@@ -2118,10 +2119,10 @@ export class TerminoComponent implements OnInit {
         }
         if (this.TerminoForm.get('DocumentoAsesor')?.value !== this.TerminoForm.get('NumeroDocumento')?.value) {
 
-          this.loading = true;
+          this.loading.show();
           this.TerminoService.BuscarAsociado(Documento, Nombre).subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               if (result.length === 0) {
                 this.notif.onWarning('Advertencia', 'No se encontró el asociado.');
                 this.TerminoForm.get('NumeroDocumento')?.reset();
@@ -2208,7 +2209,7 @@ export class TerminoComponent implements OnInit {
               }
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               this.notif.onDanger('Error', errorMessage);
               console.log(errorMessage);
@@ -2239,10 +2240,10 @@ export class TerminoComponent implements OnInit {
           && this.TerminoForm.get('Nombre')?.value !== '') {
           Nombre = this.TerminoForm.get('Nombre')?.value;
         }     
-          this.loading = true;
+          this.loading.show();
           this.TerminoService.BuscarAsociado(Documento, Nombre).subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               if (result.length === 0) {
                 this.notif.onWarning('Advertencia', 'No se encontró el asociado.');
                 this.TerminoForm.get('NumeroDocumento')?.reset();
@@ -2320,7 +2321,7 @@ export class TerminoComponent implements OnInit {
               }
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               this.notif.onDanger('Error', errorMessage);
               console.log(errorMessage);
@@ -2344,10 +2345,10 @@ export class TerminoComponent implements OnInit {
     ) {
       Nombre = this.TerminoForm.get('Nombre')?.value;
     }
-    this.loading = true;
+    this.loading.show();
     this.TerminoService.BuscarAsociado(Documento, Nombre).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.dataObjet = undefined;
         if (result.length === 0) {
           this.notif.onWarning('Advertencia', 'No se encontró el asociado.');
@@ -2438,7 +2439,7 @@ export class TerminoComponent implements OnInit {
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notif.onDanger('Error', errorMessage);
         console.log(errorMessage);
@@ -2486,10 +2487,10 @@ export class TerminoComponent implements OnInit {
         && this.TerminoForm.get('DescripcionProducto')?.value !== '') {
         Descripcion = this.TerminoForm.get('DescripcionProducto')?.value;
       }
-      this.loading = true;
+      this.loading.show();
       this.TerminoService.BuscarProducto(IdProducto, Descripcion).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           if (result.length === 0) {
             this.notif.onWarning('Advertencia', 'No se encontró el producto.');
             this.TerminoForm.get('IdProducto')?.reset();
@@ -2580,7 +2581,7 @@ export class TerminoComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           this.notif.onDanger('Error', errorMessage);
           console.log(errorMessage);
@@ -2599,10 +2600,10 @@ export class TerminoComponent implements OnInit {
         && this.TerminoForm.get('DescripcionProducto')?.value !== '') {
         Descripcion = this.TerminoForm.get('DescripcionProducto')?.value;
       }
-      this.loading = true;
+      this.loading.show();
       this.TerminoService.BuscarProducto(IdProducto, Descripcion).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           if (result.length === 0) {
             this.notif.onWarning('Advertencia', 'No se encontró el producto.');
             this.TerminoForm.get('IdProducto')?.reset();
@@ -2641,7 +2642,7 @@ export class TerminoComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           this.notif.onDanger('Error', errorMessage);
           console.log(errorMessage);
@@ -2708,10 +2709,10 @@ export class TerminoComponent implements OnInit {
       || this.AsesorForm.get('strNombre')?.value !== null
       && this.AsesorForm.get('strNombre')?.value !== undefined
       && this.AsesorForm.get('strNombre')?.value !== '') {
-      this.loading = true;
+      this.loading.show();
       this.TerminoService.BuscarAsesorExterno(this.AsesorForm.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           // this.bloquearbtnActalizar = true;
           if (result.length === 1) {
             this.AsesorForm.get('strCodigo')?.setValue(result[0].intIdAsesor);
@@ -2732,7 +2733,7 @@ export class TerminoComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           this.notif.onWarning('Advertencia', 'El valor ingresado no tiene el formato correcto');
         }
       );
@@ -2917,7 +2918,7 @@ export class TerminoComponent implements OnInit {
                   }
                   this.TerminoService.GuardarTermino(this.TerminoForm.value).subscribe(
                     result => {
-                      this.loading = false;
+                      this.loading.hide();
                       this.TerminoForm.get('IdCuenta')?.setValue(result.IdCuenta);
                       this.TerminoForm.get('FechaApertura')?.setValue(result.FechaApertura);
                       this.bloquearDatosTitulares = false;
@@ -2964,7 +2965,7 @@ export class TerminoComponent implements OnInit {
                       $('#negociacion').addClass('active');
                     },
                     error => {
-                      this.loading = false;
+                      this.loading.hide();
                       const errorMessage = <any>error;
                       this.notif.onDanger('Error', errorMessage);
                       console.log(errorMessage);
@@ -3005,7 +3006,7 @@ export class TerminoComponent implements OnInit {
                       }
                       this.TerminoService.GuardarTermino(this.TerminoForm.value).subscribe(
                         result => {
-                          this.loading = false;
+                          this.loading.hide();
                           this.TerminoForm.get('IdCuenta')?.setValue(result.IdCuenta);
                           this.TerminoForm.get('FechaApertura')?.setValue(result.FechaApertura);
                           this.bloquearDatosTitulares = false;
@@ -3052,7 +3053,7 @@ export class TerminoComponent implements OnInit {
                           $('#negociacion').addClass('active');
                         },
                         error => {
-                          this.loading = false;
+                          this.loading.hide();
                           const errorMessage = <any>error;
                           this.notif.onDanger('Error', errorMessage);
                           console.log(errorMessage);
@@ -3088,7 +3089,7 @@ export class TerminoComponent implements OnInit {
                     }
                     this.TerminoService.GuardarTermino(this.TerminoForm.value).subscribe(
                       result => {
-                        this.loading = false;
+                        this.loading.hide();
                         this.TerminoForm.get('IdCuenta')?.setValue(result.IdCuenta);
                         this.TerminoForm.get('FechaApertura')?.setValue(result.FechaApertura);
                         this.bloquearDatosTitulares = false;
@@ -3135,7 +3136,7 @@ export class TerminoComponent implements OnInit {
                         $('#negociacion').addClass('active');
                       },
                       error => {
-                        this.loading = false;
+                        this.loading.hide();
                         const errorMessage = <any>error;
                         this.notif.onDanger('Error', errorMessage);
                         console.log(errorMessage);
@@ -3178,7 +3179,7 @@ export class TerminoComponent implements OnInit {
 
                         this.TerminoService.GuardarTermino(this.TerminoForm.value).subscribe(
                           result => {
-                            this.loading = false;
+                            this.loading.hide();
                             this.TerminoForm.get('IdCuenta')?.setValue(result.IdCuenta);
                             this.TerminoForm.get('FechaApertura')?.setValue(result.FechaApertura);
                             this.bloquearDatosTitulares = false;
@@ -3225,7 +3226,7 @@ export class TerminoComponent implements OnInit {
                             $('#negociacion').addClass('active');
                           },
                           error => {
-                            this.loading = false;
+                            this.loading.hide();
                             const errorMessage = <any>error;
                             this.notif.onDanger('Error', errorMessage);
                             console.log(errorMessage);
@@ -3262,7 +3263,7 @@ export class TerminoComponent implements OnInit {
 
                   this.TerminoService.GuardarTermino(this.TerminoForm.value).subscribe(
                     result => {
-                      this.loading = false;
+                      this.loading.hide();
                       this.TerminoForm.get('IdCuenta')?.setValue(result.IdCuenta);
                       this.TerminoForm.get('FechaApertura')?.setValue(result.FechaApertura);
                       this.bloquearDatosTitulares = false;
@@ -3309,7 +3310,7 @@ export class TerminoComponent implements OnInit {
                       $('#negociacion').addClass('active');
                     },
                     error => {
-                      this.loading = false;
+                      this.loading.hide();
                       const errorMessage = <any>error;
                       this.notif.onDanger('Error', errorMessage);
                       console.log(errorMessage);
@@ -3352,7 +3353,7 @@ export class TerminoComponent implements OnInit {
 
                       this.TerminoService.GuardarTermino(this.TerminoForm.value).subscribe(
                         result => {
-                          this.loading = false;
+                          this.loading.hide();
                           this.TerminoForm.get('IdCuenta')?.setValue(result.IdCuenta);
                           this.TerminoForm.get('FechaApertura')?.setValue(result.FechaApertura);
                           this.bloquearDatosTitulares = false;
@@ -3399,7 +3400,7 @@ export class TerminoComponent implements OnInit {
                           $('#negociacion').addClass('active');
                         },
                         error => {
-                          this.loading = false;
+                          this.loading.hide();
                           const errorMessage = <any>error;
                           this.notif.onDanger('Error', errorMessage);
                           console.log(errorMessage);
@@ -3527,7 +3528,7 @@ export class TerminoComponent implements OnInit {
                 }
                 this.TerminoService.GuardarTermino(this.TerminoForm.value).subscribe(
                   result => {
-                    this.loading = false;
+                    this.loading.hide();
                     this.TerminoForm.get('IdCuenta')?.setValue(result.IdCuenta);
                     this.TerminoForm.get('FechaApertura')?.setValue(result.FechaApertura);
                     this.bloquearDatosTitulares = false;
@@ -3574,7 +3575,7 @@ export class TerminoComponent implements OnInit {
                     $('#negociacion').addClass('active');
                   },
                   error => {
-                    this.loading = false;
+                    this.loading.hide();
                     const errorMessage = <any>error;
                     this.notif.onDanger('Error', errorMessage);
                     console.log(errorMessage);
@@ -3615,7 +3616,7 @@ export class TerminoComponent implements OnInit {
                     }
                     this.TerminoService.GuardarTermino(this.TerminoForm.value).subscribe(
                       result => {
-                        this.loading = false;
+                        this.loading.hide();
                         this.TerminoForm.get('IdCuenta')?.setValue(result.IdCuenta);
                         this.TerminoForm.get('FechaApertura')?.setValue(result.FechaApertura);
                         this.bloquearDatosTitulares = false;
@@ -3662,7 +3663,7 @@ export class TerminoComponent implements OnInit {
                         $('#negociacion').addClass('active');
                       },
                       error => {
-                        this.loading = false;
+                        this.loading.hide();
                         const errorMessage = <any>error;
                         this.notif.onDanger('Error', errorMessage);
                         console.log(errorMessage);
@@ -3698,7 +3699,7 @@ export class TerminoComponent implements OnInit {
                   }
                   this.TerminoService.GuardarTermino(this.TerminoForm.value).subscribe(
                     result => {
-                      this.loading = false;
+                      this.loading.hide();
                       this.TerminoForm.get('IdCuenta')?.setValue(result.IdCuenta);
                       this.TerminoForm.get('FechaApertura')?.setValue(result.FechaApertura);
                       this.bloquearDatosTitulares = false;
@@ -3745,7 +3746,7 @@ export class TerminoComponent implements OnInit {
                       $('#negociacion').addClass('active');
                     },
                     error => {
-                      this.loading = false;
+                      this.loading.hide();
                       const errorMessage = <any>error;
                       this.notif.onDanger('Error', errorMessage);
                       console.log(errorMessage);
@@ -3786,7 +3787,7 @@ export class TerminoComponent implements OnInit {
                       }
                       this.TerminoService.GuardarTermino(this.TerminoForm.value).subscribe(
                         result => {
-                          this.loading = false;
+                          this.loading.hide();
                           this.TerminoForm.get('IdCuenta')?.setValue(result.IdCuenta);
                           this.TerminoForm.get('FechaApertura')?.setValue(result.FechaApertura);
                           this.bloquearDatosTitulares = false;
@@ -3833,7 +3834,7 @@ export class TerminoComponent implements OnInit {
                           $('#negociacion').addClass('active');
                         },
                         error => {
-                          this.loading = false;
+                          this.loading.hide();
                           const errorMessage = <any>error;
                           this.notif.onDanger('Error', errorMessage);
                           console.log(errorMessage);
@@ -3868,7 +3869,7 @@ export class TerminoComponent implements OnInit {
                 }
                 this.TerminoService.GuardarTermino(this.TerminoForm.value).subscribe(
                   result => {
-                    this.loading = false;
+                    this.loading.hide();
                     this.TerminoForm.get('IdCuenta')?.setValue(result.IdCuenta);
                     this.TerminoForm.get('FechaApertura')?.setValue(result.FechaApertura);
                     this.bloquearDatosTitulares = false;
@@ -3915,7 +3916,7 @@ export class TerminoComponent implements OnInit {
                     $('#negociacion').addClass('active');
                   },
                   error => {
-                    this.loading = false;
+                    this.loading.hide();
                     const errorMessage = <any>error;
                     this.notif.onDanger('Error', errorMessage);
                     console.log(errorMessage);
@@ -3956,7 +3957,7 @@ export class TerminoComponent implements OnInit {
                     }
                     this.TerminoService.GuardarTermino(this.TerminoForm.value).subscribe(
                       result => {
-                        this.loading = false;
+                        this.loading.hide();
                         this.TerminoForm.get('IdCuenta')?.setValue(result.IdCuenta);
                         this.TerminoForm.get('FechaApertura')?.setValue(result.FechaApertura);
                         this.bloquearDatosTitulares = false;
@@ -4003,7 +4004,7 @@ export class TerminoComponent implements OnInit {
                         $('#negociacion').addClass('active');
                       },
                       error => {
-                        this.loading = false;
+                        this.loading.hide();
                         const errorMessage = <any>error;
                         this.notif.onDanger('Error', errorMessage);
                         console.log(errorMessage);
@@ -4056,16 +4057,16 @@ export class TerminoComponent implements OnInit {
     if (objet == null)
       objet = this.TerminoForm.value;
 
-    this.loading = true;
+    this.loading.show();
     if (this.TerminoOperacionForm.get('Codigo')?.value === '10') {
       this.generalesService.GuardarlogProductos(objet, this.TerminoOperacionForm.get('Codigo')?.value,
         this.TerminoForm.get('IdCuenta')?.value, this.TerminoForm.get('LngTercero')?.value, 19).subscribe(
           result => {
-            this.loading = false;
+            this.loading.hide();
             console.log(result);
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             this.notif.onDanger('Error', errorMessage);
             console.log(errorMessage);
@@ -4075,10 +4076,10 @@ export class TerminoComponent implements OnInit {
       this.generalesService.GuardarlogTerminoDisponibles(objet, this.TerminoOperacionForm.get('Codigo')?.value,
         this.TerminoForm.get('IdCuenta')?.value, this.TerminoForm.get('LngTercero')?.value, 19, this.TerminoForm.value.IdObseCambioEstado).subscribe(
           result => {
-            this.loading = false;
+            this.loading.hide();
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             this.notif.onDanger('Error', errorMessage);
             console.log(errorMessage);
@@ -4162,13 +4163,13 @@ export class TerminoComponent implements OnInit {
 
       this.TerminoService.ObtenerTasaConPuntos(this.TerminoForm.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           this.MapearTasa(result);
           this.bloquearActualizar = true;
           this.bloquearbtnCalcular = false;
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
@@ -4179,7 +4180,7 @@ export class TerminoComponent implements OnInit {
     }
   }
   ObtenerTasaNominal() {
-    this.loading = true;
+    this.loading.show();
     const objectComplet = this.AdicionarPuntosFrom.value.AdicionarPunto;
     const puntosAdd = this.AdicionarPuntosFrom.value.AdicionarPunto.PuntosAdicionales;
     this.TerminoForm.get('AdicionarP')?.setValue(puntosAdd);
@@ -4188,13 +4189,13 @@ export class TerminoComponent implements OnInit {
     this.TerminoForm.get('TasaEfectiva')?.setValue(Number(TasaEfectivaSin));
     this.TerminoService.ObtenerTasaNominal(this.TerminoForm.value).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.AdicionarPuntosFrom.get('AdicionarPunto')?.setValue(objectComplet);
         const numberNominal = this.returnFormatNum((result.TasaNominal));
         this.TerminoForm.get('TasaNominal')?.setValue(numberNominal + "%");
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -4204,14 +4205,14 @@ export class TerminoComponent implements OnInit {
     if (this.TerminoForm.get('NumeroDocumento')?.value !== null
       && this.TerminoForm.get('NumeroDocumento')?.value !== undefined
       && this.TerminoForm.get('NumeroDocumento')?.value !== '') {
-      this.loading = true;
+      this.loading.show();
       this.TerminoService.BuscarCuentaDisponible(this.TerminoForm.value).subscribe(
         result => {
           if (result.length >= 1) {
             this.resultCuentaNegociacion = result;
             setTimeout(() => {
               this.TerminoForm.get('IdCuentaDestino')?.setValue(this.dataObjet?.IdCuentaDestino);
-              this.loading = false;
+              this.loading.hide();
             });
           } else if (result.Mensaje !== undefined || result.Mensaje !== null) {
             this.notif.onWarning('Advertencia', result.Mensaje);
@@ -4222,7 +4223,7 @@ export class TerminoComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           this.notif.onDanger('Error', errorMessage);
           console.log(errorMessage);
@@ -4260,7 +4261,7 @@ export class TerminoComponent implements OnInit {
     html.data = "";
     html.name = "";
     html.type = "";
-    this.loading = true;
+    this.loading.show();
     this.TerminoService.CuentaDestinoPDF(payload).subscribe(result => {
       pdfinBase64 = result.FileStream._buffer;
       byteArray = new Uint8Array(atob(pdfinBase64).split("").map((char) => char.charCodeAt(0)));
@@ -4270,10 +4271,10 @@ export class TerminoComponent implements OnInit {
       html.data = url;
       html.name = "FORMATO MODIFICACIÓN PRODUCTO TÉRMINO CUENTA DESTINO";
       html.type = "application/pdf";
-      this.loading = false;
+      this.loading.hide();
     },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
       });
@@ -4308,10 +4309,10 @@ export class TerminoComponent implements OnInit {
       && this.TerminoForm.get('IdFrecuenciaPago')?.value !== -1) { 
 
       this.TerminoForm.get('Plazo')?.setValue(this.TerminoForm.get('PlazoDias')?.value);
-      this.loading = true;
+      this.loading.show();
       this.TerminoService.ObtenerTasa(this.TerminoForm.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           if (result.TasaEfectiva === 0) {
             this.notif.onWarning('Advertencia', 'Tasa no valida.');
             this.TerminoForm.get('TasaEfectiva')?.reset();
@@ -4322,7 +4323,7 @@ export class TerminoComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           this.notif.onDanger('Error', errorMessage);
           console.log(errorMessage);
@@ -4516,7 +4517,7 @@ export class TerminoComponent implements OnInit {
     if (this.InteresForm.get('InteresBruto')?.value !== ''
       && this.InteresForm.get('InteresBruto')?.value !== undefined
       && this.InteresForm.get('InteresBruto')?.value !== null) {
-      this.loading = true;     
+      this.loading.show();     
 
       this.TerminoForm.get('TasaEfectiva')?.setValue(this.datoTasaEfectiva);
       this.TerminoForm.get('TasaNominal')?.setValue(this.datoTasaNominal);
@@ -4524,7 +4525,7 @@ export class TerminoComponent implements OnInit {
 
       this.TerminoService.ObtenerRetencion(this.TerminoForm.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           const retencion = result;
           this.InteresForm.get('Retencion')?.setValue(retencion)
           const plazo = this.TerminoForm.get('PlazoDias')?.value
@@ -4558,7 +4559,7 @@ export class TerminoComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
@@ -4623,11 +4624,11 @@ export class TerminoComponent implements OnInit {
       ) {
         if (this.TerminoForm.get('DocumentoBeneficiario')?.value.trim() !== this.TerminoForm.get('NumeroDocumento')?.value) {
           if (this.dataObjetBeneficiarios.length == 0) {
-            this.loading = true;
+            this.loading.show();
             this.TerminoService.BuscarBeneficiario(this.TerminoForm.get('DocumentoBeneficiario')?.value).subscribe(
               result => {
                 console.log("beneficiaroio usuar", result)
-                this.loading = false;
+                this.loading.hide();
                 if (result != null && result.Mensaje != null && (result.Mensaje == "Gerencia de desarrollo." || result.Mensaje == "Oficial de cumplimiento.")) {
                   this.AlertVetado(result.Mensaje);
                   this.TerminoForm.get('DocumentoBeneficiario')?.reset();
@@ -4694,7 +4695,7 @@ export class TerminoComponent implements OnInit {
                 }
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 this.notif.onWarning('Alerta', 'Número de documento incorrecto.');
               }
             );
@@ -4730,7 +4731,7 @@ export class TerminoComponent implements OnInit {
                     this.TerminoForm.addControl("SegundoNombre", SegundoNombre);
                     this.TerminoForm.addControl("PrimerApellido", PrimerApellido);
                     this.TerminoForm.addControl("SegundoApellido", SegundoApellido);
-                    this.loading = false;
+                    this.loading.hide();
                     this.notif.onWarning('Advertencia', 'No se encontró el beneficiario. Ingrese los datos para crearlo.');
                     this.bloquearNombreBenf = null;
                     this.bloquearDocumentoBenf = true;
@@ -4874,14 +4875,14 @@ export class TerminoComponent implements OnInit {
     }
   }
   Parentesco() {
-    this.loading = true;
+    this.loading.show();
     this.TerminoService.Parentesco().subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.resultParentesco = result;
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notif.onDanger('Error', errorMessage);
         console.log(errorMessage);
@@ -5010,7 +5011,7 @@ export class TerminoComponent implements OnInit {
       this.notif.onWarning('Advertencia', 'La suma del porcentaje debe ser igual al 100%.');
       return;
     }
-    this.loading = true;
+    this.loading.show();
     this.btnActualizarBeneficiarios = false;
     this.BenificiariosElminar.forEach(( x: any) => this.dataObjetBeneficiarios.push(x));
     this.TerminoService.ActualizarBeneficiarios(this.dataObjetBeneficiarios).subscribe(( x: any) => {
@@ -5043,11 +5044,11 @@ export class TerminoComponent implements OnInit {
         this.BuscarPorCuenta();
       }, 300);
       this.TerminoForm.get('DocumentoBeneficiario')?.disable();
-      this.loading = false;
+      this.loading.hide();
       this.BenificiariosElminar = [];
       this.dataObjetBeneficiarios = [];
     }, err => {
-      this.loading = false;
+      this.loading.hide();
       const errorMessage = <any>err;
       this.notif.onDanger('Error', errorMessage);
       console.log(errorMessage);
@@ -5118,10 +5119,10 @@ export class TerminoComponent implements OnInit {
       && this.TerminoForm.get('DocumentoTitular')?.value !== '') {
       if (this.TerminoForm.get('NumeroDocumento')?.value !== this.TerminoForm.get('DocumentoTitular')?.value.trim()) {
         if (this.dataObjetTitulares.length == 0) {
-          this.loading = true;
+          this.loading.show();
           this.TerminoService.BuscarTitular(this.TerminoForm.get('DocumentoTitular')?.value, '*').subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               if (result === null) {
                 this.notif.onWarning('Alerta', 'No se encontró el registro.');
                 this.TerminoForm.get('DocumentoTitular')?.reset();
@@ -5172,7 +5173,7 @@ export class TerminoComponent implements OnInit {
               }
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               this.notif.onWarning('Alerta', 'Número de documento incorrecto.');
             }
           );
@@ -5189,10 +5190,10 @@ export class TerminoComponent implements OnInit {
             this.TerminoForm.get('DocumentoTitular')?.reset();
             this.clearTitulares();
           } else {
-            this.loading = true;
+            this.loading.show();
             this.TerminoService.BuscarTitular(this.TerminoForm.get('DocumentoTitular')?.value, '*').subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 if (result === null) {
                   this.notif.onWarning('Alerta', 'No se encontró el registro.');
                   this.TerminoForm.get('DocumentoTitular')?.reset();
@@ -5243,7 +5244,7 @@ export class TerminoComponent implements OnInit {
                 }
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 this.notif.onDanger('Error', errorMessage);
                 console.log(errorMessage);
@@ -5274,10 +5275,10 @@ export class TerminoComponent implements OnInit {
       && this.TerminoForm.get('NombreTitular')?.value !== undefined
       && this.TerminoForm.get('NombreTitular')?.value !== '') {
       if (this.dataObjetTitulares.length == 0) {
-        this.loading = true;
+        this.loading.show();
         this.TerminoService.BuscarTitular('*', this.TerminoForm.get('NombreTitular')?.value).subscribe(
           result => {
-            this.loading = false;
+            this.loading.hide();
             if (result.length === 0) {
               this.notif.onWarning('Alerta', 'No se encontró el registro.');
             } else if (result.length > 1) {
@@ -5338,7 +5339,7 @@ export class TerminoComponent implements OnInit {
             }
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             this.notif.onDanger('Error', errorMessage);
             console.log(errorMessage);
@@ -5346,10 +5347,10 @@ export class TerminoComponent implements OnInit {
         );
 
       } else {
-        this.loading = true;
+        this.loading.show();
         this.TerminoService.BuscarTitular('*', this.TerminoForm.get('NombreTitular')?.value).subscribe(
           result => {
-            this.loading = false;
+            this.loading.hide();
             if (result.length === 0) {
               this.notif.onWarning('Alerta', 'No se encontró el registro.');
             } else if (result.length > 1) {
@@ -5423,7 +5424,7 @@ export class TerminoComponent implements OnInit {
             }
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             this.notif.onDanger('Error', errorMessage);
             console.log(errorMessage);
@@ -5434,10 +5435,10 @@ export class TerminoComponent implements OnInit {
   }
   BuscarTitularModal(Documento = '*') {
     const Nombre = '*';
-    this.loading = true;
+    this.loading.show();
     this.TerminoService.BuscarTitular(Documento, Nombre).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         if (result === null) {
           this.notif.onWarning('Alerta', 'No se encontró el registro.');
         } else if (result.IdRelacion === 10) {
@@ -5502,7 +5503,7 @@ export class TerminoComponent implements OnInit {
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notif.onDanger('Error', errorMessage);
         console.log(errorMessage);
@@ -5712,11 +5713,11 @@ export class TerminoComponent implements OnInit {
     }
   }
   ObtenerPersonasByDocumento(doc: string) {
-    this.loading = true;
+    this.loading.show();
     this.personaCesionTitylo = null;
     this.personaCesionTityloBool = false;
     this.TerminoService.ObtenerPersonasByDocumentoCesionTermino(doc).subscribe(( x: any) => {
-      this.loading = false;
+      this.loading.hide();
       if (x == null) {
         this.TerminoForm.controls["CesionTituloDocumento"].setValue("");
         this.notif.onWarning('Advertencia', 'No se encuentra el documento.');
@@ -5737,7 +5738,7 @@ export class TerminoComponent implements OnInit {
         }
       }
     }, err => {
-      this.loading = false;
+      this.loading.hide();
       this.notif.onWarning('Alerta', 'Número de documento incorrecto.');
 
     })
@@ -5746,12 +5747,12 @@ export class TerminoComponent implements OnInit {
   personaCesionTitylo: any = null;
   personaCesionTityloBool: boolean = false;
   ObtenerPersonasByNombre(nombre: string) {
-    this.loading = true;
+    this.loading.show();
     this.personaCesionTitylo = null;
     this.personaCesionTityloBool = false;
     this.ListPersonaCesionTitylo = [];
     this.TerminoService.ObtenerPersonasByNombreCesionTermino(nombre).subscribe(( x: any) => {
-      this.loading = false;
+      this.loading.hide();
 
       if (x != null && x.Mensaje != null && (x.Mensaje == "Gerencia de desarrollo." || x.Mensaje == "Oficial de cumplimiento."))
         this.AlertVetado(x.Mensaje);
@@ -5768,7 +5769,7 @@ export class TerminoComponent implements OnInit {
         this.ModalBuscarPersonasCesionTitulo.nativeElement.click();
       }
     }, err => {
-      this.loading = false;
+      this.loading.hide();
       const errorMessage = <any>err;
       this.notif.onDanger('Error', errorMessage);
       console.log(errorMessage);
@@ -5798,9 +5799,9 @@ export class TerminoComponent implements OnInit {
       this.BuscarVetado(persona.NumeroDocumento, persona, 1);
   }
   BuscarVetado(doc: string, persona: any, tipo: number) {
-    this.loading = true;
+    this.loading.show();
     this.TerminoService.BuscarVetadoTermino(doc).subscribe(( x: any) => {
-      this.loading = false;
+      this.loading.hide();
       if (x != true && x.Mensaje != null && (x.Mensaje == "Gerencia de desarrollo." || x.Mensaje == "Oficial de cumplimiento."))
         this.AlertVetado(x.Mensaje);
       else if (x == true && tipo == 1) {
@@ -5817,7 +5818,7 @@ export class TerminoComponent implements OnInit {
         }
       }
     }, err => {
-      this.loading = false;
+      this.loading.hide();
       const errorMessage = <any>err;
       this.notif.onDanger('Error', errorMessage);
       console.log(errorMessage);
@@ -5882,7 +5883,7 @@ export class TerminoComponent implements OnInit {
   }
   disableCesionTitulo: boolean = false;
   ActualizarCesionTitulo() {
-    this.loading = true;
+    this.loading.show();
     this.btnActualizarCesionTitulo = false;
     this.CesionTituloEliminar.forEach(( x: any) => this.dataObjetCesionTitulo.push(x));
     this.TerminoService.ActualizarCesionTituloTermino(this.dataObjetCesionTitulo).subscribe(( x: any) => {
@@ -5916,11 +5917,11 @@ export class TerminoComponent implements OnInit {
         this.ObtenerHistorial();
         this.BuscarPorCuenta();
       }, 300);
-      this.loading = false;
+      this.loading.hide();
       this.CesionTituloEliminar = [];
       this.dataObjetCesionTitulo = [];
     }, err => {
-      this.loading = false;
+      this.loading.hide();
       const errorMessage = <any>err;
       this.notif.onDanger('Error', errorMessage);
       console.log(errorMessage);
@@ -5968,9 +5969,9 @@ export class TerminoComponent implements OnInit {
      return "$" + strResult.substring(1,strResult.length);
     }
   serviceReciprocidadSetDateList() {
-    this.loading = true;
+    this.loading.show();
     this.TerminoService.ReciprocidadSetDateList(this.ListBajarAHistorial).subscribe(( x: any) => {
-      this.loading = false;
+      this.loading.hide();
       this.notif.onSuccess('Exitoso', 'El corregir reciprocidad se realizó correctamente.');
       this.TerminoService.GuardarObservacion({
         "IdObseCambioEstado": 0,
@@ -5999,24 +6000,24 @@ export class TerminoComponent implements OnInit {
             this.Guardarlog(reciprocidadBajarHistorialLog);
             setTimeout(() => {
               this.TerminoForm.get('IdObseCambioEstado')?.reset();
-              this.loading = false;
+              this.loading.hide();
             }, 1000);
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             this.notif.onDanger('Error', errorMessage);
             console.log(errorMessage);
           }
         );
       }, error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notif.onDanger('Error', errorMessage);
         console.error(errorMessage);
       })
     }, err => {
-      this.loading = false;
+      this.loading.hide();
       const errorMessage = <any>err;
       this.notif.onDanger('Error', errorMessage);
       console.log(errorMessage);
@@ -6047,7 +6048,7 @@ export class TerminoComponent implements OnInit {
     }
   }
   serviceEliminarReciprocidad() {
-    this.loading = true;
+    this.loading.show();
     this.TerminoService.EliminarCuentaReciprocidadTermino(this.ListEliminaReciprocidad).subscribe(( x: any) => {
       this.notif.onSuccess('Exitoso', 'El corregir reciprocidad se realizó correctamente.');
       this.TerminoService.GuardarObservacion({
@@ -6077,7 +6078,7 @@ export class TerminoComponent implements OnInit {
             this.Guardarlog(reciprocidadEliminadoLog);
             setTimeout(() => {
               this.TerminoForm.get('IdObseCambioEstado')?.reset();
-              this.loading = false;
+              this.loading.hide();
             }, 1000);
           },
           error => {
@@ -6087,13 +6088,13 @@ export class TerminoComponent implements OnInit {
           }
         );
       }, error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notif.onDanger('Error', errorMessage);
         console.error(errorMessage);
       })
     }, error => {
-      this.loading = false;
+      this.loading.hide();
       const errorMessage = <any>error;
       this.notif.onDanger('Error', errorMessage);
       console.error(errorMessage);
@@ -6456,17 +6457,17 @@ export class TerminoComponent implements OnInit {
     this.ReciprocidadCreditoFrom.controls["IdCuenta"].setValue("0");
     this.ReciprocidadCreditoFrom.controls["nombre"].setValue("");
     if (this.TerminoForm.get('NumeroDocumento')?.value != null && this.TerminoForm.get('NumeroDocumento')?.value != "") {
-      this.loading = true;
+      this.loading.show();
       this.TerminoService.ObtenerCuentaReciprocidadTermino(Number(this.ReciprocidadCreditoFrom.get('documento')?.value)).subscribe(( x: any) => {
         this.ListCuentaReciprocidad = x;
         if (this.ListCuentaReciprocidad.length > 0)
           this.ReciprocidadCreditoFrom.controls["nombre"].setValue(this.ListCuentaReciprocidad[0].PrimerApellido + " " + this.ListCuentaReciprocidad[0].SegundoApellido + " " + this.ListCuentaReciprocidad[0].PrimerNombre + " " + this.ListCuentaReciprocidad[0].SegundoNombre);
         else
           this.notif.onWarning('Advertencia', 'registro no existe.');
-        this.loading = false;
+        this.loading.hide();
       }, err => {
         this.ListCuentaReciprocidad = [];
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>err;
         this.notif.onDanger('Error', errorMessage);
       });
@@ -6486,12 +6487,12 @@ export class TerminoComponent implements OnInit {
         x.$id = coun;
         coun = coun + 1;
       });
-      this.loading = true;
+      this.loading.show();
       this.TerminoService.GuardarCuentaReciprocidadTermino(this.ListCuentaAgregadasReciprocidad).subscribe(( x: any) => {
         this.isShowResiprocidadCredito = false;
-        this.loading = false;
+        this.loading.hide();
       }, err => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>err;
         this.notif.onDanger('Error', errorMessage);
       });
@@ -6568,8 +6569,10 @@ export class TerminoComponent implements OnInit {
       this.TerminoForm.get('IdProducto')?.reset();
     } else if (Datos === 'NumeroDocumento') {
       this.TerminoForm.get('Nombre')?.reset();
+      this.TerminoForm.get('IdTipoDocumento')?.reset();
     } else if (Datos === 'Nombre') {
       this.TerminoForm.get('NumeroDocumento')?.reset();
+      this.TerminoForm.get('IdTipoDocumento')?.reset();
     }
   }
   LimpiarCamposTab(Datos : string) {
@@ -6701,7 +6704,7 @@ export class TerminoComponent implements OnInit {
     html.data = "";
     html.name = "";
     html.type = "";
-    this.loading = true;
+    this.loading.show();
     this.itemsSend.Ciudad = this.itemsSend.Ciudad == null ? "" : this.itemsSend.Ciudad;
     this.itemsSend.Telefono = this.itemsSend.Telefono == null ? "" : this.itemsSend.Telefono;
     this.TerminoService.GenerarImpresionTermino(this.itemsSend).subscribe(
@@ -6714,10 +6717,10 @@ export class TerminoComponent implements OnInit {
         html.data = url;
         html.name = "IMPRESIÓN TÍTULO";
         html.type = "application/pdf";
-        this.loading = false;
+        this.loading.hide();
       },
       error => {
-        this.loading = false
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notif.onDanger('Error', errorMessage);
         console.log(errorMessage);
@@ -6816,10 +6819,10 @@ export class TerminoComponent implements OnInit {
 
             this.datoAsesorExterno = +this.AsesorForm.get('strCodigo')?.value;
 
-            this.loading = true;
+            this.loading.show();
             this.TerminoService.getEditarAsesorExterno(this.TerminoForm.value).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 this.bloquear = false;
                 this.bloquearNroTitulo = false;
                 this.bloquearNegociacion = false;
@@ -6839,7 +6842,7 @@ export class TerminoComponent implements OnInit {
                 this.TerminoOperacionForm.get('Codigo')?.reset();
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 this.notif.onDanger('Error', errorMessage);
                 console.log(errorMessage);
@@ -6860,10 +6863,10 @@ export class TerminoComponent implements OnInit {
 
             this.datoAsesorExterno = +this.AsesorForm.get('strCodigo')?.value;
 
-            this.loading = true;
+            this.loading.show();
             this.TerminoService.getEditarAsesorExterno(this.TerminoForm.value).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 this.bloquear = false;
                 this.bloquearNegociacion = false;
                 this.bloquearAsociado = false;
@@ -6882,7 +6885,7 @@ export class TerminoComponent implements OnInit {
                 this.TerminoOperacionForm.get('Codigo')?.reset();
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 this.notif.onDanger('Error', errorMessage);
                 console.log(errorMessage);
@@ -6902,7 +6905,7 @@ export class TerminoComponent implements OnInit {
           && this.TerminoForm.get('NroTitulo')?.value !== undefined
           && this.TerminoForm.get('NroTitulo')?.value !== '') {
           if (this.TerminoForm.get('NroTitulo')?.value !== this.TerminoForm.get('NroTituloAnterior')?.value) {
-            this.loading = true;
+            this.loading.show();
             console.log({ "1 ": this.TerminoForm.get('NroTitulo')?.value, "2 ": Number(this.TerminoForm.get('IdCuenta')?.value), "3": this.TerminoForm.get('NroTituloAnterior')?.value })
             let tempNumTituloLog: any = {
               NumeroTituloAnterior: Number(this.TerminoForm.get('NroTituloAnterior')?.value),
@@ -6910,7 +6913,7 @@ export class TerminoComponent implements OnInit {
             }
             this.TerminoService.ActualizarNroTitulo(Number(this.TerminoForm.get('NroTitulo')?.value), Number(this.TerminoForm.get('IdCuenta')?.value), this.TerminoForm.get('NroTituloAnterior')?.value == null ? 0 : this.TerminoForm.get('NroTituloAnterior')?.value).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 this.bloquear = false;
                 this.btnActualizar = true;
                 this.bloquearNroTitulo = false;
@@ -6937,7 +6940,7 @@ export class TerminoComponent implements OnInit {
                 this.BuscarPorCuenta();
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 this.notif.onDanger('Error', errorMessage);
                 console.log(errorMessage);
@@ -6974,10 +6977,10 @@ export class TerminoComponent implements OnInit {
               var TasaAdicionalSin = this.TerminoForm.get('TasaAdicional')?.value;
               TasaAdicionalSin = TasaAdicionalSin.replace("%", "");
               this.TerminoForm.get('TasaAdicional')?.setValue(TasaAdicionalSin);
-              this.loading = true;
+              this.loading.show();
               this.TerminoService.getActualizarTermino(this.TerminoForm.value).subscribe(
                 result => {
-                  this.loading = false;
+                  this.loading.hide();
                   this.bloquear = false;
                   this.bloquearNroTitulo = false;
                   this.bloquearNegociacion = false;
@@ -7013,7 +7016,7 @@ export class TerminoComponent implements OnInit {
                   this.ImpresionCuentaDestinoPDF();
                 },
                 error => {
-                  this.loading = false;
+                  this.loading.hide();
                   const errorMessage = <any>error;
                   this.notif.onDanger('Error', errorMessage);
                   console.log(errorMessage);
@@ -7041,10 +7044,10 @@ export class TerminoComponent implements OnInit {
             TasaAdicionalSin = TasaAdicionalSin.replace("%", "");
             this.TerminoForm.get('TasaAdicional')?.setValue(TasaAdicionalSin);
 
-            this.loading = true;
+            this.loading.show();
             this.TerminoService.getActualizarTermino(this.TerminoForm.value).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 this.bloquear = false;
                 this.bloquearNroTitulo = false;
                 this.bloquearNegociacion = false;
@@ -7082,7 +7085,7 @@ export class TerminoComponent implements OnInit {
                 this.ImpresionCuentaDestinoPDF();
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 this.notif.onDanger('Error', errorMessage);
                 console.log(errorMessage);
@@ -7099,10 +7102,10 @@ export class TerminoComponent implements OnInit {
           if (this.dataObjetTitulares.length !== 0) {
             this.dataTitulareslist = this.dataObjetTitulares;
             this.TerminoForm.get('Titulares')?.setValue(this.dataTitulareslist);
-            this.loading = true;
+            this.loading.show();
             this.TerminoService.ActualizarTitularesTermino(this.TerminoForm.value).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 this.clearTitulares();
                 this.BloquearAutorizadoTituloInput(1);
                 this.bloquear = false;
@@ -7158,7 +7161,7 @@ export class TerminoComponent implements OnInit {
                 this.TerminoOperacionForm.get('Codigo')?.reset();
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 console.log(errorMessage);
               }
@@ -7172,10 +7175,10 @@ export class TerminoComponent implements OnInit {
             if (this.dataObjetTitulares.length != 0) {
               this.dataTitulareslist = this.dataObjetTitulares;
               this.TerminoForm.get('Titulares')?.setValue(this.dataTitulareslist);
-              this.loading = true;
+              this.loading.show();
               this.TerminoService.ActualizarTitularesTermino(this.TerminoForm.value).subscribe(
                 result => {
-                  this.loading = false;
+                  this.loading.hide();
                   this.clearTitulares();
                   this.BloquearAutorizadoTituloInput(1);
                   this.bloquear = false;
@@ -7231,7 +7234,7 @@ export class TerminoComponent implements OnInit {
                   this.TerminoOperacionForm.get('Codigo')?.reset();
                 },
                 error => {
-                  this.loading = false;
+                  this.loading.hide();
                   const errorMessage = <any>error;
                   console.log(errorMessage);
                 }
@@ -7244,10 +7247,10 @@ export class TerminoComponent implements OnInit {
           else { 
             this.dataTitulareslist = this.dataObjetTitulares
             this.TerminoForm.get('Titulares')?.setValue(this.dataTitulareslist);
-            this.loading = true;
+            this.loading.show();
             this.TerminoService.ActualizarTitularesTermino(this.TerminoForm.value).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 this.clearTitulares();
                 this.BloquearAutorizadoTituloInput(1);
                 this.bloquear = false;
@@ -7303,7 +7306,7 @@ export class TerminoComponent implements OnInit {
                 this.TerminoOperacionForm.get('Codigo')?.reset();
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 console.log(errorMessage);
               }
@@ -7327,7 +7330,7 @@ export class TerminoComponent implements OnInit {
           TasaEfectivaSin = TasaEfectivaSin.replace("%", "");
           // if (TasaEfectivaSin === Suma) {
 
-            this.loading = true;
+            this.loading.show();
 
             var TasaEfectivaSin = this.TerminoForm.get('TasaEfectiva')?.value;
             TasaEfectivaSin = TasaEfectivaSin.replace("%", "");
@@ -7356,7 +7359,7 @@ export class TerminoComponent implements OnInit {
           
             this.TerminoService.ActualizarTasaTermino(this.TerminoForm.value).subscribe(
               async result => {
-                this.loading = false;
+                this.loading.hide();
                 this.bloquear = false;
                 this.bloquearNroTitulo = false;
                 this.bloquearNegociacion = false;
@@ -7391,7 +7394,7 @@ export class TerminoComponent implements OnInit {
                 this.ObtenerHistorial();
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 console.log(errorMessage);
               }
@@ -7442,7 +7445,7 @@ export class TerminoComponent implements OnInit {
     html.data = "";
     html.name = "";
     html.type = "";
-    this.loading = true;
+    this.loading.show();
     this.TerminoService.GenerarPDFCapitalizacionTermino(payload).subscribe(result => {
       pdfinBase64 = result.FileStream._buffer;
       byteArray = new Uint8Array(atob(pdfinBase64).split("").map((char) => char.charCodeAt(0)));
@@ -7452,7 +7455,7 @@ export class TerminoComponent implements OnInit {
       html.data = url;
       html.name = "IMPRESIÓN FORMATO CAPITALIZACIÓN";
       html.type = "application/pdf";
-      this.loading = false;
+      this.loading.hide();
 
       delete payload.CuentaDesembolso;
       delete payload.TipoPdf;
@@ -7471,7 +7474,7 @@ export class TerminoComponent implements OnInit {
 
     },
       error => {
-        this.loading = false
+        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
       });
@@ -7823,7 +7826,7 @@ export class TerminoComponent implements OnInit {
     let byteArray = null;
     let newBolb = null;
     let url = null;
-    this.loading = true;
+    this.loading.show();
     html.data = "";
     html.name = "";
     html.type = "";
@@ -7838,10 +7841,10 @@ export class TerminoComponent implements OnInit {
         html.data = url;
         html.name ="Impresion";
         html.type =  "application/pdf";
-        this.loading = false;
+        this.loading.hide();
       },
       error => {
-        this.loading = false
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notif.onDanger('Error', errorMessage);
         console.log(errorMessage);

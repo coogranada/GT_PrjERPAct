@@ -1,6 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators, ValidatorFn, AbstractControl, FormBuilder } from '@angular/forms';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { GeneralesService } from '../../../../Services/Productos/generales.service';
 import { ParametrosTransmisionData } from '../../../../Models/Configuracion/Transmision-archivos.model';
 import { ToastrService } from 'ngx-toastr';
@@ -9,6 +8,7 @@ import swal from 'sweetalert2';
 import { ParametrosArchivosData } from '../../../../Models/Configuracion/Generacion-archivos.model';
 import { GeneracionArchivosService } from '../../../../Services/Configuracion/Generacion-archivos.service';
 import { TransmisionArchivosService } from '../../../../Services/Configuracion/Transmision-archivos.service';
+import { LoadingService } from '../../../../Services/shared/loading.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 
@@ -21,7 +21,7 @@ const ColorSecundario = 'rgb(13,165,80,0.7)';
 })
 export class GeneracionArchivosComponent implements OnInit {
 
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
+
   @ViewChild('ModalMasivoC', { static: true }) private modalMasivoC!: ElementRef;
   @ViewChild('diaInicial1') diaInicial1!: ElementRef;
   @ViewChild('diaFinal1') diaFinal1!: ElementRef;
@@ -33,8 +33,6 @@ export class GeneracionArchivosComponent implements OnInit {
   initialValues: any = {};
   parametrosArchivos: ParametrosArchivosData[] = [];
   parametrosArchivosF: ParametrosArchivosData[] = [];
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
   public parametrosArchivosForm!: FormGroup;
@@ -50,7 +48,8 @@ export class GeneracionArchivosComponent implements OnInit {
     private fb: FormBuilder,
     private TransmisionArchivosServices: TransmisionArchivosService,
     private GeneracionArchivosServices: GeneracionArchivosService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private loading: LoadingService
   ) { }
 
 
@@ -184,14 +183,14 @@ export class GeneracionArchivosComponent implements OnInit {
       } else {
         this.parametrosArchivosForm.get('estado')?.patchValue(0);
       }
-      this.loading = true;
+      this.loading.show();
       this.GeneracionArchivosServices.GuardarParametrosArchivos(this.parametrosArchivosForm.value).subscribe(
         (response) => {
           this.toastr.success('Exitoso', 'Configuración guardada correctamente.', ConfiguracionNotificacion.configRightTop);
           this.obtenerConfiguracion();
           this.limpiarFormulario();
           this.IrAbajo();
-          this.loading = false;
+          this.loading.hide();
           //Actualizar hora ejecución
           swal.fire({
             title: '<strong> ¿Desea que se programen nuevamente las tareas? </strong>',
@@ -212,7 +211,7 @@ export class GeneracionArchivosComponent implements OnInit {
         },
         (error) => {
           this.toastr.warning('Advertencia', error.message, ConfiguracionNotificacion.configRightTop);
-          this.loading = false;
+          this.loading.hide();
         }
       );
     }
@@ -233,7 +232,7 @@ export class GeneracionArchivosComponent implements OnInit {
         this.parametrosArchivosForm.get('estado')?.patchValue(0);
       }
 
-      this.loading = true;
+      this.loading.show();
       if (result) {
         this.GeneracionArchivosServices.ActualizarParametrosArchivos(this.parametrosArchivosForm.value).subscribe(
           (response) => {
@@ -241,11 +240,11 @@ export class GeneracionArchivosComponent implements OnInit {
             this.obtenerConfiguracion();
             this.limpiarFormulario();
             this.IrAbajo();
-            this.loading = false;
+            this.loading.hide();
           },
           (error) => {
             this.toastr.error('Error', 'Error al actualizar los datos ' + error, ConfiguracionNotificacion.configRightTop);
-            this.loading = false;
+            this.loading.hide();
           }
         );
         //Actualizar hora ejecución
@@ -263,14 +262,14 @@ export class GeneracionArchivosComponent implements OnInit {
         }).then((results) => {
           if (results.value) {
             this.actualizarHoraEjecucion();
-            this.loading = false;
+            this.loading.hide();
           }
         });
       } else {
         this.limpiarFormulario();
         this.IrAbajo();
         this.toastr.warning('Advertencia', 'No se han detectado cambios para actualizar.', ConfiguracionNotificacion.configRightTop);
-        this.loading = false;
+        this.loading.hide();
       }
     }
   }
@@ -319,16 +318,16 @@ export class GeneracionArchivosComponent implements OnInit {
   }
 
   reintentarEjecucion(parametro1: string) {
-    this.loading = true;
+    this.loading.show();
     const parametro: ParametrosArchivosData = JSON.parse(parametro1);
     try {
       this.GeneracionArchivosServices.GenerarArchivos(parametro).subscribe(
         (response) => {
-          this.loading = false;
+          this.loading.hide();
           this.toastr.success('Exitoso', 'Ejecución realizada, valide el resultado del proceso.', ConfiguracionNotificacion.configRightTop);
         });
     } catch (error) {
-      this.loading = false;
+      this.loading.hide();
       this.toastr.error('Error', 'Error ejecutando la tarea: '+error, ConfiguracionNotificacion.configRightTop);
     }
 
@@ -511,7 +510,7 @@ export class GeneracionArchivosComponent implements OnInit {
 
   actualizarMasivo1() {
     try {
-      this.loading = true;
+      this.loading.show();
       this.GeneracionArchivosServices.ActualizarParametrosArchivosMasivo(this.parametrosArchivosF)
         .subscribe(
           (response) => {
@@ -520,7 +519,7 @@ export class GeneracionArchivosComponent implements OnInit {
             this.cerrarModalMasivo();
             this.allSelected = false;
             this.vbleBtnactualizarMasivo = false;
-            this.loading = false;
+            this.loading.hide();
           });
 
       swal.fire({
@@ -537,13 +536,13 @@ export class GeneracionArchivosComponent implements OnInit {
       }).then((results) => {
         if (results.value) {
           this.actualizarHoraEjecucion();
-          this.loading = false;
+          this.loading.hide();
         }
       });
-      this.loading = false;
+      this.loading.hide();
     } catch (error) {
       this.toastr.success('Error', 'Error al actualizar registros masivamente: ' + error, ConfiguracionNotificacion.configRightTop);
-      this.loading = false;
+      this.loading.hide();
     }
   }
 

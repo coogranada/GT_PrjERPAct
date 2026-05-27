@@ -7,8 +7,8 @@ import {
   Validators
 } from "@angular/forms";
 import moment from 'moment';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from "ngx-loading";
 import swal from "sweetalert2";
+import { LoadingService } from "../../../../../Services/shared/loading.service";
 
 const ColorPrimario = "rgb(13,165,80)";
 const ColorSecundario = "rgb(13,165,80,0.7)";
@@ -20,8 +20,9 @@ const ColorSecundario = "rgb(13,165,80,0.7)";
   standalone : false
 })
 export class SegurosTabComponent implements OnInit {
-  constructor(private MiListaProductosService: MiListaProductosService) {}
-  @ViewChild("ngxLoading", { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
+  constructor(private MiListaProductosService: MiListaProductosService,
+    private loading: LoadingService
+  ) {}
 
 
   public terceroId: any;
@@ -33,7 +34,6 @@ export class SegurosTabComponent implements OnInit {
   public ActivaCargando: Boolean = false;
   public noRegistros: Boolean = false;
   public HabilitaMensate: any = 0;
-  public loading = false;
   public validaMail: Boolean = false;
   public MostrarDetalleSeguro: Boolean = false;
   public MostrarExtractoSeguro: Boolean = false;
@@ -535,7 +535,7 @@ export class SegurosTabComponent implements OnInit {
   }
 
   SendEmailSeguros() {
-    this.loading = true;
+    this.loading.show();
     this.ValidaPlantillaMail();
     setTimeout(() => {
       this.SendMailSeguros();
@@ -543,7 +543,7 @@ export class SegurosTabComponent implements OnInit {
   }
 
   SendEmailSegurosVhi() {
-    this.loading = true;
+    this.loading.show();
     this.ValidaPlantillaMail();
     setTimeout(() => {
       this.SendMailSegurosVhi();
@@ -552,10 +552,10 @@ export class SegurosTabComponent implements OnInit {
 
   SendMailSeguros() {
     if (this.validaMail == true) {
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.sendMailProductos(this.ExtactoSeguro.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           this.Response(result);
 
           var Tercero = Number($("#TerceroPrincipal").val());
@@ -580,7 +580,7 @@ export class SegurosTabComponent implements OnInit {
 
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           swal.fire({
             title: "Error",
             text: "",
@@ -595,7 +595,7 @@ export class SegurosTabComponent implements OnInit {
         }
       )
     } else {
-      this.loading = false;
+      this.loading.hide();
       swal.fire({
         title: "Info",
         text: "",
@@ -613,10 +613,10 @@ export class SegurosTabComponent implements OnInit {
 
   SendMailSegurosVhi() {
     if (this.validaMail == true) {
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.sendMailProductos(this.ExtactoSeguroVhi.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           this.Response(result);
 
           var Tercero = Number($("#TerceroPrincipal").val());
@@ -639,7 +639,7 @@ export class SegurosTabComponent implements OnInit {
           // #endregion
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           swal.fire({
             title: "Error",
             text: "",
@@ -654,7 +654,7 @@ export class SegurosTabComponent implements OnInit {
         }
       )
     } else {
-      this.loading = false;
+      this.loading.hide();
       swal.fire({
         title: "Info",
         text: "",
@@ -1052,7 +1052,7 @@ export class SegurosTabComponent implements OnInit {
       this.validaMesFinal = false;
       this.SelectErroneo = false;
 
-      this.loading = true;
+      this.loading.show();
       let datas = localStorage.getItem("Data");
       var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
       this.ExtactoSeguro.get("yearInit")?.setValue(yearInicial);
@@ -1066,7 +1066,7 @@ export class SegurosTabComponent implements OnInit {
         this.ExtactoSeguro.value
       ).subscribe(
         (result) => {
-          this.loading = false;
+          this.loading.hide();
           this.MapearEncabezadoTabla(result, 1);
 
           //#region Guarda log
@@ -1089,7 +1089,7 @@ export class SegurosTabComponent implements OnInit {
           // #endregion
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
@@ -1140,7 +1140,7 @@ export class SegurosTabComponent implements OnInit {
       this.validaMesFinal = false;
       this.SelectErroneo = false;
 
-      this.loading = true;
+      this.loading.show();
       let datas = localStorage.getItem("Data");
       var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
       this.ExtactoSeguroVhi.get("yearInit")?.setValue(yearInicial);
@@ -1154,7 +1154,7 @@ export class SegurosTabComponent implements OnInit {
         this.ExtactoSeguroVhi.value
       ).subscribe(
         (result) => {
-          this.loading = false;
+          this.loading.hide();
           this.MapearEncabezadoTabla(result, 3);
           //#region Guarda log
           let datas = localStorage.getItem("Data");
@@ -1176,7 +1176,7 @@ export class SegurosTabComponent implements OnInit {
           // #endregion
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
@@ -1251,12 +1251,12 @@ export class SegurosTabComponent implements OnInit {
       ) {
         this.ExtactoSeguro.get("FechaInicio")?.setValue(FechaInicio);
         this.ExtactoSeguro.get("FechaFin")?.setValue(FechaFin);
-        this.loading = true;
+        this.loading.show();
         this.MiListaProductosService.GetExtractoSeguros(
           this.ExtactoSeguro.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             this.MapearEncabezadoTabla(result, 1);
 
             //#region Guarda log
@@ -1279,7 +1279,7 @@ export class SegurosTabComponent implements OnInit {
             // #endregion
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -1290,12 +1290,12 @@ export class SegurosTabComponent implements OnInit {
       ) {
         this.ExtactoSeguro.get("FechaInicio")?.setValue(FechaInicio);
         this.ExtactoSeguro.get("FechaFin")?.setValue(FechaFin);
-        this.loading = true;
+        this.loading.show();
         this.MiListaProductosService.getMovimientoSeguro(
           this.ExtactoSeguro.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             this.MapearEncabezadoTablaMov(result, 2);
             //#region Guarda log
             let datas = localStorage.getItem("Data");
@@ -1318,7 +1318,7 @@ export class SegurosTabComponent implements OnInit {
             // #endregion
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -1396,12 +1396,12 @@ export class SegurosTabComponent implements OnInit {
       ) {
         this.ExtactoSeguroVhi.get("FechaInicio")?.setValue(FechaInicio);
         this.ExtactoSeguroVhi.get("FechaFin")?.setValue(FechaFin);
-        this.loading = true;
+        this.loading.show();
         this.MiListaProductosService.GetExtractoSeguros(
           this.ExtactoSeguroVhi.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             this.MapearEncabezadoTabla(result, 3);
             //#region Guarda log
             let datas = localStorage.getItem("Data");
@@ -1423,7 +1423,7 @@ export class SegurosTabComponent implements OnInit {
             // #endregion
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -1434,12 +1434,12 @@ export class SegurosTabComponent implements OnInit {
       ) {
         this.ExtactoSeguroVhi.get("FechaInicio")?.setValue(FechaInicio);
         this.ExtactoSeguroVhi.get("FechaFin")?.setValue(FechaFin);
-        this.loading = true;
+        this.loading.show();
         this.MiListaProductosService.getMovimientoSeguro(
           this.ExtactoSeguroVhi.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             this.MapearEncabezadoTablaMov(result, 3);
             //#region Guarda log
             let datas = localStorage.getItem("Data");
@@ -1461,7 +1461,7 @@ export class SegurosTabComponent implements OnInit {
             // #endregion
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -1487,14 +1487,14 @@ export class SegurosTabComponent implements OnInit {
     } else {
       this.HabilitaMensate = 0;
       this.NoRegistros = 1;
-      this.loading = true;
+      this.loading.show();
       if (tipoPdf == 1) {
         $("#extractosSegVida").show();
         this.MiListaProductosService.GenerarPdfExtractoSeguros(
           this.ExtactoSeguro.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             const pdfinBase64 = result.FileStream._buffer;
             const byteArray = new Uint8Array(
               atob(pdfinBase64)
@@ -1508,7 +1508,7 @@ export class SegurosTabComponent implements OnInit {
             document.getElementById("extractosSegVida")?.setAttribute("name", "movimiento");
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -1519,7 +1519,7 @@ export class SegurosTabComponent implements OnInit {
           this.ExtactoSeguro.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             const pdfinBase64 = result.FileStream._buffer;
             const byteArray = new Uint8Array(
               atob(pdfinBase64)
@@ -1533,7 +1533,7 @@ export class SegurosTabComponent implements OnInit {
             document.getElementById("extractosSegExequiales")?.setAttribute("name", "movimiento");
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -1544,7 +1544,7 @@ export class SegurosTabComponent implements OnInit {
           this.ExtactoSeguroVhi.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             const pdfinBase64 = result.FileStream._buffer;
             const byteArray = new Uint8Array(
               atob(pdfinBase64)
@@ -1558,7 +1558,7 @@ export class SegurosTabComponent implements OnInit {
             document.getElementById("ExtractosSegVehiculo")?.setAttribute("name", "movimiento");
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -1569,7 +1569,7 @@ export class SegurosTabComponent implements OnInit {
           this.ExtactoSeguro.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             const pdfinBase64 = result.FileStream._buffer;
             const byteArray = new Uint8Array(
               atob(pdfinBase64)
@@ -1583,7 +1583,7 @@ export class SegurosTabComponent implements OnInit {
             document.getElementById("extractosConvenio")?.setAttribute("name", "movimiento");
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -1616,14 +1616,14 @@ export class SegurosTabComponent implements OnInit {
       $(".rangoFechas").show();
       this.HabilitaMensate = 1;
     } else {
-      this.loading = true;
+      this.loading.show();
       if (pdfTipo == 1) {
         $("#movimientosSegExequial").show();
         this.MiListaProductosService.GenerarPDFMovimientoSeguro(
           this.ExtactoSeguro.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             const pdfinBase64 = result.FileStream._buffer;
             const byteArray = new Uint8Array(
               atob(pdfinBase64)
@@ -1637,7 +1637,7 @@ export class SegurosTabComponent implements OnInit {
             document.getElementById("movimientosSegExequial")?.setAttribute("name", "movimiento");
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -1648,7 +1648,7 @@ export class SegurosTabComponent implements OnInit {
           this.ExtactoSeguro.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             const pdfinBase64 = result.FileStream._buffer;
             const byteArray = new Uint8Array(
               atob(pdfinBase64)
@@ -1662,7 +1662,7 @@ export class SegurosTabComponent implements OnInit {
             document.getElementById("movimientosSegVida")?.setAttribute("name", "movimiento");
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -1673,7 +1673,7 @@ export class SegurosTabComponent implements OnInit {
           this.ExtactoSeguroVhi.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             const pdfinBase64 = result.FileStream._buffer;
             const byteArray = new Uint8Array(
               atob(pdfinBase64)
@@ -1687,7 +1687,7 @@ export class SegurosTabComponent implements OnInit {
             document.getElementById("movimientosSegVehiculo")?.setAttribute("name", "movimiento");
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -1698,7 +1698,7 @@ export class SegurosTabComponent implements OnInit {
           this.ExtactoSeguro.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             const pdfinBase64 = result.FileStream._buffer;
             const byteArray = new Uint8Array(
               atob(pdfinBase64)
@@ -1712,7 +1712,7 @@ export class SegurosTabComponent implements OnInit {
             document.getElementById("movimientosConvenio")?.setAttribute("name", "movimiento");
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -1733,7 +1733,7 @@ export class SegurosTabComponent implements OnInit {
   generarPDFSeguroExequial() {
     if (this.SelectionExtOrMov == 1) {
       //pdf movimiento
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarPDFMovimientoSeguro(
         this.ExtactoSeguro.value
       ).subscribe(
@@ -1744,18 +1744,18 @@ export class SegurosTabComponent implements OnInit {
           const fileName = "Movimiento_" + this.NumeroDocumento + ".pdf";
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
-          this.loading = false;
+          this.loading.hide();
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
     }
     if (this.SelectionExtOrMov == 2) {
       //pdf Extracto
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarPdfExtractoSeguros(
         this.ExtactoSeguro.value
       ).subscribe(
@@ -1766,11 +1766,11 @@ export class SegurosTabComponent implements OnInit {
           const fileName = "Extracto_" + this.NumeroDocumento + ".pdf";
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
-          this.loading = false;
+          this.loading.hide();
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
@@ -1781,7 +1781,7 @@ export class SegurosTabComponent implements OnInit {
     var sel1 = Number($(".SelectedMovimiento_Seguro").val());
     if (sel1 == 1) {
       //pdf movimiento
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarPDFMovimientoSeguro(
         this.ExtactoSeguro.value
       ).subscribe(
@@ -1792,11 +1792,11 @@ export class SegurosTabComponent implements OnInit {
           const fileName = "Movimiento_" + this.NumeroDocumento + ".pdf";
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
-          this.loading = false;
+          this.loading.hide();
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
@@ -1804,7 +1804,7 @@ export class SegurosTabComponent implements OnInit {
     var sel = Number($(".SelectedExtracto_Seguro").val());
     if (sel == 2) {
       //pdf Extracto
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarPdfExtractoSeguros(
         this.ExtactoSeguro.value
       ).subscribe(
@@ -1815,11 +1815,11 @@ export class SegurosTabComponent implements OnInit {
           const fileName = "Extracto_" + this.NumeroDocumento + ".pdf";
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
-          this.loading = false;
+          this.loading.hide();
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
@@ -1829,7 +1829,7 @@ export class SegurosTabComponent implements OnInit {
     var sel1 = Number($(".SelectedMovimiento_Seguro").val());
     if (sel1 == 1) {
       //pdf movimiento
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarPDFMovimientoSeguro(
         this.ExtactoSeguroVhi.value
       ).subscribe(
@@ -1840,11 +1840,11 @@ export class SegurosTabComponent implements OnInit {
           const fileName = "Movimiento_" + this.NumeroDocumento + ".pdf";
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
-          this.loading = false;
+          this.loading.hide();
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
@@ -1852,7 +1852,7 @@ export class SegurosTabComponent implements OnInit {
     var sel = Number($(".SelectedExtracto_Seguro").val());
     if (sel == 2) {
       //pdf Extracto
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarPdfExtractoSeguros(
         this.ExtactoSeguroVhi.value
       ).subscribe(
@@ -1863,11 +1863,11 @@ export class SegurosTabComponent implements OnInit {
           const fileName = "Extracto_" + this.NumeroDocumento + ".pdf";
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
-          this.loading = false;
+          this.loading.hide();
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
@@ -1877,7 +1877,7 @@ export class SegurosTabComponent implements OnInit {
   generarEXCELSeguroExequial(): void {
     var sel1 = Number($(".SelectedMovimiento_Seguro").val());
     if (sel1 == 1) {
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarXlsMovimientosSeguro(
         this.ExtactoSeguro.value
       ).subscribe(
@@ -1888,18 +1888,18 @@ export class SegurosTabComponent implements OnInit {
           const fileName = "Movimiento_" + this.NumeroDocumento + ".xlsx";
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
-          this.loading = false;
+          this.loading.hide();
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
     }
     var sel = Number($(".SelectedExtracto_Seguro").val());
     if (sel == 2) {
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarXlsxSeguro(
         this.ExtactoSeguro.value
       ).subscribe(
@@ -1910,11 +1910,11 @@ export class SegurosTabComponent implements OnInit {
           const fileName = "Extracto_" + this.NumeroDocumento + ".xlsx";
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
-          this.loading = false;
+          this.loading.hide();
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
@@ -1925,7 +1925,7 @@ export class SegurosTabComponent implements OnInit {
   generarEXCELSeguroVhi(): void {
     var sel1 = Number($(".SelectedMovimiento_Seguro").val());
     if (sel1 == 1) {
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarXlsMovimientosSeguro(
         this.ExtactoSeguroVhi.value
       ).subscribe(
@@ -1936,18 +1936,18 @@ export class SegurosTabComponent implements OnInit {
           const fileName = "Movimiento_" + this.NumeroDocumento + ".xlsx";
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
-          this.loading = false;
+          this.loading.hide();
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
     }
     var sel = Number($(".SelectedExtracto_Seguro").val());
     if (sel == 2) {
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarXlsxSeguro(
         this.ExtactoSeguroVhi.value
       ).subscribe(
@@ -1958,11 +1958,11 @@ export class SegurosTabComponent implements OnInit {
           const fileName = "Extracto_" + this.NumeroDocumento + ".xlsx";
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
-          this.loading = false;
+          this.loading.hide();
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );

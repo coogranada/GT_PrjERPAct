@@ -177,11 +177,9 @@ export class AccionistasComponent implements OnInit {
           this.notif.onWarning('Advertencia', 'El accionista ya fue ingresado.');
           this.accionistasFrom.get('NumeroDocumento').reset();
           } else {
-            // this.loading = true;
             const documentoConsulta = this.accionistasFrom.get('NumeroDocumento').value;
             this.clientesGetListService.GetAccionistas(documentoConsulta).subscribe(
               result => {
-                // this.loading = false;
                 if (result === null) {
                   this.notif.onWarning('Advertencia', 'No se encontró accionista.');
                   this.bloquearFormAcc = null;
@@ -214,7 +212,7 @@ export class AccionistasComponent implements OnInit {
                 }
               },
               error => {
-                // this.loading = false;
+                // this.loading.hide();
                 const errorMessage = <any>error;
                 console.log(errorMessage);
               }

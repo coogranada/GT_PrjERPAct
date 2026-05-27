@@ -3,11 +3,11 @@ import { formatDate, DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormControl, Validators, FormGroup, ValidatorFn, AbstractControl } from '@angular/forms';
 import swal from 'sweetalert2';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { ModuleValidationService } from '../../../../../Services/Enviroment/moduleValidation.service';
 import { fromEvent } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AlertService } from '../../../../../Services/Alert/alert.service';
+import { LoadingService } from '../../../../../Services/shared/loading.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -43,16 +43,11 @@ export class GMFDisponibleComponent implements OnInit {
   disableBusquedaForm : boolean | null = null;
   dataGMFReport: any;
   public DatosUsuario: any;
-
-
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
   private CodModulo = 23;
   constructor(private gmfDisponibleService: GmfDisponibleService, private notificacion: AlertService,
-    private moduleValidationService: ModuleValidationService, private el: ElementRef) {
+    private moduleValidationService: ModuleValidationService, private el: ElementRef, private loading: LoadingService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -84,14 +79,14 @@ export class GMFDisponibleComponent implements OnInit {
   }
 
   ObtenerTipoIdentificacion() {
-    this.loading = true;
+    this.loading.show();
     this.gmfDisponibleService.ObtenerTipoIdentificacion().subscribe(
       result => {
         this.dataTipoIdentificacion = result;
-        this.loading = false;
+        this.loading.hide();
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorJson = JSON.parse(error._body);
         this.notificacion.onDanger('Error', errorJson);
         console.log(error);
@@ -100,80 +95,80 @@ export class GMFDisponibleComponent implements OnInit {
   }
 
   ObtenerTipoCuentas() {
-    this.loading = true;
+    this.loading.show();
     this.gmfDisponibleService.ObtenerTipoCuentas().subscribe(
       result => {
-        this.dataTipoCuenta = result; this.loading = false;
+        this.dataTipoCuenta = result; this.loading.hide();
       },
       error => {
         const errorJson = JSON.parse(error._body);
         this.notificacion.onDanger('Error', errorJson);
-        console.log(error); this.loading = false;
+        console.log(error); this.loading.hide();
       }
     );
   }
 
   ObtenerEstadosCuenta() {
-    this.loading = true;
+    this.loading.show();
     this.gmfDisponibleService.ObtenerEstadosCuenta().subscribe(
       result => {
         this.dataEstadosCuenta = result; 
-        this.loading = false;
+        this.loading.hide();
       },
       error => {
         const errorJson = JSON.parse(error._body);
         this.notificacion.onDanger('Error', errorJson);
-        console.log(error); this.loading = false;
+        console.log(error); this.loading.hide();
       }
     );
   }
   ObtenerDepartamentos() {
-    this.loading = true;
+    this.loading.show();
     this.gmfDisponibleService.ObtenerDepartamentos().subscribe(
       result => {
         this.dataDepartamentos = result; 
-        this.loading = false;
+        this.loading.hide();
       },
       error => {
         const errorJson = JSON.parse(error._body);
         this.notificacion.onDanger('Error', errorJson);
-        console.log(error); this.loading = false;
+        console.log(error); this.loading.hide();
       }
     );
   }
 
   ObtenerCiudades() {
-    this.loading = true;
+    this.loading.show();
     this.gmfDisponibleService.ObtenerCiudades().subscribe(
       result => {
         this.dataciudades = result; 
-        this.loading = false;
+        this.loading.hide();
       },
       error => {
         const errorJson = JSON.parse(error._body);
         this.notificacion.onDanger('Error', errorJson);
-        console.log(error); this.loading = false;
+        console.log(error); this.loading.hide();
       }
     );
   }
 
   ObtenerSucursales() {
-    this.loading = true;
+    this.loading.show();
     this.gmfDisponibleService.ObtenerSucursales().subscribe(
       result => {
-        this.dataSucursal = result; this.loading = false;
+        this.dataSucursal = result; this.loading.hide();
       },
       error => {
         const errorJson = JSON.parse(error._body);
         this.notificacion.onDanger('Error', errorJson);
-        console.log(error); this.loading = false;
+        console.log(error); this.loading.hide();
       }
     );
   }
 
 
   ConsultarGMF() {
-    this.loading = true;
+    this.loading.show();
     const datosTipoDocumento = this.GMFForm.get('IdTipoDocumento')?.value;
     this.GMFForm.get('strValor')?.setValue(datosTipoDocumento.Valor);
 
@@ -184,18 +179,18 @@ export class GMFDisponibleComponent implements OnInit {
       // localStorage.getItem('userName'));
     this.gmfDisponibleService.ConsultarInfoAsociado(JSON.stringify(this.GMFForm.value)).subscribe(
       result => {
-        this.ValidarDatos(result); this.loading = false;
+        this.ValidarDatos(result); this.loading.hide();
       },
       error => {
         const errorJson = JSON.parse(error._body);
         this.notificacion.onDanger('Error', errorJson);
-        console.log(error); this.loading = false;
+        console.log(error); this.loading.hide();
       }
     );
   }
 
   ValidarDatos(PDatos : any) {
-    this.loading = true;
+    this.loading.show();
     let _existeMarcada = false;
     let _numeroCuenta = '';
     this.panelDatos = false;
@@ -255,7 +250,7 @@ export class GMFDisponibleComponent implements OnInit {
         this.notificacion.onWarning('Advertencia', PDatos[0].Error.Mensaje);
       }
     }
-    this.loading = false;
+    this.loading.hide();
   }
 
   Limpiar() {
@@ -264,7 +259,7 @@ export class GMFDisponibleComponent implements OnInit {
   }
 
   DesmarcarCuentaCheck() {
-    this.loading = true;
+    this.loading.show();
     if (!this.GMFForm.get('desmarcarForm')?.value) {
       this.dataMarcarDesmarcar = [];
       localStorage.removeItem('DataUserGMF');
@@ -283,10 +278,10 @@ export class GMFDisponibleComponent implements OnInit {
               this.MapearDatos(this.dataMarcarDesmarcar);
               this.AlertaCuenta = false;
             }
-          }); this.loading = false;
+          }); this.loading.hide();
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorJson = JSON.parse(error._body);
           this.notificacion.onDanger('Error', errorJson);
           console.log(error);
@@ -299,7 +294,7 @@ export class GMFDisponibleComponent implements OnInit {
   }
 
   MarcarCuentaCheck() {
-    this.loading = true;
+    this.loading.show();
     if (!this.GMFForm.get('marcarForm')?.value) {
       this.dataMarcarDesmarcar = [];
       localStorage.removeItem('DataUserGMF');
@@ -322,12 +317,12 @@ export class GMFDisponibleComponent implements OnInit {
             this.AlertaCuenta = false;
             this.MapearDatos(this.dataMarcarDesmarcar);
           }
-          console.log(result); this.loading = false;
+          console.log(result); this.loading.hide();
         },
         error => {
           const errorJson = JSON.parse(error._body);
           this.notificacion.onDanger('Error', errorJson);
-          console.log(error); this.loading = false;
+          console.log(error); this.loading.hide();
         }
       );
     } else {
@@ -388,13 +383,13 @@ export class GMFDisponibleComponent implements OnInit {
       });
     } else {
       console.error('Se ha presentado un problema al marcar o desmarcar la cuenta.');
-      this.loading = false;
+      this.loading.hide();
     }
   }
 
   MarcarGMF() {
     try {
-      this.loading = true;
+      this.loading.show();
       const datosTipoDocumento = this.GMFForm.get('IdTipoDocumento')?.value;
       let _nit;
       if (datosTipoDocumento.CodListProveedor === '2') {
@@ -420,12 +415,12 @@ export class GMFDisponibleComponent implements OnInit {
           this.marcarDesmarcar = false;
           this.panelDatos = false;
           this.disableBusquedaForm = false;
-          this.limpiarForm(); this.loading = false;
+          this.limpiarForm(); this.loading.hide();
         },
         error => {
           const errorJson = JSON.parse(error._body);
           this.notificacion.onDanger('Error', errorJson);
-          console.log(error); this.loading = false;
+          console.log(error); this.loading.hide();
         }
       );
     } catch (error) {
@@ -437,13 +432,13 @@ export class GMFDisponibleComponent implements OnInit {
       this.disableBusquedaForm = false;
       this.limpiarForm();
     } finally {
-      this.loading = false;
+      this.loading.hide();
     }
   }
 
   DesmacarGMF() {
     try {
-      this.loading = true;
+      this.loading.show();
       const datosTipoDocumento = this.GMFForm.get('IdTipoDocumento')?.value;
       let _nit;
       if (datosTipoDocumento.CodListProveedor === '2') {
@@ -470,12 +465,12 @@ export class GMFDisponibleComponent implements OnInit {
           this.marcarDesmarcar = false;
           this.panelDatos = false;
           this.disableBusquedaForm = false;
-          this.limpiarForm(); this.loading = false;
+          this.limpiarForm(); this.loading.hide();
         },
         error => {
           const errorJson = JSON.parse(error._body);
           this.notificacion.onDanger('Error', errorJson);
-          console.log(error); this.loading = false;
+          console.log(error); this.loading.hide();
         }
       );
     } catch (error) {
@@ -487,12 +482,12 @@ export class GMFDisponibleComponent implements OnInit {
       this.disableBusquedaForm = false;
       this.limpiarForm();
     } finally {
-      this.loading = false;
+      this.loading.hide();
     }
   }
 
   MapearDatos(data : any) {
-    this.loading = true;
+    this.loading.show();
     data.forEach((x : any, y : number) => {
       console.log(y, x);
       if (x.strNumeroCuenta === this.GMFForm.get('strNumeroCuenta')?.value) {
@@ -533,7 +528,7 @@ export class GMFDisponibleComponent implements OnInit {
         this.GMFForm.get('strCiudadLabora')?.setValue(data[y].strCiudadLabora);
 
       }
-    }); this.loading = false;
+    }); this.loading.hide();
   }
 
   print() {

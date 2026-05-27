@@ -1,13 +1,13 @@
 import { TarjetaHabientesService } from '../../../../../Services/Productos/tarjetaHabientes.service';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '../../../../../../../node_modules/@angular/forms';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { ModuleValidationService } from '../../../../../Services/Enviroment/moduleValidation.service';
 import { PassEncriptJs } from '../../../../../Models/Generales/PasswordEncript.model';
 import * as CryptoJS from 'crypto-js';
 import { fromEvent } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AlertService } from '../../../../../Services/Alert/alert.service';
+import { LoadingService } from '../../../../../Services/shared/loading.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -35,15 +35,11 @@ export class TarjetaHabientesComponent implements OnInit {
   public DatosUsuario : any;
   public PermisosUsuario : any;
   public TarjetaHabientesForm!: FormGroup;
-
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
   private CodModulo = 22;
   constructor(private tarjetaHabientesService: TarjetaHabientesService, private notificacion: AlertService,
-    private moduleValidationService: ModuleValidationService, private el: ElementRef) {
+    private moduleValidationService: ModuleValidationService, private el: ElementRef, private loading: LoadingService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -70,7 +66,7 @@ export class TarjetaHabientesComponent implements OnInit {
   }
 
   ConsultarAsociado() {
-    this.loading = true;
+    this.loading.show();
     if (this.TarjetaHabientesForm.valid) {
       this.tarjetaHabientesService.ConsultarAsociado(this.TarjetaHabientesForm.value).subscribe(
         result => {
@@ -81,7 +77,7 @@ export class TarjetaHabientesComponent implements OnInit {
         error => {
           const errorJson = error
           console.log(error);
-          this.loading = false;
+          this.loading.hide();
           if (errorJson === 'Cliente no existe') {
             this.notificacion.onWarning('Advetencia', 'El' + errorJson);
             this.TarjetaHabientesForm.reset();
@@ -94,7 +90,7 @@ export class TarjetaHabientesComponent implements OnInit {
         }
       );
     } else {
-      this.loading = false;
+      this.loading.hide();
     }
   }
 
@@ -111,7 +107,7 @@ export class TarjetaHabientesComponent implements OnInit {
     this.TarjetaHabientesForm.get('Email')?.setValue(this.dataTarjetasHabiente.Email);
     this.TarjetaHabientesForm.get('EnvioSMS')?.setValue(this.dataTarjetasHabiente.ActivarSMS);
     this.TarjetaHabientesForm.get('ValidacionOTP')?.setValue(this.dataTarjetasHabiente.ActivarOTP);
-    this.loading = false;
+    this.loading.hide();
 
   }
 
@@ -126,15 +122,15 @@ export class TarjetaHabientesComponent implements OnInit {
       && this.TarjetaHabientesForm.get('Nombre')?.value !== undefined
       && this.TarjetaHabientesForm.get('Nombre')?.value !== ''
     ) {
-      this.loading = true;
+      this.loading.show();
       this.tarjetaHabientesService.ConsultarCuentas(this.TarjetaHabientesForm.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           this.dataCuenta = result;
           this.openModalCuenta.nativeElement.click();
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorJson = JSON.parse(error._body);
           this.notificacion.onDanger('Error', errorJson);
           console.log(error);
@@ -144,7 +140,7 @@ export class TarjetaHabientesComponent implements OnInit {
   }
 
   ConsultarTarjetas() {
-    this.loading = true;
+    this.loading.show();
     this.PermisosUsuario.forEach((element : any)=> {
       // Perfiles que tienen acceso a tarjeta habientes pero que no deben desbloquear la tarjeta (SOLO OPERACIONES DEBE TENER ACCESO)
       if (element.IdPerfil === 59 || element.IdPerfil === 60 || element.IdPerfil === 61) {
@@ -154,12 +150,12 @@ export class TarjetaHabientesComponent implements OnInit {
 
     this.tarjetaHabientesService.ConsultarTarjetas(this.TarjetaHabientesForm.value).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.dataTarjeta = result;
         this.openModalTarjeta.nativeElement.click();
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorJson = JSON.parse(error._body);
         this.notificacion.onDanger('Error', errorJson);
         console.log(error);
@@ -168,15 +164,15 @@ export class TarjetaHabientesComponent implements OnInit {
   }
 
   ConsultarTarjetasCuentas() {
-    this.loading = true;
+    this.loading.show();
     this.tarjetaHabientesService.ConsultarTarjetasCuentas(this.TarjetaHabientesForm.value).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.dataTarjetaCuentas = result;
         this.openModalCuentaTarjeta.nativeElement.click();
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorJson = JSON.parse(error._body);
         this.notificacion.onDanger('Error', errorJson);
         console.log(error);
@@ -185,15 +181,15 @@ export class TarjetaHabientesComponent implements OnInit {
   }
 
   ConsultarCanales() {
-    this.loading = true;
+    this.loading.show();
     this.tarjetaHabientesService.ConsultarCanales(this.TarjetaHabientesForm.value).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.dataCanales = result;
         this.openModalCanal.nativeElement.click();
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorJson = JSON.parse(error._body);
         this.notificacion.onDanger('Error', errorJson);
         console.log(error);
@@ -202,16 +198,16 @@ export class TarjetaHabientesComponent implements OnInit {
   }
 
   DesbloquearTarjeta(data : any) {
-    this.loading = true;
+    this.loading.show();
     this.TarjetaHabientesForm.get('ObjTarjetas')?.setValue(data);
     this.tarjetaHabientesService.DesbloquerarTarjeta(this.TarjetaHabientesForm.value).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         if (result.indexOf('Proceso exitoso') > -1) {
           this.ConsultarTarjetas();
           this.notificacion.onSuccess('Exitoso', 'La tarjeta fue desbloqueada correctamente.');
         } else {
-          this.loading = false;
+          this.loading.hide();
           this.notificacion.onWarning('Advertencia', 'La tarjeta no pudo desbloquearse debido a'
             + result);
         }

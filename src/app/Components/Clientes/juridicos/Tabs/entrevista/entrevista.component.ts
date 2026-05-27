@@ -6,8 +6,8 @@ import { TratamientoDatosModel } from '../../../../../Models/Clientes/Juridicos/
 import { formatDate } from '@angular/common';
 import { GeneralesService } from '../../../../../Services/Productos/generales.service';
 import moment from 'moment';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { AlertService } from '../../../../../Services/Alert/alert.service';
+import { LoadingService } from '../../../../../Services/shared/loading.service';
 
 declare var $: any;
 const PrimaryWhite = 'rgb(13,165,80)';
@@ -79,13 +79,10 @@ export class EntrevistaComponent implements OnInit {
   public entrevistaModel = new EntrevistaModel();
   public entrevistaModelLst: EntrevistaModel[] = [];
   public tratamientoModel = new TratamientoDatosModel();
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = PrimaryWhite;
   public secondaryColour = SecondaryGrey;
   constructor(private notif: AlertService, private juridicoService: JuridicosService,
-    private generalesService: GeneralesService) { }
+    private generalesService: GeneralesService, private loading: LoadingService) { }
 
   ngOnInit() {
     let data = localStorage.getItem('Data');
@@ -409,13 +406,13 @@ export class EntrevistaComponent implements OnInit {
   }
  
   GuardarJuridicoCompleto() {
-    this.loading = true;
+    this.loading.show();
     let data = localStorage.getItem('Data');
     const dataUser = JSON.parse(window.atob(data == null ? "" : data));
     console.log('Cantidad -' + this.entrevistaModelLst.length);
     console.log('Cliente selec - '+ this.clienteSeleccionado);
     if (this.infoTabAllEntrevista.BasicosDto.IdRelacion === '15' && this.entrevistaModelLst.length === 0) {
-      this.loading = true;
+      this.loading.show();
       this.siguiente = true;
       this.emitEvent.emit(this.positionTab);
       this.infoTabAllEntrevista.EntrevistaDto = {};
@@ -429,13 +426,13 @@ export class EntrevistaComponent implements OnInit {
       this.tratamientoForm.get('checkTratamiento')?.setValue(true);
       this.GuardarJuridico(this.infoTabAllEntrevista);
     } else {
-      this.loading = true;
+      this.loading.show();
       const valide = this.ValidarPreguntasEntrevistas();
       if (!valide) {
         this.notif.onWarning('Advertencia', 'Debe responder todas las preguntas.');
-        this.loading = false;
+        this.loading.hide();
      } else {
-        this.loading = true;
+        this.loading.show();
         this.allItemFormEntrevista = [];
         this.infoTabAllEntrevista.EntrevistaDto = {};
         this.allItemFormEntrevista.push(this.entrevistaForm.value);
@@ -604,7 +601,7 @@ export class EntrevistaComponent implements OnInit {
   }
 
   private GuardarJuridico(infoTotal : any) {
-    this.loading = true;
+    this.loading.show();
     if (this.infoTabAllEntrevista.BasicosDto.IdRelacion === 5) {
       infoTotal.BasicosDto.DebitoAutomatico = this.tratamientoForm.get('checkDebitoAutomatico')?.value;
     } else {      
@@ -612,11 +609,11 @@ export class EntrevistaComponent implements OnInit {
     }
     console.log('infoTotal - Guardar juridico: ' + JSON.stringify(infoTotal));
   
-    this.loading = true;
+    this.loading.show();
     this.juridicoService.GuardarJuridicosAll(infoTotal).subscribe(result => {
     
       if (result != null) {
-        this.loading = true;
+        this.loading.show();
         localStorage.setItem('IdModuloActivo', window.btoa(JSON.stringify(12)));
         const dataJuridico = result;
         const AnimoLucro = infoTotal.BasicosDto.AnimoLucro ? 'Si' : 'No';
@@ -629,15 +626,15 @@ export class EntrevistaComponent implements OnInit {
         this.DesbloquearRespuesta3 = true;
         this.DesbloquearRespuesta16 = true;
         this.DesbloquearRespuesta13 = true;
-        this.loading = false;
+        this.loading.hide();
         this.IrArriba();
       }
       else {
-        this.loading = false;
+        this.loading.hide();
         console.log('result - Guardar juridico: ' + result);
       }
     }, error => {
-        this.loading = false;
+        this.loading.hide();
       console.error('Error al realizar el registro - juridicos: ' + error);
       this.notif.onDanger('Error', 'No se pudo realizar el registro - Error: ' + error);
     });

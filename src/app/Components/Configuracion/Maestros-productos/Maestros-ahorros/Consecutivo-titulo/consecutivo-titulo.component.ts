@@ -4,13 +4,13 @@ import { ConsecutivoTituloService } from '../../../../../Services/Configuracion/
 import { OperacionesService } from '../../../../../Services/Maestros/operaciones.service';
 import { GeneralesService } from '../../../../../Services/Productos/generales.service';
 import { ModuleValidationService } from '../../../../../Services/Enviroment/moduleValidation.service';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { map, retry, delay } from 'rxjs/operators';
 import { fromEvent } from 'rxjs';
 import { ConsecutivosLog } from '../../../../../Models/Configuracion/Maestro_productos/ConsecutivosLog.model';
 import { DatePipe } from '@angular/common';
 import Swal from 'sweetalert2';
 import { AlertService } from '../../../../../Services/Alert/alert.service';
+import { LoadingService } from '../../../../../Services/shared/loading.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -88,9 +88,6 @@ export class ConsecutivoTituloComponent implements OnInit {
   NroLibretasngM = "";
   libretaHTML = document.querySelector("#libretas");
   dataUser : any = {};
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
 
@@ -102,7 +99,9 @@ export class ConsecutivoTituloComponent implements OnInit {
     private notif: AlertService,
     private operacionesService: OperacionesService,
     private generalesService: GeneralesService,
-    private moduleValidationService: ModuleValidationService, private el: ElementRef) {
+    private moduleValidationService: ModuleValidationService, 
+    private loading: LoadingService,
+    private el: ElementRef) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -947,10 +946,10 @@ export class ConsecutivoTituloComponent implements OnInit {
     if (NroTituloFinal >= NroTituloInicial) {
       if (this.dataUser.NumeroOficina === this.consecutivoFrom.get('IdOficina')?.value) {
         if (this.IdModulo === 19) {
-          this.loading = true;
+          this.loading.show();
           this.ConsecutivotituloService.GuardarRangoTituloTermino(this.consecutivoFrom.value).subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               this.RegistrarLog();
               this.BloquearAsignar = false;
               this.BloquearTitulo = false;
@@ -966,7 +965,7 @@ export class ConsecutivoTituloComponent implements OnInit {
               this.btn = true;
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               this.notif.onDanger('Error', errorMessage);
               console.log(errorMessage);
@@ -974,10 +973,10 @@ export class ConsecutivoTituloComponent implements OnInit {
           );
         }
         if (this.IdModulo === 20) {
-          this.loading = true;
+          this.loading.show();
           this.ConsecutivotituloService.GuardarConsecutivoTitulo(this.consecutivoFrom.value).subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               this.RegistrarLog();
               this.BloquearAsignar = false;
               this.BloquearTitulo = false;
@@ -993,7 +992,7 @@ export class ConsecutivoTituloComponent implements OnInit {
               this.btn = true;
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               this.notif.onDanger('Error', errorMessage);
               console.log(errorMessage);
@@ -1002,10 +1001,10 @@ export class ConsecutivoTituloComponent implements OnInit {
         }
         if (this.IdModulo === 38) {
           if (this.Iddocumento === '1' || this.Iddocumento === '6') {
-            this.loading = true;
+            this.loading.show();
             this.ConsecutivotituloService.GuardarDisponibles(this.consecutivoFrom.value).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 let libretas = parseInt(this.consecutivoFrom.get("NroLibretas")?.value)
                 let colillas = parseInt(this.consecutivoFrom.get("NroColillas")?.value)
                  this.log.Colillas = colillas;
@@ -1025,7 +1024,7 @@ export class ConsecutivoTituloComponent implements OnInit {
                 this.btn = true;
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 this.notif.onDanger('Error', errorMessage);
                 console.log(errorMessage);
@@ -1033,10 +1032,10 @@ export class ConsecutivoTituloComponent implements OnInit {
             );
           }
           if (this.Iddocumento === '2') {
-            this.loading = true;
+            this.loading.show();
             this.ConsecutivotituloService.GuardarTarjetasDisponibles(this.consecutivoFrom.value).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 this.RegistrarLog();
                 this.BloquearAsignar = false;
                 this.BloquearTitulo = false;
@@ -1052,7 +1051,7 @@ export class ConsecutivoTituloComponent implements OnInit {
                 this.btn = true;
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 this.notif.onDanger('Error', errorMessage);
                 console.log(errorMessage);
@@ -1060,10 +1059,10 @@ export class ConsecutivoTituloComponent implements OnInit {
           }
         }
         if (this.IdModulo === 25) {
-          this.loading = true;
+          this.loading.show();
           this.ConsecutivotituloService.GuardarPagare(this.consecutivoFrom.value).subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               this.RegistrarLog();
               this.BloquearAsignar = false;
               this.BloquearTitulo = false;
@@ -1079,7 +1078,7 @@ export class ConsecutivoTituloComponent implements OnInit {
               this.btn = true;
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               this.notif.onDanger('Error', errorMessage);
               console.log(errorMessage);
@@ -1279,30 +1278,30 @@ export class ConsecutivoTituloComponent implements OnInit {
       this.BloquearBoton = null;
       this.btn = false;
       if (this.IdModulo === 19) {
-        this.loading = true;
+        this.loading.show();
         this.ConsecutivotituloService.ObtenerInfoRangoTitulosTermino(Inicial, Final).subscribe(
           result => {
-            this.loading = false;
+            this.loading.hide();
             this.formBuscar = false;
             this.dataBuscar = result;
             this.resultLength(result);
           }, error => {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             this.notif.onDanger('Error', errorMessage);
             console.log(errorMessage);
           });
       }
       if (this.IdModulo === 20) {
-        this.loading = true;
+        this.loading.show();
         this.ConsecutivotituloService.ObtenerInfoRangoTitulosConsecutivos(Inicial, Final).subscribe(
           result => {
-            this.loading = false;
+            this.loading.hide();
             this.formBuscar = false;
             this.dataBuscar = result;
             this.resultLength(result);
           }, error => {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             this.notif.onDanger('Error', errorMessage);
             console.log(errorMessage);
@@ -1312,16 +1311,16 @@ export class ConsecutivoTituloComponent implements OnInit {
         if (this.Iddocumento === '1' || this.Iddocumento === '6') {
           /* const libretas = parseInt(this.consecutivoFrom.get('NroLibretas').value);
           const rangoFinal = (Final + libretas - 1); */
-          this.loading = true;
+          this.loading.show();
           this.ConsecutivotituloService.ObtenerInfoLibretasDisponibles(Inicial, Producto).subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               this.formBuscar = false;
               this.dataBuscar = result;
               console.log(this.dataBuscar);
               this.resultLength(result);
             }, error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               this.notif.onDanger('Error', errorMessage);
               console.log(errorMessage);
@@ -1330,16 +1329,16 @@ export class ConsecutivoTituloComponent implements OnInit {
         else if (this.Iddocumento === '2') {
           /* const libretas = parseInt(this.consecutivoFrom.get('NroLibretas').value);
           const rangoFinal = (Final + libretas - 1); */
-          this.loading = true;
+          this.loading.show();
           this.ConsecutivotituloService.ObtenerInfoTarjetaDisponibles(Inicial, Final).subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               this.formBuscar = false;
               this.dataBuscar = result;
               this.dataBuscar = result;
               this.resultLength(result);
             }, error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               this.notif.onDanger('Error', errorMessage);
               console.log(errorMessage);
@@ -1348,15 +1347,15 @@ export class ConsecutivoTituloComponent implements OnInit {
         }
       }
       if (this.IdModulo === 25) {
-        this.loading = true;
+        this.loading.show();
         this.ConsecutivotituloService.ObtenerInfoRangoPagare(Inicial, Final).subscribe(
           result => {
-            this.loading = false;
+            this.loading.hide();
             this.formBuscar = false;
             this.dataBuscar = result;
             this.resultLength(result);
           }, error => {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             this.notif.onDanger('Error', errorMessage);
             console.log(errorMessage);
@@ -1670,10 +1669,10 @@ export class ConsecutivoTituloComponent implements OnInit {
   }
   Actualizar() {
     if (this.IdModulo === 19) {
-      this.loading = true;
+      this.loading.show();
       this.ConsecutivotituloService.ActualizarRangoTituloTermino(this.consecutivoFrom.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           let limInferior = this.log.NroInicial;
           let limSuperior = this.log.NroFinal;
           this.log.NroFinal = null;
@@ -1689,7 +1688,7 @@ export class ConsecutivoTituloComponent implements OnInit {
           this.btn = true;
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           this.notif.onDanger('Error', errorMessage);
           console.log(errorMessage);
@@ -1697,10 +1696,10 @@ export class ConsecutivoTituloComponent implements OnInit {
       )
     }
     else if (this.IdModulo === 20) {
-      this.loading = true;
+      this.loading.show();
       this.ConsecutivotituloService.ActualizarConsecutivoTitulo(this.consecutivoFrom.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           let limInferior = this.log.NroInicial;
           let limSuperior = this.log.NroFinal;
           this.log.NroFinal = null;
@@ -1716,7 +1715,7 @@ export class ConsecutivoTituloComponent implements OnInit {
           this.btn = true;
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           this.notif.onDanger('Error', errorMessage);
           console.log(errorMessage);
@@ -1725,10 +1724,10 @@ export class ConsecutivoTituloComponent implements OnInit {
     }
     else if (this.IdModulo === 38) {
       if (this.Iddocumento === '1' || this.Iddocumento === '6') {
-        this.loading = true;
+        this.loading.show();
         this.ConsecutivotituloService.ActualizarLibretasDisponibles(this.consecutivoFrom.value).subscribe(
           result => {
-            this.loading = false;
+            this.loading.hide();
             let libretas = parseInt(this.consecutivoFrom.get("NroLibretas")?.value)
             let colillas = parseInt(this.consecutivoFrom.get("NroColillas")?.value)
             let limInferior = this.log.NroInicial;
@@ -1747,7 +1746,7 @@ export class ConsecutivoTituloComponent implements OnInit {
             this.btn = true;
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             this.notif.onDanger('Error', errorMessage);
             console.log(errorMessage);
@@ -1755,10 +1754,10 @@ export class ConsecutivoTituloComponent implements OnInit {
         )
       }
       else if (this.Iddocumento === '2') {
-          this.loading = true;
+          this.loading.show();
         this.ConsecutivotituloService.ActualizarTarjetasDisponibles(this.consecutivoFrom.value).subscribe(
           result => {
-          this.loading = false;
+          this.loading.hide();
             let limInferior = this.log.NroInicial;
             let limSuperior = this.log.NroFinal;
             this.log.NroFinal = null;
@@ -1774,7 +1773,7 @@ export class ConsecutivoTituloComponent implements OnInit {
             this.btn = true;
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             this.notif.onDanger('Error', errorMessage);
             console.log(errorMessage);
@@ -1782,10 +1781,10 @@ export class ConsecutivoTituloComponent implements OnInit {
       }
     }
     else if (this.IdModulo === 25) {
-      this.loading = true;
+      this.loading.show();
       this.ConsecutivotituloService.ActualizarPagare(this.consecutivoFrom.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           let limInferior = this.log.NroInicial;
           let limSuperior = this.log.NroFinal;
           this.log.NroFinal = null;
@@ -1801,7 +1800,7 @@ export class ConsecutivoTituloComponent implements OnInit {
           this.btn = true;
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           this.notif.onDanger('Error', errorMessage);
           console.log(errorMessage);
@@ -1840,10 +1839,10 @@ export class ConsecutivoTituloComponent implements OnInit {
   }
   anular() {
     if (this.IdModulo === 19) {
-      this.loading = true;
+      this.loading.show();
       this.ConsecutivotituloService.AnularNroTituloTermino(this.consecutivoFrom.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           this.RegistrarLog();
           this.notif.onSuccess('Exitoso', 'El registro se anuló correctamente.');
           this.formAsignar = true;
@@ -1853,7 +1852,7 @@ export class ConsecutivoTituloComponent implements OnInit {
           this.btn = true;
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           this.notif.onDanger('Error', errorMessage);
           console.log(errorMessage);
@@ -1861,10 +1860,10 @@ export class ConsecutivoTituloComponent implements OnInit {
       );
     }
     else if (this.IdModulo === 20) {
-      this.loading = true;
+      this.loading.show();
       this.ConsecutivotituloService.AnularNroTituloConsecutivos(this.consecutivoFrom.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           this.RegistrarLog();
           this.notif.onSuccess('Exitoso', 'El registro se anuló correctamente.');
           this.formAsignar = true;
@@ -1874,7 +1873,7 @@ export class ConsecutivoTituloComponent implements OnInit {
           this.btn = true;
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           this.notif.onDanger('Error', errorMessage);
           console.log(errorMessage);
@@ -1883,10 +1882,10 @@ export class ConsecutivoTituloComponent implements OnInit {
     }
     else if (this.IdModulo === 38) {
       if (this.Iddocumento === "1" || this.Iddocumento === "6") {
-        this.loading = true;
+        this.loading.show();
         this.ConsecutivotituloService.AnularLibretaDisponibles(this.consecutivoFrom.value).subscribe(
           result => {
-            this.loading = false;
+            this.loading.hide();
             this.RegistrarLog();
             this.notif.onSuccess('Exitoso', 'El registro se anuló correctamente.');
             this.formAsignar = true;
@@ -1903,10 +1902,10 @@ export class ConsecutivoTituloComponent implements OnInit {
         );
       }
       else if (this.Iddocumento === "2") {
-        this.loading = true;
+        this.loading.show();
         this.ConsecutivotituloService.AnularTarjetaDisponibles(this.consecutivoFrom.value).subscribe(
           result => {
-            this.loading = false;
+            this.loading.hide();
             this.RegistrarLog();
             this.notif.onSuccess('Exitoso', 'El registro se anuló correctamente.');
             this.formAsignar = true;
@@ -1917,7 +1916,7 @@ export class ConsecutivoTituloComponent implements OnInit {
 
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             this.notif.onDanger('Error', errorMessage);
             console.log(errorMessage);
@@ -1926,10 +1925,10 @@ export class ConsecutivoTituloComponent implements OnInit {
       }
     }
     else if (this.IdModulo === 25) {
-      this.loading = true;
+      this.loading.show();
       this.ConsecutivotituloService.AnularNroTituloPagare(this.consecutivoFrom.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           this.RegistrarLog();
           this.notif.onSuccess('Exitoso', 'El registro se anulo correctamente.');
           this.formAsignar = true;
@@ -1939,7 +1938,7 @@ export class ConsecutivoTituloComponent implements OnInit {
           this.btn = true;
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           this.notif.onDanger('Error', errorMessage);
           console.log(errorMessage);
@@ -2033,10 +2032,10 @@ export class ConsecutivoTituloComponent implements OnInit {
     }).then((results) => {
       if (results.value) {
         if (this.IdModulo === 19) {
-          this.loading = true;
+          this.loading.show();
           this.ConsecutivotituloService.ConfirmarRangoTituloTermino(this.consecutivoFrom.value).subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               let limInferior = this.log.NroInicial;
               let limSuperior = this.log.NroFinal;
               this.log.NroFinal = null;
@@ -2052,7 +2051,7 @@ export class ConsecutivoTituloComponent implements OnInit {
               this.btn = true;
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               this.notif.onDanger('Error', errorMessage);
               console.log(errorMessage);
@@ -2060,10 +2059,10 @@ export class ConsecutivoTituloComponent implements OnInit {
           )
         }
         else if (this.IdModulo === 20) {
-          this.loading = true;
+          this.loading.show();
           this.ConsecutivotituloService.ConfirmarRangoTituloConsecutivos(this.consecutivoFrom.value).subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               let limInferior = this.log.NroInicial;
               let limSuperior = this.log.NroFinal;
               this.log.NroFinal = null;
@@ -2079,7 +2078,7 @@ export class ConsecutivoTituloComponent implements OnInit {
               this.btn = true;
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               this.notif.onDanger('Error', errorMessage);
               console.log(errorMessage);
@@ -2088,10 +2087,10 @@ export class ConsecutivoTituloComponent implements OnInit {
         }
         else if (this.IdModulo === 38) {
           if (this.Iddocumento === "1" || this.Iddocumento === "6") {
-            this.loading = true;
+            this.loading.show();
             this.ConsecutivotituloService.ConfirmarRangoLibretas(this.consecutivoFrom.value).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 let libretas = parseInt(this.consecutivoFrom.get("NroLibretas")?.value);
                 let colillas = parseInt(this.consecutivoFrom.get("NroColillas")?.value);
                 let limInferior = this.log.NroInicial;
@@ -2110,7 +2109,7 @@ export class ConsecutivoTituloComponent implements OnInit {
                 this.btn = true;
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 this.notif.onDanger('Error', errorMessage);
                 console.log(errorMessage);
@@ -2118,10 +2117,10 @@ export class ConsecutivoTituloComponent implements OnInit {
             )
           }
           else if (this.Iddocumento === "2") {
-            this.loading = true;
+            this.loading.show();
             this.ConsecutivotituloService.ConfirmarRangoTarjetas(this.consecutivoFrom.value).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 let limInferior = this.log.NroInicial;
                 let limSuperior = this.log.NroFinal;
                 this.log.NroFinal = null;
@@ -2137,7 +2136,7 @@ export class ConsecutivoTituloComponent implements OnInit {
                 this.btn = true;
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 this.notif.onDanger('Error', errorMessage);
                 console.log(errorMessage);
@@ -2146,10 +2145,10 @@ export class ConsecutivoTituloComponent implements OnInit {
           }
         }
         else if (this.IdModulo === 25) {
-          this.loading = true;
+          this.loading.show();
           this.ConsecutivotituloService.ConfirmarRangoPagare(this.consecutivoFrom.value).subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               let limInferior = this.log.NroInicial;
               let limSuperior = this.log.NroFinal;
               this.log.NroFinal = null;
@@ -2165,7 +2164,7 @@ export class ConsecutivoTituloComponent implements OnInit {
               this.btn = true;
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               this.notif.onDanger('Error', errorMessage);
               console.log(errorMessage);
@@ -2249,17 +2248,17 @@ export class ConsecutivoTituloComponent implements OnInit {
         result => {
         
         },error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           this.notif.onDanger('Error', errorMessage);
           console.log(errorMessage);
         }
       )
       if (this.IdModulo === 19) {
-        this.loading = true;
+        this.loading.show();
         this.ConsecutivotituloService.ActualizarTitulosRegistrar(this.resultRegistrarTermino).subscribe(
           result => {
-            this.loading = false;
+            this.loading.hide();
             this.notif.onSuccess('Exitoso', 'El rango se registro correctamente.');
             this.formAsignar = true;
             this.formRango = true;
@@ -2268,7 +2267,7 @@ export class ConsecutivoTituloComponent implements OnInit {
             this.btn = true;
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             this.notif.onDanger('Error', errorMessage);
             console.log(errorMessage);
@@ -2277,10 +2276,10 @@ export class ConsecutivoTituloComponent implements OnInit {
       }
       else if (this.IdModulo === 38) {
         if (this.Iddocumento === '1' || this.Iddocumento === '6') {
-          this.loading = true;
+          this.loading.show();
           this.ConsecutivotituloService.ActualizarLibretasRegistrar(this.resultRegistrarTermino).subscribe(
             result => {
-            this.loading = false;
+            this.loading.hide();
               this.notif.onSuccess('Exitoso', 'El rango se registro correctamente.');
               this.formAsignar = true;
               this.formRango = true;
@@ -2289,7 +2288,7 @@ export class ConsecutivoTituloComponent implements OnInit {
               this.btn = true;
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               this.notif.onDanger('Error', errorMessage);
               console.log(errorMessage);
@@ -2297,10 +2296,10 @@ export class ConsecutivoTituloComponent implements OnInit {
           )
         }
         else if (this.Iddocumento === '2') {
-          this.loading = true;
+          this.loading.show();
           this.ConsecutivotituloService.ActualizarTarjetasRegistrar(this.resultRegistrarTermino).subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               this.notif.onSuccess('Exitoso', 'El rango se registro correctamente.');
               this.formAsignar = true;
               this.formRango = true;
@@ -2309,7 +2308,7 @@ export class ConsecutivoTituloComponent implements OnInit {
               this.btn = true;
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               this.notif.onDanger('Error', errorMessage);
               console.log(errorMessage);

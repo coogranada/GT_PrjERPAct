@@ -2,10 +2,10 @@ import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { TransaccionesCajaService } from '../../../Services/Transacciones/TransaccionesCaja.service';
 import { AlertService } from '../../../Services/Alert/alert.service';
-import { LoadingService } from '../../../Services/shared/loading.service';
 import { Title } from '@angular/platform-browser';
 import { ShareComponentModule } from '../../../Modules/share-component.module';
 import { ModuleValidationService } from '../../../Services/Enviroment/moduleValidation.service';
+import { LoadingService } from '../../../Services/shared/loading.service';
 
 @Component({
   selector: 'app-imprimir-transaccion',
@@ -33,7 +33,9 @@ export class ImprimirTransaccionComponent implements OnDestroy {
 
 
 
-  constructor(private fb: FormBuilder, private transaccionesCajaService: TransaccionesCajaService, private notif: AlertService, private loading: LoadingService, private title: Title,  private moduleValidationService: ModuleValidationService) { }
+  constructor(private fb: FormBuilder, private transaccionesCajaService: TransaccionesCajaService, 
+    private notif: AlertService, private loading: LoadingService, private title: Title, 
+     private moduleValidationService: ModuleValidationService) { }
 
   ngOnInit() {
     this.moduleValidationService.ValidatePermissionsModule(this.Modulo);

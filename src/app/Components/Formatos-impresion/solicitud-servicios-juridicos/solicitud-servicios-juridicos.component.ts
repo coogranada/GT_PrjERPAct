@@ -12,6 +12,7 @@ import { PrintService } from '../../../Services/General/print.service';
 import Swal from 'sweetalert2';
 import { ClientesService } from '../../../Services/Clientes/clientes.service';
 import { GeneralesService } from '../../../Services/Productos/generales.service';
+import { LoadingService } from '../../../Services/shared/loading.service';
 
 @Component({
   selector: 'app-solicitud-servicios-juridicos',
@@ -42,7 +43,6 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
   public mostrarImporta = true;
   public mostrarExporta = true;
   public mostrarGiros = true;
-  public loading = false;
   public servicioSolicitado = new ServicioSolicitadoModel();
   public infoPersonal = new InformacionPersonal();
   public ubicacionEmpresa = new UbicacionEmpresa();
@@ -86,7 +86,9 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
 
   constructor(private juridicosService: JuridicosService, private notif: AlertService,
     private clientesService: ClientesService,
-    private clientesGetListService: ClientesGetListService,private printService: PrintService, private generalesService: GeneralesService) { }
+    private clientesGetListService: ClientesGetListService,
+    private printService: PrintService, private generalesService: GeneralesService,
+    private loading: LoadingService) { }
 
   ngOnInit() {
     console.log('esto se muestra desde el formato de impresion');
@@ -106,7 +108,7 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
     this.fechaImpresion = new Date();
     this.LimpiarDataImpresion();
     this.condicion = true;
-    this.loading = true;
+    this.loading.show();
     this.juridicosService.BuscarJuridicosAll(documento, '*').subscribe(
       result => {
         console.log(result);
@@ -186,7 +188,7 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
   }
 
   CargarSecciones(dataPrint : any) {
-    this.loading = false;
+    this.loading.hide();
     
     this.infoPersonal.IdRelacion = dataPrint.BasicosDto.IdRelacion;
     this.infoPersonal.IdEstado = dataPrint.BasicosDto.IdEstado;
