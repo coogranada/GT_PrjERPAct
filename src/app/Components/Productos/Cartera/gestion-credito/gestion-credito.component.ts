@@ -3800,6 +3800,14 @@ CalcularSimularPago(){
       this.lstReestructuracion = result.Reestructuracion ?? [];
       this.lstReliquidacion = result.Reliquidacion ?? [];
 
+      this.lstReestructuracion.sort((a, b) =>
+        new Date(b.Fecha).getTime() - new Date(a.Fecha).getTime()
+      );
+
+      this.lstReliquidacion.sort((a, b) =>
+        new Date(b.Fecha).getTime() - new Date(a.Fecha).getTime()
+      );
+
     } catch (error) {
       console.error('Error al obtener reestructuración/reliquidación', error);
     }
