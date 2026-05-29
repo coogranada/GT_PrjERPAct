@@ -563,3 +563,16 @@ export interface ObtenerCodeudorBasicoModel {
   NumeroDocumento : string;
   NombreCompleto : string;
 }
+
+export interface GarantiaCompartida {
+  lngConsecutivo: number;
+  IdGarantia: string;
+  Clase: string;
+  Cobertura: number;
+  Respalda: number;
+  Tipo: string;
+  lngTercero: number;
+  CantidadCreditos: number;
+  GrupoGarantia?: string;
+  Descripcion: string;
+}

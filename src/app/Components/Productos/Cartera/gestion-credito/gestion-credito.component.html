@@ -815,487 +815,633 @@
 
         <!-- MODAL CAMBIAR GARANTIAS -->
         <div id="cambiarGarantias" class="modal fade" data-backdrop="static">
-          <div style="width: 88%; margin: 30px auto; height: 90%;">
-            <div>
-              <div class="modal-content modal-xl">
-            
-                <!-- HEADER -->
-                <div class="modal-header bg-morado">
-                  <button
-                    type="button"
-                    class="close"
-                    data-dismiss="modal"
-                    (click)="onClickCerrarModalGarantias()">
-                    &times;
-                  </button>
-                
-                  <h6 class="modal-title">Cambiar garantías</h6>
-                </div>
-            
-                <!-- BODY -->
-                <div class="modal-body">
-                  <!-- CODEUDOR -->
-                  <form [formGroup]="garantiasForm">
-                    <div class="row">
-                      <div class="col-xs-12 col-md-4 col-lg-4">
-                        <div class="form-group">
-                          <label>Codeudor:</label>
-                          <select
-                            class="form-control"
-                            formControlName="codeudorSeleccionado"
-                            (change)="onChangeCodeudor($event)">
-                            @if(codeudoresBasico.length == 0) {
-                                <option value="">-- No hay registros --</option>
-                            } @else {
-                                <option value="">-- Seleccione --</option>
-                                <option
-                                  *ngFor="let c of codeudoresBasico"
-                                  [value]="c.IdTercero">
-                                  {{ c.NumeroDocumento }} -
-                                  {{ c.NombreCompleto }}
-                                </option>
-                            }
-                          </select>
+            <div style="width: 88%; margin: 30px auto; height: 90%;">
+                <div>
+                    <div class="modal-content modal-xl">
+        
+                        <!-- HEADER -->
+                        <div class="modal-header bg-morado">
+                            <button type="button" class="close" data-dismiss="modal" (click)="onClickCerrarModalGarantias()">
+                                &times;
+                            </button>
+        
+                            <h6 class="modal-title">Cambiar garantías</h6>
                         </div>
-                      </div>
-                    </div>
-                  </form>
-                
-                  <!-- GARANTIAS DISPONIBLES CODEUDOR -->
-                  <div *ngIf="mostrarGarantiasCodeudor">
-                    <label class="textNegrilla"> Garantías Disponibles Codeudor </label>
-                        <!-- AGREGAR ESTE BLOQUE - Mensaje cuando no hay registros -->
-                        @if (listGarantiasDisponiblesCodeudor.length === 0) {
-                            <div class="alert alert-secondary" role="alert" *ngIf="">
+        
+                        <!-- BODY -->
+                        <div class="modal-body">
+                            <!-- CODEUDOR -->
+                            <form [formGroup]="garantiasForm">
+                                <div class="row">
+                                    <div class="col-xs-12 col-md-4 col-lg-4">
+                                        <div class="form-group">
+                                            <label>Codeudor:</label>
+                                            <select class="form-control" formControlName="codeudorSeleccionado"
+                                                (change)="onChangeCodeudor($event)">
+                                                @if(codeudoresBasico.length == 0) {
+                                                <option value="">-- No hay registros --</option>
+                                                } @else {
+                                                <option value="">-- Seleccione --</option>
+                                                <option *ngFor="let c of codeudoresBasico" [value]="c.IdTercero">
+                                                    {{ c.NumeroDocumento }} -
+                                                    {{ c.NombreCompleto }}
+                                                </option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+        
+                            <!-- GARANTIAS DISPONIBLES CODEUDOR -->
+                            <div *ngIf="mostrarGarantiasCodeudor">
+                                <label class="textNegrilla"> Garantías Disponibles Codeudor </label>
+                                <!-- AGREGAR ESTE BLOQUE - Mensaje cuando no hay registros -->
+                                @if (listGarantiasDisponiblesCodeudor.length === 0) {
+                                <div class="alert alert-secondary" role="alert" *ngIf="">
+                                    No hay registros
+                                </div>
+                                }
+                                @else {
+                                <div class="table-responsive scrollTabla panel panel-default" #tablaCodeudor>
+                                    <table class="table table-hover encabezado-fijo">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">Tipo garantía</th>
+                                                <th class="text-center">Garantía</th>
+                                                <th class="text-center">Clase</th>
+                                                <th class="text-center">Descripción</th>
+                                                <th class="text-center">Valor cobertura</th>
+                                                <th class="text-center">Valor respalda</th>
+                                                <th class="text-center">Créditos</th>
+                                                <th class="text-center">Opciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <ng-container *ngFor="let item of listGarantiasDisponiblesCodeudor; let i=index">
+                                                <tr [attr.id]="'codeudor-fila-' + item.Consecutivo"
+                                                    (click)="selectRowGarantias('codeudorDisponibles', i, item.Consecutivo)"
+                                                    [class.tr-selected]="isRowSelected('codeudorDisponibles', i, item.Consecutivo)"
+                                                    [class.fila-expandida]="mostrarDetalleGarantia &&
+                                                                        filaSeleccionadaGarantia === item.Consecutivo &&
+                                                                        tablaDetalleActiva === 'codeudorDisponibles'">
+                                                    <td>
+                                                        @if(item.CantidadCreditos > 0) {
+                                                        <span class="icono-acordeon" tabindex="-1"
+                                                            (click)="onClickDetalleGarantia(item.Consecutivo, item.Tipo, 'codeudorDisponibles')"
+                                                            [title]="(mostrarDetalleGarantia &&
+                                                            filaSeleccionadaGarantia === item.Consecutivo &&
+                                                            tablaDetalleActiva === 'codeudorDisponibles')
+                                                            ? 'Ocultar detalle' : 'Ver detalle'">
+                                                            <i [ngClass]="(mostrarDetalleGarantia &&
+                                                       filaSeleccionadaGarantia === item.Consecutivo &&
+                                                       tablaDetalleActiva === 'codeudorDisponibles')
+                                                        ? 'icon-chevron-up': 'icon-chevron-down'">
+                                                            </i>
+                                                        </span>
+                                                        } @else {
+                                                            <span class="icono-acordeon" tabindex="-1" [title]="'No hay registros'">
+                                                                <i class="icon-circle"></i>
+                                                            </span>
+                                                        }
+                                                        {{item.Tipo}}
+                                                    </td>
+                                                    <td>{{item.Matricula}}</td>
+                                                    <td>{{item.Clase}}</td>
+                                                    <td>{{item.Descripcion}}</td>
+                                                    <td class="text-right">{{item.Cobertura | currency:'$'}}</td>
+                                                    <td class="text-right">{{item.Respalda | currency:'$'}}</td>
+                                                    <td class="text-center">{{item.CantidadCreditos}}</td>
+                                                    <td class="text-center">
+                                                      <span
+                                                        [title]="!puedeAgregarGarantiaCodeudor(item) 
+                                                          ? 'La garantía no tiene cobertura disponible' : ''" >
+                                                        <button 
+                                                          class="btn Gt-btn-verde btn-icon legitRipple"
+                                                          [disabled]="!puedeAgregarGarantiaCodeudor(item)"
+                                                          (click)="onClickAgregarGarantia(i,'codeudor',$event)"
+                                                        >
+                                                          <i class="icon-arrow-down5"></i>
+                                                        </button>
+                                                      </span>
+                                                    </td>
+                                                </tr>
+                                                <tr *ngIf="mostrarDetalleGarantia &&
+                                                       filaSeleccionadaGarantia === item.Consecutivo &&
+                                                       tablaDetalleActiva === 'codeudorDisponibles'" class="fila-detalle">
+                                                    <td colspan="11">
+                                                        <div class="detalle-acordeon">
+                                                            <div class="table-responsive">
+                                                                <table class="table table-sm table-border">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Garantía</th>
+                                                                            <th>Cuenta</th>
+                                                                            <th>Línea</th>
+                                                                            <th>Nombre línea</th>
+                                                                            <th>Documento deudor</th>
+                                                                            <th>Nombre deudor</th>
+                                                                            <th>Valor crédito</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr *ngFor="let d of detalleGarantiaCreditos">
+                                                                            <td>{{d.strMatricula}}</td>
+                                                                            <td>{{d.Cuenta}}</td>
+                                                                            <td>{{d.Linea}}</td>
+                                                                            <td>
+                                                                                {{ (d.NombreLinea || '').slice(0,50) }}{{
+                                                                                (d.NombreLinea || '').length > 50 ? '...' : ''
+                                                                                }}
+                                                                            </td>
+                                                                            <td>{{d.IdDeudor}}</td>
+                                                                            <td>{{d.NombreDeudor}}</td>
+                                                                            <td>{{d.ValorCredito | currency:'$'}}</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </ng-container>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                }
+                                <br>
+                                <div class="row text-center">
+                                    <div class="col-xs-12 col-md-3">
+                                        <label><strong>Total cobertura:</strong> {{ valorCoberturaDisponibleCodeudor |
+                                            currency:'$' }}</label>
+                                    </div>
+                                    <div class="col-xs-12 col-md-3">
+                                        <label><strong>Total respaldado:</strong> {{ valorRespaldadoDisponibleCodeudor |
+                                            currency:'$' }}</label>
+                                    </div>
+                                    <div class="col-xs-12 col-md-3">
+                                        <label><strong>Total disponible:</strong> {{ valorCoberturaDisponibleCodeudor -
+                                            valorRespaldadoDisponibleCodeudor | currency:'$' }}</label>
+                                    </div>
+                                    <div class="col-xs-12 col-md-3 text-center">
+                                        <label class="label-uso-codeudor">
+                                            <span class="circle-badge" [ngClass]="{
+                                                'badge-verde': obtenerEstado(valorRespaldadoDisponibleCodeudor, valorCoberturaDisponibleCodeudor) === 'VERDE',
+                                                'badge-amarillo': obtenerEstado(valorRespaldadoDisponibleCodeudor, valorCoberturaDisponibleCodeudor) === 'AMARILLO',
+                                                'badge-morado': obtenerEstado(valorRespaldadoDisponibleCodeudor, valorCoberturaDisponibleCodeudor) === 'ROJO'
+                                              }">
+                                                {{ obtenerPorcentaje(valorCoberturaDisponibleCodeudor -
+                                                valorRespaldadoDisponibleCodeudor, valorCoberturaDisponibleCodeudor) |
+                                                number:'1.0-0' }}%
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <br>
+                            </div>
+        
+                            <!-- GARANTIAS DISPONIBLES DEUDOR -->
+                            <label class="textNegrilla"> Garantías Disponibles Deudor </label>
+                            <!-- AGREGAR ESTE BLOQUE - Mensaje cuando no hay registros -->
+                            @if(listGarantiasDisponiblesDeudor.length === 0) {
+                            <div class="alert alert-secondary" role="alert">
                                 No hay registros
                             </div>
-                        }
-                        @else {
-                            <div class="table-responsive scrollTabla panel panel-default" #tablaCodeudor>
-                              <table class="table table-hover encabezado-fijo">
-                                <thead>
-                                  <tr>
-                                    <th class="text-center">Tipo garantía</th>
-                                    <th class="text-center">Garantía</th>
-                                    <th class="text-center">Clase</th>
-                                    <th class="text-center">Descripción</th>
-                                    <th class="text-center">Valor cobertura</th>
-                                    <th class="text-center">Valor respalda</th>
-                                    <th class="text-center">Créditos</th>
-                                    <th class="text-center">Opciones</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  <ng-container *ngFor="let item of listGarantiasDisponiblesCodeudor; let i=index">
-                                    <tr [attr.id]="'codeudor-fila-' + item.Consecutivo"
-                                        (click)="selectRowGarantias('codeudorDisponibles', i, item.Consecutivo)"
-                                        [class.tr-selected]="isRowSelected('codeudorDisponibles', i, item.Consecutivo)"
-                                        [class.fila-expandida]="mostrarDetalleGarantia &&
-                                                                filaSeleccionadaGarantia === item.Consecutivo &&
-                                                                tablaDetalleActiva === 'codeudorDisponibles'">
-                                      <td>
-                                        @if(item.CantidadCreditos > 0) {
-                                        <span
-                                          class="icono-acordeon" tabindex="-1"
-                                          (click)="onClickDetalleGarantia(item.Consecutivo, item.Tipo, 'codeudorDisponibles')"
-                                          [title]="(mostrarDetalleGarantia &&
-                                                    filaSeleccionadaGarantia === item.Consecutivo &&
-                                                    tablaDetalleActiva === 'codeudorDisponibles')
-                                                    ? 'Ocultar detalle' : 'Ver detalle'">
-                                          <i [ngClass]="(mostrarDetalleGarantia &&
-                                               filaSeleccionadaGarantia === item.Consecutivo &&
-                                               tablaDetalleActiva === 'codeudorDisponibles')
-                                                ? 'icon-chevron-up': 'icon-chevron-down'">
-                                          </i>
-                                        </span>
-                                        }
-                                        {{item.Tipo}}
-                                      </td>
-                                      <td>{{item.Matricula}}</td>
-                                      <td>{{item.Clase}}</td>
-                                      <td>{{item.Descripcion}}</td>
-                                      <td class="text-right">{{item.Cobertura | currency:'$'}}</td>
-                                      <td class="text-right">{{item.Respalda | currency:'$'}}</td>
-                                      <td class="text-center">{{item.CantidadCreditos}}</td>
-                                      <td class="text-center">
-                                        <button class="btn Gt-btn-verde btn-icon legitRipple"
-                                                (click)="onClickAgregarGarantia(i,'codeudor',$event)">
-                                          <i class="icon-arrow-down5"></i>
-                                        </button>
-                                      </td>
-                                    </tr>
-                                    <tr *ngIf="mostrarDetalleGarantia &&
-                                               filaSeleccionadaGarantia === item.Consecutivo &&
-                                               tablaDetalleActiva === 'codeudorDisponibles'"
-                                        class="fila-detalle">
-                                      <td colspan="11">
-                                        <div class="detalle-acordeon">
-                                          <div class="table-responsive">
-                                            <table class="table table-sm table-border">
-                                              <thead>
-                                                <tr>
-                                                  <th>Garantía</th>
-                                                  <th>Cuenta</th>
-                                                  <th>Línea</th>
-                                                  <th>Nombre línea</th>
-                                                  <th>Documento deudor</th>
-                                                  <th>Nombre deudor</th>
-                                                  <th>Valor crédito</th>
-                                                </tr>
-                                              </thead>
-                                              <tbody>
-                                                <tr *ngFor="let d of detalleGarantiaCreditos">
-                                                  <td>{{d.strMatricula}}</td>
-                                                  <td>{{d.Cuenta}}</td>
-                                                  <td>{{d.Linea}}</td>
-                                                  <td>
-                                                    {{ (d.NombreLinea || '').slice(0,50) }}{{ (d.NombreLinea || '').length > 50 ? '...' : '' }}
-                                                  </td>
-                                                  <td>{{d.IdDeudor}}</td>
-                                                  <td>{{d.NombreDeudor}}</td>
-                                                  <td>{{d.ValorCredito | currency:'$'}}</td>
-                                                </tr>
-                                              </tbody>
-                                            </table>
-                                          </div>
-                                        </div>
-                                      </td>
-                                    </tr>
-                                  </ng-container>
-                                </tbody>
-                              </table>
+                            } @else {
+                            <div class="table-responsive scrollTabla panel panel-default" #tablaDeudor>
+                                <table class="table table-hover encabezado-fijo">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Tipo garantía</th>
+                                            <th class="text-center">Garantía</th>
+                                            <th class="text-center">Clase</th>
+                                            <th class="text-center">Descripción</th>
+                                            <th class="text-center">Valor cobertura</th>
+                                            <th class="text-center">Valor respalda</th>
+                                            <th class="text-center">Créditos</th>
+                                            <th class="text-center">Opciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ng-container *ngFor="let item of listGarantiasDisponiblesDeudor; let i=index">
+                                            <tr [attr.id]="'deudor-fila-' + item.Consecutivo"
+                                                (click)="selectRowGarantias('deudorDisponibles', i, item.Consecutivo)"
+                                                [class.tr-selected]="isRowSelected('deudorDisponibles', i, item.Consecutivo)">
+                                                <td>
+                                                    @if(item.CantidadCreditos > 0) {
+                                                    <span class="icono-acordeon" tabindex="-1"
+                                                        (click)="onClickDetalleGarantia(item.Consecutivo, item.Tipo, 'deudorDisponibles')"
+                                                        [title]="(mostrarDetalleGarantia &&
+                                                  filaSeleccionadaGarantia === item.Consecutivo &&
+                                                  tablaDetalleActiva === 'deudorDisponibles') ? 'Ocultar detalle' : 'Ver detalle'">
+                                                        <i
+                                                            [ngClass]=" (mostrarDetalleGarantia && filaSeleccionadaGarantia === item.Consecutivo &&
+                                             tablaDetalleActiva === 'deudorDisponibles') ? 'icon-chevron-up' : 'icon-chevron-down' ">
+                                                        </i>
+                                                    </span>
+                                                    } @else {
+                                                    <span class="icono-acordeon" tabindex="-1" [title]="'No hay registros'">
+                                                        <i class="icon-circle"></i>
+                                                    </span>
+                                                    }
+                                                    {{item.Tipo}}
+                                                </td>
+                                                <td>{{item.Matricula}}</td>
+                                                <td>{{item.Clase}}</td>
+                                                <td>{{item.Descripcion}}</td>
+                                                <td class="text-right">{{item.Cobertura | currency:'$'}}</td>
+                                                <td class="text-right">{{item.Respalda | currency:'$'}}</td>
+        
+                                                <td class="text-center">{{item.CantidadCreditos}}</td>
+                                                <td class="text-center">
+                                                    <button class="btn Gt-btn-verde btn-icon legitRipple"
+                                                        (click)="onClickAgregarGarantia(i,'deudor',$event)">
+                                                        <i class="icon-arrow-down5"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr *ngIf="mostrarDetalleGarantia && filaSeleccionadaGarantia === item.Consecutivo && tablaDetalleActiva === 'deudorDisponibles'"
+                                                class="fila-detalle">
+                                                <td colspan="11">
+                                                    <div class="detalle-acordeon">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-sm table-border">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Garantía</th>
+                                                                        <th>Cuenta</th>
+                                                                        <th>Línea</th>
+                                                                        <th>Nombre línea</th>
+                                                                        <th>Documento deudor</th>
+                                                                        <th>Nombre deudor</th>
+                                                                        <th>Valor crédito</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr *ngFor="let d of detalleGarantiaCreditos">
+                                                                        <td>{{d.strMatricula}}</td>
+                                                                        <td>{{d.Cuenta}}</td>
+                                                                        <td>{{d.Linea}}</td>
+                                                                        <td>
+                                                                            {{ (d.NombreLinea || '').slice(0,50) }}{{
+                                                                            (d.NombreLinea || '').length > 50 ? '...' : '' }}
+                                                                        </td>
+                                                                        <td>{{d.IdDeudor}}</td>
+                                                                        <td>{{d.NombreDeudor}}</td>
+                                                                        <td>{{d.ValorCredito | currency:'$'}}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </ng-container>
+                                    </tbody>
+                                </table>
                             </div>
-                        }
-                    <br>
-                    <div class="row text-center">
-                      <div class="col-xs-12 col-md-3">
-                        <label><strong>Total cobertura:</strong> {{ valorCoberturaDisponibleCodeudor | currency:'$' }}</label>
-                      </div>
-                      <div class="col-xs-12 col-md-3">
-                        <label><strong>Total respaldado:</strong> {{ valorRespaldadoDisponibleCodeudor | currency:'$' }}</label>
-                      </div>
-                      <div class="col-xs-12 col-md-3"> 
-                        <label><strong>Total disponible:</strong> {{ valorCoberturaDisponibleCodeudor - valorRespaldadoDisponibleCodeudor | currency:'$' }}</label>
-                      </div>
-                        <div class="col-xs-12 col-md-3 text-center">
-                            <label class="label-uso-codeudor">
-                                <span class="circle-badge"
-                                      [ngClass]="{
-                                        'badge-verde': obtenerEstado(valorRespaldadoDisponibleCodeudor, valorCoberturaDisponibleCodeudor) === 'VERDE',
-                                        'badge-amarillo': obtenerEstado(valorRespaldadoDisponibleCodeudor, valorCoberturaDisponibleCodeudor) === 'AMARILLO',
-                                        'badge-morado': obtenerEstado(valorRespaldadoDisponibleCodeudor, valorCoberturaDisponibleCodeudor) === 'ROJO'
-                                      }">
-                                    {{ obtenerPorcentaje(valorCoberturaDisponibleCodeudor - valorRespaldadoDisponibleCodeudor, valorCoberturaDisponibleCodeudor) | number:'1.0-0' }}%
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="clearfix"></div>
-                    <br>
-                  </div>
-                
-                  <!-- GARANTIAS DISPONIBLES DEUDOR -->
-                  <label class="textNegrilla"> Garantías Disponibles Deudor </label>
-                   <!-- AGREGAR ESTE BLOQUE - Mensaje cuando no hay registros -->
-                    @if(listGarantiasDisponiblesDeudor.length === 0) {
-                    <div class="alert alert-secondary" role="alert">
-                        No hay registros
-                    </div>
-                    } @else {
-                    <div class="table-responsive scrollTabla panel panel-default" #tablaDeudor>
-                      <table class="table table-hover encabezado-fijo">
-                        <thead>
-                          <tr>
-                            <th class="text-center">Tipo garantía</th>
-                            <th class="text-center">Garantía</th>
-                            <th class="text-center">Clase</th>
-                            <th class="text-center">Descripción</th>
-                            <th class="text-center">Valor cobertura</th>
-                            <th class="text-center">Valor respalda</th>
-                            <th class="text-center">Créditos</th>
-                            <th class="text-center">Opciones</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <ng-container *ngFor="let item of listGarantiasDisponiblesDeudor; let i=index">
-                            <tr [attr.id]="'deudor-fila-' + item.Consecutivo"
-                                (click)="selectRowGarantias('deudorDisponibles', i, item.Consecutivo)"
-                                [class.tr-selected]="isRowSelected('deudorDisponibles', i, item.Consecutivo)">
-                              <td>        
-                              @if(item.CantidadCreditos > 0) {              
-                              <span
-                                class="icono-acordeon" tabindex="-1"
-                                (click)="onClickDetalleGarantia(item.Consecutivo, item.Tipo, 'deudorDisponibles')"
-                                [title]="(mostrarDetalleGarantia &&
-                                          filaSeleccionadaGarantia === item.Consecutivo &&
-                                          tablaDetalleActiva === 'deudorDisponibles') ? 'Ocultar detalle' : 'Ver detalle'">
-                                <i [ngClass]=" (mostrarDetalleGarantia && filaSeleccionadaGarantia === item.Consecutivo &&
-                                     tablaDetalleActiva === 'deudorDisponibles') ? 'icon-chevron-up' : 'icon-chevron-down' ">
-                                </i>
-                              </span>
-                              } @else  {
-                              <span
-                                class="icono-acordeon" tabindex="-1"
-                                [title]="'No hay registros'">
-                                <i class="icon-circle"></i>
-                              </span>
-                              }
-                                {{item.Tipo}}
-                              </td>
-                              <td>{{item.Matricula}}</td>
-                              <td>{{item.Clase}}</td>
-                              <td>{{item.Descripcion}}</td>
-                              <td class="text-right">{{item.Cobertura | currency:'$'}}</td>
-                              <td class="text-right">{{item.Respalda | currency:'$'}}</td>
-                          
-                              <td class="text-center">{{item.CantidadCreditos}}</td>
-                              <td class="text-center">
-                                <button class="btn Gt-btn-verde btn-icon legitRipple"
-                                        (click)="onClickAgregarGarantia(i,'deudor',$event)">
-                                  <i class="icon-arrow-down5"></i>
-                                </button>
-                              </td>
-                            </tr>
-                            <tr *ngIf="mostrarDetalleGarantia && filaSeleccionadaGarantia === item.Consecutivo && tablaDetalleActiva === 'deudorDisponibles'" class="fila-detalle">
-                              <td colspan="11">
-                                <div class="detalle-acordeon">
-                                  <div class="table-responsive">
-                                    <table class="table table-sm table-border">
-                                      <thead>
-                                        <tr>
-                                          <th >Garantía</th>
-                                          <th >Cuenta</th>
-                                          <th >Línea</th>
-                                          <th >Nombre línea</th>
-                                          <th >Documento deudor</th>
-                                          <th >Nombre deudor</th>
-                                          <th >Valor crédito</th>
-                                        </tr>
-                                      </thead>
-                                      <tbody>
-                                        <tr *ngFor="let d of detalleGarantiaCreditos">
-                                          <td>{{d.strMatricula}}</td>
-                                          <td>{{d.Cuenta}}</td>
-                                          <td >{{d.Linea}}</td>
-                                          <td >
-                                            {{ (d.NombreLinea || '').slice(0,50) }}{{ (d.NombreLinea || '').length > 50 ? '...' : '' }}
-                                          </td>
-                                          <td >{{d.IdDeudor}}</td>
-                                          <td>{{d.NombreDeudor}}</td>
-                                          <td >{{d.ValorCredito | currency:'$'}}</td>
-                                        </tr>
-                                      </tbody>
-                                    </table>
-                                  </div>
+                            }
+                            <br>
+                            <div class="row text-center">
+                                <div class="col-xs-12 col-md-3">
+                                    <label><strong>Total cobertura:</strong> {{ valorCoberturaDisponibleDeudor | currency:'$'
+                                        }}</label>
                                 </div>
-                              </td>
-                            </tr>
-                          </ng-container>
-                        </tbody>
-                      </table>
-                    </div>
-                    }
-                  <br>
-                  <div class="row text-center">
-                    <div class="col-xs-12 col-md-3">
-                      <label><strong>Total cobertura:</strong> {{ valorCoberturaDisponibleDeudor | currency:'$' }}</label>
-                    </div>
-                    <div class="col-xs-12 col-md-3">
-                      <label><strong>Total respaldado:</strong> {{ valorRespaldadoDisponibleDeudor | currency:'$' }}</label>
-                    </div>
-                    <div class="col-xs-12 col-md-3"> 
-                      <label><strong>Total disponible:</strong> {{ valorCoberturaDisponibleDeudor - valorRespaldadoDisponibleDeudor | currency:'$' }}</label>
-                    </div>
-                       <!-- <div class="col-xs-12 col-md-3 text-center">
-                            <label class="label-uso-codeudor">
-                                <span class="circle-badge"
-                                      [ngClass]="{
-                                        'badge-verde': obtenerEstado(valorRespaldadoDisponibleDeudor, valorCoberturaDisponibleDeudor) === 'VERDE',
-                                        'badge-amarillo': obtenerEstado(valorRespaldadoDisponibleDeudor, valorCoberturaDisponibleDeudor) === 'AMARILLO',
-                                        'badge-morado': obtenerEstado(valorRespaldadoDisponibleDeudor, valorCoberturaDisponibleDeudor) === 'ROJO'
-                                      }">
-                                    {{ obtenerPorcentaje(valorRespaldadoDisponibleDeudor, valorCoberturaDisponibleDeudor) | number:'1.0-0' }}%
-                                </span>
-                            </label>
+                                <div class="col-xs-12 col-md-3">
+                                    <label><strong>Total respaldado:</strong> {{ valorRespaldadoDisponibleDeudor | currency:'$'
+                                        }}</label>
+                                </div>
+                                <div class="col-xs-12 col-md-3">
+                                    <label><strong>Total disponible:</strong> {{ valorCoberturaDisponibleDeudor -
+                                        valorRespaldadoDisponibleDeudor | currency:'$' }}</label>
+                                </div>
+                                <div class="col-xs-12 col-md-3 text-center">
+                                    <label class="label-uso-codeudor">
+                                        <span class="circle-badge" [ngClass]="{
+                                                'badge-verde': obtenerEstado(valorRespaldadoDisponibleDeudor, valorCoberturaDisponibleDeudor) === 'VERDE',
+                                                'badge-amarillo': obtenerEstado(valorRespaldadoDisponibleDeudor, valorCoberturaDisponibleDeudor) === 'AMARILLO',
+                                                'badge-morado': obtenerEstado(valorRespaldadoDisponibleDeudor, valorCoberturaDisponibleDeudor) === 'ROJO'
+                                              }">
+                                            {{ obtenerPorcentaje(valorCoberturaDisponibleDeudor -
+                                            valorRespaldadoDisponibleDeudor, valorCoberturaDisponibleDeudor) | number:'1.0-0'
+                                            }}%
+                                        </span>
+                                    </label>
+                                </div>
+        
+                            </div>
+        
+                            <div class="clearfix"></div>
+                            <br>
+        
+                            <!-- GARANTIAS ASIGNADAS -->
+                            <label class="textNegrilla">Garantías Asignadas</label>
+        
+                            <div class="table-responsive scrollTabla panel panel-default" #tablaAsignadas>
+                                <table class="table table-hover encabezado-fijo">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Tipo garantía</th>
+                                            <th class="text-center">Garantía</th>
+                                            <th class="text-center">Clase</th>
+                                            <th class="text-center">Descripción</th>
+                                            <th class="text-center">Valor cobertura</th>
+                                            <th class="text-center">Valor respalda</th>
+                                            <th class="text-center">Créditos</th>
+                                            <th class="text-center">Opciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ng-container *ngFor="let item of garantiasRealesAsignadas; let i=index">
+        
+                                            <tr [attr.id]="'asignadas-fila-' + item.Consecutivo"
+                                                (click)="selectRowGarantias('asignadas', i, item.Consecutivo)"
+                                                [class.tr-selected]="isRowSelected('asignadas', i, item.Consecutivo)"
+                                                [class.fila-expandida]="mostrarDetalleGarantia &&
+                                                                filaSeleccionadaGarantia === item.Consecutivo &&
+                                                                tablaDetalleActiva === 'asignadas'">
+                                                <td>
+                                                    @if(item.CantidadCreditos > 0) {
+                                                    <span class="icono-acordeon" tabindex="-1"
+                                                        (click)="onClickDetalleGarantia(item.Consecutivo, item.Tipo, 'asignadas', item.Matricula)"
+                                                        [title]="(mostrarDetalleGarantia &&
+                                                    filaSeleccionadaGarantia === item.Consecutivo &&
+                                                    tablaDetalleActiva === 'asignadas')
+                                                    ? 'Ocultar detalle' : 'Ver detalle'">
+                                                        <i [ngClass]=" (mostrarDetalleGarantia && filaSeleccionadaGarantia === item.Consecutivo &&
+                                               tablaDetalleActiva === 'asignadas')
+                                                ? 'icon-chevron-up' : 'icon-chevron-down' ">
+                                                        </i>
+                                                    </span>
+                                                    }
+                                                    {{item.Tipo}}
+                                                </td>
+                                                <td>{{item.Matricula}}</td>
+                                                <td>{{item.Clase}}</td>
+                                                <td>{{item.Descripcion}}</td>
+                                                <td class="text-right">{{item.Cobertura | currency:'$'}}</td>
+                                                <td class="text-right">{{item.TotalDeuda | currency:'$'}}</td>
+                                                <td class="text-center">{{item.CantidadCreditos}}</td>
+                                                <td class="text-center">
+                                                    <button class="btn Gt-btn-verde btn-icon legitRipple"
+                                                        (click)="onClickEliminarGarantia(i,$event)">
+                                                        <i class="icon-arrow-up5"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr *ngIf="mostrarDetalleGarantia &&
+                                               filaSeleccionadaGarantia === item.Consecutivo &&
+                                               tablaDetalleActiva === 'asignadas'" class="fila-detalle">
+                                                <td colspan="11">
+                                                    <div class="detalle-acordeon">
+                                                        <div class="table-responsive">
+        
+                                                            <table class="table table-sm table-border">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Garantía</th>
+                                                                        <th>Cuenta</th>
+                                                                        <th>Línea</th>
+                                                                        <th>Nombre línea</th>
+                                                                        <th>Documento deudor</th>
+                                                                        <th>Nombre deudor</th>
+                                                                        <th>Valor crédito</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr *ngFor="let d of detalleGarantiaCreditos">
+                                                                        <td>{{d.strMatricula}}</td>
+                                                                        <td>{{d.Cuenta}}</td>
+                                                                        <td>{{d.Linea}}</td>
+                                                                        <td>
+                                                                            {{ (d.NombreLinea || '').slice(0,50) }}{{
+                                                                            (d.NombreLinea || '').length > 50 ? '...' : '' }}
+                                                                        </td>
+                                                                        <td>{{d.IdDeudor}}</td>
+                                                                        <td>{{d.NombreDeudor}}</td>
+                                                                        <td>{{d.ValorCredito | currency:'$'}}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </ng-container>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- <br> -->
+        
+                            <div class="clearfix"></div>
+                            <br>
+        
+                            <!-- GARANTIAS COMPARTIDAS -->
+                         
                         </div>
-                        <div class="col-xs-12 col-md-3 text-center">
-                            <label class="label-uso-codeudor">
-                                <span class="circle-badge"
-                                      [ngClass]="{
-                                        'badge-verde': obtenerEstado(valorRespaldadoDisponibleDeudor, valorCoberturaDisponibleDeudor) === 'VERDE',
-                                        'badge-amarillo': obtenerEstado(valorRespaldadoDisponibleDeudor, valorCoberturaDisponibleDeudor) === 'AMARILLO',
-                                        'badge-morado': obtenerEstado(valorRespaldadoDisponibleDeudor, valorCoberturaDisponibleDeudor) === 'ROJO'
-                                      }">
-                                    {{ obtenerPorcentaje(valorCoberturaDisponibleDeudor, valorRespaldadoDisponibleDeudor) | number:'1.0-0' }}%
-                                </span>
-                            </label>
+        
+                        <!-- FOOTER -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal"
+                                (click)="onClickCerrarModalGarantias()">
+                                Cancelar
+                            </button>
+                            <button type="button" class="btn Gt-btn-morado" [disabled]="isDisabledLimpiarGarantiasButton"
+                                (click)="onClickLimpiarGarantias()">
+                                Limpiar
+                            </button>
+                            <button type="button" class="btn Gt-btn-verde" [disabled]="isDisabledConfirmarGarantiasButton"
+                                (click)="onClickConfirmarCambiosGarantia()">
+                                Actualizar
+                            </button>
                         </div>
-
-                         <div class="col-xs-12 col-md-3 text-center">
-                            <label class="label-uso-codeudor">
-                                <span class="circle-badge"
-                                      [ngClass]="{
-                                        'badge-verde': obtenerEstado(valorRespaldadoDisponibleDeudor, valorCoberturaDisponibleDeudor) === 'VERDE',
-                                        'badge-amarillo': obtenerEstado(valorRespaldadoDisponibleDeudor, valorCoberturaDisponibleDeudor) === 'AMARILLO',
-                                        'badge-morado': obtenerEstado(valorRespaldadoDisponibleDeudor, valorCoberturaDisponibleDeudor) === 'ROJO'
-                                      }">
-                                    {{ obtenerPorcentaje(valorCoberturaDisponibleDeudor - valorRespaldadoDisponibleDeudor, valorRespaldadoDisponibleDeudor) | number:'1.0-0' }}%
-                                </span>
-                            </label>
-                        </div> -->
-                        <div class="col-xs-12 col-md-3 text-center">
-                            <label class="label-uso-codeudor">
-                                <span class="circle-badge"
-                                      [ngClass]="{
-                                        'badge-verde': obtenerEstado(valorRespaldadoDisponibleDeudor, valorCoberturaDisponibleDeudor) === 'VERDE',
-                                        'badge-amarillo': obtenerEstado(valorRespaldadoDisponibleDeudor, valorCoberturaDisponibleDeudor) === 'AMARILLO',
-                                        'badge-morado': obtenerEstado(valorRespaldadoDisponibleDeudor, valorCoberturaDisponibleDeudor) === 'ROJO'
-                                      }">
-                                    {{ obtenerPorcentaje(valorCoberturaDisponibleDeudor - valorRespaldadoDisponibleDeudor, valorCoberturaDisponibleDeudor) | number:'1.0-0' }}%
-                                </span>
-                            </label>
-                        </div>
-                    
-                  </div>        
-                
-                  <div class="clearfix"></div>
-                  <br>
-                
-                  <!-- GARANTIAS ASIGNADAS -->
-                  <label class="textNegrilla">Garantías Asignadas</label>
-                
-                  <div class="table-responsive scrollTabla panel panel-default" #tablaAsignadas>
-                    <table class="table table-hover encabezado-fijo">
-                      <thead>
-                        <tr>
-                            <th class="text-center">Tipo garantía</th>
-                            <th class="text-center">Garantía</th>
-                            <th class="text-center">Clase</th>
-                            <th class="text-center">Descripción</th>
-                            <th class="text-center">Valor cobertura</th>
-                            <th class="text-center">Valor respalda</th>
-                            <th class="text-center">Créditos</th>
-                            <th class="text-center">Opciones</th>
-                        </tr>
-                      </thead>
-                        <tbody>
-                          <ng-container *ngFor="let item of garantiasRealesAsignadas; let i=index">
-                        
-                            <tr [attr.id]="'asignadas-fila-' + item.Consecutivo"
-                                (click)="selectRowGarantias('asignadas', i, item.Consecutivo)"
-                                [class.tr-selected]="isRowSelected('asignadas', i, item.Consecutivo)"
-                                [class.fila-expandida]="mostrarDetalleGarantia &&
-                                                        filaSeleccionadaGarantia === item.Consecutivo &&
-                                                        tablaDetalleActiva === 'asignadas'">
-                              <td>
-                                @if(item.CantidadCreditos > 0) { 
-                                <span
-                                  class="icono-acordeon" tabindex="-1"
-                                  (click)="onClickDetalleGarantia(item.Consecutivo, item.Tipo, 'asignadas', item.Matricula)"
-                                  [title]="(mostrarDetalleGarantia &&
-                                            filaSeleccionadaGarantia === item.Consecutivo &&
-                                            tablaDetalleActiva === 'asignadas')
-                                            ? 'Ocultar detalle' : 'Ver detalle'">
-                                  <i [ngClass]=" (mostrarDetalleGarantia && filaSeleccionadaGarantia === item.Consecutivo &&
-                                       tablaDetalleActiva === 'asignadas')
-                                        ? 'icon-chevron-up' : 'icon-chevron-down' ">
-                                  </i>
-                                </span>
-                                }
-                                {{item.Tipo}}
-                              </td>
-                              <td>{{item.Matricula}}</td>
-                              <td>{{item.Clase}}</td>
-                              <td>{{item.Descripcion}}</td>
-                              <td class="text-right">{{item.Cobertura | currency:'$'}}</td>
-                              <td class="text-right">{{item.TotalDeuda | currency:'$'}}</td>
-                              <td class="text-center">{{item.CantidadCreditos}}</td>
-                              <td class="text-center">
-                                <button class="btn Gt-btn-verde btn-icon legitRipple"
-                                        (click)="onClickEliminarGarantia(i,$event)">
-                                  <i class="icon-arrow-up5"></i>
-                                </button>
-                              </td>
-                            </tr>
-                            <tr *ngIf="mostrarDetalleGarantia &&
-                                       filaSeleccionadaGarantia === item.Consecutivo &&
-                                       tablaDetalleActiva === 'asignadas'"
-                                class="fila-detalle">
-                              <td colspan="11">
-                                <div class="detalle-acordeon">
-                                  <div class="table-responsive">
+        
+                        <div class="modal-body">
+                            <!-- GARANTIAS COMPARTIDAS -->
+                            <label class="textNegrilla">Garantías Compartidas</label>
+                                                    
+                            @if (garantiasCompartidas.length === 0) {
+                              <div class="alert alert-secondary">
+                                No hay registros
+                              </div>
+                            }
+                            @else {
+                              <div class="table-responsive scrollTabla panel panel-default">
+                                <table class="table table-hover encabezado-fijo">
                                 
-                                    <table class="table table-sm table-border">
-                                      <thead>
-                                        <tr>
-                                          <th>Garantía</th>
-                                          <th>Cuenta</th>
-                                          <th>Línea</th>
-                                          <th>Nombre línea</th>
-                                          <th>Documento deudor</th>
-                                          <th>Nombre deudor</th>
-                                          <th>Valor crédito</th>
-                                        </tr>
-                                      </thead>
-                                      <tbody>
-                                        <tr *ngFor="let d of detalleGarantiaCreditos">
-                                          <td>{{d.strMatricula}}</td>
-                                          <td>{{d.Cuenta}}</td>
-                                          <td>{{d.Linea}}</td>
-                                          <td>
-                                            {{ (d.NombreLinea || '').slice(0,50) }}{{ (d.NombreLinea || '').length > 50 ? '...' : '' }}
-                                          </td>
-                                          <td>{{d.IdDeudor}}</td>
-                                          <td>{{d.NombreDeudor}}</td>
-                                          <td>{{d.ValorCredito | currency:'$'}}</td>
-                                        </tr>
-                                      </tbody>
-                                    </table>
-                                  </div>
+                                  <thead>
+                                    <tr>
+                                      <th class="text-center">Tipo garantía</th>
+                                      <th class="text-center">Garantía</th>
+                                      <th class="text-center">Clase</th>
+                                      <th class="text-center">Descripción</th>
+                                      <th class="text-center">Cobertura</th>
+                                      <th class="text-center">Respalda</th>
+                                      <th class="text-center">Créditos</th>
+                                    </tr>
+                                  </thead>
+                              
+                                  <tbody>
+                                    <ng-container *ngFor="let item of garantiasCompartidas; let i = index">
+                                    
+                                      <!-- FILA PRINCIPAL -->
+                                      <tr
+                                        [attr.id]="'compartidas-fila-' + item.lngConsecutivo"
+                                        (click)="selectRowGarantias('compartidas', i, item.lngConsecutivo)"
+                                        [class.tr-selected]="isRowSelected('compartidas', i, item.lngConsecutivo)"
+                                        [class.fila-expandida]="mostrarDetalleGarantia &&
+                                                                filaSeleccionadaGarantia === item.lngConsecutivo &&
+                                                                tablaDetalleActiva === 'compartidas'">
+                            
+                                        <td>
+                                          @if(item.CantidadCreditos > 0) {
+                                            <span
+                                              class="icono-acordeon"
+                                              tabindex="-1"
+                                              (click)="onClickDetalleGarantia(item.lngConsecutivo, item.Tipo, 'compartidas', item.IdGarantia)"
+                                              [title]="(mostrarDetalleGarantia &&
+                                                        filaSeleccionadaGarantia === item.lngConsecutivo &&
+                                                        tablaDetalleActiva === 'compartidas')
+                                                        ? 'Ocultar detalle' : 'Ver detalle'">
+                            
+                                              <i [ngClass]="(mostrarDetalleGarantia &&
+                                                            filaSeleccionadaGarantia === item.lngConsecutivo &&
+                                                            tablaDetalleActiva === 'compartidas')
+                                                            ? 'icon-chevron-up' : 'icon-chevron-down'">
+                                              </i>
+                                            </span>
+                                          }
+                                      
+                                          {{ mapTipoGarantia(item.Tipo, true) }}
+                                        </td>
+                                    
+                                        <td>{{ item.IdGarantia }}</td>
+                                        <td>{{ item.Clase }}</td>
+                                        <td>{{ item.Descripcion }}</td>
+                                        <td class="text-right">{{ item.Cobertura | currency:'$' }}</td>
+                                        <td class="text-right">{{ item.Respalda | currency:'$' }}</td>
+                                        <td class="text-center">{{ item.CantidadCreditos }}</td>
+                                    
+                                      </tr>
+                                  
+                                      <!-- DETALLE -->
+                                      <tr *ngIf="mostrarDetalleGarantia &&
+                                                 filaSeleccionadaGarantia === item.lngConsecutivo &&
+                                                 tablaDetalleActiva === 'compartidas'"
+                                          class="fila-detalle">
+                                  
+                                        <td colspan="11">
+                                          <div class="detalle-acordeon">
+                                            <div class="table-responsive">
+                                            
+                                              <table class="table table-sm table-border">
+                                                <thead>
+                                                  <tr>
+                                                    <th>Garantía</th>
+                                                    <th>Cuenta</th>
+                                                    <th>Línea</th>
+                                                    <th>Nombre línea</th>
+                                                    <th>Documento deudor</th>
+                                                    <th>Nombre deudor</th>
+                                                    <th>Valor crédito</th>
+                                                  </tr>
+                                                </thead>
+                                            
+                                                <tbody>
+                                                  <tr *ngFor="let d of detalleGarantiaCreditos">
+                                                    <td>{{ d.strMatricula }}</td>
+                                                    <td>{{ d.Cuenta }}</td>
+                                                    <td>{{ d.Linea }}</td>
+                                                    <td>
+                                                      {{ (d.NombreLinea || '').slice(0,50) }}
+                                                      {{ (d.NombreLinea || '').length > 50 ? '...' : '' }}
+                                                    </td>
+                                                    <td>{{ d.IdDeudor }}</td>
+                                                    <td>{{ d.NombreDeudor }}</td>
+                                                    <td>{{ d.ValorCredito | currency:'$' }}</td>
+                                                  </tr>
+                                                </tbody>
+                                            
+                                              </table>
+                                          
+                                            </div>
+                                          </div>
+                                        </td>
+                                    
+                                      </tr>
+                                  
+                                    </ng-container>
+                                  </tbody>
+                                </table>
+                              </div>
+                            }
+                            
+                            <br>
+                            
+                            <!-- TOTALES -->
+                            <div class="row text-center">
+                            
+                                <div class="col-xs-12 col-md-3">
+                                <label>
+                                  <strong>Total cobertura:</strong>
+                                  {{ valorCoberturaCompartidas | currency:'$' }}
+                                </label>
                                 </div>
-                              </td>
-                            </tr>
-                          </ng-container>
-                        </tbody>
-                    </table>
-                  </div>
-                  <br>
-                
-                  <div class="row text-center">
-                    <div class="col-xs-12 col-md-3">
-                      <label><strong>Total cobertura:</strong> {{ valorCoberturaTotal | currency:'$' }}</label>
-                    </div>
-                    <div class="col-xs-12 col-md-3">
-                      <label><strong>Total respaldado:</strong> {{ valorRespaldadoTotal | currency:'$' }}</label>
-                    </div>
-                    <div class="col-xs-12 col-md-3"> 
-                      <label><strong>Total disponible:</strong> {{ valorDisponibleTotal | currency:'$' }}</label>
-                    </div>                    
-                    <div class="col-xs-12 col-md-3"> 
-                      <label><strong>Valor a respaldar:</strong> {{ carteraInfo.SaldoCapital | currency:'$' }}</label>
-                    </div>
-                  </div>
+                          
+                                <div class="col-xs-12 col-md-3">
+                                <label>
+                                  <strong>Total respaldado:</strong>
+                                  {{ valorRespaldadoCompartidas | currency:'$' }}
+                                </label>
+                                </div>
+                          
+                                <div class="col-xs-12 col-md-3">
+                                <label>
+                                  <strong>Total disponible:</strong>
+                                  {{ valorCoberturaCompartidas - valorRespaldadoCompartidas | currency:'$' }}
+                                </label>
+                                </div>
+                                <div class="col-xs-12 col-md-3">
+                                    <label><strong>Valor a respaldar:</strong> {{ carteraInfo.SaldoCapital | currency:'$'
+                                        }}</label>
+                                </div>
+                            </div>
+                            <br>
+                             
+                            <div class="row text-center">
+                                <div class="col-xs-12 col-md-3"></div>
+                                <div class="col-xs-12 col-md-3"></div>
+                                <div class="col-xs-12 col-md-3"></div>
+                                <div class="col-xs-12 col-md-3 text-center">
+                                <label class="label-uso-codeudor">
+                                  <span class="circle-badge"
+                                    [ngClass]="{
+                                      'badge-verde': obtenerEstado(valorRespaldadoCompartidas, valorCoberturaCompartidas) === 'VERDE',
+                                      'badge-amarillo': obtenerEstado(valorRespaldadoCompartidas, valorCoberturaCompartidas) === 'AMARILLO',
+                                      'badge-morado': obtenerEstado(valorRespaldadoCompartidas, valorCoberturaCompartidas) === 'ROJO'
+                                    }">
+                            
+                                    {{
+                                      obtenerPorcentaje(
+                                        valorCoberturaCompartidas - valorRespaldadoCompartidas,
+                                        valorCoberturaCompartidas
+                                      ) | number:'1.0-0'
+                                    }}%
+                            
+                                  </span>
+                                </label>
+                                </div>
+                            </div>
+                          
+                            
+                            <div class="clearfix"></div>
+                            <br>
+                        </div>
 
-                  <div class="clearfix"></div>
-                  <br>
+                    </div>
                 </div>
-            
-                <!-- FOOTER -->
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal" (click)="onClickCerrarModalGarantias()">
-                    Cancelar
-                  </button>
-                  <button type="button" class="btn Gt-btn-morado" [disabled]="isDisabledLimpiarGarantiasButton" (click)="onClickLimpiarGarantias()">
-                    Limpiar
-                  </button>
-                  <button type="button" class="btn Gt-btn-verde" [disabled]="isDisabledConfirmarGarantiasButton" (click)="onClickConfirmarCambiosGarantia()">
-                    Actualizar
-                  </button>
-                </div>
-            
-              </div>
             </div>
-          </div>
         </div>
 
         <button type="button" style="visibility:hidden" #openCambiarGarantiasModal class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#cambiarGarantias">

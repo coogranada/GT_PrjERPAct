@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { EnvironmentService } from '../Enviroment/enviroment.service';
 import { Observable, retry } from 'rxjs';
 import { TipoBusquedaResumen } from '../../Models/Productos/cartera/gestion-credito.enum';
-import { ActualizarPagareCupoDto, ActualizarPagareDto, BaseRequestAlCalcular, CalcularDatosRequest, CambiarCalificacionDto, CambiarFormaPagoDto, CambiarGarantiaDto, CambiarGarantiasRequestDto, CambiarLineaCreditoDto, CuentaCarteraDetalle, CuentaCarteraResumen, CuentaFormateada, CupoInfo, DebitoAutomaticoCreditoDto, DetalleGarantiaCreditoDto, Diferido, GarantiaDisponible, GarantiaRealAsignada, GarantiasResponse, HistorialOperacion, LineaCambioListDto, ManejarSeguroCreditoDto, ObservacionRadicado, ObtenerCodeudorBasicoModel, PeriodoPago, PersonaNaturalBusquedaDto, Provision, ReesRelResponse, ResultadoOperacionDto, ResultCalcularCambioDatos, UltimaCalificacionDto } from '../../Models/Productos/cartera/gestion-credito.model';
+import { ActualizarPagareCupoDto, ActualizarPagareDto, BaseRequestAlCalcular, CalcularDatosRequest, CambiarCalificacionDto, CambiarFormaPagoDto, CambiarGarantiaDto, CambiarGarantiasRequestDto, CambiarLineaCreditoDto, CuentaCarteraDetalle, CuentaCarteraResumen, CuentaFormateada, CupoInfo, DebitoAutomaticoCreditoDto, DetalleGarantiaCreditoDto, Diferido, GarantiaCompartida, GarantiaDisponible, GarantiaRealAsignada, GarantiasResponse, HistorialOperacion, LineaCambioListDto, ManejarSeguroCreditoDto, ObservacionRadicado, ObtenerCodeudorBasicoModel, PeriodoPago, PersonaNaturalBusquedaDto, Provision, ReesRelResponse, ResultadoOperacionDto, ResultCalcularCambioDatos, UltimaCalificacionDto } from '../../Models/Productos/cartera/gestion-credito.model';
 import { buildParams } from '../../utils/helpers';
 
 @Injectable({
@@ -263,5 +263,16 @@ export class CarteraService {
         let params = new HttpParams().set('idCuenta', idCuenta);
         return this._http.get<ObtenerCodeudorBasicoModel[]>(url, { params });
     }
+
+    getGarantiasCompartidas(idCuenta: number, idTercero: number) {
+        const url = `${this.environment.Url}/ObtenerGarantiasCompartidas`;
+        
+        const params = new HttpParams()
+            .set('idCuenta', idCuenta)
+            .set('idTercero', idTercero);
+        
+        return this._http.get<GarantiaCompartida[]>(url, { params });
+    }
+
 
 }
