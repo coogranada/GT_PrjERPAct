@@ -1262,6 +1262,7 @@ export class AportesComponent implements OnInit {
               this.btnActualizar = true;
               this.btnActualizarBeneficiario = true;
               this.btnGuardar = true;
+               this.aportesOperacionFrom.get('Codigo')?.reset();
             }
           } else if (result.length > 1) {
             this.dataAsociados = result;
@@ -1311,12 +1312,14 @@ export class AportesComponent implements OnInit {
               this.btnActualizar = true;
               this.btnActualizarBeneficiario = true;
               this.btnGuardar = true;
+              this.aportesOperacionFrom.get('Codigo')?.reset();
             } else {
               this.dataAsociados = result;
               this.BuscarAsociados.nativeElement.click();
               this.btnActualizar = true;
               this.btnActualizarBeneficiario = true;
               this.btnGuardar = true;
+               this.aportesOperacionFrom.get('Codigo')?.reset();
             }
           },
           error => {

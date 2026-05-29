@@ -5,6 +5,7 @@ import { AccionistaModel } from '../../../../../Models/Clientes/Juridicos/Accion
 import { JuridicosService } from '../../../../../Services/Clientes/Juridicos.service';
 import { GeneralesService } from '../../../../../Services/Productos/generales.service';
 import { AlertService } from '../../../../../Services/Alert/alert.service';
+import { LoadingService } from '../../../../../Services/shared/loading.service';
 declare var $: any;
 @Component({
   selector: 'app-accionistas',
@@ -55,7 +56,7 @@ export class AccionistasComponent implements OnInit {
   public accionistaModel = new AccionistaModel();
   public accionistaModelLst: AccionistaModel[] = [];
   constructor(private clientesGetListService: ClientesGetListService, private notif: AlertService,
-    private juridicoService: JuridicosService, private generalesService: GeneralesService) { }
+    private juridicoService: JuridicosService, private generalesService: GeneralesService, private loading: LoadingService) { }
 
   ngOnInit() {
     this.IrArriba();
@@ -465,7 +466,7 @@ export class AccionistasComponent implements OnInit {
     this.EnableUpdateAccionistas = true;
   }
 
-  GuardarAccionistas() {
+  GuardarAccionistas() {    
     this.infoTabAllAccionista.AccionistaDto = {};
     if (this.infoTabAllAccionista.BasicosDto.IdRelacion === '15' && this.itemAccionistas.length === 0) {
       this.siguiente = true;
@@ -503,7 +504,7 @@ export class AccionistasComponent implements OnInit {
   }
 
   ActualizarAccionistas() {
-
+  this.loading.show();
     if (this.itemAccionistas.length <= 0) {
       this.notif.onWarning('Advertencia', 'No hay registros relacionados para actualizar.');
       this.EnableUpdateAccionistas = false;
@@ -532,6 +533,7 @@ export class AccionistasComponent implements OnInit {
       this.juridicoService.EditAccionistas(this.accionistaModelLst).subscribe(
         result => {
           if (result) {
+            this.loading.hide();
             this.notif.onSuccess('Exitoso', 'El registro se actualizó correctamente.');
             this.accionistaModelLst = [];
             this.EnableUpdateAccionistas = false;

@@ -353,7 +353,6 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     });
  
     this.entrevistaComponent.emitEventGuardado.subscribe(res => {
-      this.loading.show();
       if (+res.cargar === 1) {
         this.LimpiarFormularios();
         this.ActivarBtnOpciones = false;
@@ -402,7 +401,6 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     this.emitEventJuridico.subscribe(res => {
       const GetOperacion = Number(localStorage.getItem('EsGestion'));
       if (GetOperacion === 1) {
-        this.loading.show();
         let datages : string | null = localStorage.getItem('DataGest')
         this.dataGestionOperacion = JSON.parse(datages == null ? "" : datages);
         localStorage.removeItem('EsGestion');
@@ -523,10 +521,6 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           this.JuridicoSeleccionado = result.JuridicoDto.IdJuridico;
           this.entrevistaComponent.idJuridicoSearch = result.JuridicoDto.IdJuridico;
           this.entrevistaComponent.fechaMatricula = result.JuridicoDto.FechaMatricula;
-
-          // this.juridicosFrom.get('nombre')?.reset();
-          // this.juridicosFrom.get('operacion')?.reset();
-          this.loading.hide();
         },
         error => {
           this.notif.onDanger('Error', 'Los datos no se cargaron correctamente - ' + error);
@@ -7338,8 +7332,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       if (data.ListContacto !== null) {
         this.representanteComponent.dataTipoContacto.forEach((elementDataContacto : any) => {
           data.ListContacto.forEach((elementCont : any) => {
-            if (elementCont.ContactoPrincipal) {
-              this.loading.show();
+            if (elementCont.ContactoPrincipal) {         
               if (elementDataContacto.Id === elementCont.IdTipoContacto) {
                 if (elementCont.IdCiudad !== undefined && elementCont.IdCiudad !== null && elementCont.IdCiudad !== 0) {
                   this.dataBarriosAll.forEach((elementBarrio : any) => {
@@ -7355,8 +7348,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
                           CiudadContatctos = CiudadContatctos + ' - ' + elementDep.Descripcion;
                           elementCont.IdCiudad = CiudadContatctos;
                           elementCont.IdTipoContacto = elementDataContacto.Nombre;
-                          this.representanteComponent.datatableRepresenta.push(elementCont);
-                          this.loading.hide();
+                          this.representanteComponent.datatableRepresenta.push(elementCont);                         
                         }
                       });
                     }
@@ -7364,7 +7356,6 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
                 } else {
                   elementCont.IdTipoContacto = elementDataContacto.Nombre;
                   this.representanteComponent.datatableRepresenta.push(elementCont);
-                  this.loading.hide();
                 }
 
               }
@@ -7372,8 +7363,6 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           });
         });
       }
-      this.loading.hide();
-        // });
     }
   }
 
@@ -7554,16 +7543,10 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     this.juridicosFrom.get('operacion')?.reset();
   }
 
-  CargarDataTratamientoDatos(data : any) {
-    // if (data.Acepto) {
-    //   this.entrevistaComponent.MostrarFechaTratamiento = true;
-    // } else {
-    //   this.entrevistaComponent.MostrarFechaTratamiento = false;
-    // }
+  CargarDataTratamientoDatos(data : any) {  
     this.entrevistaComponent.tratamientoForm.get('checkTratamiento')?.setValue(data.Acepto);
     this.entrevistaComponent.tratamientoForm.get('fechaTrataManual')?.setValue(
-      formatDate(data.FechaAceptacion, 'yyyy-MM-dd HH:mm:ss', 'en')); 
-    this.loading.hide();
+      formatDate(data.FechaAceptacion, 'yyyy-MM-dd HH:mm:ss', 'en'));     
   }
 
   SeleccionarOficina() {

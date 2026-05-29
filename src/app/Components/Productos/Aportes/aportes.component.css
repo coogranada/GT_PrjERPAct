@@ -83,3 +83,13 @@
 .pr-0 {
   padding-right: 0;
 }
+
+.tipo-doc-col {
+    flex: 0 0 60px;
+    max-width: 60px;
+}
+.num-doc-col {
+    flex: 1;
+    min-width: 135px; 
+}
+

@@ -431,3 +431,11 @@ h3 {
     text-align: center !important;
     align-items: center;
 }
+.tipo-doc-col {
+    flex: 0 0 60px;
+    max-width: 60px;
+}
+.num-doc-col {
+    flex: 1;
+    min-width: 135px; 
+}
