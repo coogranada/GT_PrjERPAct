@@ -1816,6 +1816,20 @@ export class GestionCreditoComponent {
 
   private async habilitarReestructurar() {
     await this.BuscarSaldosCartera();
+    await this.buscarReestructuracionReliquidacion();
+    const hoy = new Date();
+
+    const seHizoReestructuracionHoy = this.lstReestructuracion.some(r => {
+      const fecha = new Date(r.Fecha);
+      return fecha.toDateString() === hoy.toDateString();
+    });
+
+    if(seHizoReestructuracionHoy) {
+      this.notif.warning('Advertencia', "Ya se reestructuró hoy.", ConfiguracionNotificacion.configRightTop);
+      this.gestionCreditoOperacionForm.get('Codigo')?.reset();
+      return;
+    }
+
     const error = this.validarEdicionCredito(this.gestionCreditoOperacionForm.get('Codigo')?.value);
     if (error) {
       this.notif.warning('Advertencia', error, ConfiguracionNotificacion.configRightTop);
@@ -3773,33 +3787,30 @@ CalcularSimularPago(){
 
   // TAB CAMBIOS
   onCambiosTabClick() {
-    this.onTabChange(Tabs.Cambios, () => this.BuscarReetructuracionReliquidacion());
+    this.onTabChange(Tabs.Cambios, () => this.buscarReestructuracionReliquidacion());
   }
-  BuscarReetructuracionReliquidacion() {
-    const IdCuenta = this.gestionCreditoForm.get('IdCuenta')?.value;
-    if (!IdCuenta) return;
-    this.carteraService.getReestructuracionReliquidacion(IdCuenta).subscribe(
-      result => {
-        var Reestr = 0;
-        var Reli = 0;
-        if (result.Reestructuracion !== null) {
-          for (var i = 0; i < result.Reestructuracion.length; i++) {
-            this.lstReestructuracion[Reestr] = result.Reestructuracion[i];
-            Reestr++;
-          }
-        }
-        if (result.Reliquidacion !== null) {
-          for (var i = 0; i < result.Reliquidacion.length; i++) {
-            this.lstReliquidacion[Reli] = result.Reliquidacion[i];
-            Reli++;
-          }
-        }
-      },
-      error => {
-        const errorMessage = <any>error;
-        console.log(errorMessage);
-      }
-    )
+  async buscarReestructuracionReliquidacion(): Promise<void> {
+    const idCuenta = this.gestionCreditoForm.get('IdCuenta')?.value;
+    if (!idCuenta) return;
+    try {
+      const result = await firstValueFrom(
+        this.carteraService.getReestructuracionReliquidacion(idCuenta)
+      );
+
+      this.lstReestructuracion = result.Reestructuracion ?? [];
+      this.lstReliquidacion = result.Reliquidacion ?? [];
+
+      this.lstReestructuracion.sort((a, b) =>
+        new Date(b.Fecha).getTime() - new Date(a.Fecha).getTime()
+      );
+
+      this.lstReliquidacion.sort((a, b) =>
+        new Date(b.Fecha).getTime() - new Date(a.Fecha).getTime()
+      );
+
+    } catch (error) {
+      console.error('Error al obtener reestructuración/reliquidación', error);
+    }
   }
   // FIN CAMBIOS
 
@@ -4274,6 +4285,10 @@ CalcularSimularPago(){
       const hoy = new Date();
       const dias = diferenciaEnDias(hoy, fechaVencimiento);
       if (dias < 30) return ERROR_MESSAGES.PERIODOS_NO_CUMPLEN;
+    }
+
+    if(operacionId !== Operacion.ReestructurarCambioPlazo) {
+      this.lstReliquidacion
     }
 
     
