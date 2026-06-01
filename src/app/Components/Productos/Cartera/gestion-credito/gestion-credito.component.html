@@ -661,11 +661,15 @@
                                 <div class="col-xs-12 col-md-3 col-lg-4">
                                     <label>Cuenta Origen</label>
                                     <select class="form-control" name="select" formControlName="IdCuentaOrigen"
-                                        [attr.disabled]="BloquearCuentaOrigen">
+                                        [attr.disabled]="BloquearCuentaOrigen"
+                                        (change)="onChangeCuentaDebito()">
+                                                                    
                                         <option selected="selected" value="0">-- Seleccione --</option>
+                                                                    
                                         <option *ngFor="let Cuenta of resultCuentaDebito" [ngValue]="Cuenta">
                                             {{Cuenta.CuentaD}}
                                         </option>
+                                    
                                     </select>
                                     <br /><br />
                                 </div>
@@ -858,7 +862,7 @@
                                 <label class="textNegrilla"> Garantías Disponibles Codeudor </label>
                                 <!-- AGREGAR ESTE BLOQUE - Mensaje cuando no hay registros -->
                                 @if (listGarantiasDisponiblesCodeudor.length === 0) {
-                                <div class="alert alert-secondary" role="alert" *ngIf="">
+                                <div class="alert alert-secondary" role="alert">
                                     No hay registros
                                 </div>
                                 }

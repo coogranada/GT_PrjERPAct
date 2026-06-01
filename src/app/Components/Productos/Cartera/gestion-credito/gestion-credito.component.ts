@@ -117,6 +117,7 @@ export class GestionCreditoComponent {
   public documentoSugDebito?: string;
   public BloquearCuentaOrigen: boolean | null = false;
   public BloquearNombreDebito: boolean | null = false;
+  
 
   //Calificación
   public calificacionForm!: FormGroup;
@@ -1266,25 +1267,76 @@ export class GestionCreditoComponent {
   }
 
   getGarantiasDisponibles(idTercero: number, codeudor: boolean) {
-    this.loading.show()
+    this.loading.show();
+  
     return this.carteraService.getGarantiasDisponibles(idTercero).pipe(
       tap((data: any) => {
-
-        const filtradas = (data ?? []).filter((g: any) =>
-          !this.garantiasRealesAsignadas.some(
-            r => Number(r.Consecutivo) === Number(g.Consecutivo)
+      
+        const saldoActual = Number(this.carteraInfo?.SaldoCapital) || 0;
+        const idCuentaActual = this.gestionCreditoForm.get('IdCuenta')?.value?.toString().trim();
+      
+        const filtradas = (data ?? [])
+          .filter((g: any) =>
+            !this.garantiasRealesAsignadas.some(
+              r => Number(r.Consecutivo) === Number(g.Consecutivo)
+            )
           )
-        );
-
+          .map((g: any) => {
+          
+            const eraInicial = this.garantiasRealesAsignadasInicial.some(
+              x => Number(x.Consecutivo) === Number(g.Consecutivo)
+            );
+          
+            const sigueAsignada = this.garantiasRealesAsignadas.some(
+              x => Number(x.Consecutivo) === Number(g.Consecutivo)
+            );
+          
+            let cantidad = Number(g.CantidadCreditos) || 0;
+            let respalda = Number(g.Respalda) || 0;
+            let grupoGarantia = (g.GrupoGarantia || '').toString();
+          
+            // ✅ REGLA DE NEGOCIO: simulación
+            if (eraInicial && !sigueAsignada) {
+            
+              // ✔ Ajustar cantidad
+              cantidad = cantidad - 1;
+              if (cantidad < 0) cantidad = 0;
+            
+              // ✔ Ajustar valor respalda
+              respalda = respalda - saldoActual;
+              if (respalda < 0) respalda = 0;
+            
+              // 🔥 FIX CLAVE: quitar el crédito actual del grupo
+              if (grupoGarantia && idCuentaActual) {
+                const nuevos = grupoGarantia
+                  .split('-')
+                  .map((x: string) => x.trim())
+                  .filter((item: string) => {
+                    const cuenta = (item.split(':')[0] || '').trim();
+                    return cuenta !== idCuentaActual;
+                  });
+                
+                grupoGarantia = nuevos.join('-');
+              }
+            }
+          
+            return {
+              ...g,
+              CantidadCreditos: cantidad,
+              Respalda: respalda,
+              GrupoGarantia: grupoGarantia // ✅ FUNDAMENTAL para totales
+            };
+          });
+        
         if (codeudor) {
-
           this.listGarantiasDisponiblesCodeudor = filtradas;
           this.garantiasDisponiblesInicialCodeudor = JSON.parse(JSON.stringify(filtradas));
         } else {
           this.listGarantiasDisponiblesDeudor = filtradas;
           this.garantiasDisponiblesInicialDeudor = JSON.parse(JSON.stringify(filtradas));
         }
-        this.loading.hide()
+      
+        this.loading.hide();
       })
     );
   }
@@ -2410,6 +2462,30 @@ export class GestionCreditoComponent {
       ConfiguracionNotificacion.configRightTop
     );
     this.cuotaTabBloqueado = false;
+  }
+
+  onChangeCuentaDebito() {
+    const cuentaSeleccionada = this.debitoAutomaticoFrom.get('IdCuentaOrigen')?.value;
+
+    if (!cuentaSeleccionada) return;
+
+    if (!cuentaSeleccionada.ActivaMovimiento) {
+
+      this.notif.warning(
+        'Advertencia',
+        'Cuenta no se puede seleccionar, estado no válido',
+        ConfiguracionNotificacion.configRightTop
+      );
+
+      this.debitoAutomaticoFrom.get('IdCuentaOrigen')?.setValue(null);
+
+      return;
+    }
+
+    this.debitoAutomaticoFrom.get('IdOficinaDebito')?.setValue(cuentaSeleccionada.IdOficina);
+    this.debitoAutomaticoFrom.get('IdProductoDebito')?.setValue(cuentaSeleccionada.IdProducto);
+    this.debitoAutomaticoFrom.get('IdConsecutivoDebito')?.setValue(cuentaSeleccionada.IdConsecutivo);
+    this.debitoAutomaticoFrom.get('IdDigitoDebito')?.setValue(cuentaSeleccionada.IdDigito);
   }
   //Fin cambioFormaPago
 
