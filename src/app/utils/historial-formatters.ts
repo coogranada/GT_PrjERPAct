@@ -158,8 +158,10 @@ export const formateadoresPorOperacion: Record<number, FormateadorOperacion> = {
   140: (registro) => {
     const detalles: DetallesLogCredito = JSON.parse(registro.Detalles);
 
-    const formatear = (detalle: CambiarInfoCreditoLog) => {
-      return `Sistema: ${detalle.Sistema} - ${detalle.Plazo} ${detalle.PeriodoInteres} - Periodo gracia: ${detalle.PeriodoGracia}`;
+    const formatear = ({ Sistema, PeriodoCapital, PeriodoInteres, Plazo, PeriodoGracia }: Partial<CambiarInfoCreditoLog>) => {
+      return Object.entries({ Sistema, PeriodoCapital, PeriodoInteres, Plazo, PeriodoGracia })
+        .map(([key, value]) => `${key}: ${value ?? ''}`)
+        .join(' - ');
     };
 
     return {
