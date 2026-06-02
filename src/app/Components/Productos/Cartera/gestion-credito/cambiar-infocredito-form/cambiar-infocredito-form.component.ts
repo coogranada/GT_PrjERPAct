@@ -518,6 +518,11 @@ export class CambiarInfoCreditoForm {
         this.notif.warning('Advertencia', 'Debe seleccionar periodos.', ConfiguracionNotificacion.configRightTop);
         return false;
       }
+
+      if (periodoGracia && plazo && periodoGracia >= plazo) {
+        this.notif.warning('Advertencia', 'El periodo de gracia debe ser menor al plazo.', ConfiguracionNotificacion.configRightTop);
+        return false;
+      }
     }
 
     // if (

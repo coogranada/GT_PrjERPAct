@@ -2043,7 +2043,7 @@ export class GestionCreditoComponent {
     });
 
     if(seHizoReestructuracionHoy) {
-      this.notif.warning('Advertencia', "Ya se reestructuró hoy.", ConfiguracionNotificacion.configRightTop);
+      this.notif.warning('Advertencia', "Ya se realizó una reestructuración al crédito el día de hoy.", ConfiguracionNotificacion.configRightTop);
       this.gestionCreditoOperacionForm.get('Codigo')?.reset();
       return;
     }

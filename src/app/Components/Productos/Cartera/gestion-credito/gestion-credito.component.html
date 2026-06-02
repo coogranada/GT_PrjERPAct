@@ -1677,7 +1677,7 @@
                                                                 </div>
                                                                 <div class="col-xs-12 col-md-2 col-lg-2">
                                                                     <div class="form-group">
-                                                                        <label><strong>Tasas nominal:</strong></label>
+                                                                        <label><strong>Tasa nominal:</strong></label>
                                                                         <span class="text-danger"></span>
                                                                         <input type="text" currencyMask
                                                                             [options]="{ prefix: '', suffix: ' %', thousands: '.', precision: 4 }"
@@ -2842,6 +2842,7 @@
                                                         <th><strong>Cuota</strong></th>
                                                         <th><strong>Cuota libranza</strong></th>
                                                         <th class="text-center"><strong>Plazo</strong></th>
+                                                        <th><strong>Periodo interes</strong></th>
                                                         <th><strong>Tasa periodica</strong></th>
                                                         <th><strong>Tasa nominal</strong></th>
                                                         <th><strong>Puntos</strong></th>
@@ -2859,6 +2860,7 @@
                                                         <td>{{ itemReliquida.Cuota | currency }}</td>
                                                         <td class="text-center">{{ itemReliquida.CuotaLibranza ?? 0 | currency }}</td>
                                                         <td class="text-center">{{ itemReliquida.Plazo }}</td>
+                                                        <td class="text-center">{{ itemReliquida.PeriodoInteres }}</td>
                                                         <td class="text-center">{{ itemReliquida.Tasa | number:'1.4-4' }} %</td>
                                                         <td class="text-center">{{ itemReliquida.TasaNominal | number:'1.4-4' }} %</td>
                                                         <td class="text-center">{{ itemReliquida.Puntos ?? 0 | number:'1.4-4' }} %</td>
