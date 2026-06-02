@@ -964,11 +964,3 @@ tr.fila-detalle td{
 .badge-amarillo{ background: #ffc107; color:#222; }
 .badge-morado{ background:rgb(133,38,98); color:#fff; }
 
-.tipo-doc-col {
-    flex: 0 0 60px;
-    max-width: 60px;
-}
-.num-doc-col {
-    flex: 1;
-    min-width: 135px; 
-}
