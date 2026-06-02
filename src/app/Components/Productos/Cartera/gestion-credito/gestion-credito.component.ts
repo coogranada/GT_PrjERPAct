@@ -2473,7 +2473,7 @@ export class GestionCreditoComponent {
 
       this.notif.warning(
         'Advertencia',
-        'Cuenta no se puede seleccionar, estado no válido',
+        'Cuenta no se puede seleccionar, estado no válido.',
         ConfiguracionNotificacion.configRightTop
       );
 
