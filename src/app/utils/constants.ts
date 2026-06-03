@@ -13,7 +13,9 @@ export enum ErrorCode {
     PERIODOS_NO_CUMPLEN = 'PERIODOS_NO_CUMPLEN',
     SALDO_MONTO_NO_CUMPLE = 'SALDO_MONTO_NO_CUMPLE',
     CREDITO_NO_CUMPLE = 'CREDITO_NO_CUMPLE',
-    OTRA_OFICINA = 'OTRA_OFICINA'
+    OTRA_OFICINA = 'OTRA_OFICINA',
+    PLAZO_NUEVO_MAYOR = 'PLAZO_NUEVO_MAYOR',
+
 }
 
 export const ERROR_MESSAGES: Record<ErrorCode, string> = {
@@ -24,12 +26,13 @@ export const ERROR_MESSAGES: Record<ErrorCode, string> = {
     [ErrorCode.CUPO_TARJETA_DEBITO]: 'No se puede realizar esta operación, tarjeta débito.',
     [ErrorCode.INTERESES_AL_DIA]: 'Debe ponerse al día con los intereses.',
     [ErrorCode.CUENTA_CANCELADA]: 'Cuenta no se puede editar, estado no válido.',
-    [ErrorCode.CUENTA_VENCIDA]: 'Cuenta no se puede editar, estado no válido.',
+    [ErrorCode.CUENTA_VENCIDA]: 'Cuenta no se puede editar, crédito vencido.',
     [ErrorCode.TASA_USURA]: 'Las tasas de la línea no cumplen con las condiciones.',
     [ErrorCode.PERIODOS_NO_CUMPLEN]: 'Periodos no cumplen con las condiciones.',
     [ErrorCode.SALDO_MONTO_NO_CUMPLE]: 'No puede cambiar cuota. Crédito no cumple con las condiciones.',
     [ErrorCode.CREDITO_NO_CUMPLE]: 'Crédito no cumple con las condiciones.',
-    [ErrorCode.OTRA_OFICINA]: 'La cuenta pertenece a otra oficina.'
+    [ErrorCode.OTRA_OFICINA]: 'La cuenta pertenece a otra oficina.',
+    [ErrorCode.PLAZO_NUEVO_MAYOR]: 'El nuevo plazo debe ser mayor al faltante.',
 };
 
 export const PERIODOS_MESES = {

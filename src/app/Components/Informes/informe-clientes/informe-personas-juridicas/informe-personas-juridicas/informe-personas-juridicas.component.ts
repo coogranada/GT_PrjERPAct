@@ -4,7 +4,6 @@ import { ModuleValidationService } from '../../../../../Services/Enviroment/modu
 import { InformePerfilService } from '../../../../../Services/Maestros/informes-perfiles';
 import { GeneralesService } from '../../../../../Services/Productos/generales.service';
 import { TablaVirtualComponent } from '../../../../Tabla-virtual/tabla-virtual/tabla-virtual.component';
-import { NgxLoadingComponent } from 'ngx-loading';
 import { SPParametros } from '../../../../../Models/Informes/configuracion-informes/parametros-informes.model';
 import { Filtro } from '../../../../../Models/Informes/informe-clientes/informe-clientes.model';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -15,6 +14,7 @@ import { ToastrService } from 'ngx-toastr';
 import { forkJoin, fromEvent, map } from 'rxjs';
 import { ConfiguracionNotificacion } from '../../../../../../environments/config.noticaciones';
 import Swal from 'sweetalert2';
+import { LoadingService } from '../../../../../Services/shared/loading.service';
 
 @Component({
   selector: 'app-informe-personas-juridicas',
@@ -28,9 +28,6 @@ export class InformePersonasJuridicasComponent {
   @ViewChild('ModalProgressBar', { static: true }) private ModalProgressBar!: ElementRef;
   @ViewChild(TablaVirtualComponent) tablaVirtual!: TablaVirtualComponent;
   @ViewChild('selectInformeL') selectElementRef!: ElementRef<HTMLSelectElement>;
-
-  ngxLoadingComponent!: NgxLoadingComponent;
-
   primaryColour = 'rgb(13,165,80)';
   secondaryColour = 'rgb(13,165,80,0.7)';
   selectedTab: string = '';
@@ -49,7 +46,6 @@ export class InformePersonasJuridicasComponent {
   public OpcionSelected: Boolean = true;
   public validaOperacion: Boolean = true;
   public deshabilitarOficina: boolean = true;
-  public loading: boolean = false;
   public allSelected: boolean = false;
   public OperacionSelect: string = "";
   public valueSlect: string = "";
@@ -85,8 +81,13 @@ export class InformePersonasJuridicasComponent {
 
   CodModulo: number = 76
 
-  constructor(private excelReportService: ExceljsService, private fb: FormBuilder, private configuracionInformesS: ConfiguracionInformesService, private informeAhorrosService: InformeAhorrosService, private operacionesService: OperacionesService, 
-              private el: ElementRef, private moduleValidationService: ModuleValidationService, private notif: ToastrService, private InformePerfilS:InformePerfilService, private generalesService: GeneralesService) {
+  constructor(private excelReportService: ExceljsService, private fb: FormBuilder, 
+    private configuracionInformesS: ConfiguracionInformesService, 
+    private informeAhorrosService: InformeAhorrosService, 
+    private operacionesService: OperacionesService, 
+    private el: ElementRef, private moduleValidationService: ModuleValidationService,
+    private notif: ToastrService, private InformePerfilS:InformePerfilService, 
+    private generalesService: GeneralesService, private loading: LoadingService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -218,7 +219,7 @@ export class InformePersonasJuridicasComponent {
   }
 
   informeSelected(event: Event) {
-    this.loading = true;
+    this.loading.show();
     const selectElement = event.target as HTMLSelectElement;
     const selectedId = +selectElement.value;
     this.nombreInformeSelect = selectElement.options[selectElement.selectedIndex].text;
@@ -237,11 +238,11 @@ export class InformePersonasJuridicasComponent {
         );
 
         this.crearFormularioDinamico();
-        this.loading = false;
+        this.loading.hide();
       },
       error: (err) => {
         console.error('Error al cargar parámetros de informes:', err);
-        this.loading = false;
+        this.loading.hide();
       }
     });
   }
@@ -335,7 +336,7 @@ export class InformePersonasJuridicasComponent {
             this.ModalCantidadRegistros(respuesta.length, false);
             this.GuardarLog(LogData, this.selectedId, 0, 0, this.CodModulo);
           }
-          this.loading = false;
+          this.loading.hide();
           return;
         },
           error => {
@@ -358,12 +359,12 @@ export class InformePersonasJuridicasComponent {
   }
 
   exportarExcel2() {
-    this.loading = true;
+    this.loading.show();
 
 
     var data = null;
     if (!this.resultadoInforme || this.resultadoInforme.length === 0) {
-    this.loading = false ;
+    this.loading.hide(); ;
       this.notif.warning('Advertencia', 'No hay información para exportar.', ConfiguracionNotificacion.configRightTop);
     } else {
       data = this.resultadoInforme.map(row => {
@@ -400,7 +401,7 @@ export class InformePersonasJuridicasComponent {
 
       });
       this.excelReportService.exportAsExcelFile(data, this.nombreInforme)
-      this.loading = false ;
+      this.loading.hide(); ;
     }
   }
 
@@ -473,7 +474,7 @@ export class InformePersonasJuridicasComponent {
       },
       error: (err) => {
         console.error('Error al cargar parámetros de informes:', err);
-        this.loading = false;
+        this.loading.hide();
       }
     });
   }
@@ -601,7 +602,7 @@ export class InformePersonasJuridicasComponent {
       error: (err) => {
         this.notif.warning('Advertencia', 'Error al cargar las columnas del informe:', ConfiguracionNotificacion.configRightTop);
         console.error('Error al cargar las columnas del informe:', err);
-        this.loading = false;
+        this.loading.hide();
       }
     });
   }
@@ -617,11 +618,11 @@ export class InformePersonasJuridicasComponent {
           (param) => param.AliasCampo.toLowerCase() !== 'reservado'
         );
 
-        this.loading = false;
+        this.loading.hide();
       },
       error: (err) => {
         console.error('Error al cargar parámetros de informes dinámicos: ', err);
-        this.loading = false;
+        this.loading.hide();
       }
     });
 
@@ -1021,7 +1022,7 @@ export class InformePersonasJuridicasComponent {
       .map(col => col.name);
     if (columnasSeleccionadas.length === 0) {
       this.notif.warning('Advertencia', 'Debe seleccionar al menos un campo para generar el informe.', ConfiguracionNotificacion.configRightTop);
-      this.loading = false;
+      this.loading.hide();
       return;
     }
 
@@ -1034,7 +1035,7 @@ export class InformePersonasJuridicasComponent {
             this.ocultarModalProgreso();
             if (!respuesta || respuesta.length === 0) {
               this.notif.warning('Advertencia', 'No se encontraron datos para mostrar, verifique los filtros.', ConfiguracionNotificacion.configRightTop);
-              this.loading = false;
+              this.loading.hide();
               return;
             }
             // Tomar referencia de encabezado
@@ -1054,7 +1055,7 @@ export class InformePersonasJuridicasComponent {
             // Mostrar cantidad de registros
             this.ModalCantidadRegistros(this.resultadoInforme.length, false);
             this.GuardarLog(LogData, this.selectedId, 0, 0, this.CodModulo);
-            this.loading = false;
+            this.loading.hide();
           },
           error => {
             this.ocultarModalProgreso();
@@ -1067,13 +1068,13 @@ export class InformePersonasJuridicasComponent {
               console.error('Error al parsear el mensaje del backend:', e);
             }
             this.notif.warning('Advertencia', mensaje, ConfiguracionNotificacion.configRightTop);
-            this.loading = false;
+            this.loading.hide();
           }
         );
     } catch (error) {
       console.error("Error al ejecutar el SP dinámico:", error);
       this.notif.warning('Advertencia', 'Ha ocurrido un problema en la ejecución: ' + error, ConfiguracionNotificacion.configRightTop);
-      this.loading = false;
+      this.loading.hide();
     }
   }
 
@@ -1135,10 +1136,10 @@ export class InformePersonasJuridicasComponent {
   }
 
   GuardarLog(formulario : any, operacion : number, cuenta : number, tercero : number, modulo : number) {
-    this.loading = true;
+    this.loading.show();
     this.generalesService.Guardarlog(formulario, operacion, cuenta, tercero, modulo).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         console.log(result);
       });
   }

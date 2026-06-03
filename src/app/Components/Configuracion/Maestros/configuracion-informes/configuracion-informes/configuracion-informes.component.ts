@@ -7,9 +7,9 @@ import { filter, map } from 'rxjs/operators';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfiguracionNotificacion } from '../../../../../../environments/config.noticaciones';
 import { OperacionesModulosService } from '../../../../../Services/Maestros/operaciones-modulos.service';
-import { NgxLoadingComponent } from 'ngx-loading';
 import swal from 'sweetalert2';
 import { PermisosInformesComponent } from '../permisos-informes/permisos-informes/permisos-informes.component';
+import { LoadingService } from '../../../../../Services/shared/loading.service';
 
 
 @Component({
@@ -23,9 +23,6 @@ export class ConfiguracionInformesComponent implements OnInit {
   @ViewChild('ShowModalList', { static: true }) private ShowModalList!: ElementRef;
   @ViewChild('filtroCodigo') private filtroCodigoInput!: ElementRef;
   @ViewChild(PermisosInformesComponent) permisosInformes!: PermisosInformesComponent;
-
-  ngxLoadingComponent!: NgxLoadingComponent;
-
   CodModulo: number = 83
   primaryColour = 'rgb(13,165,80)';
   secondaryColour = 'rgb(13,165,80,0.7)';
@@ -42,7 +39,6 @@ export class ConfiguracionInformesComponent implements OnInit {
   public TipoDatoSelect: string = "";
   public OpcionSelected: boolean = true;
   public VbleCodigoFiltro: boolean = false;
-  public loading: boolean = false;
   public mostrarModal: boolean = false;
   public configuracionInfomesForm!: FormGroup;
   public parametroConfiguracionInfForm!: FormGroup;
@@ -61,7 +57,11 @@ export class ConfiguracionInformesComponent implements OnInit {
   selectedRow: any = null;
 
 
-  constructor(private configuracionInformesS: ConfiguracionInformesService, private notif: ToastrService, private el: ElementRef, private moduleValidationService: ModuleValidationService, private fb: FormBuilder, private operacionesModulosService: OperacionesModulosService) {
+  constructor(private configuracionInformesS: ConfiguracionInformesService,
+    private notif: ToastrService, private el: ElementRef,
+    private moduleValidationService: ModuleValidationService, 
+    private fb: FormBuilder, private operacionesModulosService: OperacionesModulosService,
+    private loading: LoadingService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -492,18 +492,18 @@ export class ConfiguracionInformesComponent implements OnInit {
   }
 
   getListas() {
-    this.loading = true;
+    this.loading.show();
     this.configuracionInformesS.ObtenerListas().subscribe({
       next: (respuesta) => {
         this.listasCodigos = respuesta
         this.unicosPorIdClase = Array.from(
           new Map(respuesta.map((item: any) => [item.IdTipo, item])).values()
         );
-        this.loading = false;
+        this.loading.hide();
       },
       error: (err) => {
         console.error('Error al cargar parámetros de informes:', err);
-        this.loading = false;
+        this.loading.hide();
       }
     });
   }

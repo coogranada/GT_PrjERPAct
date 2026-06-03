@@ -3,7 +3,6 @@ import { ModuleValidationService } from '../../../../Services/Enviroment/moduleV
 import { forkJoin, fromEvent } from 'rxjs';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { filter, map } from 'rxjs/operators';
-import { NgxLoadingComponent } from 'ngx-loading';
 import { ConfiguracionNotificacion } from '../../../../../environments/config.noticaciones';
 import { OperacionesService } from '../../../../Services/Maestros/operaciones.service';
 import { ToastrService } from 'ngx-toastr';
@@ -17,6 +16,7 @@ import { InformePerfilService } from '../../../../Services/Maestros/informes-per
 import { GeneralesService } from '../../../../Services/Productos/generales.service';
 import { ExceljsService } from '../../../../Services/General/exceljs.service';
 import { ShareComponentModule } from '../../../../Modules/share-component.module';
+import { LoadingService } from '../../../../Services/shared/loading.service';
 
 
 @Component({
@@ -32,9 +32,6 @@ export class InformeAhorrosComponent implements OnInit {
   @ViewChild('ModalProgressBar', { static: true }) private ModalProgressBar!: ElementRef;
   @ViewChild(TablaVirtualComponent) tablaVirtual!: TablaVirtualComponent;
   @ViewChild('selectInformeL') selectElementRef!: ElementRef<HTMLSelectElement>;
-
-  ngxLoadingComponent!: NgxLoadingComponent;
-
   primaryColour = 'rgb(13,165,80)';
   secondaryColour = 'rgb(13,165,80,0.7)';
   selectedTab: string = '';
@@ -49,7 +46,6 @@ export class InformeAhorrosComponent implements OnInit {
   public OpcionSelected: Boolean = true;
   public validaOperacion: Boolean = true;
   public deshabilitarOficina: boolean = true;
-  public loading: boolean = false;
   public allSelected: boolean = false;
   public OperacionSelect: string = "";
   public valueSlect: string = "";
@@ -86,7 +82,10 @@ export class InformeAhorrosComponent implements OnInit {
   CodModulo: number = 82
 
   constructor(private excelReportService: ExceljsService, private fb: FormBuilder, private configuracionInformesS: ConfiguracionInformesService, private informeAhorrosService: InformeAhorrosService, private operacionesService: OperacionesService, 
-              private el: ElementRef, private moduleValidationService: ModuleValidationService, private notif: ToastrService, private InformePerfilS:InformePerfilService, private generalesService: GeneralesService) {
+              private el: ElementRef, private moduleValidationService: ModuleValidationService,
+              private notif: ToastrService, private InformePerfilS:InformePerfilService,
+              private generalesService: GeneralesService,
+              private loading: LoadingService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -218,7 +217,7 @@ export class InformeAhorrosComponent implements OnInit {
   }
 
   informeSelected(event: Event) {
-    this.loading = true;
+    this.loading.show();
     const selectElement = event.target as HTMLSelectElement;
     const selectedId = +selectElement.value;
     this.nombreInformeSelect = selectElement.options[selectElement.selectedIndex].text;
@@ -237,11 +236,11 @@ export class InformeAhorrosComponent implements OnInit {
         );
 
         this.crearFormularioDinamico();
-        this.loading = false;
+        this.loading.hide();
       },
       error: (err) => {
         console.error('Error al cargar parámetros de informes:', err);
-        this.loading = false;
+        this.loading.hide();
       }
     });
   }
@@ -335,7 +334,7 @@ export class InformeAhorrosComponent implements OnInit {
             this.ModalCantidadRegistros(respuesta.length, false);
             this.GuardarLog(LogData, this.selectedId, 0, 0, this.CodModulo);
           }
-          this.loading = false;
+          this.loading.hide();
           return;
         },
           error => {
@@ -358,12 +357,12 @@ export class InformeAhorrosComponent implements OnInit {
   }
 
   exportarExcel2() {
-    this.loading = true;
+    this.loading.show();
 
 
     var data = null;
     if (!this.resultadoInforme || this.resultadoInforme.length === 0) {
-    this.loading = false ;
+    this.loading.hide(); ;
       this.notif.warning('Advertencia', 'No hay información para exportar.', ConfiguracionNotificacion.configRightTop);
     } else {
       data = this.resultadoInforme.map(row => {
@@ -400,7 +399,7 @@ export class InformeAhorrosComponent implements OnInit {
 
       });
       this.excelReportService.exportAsExcelFile(data, this.nombreInforme)
-      this.loading = false ;
+      this.loading.hide(); ;
     }
   }
 
@@ -471,7 +470,7 @@ export class InformeAhorrosComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al cargar parámetros de informes:', err);
-        this.loading = false;
+        this.loading.hide();
       }
     });
   }
@@ -576,7 +575,7 @@ export class InformeAhorrosComponent implements OnInit {
       error: (err) => {
         this.notif.warning('Advertencia', 'Error al cargar las columnas del informe:', ConfiguracionNotificacion.configRightTop);
         console.error('Error al cargar las columnas del informe:', err);
-        this.loading = false;
+        this.loading.hide();
       }
     });
   }
@@ -592,11 +591,11 @@ export class InformeAhorrosComponent implements OnInit {
           (param) => param.AliasCampo.toLowerCase() !== 'reservado'
         );
 
-        this.loading = false;
+        this.loading.hide();
       },
       error: (err) => {
         console.error('Error al cargar parámetros de informes dinámicos: ', err);
-        this.loading = false;
+        this.loading.hide();
       }
     });
 
@@ -863,7 +862,7 @@ export class InformeAhorrosComponent implements OnInit {
       .map(col => col.name);
     if (columnasSeleccionadas.length === 0) {
       this.notif.warning('Advertencia', 'Debe seleccionar al menos un campo para generar el informe.', ConfiguracionNotificacion.configRightTop);
-      this.loading = false;
+      this.loading.hide();
       return;
     }
 
@@ -876,7 +875,7 @@ export class InformeAhorrosComponent implements OnInit {
             this.ocultarModalProgreso();
             if (!respuesta || respuesta.length === 0) {
               this.notif.warning('Advertencia', 'No se encontraron datos para mostrar, verifique los filtros.', ConfiguracionNotificacion.configRightTop);
-              this.loading = false;
+              this.loading.hide();
               return;
             }
             // Tomar referencia de encabezado
@@ -896,7 +895,7 @@ export class InformeAhorrosComponent implements OnInit {
             // Mostrar cantidad de registros
             this.ModalCantidadRegistros(this.resultadoInforme.length, false);
             this.GuardarLog(LogData, this.selectedId, 0, 0, this.CodModulo);
-            this.loading = false;
+            this.loading.hide();
           },
           error => {
             this.ocultarModalProgreso();
@@ -909,13 +908,13 @@ export class InformeAhorrosComponent implements OnInit {
               console.error('Error al parsear el mensaje del backend:', e);
             }
             this.notif.warning('Advertencia', mensaje, ConfiguracionNotificacion.configRightTop);
-            this.loading = false;
+            this.loading.hide();
           }
         );
     } catch (error) {
       console.error("Error al ejecutar el SP dinámico:", error);
       this.notif.warning('Advertencia', 'Ha ocurrido un problema en la ejecución: ' + error, ConfiguracionNotificacion.configRightTop);
-      this.loading = false;
+      this.loading.hide();
     }
   }
 
@@ -963,10 +962,10 @@ export class InformeAhorrosComponent implements OnInit {
   }
 
   GuardarLog(formulario : any, operacion : number, cuenta : number, tercero : number, modulo : number) {
-    this.loading = true;
+    this.loading.show();
     this.generalesService.Guardarlog(formulario, operacion, cuenta, tercero, modulo).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         console.log(result);
       });
   }

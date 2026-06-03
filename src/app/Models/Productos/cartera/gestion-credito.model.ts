@@ -66,6 +66,7 @@ export interface GestionCreditoEncabezado {
   FechaMatricula: string;
   IdLinea: number;
   TasaLinea: number;
+  PlazoMaximoLinea: number | null;
 }
 
 export interface SeguroHipotecario {
@@ -246,27 +247,47 @@ export interface PersonaNaturalBusquedaDto {
   FechaMod: string;
 }
 
-type BaseRequestAlCalcular = {
+export type BaseRequestAlCalcular = {
   idCuenta: number;
   idNovedad: Novedad;
 };
 
 export type CalcularDatosAlCambiarTasa =
-  | BaseRequestAlCalcular & { tasaNominal: number }
-  | BaseRequestAlCalcular & { puntos: number }
+  | { tasaNominal: number }
+  | { puntos: number }
 
 
-export type CalcularDatosAlCambiarCuota = BaseRequestAlCalcular
+export type CalcularDatosAlCambiarPlazo = { plazo: number }
 
-export type CalcularDatosAlCambiarPlazo = BaseRequestAlCalcular & { plazo: number }
+export type CalcularDatosAlCambiarSistema = { idSistema: number, idPeriodoCapital: number, idPeriodoInteres: number }
 
-export type CalcularDatosAlCambiarSistema = BaseRequestAlCalcular & { idSistema: number, idPeriodoCapital: number, idPeriodoInteres: number }
+export type CalcularDatosReeliquidacion = CalcularDatosAlCambiarTasa | CalcularDatosAlCambiarPlazo | CalcularDatosAlCambiarSistema;
 
 export type CalcularDatosRequest = 
+  | BaseRequestAlCalcular
+  | BaseRequestAlCalcular & (
   | CalcularDatosAlCambiarTasa
-  | CalcularDatosAlCambiarCuota
   | CalcularDatosAlCambiarPlazo
-  | CalcularDatosAlCambiarSistema;
+  | CalcularDatosAlCambiarSistema
+);
+
+export interface ConPlazo {
+  plazo: number;
+  idSistema?: number;
+  idPeriodoCapital?: number;
+  idPeriodoInteres?: number;
+  periodoGracia: number;
+};
+
+export interface ConTasa {
+  tasaNominal: number;
+  puntos: number;
+};
+
+export type CalcularDatosReestRequest = BaseRequestAlCalcular & (
+  | ConPlazo
+  | ConTasa
+);
 
 export interface ResultCalcularCambioDatos {
   TasaEfectiva: number;
@@ -357,6 +378,8 @@ export interface ICambiarInfoCreditoForm {
   siglaIndicador: FormControl<string | null>;
   puntos: FormControl<number | null>;
   periodoGracia: FormControl<number | null>;
+  reestrucutradoIndicador: FormControl<number | null>;
+  acta: FormControl<number | null>;
 }
 
 export interface PeriodoPago {
@@ -373,6 +396,42 @@ export interface LogGestionCreditoRequest {
   idObsCambioEstado?: string;
   aplicativo?: string;
 }
+
+export interface Reestructurados {
+  Monto: number;
+  Saldo: number;
+  Cuota: number;
+  Plazo: number;
+  Tasa: number;
+  Fecha: Date;
+  Novedad: string;
+  CalAct: string;
+  CalAnt: string;
+  Acta: number;
+  Contador: number;
+}
+
+export interface Reliquidados {
+  Monto: number;
+  Saldo: number;
+  Cuota: number;
+  Plazo: number;
+  Tasa: number;
+  Fecha: Date;
+  Novedad: string;
+  FechaDesembolso: Date;
+  TasaNominal: number;
+  CuotaLibranza: number | null;
+  Puntos: number | null;
+  PeriodoGracia: number | null;
+  FechaInicioGracia: Date | null;
+}
+
+export interface ReesRelResponse {
+  Reestructuracion: Reestructurados[];
+  Reliquidacion: Reliquidados[];
+}
+
 
 export interface LineaCambioListDto {
   IdLinea: number;
@@ -503,4 +562,17 @@ export interface ObtenerCodeudorBasicoModel {
   IdTercero: number;
   NumeroDocumento : string;
   NombreCompleto : string;
+}
+
+export interface GarantiaCompartida {
+  lngConsecutivo: number;
+  IdGarantia: string;
+  Clase: string;
+  Cobertura: number;
+  Respalda: number;
+  Tipo: string;
+  lngTercero: number;
+  CantidadCreditos: number;
+  GrupoGarantia?: string;
+  Descripcion: string;
 }

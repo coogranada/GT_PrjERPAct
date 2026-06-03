@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, ElementRef, Input, Output } from '@angular/core';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { FormGroup, ValidatorFn, AbstractControl, FormControl, Validators } from '@angular/forms';
 
 import {
@@ -11,6 +10,7 @@ import { GestionesService } from '../../../Services/Gestiones/gestiones.service'
 import { GeneralesService } from '../../../Services/Productos/generales.service';
 import { moduloAGestionar } from '../../../../environments/config.modulos';
 import { AlertService } from '../../../Services/Alert/alert.service';
+import { LoadingService } from '../../../Services/shared/loading.service';
 
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -30,7 +30,6 @@ export class GestionGestionesOperacionesComponent implements OnInit {
   @ViewChild('AbrirRechzarGestion', { static: true }) private AbrirRechzarGestion!: ElementRef;
   @ViewChild('AbrirCancelGestion', { static: true }) private AbrirCancelGestion!: ElementRef;
   @ViewChild('AbrirReasignacion', { static: true }) private AbrirReasignacion!: ElementRef;
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
   @ViewChild('CerrarModales', { static: true }) CerrarModales!: ElementRef;
   @ViewChild('CerrarModalesCancel', { static: true }) CerrarModalesCancel!: ElementRef;
   @ViewChild('CerrarModalesRechazo', { static: true }) CerrarModalesRechazo!: ElementRef;
@@ -39,10 +38,7 @@ export class GestionGestionesOperacionesComponent implements OnInit {
 
   @Input() dataDetalleGestion: any;
   @Output() GestionoOpe = new EventEmitter();
-
-  public loading = false;
   public bloquearForm = true;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
 
@@ -71,8 +67,10 @@ export class GestionGestionesOperacionesComponent implements OnInit {
   public mostrarSpanAlertaGestion = false;
   public mostrarSpanAlertaReasignar = false;
 //#endregion
-  constructor(private gestionesService: GestionesService, private notificacion: AlertService,
-    private generalesService: GeneralesService) { }
+  constructor(private gestionesService: GestionesService, 
+    private notificacion: AlertService,
+    private generalesService: GeneralesService,
+    private loading: LoadingService) { }
 
   ngOnInit() {
     this.ValidarFormulario();
@@ -195,7 +193,7 @@ export class GestionGestionesOperacionesComponent implements OnInit {
 
     this.gestionesService.ObtenerUsuariosAutorizados(this.dataDetalleGestion.IdOperacion, this.dataDetalleGestion.IdModulo).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           this.UsuariosAutorizados = result;
           if (this.UsuariosAutorizados !== null && this.UsuariosAutorizados !== undefined) {
             this.UsuariosAutorizados.forEach((element : any) => {
@@ -214,15 +212,15 @@ export class GestionGestionesOperacionesComponent implements OnInit {
   }
 
   GenerarCuenta(PIdOficina : string, PProducto : string, PConsecutivo : string, PDigito : string) {
-    this.loading = true;
+    this.loading.show();
     this.gestionesService.GenerarCuenta(PIdOficina, PProducto, PConsecutivo, PDigito).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         const _cuenta = result;
         this.SolicitudGestionForm.get('Cuenta')?.setValue(_cuenta);
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorJson = JSON.parse(error._body);
         this.notificacion.onDanger('Error', errorJson);
         console.log(error);
@@ -231,16 +229,16 @@ export class GestionGestionesOperacionesComponent implements OnInit {
   }
 
   ObtenerOperaciones(PModulo : string) {
-    this.loading = true;
+    this.loading.show();
     this.gestionesService.ObtenerOperaciones(PModulo).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.ListaOperaciones = result;
         this.ListaOperacionesDetalle = result;
         this.SolicitudGestionForm.get('IdOperacion')?.setValue('-');
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorJson = JSON.parse(error._body);
         this.notificacion.onDanger('Error', errorJson);
         console.log(error);
@@ -299,10 +297,10 @@ export class GestionGestionesOperacionesComponent implements OnInit {
   }
 
   ObtenerEstados() {
-    this.loading = true;
+    this.loading.show();
     this.gestionesService.ObtenerEstados().subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.ListaEstados = result;
         this.ListaEstadosDetalle = result;
         if (this.ListaEstados !== null && this.ListaEstados !== undefined) {
@@ -310,7 +308,7 @@ export class GestionGestionesOperacionesComponent implements OnInit {
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorJson = JSON.parse(error._body);
         this.notificacion.onDanger('Error', errorJson);
         console.log(error);
@@ -319,10 +317,10 @@ export class GestionGestionesOperacionesComponent implements OnInit {
   }
 
   ObtenerUsuariosAutorizados(POperacion: any) {
-    this.loading = true;
+    this.loading.show();
     this.gestionesService.ObtenerUsuariosAutorizados(POperacion, this.Modulo.toString()).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.UsuariosAutorizados = result;
         if (this.UsuariosAutorizados !== null && this.UsuariosAutorizados !== undefined) {
           this.UsuariosAutorizados.forEach((element : any) => {
@@ -331,7 +329,7 @@ export class GestionGestionesOperacionesComponent implements OnInit {
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorJson = JSON.parse(error._body);
         this.notificacion.onDanger('Error', errorJson);
         console.log(error);

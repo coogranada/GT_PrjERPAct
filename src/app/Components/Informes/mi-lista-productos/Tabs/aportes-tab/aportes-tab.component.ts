@@ -4,10 +4,10 @@ import { MiListaProductosService } from '../../../../../Services/Informes/mi-lis
 import moment from 'moment';
 import { DatePipe } from '@angular/common';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { NgxLoadingComponent } from 'ngx-loading';
 import { DatosProducto,LogMisProductos,DatosProductos,MesxYear }  from "../../../../../Models/Informes/MisProductos/mis-producto.model";
 import swal from "sweetalert2";
 import { AlertService } from '../../../../../Services/Alert/alert.service';
+import { LoadingService } from '../../../../../Services/shared/loading.service';
 
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -21,11 +21,8 @@ const ColorSecundario = 'rgb(13,165,80,0.7)';
 })
 export class AportesTabComponent implements OnInit {
   @ViewChild("pdfTable", { static: false }) pdfTable!: ElementRef;
-  @ViewChild("ngxLoading", { static: false })
-  ngxLoadingComponent!: NgxLoadingComponent;
   public Extractos: any[] = [];
   public Movimientos: any[] = [];
-  public loading = false;
   public validaMail: Boolean = false;
   public valueSlect: any;
   public yearInit: any;
@@ -125,7 +122,8 @@ export class AportesTabComponent implements OnInit {
   constructor(
     private MiListaProductosService: MiListaProductosService,
     private miDatePipe: DatePipe,
-    private notificacion: AlertService
+    private notificacion: AlertService,
+    private loading: LoadingService
   ) {}
 
   ngOnInit() {
@@ -214,7 +212,7 @@ export class AportesTabComponent implements OnInit {
   }
 
   SendEmail() {
-    this.loading = true;
+    this.loading.show();
     this.ValidaPlantillaMail();
     setTimeout(() => {
       this.SendMailAportes();
@@ -223,10 +221,10 @@ export class AportesTabComponent implements OnInit {
 
   SendMailAportes() {
     if (this.validaMail == true) {
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.sendMailProductos(this.ExtactoAportes.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           this.Response(result);
 
           var Tercero = Number($("#TerceroPrincipal").val());
@@ -249,7 +247,7 @@ export class AportesTabComponent implements OnInit {
           // #endregion
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           swal.fire({
             title: "Error",
             text: "",
@@ -264,7 +262,7 @@ export class AportesTabComponent implements OnInit {
         }
       )
     } else {
-      this.loading = false;
+      this.loading.hide();
       swal.fire({
         title: "Info",
         text: "",
@@ -384,7 +382,7 @@ export class AportesTabComponent implements OnInit {
       this.validaMesInicial = false;
       this.validaMesFinal = false;
       this.SelectErroneo = false;
-      this.loading = true;
+      this.loading.show();
       let data = localStorage.getItem("Data");
       var dataLocalStorage = JSON.parse(window.atob(data == null ? "" : data));
       this.ExtactoAportes.get("yearInit")?.setValue(yearInicial);
@@ -398,7 +396,7 @@ export class AportesTabComponent implements OnInit {
         this.ExtactoAportes.value
       ).subscribe(
       (result) => {
-        this.loading = false;
+        this.loading.hide();
         this.MapearEncabezadoTabla(result);
         // #region Guarda log
         let data = localStorage.getItem("Data");
@@ -420,7 +418,7 @@ export class AportesTabComponent implements OnInit {
         // #endregion
       },
       (error) => {
-        this.loading = false;
+        this.loading.hide();
         console.log(error);
       }
       );
@@ -1128,12 +1126,12 @@ export class AportesTabComponent implements OnInit {
         var dataLocalStorage = JSON.parse(window.atob(data == null ? "" : data));
         this.ExtactoAportes.get("FechaInicio")?.setValue(FechaInicio);
         this.ExtactoAportes.get("FechaFin")?.setValue(FechaFin);
-        this.loading = true;
+        this.loading.show();
         this.MiListaProductosService.getExtracto(
           this.ExtactoAportes.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             this.MapearEncabezadoTabla(result);
             //#region Guarda log
 
@@ -1154,7 +1152,7 @@ export class AportesTabComponent implements OnInit {
             // #endregion
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -1165,12 +1163,12 @@ export class AportesTabComponent implements OnInit {
       ) {
         this.ExtactoAportes.get("FechaInicio")?.setValue(FechaInicio);
         this.ExtactoAportes.get("FechaFin")?.setValue(FechaFin);
-        this.loading = true;
+        this.loading.show();
         this.MiListaProductosService.getMovimiento(
           this.ExtactoAportes.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             this.MapearEncabezadoTablaMov(result);
 
             let data = localStorage.getItem("Data");
@@ -1192,7 +1190,7 @@ export class AportesTabComponent implements OnInit {
 
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -1204,7 +1202,7 @@ export class AportesTabComponent implements OnInit {
     var valida1 = Number($("#SelectedMovimiento_Aportes").val());
     if (valida1 == 1) {
       //pdf movimiento
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarPDFMovimientoAportes(
         this.ExtactoAportes.value
       ).subscribe(
@@ -1215,11 +1213,11 @@ export class AportesTabComponent implements OnInit {
           const fileName = "Movimiento_" + this.NumeroDocumento + ".pdf";
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
-          this.loading = false;
+          this.loading.hide();
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
@@ -1227,7 +1225,7 @@ export class AportesTabComponent implements OnInit {
     var valida = Number($("#SelectedExtracto_Aportes").val());
     if (valida == 2) {
       //pdf Extracto
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarPdf(
         this.ExtactoAportes.value
       ).subscribe(
@@ -1238,11 +1236,11 @@ export class AportesTabComponent implements OnInit {
           const fileName = "Extracto_" + this.NumeroDocumento + ".pdf";
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
-          this.loading = false;
+          this.loading.hide();
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
@@ -1251,7 +1249,7 @@ export class AportesTabComponent implements OnInit {
   generarEXCEL(): void {
     var valida1 = Number($("#SelectedMovimiento_Aportes").val());
     if (valida1 == 1) {
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarXlsMovimientos(
         this.ExtactoAportes.value
       ).subscribe(
@@ -1262,18 +1260,18 @@ export class AportesTabComponent implements OnInit {
           const fileName = "Movimiento_" + this.NumeroDocumento + ".xlsx";
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
-          this.loading = false;
+          this.loading.hide();
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
     }
     var valida = Number($("#SelectedExtracto_Aportes").val());
     if (valida == 2) {
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarXlsx(
         this.ExtactoAportes.value
       ).subscribe(
@@ -1284,11 +1282,11 @@ export class AportesTabComponent implements OnInit {
           const fileName = "Extracto_" + this.NumeroDocumento + ".xlsx";
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
-          this.loading = false;
+          this.loading.hide();
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
@@ -1311,13 +1309,13 @@ export class AportesTabComponent implements OnInit {
     } else {
       this.HabilitaMensate = 0;
       this.NoRegistros = 1;
-      this.loading = true;
+      this.loading.show();
 
       this.MiListaProductosService.GenerarPdf(
         this.ExtactoAportes.value
       ).subscribe(
         (result) => {
-          this.loading = false;
+          this.loading.hide();
           const pdfinBase64 = result.FileStream._buffer;
           const byteArray = new Uint8Array(
             atob(pdfinBase64)
@@ -1331,7 +1329,7 @@ export class AportesTabComponent implements OnInit {
           document.getElementById("extractosDtosAporte")?.setAttribute("name", "movimiento");
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
@@ -1375,12 +1373,12 @@ export class AportesTabComponent implements OnInit {
       $("#xlsx").hide();
       this.HabilitaMensate = 1;
     } else {
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarPDFMovimientoAportes(
         this.ExtactoAportes.value
       ).subscribe(
         (result) => {
-          this.loading = false;
+          this.loading.hide();
           const pdfinBase64 = result.FileStream._buffer;
           const byteArray = new Uint8Array(
             atob(pdfinBase64)
@@ -1395,7 +1393,7 @@ export class AportesTabComponent implements OnInit {
           document.getElementById("movimientosDtosAporte")?.setAttribute("name", "movimiento");
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );

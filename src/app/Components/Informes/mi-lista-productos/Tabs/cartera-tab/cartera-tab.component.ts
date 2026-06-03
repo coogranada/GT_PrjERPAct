@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@an
 import { ExcelService } from '../../../../../Services/General/excel.service';
 import { FormGroup, FormControl, Validators, NgForm } from '@angular/forms';
 import { MiListaProductosService } from '../../../../../Services/Informes/mi-lista-productos.service';
-import { NgxLoadingComponent } from 'ngx-loading';
 import moment from 'moment';
 import { DetalleCartera } from "../../../../../Models/Informes/MisProductos/mis-producto.model";
 import {   
@@ -12,6 +11,7 @@ import {
 } from "../../../../../Models/Informes/MisProductos/mis-producto.model";
 import swal from "sweetalert2";
 import { AlertService } from '../../../../../Services/Alert/alert.service';
+import { LoadingService } from '../../../../../Services/shared/loading.service';
 
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -26,12 +26,10 @@ const ColorSecundario = 'rgb(13,165,80,0.7)';
 })
 export class CarteraTabComponent implements OnInit {
   //#region Variables
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
   @ViewChild('ModalFormatosMovimientosCr', { static: true }) ModalFormatosMovimientosCr!: NgForm;
   @ViewChild('ModalCalificacion', { static: true }) private ModalCalificacion!: ElementRef;
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
-  public loading = false;
   public fechaAperturaCuenta: any;
   public fechaAperturaActualDisabled: any;
   public NombreProducto: any;
@@ -328,7 +326,8 @@ export class CarteraTabComponent implements OnInit {
   titulo = 'Generar PDF con Angular JS 5';
   constructor(private excelService: ExcelService,
     private notif: AlertService,
-    private MiListaProductosService: MiListaProductosService, changeDetectorRef: ChangeDetectorRef) { }
+    private MiListaProductosService: MiListaProductosService, changeDetectorRef: ChangeDetectorRef,
+    private loading: LoadingService) { }
 
   ngOnInit() {
     this.FormCarteraTag();
@@ -358,7 +357,7 @@ export class CarteraTabComponent implements OnInit {
   generarEXCEL(): void {
     var sel1 = Number($(".SelectedMovimiento_Cartera").val());
     if (sel1 == 1) {
-      this.loading = true;
+      this.loading.show();
       var FechaInicio = $("#fechaInicartera").val();
       var FechaFin = $("#fechaendcartera").val();
       this.MiListaProductosService.GenerarXlxsMovimientoCartera(this.lngCuenta, FechaInicio, FechaFin).subscribe(
@@ -369,11 +368,11 @@ export class CarteraTabComponent implements OnInit {
           const fileName = "Movimiento_" + this.NumeroDocumento + ".xlsx";
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
-          this.loading = false;
+          this.loading.hide();
           downloadLink.click();
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       )
@@ -389,7 +388,7 @@ export class CarteraTabComponent implements OnInit {
       var MesInicial = Number($(".MesInit_Cartera").val());
       var MesFinal = Number($(".MesEnd_Cartera").val());
       var FechaInici = yearInicial + "-" + MesInicial + "-1";
-      this.loading = true;
+      this.loading.show();
 
       this.MiListaProductosService.GenerarXlsxCartera(this.lngCuenta, FechaInici,yearFinal,MesFinal,dataLocalStorage.Oficina).subscribe(
         result => {
@@ -399,11 +398,11 @@ export class CarteraTabComponent implements OnInit {
           const fileName = "Extracto_" + this.NumeroDocumento + ".xlsx";
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
-          this.loading = false;
+          this.loading.hide();
           downloadLink.click();
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       )
@@ -565,7 +564,7 @@ export class CarteraTabComponent implements OnInit {
       this.validaMesFinal = false;
       this.SelectErroneo = false;
 
-      this.loading = true;
+      this.loading.show();
       let data = localStorage.getItem("Data");
       var dataLocalStorage = JSON.parse(window.atob(data != null ? data : ""));
 
@@ -573,10 +572,10 @@ export class CarteraTabComponent implements OnInit {
 
       var Oficina = dataLocalStorage.Oficina;
 
-        this.loading = true;
+        this.loading.show();
         this.MiListaProductosService.getExtractosCartera(this.lngCuenta, FechaInicio, yearFinal,MesFinal,Oficina).subscribe(
           result => {
-            this.loading = false;
+            this.loading.hide();
             this.MapeaEncabezadoExtracto(result);
 
             if (result.Detalles !== null) {
@@ -593,7 +592,7 @@ export class CarteraTabComponent implements OnInit {
                   $("#objepdfmovimientoCartera").hide();
                 },
                 error => {
-                  this.loading = false;
+                  this.loading.hide();
                   console.log(error);
                 }
               )
@@ -625,7 +624,7 @@ export class CarteraTabComponent implements OnInit {
 
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         )
@@ -634,7 +633,7 @@ export class CarteraTabComponent implements OnInit {
 
   SendMailSeguros() {
     if (this.validaPlantillla == true) {
-      this.loading = true;
+      this.loading.show();
       var yearInicial = Number($(".yearInit_Cartera").val());
       var yearFinal = Number($(".yearEnd_Cartera").val());
       var MesInicial = Number($(".MesInit_Cartera").val());
@@ -648,7 +647,7 @@ export class CarteraTabComponent implements OnInit {
 
       this.MiListaProductosService.sendMailCartera(this.lngCuenta, "Coogranada",Oficina,this.NombreProducto,"Cartera",FechaInicio,yearFinal,MesFinal,null).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           this.Response(result);
 
           //#region Guarda log
@@ -670,7 +669,7 @@ export class CarteraTabComponent implements OnInit {
           // #endregion
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           swal.fire({
             title: "Error",
             text: "",
@@ -685,7 +684,7 @@ export class CarteraTabComponent implements OnInit {
         }
       )
     } else {
-      this.loading = false;
+      this.loading.hide();
       swal.fire({
         title: "Info",
         text: "",
@@ -704,7 +703,7 @@ export class CarteraTabComponent implements OnInit {
   SendMailCpM() {
 
     if (this.validaPlantillla == true) {
-      this.loading = true;
+      this.loading.show();
       var yearInicial = Number($(".yearInit_Cartera").val());
       var yearFinal = Number($(".yearEnd_Cartera").val());
       var MesInicial = Number($(".MesInit_Cartera").val());
@@ -718,7 +717,7 @@ export class CarteraTabComponent implements OnInit {
 
       this.MiListaProductosService.sendMailCartera(this.lngCuenta, "Coogranada",Oficina,this.NombreProducto,"CarteraPadre",FechaInicio,yearFinal,MesFinal,null).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           this.Response(result);
 
           //#region Guarda log
@@ -740,7 +739,7 @@ export class CarteraTabComponent implements OnInit {
           // #endregion
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           swal.fire({
             title: "Error",
             text: "",
@@ -755,7 +754,7 @@ export class CarteraTabComponent implements OnInit {
         }
       )
     } else {
-      this.loading = false;
+      this.loading.hide();
       swal.fire({
         title: "Info",
         text: "",
@@ -1164,7 +1163,7 @@ export class CarteraTabComponent implements OnInit {
 
     if (selec1 == 1) {
       //pdf movimiento
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarPdfMovimientoCartera(this.lngCuenta, FechaInicio, FechaFin).subscribe(
         result => {
           var baseg4 = result.FileStream;
@@ -1173,11 +1172,11 @@ export class CarteraTabComponent implements OnInit {
           const fileName = "Movimiento_" + this.NumeroDocumento + ".pdf";
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
-          this.loading = false;
+          this.loading.hide();
           downloadLink.click();
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       )
@@ -1187,7 +1186,7 @@ export class CarteraTabComponent implements OnInit {
     var selec = Number($(".SelectedExtracto_Cartera").val());
     if (selec == 2) {
       //pdf Extracto
-      this.loading = true;
+      this.loading.show();
       let data = localStorage.getItem("Data");
       var dataLocalStorage = JSON.parse(window.atob(data != null ? data : ""));
 
@@ -1204,11 +1203,11 @@ export class CarteraTabComponent implements OnInit {
           const fileName = "Extracto_" + this.NumeroDocumento + ".pdf";
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
-          this.loading = false;
+          this.loading.hide();
           downloadLink.click();
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       )
@@ -2702,7 +2701,7 @@ export class CarteraTabComponent implements OnInit {
 
 
   SendEmailCartera() {
-    this.loading = true;
+    this.loading.show();
     this.ValidaPlantillaMail();
     setTimeout(() => {
       this.SendMailSeguros();
@@ -2711,7 +2710,7 @@ export class CarteraTabComponent implements OnInit {
 
 
   SendEmailCp() {
-    this.loading = true;
+    this.loading.show();
     this.ValidaPlantillaMail();
     setTimeout(() => {
       this.SendMailCpM();
@@ -2950,7 +2949,7 @@ export class CarteraTabComponent implements OnInit {
       if (this.SelectionExtOrMov == 2 && FechaInicio != null && FechaFin != null) {
         this.ExtactoCartera.get('FechaIniciocartera')?.setValue(FechaInicio);
         this.ExtactoCartera.get('FechaFincartera')?.setValue(FechaFin);
-        this.loading = true;
+        this.loading.show();
         let data = localStorage.getItem("Data");
         var dataLocalStorage = JSON.parse(window.atob(data != null ? data : ""));
        
@@ -2961,7 +2960,7 @@ export class CarteraTabComponent implements OnInit {
         var FechaInici = yearInicial + "-" + MesInicial + "-1";
         this.MiListaProductosService.getExtractosCartera(this.lngCuenta, FechaInici, yearFinal,MesFinal,dataLocalStorage.Oficina).subscribe(
           result => {
-            this.loading = false;
+            this.loading.hide();
             //71723010
             this.MapeaEncabezadoExtracto(result);
             if (result.Detalles !== null) {
@@ -2980,7 +2979,7 @@ export class CarteraTabComponent implements OnInit {
                   $("#objepdfmovimientoCartera").hide();
                 },
                 error => {
-                  this.loading = false;
+                  this.loading.hide();
                   console.log(error);
                 }
               )
@@ -3012,23 +3011,23 @@ export class CarteraTabComponent implements OnInit {
 
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         )
       } else if (this.SelectionExtOrMov == 1 && FechaInicio != null && FechaFin != null) {
         this.ExtactoCartera.get('FechaIniciocartera')?.setValue(FechaInicio);
         this.ExtactoCartera.get('FechaFincartera')?.setValue(FechaFin);
-        this.loading = true;
+        this.loading.show();
         this.MiListaProductosService.getMovimientosCartera(this.lngCuenta, FechaInicio, FechaFin).subscribe(
           result => {
-            this.loading = true;
+            this.loading.show();
             this.MapeaEncabezadoExtractoMovimientos(result)
 
             if (result.Detalles !== null) {
               this.MiListaProductosService.GenerarPdfMovimientoCartera(this.lngCuenta, FechaInicio, FechaFin).subscribe(
                 result => {
-                  this.loading = false;
+                  this.loading.hide();
                   const pdfinBase64 = result.FileStream._buffer;
                   const byteArray = new Uint8Array(atob(pdfinBase64).split('').map(char => char.charCodeAt(0)));
                   const newBolb = new Blob([byteArray], { type: 'application/pdf' });
@@ -3042,7 +3041,7 @@ export class CarteraTabComponent implements OnInit {
                   $("#objepdfmovimientoCartera").show();
                 },
                 error => {
-                  this.loading = false;
+                  this.loading.hide();
                   console.log(error);
                   $("#objepdfExtCartera").hide();
                   $("#objepdfmovimientoCartera").hide();
@@ -3050,7 +3049,7 @@ export class CarteraTabComponent implements OnInit {
               )
 
             } else {
-              this.loading = false;
+              this.loading.hide();
               this.DetallesMovimientosCartera.length = 0;
               this.HabilitaMensate = 1
               $("#objepdfExtCartera").hide();
@@ -3079,7 +3078,7 @@ export class CarteraTabComponent implements OnInit {
 
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
             $("#objepdfExtCartera").hide();
             $("#objepdfmovimientoCartera").hide();
@@ -3562,7 +3561,7 @@ export class CarteraTabComponent implements OnInit {
       if (this.SelectionExtOrMov == 2 && FechaInicio != null && FechaFin != null) {
         this.ExtactoCarteraTD.get('FechaIniciocartera')?.setValue(FechaInicio);
         this.ExtactoCarteraTD.get('FechaFincartera')?.setValue(FechaFin);
-        this.loading = true;
+        this.loading.show();
         let datas = localStorage.getItem("Data");
         var dataLocalStorage = JSON.parse(window.atob(datas != null ? datas : ""));
         var yearInicial = Number($(".yearInit_Cartera").val());
@@ -3585,7 +3584,7 @@ export class CarteraTabComponent implements OnInit {
                   result => {
                     if (result != null) {
                       this.FilePDFXLS = result.FileStream;
-                      this.loading = false;
+                      this.loading.hide();
                       this.objfull = true;
                       const pdfinBase64 = result.FileStream._buffer;
                       const byteArray = new Uint8Array(atob(pdfinBase64).split('').map(char => char.charCodeAt(0)));
@@ -3603,14 +3602,14 @@ export class CarteraTabComponent implements OnInit {
                     }
                   },
                   error => {
-                    this.loading = false;
+                    this.loading.hide();
                     console.log(error);
                     $("#ExtractosCarteraTD").hide();
                   });
               }
               else {
                 this.HabilitaMensate = 1;
-                this.loading = false;
+                this.loading.hide();
                 this.DatosExtractoTD.length = 0;
                 this.objfull = false;
                 $("#ExtractosCarteraTD").hide();
@@ -3618,7 +3617,7 @@ export class CarteraTabComponent implements OnInit {
             }
             else {
               this.HabilitaMensate = 1;
-              this.loading = false;
+              this.loading.hide();
               this.DatosExtractoTD.length = 0;
               this.objfull = false;
               $("#ExtractosCarteraTD").hide();
@@ -3650,7 +3649,7 @@ export class CarteraTabComponent implements OnInit {
         // #endregion
 
       } else if (this.SelectionExtOrMov == 1 && FechaInicio != null && FechaFin != null) {
-        this.loading = true;
+        this.loading.show();
         this.MiListaProductosService.ListaItemMovimimientoCarteraTd(this.lngCuenta, FechaInicio, FechaFin).subscribe(
           result => {
             var item = 0
@@ -3665,7 +3664,7 @@ export class CarteraTabComponent implements OnInit {
                   result => {
                     if (result != null) {
                       this.FilePDFXLS = result.FileStream;
-                      this.loading = false;
+                      this.loading.hide();
                       this.objfull = true;
                       const pdfinBase64 = result.FileStream._buffer;
                       const byteArray = new Uint8Array(atob(pdfinBase64).split('').map(char => char.charCodeAt(0)));
@@ -3681,13 +3680,13 @@ export class CarteraTabComponent implements OnInit {
                     }
                   },
                   error => {
-                    this.loading = false;
+                    this.loading.hide();
                     console.log(error);
                     $("#MovimientosCarteraTD").hide();
                   });
               }
               else {
-                this.loading = false;
+                this.loading.hide();
                 this.DatosMovimientoTD.length = 0;
                 this.objfull = false;
                 this.HabilitaMensate = 1;
@@ -3695,7 +3694,7 @@ export class CarteraTabComponent implements OnInit {
               }
             }
             else {
-              this.loading = false;
+              this.loading.hide();
               this.DatosMovimientoTD.length = 0;
               this.objfull = false;
               this.HabilitaMensate = 1;
@@ -3730,10 +3729,10 @@ export class CarteraTabComponent implements OnInit {
       } else if (Number(this.SelectionExtOrMov) == 3) {
         let data = localStorage.getItem("Data");
         var dataLocalStorage = JSON.parse(window.atob(data != null ? data : ""));
-        this.loading = true;
+        this.loading.show();
         this.MiListaProductosService.getDetalleTarjetaDebito(this.lngCuenta).subscribe(
           result => {
-            this.loading = false;
+            this.loading.hide();
             var item = 0;
             if (result != null) {
               if (result.length > 0) {
@@ -3748,7 +3747,7 @@ export class CarteraTabComponent implements OnInit {
                 result => {
                   if (result != null) {
                     this.FilePDFXLS = result.FileStream;
-                    this.loading = false;
+                    this.loading.hide();
                     this.objfull = true;
                     const pdfinBase64 = result.FileStream._buffer;
                     const byteArray = new Uint8Array(atob(pdfinBase64).split('').map(char => char.charCodeAt(0)));
@@ -3764,7 +3763,7 @@ export class CarteraTabComponent implements OnInit {
                   }
                 },
                 error => {
-                  this.loading = false;
+                  this.loading.hide();
                   console.log(error);
                 });
               } else {
@@ -3799,9 +3798,9 @@ export class CarteraTabComponent implements OnInit {
                   // #endregion
 
             }
-            this.loading = false;
+            this.loading.hide();
           }, error => {
-            this.loading = false;
+            this.loading.hide();
 
           });
       }
@@ -3860,7 +3859,7 @@ export class CarteraTabComponent implements OnInit {
 
       var FechaInicio = yearInicial + "-" + MesInicial + "-1";
       var Oficina = dataLocalStorage.Oficina;
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.listItemExtCarteraTD(this.lngCuenta, FechaInicio, yearFinal,MesFinal,Oficina).subscribe(
         result => {
           var item = 0
@@ -3875,7 +3874,7 @@ export class CarteraTabComponent implements OnInit {
                 result => {
                   if (result != null) {
                     this.FilePDFXLS = result.FileStream;
-                    this.loading = false;
+                    this.loading.hide();
                     this.objfull = true;
                     const pdfinBase64 = result.FileStream._buffer;
                     const byteArray = new Uint8Array(atob(pdfinBase64).split('').map(char => char.charCodeAt(0)));
@@ -3893,14 +3892,14 @@ export class CarteraTabComponent implements OnInit {
                   }
                 },
                 error => {
-                  this.loading = false;
+                  this.loading.hide();
                   console.log(error);
                   $("#ExtractosCarteraTD").hide();
                 });
             }
             else {
               this.HabilitaMensate = 1;
-              this.loading = false;
+              this.loading.hide();
               this.DatosExtractoTD.length = 0;
               this.objfull = false;
               $("#ExtractosCarteraTD").hide();
@@ -3908,7 +3907,7 @@ export class CarteraTabComponent implements OnInit {
           }
           else {
             this.HabilitaMensate = 1;
-            this.loading = false;
+            this.loading.hide();
             this.DatosExtractoTD.length = 0;
             this.objfull = false;
             $("#ExtractosCarteraTD").hide();
@@ -3946,7 +3945,7 @@ export class CarteraTabComponent implements OnInit {
     const fileName = "MovExt_" + this.NumeroDocumento + ".pdf";
     downloadLink.href = linkSource;
     downloadLink.download = fileName;
-    this.loading = false;
+    this.loading.hide();
     downloadLink.click();
   }
 
@@ -3954,11 +3953,11 @@ export class CarteraTabComponent implements OnInit {
     let data = localStorage.getItem("Data");
     var dataLocalStorage = JSON.parse(window.atob(data == null ? "" : data));
 
-    this.loading = true;
+    this.loading.show();
     //falta validar si existe la plantilla
     this.MiListaProductosService.sendMailCartera(this.lngCuenta, dataLocalStorage.Usuario, dataLocalStorage.Oficina,this.NombreProducto,"TD",null,null,null,null).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.Response(result);
 
         var Tercero = Number($("#TerceroPrincipal").val());
@@ -3982,7 +3981,7 @@ export class CarteraTabComponent implements OnInit {
           // #endregion
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         swal.fire({
           title: "Error",
           text: "",
@@ -4048,7 +4047,7 @@ export class CarteraTabComponent implements OnInit {
   }
 
   SendEmailCertificateSaldos() {
-    this.loading = true;
+    this.loading.show();
     this.ValidaPlantillaMail();
     setTimeout(() => {
       this.sendTD();
@@ -4066,7 +4065,7 @@ export class CarteraTabComponent implements OnInit {
     var fechaFin =  $("#fechaendcarteraTD").val();
 
     if (select1 == 1) {
-      this.loading = true;
+      this.loading.show();
 
       this.MiListaProductosService.GenerarXlxsMovimientoCarteraCuentaPadre(this.lngCuenta, fechaInicio,fechaFin).subscribe(
         result => {
@@ -4076,11 +4075,11 @@ export class CarteraTabComponent implements OnInit {
           const fileName = "Movimiento_" + this.NumeroDocumento + ".xlsx";
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
-          this.loading = false;
+          this.loading.hide();
           downloadLink.click();
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       )
@@ -4088,7 +4087,7 @@ export class CarteraTabComponent implements OnInit {
       var selec = Number($(".SelectedExtracto_CarteraTD").val());
     if (selec == 2) {
       this.SelectionExtOrMov = selec;
-        this.loading = true;
+        this.loading.show();
 
 
       var yearInicial = Number($(".yearInit_Cartera").val());
@@ -4105,11 +4104,11 @@ export class CarteraTabComponent implements OnInit {
           const fileName = "Extracto_" + this.NumeroDocumento + ".xlsx";
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
-          this.loading = false;
+          this.loading.hide();
           downloadLink.click();
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       )
@@ -4138,7 +4137,7 @@ export class CarteraTabComponent implements OnInit {
           this.carteraInfo.PagoTotal = result.PagoTotal;
           this.carteraInfo.PagoMini = result.PagoMini;
         }, error => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         });
     }
@@ -4154,7 +4153,7 @@ export class CarteraTabComponent implements OnInit {
           this.carteraInfo.PagoTotal = result.PagoTotal;
           this.carteraInfo.PagoMini = result.PagoMini;
         }, error => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         });
     }

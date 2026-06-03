@@ -8,12 +8,12 @@ import { GeneralesService } from '../../../../../Services/Productos/generales.se
 import { AsesoriaTerminoService } from '../../../../../Services/Productos/asesoriaTermino.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConfiguracionNotificacion } from '../../../../../../environments/config.noticaciones';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { DatePipe, formatDate } from '@angular/common';
 import swal from 'sweetalert2';
 import { LogDataOnEditAsesoria } from '../../../../../Models/Productos/termino/asesoria/asesoria-termino.model';
 import { TerminoAhorrosService } from '../../../../../Services/Productos/terminoAhorros.service';
 import { ClientesGetListService } from '../../../../../Services/Clientes/clientesGetList.service';
+import { LoadingService } from '../../../../../Services/shared/loading.service';
 declare var $: any;
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -37,7 +37,8 @@ export class AsesoriaTerminoComponent implements OnInit {
     private operacionesService: OperacionesService,
     private TerminoService: TerminoAhorrosService,
     private AsesoriaTerminoServices: AsesoriaTerminoService,
-    private generalesService: GeneralesService,) {
+    private generalesService: GeneralesService,
+    private loading: LoadingService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -56,8 +57,6 @@ export class AsesoriaTerminoComponent implements OnInit {
   @ViewChild('ModalImpresion', { static: true }) private ModalImpresion!: ElementRef;
 
   private emitEventTermino: EventEmitter<boolean> = new EventEmitter<boolean>();
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
 
@@ -173,7 +172,7 @@ export class AsesoriaTerminoComponent implements OnInit {
         return;
       }
 
-      this.loading = true;
+      this.loading.show();
       const NumeroAsesoria = this.asesoriaterminoForm.get('NumeroAsesoria')?.value;
       const logData = {
         IdAsesorExternoAnterior: this.asesorExternoAnterior.id || '',
@@ -185,7 +184,7 @@ export class AsesoriaTerminoComponent implements OnInit {
       this.AsesoriaTerminoServices.EditarAsesorExterno({ IdAsesorExterno: asesorExternoCode, NumeroAsesoria }).subscribe(
         result => {
           this.notif.success('Exitoso', 'El cambio asesor externo se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
-          this.loading = false;
+          this.loading.hide();
           this.BloquearbtnActalizar = true;
           this.btnActualizar = true;
           this.BloquearAsesorExterno = true;
@@ -197,13 +196,13 @@ export class AsesoriaTerminoComponent implements OnInit {
                 this.GetHistorial(NumeroAsesoria);
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 console.log(errorMessage);
               });
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         });
@@ -216,7 +215,7 @@ export class AsesoriaTerminoComponent implements OnInit {
         return;
       }
 
-      this.loading = true;
+      this.loading.show();
       const NumeroAsesoria = this.asesoriaterminoForm.get('NumeroAsesoria')?.value;
       var TasaAdicionalSin = this.asesoriaterminoForm.get('TasaAdicional')?.value;
       TasaAdicionalSin = TasaAdicionalSin.replace("%", "");
@@ -276,10 +275,10 @@ export class AsesoriaTerminoComponent implements OnInit {
       this.AsesoriaTerminoServices.GuardarAsesoria(payload)
         .subscribe(
          async asesoria => {
-            this.loading = false;
+            this.loading.hide();
             if (asesoria.NumeroAsesoria) {
               this.notif.success('Exitoso', 'La asesoria se actualizó correctamente.', ConfiguracionNotificacion.configRightTop);
-              this.loading = false;
+              this.loading.hide();
               this.BloquearbtnActalizar = false;
               this.btnActualizar = true;
               this.showBtnCalcularIntereses = false;
@@ -299,14 +298,14 @@ export class AsesoriaTerminoComponent implements OnInit {
                     this.asesoriaterminoOperacionFrom.get('Codigo')?.reset();
                   },
                   error => {
-                    this.loading = false;
+                    this.loading.hide();
                     const errorMessage = <any>error;
                     console.log(errorMessage);
                   });
             }
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             console.log(errorMessage);
           });
@@ -321,6 +320,7 @@ export class AsesoriaTerminoComponent implements OnInit {
   onChangeAsociado() {
     this.disableBtnGuardar = false;
     this.asesoriaterminoForm.get('Nombre')?.reset();
+    this.asesoriaterminoForm.get('IdTipoDocumento')?.reset();
   }
 
   Operaciones() {
@@ -518,7 +518,7 @@ export class AsesoriaTerminoComponent implements OnInit {
     let byteArray = null;
     let newBolb = null;
     let url = null;
-    this.loading = true;
+    this.loading.show();
     document.querySelector("object")!.data = "";
     document.querySelector("object")!.name = "";
     document.querySelector("object")!.type = "";
@@ -536,10 +536,10 @@ export class AsesoriaTerminoComponent implements OnInit {
         document.querySelector("object")!.data = url;
         document.querySelector("object")!.name = "Impresion";
         document.querySelector("object")!.type = "application/pdf";
-        this.loading = false;
+        this.loading.hide();
       },
       error => {
-        this.loading = false
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notif.error('Error', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
         console.log(errorMessage);
@@ -745,16 +745,16 @@ export class AsesoriaTerminoComponent implements OnInit {
       let puntos: any[] = this.resultPuntosAdicionales.filter((x : any) => x.IdPuntosAdicionales == this.AdicionarPuntosFrom.get('AdicionarPunto')?.value);
       const Punto = puntos[0].PuntosAdicionales;
       this.asesoriaterminoForm.get('AdicionarP')?.setValue(Punto);
-      this.loading = true;
+      this.loading.show();
       let payload: any = this.asesoriaterminoForm.value;
       this.AsesoriaTerminoServices.ObtenerTasaConPuntos(payload).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           console.log("suma puntos",result)
           this.MapearTasa(result);
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         });
@@ -865,7 +865,7 @@ export class AsesoriaTerminoComponent implements OnInit {
     if (this.asesoriaterminoForm.get('TotalInteresBruto')?.value !== ''
       && this.asesoriaterminoForm.get('TotalInteresBruto')?.value !== undefined
       && this.asesoriaterminoForm.get('TotalInteresBruto')?.value !== null) {
-      this.loading = true;
+      this.loading.show();
       this.asesoriaterminoForm.get('TasaEfectiva')?.setValue(this.datoTasaEfectiva);
       this.asesoriaterminoForm.get('TasaNominal')?.setValue(this.datoTasaNominal);
       this.asesoriaterminoForm.get('InteresBruto')?.setValue(this.asesoriaterminoForm.get('TotalInteresBruto')?.value);
@@ -874,7 +874,7 @@ export class AsesoriaTerminoComponent implements OnInit {
       this.AsesoriaTerminoServices.ObtenerRetencionAsesoriaTermino(payload).subscribe(
         result => {
           console.log("Rete", result);
-          this.loading = false;
+          this.loading.hide();
           const retencion = result;
           this.asesoriaterminoForm.get('Retencion')?.setValue(retencion)
           if (this.asesoriaterminoForm.get('IdTipoDocumento')?.value === 3 && this.idObjetoSocial === 2) this.asesoriaterminoForm.get('Retencion')?.setValue(0);
@@ -910,7 +910,7 @@ export class AsesoriaTerminoComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         });
@@ -925,12 +925,12 @@ export class AsesoriaTerminoComponent implements OnInit {
         && this.asesoriaterminoForm.get('IdFrecuenciaPago')?.value !== ''
         && this.asesoriaterminoForm.get('IdFrecuenciaPago')?.value !== undefined
         && this.asesoriaterminoForm.get('IdFrecuenciaPago')?.value !== null) {
-        this.loading = true;
+        this.loading.show();
         let payload: any = this.asesoriaterminoForm.value;
         this.AsesoriaTerminoServices.ObtenerTasa(payload).subscribe(
           result => {
             resolve('');
-            this.loading = false;
+            this.loading.hide();
             this.disableBtnGuardar = false;
             console.log("tasa", result)
             if (this.resultFrecuenciaPago != null && this.resultFrecuenciaPago.length > 0) {
@@ -953,7 +953,7 @@ export class AsesoriaTerminoComponent implements OnInit {
           },
           error => {
             this.BloquearCalcularIntereces = false;
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             console.log(errorMessage);
           });
@@ -1238,12 +1238,12 @@ export class AsesoriaTerminoComponent implements OnInit {
     this.generalesService.GuardarlogAsesoria(objLog,this.asesoriaterminoOperacionFrom.get('Codigo')?.value || 43, currentDate,
       77, this.asesoriaterminoForm.controls['NumeroAsesoria'].value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           this.GetHistorial(this.asesoriaterminoForm.controls['NumeroAsesoria'].value);
           console.log(result);
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         });
@@ -1255,10 +1255,10 @@ export class AsesoriaTerminoComponent implements OnInit {
         && this.asesoriaterminoForm.get('NumeroDocumento')?.value !== undefined
         && this.asesoriaterminoForm.get('NumeroDocumento')?.value !== '') {
         Documento = this.asesoriaterminoForm.get('NumeroDocumento')?.value;
-        this.loading = true;
+        this.loading.show();
         this.AsesoriaTerminoServices.BuscarNombreXDocumento(Documento).subscribe(
           result => {
-            this.loading = false;
+            this.loading.hide();
             if (result === null) {
               this.notif.warning('Advertencia', 'No se encontraron datos.', ConfiguracionNotificacion.configRightTop);
               this.creacionFrom.get('PrimerNombre')?.reset();
@@ -1286,7 +1286,7 @@ export class AsesoriaTerminoComponent implements OnInit {
             }
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             console.log(errorMessage);
           }
@@ -1320,10 +1320,10 @@ export class AsesoriaTerminoComponent implements OnInit {
       && this.asesoriaterminoForm.get('Nombre')?.value !== undefined
       && this.asesoriaterminoForm.get('Nombre')?.value !== '') {
       Nombre = this.asesoriaterminoForm.get('Nombre')?.value;
-      this.loading = true;
+      this.loading.show();
       this.AsesoriaTerminoServices.BuscarNombreXNombre(Nombre).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           if (result.length === 0) {
             this.notif.warning('Advertencia', 'No se encontró el nombre.', ConfiguracionNotificacion.configRightTop);
           } else if (result.length === 1) {
@@ -1339,7 +1339,7 @@ export class AsesoriaTerminoComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
@@ -1399,10 +1399,10 @@ export class AsesoriaTerminoComponent implements OnInit {
 
   }
   BuscarNombreModal(Documento = '*') {
-    this.loading = true;
+    this.loading.show();
     this.AsesoriaTerminoServices.BuscarAsociado(Documento, '*').subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.creacionFrom.reset();
         this.asesoriaterminoForm.get('Edad')?.reset();
         if (result.length === 1) {
@@ -1456,7 +1456,7 @@ export class AsesoriaTerminoComponent implements OnInit {
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notif.error('Error', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
         console.log(errorMessage);
@@ -1482,10 +1482,10 @@ export class AsesoriaTerminoComponent implements OnInit {
         && this.asesoriaterminoForm.get('Nombre')?.value !== undefined
         && this.asesoriaterminoForm.get('Nombre')?.value !== '') {
           Nombre = this.asesoriaterminoForm.get('Nombre')?.value;
-          this.loading = true;
+          this.loading.show();
           this.AsesoriaTerminoServices.BuscarNombreXNombre_(Nombre).subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               if (result.length === 0) {
                 this.notif.warning('Advertencia', 'No se encontró el nombre.');
               } else if (result.length === 1) {
@@ -1498,7 +1498,7 @@ export class AsesoriaTerminoComponent implements OnInit {
               }
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               console.log(errorMessage);
             }
@@ -1570,10 +1570,10 @@ export class AsesoriaTerminoComponent implements OnInit {
       else if (this.asesoriaterminoForm.get('Nombre')?.value !== null && this.asesoriaterminoForm.get('Nombre')?.value !== undefined && this.asesoriaterminoForm.get('Nombre')?.value !== '')
         Nombre = this.asesoriaterminoForm.get('Nombre')?.value;
 
-      this.loading = true;
+      this.loading.show();
       this.AsesoriaTerminoServices.BuscarAsociado(Documento, Nombre).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           this.creacionFrom.reset();
           this.asesoriaterminoForm.get('Edad')?.reset();
           if (result.length === 0) {
@@ -1646,7 +1646,7 @@ export class AsesoriaTerminoComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           this.notif.error('Error', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
           console.log(errorMessage);
@@ -1662,11 +1662,11 @@ export class AsesoriaTerminoComponent implements OnInit {
     } else if (this.asesoriaterminoForm.get('Nombre')?.value !== null && this.asesoriaterminoForm.get('Nombre')?.value !== undefined && this.asesoriaterminoForm.get('Nombre')?.value !== '') {
       Nombre = this.asesoriaterminoForm.get('Nombre')?.value;
     }
-    this.loading = true;
+    this.loading.show();
     this.AsesoriaTerminoServices.BuscarAsociado(Documento, Nombre).subscribe(
       result => {
         console.log("personas",result)
-        this.loading = false;
+        this.loading.hide();
         this.dataObjet = undefined;
         if (result.length === 0) {
           this.notif.warning('Advertencia', 'No se encontró el asociado.', ConfiguracionNotificacion.configRightTop);
@@ -1705,7 +1705,7 @@ export class AsesoriaTerminoComponent implements OnInit {
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notif.error('Error', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
         console.log(errorMessage);
@@ -1765,10 +1765,10 @@ export class AsesoriaTerminoComponent implements OnInit {
     if (IdAsesor === '*' && NombreAsesor === '*') {
       this.notif.warning('Alerta', 'Debe ingresar el documento o el nombre del asesor.', ConfiguracionNotificacion.configRightTop);
     } else {
-      this.loading = true;
+      this.loading.show();
       this.AsesoriaTerminoServices.BuscarAsesor(IdAsesor, NombreAsesor).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           if (result.length === 1) {
             this.MapearDatosAsesor(result);
           } else if (result.length > 1) {
@@ -1779,7 +1779,7 @@ export class AsesoriaTerminoComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
@@ -1809,10 +1809,10 @@ export class AsesoriaTerminoComponent implements OnInit {
       const searchData = { strCodigo: asesorExternoCode, strNombre: asesorExternoNombre };
       if (target.id === 'SelectAsesorExterno') searchData.strNombre = ''; //Esto es para que cuando se haga el blur en el codigo, busque por codigo y no por nombre.
 
-      this.loading = true;
+      this.loading.show();
       this.AsesoriaTerminoServices.BuscarAsesorExterno(searchData).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           if (result.length === 1) {
             this.AsesorFrom.get('strCodigo')?.setValue(result[0].intIdAsesor);
             this.AsesorFrom.get('strNombre')?.setValue(result[0].Nombre);
@@ -1831,7 +1831,7 @@ export class AsesoriaTerminoComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           this.notif.warning('Advertencia', 'El valor ingresado no tiene el formato correcto',ConfiguracionNotificacion.configRightTopNoClose);
           const errorMessage = <any>error;
           console.log(errorMessage);
@@ -1948,11 +1948,11 @@ export class AsesoriaTerminoComponent implements OnInit {
         && this.asesoriaterminoForm.get('DescripcionProducto')?.value !== '') {
         Descripcion = this.asesoriaterminoForm.get('DescripcionProducto')?.value;
       }
-      this.loading = true;
+      this.loading.show();
       console.log(IdProducto,Descripcion)
       this.AsesoriaTerminoServices.BuscarProducto(IdProducto, Descripcion).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           this.BloquearPuntosA = false;
           if (result.length === 0) {
             this.notif.warning('Alerta', 'No se encontró el producto.', ConfiguracionNotificacion.configRightTop);
@@ -2018,7 +2018,7 @@ export class AsesoriaTerminoComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         }

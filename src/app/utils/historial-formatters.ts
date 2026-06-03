@@ -155,6 +155,20 @@ export const formateadoresPorOperacion: Record<number, FormateadorOperacion> = {
       Detalles: `<strong>Anterior:</strong> ${formatear(detalles.Anterior)} | <strong>Actualiza:</strong> ${formatear(detalles.Actualiza)}`
     };
   },
+  140: (registro) => {
+    const detalles: DetallesLogCredito = JSON.parse(registro.Detalles);
+
+    const formatear = ({ Sistema, PeriodoCapital, PeriodoInteres, Plazo, PeriodoGracia }: Partial<CambiarInfoCreditoLog>) => {
+      return Object.entries({ Sistema, PeriodoCapital, PeriodoInteres, Plazo, PeriodoGracia })
+        .map(([key, value]) => `${key}: ${value ?? ''}`)
+        .join(' - ');
+    };
+
+    return {
+      ...registro,
+      Detalles: `<strong>Anterior:</strong> ${formatear(detalles.Anterior)} | <strong>Actualiza:</strong> ${formatear(detalles.Actualiza)}`
+    };
+  },
   21: (registro) => {
     if (!registro?.Detalles) return registro;
       

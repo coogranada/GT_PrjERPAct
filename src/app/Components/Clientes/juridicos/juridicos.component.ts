@@ -34,11 +34,11 @@ import { ReferenciasComponent } from './Tabs/referencias/referencias.component';
 import { RepresentanteLegalComponent } from './Tabs/representante-legal/representante-legal.component';
 import { SolicitudServiciosJuridicosComponent } from '../../Formatos-impresion/solicitud-servicios-juridicos/solicitud-servicios-juridicos.component';
 import { ClientesService } from '../../../Services/Clientes/clientes.service';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { Cardinales, Divisas, Inmueble, Vias }  from '../../../../environments/Maestros.Naturales';
 import { AlertService } from '../../../Services/Alert/alert.service';
 import { MiListaProductosService } from '../../../Services/Informes/mi-lista-productos.service';
 import { Estados } from '../../../../environments/Estados';
+import { LoadingService } from '../../../Services/shared/loading.service';
 
 declare var $: any;
 const PrimaryWhite = 'rgb(13,165,80)';
@@ -97,9 +97,6 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
   //#endregion
 
   @ViewChild('AppComponent', { static: true }) appComponent!: AppComponent;
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = PrimaryWhite;
   public secondaryColour = SecondaryGrey;
   parentMessage = 'message from parent basico y contacto';
@@ -260,8 +257,9 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     private juridicosService: JuridicosService, private generalesService: GeneralesService,
     private gestionServiceOperacion: GestioOperacionesService, private loginService: LoginService, private router: Router,
     private clientesService: ClientesService,
-    private MiListaProductosService: MiListaProductosService
-  ) {
+    private MiListaProductosService: MiListaProductosService,
+    private loading: LoadingService
+    ) {
       let data : string | null = localStorage.getItem('Data');
       this.resultDataStore  = JSON.parse(window.atob(data == null ? "" : data));
     this.moduloLocal = 12;
@@ -355,7 +353,6 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     });
  
     this.entrevistaComponent.emitEventGuardado.subscribe(res => {
-      this.loading = true;
       if (+res.cargar === 1) {
         this.LimpiarFormularios();
         this.ActivarBtnOpciones = false;
@@ -404,7 +401,6 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     this.emitEventJuridico.subscribe(res => {
       const GetOperacion = Number(localStorage.getItem('EsGestion'));
       if (GetOperacion === 1) {
-        this.loading = true;
         let datages : string | null = localStorage.getItem('DataGest')
         this.dataGestionOperacion = JSON.parse(datages == null ? "" : datages);
         localStorage.removeItem('EsGestion');
@@ -525,10 +521,6 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           this.JuridicoSeleccionado = result.JuridicoDto.IdJuridico;
           this.entrevistaComponent.idJuridicoSearch = result.JuridicoDto.IdJuridico;
           this.entrevistaComponent.fechaMatricula = result.JuridicoDto.FechaMatricula;
-
-          // this.juridicosFrom.get('nombre')?.reset();
-          // this.juridicosFrom.get('operacion')?.reset();
-          this.loading = false;
         },
         error => {
           this.notif.onDanger('Error', 'Los datos no se cargaron correctamente - ' + error);
@@ -6480,10 +6472,10 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     if (nit !== '' && nit !== undefined && nit !== null ) {
       localStorage.setItem('trasabilidad-juridico', window.btoa(JSON.stringify(nit)));
        this.LimpiarFormularios();
-       this.loading = true;
+       this.loading.show();
       this.juridicosService.BuscarJuridicosAll(nit, '*').subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           if (result !== null) {
             if (result.JuridicoDto !== null) {
               this.CargarTabs(result);
@@ -6497,20 +6489,17 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
               this.juridicosFrom.get('operacion')?.reset();
               this.btnBuscar = true;
               this.ActivarAsteriscosEditar(result.BasicosDto.IdRelacion);
-              this.loading = false;
-            } else {
-              this.loading = false;
-            }
+            } 
           } else {
             this.notif.onWarning('Advertencia', 'No se encontró registro.');
-            this.loading = false;
+            this.loading.hide();
             this.juridicosFrom.get('buscar')?.reset();
             this.juridicosFrom.get('nombre')?.reset();
             this.generalesService.Autofocus('BuscarDocumento');
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           this.notif.onWarning('Advertencia', 'No existen datos realizar la consulta.');
           console.error('Error' + error);
           this.juridicosFrom.get('buscar')?.reset();
@@ -6567,85 +6556,78 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       }
     }
   }
+ 
+ CargarTabs(result: any) {
+  this.mostrarOficina = true;
+  // Asignación de catálogos
+  this.infoJuridicoComponent.dataCiudades = this.dataCiudadesAll;
+  this.infoJuridicoComponent.dataDepartamentos = this.dataDepartamentosAll;
+  this.infoJuridicoComponent.dataPais = this.dataPaisesAll;
 
-  CargarTabs(result : any) {
-    this.mostrarOficina = true;
+  this.contactoComponet.dataCiudades = this.dataCiudadesAll;
+  this.contactoComponet.dataDepartamentos = this.dataDepartamentosAll;
+  this.contactoComponet.dataPais = this.dataPaisesAll;
 
-    this.infoJuridicoComponent.dataCiudades = this.dataCiudadesAll;
-    this.infoJuridicoComponent.dataDepartamentos = this.dataDepartamentosAll;
-    this.infoJuridicoComponent.dataPais = this.dataPaisesAll;
+  this.referenciasComponent.dataCiudades = this.dataCiudadesAll;
+  this.referenciasComponent.dataDepartamentos = this.dataDepartamentosAll;
+  this.referenciasComponent.dataPais = this.dataPaisesAll;
 
-    this.contactoComponet.dataCiudades = this.dataCiudadesAll;
-    this.contactoComponet.dataDepartamentos = this.dataDepartamentosAll;
-    this.contactoComponet.dataPais = this.dataPaisesAll;
+  console.log('RESULT', result);
+  console.log('JuridicoDto', result?.JuridicoDto);
 
-    this.referenciasComponent.dataCiudades = this.dataCiudadesAll;
-    this.referenciasComponent.dataDepartamentos = this.dataDepartamentosAll;
-    this.referenciasComponent.dataPais = this.dataPaisesAll;
-
-    console.log(result);
-    console.log(result.JuridicoDto);
-
-    if ((result.JuridicoDto !== null && result.JuridicoDto !== undefined) && 
-      ( result.BasicosDto !== null && result.BasicosDto !== undefined)) {
-      this.CargarDataFormularioBaisco(result.JuridicoDto, result.BasicosDto);
-    } else {
-      this.CargarDatosFormularioBasicoInicial(result.JuridicoDto, result);
-    }
-
-    if (result.ContactoDto !== null ) {
-      if (result.ContactoDto.length > 0) {
-        this.CargarDataFormularioContacto(result.ContactoDto);
-      } else { 
-        this.objMotivoEnvio.Celular = '';
+  if (result?.JuridicoDto && result?.BasicosDto) {
+    this.CargarDataFormularioBaisco(result.JuridicoDto, result.BasicosDto);
+  } else {
+    this.CargarDatosFormularioBasicoInicial(result?.JuridicoDto, result);
+  }
+  if (result?.ContactoDto?.length > 0) {
+    this.CargarDataFormularioContacto(result.ContactoDto);
+  } else {
+    this.objMotivoEnvio.Celular = '';
         this.objMotivoEnvio.Direccion = '';
         this.objMotivoEnvio.Email = '';
         this.objMotivoEnvio.Telefono = '';
-        this.objMotivoEnvio.TelefonoEmpresa = '';
-      }
-    }
-    if (result.FinancieroDto !== null ) {
-      if (result.FinancieroDto.length > 0) {
-        this.CargarDataFormularioFinanciero(result.FinancieroDto);
-      }
-    }
-    if (result.PatrimonioDto !== null ) {
-      this.CargarDataFormularioPatrimonio(result.PatrimonioDto);
+        this.objMotivoEnvio.TelefonoEmpresa = '';  
+  }
+  if (result?.FinancieroDto?.length > 0) {
+    this.CargarDataFormularioFinanciero(result.FinancieroDto);
+  }  
+  if (result?.PatrimonioDto) {
+    this.CargarDataFormularioPatrimonio(result.PatrimonioDto);
+  }
+  if (result?.JuridicoDto?.IdJuridico) {
+    if (result?.RepresentanteDto) {
+      this.CargarDataFormularioRepresentante(
+        result.RepresentanteDto,
+        result.JuridicoDto.IdJuridico
+      );
     } else {
-      this.CargarDataFormularioPatrimonio(result.PatrimonioDto);
-    }
-    if (result.RepresentanteDto !== null ) {
-      if (result.JuridicoDto !== null) {
-        this.CargarDataFormularioRepresentante(result.RepresentanteDto, result.JuridicoDto.IdJuridico);
-      }
-    } else {
-      if (result.JuridicoDto !== null) {
-        this.CargarDataFormularioRepresentanteEdit(result.JuridicoDto.IdJuridico);
-      }
-    }
-    if (result.AccionistaDto !== null ) {
-      if (result.AccionistaDto.length > 0) {
-        this.CargarDataFormularioAccionistas(result.AccionistaDto);
-      }
-    }
-    if (result.ReferenciasDto !== null ) { 
-      if (result.ReferenciasDto.length > 0) {
-        this.CargarDataFormularioReferencias(result.ReferenciasDto);
-      }
-    }
-    if (result.EntrevistaDto !== null ) {
-      if (result.EntrevistaDto.length > 0) {
-        this.CargarDataFormularioEntrevista(result.EntrevistaDto, result.TratamientoDto, result.BasicosDto);
-      }
-    }
-    //Cargar data Historial
-    if (result.JuridicoDto !== null && result.BasicosDto !== null) {
-        this.CargarDataFormularioHistorial(result);
-    }
-    if (result.TratamientoDto !== null) {
-      this.CargarDataTratamientoDatos(result.TratamientoDto);
+      this.CargarDataFormularioRepresentanteEdit(
+        result.JuridicoDto.IdJuridico
+      );
     }
   }
+  if (result?.AccionistaDto?.length > 0) {
+    this.CargarDataFormularioAccionistas(result.AccionistaDto);
+  }
+  if (result?.ReferenciasDto?.length > 0) {
+    this.CargarDataFormularioReferencias(result.ReferenciasDto);
+  }
+  if (result?.EntrevistaDto?.length > 0) {
+    this.CargarDataFormularioEntrevista(
+      result.EntrevistaDto,
+      result?.TratamientoDto,
+      result?.BasicosDto
+    );
+  }
+  if (result?.JuridicoDto && result?.BasicosDto) {
+    this.CargarDataFormularioHistorial(result);
+  }
+  if (result?.TratamientoDto) {
+    this.CargarDataTratamientoDatos(result.TratamientoDto);
+  }
+  console.log('✅ CargarTabs finalizado correctamente');
+}
 
   limpiarRazon(campo : string) {
     this.juridicosFrom.get(campo)?.reset();
@@ -7350,8 +7332,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       if (data.ListContacto !== null) {
         this.representanteComponent.dataTipoContacto.forEach((elementDataContacto : any) => {
           data.ListContacto.forEach((elementCont : any) => {
-            if (elementCont.ContactoPrincipal) {
-              this.loading = true;
+            if (elementCont.ContactoPrincipal) {         
               if (elementDataContacto.Id === elementCont.IdTipoContacto) {
                 if (elementCont.IdCiudad !== undefined && elementCont.IdCiudad !== null && elementCont.IdCiudad !== 0) {
                   this.dataBarriosAll.forEach((elementBarrio : any) => {
@@ -7367,8 +7348,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
                           CiudadContatctos = CiudadContatctos + ' - ' + elementDep.Descripcion;
                           elementCont.IdCiudad = CiudadContatctos;
                           elementCont.IdTipoContacto = elementDataContacto.Nombre;
-                          this.representanteComponent.datatableRepresenta.push(elementCont);
-                          this.loading = false;
+                          this.representanteComponent.datatableRepresenta.push(elementCont);                         
                         }
                       });
                     }
@@ -7376,7 +7356,6 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
                 } else {
                   elementCont.IdTipoContacto = elementDataContacto.Nombre;
                   this.representanteComponent.datatableRepresenta.push(elementCont);
-                  this.loading = false;
                 }
 
               }
@@ -7384,8 +7363,6 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           });
         });
       }
-      this.loading = false;
-        // });
     }
   }
 
@@ -7566,16 +7543,10 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     this.juridicosFrom.get('operacion')?.reset();
   }
 
-  CargarDataTratamientoDatos(data : any) {
-    // if (data.Acepto) {
-    //   this.entrevistaComponent.MostrarFechaTratamiento = true;
-    // } else {
-    //   this.entrevistaComponent.MostrarFechaTratamiento = false;
-    // }
+  CargarDataTratamientoDatos(data : any) {  
     this.entrevistaComponent.tratamientoForm.get('checkTratamiento')?.setValue(data.Acepto);
     this.entrevistaComponent.tratamientoForm.get('fechaTrataManual')?.setValue(
-      formatDate(data.FechaAceptacion, 'yyyy-MM-dd HH:mm:ss', 'en')); 
-    this.loading = false;
+      formatDate(data.FechaAceptacion, 'yyyy-MM-dd HH:mm:ss', 'en'));     
   }
 
   SeleccionarOficina() {

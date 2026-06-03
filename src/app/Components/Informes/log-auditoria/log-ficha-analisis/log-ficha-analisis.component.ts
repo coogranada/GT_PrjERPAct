@@ -1,12 +1,12 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { NgxLoadingComponent } from 'ngx-loading';
 import { InformeClientesService } from '../../../../Services/Informes/informe-clientes.service';
 import { InformeLogService } from '../../../../Services/Informes/informe-log.service';
 import Swal from "sweetalert2";
 import moment from 'moment';
 import { Campo, Filtro } from '../../../../Models/Informes/informe-clientes/informe-clientes.model';
 import { ConfiguracionNotificacion } from '../../../../../environments/config.noticaciones';
+import { LoadingService } from '../../../../Services/shared/loading.service';
 declare var $: any;
 @Component({
   selector: 'app-log-ficha-analisis',
@@ -40,8 +40,6 @@ export class LogFichaAnalisisComponent implements OnInit {
   dateBegin: string = "";
   dateEnd: string = "";
   usuario: string = "";
-  loading = false;
-  ngxLoadingComponent!: NgxLoadingComponent;
   IdOficina: number = 0;
   NombreOficina: string = "";
   checkAll: boolean = false;
@@ -55,7 +53,7 @@ export class LogFichaAnalisisComponent implements OnInit {
   validBlur: boolean = false;
   @ViewChild('ShowModalListLogs', { static: true }) private ShowModalListLogs!: ElementRef;
   constructor(private serviceLogs: InformeLogService, private notif: ToastrService,
-    private informeClientesService: InformeClientesService) { } 
+    private informeClientesService: InformeClientesService, private loading: LoadingService) { } 
 
   ngOnInit() {
     this.InitVariables();
@@ -95,33 +93,33 @@ export class LogFichaAnalisisComponent implements OnInit {
     this.serviceLogs.GetInformeLogs(payload).subscribe(x => {
       this.InformesLog = x;
       this.DeletedOficina();
-      this.loading = false;
+      this.loading.hide();
       this.ShowModalListLogs.nativeElement.click();
     }, err => {
       this.DeletedOficina();
-      this.loading = false;
+      this.loading.hide();
       const errorMessage = <any>err;
       this.notif.error("Error al generar el informe", errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
       console.log(err)
     })
   }
   getOficinas() {
-    this.loading = true;
+    this.loading.show();
     this.informeClientesService.getOficinas().subscribe(x => {
       this.ListOficinas = x;
       this.ListOficinas.forEach(x => x.descri = x.Descripcion);
       this.ListOficinas.forEach(x => x.id = Number(x.Valor));
       this.ListGenerico = this.ListOficinas;
-      this.loading = false;
+      this.loading.hide();
     }, err => {
-      this.loading = false;
+      this.loading.hide();
       const errorMessage = <any>err;
       this.notif.error("Error al consultar", errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
       console.log(err)
     })
   }
   validar() {
-    this.loading = true;
+    this.loading.show();
     let temp: any = null;
     this.informeClientesService.ValidatUsuario(this.usuario).subscribe(x => {
       temp = x;
@@ -135,16 +133,16 @@ export class LogFichaAnalisisComponent implements OnInit {
         this.usuario = "";
         this.btnMore = false;
       }
-      this.loading = false;
+      this.loading.hide();
     }, err => {
-      this.loading = false;
+      this.loading.hide();
       const errorMessage = <any>err;
       this.notif.error("Error al consultar", errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
       console.log(err)
     })
   }
   getOperaciones(idModulo: string) {
-    this.loading = true;
+    this.loading.show();
     this.serviceLogs.GetOperaciones(idModulo).subscribe(x => {
       if (x.length == 0) {
         this.filtroSelect = 0;
@@ -156,9 +154,9 @@ export class LogFichaAnalisisComponent implements OnInit {
         this.ListOperaciones.forEach(f => f.id = f.IdOperacion);
         this.ListGenerico = this.ListOperaciones;
       }
-      this.loading = false;
+      this.loading.hide();
     }, err => {
-      this.loading = false;
+      this.loading.hide();
       const errorMessage = <any>err;
       this.notif.error("Error al consultar", errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
       console.log(err)
@@ -309,19 +307,19 @@ export class LogFichaAnalisisComponent implements OnInit {
     this.filtroSelect = 0;
     this.MostrarPanel();
     this.setFiltroOficina();
-    this.loading = true;
+    this.loading.show();
     let payload: any = {
       Filtros: this.filtrosAgregado,
       TipoInforme: 12,//this.getTipoInforme(),
       Accion: 1
     }
     this.serviceLogs.GetCantidadRegistros(payload).subscribe(x => {
-      this.loading = false;
+      this.loading.hide();
       this.DeletedOficina();
       this.ModalCantidadRegistros(x, isDowload);
     }, err => {
       this.DeletedOficina();
-      this.loading = false;
+      this.loading.hide();
       const errorMessage = <any>err;
       this.notif.error("Error al consultar", errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
       console.log(err)
@@ -355,7 +353,7 @@ export class LogFichaAnalisisComponent implements OnInit {
     }).then((result) => {
       Swal.close();
       if (result.value) {
-        this.loading = true;
+        this.loading.show();
         setTimeout(() => {
           if (idDowload)
             this.DescargarInforme();
@@ -377,9 +375,9 @@ export class LogFichaAnalisisComponent implements OnInit {
       TipoInforme: 12,
       Accion: 2
     }
-    this.loading = true;
+    this.loading.show();
     this.serviceLogs.GenerateInformesJuridicos(payload).subscribe(x => {
-      this.loading = false;
+      this.loading.hide();
       this.DeletedOficina();
       var baseg4 = x;
       const linkSource = `data:application/xlsx;base64,${baseg4}`;
@@ -391,7 +389,7 @@ export class LogFichaAnalisisComponent implements OnInit {
     },
       err => {
         this.DeletedOficina();
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>err;
         this.notif.error("Error al generar el informe", errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
         console.log(err)

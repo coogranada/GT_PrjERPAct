@@ -1917,10 +1917,10 @@
                                                             {{itemReliquida.Plazo}}
                                                         </td>
                                                         <td style="text-align: right;">
-                                                            {{itemReliquida.Tasa}} %
+                                                            {{itemReliquida.Tasa | number:'1.4-4' }} %
                                                         </td>
                                                         <td style="text-align: center;">
-                                                            {{itemReliquida.Fecha}}
+                                                            {{itemReliquida.Fecha | date:'yyyy/MM/dd' }}
                                                         </td>
                                                         <td style="text-align: left;">
                                                             {{itemReliquida.Novedad}}
@@ -3793,8 +3793,6 @@
                         </div>
                     </div>
                 </div>
-                <ngx-loading [show]="loading" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px '}">
-                </ngx-loading>
             </div>
         </div>
     </form>
@@ -4003,8 +4001,6 @@
                         </div>
                     </div>
                 </div>
-                <ngx-loading [show]="loading" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px '}">
-                </ngx-loading>
             </div>
         </div>
     </form>

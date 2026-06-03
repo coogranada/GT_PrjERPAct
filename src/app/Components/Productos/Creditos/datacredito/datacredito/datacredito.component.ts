@@ -1,6 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { DatacreditoService } from '../../../../../Services/Productos/datacredito.service';
 import { EnvironmentService } from '../../../../../Services/Enviroment/enviroment.service';
 import { ModuleValidationService } from '../../../../../Services/Enviroment/moduleValidation.service';
@@ -8,6 +7,7 @@ import { LoginService } from '../../../../../Services/Login/login.service';
 import { AlertService } from '../../../../../Services/Alert/alert.service';
 import swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { LoadingService } from '../../../../../Services/shared/loading.service';
 
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -22,15 +22,10 @@ const ColorSecundario = 'rgb(13,165,80,0.7)';
 })
 export class DatacreditoComponent implements OnInit {
 
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
   @ViewChild('ModalImpresion', { static: true }) private ModalImpresion!: ElementRef;
 
   DataForm!: FormGroup;
   bOrigenDatos: boolean = false;
-
-
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
   public dataMotivoConsulta: any;
@@ -46,7 +41,10 @@ export class DatacreditoComponent implements OnInit {
   ];
 
 
-  constructor(private fb: FormBuilder, private datacreditoService: DatacreditoService, private notif: AlertService, private envirment: EnvironmentService, private moduleValidationService: ModuleValidationService, private loginService: LoginService, private router: Router
+  constructor(private fb: FormBuilder, private datacreditoService: DatacreditoService, 
+    private notif: AlertService, private envirment: EnvironmentService, 
+    private moduleValidationService: ModuleValidationService, private loginService: LoginService, 
+    private router: Router, private loading: LoadingService
   ) { }
 
   ngOnInit(): void {
@@ -138,14 +136,14 @@ export class DatacreditoComponent implements OnInit {
   }
 
   ConsultarReporteDatacredito() {
-    this.loading = true;
+    this.loading.show();
     const data = this.DataForm.getRawValue();
     data.TipoDocumento = +data.TipoDocumento;
     data.TipoPersona = +data.TipoPersona;
 
     this.datacreditoService.ObtenerInformacionDataCredito(data).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         if (result.TipoAlerta !== 'Correcto') {
           this.notif.onDanger('Error', result.Mensaje);
         } else {
@@ -162,7 +160,7 @@ export class DatacreditoComponent implements OnInit {
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         let mensaje = error.Mensaje;
 
         const startIndex = mensaje.indexOf("{");
@@ -191,13 +189,13 @@ export class DatacreditoComponent implements OnInit {
   }
 
   ObtenerMotivosConsulta() {
-    this.loading = true;
+    this.loading.show();
     this.datacreditoService.ObtenerMotivosConsulta().subscribe(
       result => {
-        this.dataMotivoConsulta = result; this.loading = false;
+        this.dataMotivoConsulta = result; this.loading.hide();
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         this.notif.onDanger('Error', error);
         console.error('ObtenerMotivosConsulta - ' + error);
       }
@@ -205,13 +203,13 @@ export class DatacreditoComponent implements OnInit {
   }
 
   ObtenerTiposIdentificacion() {
-    this.loading = true;
+    this.loading.show();
     this.datacreditoService.ObtenerTipoIdentificacionDataC().subscribe(
       result => {
-        this.dataTipoIdentificacion = result; this.loading = false;
+        this.dataTipoIdentificacion = result; this.loading.hide();
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         this.notif.onDanger('Error', error);
         console.error('ObtenerTiposIdentificacion - ' + error);
       }
@@ -227,14 +225,14 @@ export class DatacreditoComponent implements OnInit {
       return;
     }
 
-    this.loading = true;
+    this.loading.show();
     this.datacreditoService.ObtenerInformacionxDocumento(numeroDocumento).subscribe(
       result => {
         if (result === null) {
           this.LimpiarBusqueda();
           this.notif.onWarning('Advertencia', "No se encontró el documento, diligencie los campos faltantes manualmente.");
 
-          this.loading = false;
+          this.loading.hide();
 
         } else {
           this.DataForm.get('PrimerApellido')?.setValue(result.PrimerApellido.trim());
@@ -242,17 +240,17 @@ export class DatacreditoComponent implements OnInit {
           this.DataForm.get('IngresoValidar')?.setValue(result.IngresoValidar);
           this.DataForm.get('TipoPersona')?.setValue(result.TipoPersona.toString());
           this.onChangeTipoocupa();
-          this.loading = false;
+          this.loading.hide();
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         this.LimpiarBusqueda();
         this.notif.onDanger('Error', error);
         console.error('ObtenerTiposIdentificacion - ' + error);
       }
     );
-    this.loading = false;
+    this.loading.hide();
   }
 
   LimpiarBusqueda() {

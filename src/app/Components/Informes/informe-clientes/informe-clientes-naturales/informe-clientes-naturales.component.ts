@@ -16,6 +16,7 @@ import Swal from "sweetalert2/dist/sweetalert2.js";
 import { ToastrService } from 'ngx-toastr';
 import { ExcelService } from '../../../../Services/General/excel.service';
 import { TablaVirtualComponent } from '../../../Tabla-virtual/tabla-virtual/tabla-virtual.component';
+import { LoadingService } from '../../../../Services/shared/loading.service';
 declare var $: any;
 @Component({
   selector: 'app-informe-clientes-naturales',
@@ -40,7 +41,6 @@ export class InformeClientesNaturalesComponent implements OnInit {
   filtrosAgregado: Filtro[] = [];
   TituloGenerico: string = "";
   alertGenerico: string = "";
-  loading: boolean = false;
   ListGenerico: any[] = [];
   ListRelaciones: any[] = [{ id: 5, descri: "Asociados" },{ id: 10, descri: "Menores" }, { id: 15, descri: "Terceros" }];
   ListTipoDoc: any[] = [];
@@ -79,7 +79,8 @@ export class InformeClientesNaturalesComponent implements OnInit {
     private notif: ToastrService,
     private moduleValidationService: ModuleValidationService, private el: ElementRef, private loginService: LoginService,private serviseGeneral : RecursosGeneralesService,
     private router: Router,
-    private operacionesService:OperacionesService) {
+    private operacionesService:OperacionesService,
+    private loading: LoadingService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -239,33 +240,33 @@ export class InformeClientesNaturalesComponent implements OnInit {
     this.btnMore = false;
   }
   GetMotivosIngreso() {
-    this.loading = true;
+    this.loading.show();
     this.clientesGetListService.GetMotivoIngreso().subscribe(
       result => {
         this.ListMotivosIngreso = result;
         this.ListMotivosIngreso.forEach(x => x.descri = x.Descripcion);
         this.ListMotivosIngreso.forEach(x => x.id = x.Clase);
         this.ListGenerico = this.ListMotivosIngreso;
-        this.loading = false;
+        this.loading.hide();
       },
       err => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>err;
         this.notif.error('Error al consultar', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
         console.log(err)
        })
   }
   GetOficinas() {
-    this.loading = true;
+    this.loading.show();
     this.informeClientesService.getOficinas().subscribe(
       result => {
         this.ListOficina = result;
         this.ListOficina.forEach(x => x.descri = x.Descripcion);
         this.ListOficina.forEach(x => x.id = x.Valor);
         this.ListGenerico = this.ListOficina;
-        this.loading = false;
+        this.loading.hide();
       },err =>  { 
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>err;
         this.notif.error('Error al consultar', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
         console.log(err)
@@ -278,15 +279,15 @@ export class InformeClientesNaturalesComponent implements OnInit {
       this.filtroSelect = 0;
     }     
     else {
-        this.loading = true;
+        this.loading.show();
         this.serviseGeneral.GetBarrioList(tempCiudad.idValue).subscribe(x => {
         this.ListBarrio = x;
         this.ListBarrio.forEach(x => x.descri = x.Descripcion);
         this.ListBarrio.forEach(x => x.id = x.IdBarrio);
         this.ListGenerico = this.ListBarrio;
-        this.loading = false;
+        this.loading.hide();
       },err =>  { 
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>err;
         this.notif.error('Error al consultar', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
         console.log(err)
@@ -300,15 +301,15 @@ export class InformeClientesNaturalesComponent implements OnInit {
       this.filtroSelect = 0;
     }
     else {
-      this.loading = true;
+      this.loading.show();
       this.serviseGeneral.GetCiudadList(tempDepartamento.idValue).subscribe(x => { 
         this.ListCiudad = x;
         this.ListCiudad.forEach(x => x.descri = x.Descripcion);
         this.ListCiudad.forEach(x => x.id = x.IdCiudad);
         this.ListGenerico = this.ListCiudad;
-        this.loading = false;
+        this.loading.hide();
       },err =>  { 
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>err;
         this.notif.error('Error al consultar', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
         console.log(err)
@@ -327,16 +328,16 @@ export class InformeClientesNaturalesComponent implements OnInit {
     }
     else if(tempPais.idValue == 42)
     {
-      this.loading = true;
+      this.loading.show();
       this.serviseGeneral.GetDepartamentosList(42).subscribe(x => { 
       this.ListDepartamento = x;
       this.ListDepartamento.forEach(x => x.descri = x.Descripcion);
       this.ListDepartamento.forEach(x => x.id = x.IdDepartamento);
       this.ListGenerico = this.ListDepartamento;
-      this.loading = false;
+      this.loading.hide();
     },
     err => { 
-      this.loading = false;
+      this.loading.hide();
       const errorMessage = <any>err;
       this.notif.error('Error al consultar', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
       console.log(err)
@@ -344,16 +345,16 @@ export class InformeClientesNaturalesComponent implements OnInit {
     }
   }
   GetPaises() {
-    this.loading = true;
+    this.loading.show();
     this.serviseGeneral.GetPaisesList().subscribe(x => {
       this.ListPaises = x;
       this.ListPaises.forEach(x => x.descri = x.Descripcion);
       this.ListPaises.forEach(x => x.id = x.IdPais);
       this.ListGenerico = this.ListPaises;
-      this.loading = false;
+      this.loading.hide();
     },
     err => { 
-      this.loading = false;
+      this.loading.hide();
       const errorMessage = <any>err;
       this.notif.error('Error al consultar', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
       console.log(err)
@@ -405,17 +406,17 @@ export class InformeClientesNaturalesComponent implements OnInit {
   GetTipoOcupacion() {
     let tipoEmpleo: Filtro = this.filtrosAgregado.filter(x => x.idFiltro == 10)[0];
     if (tipoEmpleo != null) { 
-      this.loading = true;
+      this.loading.show();
       this.informeClientesService.getOcupaciones(tipoEmpleo.idValue).subscribe(
         (result) => {
           this.ListTipoOcupacion = result;                 
           this.ListTipoOcupacion.forEach(x => x.descri = x.Nombre);
           this.ListTipoOcupacion.forEach(x => x.id = x.IdTipoOcupacion);
           this.ListGenerico = this.ListTipoOcupacion;
-          this.loading = false;
+          this.loading.hide();
         },
         err => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>err;
           this.notif.error('Error al consultar', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
           console.log(err)
@@ -441,7 +442,7 @@ export class InformeClientesNaturalesComponent implements OnInit {
     this.ListGenerico = this.ListMetodosComoConocio;
   }
   GetTipoDocumento() {
-    this.loading = true;
+    this.loading.show();
     this.clientesGetListService.GetTipoDocumento().subscribe(
       result => {
         this.ListTipoDoc = result;
@@ -449,9 +450,9 @@ export class InformeClientesNaturalesComponent implements OnInit {
         this.ListTipoDoc.forEach(x => x.id = x.Clase);
         this.ListTipoDoc = this.ListTipoDoc.filter(x => x.id != 3);
         this.ListGenerico = this.ListTipoDoc;
-        this.loading = false;
+        this.loading.hide();
       },err => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>err;
           this.notif.error('Error al consultar', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
           console.log(err)
@@ -571,17 +572,17 @@ export class InformeClientesNaturalesComponent implements OnInit {
   }
   GetCantInforme() {
     this.setFiltroOficina();
-    this.loading = true;
+    this.loading.show();
     let payload : any = {
       Filtros : this.filtrosAgregado
     }
     this.informeClientesService.GenerarInformeNaturales(payload).subscribe(x => {
-      this.loading = false;
+      this.loading.hide();
       this.DeletedOficina();
       this.ModalCantidadRegistros(x);
     }, err => {
       this.DeletedOficina();
-      this.loading = false;
+      this.loading.hide();
       const errorMessage = <any>err;
       this.notif.error('Error al consultar', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
       console.log(err)
@@ -611,7 +612,7 @@ export class InformeClientesNaturalesComponent implements OnInit {
       confirmButtonText: "Descargar"
     }).then((result) => {
       if (result.value) {
-        this.loading = true;
+        this.loading.show();
         setTimeout(() => {
           this.DescargarInforme(Cant);
         }, 300);
@@ -676,7 +677,7 @@ export class InformeClientesNaturalesComponent implements OnInit {
   }
   ModalPrgressBar(cant : number) {
     this.ProcentajeProgressBar = 0;
-    this.loading = false;
+    this.loading.hide();
     this.ModalProgressBar.nativeElement.click();
     let tempT: number = cant * 0.018;
     let timer: any = (tempT / 95) * 1000;

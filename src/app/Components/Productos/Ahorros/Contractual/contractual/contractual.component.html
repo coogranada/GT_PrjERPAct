@@ -149,7 +149,11 @@
                             <label class="textNegrilla">Asociado:</label>
                             <span class="grande">*</span>
                         </div>
-                        <div class="col-xs-4 col-md-3 col-lg-2">
+                        <div class="col-xs-4 col-md-3 col-lg-0-5">
+                            <input type="text" class="form-control"
+                                [value]="contractualFrom.get('IdTipoDocumento')?.value | tipoDocumento" disabled>
+                        </div>
+                        <div class="col-xs-4 col-md-3 col-lg-1-5">
                             <input type="text" class="form-control" id="SelectAsociado"
                                 formControlName="NumeroDocumento" (blur)="BuscarAsociado()"
                                 [attr.disabled]="BloquearAsociado" (input)="LimpiarCampos('NumeroDocumento')"
@@ -944,9 +948,6 @@
             <input type="button" style="visibility:hidden" data-toggle="tab" href="#tab4" #tab4 />
         </div>
     </form>
-    <ngx-loading [show]="loading"
-        [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
-    </ngx-loading>
 </form>
 <!-- Modal Ayuda -->
 <div id="ModalAyuda" class="modal fade" data-backdrop="static">

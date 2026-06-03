@@ -4,7 +4,6 @@ import { UsuariosModel } from '../../../../Models/Maestros/usuarios.model';
 import { UsuariosService } from '../../../../Services/Maestros/usuarios.service';
 import { GeneralesService } from '../../../../Services/Productos/generales.service';
 import moment from 'moment';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { ModuleValidationService } from '../../../../Services/Enviroment/moduleValidation.service';
 import { fromEvent } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -13,6 +12,7 @@ import { LoginService } from '../../../../Services/Login/login.service';
 import { ImagenesBannerServices } from '../../../../Services/Maestros/imagenes-banner.service';
 import { UsuariosImagenModel } from '../../../../Models/Maestros/banner.model';
 import { AlertService } from '../../../../Services/Alert/alert.service';
+import { LoadingService } from '../../../../Services/shared/loading.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -51,10 +51,6 @@ export class UsuariosComponent implements OnInit {
   public items : any[] = [];
   public infoForm: any;
   public ColorAnterior1: any;
-
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
   private CodModulo = 9;
@@ -63,8 +59,11 @@ export class UsuariosComponent implements OnInit {
   //#endregion
   
   constructor(private usuariosServices: UsuariosService, private notificacion: AlertService,
-    private generalesService: GeneralesService, private moduleValidationService: ModuleValidationService,
-    private el: ElementRef, private loginService: LoginService, private router: Router, private ImagenesBannerServices: ImagenesBannerServices) {
+    private generalesService: GeneralesService, 
+    private moduleValidationService: ModuleValidationService,
+    private el: ElementRef, private loginService: LoginService, 
+    private loading: LoadingService,
+    private router: Router, private ImagenesBannerServices: ImagenesBannerServices) {
     this.usuariosModel = new UsuariosModel();
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
@@ -103,69 +102,69 @@ export class UsuariosComponent implements OnInit {
       }); 
   }
   TipoIdentificacion() {
-    this.loading = true;
+    this.loading.show();
     this.usuariosServices.getTipoIdentificacion().subscribe(result => {
-        this.loading = false;
+        this.loading.hide();
         this.resultDocumento = result;
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notificacion.onDanger('Error', errorMessage);
         console.log(errorMessage);
       });
   }
   AreasActivas() {
-    this.loading = true;
+    this.loading.show();
     this.usuariosServices.getAreasActivas().subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.resultArea = result;
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notificacion.onDanger('Error', errorMessage);
         console.log(errorMessage);
       });
   }
   CargosActivos() {
-    this.loading = true;
+    this.loading.show();
     this.usuariosServices.getCargosActivos().subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.resultCargo = result;
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notificacion.onDanger('Error', errorMessage);
         console.log(errorMessage);
       });
   }
   ObtenerOficinas() {
-    this.loading = true;
+    this.loading.show();
     this.usuariosServices.getOficinas().subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.resultOficina = result;
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notificacion.onDanger('Error', errorMessage);
         console.log(errorMessage);
       });
   }
   PerfilesActivos() {
-    this.loading = true;
+    this.loading.show();
     this.usuariosServices.getPerfilesActivos().subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.resultPerfiles = result;
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notificacion.onDanger('Error', errorMessage);
         console.log(errorMessage);
@@ -219,7 +218,7 @@ export class UsuariosComponent implements OnInit {
   }
   GuardarUsuarios() {
     if (this.usuariosFrom.valid) {
-    this.loading = true;
+    this.loading.show();
     const nombreCompleto = this.usuariosFrom.get('Nombre')?.value + ','
       + this.usuariosFrom.get('SegundoNombre')?.value + ','
       + this.usuariosFrom.get('Apellido')?.value + ','
@@ -233,7 +232,7 @@ export class UsuariosComponent implements OnInit {
       this.GuardarLog('Registro usuario' + JSON.stringify(this.infoForm), 96, 0, 0, 9); // GUARDAR
      this.usuariosServices.setUsuario(this.usuariosFrom.value).subscribe(
        result => {
-         this.loading = false;
+         this.loading.hide();
          if (result) {           
            this.usuariosFrom.reset();
            this.items = [];
@@ -244,7 +243,7 @@ export class UsuariosComponent implements OnInit {
            this.notificacion.onDanger('Error', 'Ocurrió un error al guardar el usuario.');
          }
        },error => {
-         this.loading = false;
+         this.loading.hide();
          const errorMessage = <any>error;
          this.notificacion.onDanger('Error', errorMessage);
          console.log(errorMessage);
@@ -255,7 +254,7 @@ export class UsuariosComponent implements OnInit {
   }
   BuscarUsuarios(Campo : any) {
     this.base64textString = null;
-    this.loading = true;
+    this.loading.show();
     if (Campo === 'Documento') {
       this.usuariosFrom.get('Usuario')?.reset();
       this.usuariosFrom.get('Usuario')?.setValue('');
@@ -266,7 +265,7 @@ export class UsuariosComponent implements OnInit {
     this.items = [];
     this.usuariosServices.getBuscarUsuario(this.usuariosFrom.value).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         if (result.error === null) {
           this.bloqueoBtnAgregar = null;
           this.disableActualizar = false;
@@ -345,7 +344,7 @@ export class UsuariosComponent implements OnInit {
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notificacion.onDanger('Error', errorMessage);
         console.log(errorMessage);
@@ -362,7 +361,7 @@ export class UsuariosComponent implements OnInit {
   }
   ActualizarUsuarios() { 
     if (this.usuariosFrom.valid) {
-    this.loading = true;
+    this.loading.show();
     const nombreCompleto = this.usuariosFrom.get('Nombre')?.value + ','
       + this.usuariosFrom.get('SegundoNombre')?.value + ','
       + this.usuariosFrom.get('Apellido')?.value + ','
@@ -379,7 +378,7 @@ export class UsuariosComponent implements OnInit {
       this.infoForm = this.usuariosFrom.value;  
       this.GuardarLog(this.infoForm, 97, 0, 0, 9);// ACTUALIZAR
      this.usuariosServices.updateUsuario(this.usuariosFrom.value).subscribe(result => {
-         this.loading = false;
+         this.loading.hide();
          if (result) {           
            this.bloqueoBtnAgregar = true;
            this.disableActualizar = true;
@@ -393,7 +392,7 @@ export class UsuariosComponent implements OnInit {
          }
        },
        error => {
-         this.loading = false;
+         this.loading.hide();
          const errorMessage = <any>error;
          this.notificacion.onDanger('Error', error);
          console.log(errorMessage);
@@ -452,7 +451,7 @@ export class UsuariosComponent implements OnInit {
   }
   GuardarLog(form : any, operacion : number, cuenta : number, tercero : number, modulo : number) {
     this.generalesService.Guardarlog(form, operacion, cuenta, tercero, modulo).subscribe( result => {
-        this.loading = false;
+        this.loading.hide();
         console.log(result);
       });
   }

@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { FormGroup, FormControl } from '@angular/forms';
 import { GestionesService } from '../../../Services/Gestiones/gestiones.service';
 import { Estados } from '../../../../environments/Estados';
@@ -8,6 +7,7 @@ import { moduloGestionOperacion } from '../../../../environments/config.modulos'
 import { Router } from '@angular/router';
 import { GestioOperacionesService } from '../../..//Services/Gestiones/gestioOperaciones.service';
 import { AlertService } from '../../../Services/Alert/alert.service';
+import { LoadingService } from '../../../Services/shared/loading.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 
@@ -19,12 +19,10 @@ const ColorSecundario = 'rgb(13,165,80,0.7)';
   standalone : false
 })
 export class GestionesOperacionesComponent implements OnInit {
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
   @ViewChild('DetalleGestion', { static: false }) gestionOperacionesComponent!: GestionGestionesOperacionesComponent;
   @Output() emitEventJuridico: EventEmitter <any> = new EventEmitter<any>();
   @Output() emitEventContractual: EventEmitter<boolean> = new EventEmitter<boolean>();
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
+
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
 
@@ -41,10 +39,11 @@ export class GestionesOperacionesComponent implements OnInit {
 
   @ViewChild('AbrirDetalleGestion', { static: true }) private AbrirDetalleGestion!: ElementRef;
   constructor(private gestionesService: GestionesService, private notificacion: AlertService,
-    private router: Router, private gestionServiceOperacion: GestioOperacionesService) { }
+    private router: Router, private gestionServiceOperacion: GestioOperacionesService,
+    private loading: LoadingService) { }
 
   ngOnInit() {
-    this.loading = true;
+    this.loading.show();
     let dataobj : string | null = localStorage.getItem('Data');
     this.DatosUsuario = JSON.parse(window.atob(dataobj == null ? "" : dataobj));
     this.ValidarFormulario();
@@ -70,7 +69,7 @@ export class GestionesOperacionesComponent implements OnInit {
     this.GestionesOperacionesForm.get('IdUsuario')?.setValue(this.DatosUsuario.IdUsuario);
     this.gestionesService.Obtener(this.DatosUsuario.IdUsuario).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
 
         this.ListaGestiones = result;
         if (this.ListaGestiones === null || this.ListaGestiones === undefined) {
@@ -90,10 +89,10 @@ export class GestionesOperacionesComponent implements OnInit {
             }
           });
         }
-        this.loading = false;
+        this.loading.hide();
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorJson = JSON.parse(error._body);
         this.notificacion.onDanger('Error', errorJson);
         console.log(error);
@@ -117,7 +116,7 @@ export class GestionesOperacionesComponent implements OnInit {
   }
 
   Procesar(data : any) {
-    this.loading = true;
+    this.loading.show();
     const urlModulo = moduloGestionOperacion.validarGestionOpera(data.IdModulo);
     localStorage.setItem('EsGestion', '1');
     localStorage.setItem('DataGest', JSON.stringify(data));

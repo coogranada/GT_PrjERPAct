@@ -8,9 +8,9 @@ import { fromEvent, map } from 'rxjs';
 import moment from 'moment';
 import { ConfiguracionNotificacion } from '../../../../environments/config.noticaciones';
 import { DatacreditoAuditoriaService } from '../../../Services/Auditoria/DatacreditoAuditoria.service';
-import { NgxLoadingComponent } from 'ngx-loading';
 import { ExceljsService } from '../../../Services/General/exceljs.service';
 import { TablaVirtualComponent } from '../../Tabla-virtual/tabla-virtual/tabla-virtual.component';
+import { LoadingService } from '../../../Services/shared/loading.service';
 
 @Component({
   selector: 'app-datacredito',
@@ -30,20 +30,14 @@ export class DatacreditoComponent implements OnInit {
   public selectedRow: any = null;
   public resultadoInforme: any[] = [];
   public encabezados: any[] = [];
-  public loading: boolean = false;
 
 
   @ViewChild('ShowModalList', { static: true }) private ShowModalList!: ElementRef;
   @ViewChild(TablaVirtualComponent) tablaVirtual!: TablaVirtualComponent;
-  
-
-  ngxLoadingComponent!: NgxLoadingComponent;
-
-
 
   constructor(private excelReportService: ExceljsService, private datacreditoAuditoriaService: DatacreditoAuditoriaService, private notificacion: ToastrService,
     private moduleValidationService: ModuleValidationService, private el: ElementRef, private loginService: LoginService,
-    private router: Router) {
+    private router: Router, private loading: LoadingService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -159,10 +153,10 @@ export class DatacreditoComponent implements OnInit {
   }
 
   exportarExcel2() {
-    this.loading = true;
+    this.loading.show();
     var data = null;
     if (!this.resultadoInforme || this.resultadoInforme.length === 0) {
-      this.loading = false;
+      this.loading.hide();
       this.notificacion.warning('Advertencia', 'No hay información para exportar.', ConfiguracionNotificacion.configRightTop);
     } else {
       data = this.resultadoInforme.map(row => {
@@ -182,7 +176,7 @@ export class DatacreditoComponent implements OnInit {
 
       });
       this.excelReportService.exportAsExcelFile(data, "Resumen consultas")
-      this.loading = false;
+      this.loading.hide();
     }
   }
 

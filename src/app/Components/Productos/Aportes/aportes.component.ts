@@ -6,7 +6,6 @@ import { DatePipe, formatDate } from '@angular/common';
 import { GeneralesService } from '../../../Services/Productos/generales.service';
 import { OperacionesService } from '../../../Services/Maestros/operaciones.service';
 import { ModuleValidationService } from '../../../Services/Enviroment/moduleValidation.service';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { fromEvent } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -15,6 +14,7 @@ import { AperturaCuentaDto, CambiarAsesorDto, CambiarFormaPagoDto } from '../../
 import { ClientesService } from '../../../Services/Clientes/clientes.service';
 import { JuridicosService } from '../../../Services/Clientes/Juridicos.service';
 import { AlertService } from '../../../Services/Alert/alert.service';
+import { LoadingService } from '../../../Services/shared/loading.service';
 declare var $: any;
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -36,10 +36,7 @@ export class AportesComponent implements OnInit {
   @ViewChild('tab1', { static: true }) private tab1!: ElementRef;
   @ViewChild('tab2', { static: true }) private tab2!: ElementRef;
   @ViewChild('AsesorExterno', { static: true }) private AsesorExterno!: ElementRef;
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
   public codModulo = 16;
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
   public ColorAnterior1: any;
@@ -156,8 +153,10 @@ export class AportesComponent implements OnInit {
     private generalesService: GeneralesService,
     private operacionesService: OperacionesService,
     private moduleValidationService: ModuleValidationService, private el: ElementRef,
-    private loginService: LoginService, private router: Router, private clientesService: ClientesService,
-  private JuridicosService : JuridicosService) {
+    private loginService: LoginService, private router: Router, 
+    private clientesService: ClientesService,
+    private JuridicosService : JuridicosService, 
+    private loading: LoadingService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -596,7 +595,7 @@ export class AportesComponent implements OnInit {
     }
   }
   CambiarRelacionJuridico(payload: any) {        
-    this.JuridicosService.CambiarRelacion(this.dataObjet.LngTercero, "15", this.dataObjet.NumeroDocumento, this.dataUser.Usuario, this.dataObjet.IdObjetoSocial).subscribe(x => {
+    this.JuridicosService.CambiarRelacion(this.dataObjet.LngTercero, "15", this.dataObjet.NumeroDocumento, this.dataUser.Usuario, this.dataObjet.IdObjetoSocial, this.dataUser.IdOficina).subscribe(x => {
       console.log(x)
     });
   }
@@ -657,24 +656,24 @@ export class AportesComponent implements OnInit {
       'IdOperacionesPerfil': '',
       'IdPerfil': this.dataUser.idPerfilUsuario
     }];
-    this.loading = true;
+    this.loading.show();
     this.operacionesService.OperacionesPermitidas(arrayExample[0]).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.resultOperaciones = result;
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
     );
   }
   Encabezado() {
-    this.loading = true;
+    this.loading.show();
     this.aportesServices.getEncabezado().subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.aportesFrom.get('IdProducto')?.setValue(result[1].IdProducto);
         this.aportesFrom.get('DescripcionProducto')?.setValue(result[1].DescripcionProducto);
         this.aportesFrom.get('IdEstado')?.setValue(result[0].IdEstado);
@@ -683,7 +682,7 @@ export class AportesComponent implements OnInit {
         this.aportesFrom.get('IdFormaPago')?.setValue(result[2].IdFormaPago);
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -699,18 +698,18 @@ export class AportesComponent implements OnInit {
       'IdPerfil': this.dataUser.idPerfilUsuario,
       'IdModulo': this.codModulo  //JSON.parse(window.atob(idmoduloActivo == null ? "" : idmoduloActivo))
     };
-    this.loading = true;
+    this.loading.show();
     this.operacionesService.ObtenerEstadosXOperacionesData(arrayExample).subscribe(
       result => {
         setTimeout(() => {
           this.resultEstados = result;
           this.aportesFrom.get('IdEstado')?.setValue("0");
           $('#SelectEstadoCuenta').focus().select();
-          this.loading = false;
+          this.loading.hide();
         }, 1000);
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -729,10 +728,10 @@ export class AportesComponent implements OnInit {
       && this.aportesFrom.get('DescripcionProducto')?.value  !== '') {
       Descripcion = this.aportesFrom.get('DescripcionProducto')?.value ;
     }
-    this.loading = true;
+    this.loading.show();
     this.aportesServices.getBuscarProducto(IdProducto, Descripcion).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         if (result.length === 0) {
           this.notif.onWarning('Advertencia', 'No se encontró el producto.');
         } else if (result.length === 1) {
@@ -744,7 +743,7 @@ export class AportesComponent implements OnInit {
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -776,11 +775,11 @@ export class AportesComponent implements OnInit {
       this.BloquearAsociado = false;
       this.BloquearBuscar = false;
       this.BloquearbtnBenef = false;
-      this.loading = true;
+      this.loading.show();
       this.generalesService.Autofocus('SelectBuscar');
       this.aportesServices.getBuscarCuenta(this.aportesFrom.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           if (result !== null) {
             if (result.Beneficiarios !== null && result.Beneficiarios !== undefined) {
               result.Beneficiarios.forEach(( elementBeneficiarios :  any) => {
@@ -798,7 +797,7 @@ export class AportesComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
           this.notif.onWarning('Advertencia', 'La cuenta no existe.');
@@ -817,11 +816,11 @@ export class AportesComponent implements OnInit {
     }
   }
   BuscarDatosCuenta(IdOficina : number, IdProductoCuenta : number, IdConsecutivo : number, IdDigito : number) {
-    this.loading = true;
+    this.loading.show();
     this.aportesServices.getBuscarCuenta
       ({ 'IdOficina': IdOficina, 'IdProductoCuenta': IdProductoCuenta, 'IdConsecutivo': IdConsecutivo, 'IdDigito': IdDigito }).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           if (result.Beneficiarios !== null && result.Beneficiarios !== undefined) {
             result.Beneficiarios.forEach(( elementBeneficiarios :  any) => {
               this.resultParentesco.forEach(( elementParentesco :  any) => {
@@ -839,26 +838,27 @@ export class AportesComponent implements OnInit {
           this.BloquearFormaPago = false;
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
       );
   }
   MapearDatosCuenta(result : any) {
-    this.loading = true;
+    this.loading.show();
     console.log("usu",result)
     if (result !== null) {
-      this.loading = false;
+      this.loading.hide();
       let data = localStorage.getItem('Data');
       this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
       if (result.length >= 1) {
         this.dataObjet = result[0];
         localStorage.setItem('TerceroAportes', this.dataObjet.LngTercero);
-
         this.aportesFrom.get('IdUsuarioSGF')?.setValue(this.dataUser.IdUsuarioSGF);
         this.aportesFrom.get('LngTercero')?.setValue(this.dataObjet.LngTercero);
         this.aportesFrom.get('IdCuenta')?.setValue(this.dataObjet.IdCuenta);
+        this.aportesFrom.get('TipoDocumento')?.setValue(this.dataObjet.IdTipoDocumento);
+
         this.aportesFrom.get('NumeroDocumento')?.setValue(this.dataObjet.NumeroDocumento);
         this.aportesFrom.get('Nombre')?.setValue(this.dataObjet.PrimerApellido + ' ' + this.dataObjet.SegundoApellido + ' ' + this.dataObjet.PrimerNombre + ' ' + this.dataObjet.SegundoNombre);
         this.aportesFrom.get('IdAsesor')?.setValue(this.dataObjet.IdAsesor);
@@ -930,6 +930,8 @@ export class AportesComponent implements OnInit {
         this.aportesFrom.get('LngTercero')?.setValue(this.dataObjet.LngTercero);
         this.aportesFrom.get('NumeroDocumento')?.setValue(this.dataObjet.NumeroDocumento);
         this.aportesFrom.get('Nombre')?.setValue(this.dataObjet.PrimerApellido + ' ' + this.dataObjet.SegundoApellido + ' ' + this.dataObjet.PrimerNombre + ' ' + this.dataObjet.SegundoNombre);
+        this.aportesFrom.get('TipoDocumento')?.setValue(this.dataObjet.IdTipoDocumento);
+
         this.aportesFrom.get('IdAsesor')?.setValue(this.dataObjet.IdAsesor);
         if (this.aportesFrom.get('IdAsesor')?.value  === 2) {
           this.aportesFrom.get('NombreAsesor')?.setValue('Coogranada');
@@ -1045,10 +1047,10 @@ export class AportesComponent implements OnInit {
         Nombre = this.aportesFrom.get('Nombre')?.value ;
       }
       Oficina = this.dataUser.NumeroOficina;
-      this.loading = true;
+      this.loading.show();
       this.aportesServices.BuscarAsociado(Documento, Nombre, Oficina).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           this.clearBeneficiario();
           this.dataObjet = undefined;
           this.BloquearDatoBenf = false;
@@ -1057,6 +1059,7 @@ export class AportesComponent implements OnInit {
             this.notif.onWarning('Advertencia', 'No se encontró el asociado.');
             this.btnGuardar = false;
           } else if (result.length === 1) {
+            this.aportesFrom.get('TipoDocumento')?.setValue(result[0].IdTipoDocumento);
             this.aportesFrom.get('NumeroDocumento')?.setValue(result[0].NumeroDocumento);
             this.aportesFrom.get('Nombre')?.setValue(result[0].PrimerApellido + ' ' + result[0].SegundoApellido + ' ' + result[0].PrimerNombre + ' ' + result[0].SegundoNombre);
             localStorage.setItem('TerceroAportes', result[0].lngTercero);
@@ -1123,7 +1126,7 @@ export class AportesComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
@@ -1146,10 +1149,10 @@ export class AportesComponent implements OnInit {
       Nombre = this.aportesFrom.get('Nombre')?.value ;
     }
     Oficina = this.dataUser.NumeroOficina;
-    this.loading = true;
+    this.loading.show();
     this.aportesServices.BuscarAsociado(Documento, Nombre, Oficina).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.clearBeneficiario();
         this.dataObjet = undefined;
         this.BloquearDatoBenf = false;
@@ -1158,6 +1161,7 @@ export class AportesComponent implements OnInit {
           this.notif.onWarning('Advertencia', 'No se encontró el asociado.');
           this.btnGuardar = false;
         } else if (result.length === 1) {
+          this.aportesFrom.get('TipoDocumento')?.setValue(result[0].IdTipoDocumento);
           this.aportesFrom.get('NumeroDocumento')?.setValue(result[0].NumeroDocumento);
           this.aportesFrom.get('Nombre')?.setValue(result[0].PrimerApellido + ' ' +
             result[0].SegundoApellido + ' ' + result[0].PrimerNombre + ' ' + result[0].SegundoNombre);
@@ -1207,7 +1211,7 @@ export class AportesComponent implements OnInit {
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -1229,14 +1233,13 @@ export class AportesComponent implements OnInit {
     }
   }
   BuscarCuentaPorDocumento() {
-      this.loading = true;
+      this.loading.show();
       this.aportesServices.getBuscarPorDocumento(this.aportesFrom.value).subscribe(
         result => {
-          if (this.aportesOperacionFrom.get('Codigo')?.value  === '2') {
-            
+          this.loading.hide();
+          if (this.aportesOperacionFrom.get('Codigo')?.value  === '2') {            
             this.aportesOperacionFrom.get('Codigo')?.reset();
-          }
-          this.loading = false;
+          }          
           if (result.length === 0) {
             this.notif.onWarning('Advertencia', 'No se encontró registro.');
             this.clearFrom();
@@ -1259,6 +1262,7 @@ export class AportesComponent implements OnInit {
               this.btnActualizar = true;
               this.btnActualizarBeneficiario = true;
               this.btnGuardar = true;
+               this.aportesOperacionFrom.get('Codigo')?.reset();
             }
           } else if (result.length > 1) {
             this.dataAsociados = result;
@@ -1269,7 +1273,7 @@ export class AportesComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
@@ -1277,10 +1281,10 @@ export class AportesComponent implements OnInit {
   }
   BuscarCuentaPorNombre() {
       if (this.aportesFrom.get('BuscarNombre')?.value  !== undefined) {
-        this.loading = true;
+        this.loading.show();
         this.aportesServices.getBuscarPorNombre(this.aportesFrom.value).subscribe(
           result => {
-            this.loading = false;
+            this.loading.hide();
             this.aportesFrom.get('BuscarNombre')?.reset();
             if (result.length === 0) {
               this.notif.onWarning('Advertencia', 'No se encontró registro.');
@@ -1308,16 +1312,18 @@ export class AportesComponent implements OnInit {
               this.btnActualizar = true;
               this.btnActualizarBeneficiario = true;
               this.btnGuardar = true;
+              this.aportesOperacionFrom.get('Codigo')?.reset();
             } else {
               this.dataAsociados = result;
               this.BuscarAsociados.nativeElement.click();
               this.btnActualizar = true;
               this.btnActualizarBeneficiario = true;
               this.btnGuardar = true;
+               this.aportesOperacionFrom.get('Codigo')?.reset();
             }
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             console.log(errorMessage);
           }
@@ -1342,10 +1348,10 @@ export class AportesComponent implements OnInit {
     if (IdAsesor === '*' && NombreAsesor === '*') {
       this.notif.onWarning('Advertencia', 'Debe ingresar el documento o el nombre del asesor.');
     } else {
-      this.loading = true;
+      this.loading.show();
       this.aportesServices.getBuscarAsesor(IdAsesor, NombreAsesor).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           if (result.length === 1) {
             this.MapearDatosAsesor(result);
           } else if (result.length > 1) {
@@ -1358,7 +1364,7 @@ export class AportesComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         });
@@ -1371,10 +1377,10 @@ export class AportesComponent implements OnInit {
       || this.AsesorFrom.get('strNombre')?.value  !== null
       && this.AsesorFrom.get('strNombre')?.value  !== undefined
       && this.AsesorFrom.get('strNombre')?.value  !== '') {
-        this.loading = true;
+        this.loading.show();
       this.aportesServices.getBuscarAsesorExterno(this.AsesorFrom.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           if (result.length === 1) {
             this.AsesorFrom.get('strCodigo')?.setValue(result[0].intIdAsesor);
             this.AsesorFrom.get('strNombre')?.setValue(result[0].Nombre);
@@ -1389,7 +1395,7 @@ export class AportesComponent implements OnInit {
           this.bloquearbtnActalizar = true;
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           this.notif.onWarning('Advertencia', 'El valor ingresado no tiene el formato correcto.');
           const errorMessage = <any>error;
           console.log(errorMessage);
@@ -1434,27 +1440,27 @@ export class AportesComponent implements OnInit {
       });
   }
   FormaPago() {
-    this.loading = true;
+    this.loading.show();
     this.aportesServices.getFormaPago().subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.resultFormaPago = result;
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
       });
   }
   OperacionPermitida() {
-    this.loading = true;
+    this.loading.show();
     this.aportesServices.getOperacionPermitida().subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.aportesFrom.get('DescripcionOperacion')?.setValue(result[0].DescripcionOperacion);
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
       });
@@ -1525,8 +1531,10 @@ export class AportesComponent implements OnInit {
   LimpiarCampos(Datos : any) {
     if (Datos === 'NumeroDocumento') {
       this.aportesFrom.get('Nombre')?.reset();
+       this.aportesFrom.get('TipoDocumento')?.reset();
     } else if (Datos === 'Nombre') {
       this.aportesFrom.get('NumeroDocumento')?.reset();
+       this.aportesFrom.get('TipoDocumento')?.reset();
     } else if (Datos === 'IdAsesor') {
       this.aportesFrom.get('NombreAsesor')?.reset();
     } else if (Datos === 'NombreAsesor') {
@@ -1573,14 +1581,14 @@ export class AportesComponent implements OnInit {
     return (dato !== null && dato !== undefined && dato !== '') ? true : false;
   }
   Parentesco() {
-    this.loading = true;
+    this.loading.show();
     this.aportesServices.getParentesco().subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.resultParentesco = result;
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
       });
@@ -1615,11 +1623,11 @@ export class AportesComponent implements OnInit {
       ) {
         if (this.aportesFrom.get('DocumentoBeneficiario')?.value .trim() !== this.aportesFrom.get('NumeroDocumento')?.value ) {
           if (this.dataObjetBeneficiarios.length == 0) {
-            this.loading = true;
+            this.loading.show();
             this.aportesServices.BuscarBeneficiario(this.aportesFrom.get('DocumentoBeneficiario')?.value
           ).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 if (result != null && result.Mensaje != null && (result.Mensaje == "Gerencia de desarrollo." || result.Mensaje == "Oficial de cumplimiento.")) {
                   this.AlertVetado(result.Mensaje);
                   this.aportesFrom.get('DocumentoBeneficiario')?.reset();
@@ -1686,7 +1694,7 @@ export class AportesComponent implements OnInit {
                 }
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 this.notif.onWarning('Alerta', 'Número de documento incorrecto.');
               }
             );
@@ -1722,7 +1730,7 @@ export class AportesComponent implements OnInit {
                     this.aportesFrom.addControl("SegundoNombre", SegundoNombre);
                     this.aportesFrom.addControl("PrimerApellido", PrimerApellido);
                     this.aportesFrom.addControl("SegundoApellido", SegundoApellido);
-                    this.loading = false;
+                    this.loading.hide();
                     this.notif.onWarning('Advertencia', 'No se encontró el beneficiario. Ingrese los datos para crearlo.');
                     this.BloquearNombreBenf = null;
                     this.bloquearDocumentoBenf = true;
@@ -2048,10 +2056,10 @@ export class AportesComponent implements OnInit {
         totalSuma = sumaPorcentaje + +this.aportesFrom.get('Porcentaje')?.value ;
         if (totalSuma === 100) {
           this.aportesFrom.get('DocumentoBeneficiario')?.disable();
-          this.loading = true;
+          this.loading.show();
           this.aportesServices.getGuardarAportes(this.aportesFrom.value).subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               this.aportesFrom.get('IdCuenta')?.setValue(result.IdCuenta);
               this.aportesFrom.get('FechaApertura')?.setValue(result.FechaApertura);
               this.BloquearDatoBenf = false;
@@ -2083,7 +2091,7 @@ export class AportesComponent implements OnInit {
               this.aportesOperacionFrom.get('Codigo')?.reset();
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               console.log(errorMessage);
             }
@@ -2093,11 +2101,11 @@ export class AportesComponent implements OnInit {
         }
       } else {
         this.aportesFrom.get('Beneficiarios')?.setValue(this.dataObjetBeneficiarios);
-        this.loading = true;
+        this.loading.show();
         this.aportesFrom.get('DocumentoBeneficiario')?.disable();
         this.aportesServices.getGuardarAportes(this.aportesFrom.value).subscribe(
           result => {
-            this.loading = false;
+            this.loading.hide();
             this.aportesFrom.get('IdCuenta')?.setValue(result.IdCuenta);
             this.aportesFrom.get('FechaApertura')?.setValue(result.FechaApertura);
             this.BloquearDatoBenf = false;
@@ -2129,7 +2137,7 @@ export class AportesComponent implements OnInit {
             this.aportesOperacionFrom.get('Codigo')?.reset();
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             const errorMessage = <any>error;
             console.log(errorMessage);
           }
@@ -2165,11 +2173,11 @@ export class AportesComponent implements OnInit {
             totalSuma = sumaPorcentaje + +this.aportesFrom.get('Porcentaje')?.value ;
             console.log("porse",totalSuma)
             if (totalSuma === 100) {
-              this.loading = true;
+              this.loading.show();
               this.aportesFrom.get('DocumentoBeneficiario')?.disable();
               this.aportesServices.getGuardarAportes(this.aportesFrom.value).subscribe(
                 result => {
-                  this.loading = false;
+                  this.loading.hide();
                   this.aportesFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                   this.aportesFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                   this.BloquearDatoBenf = false;
@@ -2201,7 +2209,7 @@ export class AportesComponent implements OnInit {
                   this.aportesOperacionFrom.get('Codigo')?.reset();
                 },
                 error => {
-                  this.loading = false;
+                  this.loading.hide();
                   const errorMessage = <any>error;
                   console.log(errorMessage);
                 }
@@ -2210,11 +2218,11 @@ export class AportesComponent implements OnInit {
               this.notif.onWarning('Advertencia', 'La suma del porcentaje debe ser igual al 100%.');
             }
           } else {
-            this.loading = true;
+            this.loading.show();
             this.aportesFrom.get('DocumentoBeneficiario')?.disable();
             this.aportesServices.getGuardarAportes(this.aportesFrom.value).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 this.aportesFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                 this.aportesFrom.get('FechaApertura')?.setValue(result.FechaApertura);
                 this.BloquearDatoBenf = false;
@@ -2246,7 +2254,7 @@ export class AportesComponent implements OnInit {
                 this.aportesOperacionFrom.get('Codigo')?.reset();
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 console.log(errorMessage);
               }
@@ -2263,7 +2271,7 @@ export class AportesComponent implements OnInit {
       this.notif.onWarning('Advertencia', 'La suma del porcentaje debe ser igual al 100%.');
       return;
     }
-    this.loading = true;
+    this.loading.show();
     this.btnActualizarBeneficiarios = false;
     this.BenificiariosElminar.forEach(x => this.dataObjetBeneficiarios.push(x));
     this.aportesServices.getActualizaBeneficiarios(this.dataObjetBeneficiarios).subscribe(x => {
@@ -2297,11 +2305,11 @@ export class AportesComponent implements OnInit {
         this.BuscarPorCuenta();
       }, 300);
       this.aportesFrom.get('DocumentoBeneficiario')?.disable();
-      this.loading = false;
+      this.loading.hide();
       this.BenificiariosElminar = [];
       this.dataObjetBeneficiarios = [];
     }, err => {
-      this.loading = false;
+      this.loading.hide();
       const errorMessage = <any>err;
       this.notif.onDanger('Error', errorMessage);
       console.log(errorMessage);
@@ -2328,10 +2336,10 @@ export class AportesComponent implements OnInit {
       if (this.aportesOperacionFrom.get('Codigo')?.value  === '21') {         // Actualizar la forma de pago
         if (+this.aportesFrom.get('IdFormaPago')?.value  !== this.datoformaPago) {
           this.datoformaPago = +this.aportesFrom.get('IdFormaPago')?.value ;
-          this.loading = true;
+          this.loading.show();
           this.aportesServices.getEditarFormaPago(this.aportesFrom.value).subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               this.BloquearDatoBenf = false;
               this.BloquearNombreBenf = false;
               this.BloquearAsociado = false;
@@ -2350,7 +2358,7 @@ export class AportesComponent implements OnInit {
               }, 1200);
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               const errorMessage = <any>error;
               console.log(errorMessage);
             }
@@ -2374,7 +2382,7 @@ export class AportesComponent implements OnInit {
 
             this.aportesServices.getEditarAsesorExterno(this.aportesFrom.value).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 this.BloquearDatoBenf = false;
                 this.BloquearNombreBenf = false;
                 this.BloquearAsociado = false;
@@ -2394,7 +2402,7 @@ export class AportesComponent implements OnInit {
                 }, 1200);
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 console.log(errorMessage);
               });
@@ -2411,7 +2419,7 @@ export class AportesComponent implements OnInit {
 
             this.aportesServices.getEditarAsesorExterno(this.aportesFrom.value).subscribe(
               result => {
-                this.loading = false;
+                this.loading.hide();
                 this.BloquearDatoBenf = false;
                 this.BloquearNombreBenf = false;
                 this.BloquearAsociado = false;
@@ -2431,7 +2439,7 @@ export class AportesComponent implements OnInit {
                 this.aportesOperacionFrom.get('Codigo')?.reset();
               },
               error => {
-                this.loading = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 console.log(errorMessage);
               });
@@ -2456,7 +2464,7 @@ export class AportesComponent implements OnInit {
   }
   ObtenerHistorial() {
     console.log("histo")
-    this.loading = true;
+    this.loading.show();
     const IdOficina = this.aportesFrom.get('IdOficina')?.value ;
     const IdProductoCuenta = this.aportesFrom.get('IdProductoCuenta')?.value ;
     const IdConsecutivo = this.aportesFrom.get('IdConsecutivo')?.value ;
@@ -2465,7 +2473,7 @@ export class AportesComponent implements OnInit {
       ({ 'IdOficina': IdOficina, 'IdProductoCuenta': IdProductoCuenta, 'IdConsecutivo': IdConsecutivo, 'IdDigito': IdDigito  }).subscribe(
         result => {
           console.log("h",result)
-          this.loading = false;
+          this.loading.hide();
           this.dataHistorial = result;
           this.dataHistorial.forEach(element => {
             if (element.Operacion == 10)
@@ -2481,7 +2489,7 @@ export class AportesComponent implements OnInit {
           });
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
@@ -2580,17 +2588,17 @@ export class AportesComponent implements OnInit {
     return descripcion;
   }
   Guardarlog(Aporteslog: any = null) {
-    this.loading = true;
+    this.loading.show();
     if (Aporteslog == 10) {
       const fecha =  new DatePipe('en-CO').transform(new Date(), 'yyyy/MM/dd  HH:mm:ss');
       this.generalesService.GuardarlogProductos(this.generarAportesDto(), 10,
       this.aportesFrom.get('IdCuenta')?.value , this.aportesFrom.get('LngTercero')?.value , 16).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           this.aportesOperacionFrom.get('Codigo')?.reset();
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
@@ -2607,11 +2615,11 @@ export class AportesComponent implements OnInit {
       this.generalesService.Guardarlog(datos, this.aportesOperacionFrom.get('Codigo')?.value ,
       this.aportesFrom.get('IdCuenta')?.value , this.aportesFrom.get('LngTercero')?.value , 16).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
 
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
@@ -2676,10 +2684,10 @@ export class AportesComponent implements OnInit {
     }
   }
   ÖbtenerConvenio() {
-    this.loading = true;
+    this.loading.show();
     this.aportesServices.getÖbtenerConvenioAportes(this.aportesFrom.value).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         if (result.length === 1) {
           this.bloquearbtnActalizar = true;
         } else if (result.Mensaje !== undefined || result.Mensaje !== null) {
@@ -2690,7 +2698,7 @@ export class AportesComponent implements OnInit {
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -2738,6 +2746,7 @@ export class AportesComponent implements OnInit {
     const Nombre = new FormControl('', [Validators.required]);
     const NumeroDocumento = new FormControl('', [Validators.required]);
     const NombreOficina = new FormControl('', [Validators.required]);
+    const TipoDocumento = new FormControl({ value: '', disabled: true }, []);
     const NumeroOficina = new FormControl('', [Validators.required]);
     const IdAsesor = new FormControl('', [Validators.required]);
     const NombreAsesor = new FormControl('', [Validators.required]);
@@ -2785,6 +2794,7 @@ export class AportesComponent implements OnInit {
     this.aportesFrom = new FormGroup({
       Nombre: Nombre,
       NumeroDocumento: NumeroDocumento,
+      TipoDocumento: TipoDocumento,
       IdProducto: IdProducto,
       DescripcionProducto: DescripcionProducto,
       IdFormaPago: IdFormaPago,

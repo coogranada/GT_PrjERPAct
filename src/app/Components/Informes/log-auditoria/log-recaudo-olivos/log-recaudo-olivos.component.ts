@@ -293,12 +293,12 @@ export class LogRecaudoOlivosComponent {
   }
 
   exportarExcel2() {
-    // this.loading = true;
+    // this.loading.show();
 
 
     var data = null;
     if (!this.resultadoInforme || this.resultadoInforme.length === 0) {
-      //this.loading = false ;
+      //this.loading.hide(); ;
       this.notif.onWarning('Advertencia', 'No hay información para exportar.');
     } else {
       data = this.resultadoInforme.map(row => {
@@ -319,7 +319,7 @@ export class LogRecaudoOlivosComponent {
 
       });
       this.excelReportService.exportAsExcelFile(data, 'Recaudo olivos')
-      //this.loading = false ;
+      //this.loading.hide(); ;
     }
   }
 

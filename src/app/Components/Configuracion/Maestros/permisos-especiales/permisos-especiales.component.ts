@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, Validators, FormControl, ValidatorFn, AbstractControl } from '@angular/forms';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { ModuleValidationService } from '../../../../Services/Enviroment/moduleValidation.service';
 import Swal from 'sweetalert2';
 import { PermisosEspecialesService } from '../../../../Services/Maestros/permisos-especiales.service';
@@ -9,6 +8,7 @@ import { map } from 'rxjs/operators';
 import { LoginService } from '../../../../Services/Login/login.service';
 import { Router } from '@angular/router';
 import { AlertService } from '../../../../Services/Alert/alert.service';
+import { LoadingService } from '../../../../Services/shared/loading.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -37,17 +37,15 @@ export class PermisosEspecialesComponent implements OnInit {
   public arrayRemoveOperacion: any;
   public arrayRemove: any;
   public arrayForm: any;
-
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
   private CodModulo = 48;
   public DatosUsuario : any = {};
-  constructor(private permisosEspecialesService: PermisosEspecialesService, private notificacion: AlertService,
-    private moduleValidationService: ModuleValidationService, private el: ElementRef, private loginService: LoginService,
-    private router: Router) {
+  constructor(private permisosEspecialesService: PermisosEspecialesService, 
+    private notificacion: AlertService,
+    private moduleValidationService: ModuleValidationService, 
+    private el: ElementRef, private loginService: LoginService,
+    private router: Router, private loading: LoadingService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -69,11 +67,11 @@ export class PermisosEspecialesComponent implements OnInit {
     this.IrArriba();
   }
   BuscarUsuario() {
-    this.loading = true;
+    this.loading.show();
     const _usuario = this.permisosEspecialesFrom.get('Usuario')?.value;
     this.permisosEspecialesService.ObtenerUsuario(_usuario).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         if (result !== null) {
           this.bModulo = null;
           this.bUsuario = false;
@@ -83,7 +81,7 @@ export class PermisosEspecialesComponent implements OnInit {
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         this.notificacion.onWarning('Advertencia', error._body);
       });
   }
@@ -94,20 +92,20 @@ export class PermisosEspecialesComponent implements OnInit {
     this.ObtenerOperacionesPermitidas();
   }
   ObtenerOperacionesDenegadas() {
-    this.loading = true;
+    this.loading.show();
     this.bOperacion = null;
     const _usuario = this.permisosEspecialesFrom.get('Usuario')?.value;
     const _idModulo = this.permisosEspecialesFrom.get('IdModulo')?.value;
     this.permisosEspecialesService.ObtenerOperacionesDenegadas(_idModulo, _usuario).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.ListaOperacionesDenegadas = result;
         if (this.ListaOperacionesDenegadas === null || this.ListaOperacionesDenegadas === undefined) {
           this.notificacion.onWarning('Advertencia', 'No se encontró registro.');
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notificacion.onDanger('Error', errorMessage);
         console.log(errorMessage);
@@ -116,37 +114,37 @@ export class PermisosEspecialesComponent implements OnInit {
   }
 
   ObtenerOperacionesPermitidas() {
-    this.loading = true;
+    this.loading.show();
     this.bOperacion = null;
     const _usuario = this.permisosEspecialesFrom.get('Usuario')?.value;
     const _idModulo = this.permisosEspecialesFrom.get('IdModulo')?.value;
     this.permisosEspecialesService.ObtenerOperacionesPermitidas(_idModulo, _usuario).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.ListaOperacionesPermitidas = result;
         if (this.ListaOperacionesPermitidas === null || this.ListaOperacionesPermitidas === undefined) {
           this.notificacion.onWarning('Advertencia', 'No se encontró registro.');
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notificacion.onDanger('Error', errorMessage);
         console.log(errorMessage);
       });
   }
   ObtenerModulos(PstrUsuario : number) {
-    this.loading = true;
+    this.loading.show();
     this.permisosEspecialesService.ObtenerModulos(PstrUsuario).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.ListaModulos = result;
         if (this.ListaModulos === null) {
           this.notificacion.onWarning('Advertencia', 'No se encontró registro.');
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notificacion.onDanger('Error', errorMessage);
         console.log(errorMessage);
@@ -185,13 +183,13 @@ export class PermisosEspecialesComponent implements OnInit {
     }
   }
   Agregar() {
-    this.loading = true;
+    this.loading.show();
     this.arrayRemove = this.arrayAddOperacion[0];
     this.arrayForm = this.permisosEspecialesFrom.value;
     this.permisosEspecialesFrom.get('IdOperacion')?.setValue(this.arrayRemove.IdOperacion);
     this.permisosEspecialesService.Guardar(this.permisosEspecialesFrom.value).subscribe(result => {
         if (result) {
-          this.loading = false;
+          this.loading.hide();
           this.permisosEspecialesFrom.get('IdModulo')?.setValue(this.arrayForm.IdModulo);
           this.ObtenerOperaciones();
           this.notificacion.onSuccess('Exitoso', 'La operación se guardó correctamente.');
@@ -200,7 +198,7 @@ export class PermisosEspecialesComponent implements OnInit {
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorJson = JSON.parse(error._body);
         this.notificacion.onDanger('Error', errorJson);
         console.log(error);
@@ -238,7 +236,7 @@ export class PermisosEspecialesComponent implements OnInit {
               this.notificacion.onWarning('Advertencia','Ocurrió un error al eliminar la operación. - ' + result);
             }
           }, error => {
-            this.loading = false;
+            this.loading.hide();
             const errorJson = JSON.parse(error._body);
             this.notificacion.onDanger('Error', errorJson);
             console.log(error);

@@ -1,11 +1,11 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { fromEvent } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ModuleValidationService } from '../../../../Services/Enviroment/moduleValidation.service';
 import { LlavesService } from '../../../../Services/Maestros/llaves.service';
 import { AlertService } from '../../../../Services/Alert/alert.service';
+import { LoadingService } from '../../../../Services/shared/loading.service';
 declare var $: any;
 @Component({
   selector: 'app-llaves',
@@ -15,7 +15,6 @@ declare var $: any;
   standalone : false
 })
 export class LlavesComponent implements OnInit {
-  loading = false;
   private CodModulo = 68;
   public llaveForm!: FormGroup;
   dataLlavesResult: any[] = [];
@@ -27,10 +26,9 @@ export class LlavesComponent implements OnInit {
   primaryColour = 'rgb(13,165,80)';
   secondaryColour = 'rgb(13,165,80,0.7)';
 
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   constructor(private llavesService: LlavesService, private notif: AlertService,
-    private el: ElementRef, private moduleValidationService: ModuleValidationService,
+    private el: ElementRef, private moduleValidationService: ModuleValidationService, 
+    private loading: LoadingService
   ) { 
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
@@ -61,7 +59,7 @@ export class LlavesComponent implements OnInit {
     });
   }
   GetLlaves() {
-    this.loading = true;
+    this.loading.show();
     this.generateBool = false;
     this.llavesService.GetLlaves().subscribe((x : any[])=> {
       console.log(x);
@@ -77,29 +75,29 @@ export class LlavesComponent implements OnInit {
           this.llaveForm.controls["llavePB"].setValue(this.llavePB);
         }
       }
-      this.loading = false;
+      this.loading.hide();
     }, error => {
-      this.loading = false;
+      this.loading.hide();
       const errorMessage = <any>error;
       this.notif.onDanger('Error', errorMessage);
     });
   }
   CambiarLlaves() {
-    this.loading = true;
+    this.loading.show();
     this.llavesService.CambiarLlavesPublicas(this.llavePA, this.llavePB).subscribe(x => {
       console.log("Actualizar", x);
-      this.loading = false;
+      this.loading.hide();
       this.notif.onSuccess('Exitoso', "llaves públicas se actualizaron correctamente");
       this.GetLlaves();
     }, error => {
-      this.loading = false;
+      this.loading.hide();
       this.GetLlaves();
       const errorMessage = <any>error;
       this.notif.onDanger('Error', errorMessage);
     });
   }
   GetGenerarLlaves() {
-    this.loading = true;
+    this.loading.show();
     this.llavesService.GetGenerarLlaves().subscribe((x : any[]) => {
       console.log(x);
       if (x.length > 0) {
@@ -112,15 +110,15 @@ export class LlavesComponent implements OnInit {
       } 
       if (x.length > 0 && x.length > 1) 
         this.generateBool = true;
-      this.loading = false;
+      this.loading.hide();
     }, error => {
-      this.loading = false;
+      this.loading.hide();
       const errorMessage = <any>error;
       this.notif.onDanger('Error', errorMessage);
     });
   }
   GuardarLlaves() {
-    this.loading = true;
+    this.loading.show();
     let payload: any = {
       Nit : this.llaveForm.controls["proveedor"].value,
       TipoLlave : 2,// this.llaveForm.controls["tipoLlave"].value,
@@ -133,25 +131,25 @@ export class LlavesComponent implements OnInit {
     }
     this.llavesService.GuardarLlaves(payload).subscribe(x => {
       console.log(x);
-      this.loading = false;
+      this.loading.hide();
       this.notif.onSuccess('Exitoso', x);
       this.Clear();
       this.GetLlaves();
     }, error => {
-      this.loading = false;
+      this.loading.hide();
       this.GetLlaves();
       const errorMessage = <any>error;
       this.notif.onDanger('Error', errorMessage);
     });
   }
   GetProveedores() {
-    this.loading = true;
+    this.loading.show();
     this.llavesService.GetProveedores().subscribe(x => {
       console.log(x);
       this.dataListProveedores = x;
-      this.loading = false;
+      this.loading.hide();
     }, error => {
-      this.loading = false;
+      this.loading.hide();
       this.GetLlaves();
       const errorMessage = <any>error;
       this.notif.onDanger('Error', errorMessage);

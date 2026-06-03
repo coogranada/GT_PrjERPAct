@@ -25,6 +25,10 @@
   justify-content: end;
 }
 
+.col-lg-0-5 {
+  width: calc(var(--width-base) * 0.5);
+}
+
 .col-lg-1-5 {
   width: calc(var(--width-base) * 1.5);
 }

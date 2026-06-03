@@ -67,13 +67,26 @@
                 <div class="form-group">
                     <label class="bold">Plazo:</label>
                     <input *ngIf="!usaSelectPlazo" #plazo type="text" class="form-control input__border" formControlName="plazo" maxlength="3">
-                    
+                    <span *ngIf="context.operacion === '140' && esCuotaVariable(this.cambiarInfoCreditoForm.controls.sistemaSelect.value!) && periodoInteresMeses" class="help-block-grey">Equivale a {{ this.cambiarInfoCreditoForm.controls.plazo.value! * periodoInteresMeses }} meses</span>
+
                     <select *ngIf="usaSelectPlazo" formControlName="plazoSelect" class="form-control input__border">
                         <option *ngFor="let p of plazos" [ngValue]="p">
                             {{ p }}
                         </option>
                     </select>
-                    <span *ngIf="cambiarInfoCreditoForm.controls.plazo.invalid" class="help-block">Plazo no es válido.</span>
+                    <span *ngIf="context.operacion === '135' && cambiarInfoCreditoForm.controls.plazo.invalid" class="help-block">Plazo no es válido.</span>
+                    <span *ngIf="context.operacion === '140' && (cambiarInfoCreditoForm.controls.plazo.hasError('min') || cambiarInfoCreditoForm.controls.plazo.hasError('max'))" class="help-block">
+                        Plazo mínimo: {{ plazoMinimo }} <br> Plazo máximo: {{ plazoMaximo }}
+                    </span>
+
+                     <span *ngIf="context.operacion === '140' 
+                            && esCuotaVariable(this.cambiarInfoCreditoForm.controls.sistemaSelect.value!)
+                            && !plazoEsMultiploExacto && !cambiarInfoCreditoForm.controls.plazo.hasError('min') 
+                            && !cambiarInfoCreditoForm.controls.plazo.hasError('max')
+                            && periodoCapitalMeses
+                            && periodoInteresMeses && periodoCapitalMeses" class="help-block">
+                        Plazo en meses debe ser multiplo del periodo capital ({{ periodoCapitalMeses }})
+                    </span>
                 </div>
             </div>
 
@@ -86,17 +99,17 @@
         </div>
 
         <div class="row">
-            <div class="col-sm-3">
+            <div class="col-sm-3" [hidden]="!esTasaVariable()">
                 <div class="form-group">
                     <label class="bold">Indicador:</label>
                     <input type="text" class="form-control" formControlName="siglaIndicador">
                 </div>
             </div>
 
-            <div class="col-sm-3">
+            <div class="col-sm-3" [hidden]="!esTasaVariable()">
                 <div class="form-group">
                     <label class="bold">Puntos:</label>
-                    <input #inputPuntos type="text" class="form-control input__border" formControlName="puntos" currencyMask [options]="percentOptions">
+                    <input #inputPuntos appPorcentajeDirectiva type="text" class="form-control input__border text-right" formControlName="puntos" maxlength="7">
                     <span *ngIf="cambiarInfoCreditoForm.controls.puntos.invalid" class="help-block">Puntos no válidos.</span>
                 </div>
             </div>
@@ -104,12 +117,23 @@
             <div class="col-sm-3">
                 <div class="form-group">
                     <label class="bold">Periodo de gracia:</label>
-                    <input type="text" class="form-control" formControlName="periodoGracia">
+                    <input type="text" class="form-control input__border" formControlName="periodoGracia" maxlength="3">
+                    <span *ngIf="cambiarInfoCreditoForm.controls.periodoGracia.invalid" class="help-block">Periodo gracia no es válido.</span>
+                </div>
+            </div>
+            
+            <div class="col-sm-3" [hidden]="context.operacion !== '140'">
+                <div class="form-group">
+                    <label class="bold">Acta:</label>
+                    <input type="text" appSoloNumero class="form-control input__border" formControlName="acta" maxlength="20">
                 </div>
             </div>
 
-            <div class="col-sm-3">
-                <!-- vacío para mantener alineac -->
+            <div class="col-sm-3" [hidden]="context.operacion !== '140'">
+                <div class="form-group">
+                    <label class="bold">Número reestructuraciones:</label>
+                    <input type="text" class="form-control" formControlName="reestrucutradoIndicador">
+                </div>
             </div>
         </div>
 
@@ -118,12 +142,6 @@
             <button *ngIf="btnCalcularVisible" class="btn Gt-btn-morado" (click)="onCalcular()" [disabled]="btnCalcularBloqueado">Calcular</button>
             <button class="btn Gt-btn-verde" (click)="onActualizar()" [disabled]="btnActualizarBloqueado">Actualizar</button>   
         </div>
-
     </form>
-
-    <div class="loader-overlay" *ngIf="loading">
-        <div class="spinner"></div>
-    </div>
-
 </div>
 

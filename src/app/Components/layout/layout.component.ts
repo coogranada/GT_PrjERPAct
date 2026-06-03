@@ -37,7 +37,8 @@ export class LayoutComponent implements OnInit,OnDestroy {
   public rutaActual: string = "";
   public NombrePaginaActual: string = "";
   public rutaPaginaActual: string = "";
-  public FechaActual: any;
+  public FechaActual: any;  
+  private bannerMostrado = false;
 
   
   /* Usuarios */
@@ -566,13 +567,19 @@ export class LayoutComponent implements OnInit,OnDestroy {
     });
 
     // // Start watch when time is up.
-    this.userIdle.onTimeout().subscribe(() => {
-      console.log("Show");
 
-      this.AbrirModalBanner?.nativeElement.click();
-      this.restart();
-      this.boolBannner = false;
-    });
+this.userIdle.onTimeout().subscribe(() => {
+  console.log("Show");
+
+  if (!this.bannerMostrado) {
+    this.bannerMostrado = true;
+    this.openModal();
+  }
+
+  this.boolBannner = false;
+});
+
+
 
     // this.bnIdle.startWatching(60).subscribe((isTimedOut: boolean) => {
     //   this.AbrirModalBanner.nativeElement.click();
@@ -1190,10 +1197,17 @@ export class LayoutComponent implements OnInit,OnDestroy {
     console.log('Abriendo modal'); 
     this.isModalOpen = true;
   }
-  closeModal() {
-    console.log('Cerrando modal');
-    this.isModalOpen = false;
-  }
+ 
+closeModal() {
+  console.log('Cerrando modal');
+
+  this.isModalOpen = false;
+
+  this.bannerMostrado = false;  
+  this.userIdle.resetTimer();
+  this.userIdle.startWatching();
+}
+
   
   // Para cerrar si se hace clic fuera del modal
   onBackdropClick(event: MouseEvent) {

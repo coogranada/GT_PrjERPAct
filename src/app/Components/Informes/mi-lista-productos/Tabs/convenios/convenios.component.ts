@@ -17,10 +17,10 @@ import {
   Tarjeta,
   Cupo
 } from '../../../../../Models/Informes/MisProductos/mis-producto.model';
-import { NgxLoadingComponent } from "ngx-loading";
 import moment from 'moment';
 import { DatePipe } from '@angular/common';
 import swal from "sweetalert2";
+import { LoadingService } from '../../../../../Services/shared/loading.service';
 
 //import { isString } from 'util';
 
@@ -39,11 +39,11 @@ const ColorSecundario = "rgb(13,165,80,0.7)";
 
 export class ConveniosComponent implements OnInit {
 
-  constructor(private MiListaProductosService: MiListaProductosService) {
+  constructor(private MiListaProductosService: MiListaProductosService,
+    private loading: LoadingService
+  ) {
 
   }
-
-  @ViewChild("ngxLoading", { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
 
   public ServicioExequialData: any[] = [];
   public ServicioExequialCancelado: any[] = [];
@@ -52,7 +52,6 @@ export class ConveniosComponent implements OnInit {
   public ValidadaActivo: boolean = true;
   public ConvenioActivo: any[] = [];
   public ConvenioCancelado: any[] = [];
-  public loading = false;
   public urlPdf: any;
   public desactiveExequial: boolean = false;
   public validaMail: boolean = false;
@@ -512,7 +511,7 @@ export class ConveniosComponent implements OnInit {
   }
 
   ObtenerHistorial(idOficina : string, idProducto : string, consecutivo : string, digito : string) {
-    this.loading = true;
+    this.loading.show();
     this.MiListaProductosService.ObtenerHistorial(
       idOficina,
       idProducto,
@@ -520,11 +519,11 @@ export class ConveniosComponent implements OnInit {
       digito
     ).subscribe(
       (result) => {
-        this.loading = false;
+        this.loading.hide();
         this.dataHistorialDisponible = result;
       },
       (error) => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -542,7 +541,7 @@ export class ConveniosComponent implements OnInit {
         this.Cupo.CuentaCupo = result;
       },
       (error) => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -1421,7 +1420,7 @@ export class ConveniosComponent implements OnInit {
   }
 
   SendEmailSeguros() {
-    this.loading = true;
+    this.loading.show();
     this.ValidaPlantillaMail();
     setTimeout(() => {
       this.SendMailSeguros();
@@ -1429,7 +1428,7 @@ export class ConveniosComponent implements OnInit {
   }
 
   SendEmailSegurosExe() {
-    this.loading = true;
+    this.loading.show();
     this.ValidaPlantillaMail();
     setTimeout(() => {
       this.SendMailSegurosEx();
@@ -1438,14 +1437,14 @@ export class ConveniosComponent implements OnInit {
 
   SendMailSeguros() {
     if (this.validaMail == true) {
-      this.loading = true;
+      this.loading.show();
 
       var idProducto = Number($("#ProductoID").val());
 
       if (idProducto == 106) {
         this.MiListaProductosService.sendMailProductos(this.ExtractoConveniosForm.value).subscribe(
           result => {
-            this.loading = false;
+            this.loading.hide();
             this.Response(result);
 
             var Tercero = Number($("#TerceroPrincipal").val());
@@ -1468,7 +1467,7 @@ export class ConveniosComponent implements OnInit {
           // #endregion
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             swal.fire({
               title: "Error",
               text: "",
@@ -1485,7 +1484,7 @@ export class ConveniosComponent implements OnInit {
       } else {
         this.MiListaProductosService.sendMailProductos(this.ExtractoConveniosForm.value).subscribe(
           result => {
-            this.loading = false;
+            this.loading.hide();
             this.Response(result);
 
             var Tercero = Number($("#TerceroPrincipal").val());
@@ -1508,7 +1507,7 @@ export class ConveniosComponent implements OnInit {
           // #endregion
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             swal.fire({
               title: "Error",
               text: "",
@@ -1524,7 +1523,7 @@ export class ConveniosComponent implements OnInit {
         )
       }
     } else {
-      this.loading = false;
+      this.loading.hide();
       swal.fire({
         title: "Info",
         text: "",
@@ -1542,10 +1541,10 @@ export class ConveniosComponent implements OnInit {
 
   SendMailSegurosEx() {
     if (this.validaMail == true) {
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.sendMailProductos(this.ExtractoSeguroForm.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           this.Response(result);
 
           var Tercero = Number($("#TerceroPrincipal").val());
@@ -1568,7 +1567,7 @@ export class ConveniosComponent implements OnInit {
           // #endregion
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           swal.fire({
             title: "Error",
             text: "",
@@ -1583,7 +1582,7 @@ export class ConveniosComponent implements OnInit {
         }
       )
     } else {
-      this.loading = false;
+      this.loading.hide();
       swal.fire({
         title: "Info",
         text: "",
@@ -1913,31 +1912,31 @@ export class ConveniosComponent implements OnInit {
       this.ExtractoSeguroForm.get("MesEnd")?.setValue(MesFinal);
       this.ExtractoSeguroForm.get("Usuario")?.setValue(dataLocalStorage.Usuario);
       this.ExtractoSeguroForm.get("Oficina")?.setValue(dataLocalStorage.Oficina);
-      this.loading = true;
+      this.loading.show();
 
 
       this.MiListaProductosService.GetExtractoSeguros(
         this.ExtractoSeguroForm.value
       ).subscribe(
         (result) => {
-          this.loading = false;
+          this.loading.hide();
           if (result.TipoAlerta == "3") {
             $("#extractosSegExequiales").hide();
             $("#movimientosSegExequial").hide();
             $("#pdf").hide();
             $("#xlsx").hide();
             $(".rangoFechas").show();
-            this.loading = false;
+            this.loading.hide();
             this.HabilitaMensate = 1;
           } else {
             this.HabilitaMensate = 0;
-            this.loading = true;
+            this.loading.show();
             $("#extractosSegExequiales").show();
             this.MiListaProductosService.GenerarPdfExtractoSeguros(
               this.ExtractoSeguroForm.value
             ).subscribe(
               (result) => {
-                this.loading = false;
+                this.loading.hide();
                 this.urlPdf = result.FileStream;
                 const pdfinBase64 = result.FileStream._buffer;
                 const byteArray = new Uint8Array(
@@ -1951,7 +1950,7 @@ export class ConveniosComponent implements OnInit {
                 document.getElementById("extractosSegExequiales")?.setAttribute("name", "movimiento");
               },
               (error) => {
-                this.loading = false;
+                this.loading.hide();
                 console.log(error);
               }
             );
@@ -1965,7 +1964,7 @@ export class ConveniosComponent implements OnInit {
           }
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
@@ -2017,7 +2016,7 @@ export class ConveniosComponent implements OnInit {
       this.validaMesInicial = false;
       this.validaMesFinal = true;
     } else {
-      this.loading = true;
+      this.loading.show();
       let datasq = localStorage.getItem("Data");
       var dataLocalStorage = JSON.parse(window.atob(datasq == null ? "" : datasq));
       this.ExtractoConveniosForm.get("yearInit")?.setValue(yearInicial);
@@ -2034,24 +2033,24 @@ export class ConveniosComponent implements OnInit {
           this.ExtractoConveniosForm.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             if (result.TipoAlerta == "3") {
               $("#pdf").hide();
               $("#xlsx").hide();
               $(".rangoFechas").show();
               $("#movimientosConvenio").hide();
               $("#extractosConvenio").hide();
-              this.loading = false;
+              this.loading.hide();
               this.HabilitaMensate = 1;
             } else {
               $("#extractosConvenio").show();
               this.HabilitaMensate = 0;
-              this.loading = true;
+              this.loading.show();
               this.MiListaProductosService.GenerarPdfAhorroDisponible(
                 this.ExtractoConveniosForm.value
               ).subscribe(
                 (result) => {
-                  this.loading = false;
+                  this.loading.hide();
                   this.urlPdf = result.FileStream;
                   const pdfinBase64 = result.FileStream._buffer;
                   const byteArray = new Uint8Array(
@@ -2065,7 +2064,7 @@ export class ConveniosComponent implements OnInit {
                   document.getElementById("extractosConvenio")?.setAttribute("name", "movimiento");
                 },
                 (error) => {
-                  this.loading = false;
+                  this.loading.hide();
                   console.log(error);
                 }
               );
@@ -2080,7 +2079,7 @@ export class ConveniosComponent implements OnInit {
         }
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
         );
@@ -2090,25 +2089,25 @@ export class ConveniosComponent implements OnInit {
           this.ExtractoConveniosForm.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             if (result.TipoAlerta == "3") {
               $("#pdf").hide();
               $("#xlsx").hide();
               $(".rangoFechas").show();
               $("#movimientosConvenio").hide();
               $("#extractosConvenio").hide();
-              this.loading = false;
+              this.loading.hide();
               this.HabilitaMensate = 1;
             } else {
               $("#extractosConvenio").show();
               this.HabilitaMensate = 0;
-              this.loading = true;
+              this.loading.show();
 
               this.MiListaProductosService.GenerarPdfExtractoSeguros(
                 this.ExtractoConveniosForm.value
               ).subscribe(
                 (result) => {
-                  this.loading = false;
+                  this.loading.hide();
                   const pdfinBase64 = result.FileStream._buffer;
                   const byteArray = new Uint8Array(
                     atob(pdfinBase64)
@@ -2121,7 +2120,7 @@ export class ConveniosComponent implements OnInit {
                   document.getElementById("extractosConvenio")?.setAttribute("name", "movimiento");
                 },
                 (error) => {
-                  this.loading = false;
+                  this.loading.hide();
                   console.log(error);
                 }
               );
@@ -2135,7 +2134,7 @@ export class ConveniosComponent implements OnInit {
             }
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -2473,29 +2472,29 @@ export class ConveniosComponent implements OnInit {
       ) {
         this.ExtractoSeguroForm.get("FechaInicio")?.setValue(FechaInicio);
         this.ExtractoSeguroForm.get("FechaFin")?.setValue(FechaFin);
-        this.loading = true;
+        this.loading.show();
         this.MiListaProductosService.GetExtractoSeguros(
           this.ExtractoSeguroForm.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             if (result.TipoAlerta == "3") {
               $("#extractosSegExequiales").hide();
               $("#movimientosSegExequial").hide();
               $("#pdf").hide();
               $("#xlsx").hide();
               $(".rangoFechas").show();
-              this.loading = false;
+              this.loading.hide();
               this.HabilitaMensate = 1;
             } else {
               this.HabilitaMensate = 0;
-              this.loading = true;
+              this.loading.show();
               $("#extractosSegExequiales").show();
               this.MiListaProductosService.GenerarPdfExtractoSeguros(
                 this.ExtractoSeguroForm.value
               ).subscribe(
                 (result) => {
-                  this.loading = false;
+                  this.loading.hide();
                   const pdfinBase64 = result.FileStream._buffer;
                   const byteArray = new Uint8Array(
                     atob(pdfinBase64)
@@ -2508,7 +2507,7 @@ export class ConveniosComponent implements OnInit {
                   document.getElementById("extractosSegExequiales")?.setAttribute("name", "movimiento");
                 },
                 (error) => {
-                  this.loading = false;
+                  this.loading.hide();
                   console.log(error);
                 }
               );
@@ -2522,7 +2521,7 @@ export class ConveniosComponent implements OnInit {
             }
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -2552,7 +2551,7 @@ export class ConveniosComponent implements OnInit {
       ) {
         this.ExtractoSeguroForm.get("FechaInicio")?.setValue(FechaInicio);
         this.ExtractoSeguroForm.get("FechaFin")?.setValue(FechaFin);
-        this.loading = true;
+        this.loading.show();
         this.MiListaProductosService.getMovimientoSeguro(
           this.ExtractoSeguroForm.value
         ).subscribe(
@@ -2563,17 +2562,17 @@ export class ConveniosComponent implements OnInit {
               $("#pdf").hide();
               $("#xlsx").hide();
               $(".rangoFechas").show();
-              this.loading = false;
+              this.loading.hide();
               this.HabilitaMensate = 1;
             } else {
-              this.loading = true;
+              this.loading.show();
               this.HabilitaMensate = 0;
               $("#movimientosSegExequial").show();
               this.MiListaProductosService.GenerarPDFMovimientoSeguro(
                 this.ExtractoSeguroForm.value
               ).subscribe(
                 (result) => {
-                  this.loading = false;
+                  this.loading.hide();
                   const pdfinBase64 = result.FileStream._buffer;
                   const byteArray = new Uint8Array(
                     atob(pdfinBase64)
@@ -2586,11 +2585,11 @@ export class ConveniosComponent implements OnInit {
                   document.getElementById("movimientosSegExequial")?.setAttribute("name", "movimiento");
                 },
                 (error) => {
-                  this.loading = false;
+                  this.loading.hide();
                   console.log(error);
                 }
               );
-              this.loading = false;
+              this.loading.hide();
               this.Movimientos = result.DescribeMovimiento;
               this.NumeroDocumento = result.NumeroDocumento;
               $("#pdf").show();
@@ -2601,7 +2600,7 @@ export class ConveniosComponent implements OnInit {
             }
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -2729,10 +2728,10 @@ export class ConveniosComponent implements OnInit {
         const fileName = "Movimiento_" + this.NumeroDocumento + ".pdf";
         downloadLink.href = linkSource;
         downloadLink.download = fileName;
-        this.loading = false;
+        this.loading.hide();
         downloadLink.click();
        } else {
-        this.loading = true;
+        this.loading.show();
         this.MiListaProductosService.GenerarPDFMovimientoSeguro(
           this.ExtractoConveniosForm.value
         ).subscribe(
@@ -2743,11 +2742,11 @@ export class ConveniosComponent implements OnInit {
             const fileName = "Movimiento_" + this.NumeroDocumento + ".pdf";
             downloadLink.href = linkSource;
             downloadLink.download = fileName;
-            this.loading = false;
+            this.loading.hide();
             downloadLink.click();
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -2763,10 +2762,10 @@ export class ConveniosComponent implements OnInit {
         const fileName = "Extracto_" + this.NumeroDocumento + ".pdf";
         downloadLink.href = linkSource;
         downloadLink.download = fileName;
-        this.loading = false;
+        this.loading.hide();
         downloadLink.click();
       }else{
-        this.loading = true;
+        this.loading.show();
         this.MiListaProductosService.GenerarPdfExtractoSeguros(
           this.ExtractoConveniosForm.value
         ).subscribe(
@@ -2777,11 +2776,11 @@ export class ConveniosComponent implements OnInit {
             const fileName = "Extracto_" + this.NumeroDocumento + ".pdf";
             downloadLink.href = linkSource;
             downloadLink.download = fileName;
-            this.loading = false;
+            this.loading.hide();
             downloadLink.click();
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -2795,7 +2794,7 @@ export class ConveniosComponent implements OnInit {
     var sel1 = Number($(".SelectedMovimiento_Convenio").val());
     if (sel1 == 1) {
       //pdf movimiento
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarPDFMovimientoSeguro(
         this.ExtractoSeguroForm.value
       ).subscribe(
@@ -2806,11 +2805,11 @@ export class ConveniosComponent implements OnInit {
           const fileName = "Movimiento_" + this.NumeroDocumento + ".pdf";
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
-          this.loading = false;
+          this.loading.hide();
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
@@ -2818,7 +2817,7 @@ export class ConveniosComponent implements OnInit {
     var select = Number($(".SelectedExtracto_Convenio").val());
     if (select == 2) {
       //pdf Extracto
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarPdfExtractoSeguros(
         this.ExtractoSeguroForm.value
       ).subscribe(
@@ -2829,11 +2828,11 @@ export class ConveniosComponent implements OnInit {
           const fileName = "Extracto_" + this.NumeroDocumento + ".pdf";
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
-          this.loading = false;
+          this.loading.hide();
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
@@ -2847,7 +2846,7 @@ export class ConveniosComponent implements OnInit {
     var sel1 = Number($(".SelectedMovimiento_Convenio").val());
     if (sel1 == 1) {
 
-      this.loading = true;
+      this.loading.show();
 
       var intProducto = Number($("#ProductoID").val());
       if (intProducto == 106) {
@@ -2861,11 +2860,11 @@ export class ConveniosComponent implements OnInit {
             const fileName = "Movimiento_" + this.NumeroDocumento + ".xlsx";
             downloadLink.href = linkSource;
             downloadLink.download = fileName;
-            this.loading = false;
+            this.loading.hide();
             downloadLink.click();
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -2880,11 +2879,11 @@ export class ConveniosComponent implements OnInit {
             const fileName = "Movimiento_" + this.NumeroDocumento + ".xlsx";
             downloadLink.href = linkSource;
             downloadLink.download = fileName;
-            this.loading = false;
+            this.loading.hide();
             downloadLink.click();
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -2895,14 +2894,14 @@ export class ConveniosComponent implements OnInit {
     }
     var select = Number($(".SelectedExtracto_Convenio").val());
     if (select == 2) {
-      this.loading = true;
+      this.loading.show();
       var intProducto = Number($("#ProductoID").val());
       if (intProducto == 106) {
         this.MiListaProductosService.GenerarXlsxAhorroDisponible(
           this.ExtractoConveniosForm.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             var baseg4 = result;
             const linkSource = `data:application/xlsx;base64,${baseg4}`;
             const downloadLink = document.createElement("a");
@@ -2912,7 +2911,7 @@ export class ConveniosComponent implements OnInit {
             downloadLink.click();
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -2927,11 +2926,11 @@ export class ConveniosComponent implements OnInit {
             const fileName = "Extracto_" + this.NumeroDocumento + ".xlsx";
             downloadLink.href = linkSource;
             downloadLink.download = fileName;
-            this.loading = false;
+            this.loading.hide();
             downloadLink.click();
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -2942,7 +2941,7 @@ export class ConveniosComponent implements OnInit {
 
     var sel1 = Number($(".SelectedMovimiento_Convenio").val());
     if (sel1 == 1) {
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarXlsMovimientosSeguro(
         this.ExtractoSeguroForm.value
       ).subscribe(
@@ -2953,18 +2952,18 @@ export class ConveniosComponent implements OnInit {
           const fileName = "Movimiento_" + this.NumeroDocumento + ".xlsx";
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
-          this.loading = false;
+          this.loading.hide();
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
     }
     var select = Number($(".SelectedExtracto_Convenio").val());
     if (select == 2) {
-      this.loading = true;
+      this.loading.show();
       this.MiListaProductosService.GenerarXlsxSeguro(
         this.ExtractoSeguroForm.value
       ).subscribe(
@@ -2975,11 +2974,11 @@ export class ConveniosComponent implements OnInit {
           const fileName = "Extracto_" + this.NumeroDocumento + ".xlsx";
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
-          this.loading = false;
+          this.loading.hide();
           downloadLink.click();
         },
         (error) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(error);
         }
       );
@@ -3176,7 +3175,7 @@ export class ConveniosComponent implements OnInit {
       ) {
         this.ExtractoConveniosForm.get("FechaInicio")?.setValue(FechaInicio);
         this.ExtractoConveniosForm.get("FechaFin")?.setValue(FechaFin);
-        this.loading = true;
+        this.loading.show();
         var IdProducto = Number($("#ProductoID"));
         if (IdProducto == 106) {
 
@@ -3185,25 +3184,25 @@ export class ConveniosComponent implements OnInit {
           this.ExtractoConveniosForm.value
         ).subscribe(
           (result) => {
-            this.loading = false;
+            this.loading.hide();
             if (result.TipoAlerta == "3") {
               $("#pdf").hide();
               $("#xlsx").hide();
               $(".rangoFechas").show();
               $("#movimientosConvenio").hide();
               $("#extractosConvenio").hide();
-              this.loading = false;
+              this.loading.hide();
               this.HabilitaMensate = 1;
             } else {
               $("#extractosConvenio").show();
               this.HabilitaMensate = 0;
-              this.loading = true;
+              this.loading.show();
 
               this.MiListaProductosService.GenerarPdfExtractoSeguros(
                 this.ExtractoConveniosForm.value
               ).subscribe(
                 (result) => {
-                  this.loading = false;
+                  this.loading.hide();
                   const pdfinBase64 = result.FileStream._buffer;
                   const byteArray = new Uint8Array(
                     atob(pdfinBase64)
@@ -3216,13 +3215,13 @@ export class ConveniosComponent implements OnInit {
                   document.getElementById("extractosConvenio")?.setAttribute("name", "movimiento");
                 },
                 (error) => {
-                  this.loading = false;
+                  this.loading.hide();
                   console.log(error);
                 }
               );
               this.ExtractosConvenio = result.DescribeExtracto;
 
-              this.loading = false;
+              this.loading.hide();
               this.NumeroDocumento = result.NumeroDocumento;
               $("#pdf").show();
               $("#xlsx").show();
@@ -3231,7 +3230,7 @@ export class ConveniosComponent implements OnInit {
             }
           },
           (error) => {
-            this.loading = false;
+            this.loading.hide();
             console.log(error);
           }
         );
@@ -3263,7 +3262,7 @@ export class ConveniosComponent implements OnInit {
       ) {
         this.ExtractoConveniosForm.get("FechaInicio")?.setValue(FechaInicio);
         this.ExtractoConveniosForm.get("FechaFin")?.setValue(FechaFin);
-        this.loading = true;
+        this.loading.show();
         var IdProducto = Number($("#ProductoID").val());
         if (IdProducto == 106) {
           this.MiListaProductosService.getMovimiento(
@@ -3276,17 +3275,17 @@ export class ConveniosComponent implements OnInit {
                 $(".rangoFechas").show();
                 $("#movimientosConvenio").hide();
                 $("#extractosConvenio").hide();
-                this.loading = false;
+                this.loading.hide();
                 this.HabilitaMensate = 1;
               } else {
-                this.loading = true;
+                this.loading.show();
                 this.HabilitaMensate = 0;
                 $("#movimientosConvenio").show();
                 this.MiListaProductosService.GenerarPDFMovimientoAportes(
                   this.ExtractoConveniosForm.value
                 ).subscribe(
                   (result) => {
-                    this.loading = false;
+                    this.loading.hide();
                     this.urlPdf = result.FileStream;
 
                     const pdfinBase64 = result.FileStream._buffer;
@@ -3301,13 +3300,13 @@ export class ConveniosComponent implements OnInit {
                     document.getElementById("movimientosConvenio")?.setAttribute("name", "Movimientos");
                   },
                   (error) => {
-                    this.loading = false;
+                    this.loading.hide();
                     console.log(error);
                   }
                 );
               }
 
-              this.loading = false;
+              this.loading.hide();
               this.NumeroDocumento = result.NumeroDocumento;
               $("#pdf").show();
               $("#xlsx").show();
@@ -3317,7 +3316,7 @@ export class ConveniosComponent implements OnInit {
 
             },
             (error) => {
-              this.loading = false;
+              this.loading.hide();
               console.log(error);
             }
           );
@@ -3332,17 +3331,17 @@ export class ConveniosComponent implements OnInit {
                 $(".rangoFechas").show();
                 $("#movimientosConvenio").hide();
                 $("#extractosConvenio").hide();
-                this.loading = false;
+                this.loading.hide();
                 this.HabilitaMensate = 1;
               } else {
-                this.loading = true;
+                this.loading.show();
                 this.HabilitaMensate = 0;
                 $("#movimientosConvenio").show();
                 this.MiListaProductosService.GenerarPDFMovimientoSeguro(
                   this.ExtractoConveniosForm.value
                 ).subscribe(
                   (result) => {
-                    this.loading = false;
+                    this.loading.hide();
                     const pdfinBase64 = result.FileStream._buffer;
                     const byteArray = new Uint8Array(
                       atob(pdfinBase64)
@@ -3355,13 +3354,13 @@ export class ConveniosComponent implements OnInit {
                     document.getElementById("movimientosConvenio")?.setAttribute("name", "movimiento");
                   },
                   (error) => {
-                    this.loading = false;
+                    this.loading.hide();
                     console.log(error);
                   }
                 );
                 this.urlPdf = "";
 
-                this.loading = false;
+                this.loading.hide();
                 this.NumeroDocumento = result.NumeroDocumento;
                 $("#pdf").show();
                 $("#xlsx").show();
@@ -3371,12 +3370,12 @@ export class ConveniosComponent implements OnInit {
               }
             },
             (error) => {
-              this.loading = false;
+              this.loading.hide();
               console.log(error);
             }
           );
         }
-        this.loading = false;
+        this.loading.hide();
         //#region Guarda log
         let datas = localStorage.getItem("Data");
     var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));

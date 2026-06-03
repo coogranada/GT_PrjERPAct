@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { fromEvent } from 'rxjs/internal/observable/fromEvent';
 import swal from 'sweetalert2';
 import { map } from 'rxjs/internal/operators/map';
@@ -16,6 +15,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { parseXML } from 'jquery';
 import { CheckList, FADeudor, LogFichaAnalisis, ObligacionesExtinguidas, ObligacionesVigentes, DtosAttachFiles } from '../../../../Models/Productos/ficha-analisis.model';
 import { AlertService } from '../../../../Services/Alert/alert.service';
+import { LoadingService } from '../../../../Services/shared/loading.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 @Component({
@@ -27,13 +27,10 @@ const ColorSecundario = 'rgb(13,165,80,0.7)';
 })
 export class FichaAnalisisComponent implements OnInit {
 
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
   @ViewChild('ModalTipoFicha', { static: true }) private ModalTipoFicha!: ElementRef;
   @ViewChild('ModalTipoFichaClose', { static: true }) private ModalTipoFichaClose!: ElementRef;
   @ViewChild('ModalGestionLC', { static: true }) private ModalGestionLC!: ElementRef
 
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
   private CodModulo = 75;
@@ -146,7 +143,8 @@ export class FichaAnalisisComponent implements OnInit {
     private generalesService: GeneralesService,
     private cd: ChangeDetectorRef,
     private FichaAnalisisService: fichaAnalisisService,
-    private fb: FormBuilder) {
+    private fb: FormBuilder,
+    private loading: LoadingService,) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -329,14 +327,14 @@ export class FichaAnalisisComponent implements OnInit {
   }
 
   OperacionSetFADeudor(FADeudor: FADeudor) {
-    this.loading = true;
+    this.loading.show();
     this.FichaAnalisisService.setFADeudor(FADeudor).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.notif.onSuccess('Exitoso', 'La ficha de análisis se creó correctamente.');
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         console.log(error);
       }
     )
@@ -362,13 +360,13 @@ export class FichaAnalisisComponent implements OnInit {
     )
   }
   OperacionUpdateFADeudor(FADeudor: FADeudor) {
-    this.loading = false;
+    this.loading.hide();
     this.FichaAnalisisService.actualizarFichaAnalisis(FADeudor).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.notif.onSuccess('Exitoso', 'La ficha de análisis se actualizó correctamente.');
       }, error => {
-        this.loading = false;
+        this.loading.hide();
         console.log(error);
       }
     )
@@ -427,13 +425,13 @@ export class FichaAnalisisComponent implements OnInit {
     )
   }
   OperacionUpdateFADeudorDeNaturales(FADeudor: FADeudor) {
-    this.loading = false;
+    this.loading.hide();
     this.FichaAnalisisService.actualizarFichaDeAnalisisDeNaturales(FADeudor).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.notif.onSuccess('Exitoso', 'La ficha de análisis se actualizó correctamente.');
       }, error => {
-        this.loading = false;
+        this.loading.hide();
         console.log(error);
       }
     )
@@ -566,14 +564,14 @@ export class FichaAnalisisComponent implements OnInit {
     this.radicadoActual = this.FichaOperacionForm.get('Radicado')?.value;
     let radicado = this.radicadoActual;
     this.bloquearBuscar = null;
-    this.loading = true;
+    this.loading.show();
     this.FichaAnalisisService.BuscarRadicadoOpBuscar(radicado).subscribe(
       result => {
         if (result.length != 0) {
           this.notif.onWarning('Advertencia', 'El número de radicado ya tiene ficha de análisis.');
           this.infoRadicado = false;
           this.ClearAll();
-          this.loading = false;
+          this.loading.hide();
         } else {
           this.FichaAnalisisService.BuscarRadicado(radicado).subscribe(
             resultado => {
@@ -609,17 +607,17 @@ export class FichaAnalisisComponent implements OnInit {
                       }, 500);
 
                       this.infoRadicado = true;
-                      this.loading = false;
+                      this.loading.hide();
                     } else {
                       this.resultadoCodeudores = [];
-                      this.loading = false;
+                      this.loading.hide();
                       this.infoRadicado = false;
                     }
                   },
                   error => {
                     const errorMessage = <any>error;
                     this.infoRadicado = false;
-                    this.loading = false;
+                    this.loading.hide();
                     console.log(errorMessage);
                   }
                 )
@@ -631,7 +629,7 @@ export class FichaAnalisisComponent implements OnInit {
                 this.resultadoCodeudores = [];
                 this.resultadoInfoRadicado = [];
                 this.infoRadicado = false;
-                this.loading = false;
+                this.loading.hide();
                 this.FichaAnalisisDataForm?.reset();
               }
 
@@ -651,7 +649,7 @@ export class FichaAnalisisComponent implements OnInit {
 
             },
             error => {
-              this.loading = false;
+              this.loading.hide();
               this.notif.onWarning('Advertencia', 'No se encontró número de radicado.');
               this.generalesService.Autofocus('opcionOperacion');
               this.FichaOperacionForm.get('Radicado')?.reset();
@@ -667,7 +665,7 @@ export class FichaAnalisisComponent implements OnInit {
       },
       error => {
         const errorMessage = <any>error;
-        this.loading = false;
+        this.loading.hide();
         this.notif.onWarning('Advertencia', 'No se encontró número de radicado.');
         this.generalesService.Autofocus('opcionOperacion');
         this.FichaOperacionForm.get('Radicado')?.reset();
@@ -735,12 +733,12 @@ export class FichaAnalisisComponent implements OnInit {
     let radicado = this.radicadoActual;
     this.bloquearBuscar = true;
     this.bloquearBuscarEmpresa = true;
-    this.loading = true;
+    this.loading.show();
     this.currencyOptions.precision = 2;
     this.FichaAnalisisService.BuscarRadicadoOpBuscar(radicado).subscribe(
       result => {
         if (result.length == 0) {
-          this.loading = false;
+          this.loading.hide();
           this.infoRadicado = false;
           this.resultadoInfoRadicado = [];
           this.crear = true;
@@ -762,14 +760,14 @@ export class FichaAnalisisComponent implements OnInit {
               }
               this.resultadoCodeudores = this.organizarInfoExtinguidasYVigentes(res);            
               this.dataInsertInicialCode = this.recolectarInfoCodeGeneral();
-              this.loading = false;
+              this.loading.hide();
               setTimeout(() => {
                 this.infoRadicado = true;
               }, 1000);
             },
             error => {
               this.infoRadicado = false;
-              this.loading = false;
+              this.loading.hide();
               console.log(error);
             }
           )
@@ -782,7 +780,7 @@ export class FichaAnalisisComponent implements OnInit {
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         this.crear = true;
         this.infoRadicado = false;
         this.resultadoInfoRadicado = [];
@@ -1102,7 +1100,7 @@ export class FichaAnalisisComponent implements OnInit {
   }
 
   recolectarInfo() {
-    this.loading = true;
+    this.loading.show();
     let act = null;
 
     if (this.isProcessing) return;
@@ -1128,10 +1126,10 @@ export class FichaAnalisisComponent implements OnInit {
         this.OperacionBuscarFichaAnalisis();
         this.isProcessing = false;
       }, 1500);
-      this.loading = false;
+      this.loading.hide();
     } else {
       this.notif.onWarning('Advertencia', 'Debe realizar un cambio para actualizar.');
-      this.loading = false;
+      this.loading.hide();
       this.isProcessing = false;
     }
   }
@@ -2202,12 +2200,12 @@ export class FichaAnalisisComponent implements OnInit {
   }
 
   enviarFichaAlWorkManager() {
-    this.loading = true;
+    this.loading.show();
     let data = localStorage.getItem('Data');
     this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
     this.FichaAnalisisService.GenerarPDFFichaAnalisis(this.radicadoActual).subscribe(
       (result) => {
-        this.loading = false;
+        this.loading.hide();
         const pdfinBase64 = result.FileStream._buffer;
         this.linkPdf = pdfinBase64;
         this.dataAttachFiles.base64 = this.linkPdf;
@@ -2229,15 +2227,15 @@ export class FichaAnalisisComponent implements OnInit {
                     this.notif.onSuccess('Exitoso', 'Se envió al workmangaer correctamente.');
                     this.recolectarInfoLog();
                     this.ClearAll();
-                    this.loading = false;
+                    this.loading.hide();
                   },
                   err => {
-                    this.loading = false;
+                    this.loading.hide();
                     this.notif.onWarning('Advertencia', 'Se envió al workmangaer correctamente.');
                   }
                 )
               } else {
-                this.loading = false;
+                this.loading.hide();
                 this.notif.onWarning('Advertencia', 'No se envió al workmanager.');
                 $("#procesowf").val("");
                 this.workFlowId = "";
@@ -2247,7 +2245,7 @@ export class FichaAnalisisComponent implements OnInit {
           },
           error => {
             this.notif.onWarning('Advertencia', 'No se envió al workmanager.');
-            this.loading = false;
+            this.loading.hide();
             this.infoRadicado = true;
             this.FichaOperacionForm.get('Codigo')?.reset();
           }
@@ -2255,7 +2253,7 @@ export class FichaAnalisisComponent implements OnInit {
       },
       (error) => {
         this.notif.onWarning('Advertencia', 'No se envió al workmanager.');
-        this.loading = false;
+        this.loading.hide();
         this.infoRadicado = true;
         this.FichaOperacionForm.get('Codigo')?.reset();
       }
@@ -2264,12 +2262,12 @@ export class FichaAnalisisComponent implements OnInit {
 
   mostrarPDF() {
     $("#BotonPDF").click();
-    this.loading = true;
+    this.loading.show();
     this.infoPdfTrue = true;
     const radicado = this.radicadoActual;
     this.FichaAnalisisService.GenerarPDFFichaAnalisis(radicado).subscribe(
       (result) => {
-        this.loading = false;
+        this.loading.hide();
         this.recolectarInfoLog();
         const pdfinBase64 = result.FileStream._buffer;
         this.linkPdf = pdfinBase64;
@@ -2281,7 +2279,7 @@ export class FichaAnalisisComponent implements OnInit {
       },
       (error) => {
         this.notif.onWarning('Advertencia', 'No se generó el PDF.');
-        this.loading = false;
+        this.loading.hide();
         this.infoRadicado = true;
         console.log(error);
       }
@@ -2402,13 +2400,13 @@ export class FichaAnalisisComponent implements OnInit {
     });
   }
   autorizacion() {
-    this.loading = true;
+    this.loading.show();
     this.FichaAnalisisService.actualizarColEnvioAlWM(this.radicadoActual, 0).subscribe(
       result => {
         this.recolectarInfoLog();
         this.notif.onSuccess('Exitoso', 'El estado de la ficha de análisis fue actualizado correctamente.');
         this.OperacionBuscarFichaAnalisis();
-        this.loading = false;
+        this.loading.hide();
       }, error => {
         this.notif.onWarning('Advertencia', 'No se ejecutó la autorización.');
       }
@@ -2439,7 +2437,7 @@ export class FichaAnalisisComponent implements OnInit {
 
   ActualizarDeNaturales() {
     const radicado = this.FichaOperacionForm.get('Radicado')?.value;
-    this.loading = true;
+    this.loading.show();
     this.FichaAnalisisService.BuscarRadicado(radicado).subscribe(
       async resultado => {
         if (resultado.length != 0) {
@@ -2477,7 +2475,7 @@ export class FichaAnalisisComponent implements OnInit {
                   this.strDatos = "/Buscar";
                   this.OperacionBuscarFichaAnalisis();
                 }
-                this.loading = false;
+                this.loading.hide();
               } else {
                 this.resultadoCodeudores = [];
                 let actualizar = this.compararDataParaActualizar();
@@ -2490,12 +2488,12 @@ export class FichaAnalisisComponent implements OnInit {
                   this.strDatos = "/Buscar";
                   this.OperacionBuscarFichaAnalisis();
                 }
-                this.loading = false;
+                this.loading.hide();
               }
             },
             error => {
               const errorMessage = <any>error;
-              this.loading = false;
+              this.loading.hide();
               console.log(errorMessage);
             }
           )
@@ -2503,11 +2501,11 @@ export class FichaAnalisisComponent implements OnInit {
           this.resultadoCodeudores = [];
           this.infoRadicado = false;
           this.resultadoInfoRadicado = [];
-          this.loading = false;
+          this.loading.hide();
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
       })
@@ -3062,100 +3060,143 @@ export class FichaAnalisisComponent implements OnInit {
 
   }
 
-  CargarIngresoData(i: number, index: number) {
-    let tipoOcupa;
-    let lista;
+CargarIngresoData(i: number, index: number) {
+  let tipoOcupa: boolean | undefined;
+  let lista: any;
+  if (i === 1) {
+    tipoOcupa = this.resultadoInfoRadicado?.[0]?.TipoOcupacion;
+    this.tipoOcupa = tipoOcupa ?? null;
 
-    if (i == 1) {
-      tipoOcupa = this.resultadoInfoRadicado[0].TipoOcupacion;
-      this.tipoOcupa = tipoOcupa;
-      lista = JSON.parse(this.resultadoInfoRadicado[0].ProductValueList);
-    } else if (i == 2) {
-      tipoOcupa = this.codSelected[index].TipoOcupacion;
-      this.tipoOcupaCod = tipoOcupa;
-      lista = JSON.parse(this.codSelected[index].ProductValueList);
+    const productValue = this.resultadoInfoRadicado?.[0]?.ProductValueList;
+    if (!productValue) {
+      console.warn('ProductValueList no disponible (i=1)');
+      return;
     }
 
+    try {
+      lista = JSON.parse(productValue);
+    } catch {
+      console.error('Error parseando ProductValueList (i=1)');
+      return;
+    }
 
-    //INDEPENDIENTE
-    if (tipoOcupa === true) {
-      const valorMedio = + lista[0][0]?.value * 1000;
-      const valorMin = + lista[0][1]?.value * 1000;
-      const valorMax = + lista[0][2]?.value * 1000;
+  } else if (i === 2) {
+    tipoOcupa = this.codSelected?.[index]?.TipoOcupacion;
+    this.tipoOcupaCod = tipoOcupa ?? null;
 
-      if (i == 1) {
-        this.FichaAnalisisDataForm.get("IngresoMinimoData")?.setValue(valorMin);
-        this.FichaAnalisisDataForm.get("IngresoMedioData")?.setValue(valorMedio);
-        this.FichaAnalisisDataForm.get("IngresoMaximoData")?.setValue(valorMax);
-      } else if (i == 2) {
-        this.CodeudorForm.get("IngresoMinimoDataCod")?.setValue(valorMin);
-        this.CodeudorForm.get("IngresoMedioDataCod")?.setValue(valorMedio);
-        this.CodeudorForm.get("IngresoMaximoDataCod")?.setValue(valorMax);
-        this.codSelected[index].IngresoMinimoData = valorMin;
-        this.codSelected[index].IngresoMedioData = valorMedio;
-        this.codSelected[index].IngresoMaximoData = valorMax;
-      }
-      //DEPENDIENTE
-    } else if (tipoOcupa === false) {
-      let valorIngreso;
+    const productValue = this.codSelected?.[index]?.ProductValueList;
+    if (!productValue) {
+      console.warn('ProductValueList no disponible (i=2)');
+      return;
+    }
 
-      if (i == 1) {
-        valorIngreso = this.resultadoInfoRadicado[0].ValorIngreso;
-      } else if (i == 2) {
-        valorIngreso = this.codSelected[index].ValorIngreso;
-      }
-
-
-      const cleanedString = valorIngreso.replace(/\\r\\n/g, '').replace(/\\"/g, '"');
-
-      let listaI = [];
-      try {
-        listaI = JSON.parse(cleanedString);
-      } catch (error) {
-        console.error('Error al parsear JSON:', error);
-      }
-
-      //      this.dataValorIngreso = [];
-      //      this.dataValorIngresoCod = [];
-
-      listaI.aportantes.forEach((aportante: any) => {
-
-        const numeroIdentificacion = aportante.numero_identificacion_aportante;
-        const razonSocial = aportante.razon_social_aportante;
-        const descripcionCotizante = aportante.descripcion_cotizante_persona_natural;
-
-        const ingresoTotalUltMes = listaI.indicadores.ingreso_total_ult_mes;
-        const promedioIngresosCotizante = listaI.resumen_general_ingresos.promedio_ingresos_cotizante;
-        const promedioUltTresMeses = listaI.indicadores.promedio_ult_tres_meses;
-
-        const rowData = {
-          numeroIdentificacion,
-          razonSocial,
-          descripcionCotizante,
-          ingresoTotalUltMes,
-          promedioIngresosCotizante,
-          promedioUltTresMeses
-        };
-
-        if (i == 1) {
-          this.dataValorIngreso.push(rowData);
-          this.FichaAnalisisDataForm.get("ValorIngresoData")?.setValue(promedioUltTresMeses);
-          this.FichaAnalisisDataForm.get("SalarioTotalData")?.setValue(ingresoTotalUltMes);
-          this.FichaAnalisisDataForm.get("PromedioIngresoData")?.setValue(promedioIngresosCotizante);
-        } else if (i == 2) {
-          this.dataValorIngresoCod.push(rowData);
-          this.codSelected[index].EmpleadorData = this.dataValorIngresoCod;
-          this.CodeudorForm.get("ValorIngresoDataCod")?.setValue(promedioUltTresMeses);
-          this.CodeudorForm.get("SalarioTotalDataCod")?.setValue(ingresoTotalUltMes);
-          this.CodeudorForm.get("PromedioIngresoDataCod")?.setValue(promedioIngresosCotizante);
-          this.codSelected[index].ValorIngresoData = promedioUltTresMeses;
-          this.codSelected[index].SalarioTotalData = ingresoTotalUltMes;
-          this.codSelected[index].PromedioIngresoData = promedioIngresosCotizante;
-        }
-
-      });
+    try {
+      lista = JSON.parse(productValue);
+    } catch {
+      console.error('Error parseando ProductValueList (i=2)');
+      return;
     }
   }
+
+  if (tipoOcupa === undefined || !lista) {
+    console.warn('Tipo de ocupación o lista inválidos');
+    return;
+  }
+  if (tipoOcupa === true) {
+    const valorMedio = +(lista?.[0]?.[0]?.value ?? 0) * 1000;
+    const valorMin   = +(lista?.[0]?.[1]?.value ?? 0) * 1000;
+    const valorMax   = +(lista?.[0]?.[2]?.value ?? 0) * 1000;
+
+    if (i === 1) {
+      this.FichaAnalisisDataForm.get('IngresoMinimoData')?.setValue(valorMin);
+      this.FichaAnalisisDataForm.get('IngresoMedioData')?.setValue(valorMedio);
+      this.FichaAnalisisDataForm.get('IngresoMaximoData')?.setValue(valorMax);
+    } else if (i === 2) {
+      this.CodeudorForm.get('IngresoMinimoDataCod')?.setValue(valorMin);
+      this.CodeudorForm.get('IngresoMedioDataCod')?.setValue(valorMedio);
+      this.CodeudorForm.get('IngresoMaximoDataCod')?.setValue(valorMax);
+
+      this.codSelected[index].IngresoMinimoData = valorMin;
+      this.codSelected[index].IngresoMedioData  = valorMedio;
+      this.codSelected[index].IngresoMaximoData = valorMax;
+    }
+
+  // ===============================
+  // DEPENDIENTE
+  // ===============================
+  } else if (tipoOcupa === false) {
+
+    let valorIngreso: string | null | undefined;
+
+    if (i === 1) {
+      valorIngreso = this.resultadoInfoRadicado?.[0]?.ValorIngreso;
+    } else if (i === 2) {
+      valorIngreso = this.codSelected?.[index]?.ValorIngreso;
+    }
+
+    if (!valorIngreso) {
+      console.warn('ValorIngreso vacío o null');
+      return;
+    }
+
+    const cleanedString = valorIngreso
+      .replace(/\\r\\n/g, '')
+      .replace(/\\"/g, '"');
+
+    let listaI: any;
+    try {
+      listaI = JSON.parse(cleanedString);
+    } catch (error) {
+      console.error('Error al parsear ValorIngreso JSON:', error);
+      return;
+    }
+
+    if (!Array.isArray(listaI?.aportantes)) {
+      console.warn('aportantes no es un array o no existe', listaI);
+      return;
+    }
+
+    listaI.aportantes.forEach((aportante: any) => {
+
+      const numeroIdentificacion = aportante?.numero_identificacion_aportante ?? '';
+      const razonSocial          = aportante?.razon_social_aportante ?? '';
+      const descripcionCotizante = aportante?.descripcion_cotizante_persona_natural ?? '';
+
+      const ingresoTotalUltMes        = listaI?.indicadores?.ingreso_total_ult_mes ?? 0;
+      const promedioIngresosCotizante = listaI?.resumen_general_ingresos?.promedio_ingresos_cotizante ?? 0;
+      const promedioUltTresMeses      = listaI?.indicadores?.promedio_ult_tres_meses ?? 0;
+
+      const rowData = {
+        numeroIdentificacion,
+        razonSocial,
+        descripcionCotizante,
+        ingresoTotalUltMes,
+        promedioIngresosCotizante,
+        promedioUltTresMeses
+      };
+
+      if (i === 1) {
+        this.dataValorIngreso.push(rowData);
+        this.FichaAnalisisDataForm.get('ValorIngresoData')?.setValue(promedioUltTresMeses);
+        this.FichaAnalisisDataForm.get('SalarioTotalData')?.setValue(ingresoTotalUltMes);
+        this.FichaAnalisisDataForm.get('PromedioIngresoData')?.setValue(promedioIngresosCotizante);
+
+      } else if (i === 2) {
+        this.dataValorIngresoCod.push(rowData);
+        this.codSelected[index].EmpleadorData = this.dataValorIngresoCod;
+
+        this.CodeudorForm.get('ValorIngresoDataCod')?.setValue(promedioUltTresMeses);
+        this.CodeudorForm.get('SalarioTotalDataCod')?.setValue(ingresoTotalUltMes);
+        this.CodeudorForm.get('PromedioIngresoDataCod')?.setValue(promedioIngresosCotizante);
+
+        this.codSelected[index].ValorIngresoData   = promedioUltTresMeses;
+        this.codSelected[index].SalarioTotalData   = ingresoTotalUltMes;
+        this.codSelected[index].PromedioIngresoData = promedioIngresosCotizante;
+      }
+
+    });
+  }
+}
 
   AlertaEdad() {
     if (this.resultadoInfoRadicado[0].Nacimiento === "" || this.resultadoInfoRadicado[0].Nacimiento === undefined) {

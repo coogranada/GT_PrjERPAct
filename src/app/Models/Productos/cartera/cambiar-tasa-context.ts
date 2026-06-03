@@ -1,4 +1,4 @@
-import { CuentaCarteraDetalle, DatosForm } from "./gestion-credito.model";
+import { CuentaCarteraDetalle, DatosForm, PeriodoPago } from "./gestion-credito.model";
 
 export interface CambiarInfoCreditoContext {
     detalleCredito: CuentaCarteraDetalle & {
@@ -7,7 +7,8 @@ export interface CambiarInfoCreditoContext {
         fechaVencimiento: Date;
     };
     datosFormData: DatosForm;
-    operacion: Operacion
+    operacion: Operacion;
+    periodosPago: PeriodoPago[];
 }
 
 export enum Operacion {
@@ -15,6 +16,7 @@ export enum Operacion {
     CambiarCuota = '132',
     CambiarPlazo = '135',
     CambiarSistema = '139',
+    ReestructurarCambioPlazo = '140',
 }
 
 export enum Novedad {

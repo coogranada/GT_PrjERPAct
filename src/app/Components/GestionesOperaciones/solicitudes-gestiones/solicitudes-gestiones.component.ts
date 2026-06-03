@@ -1,5 +1,4 @@
 import { Component, OnInit, ElementRef, ViewChild, EventEmitter, Output } from '@angular/core';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { GestionesService } from '../../../Services/Gestiones/gestiones.service';
 import { CuentaModel } from '../../../Models/Productos/cuenta.model';
 import { GestionModel, GestionModelLog } from '../../../Models/Gestiones/gestiones.model';
@@ -7,6 +6,7 @@ import { FormGroup, FormControl, Validators, AbstractControl, ValidatorFn } from
 import { GeneralesService } from '../../../Services/Productos/generales.service';
 import { moduloAGestionar } from '../../../../environments/config.modulos';
 import { AlertService } from '../../../Services/Alert/alert.service';
+import { LoadingService } from '../../../Services/shared/loading.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 
@@ -21,10 +21,7 @@ const ColorSecundario = 'rgb(13,165,80,0.7)';
 export class SolicitudesGestionesComponent implements OnInit {
   @ViewChild('AbrirSolicitud', { static: true }) private AbrirSolicitud!: ElementRef;
   @ViewChild('CerrarSolicitud', { static: true }) private CerrarSolicitud!: ElementRef;
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
-  @Output() emitEventJuridicoSolicitud: EventEmitter<any> = new EventEmitter<any>();
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
+  @Output() emitEventJuridicoSolicitud: EventEmitter<any> = new EventEmitter<any>(); 
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
 
@@ -43,7 +40,7 @@ export class SolicitudesGestionesComponent implements OnInit {
   public Estado = true;
 
   constructor(private gestionesService: GestionesService, private notificacion: AlertService,
-    private generalesService: GeneralesService) { }
+    private generalesService: GeneralesService, private loading: LoadingService) { }
 
   ngOnInit() {
     this.ValidarFormulario();
@@ -90,15 +87,15 @@ export class SolicitudesGestionesComponent implements OnInit {
   }
 
   GenerarCuenta(PIdOficina : string, PProducto : string, PConsecutivo : string, PDigito : string) {
-    this.loading = true;
+    this.loading.show();
     this.gestionesService.GenerarCuenta(PIdOficina, PProducto, PConsecutivo, PDigito).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         const _cuenta = result;
         this.SolicitudGestionForm.get('Cuenta')?.setValue(_cuenta);
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorJson = JSON.parse(error._body);
         this.notificacion.onDanger('Error', errorJson);
         console.log(error);
@@ -107,15 +104,15 @@ export class SolicitudesGestionesComponent implements OnInit {
   }
 
   ObtenerOperaciones(PModulo : string) {
-    this.loading = true;
+    this.loading.show();
     this.gestionesService.ObtenerOperaciones(PModulo).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.ListaOperaciones = result;
         this.SolicitudGestionForm.get('IdOperacion')?.setValue('-');
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorJson = JSON.parse(error._body);
         this.notificacion.onDanger('Error', errorJson);
         console.log(error);
@@ -175,10 +172,10 @@ export class SolicitudesGestionesComponent implements OnInit {
   }
 
   ObtenerEstados() {
-    this.loading = true;
+    this.loading.show();
     this.gestionesService.ObtenerEstados().subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.ListaEstados = result;
         if (this.ListaEstados !== null && this.ListaEstados !== undefined) {
           this.ListaEstados.forEach(element => {
@@ -189,7 +186,7 @@ export class SolicitudesGestionesComponent implements OnInit {
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorJson = JSON.parse(error._body);
         this.notificacion.onDanger('Error', errorJson);
         console.log(error);
@@ -198,10 +195,10 @@ export class SolicitudesGestionesComponent implements OnInit {
   }
 
   ObtenerUsuariosAutorizados(POperacion: any) {
-    this.loading = true;
+    this.loading.show();
     this.gestionesService.ObtenerUsuariosAutorizados(POperacion, this.Modulo.toString()).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.UsuariosAutorizados = result;
         if (this.UsuariosAutorizados !== null && this.UsuariosAutorizados !== undefined) {
           this.UsuariosAutorizados.forEach((element : any) => {
@@ -210,7 +207,7 @@ export class SolicitudesGestionesComponent implements OnInit {
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorJson = JSON.parse(error._body);
         this.notificacion.onDanger('Error', errorJson);
         console.log(error);
@@ -223,7 +220,7 @@ export class SolicitudesGestionesComponent implements OnInit {
     this.DatosUsuario = JSON.parse(window.atob(data == null ? "" : data));
     const UsuarioRecibe = this.SolicitudGestionForm.get('IdUsuarioRecibe')?.value.IdUsuario;
     if (this.DatosUsuario.IdUsuario !== UsuarioRecibe) {
-      this.loading = true;
+      this.loading.show();
       if ((this.SolicitudGestionForm.get('Cuenta')?.value === null ||
         this.SolicitudGestionForm.get('Cuenta')?.value === undefined ||
         this.SolicitudGestionForm.get('Cuenta')?.value === '') &&
@@ -280,7 +277,7 @@ export class SolicitudesGestionesComponent implements OnInit {
 
       this.gestionesService.Guardar(JSON.stringify(_objGestionesModel)).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           if (result !== null && result.ObjAlertasDto !== null) {
             if (result.ObjAlertasDto.TipoAlerta === 'Error') {
               this.CerrarSolicitud.nativeElement.click();
@@ -293,7 +290,7 @@ export class SolicitudesGestionesComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorJson = JSON.parse(error._body);
           this.notificacion.onDanger('Error', errorJson);
           console.log(error);

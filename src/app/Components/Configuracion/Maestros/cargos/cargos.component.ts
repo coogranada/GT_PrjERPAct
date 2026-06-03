@@ -3,13 +3,13 @@ import { CargosService } from '../../../../Services/Maestros/cargos.service';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { GeneralesService } from '../../../../../app/Services/Productos/generales.service';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { ModuleValidationService } from '../../../../../app/Services/Enviroment/moduleValidation.service';
 import { fromEvent } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { LoginService } from '../../../../../app/Services/Login/login.service';
 import { AlertService } from '../../../../Services/Alert/alert.service';
+import { LoadingService } from '../../../../Services/shared/loading.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -28,10 +28,6 @@ export class CargosComponent implements OnInit {
   { value: '3', descripcion: 'Activo' },
   { value: '4', descripcion: 'Inactivo' }];
   public cargosFrom!: FormGroup;
-
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
   private CodModulo : number = 3;
@@ -44,8 +40,10 @@ export class CargosComponent implements OnInit {
 
   constructor(private cargoService: CargosService,
     private notif: AlertService,
-    private generalesService: GeneralesService, private moduleValidationService: ModuleValidationService,
-    private el: ElementRef, private loginService: LoginService, private router: Router) {
+    private generalesService: GeneralesService, 
+    private moduleValidationService: ModuleValidationService,
+    private el: ElementRef, private loginService: LoginService, 
+    private router: Router, private loading: LoadingService) {
     this.cargosModel = new CargosModel();
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
@@ -79,10 +77,10 @@ export class CargosComponent implements OnInit {
     });
   }
   ObtenerCargos() {
-    this.loading = true;
+    this.loading.show();
     this.cargoService.getCargos().subscribe(
       (result : any) => {
-        this.loading = false;
+        this.loading.hide();
         this.dataCargosResult = result;
       },
       error => {
@@ -92,19 +90,19 @@ export class CargosComponent implements OnInit {
       });
   }
   GuardarCargos() {
-    this.loading = true;
+    this.loading.show();
     if (this.cargosFrom.value.idEstado === '0') {
       this.notif.onWarning('Advertencia', 'Debe seleccionar un estado.');
     } else {
       this.GuardarLog(this.cargosFrom.value, 96, 0, 0,3); //GUARDAR
       this.cargoService.setCargos(this.cargosFrom.value).subscribe(() => {
-          this.loading = false;
+          this.loading.hide();
           this.resetForm();
           this.notif.onSuccess('Exitoso', 'El cargo se guardó correctamente.');
           this.ObtenerCargos();
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           this.notif.onDanger('Error', errorMessage);
           console.log(errorMessage);
@@ -112,13 +110,13 @@ export class CargosComponent implements OnInit {
     }
   }
   ActualizarCargos() {
-    this.loading = true;
+    this.loading.show();
     if (this.cargosFrom.value.idEstado === '0') {
       this.notif.onWarning('Advertencia', 'Debe seleccionar un estado.');
     } else {
       this.GuardarLog(this.cargosFrom.value, 97, 0, 0,3); // ACTUALIZAR
       this.cargoService.updateCargos(this.cargosFrom.value).subscribe((result : any) => {
-          this.loading = false;
+          this.loading.hide();
           if (result) {
             this.resetForm();
             this.isdisabledUpdate = true;
@@ -129,7 +127,7 @@ export class CargosComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           this.notif.onDanger('Error', errorMessage);
           console.log(errorMessage);
@@ -148,10 +146,10 @@ export class CargosComponent implements OnInit {
     }
   }
   GuardarLog(formulario : any, operacion : number, cuenta : number, tercero : number, modulo : number) {
-    this.loading = true;
+    this.loading.show();
     this.generalesService.Guardarlog(formulario, operacion, cuenta, tercero, modulo).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         console.log(result);
       });
   }

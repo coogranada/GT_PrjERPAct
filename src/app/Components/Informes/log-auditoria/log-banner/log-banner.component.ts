@@ -1,12 +1,12 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { NgxLoadingComponent } from 'ngx-loading';
 import { Campo, Filtro } from '../../../../Models/Informes/informe-clientes/informe-clientes.model';
 import { InformeClientesService } from '../../../../Services/Informes/informe-clientes.service';
 import { InformeLogService } from '../../../../Services/Informes/informe-log.service';
 import { ConfiguracionNotificacion } from '../../../../../environments/config.noticaciones';
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import moment from 'moment';
+import { LoadingService } from '../../../../Services/shared/loading.service';
 
 @Component({
   selector: 'app-log-banner',
@@ -38,8 +38,6 @@ export class LogBannerComponent implements OnInit {
   dateBegin: string = "";
   dateEnd: string = "";
   strInput: string = "";
-  loading = false;
-  ngxLoadingComponent!: NgxLoadingComponent;
   checkAll: boolean = false;
   primaryColour = 'rgb(13,165,80)';
   secondaryColour = 'rgb(13,165,80,0.7)';
@@ -51,7 +49,7 @@ export class LogBannerComponent implements OnInit {
   validBlur: boolean = false;
   @ViewChild('ShowModalListLogs', { static: true }) private ShowModalListLogs!: ElementRef;
   constructor(private serviceLogs: InformeLogService, private notif: ToastrService,
-    private informeClientesService: InformeClientesService) { }
+    private informeClientesService: InformeClientesService, private loading: LoadingService) { }
 
   
   ngOnInit() {
@@ -74,18 +72,18 @@ export class LogBannerComponent implements OnInit {
     this.serviceLogs.GetInformeLogs(payload).subscribe(x => { 
       this.InformesLog = x;
       this.DeleteDate(); 
-      this.loading = false;
+      this.loading.hide();
       this.ShowModalListLogs.nativeElement.click();
     }, err => {
       this.DeleteDate(); 
-      this.loading = false;
+      this.loading.hide();
       const errorMessage = <any>err;
       this.notif.error("Error al generar el informe", errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
       console.log(err)
     })
   }
   validar(TituloGenerico : string) {
-    this.loading = true;
+    this.loading.show();
     let temp: any = null;
      this.informeClientesService.ValidatUsuario(this.strInput).subscribe(x => {
       temp = x;
@@ -100,9 +98,9 @@ export class LogBannerComponent implements OnInit {
          this.strInput = "";
          this.btnMore = false;
        }
-       this.loading = false;
+       this.loading.hide();
      }, err => {
-       this.loading = false;
+       this.loading.hide();
        const errorMessage = <any>err;
        this.notif.error("Error al consultar", errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
        console.log(err)
@@ -220,7 +218,7 @@ export class LogBannerComponent implements OnInit {
       this.filtroSelect = -3;
       this.MostrarPanel();
     }  
-    this.loading = true;
+    this.loading.show();
     let payload : any = {
       Filtros: this.filtrosAgregado,
       TipoInforme: 9,
@@ -228,11 +226,11 @@ export class LogBannerComponent implements OnInit {
     }
     this.serviceLogs.GetCantidadRegistros(payload).subscribe(x => {
        this.DeleteDate(); 
-       this.loading = false;
+       this.loading.hide();
        this.ModalCantidadRegistros(x,isDowload);
     }, err => {
        this.DeleteDate(); 
-       this.loading = false;
+       this.loading.hide();
        const errorMessage = <any>err;
        this.notif.error("Error al consultar", errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
        console.log(err)
@@ -256,7 +254,7 @@ export class LogBannerComponent implements OnInit {
       confirmButtonText: idDowload == true ? "Descargar" : "Ver Lista"
     }).then((result) => {
       if (result.value) {
-        this.loading = true;
+        this.loading.show();
         setTimeout(() => {
           if (idDowload)
             this.DescargarInforme();
@@ -278,11 +276,11 @@ export class LogBannerComponent implements OnInit {
       TipoInforme: 9,
       Accion: 2
     }
-      this.loading = true;
+      this.loading.show();
     this.serviceLogs.GenerateInformesJuridicos(payload).subscribe(x =>
     {
       this.DeleteDate(); 
-      this.loading = false;
+      this.loading.hide();
       var baseg4 = x;
       const linkSource = `data:application/xlsx;base64,${baseg4}`;
       const downloadLink = document.createElement("a");
@@ -293,7 +291,7 @@ export class LogBannerComponent implements OnInit {
     },
     err => {
       this.DeleteDate(); 
-      this.loading = false;
+      this.loading.hide();
       const errorMessage = <any>err;
       this.notif.error("Error al generar el informe", errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
       console.log(err)

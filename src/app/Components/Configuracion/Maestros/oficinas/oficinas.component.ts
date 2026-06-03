@@ -3,13 +3,13 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { OficinasService } from '../../../../Services/Maestros/oficinas.service';
 import { GeneralesService } from '../../../../../app/Services/Productos/generales.service';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { ModuleValidationService } from '../../../../../app/Services/Enviroment/moduleValidation.service';
 import { fromEvent } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { LoginService } from '../../../../../app/Services/Login/login.service';
 import { AlertService } from '../../../../Services/Alert/alert.service';
+import { LoadingService } from '../../../../Services/shared/loading.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -29,10 +29,6 @@ export class OficinasComponent implements OnInit {
   { value: '3', descripcion: 'Activo' },
   { value: '4', descripcion: 'Inactivo' }];
   public oficinasFrom!: FormGroup;
-
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
-  public loading : boolean = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
   private CodModulo = 4;
@@ -44,7 +40,8 @@ export class OficinasComponent implements OnInit {
 
   constructor(private oficinasService: OficinasService, private notif: AlertService,
     private generalesService: GeneralesService, private moduleValidationService: ModuleValidationService,
-    private el: ElementRef, private loginService: LoginService, private router: Router) {
+    private el: ElementRef, private loginService: LoginService, private router: Router,
+    private loading: LoadingService) {
     this.oficinasModel = new OficinasModel();
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
@@ -71,26 +68,26 @@ export class OficinasComponent implements OnInit {
     this.IrArriba();
   }
   ObtenerOficinas() {
-    this.loading = true;
+    this.loading.show();
     this.oficinasService.getOficinas().subscribe((result : any) => {
-        this.loading = false;
+        this.loading.hide();
         this.dataOficinaResult = result;
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notif.onDanger('Error', errorMessage);
         console.log(errorMessage);
       });
   }
   GuardarOficinas() {
-    this.loading = true;
+    this.loading.show();
     if (this.oficinasFrom.value.IdEstado === '0') {
       this.notif.onWarning('Advertencia', 'Debe seleccionar un estado valido para realizar el registro',);
     } else {
       this.GuardarLog(this.oficinasFrom.value, 96, 0, 0,4); // GUARDAR
       this.oficinasService.setOficinas(this.oficinasFrom.value).subscribe((result : any) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(result);
           if (result) {
             this.resetForm();
@@ -101,7 +98,7 @@ export class OficinasComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           this.notif.onDanger('Error', errorMessage);
           console.log(errorMessage);
@@ -109,14 +106,14 @@ export class OficinasComponent implements OnInit {
     }
   }
   ActualizarOficinas() {
-    this.loading = true;
+    this.loading.show();
     if (this.oficinasFrom.value.idEstado === '0') {
       this.notif.onWarning('Advertencia', 'Debe seleccionar un estado valido para realizar el registro');
     } else {
       console.log(this.oficinasFrom);
       this.GuardarLog(this.oficinasFrom.value, 97, 0, 0,4); // ACTUALIZAR
       this.oficinasService.updateOficinas(this.oficinasFrom.value).subscribe((result : any) => {
-          this.loading = false;
+          this.loading.hide();
           console.log(result);
           if (result) {
             this.isdisabledUpdate = true;
@@ -128,7 +125,7 @@ export class OficinasComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           this.notif.onDanger('Error', errorMessage);
           console.log(errorMessage);
@@ -146,10 +143,10 @@ export class OficinasComponent implements OnInit {
   }
 
   GuardarLog(form : any, operacion : number, cuenta : number, tercero : number, modulo : number) {
-    this.loading = true;
+    this.loading.show();
     this.generalesService.Guardarlog(form, operacion, cuenta, tercero, modulo).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         console.log(result);
       });
   }

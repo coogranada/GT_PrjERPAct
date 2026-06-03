@@ -99,8 +99,6 @@
                     <input type="submit" id="btnEnviar" class="btn Gt-btn-verde" value="Enviar" [disabled]="!SolicitudGestionForm.valid" (click)="Enviar()" />
                     <button type="button" class="btn Gt-btn-morado doNotPrint" data-dismiss="modal" #CerrarSolicitud (click)="cerrarModal()">Cerrar</button>
                 </div>
-                <ngx-loading [show]="loading" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
-                </ngx-loading>
             </form>
         </div>
     </div>

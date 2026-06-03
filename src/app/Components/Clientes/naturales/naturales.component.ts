@@ -18,7 +18,6 @@ import moment from 'moment';
 import { MotivoRetiroModel, EnvioMotivoModel } from '../../../Models/Clientes/motivoRetiro.model';
 import { SolicitudReingresoModel } from '../../../Models/Clientes/solicitudReingreso.model';
 import { GeneralesService } from '../../../Services/Productos/generales.service';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { CambioRelacionModel, CambioTipoDocumentoModel, CambioNombresApellidosModel } from '../../../Models/Clientes/cambioRelacion.model';
 import { ModuleValidationService } from '../../../Services/Enviroment/moduleValidation.service';
 import { RequiredData } from '../../../Models/Generales/RequiredData.model';
@@ -36,6 +35,7 @@ import { AlertService } from '../../../Services/Alert/alert.service';
 import { NaturalesAllModel, NaturalesServicio } from '../../../Models/Clientes/naturalesAll.model';
 import { MiListaProductosService } from '../../../Services/Informes/mi-lista-productos.service';
 import { Estados } from '../../../../environments/Estados';
+import { LoadingService } from '../../../Services/shared/loading.service';
 
 declare var $: any;
 const PrimaryWhite = 'rgb(13,165,80)';
@@ -65,7 +65,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   myModel = true;
   @ViewChild('paisSelect') paisSelect: any;
   
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
   @ViewChild('contactoPpal', { static: true }) private contactoPpal!: ElementRef;
   @ViewChild('tratamientodatos', { static: true }) private tratamientoDatos!: ElementRef;
   @ViewChild('CCdocumento', { static: true }) private CCdocumento!: ElementRef;
@@ -234,8 +233,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   public cambioTipoDocumentoModel = new CambioTipoDocumentoModel();
   public cambioNombresApellidosModel = new CambioNombresApellidosModel();
   public cambioCivil = false;
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = PrimaryWhite;
   public secondaryColour = SecondaryGrey;
   public cambioEmpleo = false;
@@ -808,6 +805,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     { id: 5, name: 'Adjuntar representante legal' },
     { id: 6, name: 'Adjuntar tutor' },
     { id: 7, name: 'Tercero autorizado' },
+    { id: 8, name: 'Tercero general' },
   ]
   procesosWorkManager: any[] = [];
   public tiposDocumento = [
@@ -838,7 +836,8 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     private router: Router,
     private _compiler: Compiler,
     private oficinasService: OficinasService,
-    private MiListaProductosService: MiListaProductosService
+    private MiListaProductosService: MiListaProductosService,
+    private loading: LoadingService
    ) {
     // OperacionesPermitidasNaturales
     let data : string | null = localStorage.getItem('Data');
@@ -852,7 +851,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       this.operacionesService.OperacionesPermitidasNaturales(arrayExample[0]).subscribe(
         result => {
           this.dataOperaciones = result;
-          this.loading = false;
+          this.loading.hide();
         },
         error => {
           this.notif.onDanger('Error', error);
@@ -910,7 +909,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     let data : string | null = localStorage.getItem('Data');
     this.DatosUsuario = JSON.parse(window.atob(data == null ? "" : data));
     // console.log(this.appComponent);
-    this.loading = true;
+    this.loading.show();
     // this.moduleValidationService.ValidatePermissionsModule(this.CodModulo);
 
     $('html, body').animate({ scrollTop: 0 }, 'slow');
@@ -977,7 +976,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.laboralForm.get('NumPersonasCargo')?.setValue(0);
     this.patrimonioForm.get('tlPasivo')?.setValue(0);
     //#endregion
-    // this.loading = false;
+    // this.loading.hide();
     this.selectAutomaticoDropEntrevista();
 
     this.loginService.GetSesionXUsuario(this.DatosUsuario.IdUsuario).subscribe(
@@ -7391,7 +7390,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.dataCiudad = [];
   }
   validarTipoReferencia() {
-    this.loading = true;
+    this.loading.show();
     const referen = this.referenciaForm.get('idTipoReferencia')?.value;
     this.referenciaForm.controls['TelefonoEmpresaPersonal'].setValidators(null);
     this.referenciaForm.controls['TelefonoEmpresaPersonal'].setErrors(null);
@@ -7426,7 +7425,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         this.referenciaForm.get('celular')?.reset();
         this.referenciaForm.get('IdCiudadR')?.reset();
         // this.NombresCapitaliceRefe();
-        this.loading = false;
+        this.loading.hide();
       } else if (referen.Nombre === 'Comercial') {
         this.addVaidatorsComercial();
         this.removerValidatorFamiliarPersonal();
@@ -7438,7 +7437,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         this.referenciaForm.get('TelefonoEmpresas')?.reset();
         this.referenciaForm.get('CiudadComercial')?.reset();
         this.referenciaForm.get('ServicioProductoComercial')?.reset();
-        this.loading = false;
+        this.loading.hide();
       } else if (referen.Nombre === 'Financiera') {
         this.addValidatorsFinanciera();
         this.removerValidatorFamiliarPersonal();
@@ -7451,14 +7450,14 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         this.referenciaForm.get('IdOficinaR')?.reset();
         this.referenciaForm.get('ServicioProductoFinanciera')?.reset();
         this.referenciaForm.get('NumeroProductoFinanciera')?.reset();
-        this.loading = false;
+        this.loading.hide();
       } else {
         this.removerValidatorFamiliarPersonal();
         this.referenciaForm.reset();
         this.refFamiliar = true;
         this.refFinanciera = false;
         this.refComercial = false;
-        this.loading = false;
+        this.loading.hide();
       }
     } else {
       this.referenciaForm.get('idTipoReferencia')?.reset();
@@ -7466,7 +7465,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       this.removerValidatorFamiliarPersonal();
       this.removerValidatorComercial();
       this.removerValidatorFinanciera();
-      this.loading = false;
+      this.loading.hide();
     }
   }
   removerValidatorFamiliarPersonal() {
@@ -10817,7 +10816,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   }
 
   async GenerarPDFHojaVida() {
-    this.loading = true;
+    this.loading.show();
     await this.openChildServicio.abrirSolicitud(this.basicosFrom.get('numeroDocumento')?.value);
     const idServicioSeleccionado = this.serviciosFrom.get('proceso')?.value;
     this.recievedNatural.ServicioSolicitado = this.servicios.find(item => item.id == idServicioSeleccionado)?.name || '';
@@ -10852,7 +10851,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     
     this.clientesService.GenerarPDFHojaVida({...this.recievedNatural, ...naturalesServicio }).subscribe(
       async (blob) => {
-        this.loading = false;
+        this.loading.hide();
         this.blobUrl = window.URL.createObjectURL(blob);       
         this.hojaVidaAfiliado.nativeElement.setAttribute('src', this.blobUrl);
         this.openModalHojaVida.nativeElement.click();
@@ -13130,10 +13129,10 @@ enviarWorkManager() {
     this.contactoModelList = [];
     this.JuridicoEdit = this.idTerceroConsulta;
     if (this.itemsContacto.length <= 0) {
-      this.loading=false;
+      this.loading.hide(); 
       this.notif.onWarning('Advertencia', 'No hay registros relacionados para actualizar.');
     } else {
-      this.loading=true;
+      this.loading.show();
       this.itemsContacto.forEach(element => {
   
         if (element.TipoContacto.Id === 1 || element.TipoContacto.Id === 2 ) {
@@ -13209,7 +13208,7 @@ enviarWorkManager() {
           result => {
             if (result) {
               this.dataCorrespondencia = [];
-                this.loading=false;
+                this.loading.hide(); 
                 const tercero = localStorage.getItem('TerceroNatura');
                 this.notif.onSuccess('Exitoso', 'El registro se actualizó correctamente.');
                 this.AsesorModifica(tercero == null ? "" : tercero);
@@ -13222,18 +13221,18 @@ enviarWorkManager() {
             }
           },
           error => {
-            this.loading=false;
+            this.loading.hide(); 
             console.error('Error al realizar la actualizacion - juridicos: ' + error);
             this.notif.onDanger('Error', 'No se pudo realizar la actualizacion - Error: ' + error);
           });
       } else {
         if (tieneDir === null || tieneDir === undefined) {
-          this.loading=false;
+          this.loading.hide(); 
           this.notif.onWarning('Advertencia', 'Debe ingresar una Dirección principal');
           this.EnableUpdateContacto = false;
         }
         if (tieneOtro === null || tieneOtro === undefined) {
-          this.loading=false;
+          this.loading.hide(); 
           this.notif.onWarning('Advertencia', 'Debe ingresar Celular principal ');
           this.EnableUpdateContacto = false;
         }
@@ -21161,7 +21160,7 @@ enviarWorkManager() {
 
     } else {
 
-      this.loading = true;
+      this.loading.show();
 
       if (this.allItemsFormSaves.asociadosNaturalesDto != null &&
         this.allItemsFormSaves.financieroDto != null &&
@@ -21243,7 +21242,7 @@ enviarWorkManager() {
               } else {
                 this.AbrirCorrespondencia.nativeElement.click();
               }
-              this.loading = false;
+              this.loading.hide();
               this.BlockVinculacion = true;
               this.CargarServicios = 1;
               this.serviciosFrom.reset();
@@ -21315,7 +21314,7 @@ enviarWorkManager() {
               this.devolverTab(1);
               this.BloquearFormBuscar();
               this.disbaleBusqueda = true;
-              this.loading = false;
+              this.loading.hide();
               this.infoTutor = [];
               this.allItemsFormRefencia = [];
               this.allItemsFormSave = [];
@@ -21332,7 +21331,7 @@ enviarWorkManager() {
               this.bloqCiudadRef= false;
               this.buscarAllNameCedula(resulNatural.Result.tercerosDto.NumeroDocumento);
             } else {
-              this.loading = false;
+              this.loading.hide();
               this.notif.onWarning('Advertencia',
                 'El asociado ya fue ingresado.',
                 );
@@ -21340,12 +21339,12 @@ enviarWorkManager() {
             }
           },
           error => {
-            this.loading = false;
+            this.loading.hide();
             console.error('Guardar natural - ' + error);
           }
         );
       } else {
-        this.loading = false;
+        this.loading.hide();
         this.notif.onWarning('Advertencia',
           'Debe llenar los campos obligatorios para completar el formulario.',
           );
@@ -21927,7 +21926,7 @@ enviarWorkManager() {
 
   async BuscarNaturalesAll(documento : string) {
     if (documento !== null && documento !== undefined && documento !== '') {
-      this.loading = true;
+      this.loading.show();
       this.allItemsForm = [];
       this.datatratamientoLog = [];
       this.dataPepsLog = [];
@@ -21959,7 +21958,7 @@ enviarWorkManager() {
            this.basicosFrom.get('FechaAportes')?.setValue(result.tercerosDto.FechaAportes);
             this.basicosFrom.get('IdTerceroPrincipal')?.setValue(result.asociadosNaturalesDto.IdTercero);
             this.btnBuscar = true;
-            this.loading = false;
+            this.loading.hide();
             this.disbaleBusqueda = true;
             this.VolverArriba();
             this.dataCiudad = this.dataCiudadesAll;
@@ -23516,7 +23515,7 @@ enviarWorkManager() {
             this.ResetAllFormBusqueda();
             this.ResetItemForm();
             this.notif.onWarning('Advertencia', 'No se encontró registro.');
-            this.loading = false;
+            this.loading.hide();
             this.mostrarOficina = false;
             this.basicosFrom.get('operacion')?.setValue(2);
             this.basicosFrom.get('NombreBusqueda')?.reset();
@@ -23525,7 +23524,7 @@ enviarWorkManager() {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           this.notif.onWarning('Error', error);
           console.error('BuscarNaturalesAll - ' + error);
         });
@@ -23553,20 +23552,20 @@ enviarWorkManager() {
   //#region Buscar por nombre
 
   BuscarNaturalAllName() {
-    this.loading = true;
+    this.loading.show();
     const strNombreBusqueda = this.basicosFrom.get('NombreBusqueda')?.value;
     if (strNombreBusqueda === '' || strNombreBusqueda === null || strNombreBusqueda === undefined) {
       this.disableForm = true;
-      this.loading = false;
+      this.loading.hide();
     } else {
       this.clientesService.BuscarNaturalesAllNombre(strNombreBusqueda).subscribe(
         result => {
           if (result.length !== 0) {
-          this.loading = false;
+          this.loading.hide();
           this.dataTercero = result;
           this.BuscarAsociados.nativeElement.click();
           } else {
-            this.loading = false;
+            this.loading.hide();
             this.notif.onWarning('Advertencia', 'No se encontró registro.');
             this.basicosFrom.get('NombreBusqueda')?.reset();
             this.basicosFrom.get('DocumentoBusqueda')?.reset();
@@ -23590,11 +23589,11 @@ enviarWorkManager() {
 
   buscarAllNaturalLaboral(objeto : any, definir : any) {
     const arrayResult = [];
-    this.loading = true;
+    this.loading.show();
     this.bloquearClick = true;
     this.clientesService.BuscarNaturalesALLLaboral(objeto, definir).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         // arrayResult.push(result);
         this.dataTercero = result;
         this.BuscarAsociadosLaboral.nativeElement.click();
@@ -23611,11 +23610,11 @@ enviarWorkManager() {
 
   // Buscar por nombres  y cedula para laboral
   buscarAllNaturalLaboralEdit(objeto : any, definir : any) {
-    this.loading = true;
+    this.loading.show();
     this.bloquearClick = true;
     this.clientesService.BuscarNaturalesALLLaboral(objeto, definir).subscribe(
       result => {
-        this.loading = false;
+        this.loading.hide();
         this.dataTercero = result;
       },
       error => {
@@ -23763,7 +23762,7 @@ enviarWorkManager() {
   }
 
   cambiarRelacion() {
-    this.loading = true;
+    this.loading.show();
     this.blockBtnBasico = true;
     let data : string | null = localStorage.getItem('Data');
     const resultPerfil = JSON.parse(window.atob(data == null ? "": data));
@@ -23773,7 +23772,7 @@ enviarWorkManager() {
         this.clientesService.TieneCuentas(Number(localStorage.getItem('TerceroNatura'))).subscribe(
           resultCuenta => {
             if (!resultCuenta) {
-              this.loading = false;
+              this.loading.hide();
               this.notif.onWarning('Advertencia', 'No se puede realizar el cambio de relación, el asociado tiene cuentas activas.');
               this.siguienteOculto = true;
               this.btnOcultoBuscar = true;
@@ -23797,7 +23796,7 @@ enviarWorkManager() {
               this.GuardarLog(this.cambioRelacionModel, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
               this.clientesService.CambiarRelacion(this.cambioRelacionModel).subscribe(
                 result => {
-                  this.loading = false;
+                  this.loading.hide();
                   this.basicosFrom.get('operacion')?.reset();
                   this.VolverArriba();
                   this.blockBtnBasico = false;
@@ -23844,7 +23843,7 @@ enviarWorkManager() {
               this.disableFromTipoDocumento = true;
               this.disableFromTipoCliente = true;
               this.blockBtnBasico = false;
-              this.loading = false;
+              this.loading.hide();
             } else {
               this.cambioRelacionModel.idRelacion = +this.basicosFrom.get('tipoCliente')?.value;
               this.cambioRelacionModel.idTercero = Number(localStorage.getItem('TerceroNatura'));
@@ -23859,7 +23858,7 @@ enviarWorkManager() {
               this.GuardarLog(this.cambioRelacionModel, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
               this.clientesService.CambiarRelacion(this.cambioRelacionModel).subscribe(
                 result => {
-                  this.loading = false;
+                  this.loading.hide();
                   this.basicosFrom.get('operacion')?.reset();
                   this.VolverArriba();
                   this.blockBtnBasico = false;
@@ -23904,7 +23903,7 @@ enviarWorkManager() {
               'El usuario debe ser asesor.');
             this.blockBtnBasico = null;
           }
-          this.loading = false;
+          this.loading.hide();
         } else {
           // proceso normal
           this.cambioRelacionModel.idRelacion = +this.basicosFrom.get('tipoCliente')?.value;
@@ -23920,7 +23919,7 @@ enviarWorkManager() {
           this.GuardarLog(this.cambioRelacionModel, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
           this.clientesService.CambiarRelacion(this.cambioRelacionModel).subscribe(
             result => {
-              this.loading = false;
+              this.loading.hide();
               this.basicosFrom.get('operacion')?.reset();
               this.VolverArriba();
               this.blockBtnBasico = false;
@@ -23962,12 +23961,12 @@ enviarWorkManager() {
             this.notif.onWarning('Advertencia', 'El usuario debe ser asesor.',
               );
           }  
-          this.loading = false;
+          this.loading.hide();
         } else {
           // Proceso normal
           const tipoDoc = this.basicosFrom.value.tipoDocumento;
           if (tipoDoc === null) {
-            this.loading = false;
+            this.loading.hide();
             this.VolverArriba();
             this.notif.onWarning('Advertencia', 'Debe seleccionar un tipo de documento válido.',
               );
@@ -23977,7 +23976,7 @@ enviarWorkManager() {
             this.disableFromTipoDocumento = true;
             this.disableFromTipoCliente = true;
             this.blockBtnBasico = false;
-            this.loading = false;
+            this.loading.hide();
           } else {
             this.cambioRelacionModel.idRelacion = +this.basicosFrom.get('tipoCliente')?.value;
             this.cambioRelacionModel.idTercero = Number(localStorage.getItem('TerceroNatura'));
@@ -23990,17 +23989,17 @@ enviarWorkManager() {
             }
             if (this.cambioRelacionModel.idTutor === null && this.relacionAnterior !== 10) {
               this.VolverArriba();
-              this.loading = false;
+              this.loading.hide();
               this.notif.onWarning('Advertencia', 'Debe ingresar la información del tutor.',
                 );
               this.blockBtnBasico = false;
-              this.loading = false;
+              this.loading.hide();
             } else {
               this.cambioRelacionModel.idTipoDocumento = +this.basicosFrom.get('tipoDocumento')?.value;
               this.GuardarLog(this.cambioRelacionModel, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
               this.clientesService.CambiarRelacion(this.cambioRelacionModel).subscribe(
                 result => {
-                  this.loading = false;
+                  this.loading.hide();
                   this.basicosFrom.get('operacion')?.reset();
                   this.VolverArriba();
                   this.blockBtnBasico = false;
@@ -24040,7 +24039,7 @@ enviarWorkManager() {
       this.notif.onWarning('Advertencia', 'Debe cambiar el tipo de relación.',
         );
       this.blockBtnBasico = false;
-      this.loading = false;
+      this.loading.hide();
     }
   }
 
@@ -24097,7 +24096,7 @@ enviarWorkManager() {
   }
 
   cambiarNombresApellidos() {
-    this.loading = true;
+    this.loading.show();
     this.blockBtnBasico = true;
     let data : string | null = localStorage.getItem('Data');
     const resultPerfil = JSON.parse(window.atob(data == null ? "": data));
@@ -24105,7 +24104,7 @@ enviarWorkManager() {
       this.notif.onWarning('Advertencia', 'Debe ingresar primer apellido y primer nombre. ',
         );
       this.blockBtnBasico = false;
-       this.loading = false;
+       this.loading.hide();
     } else {
       if(this.ApeViejo !== this.basicosFrom.get('primerApellido')?.value || this.segApeViejo !== this.basicosFrom.get('segundoApellido')?.value
        || this.PriVNomViejo !== this.basicosFrom.get('primerNombre')?.value || this.SegNomViejo !== this.basicosFrom.get('segundoNombre')?.value ) {
@@ -24147,14 +24146,14 @@ enviarWorkManager() {
             this.ProSegundoApellido = '0';
             this.ProDescripcionOpe = ' ';
             this.OperacionMarcada = undefined;
-              this.loading = false;
+              this.loading.hide();
               this.BuscarNaturalesAll(this.DocumentoSolicitud);
           },
           error => {
             this.blockBtnBasico = false;
           });
       } else {
-        this.loading = false;
+        this.loading.hide();
         this.blockBtnBasico = null;
         this.notif.onWarning('Advertencia', 'Debe realizar cambios en los nombres y apellidos.');
         this.VolverArriba();

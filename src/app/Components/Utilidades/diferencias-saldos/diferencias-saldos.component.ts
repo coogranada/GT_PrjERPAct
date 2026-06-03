@@ -5,11 +5,11 @@ import { ConfiguracionNotificacion } from '../../../../environments/config.notic
 import { DiferenciasSaldosService } from '../../../Services/Utilidades/diferencias-saldos.service';
 import swal from 'sweetalert2';
 import { Router} from '@angular/router';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { ModuleValidationService } from '../../../Services/Enviroment/moduleValidation.service';
 import { fromEvent } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LoginService } from '../../../Services/Login/login.service';
+import { LoadingService } from '../../../Services/shared/loading.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 @Component({
@@ -29,16 +29,14 @@ export class DiferenciasSaldosComponent implements OnInit {
   public DatosUsuario : any;
   public File : any;
   public btnBotonesIniciales : any;
-
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
-  public loading = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
   private CodModulo = 41;
   constructor(private diferenciasSaldosService: DiferenciasSaldosService,
     private notificacion: ToastrService, private router: Router,
-    private moduleValidationService: ModuleValidationService, private el: ElementRef, private loginService: LoginService) {
+    private moduleValidationService: ModuleValidationService, 
+    private el: ElementRef, private loginService: LoginService,
+    private loading: LoadingService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -72,25 +70,25 @@ export class DiferenciasSaldosComponent implements OnInit {
   }
 
   OnChange(event : any) {
-    this.loading = true;
+    this.loading.show();
     const _nombreArchivo = event.target.files;
     if (event.target.files && event.target.files.length > 0 && _nombreArchivo[0].name.includes('.AMO')) {
       const archivo = new FileReader();
       archivo.readAsDataURL(event.target.files[0]);
       setTimeout(() => {
         this.btnBotonesIniciales = true;
-        this.loading = false;
+        this.loading.hide();
         this.diferenciasSaldosFrom.get('Archivo')?.setValue(archivo.result);
         this.diferenciasSaldosFrom.get('NombreArchivo')?.setValue(_nombreArchivo[0].name);
       }, 1000);
     } else {
-      this.loading = false;
+      this.loading.hide();
       this.notificacion.warning('Advertencia', 'Debe seleccionar un archivo con extensión .AMO', ConfiguracionNotificacion.configRightTop);
     }
   }
 
   ConsultarDiferencias() {
-    this.loading = true;
+    this.loading.show();
     this.btnBotonesIniciales = false;
     this.diferenciasSaldosFrom.get('Usuario')?.setValue(this.DatosUsuario.Usuario);
     this.diferenciasSaldosService.ConsultarDiferencias(this.diferenciasSaldosFrom.value).subscribe(
@@ -122,12 +120,12 @@ export class DiferenciasSaldosComponent implements OnInit {
             this.diferenciasSaldosFrom.get('NumDiferencias')?.setValue(numeroDiferencias);
             this.diferenciasSaldosFrom.get('TotSaldCoogranada')?.setValue(totalSaldoCoogranada);
             this.bPanelDatos = true;
-            this.loading = false;
+            this.loading.hide();
           }
         }
       },
       error => {
-        this.loading = false;
+        this.loading.hide();
         const errorJson = JSON.parse(error._body);
         this.notificacion.error('Error', errorJson, ConfiguracionNotificacion.configRightTop);
         console.log(error);
@@ -156,7 +154,7 @@ export class DiferenciasSaldosComponent implements OnInit {
       allowEscapeKey: false
     }).then((results) => {
       if (results.value) {
-        this.loading = true;
+        this.loading.show();
         let numeroDiferencias = this.diferenciasSaldosFrom.get('NumDiferencias')?.value;
         let totalSaldoCoogranada = this.diferenciasSaldosFrom.get('TotSaldCoogranada')?.value;
         if (this.ListadoDiferencias[index].SaldoCoogranada !== '') {
@@ -170,7 +168,7 @@ export class DiferenciasSaldosComponent implements OnInit {
           this.ListadoDiferencias = null;
           this.bPanelDatos = false;
         }
-        this.loading = false;
+        this.loading.hide();
         swal.fire({
           title: 'Registro eliminado',
           text: '',
@@ -184,11 +182,11 @@ export class DiferenciasSaldosComponent implements OnInit {
   }
 
   CrearNotificaciones() {
-    this.loading = true;
+    this.loading.show();
     this.btnBotonesIniciales = false;
     this.diferenciasSaldosService.CrearNotificaciones(this.diferenciasSaldosFrom.get('Notificaciones')?.value).subscribe(
         result => {
-          this.loading = false;
+          this.loading.hide();
           this.btnBotonesIniciales = true;
           if (result) {
             this.Limpiar();
@@ -196,7 +194,7 @@ export class DiferenciasSaldosComponent implements OnInit {
           }
         },
         error => {
-          this.loading = false;
+          this.loading.hide();
           const errorJson = JSON.parse(error._body);
           this.notificacion.error('Error', errorJson, ConfiguracionNotificacion.configRightTop);
           console.log(error);

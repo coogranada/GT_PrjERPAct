@@ -1,11 +1,11 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { NgxLoadingComponent } from 'ngx-loading';
 import { Campo, Filtro } from '../../../../Models/Informes/informe-clientes/informe-clientes.model';
 import { InformeLogService } from '../../../../Services/Informes/informe-log.service';
 import { ConfiguracionNotificacion } from '../../../../../environments/config.noticaciones';
 import Swal from "sweetalert2";
 import moment from 'moment';
+import { LoadingService } from '../../../../Services/shared/loading.service';
 
 @Component({
   selector: 'app-log-gestion-clientes',
@@ -40,9 +40,7 @@ export class LogGestionClientesComponent implements OnInit {
   dateBegin: string = "";
   dateEnd: string = "";
   usuario: string = "";
-  loading = false;
   IsShow: boolean = false;
-  ngxLoadingComponent!: NgxLoadingComponent;
   IdOficina: number = 0;
   NombreOficina: string = "";
   checkAll: boolean = false;
@@ -60,7 +58,7 @@ export class LogGestionClientesComponent implements OnInit {
   isShowFechaDesmarcacion: boolean = false;
   isShowFechaMarcacion: boolean = false;
   @ViewChild('ShowModalListLogs', { static: true }) private ShowModalListLogs!: ElementRef;
-  constructor(private serviceLogs: InformeLogService, private notif: ToastrService) { }
+  constructor(private serviceLogs: InformeLogService, private notif: ToastrService, private loading: LoadingService) { }
     
 ngOnInit() {
      this.InitVariables();
@@ -96,11 +94,11 @@ ngOnInit() {
         if (x.FechaDesMarca != null)
           this.isShowFechaDesmarcacion = true;
       })
-      this.loading = false;
+      this.loading.hide();
       this.ShowModalListLogs.nativeElement.click();
     }, err => {
       this.filtrosAgregado = [];
-      this.loading = false;
+      this.loading.hide();
       const errorMessage = <any>err;
       this.notif.error("Error al generar el informe", errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
       console.log(err)
@@ -194,19 +192,19 @@ ngOnInit() {
   GetCantInforme(isDowload: boolean) {
     this.InformesLog = [];
     this.setFiltroFecha();
-    this.loading = true;
+    this.loading.show();
     let payload : any = {
       Filtros: this.filtrosAgregado,
       TipoInforme: this.getTypeInforme(),
       Accion: 1
     }
     this.serviceLogs.GetCantidadRegistros(payload).subscribe(x => {
-      this.loading = false;
+      this.loading.hide();
       this.filtrosAgregado = [];
       this.ModalCantidadRegistros(x,isDowload);
     }, err => {
       this.filtrosAgregado = [];
-      this.loading = false;
+      this.loading.hide();
       const errorMessage = <any>err;
       this.notif.error("Error al consultar", errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
       console.log(err)
@@ -253,7 +251,7 @@ ngOnInit() {
     }).then((result) => {
       if (result.value) {
       
-        this.loading = true;
+        this.loading.show();
         setTimeout(() => {
           if (idDowload)
             this.DescargarInforme();
@@ -272,7 +270,7 @@ ngOnInit() {
       TipoInforme: this.getTypeInforme(),
       Accion: 2
     }
-    this.loading = true;
+    this.loading.show();
     let fileName: string = "";
     switch (this.Type)
     {
@@ -293,7 +291,7 @@ ngOnInit() {
             break;
     }
       this.serviceLogs.GenerateInformesJuridicos(payload).subscribe(x => {
-      this.loading = false;
+      this.loading.hide();
       this.filtrosAgregado = [];
       var baseg4 = x;
       const linkSource = `data:application/xlsx;base64,${baseg4}`;
@@ -304,7 +302,7 @@ ngOnInit() {
     },
     err => {
         this.filtrosAgregado = [];
-        this.loading = false;
+        this.loading.hide();
         const errorMessage = <any>err;
         this.notif.error("Error al generar el informe", errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
         console.log(err)

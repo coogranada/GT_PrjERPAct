@@ -102,7 +102,11 @@
                             <label class="textNegrilla">Asociado:</label>
                             <span class="grande">*</span>
                         </div>
-                        <div class="col-xs-4 col-md-3 col-lg-2">
+                         <div class="col-xs-4 col-md-3 col-lg-0-5">
+                            <input type="text" class="form-control"
+                                [value]="aportesFrom.get('TipoDocumento')?.value | tipoDocumento" disabled>                       
+                        </div>
+                        <div class="col-xs-4 col-md-3 col-lg-1-5">
                             <input type="text" class="form-control" id="selectAsociado" formControlName="NumeroDocumento" (blur)="BuscarAsociado()" [attr.disabled]="BloquearAsociado" (input)="LimpiarCampos('NumeroDocumento')" maxlength="15" />                           
                         </div>
                         <div class="col-xs-6 col-md-5 col-lg-3">
@@ -588,8 +592,6 @@
             <input type="button" style="visibility:hidden" data-toggle="tab" href="#tab3" #tab3/>
         </div>
     </form>
-    <ngx-loading [show]="loading" [config]="{primaryColour: primaryColour, secondaryColour: secondaryColour, tertiaryColour: primaryColour, backdropBorderRadius: '3px'}">
-    </ngx-loading>
 </form>
 <!-- <app-root (permisosEmit)="getPermisos($event)">
 </app-root> -->
