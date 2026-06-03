@@ -100,7 +100,7 @@ export class TransaccionesCajaService {
         );
     }
 
-     ObtenerCuentaTesoreria(IdOficina: number): Observable<any> {
+    ObtenerCuentaTesoreria(IdOficina: number): Observable<any> {
         this.url = `${this.environment.Url}/ObtenerCuentaTesoreria?IdOficina=` + IdOficina;
         return this._http.get<any>(this.url);
     }
@@ -119,7 +119,7 @@ export class TransaccionesCajaService {
             { params }
         );
     }
-    
+
     ObtenerOtrasTransacciones(IdPerfil: any): Observable<any> {
         this.url = `${this.environment.Url}/ObtenerOtrasTransacciones`;
         return this._http.post<any>(this.url, IdPerfil);
@@ -146,5 +146,36 @@ export class TransaccionesCajaService {
         this.url = `${this.environment.Url}/ObtenerValidadora?IdUsuario=` + IdUsuario;
         return this._http.get<any>(this.url);
     }
+
+    ObtenerListas(): Observable<any> {
+        this.url = `${this.environment.Url}/ObtenerListas`;
+        return this._http.get<any>(this.url);
+    }
+
+    ObtenerRemesas(): Observable<any> {
+        this.url = `${this.environment.Url}/ObtenerRemesas`;
+        return this._http.get<any>(this.url);
+    }
+
+    ObtenerConvenioRecaudo(IdConvenio: number, Nombre: string): Observable<any[]> {
+        const url = `${this.environment.Url}/ObtenerConvenioRecaudo`;
+
+        const params = new HttpParams()
+            .set('IdConvenio', IdConvenio)
+            .set('Nombre', Nombre);
+
+        return this._http.get<any[]>(url, { params });
+    }
+
+    ObtenerBancos(Codigo: number, Nombre: string): Observable<any[]> {
+        const url = `${this.environment.Url}/ObtenerBancos`;
+
+        const params = new HttpParams()
+            .set('Codigo', Codigo)
+            .set('Nombre', Nombre);
+
+        return this._http.get<any[]>(url, { params });
+    }
+
 
 }

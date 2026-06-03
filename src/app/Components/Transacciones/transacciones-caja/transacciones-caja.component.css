@@ -451,3 +451,28 @@ tr {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+.div-espacio1 {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+
+.contorno-rutas {
+    border: 1px solid #852662;
+    padding: 10px;
+    border-radius: 10px;
+    padding-top: 20px;
+    /* Espacio para que el texto no se superponga al borde */
+    position: relative;
+}
+
+.titulo {
+    position: absolute;
+    top: -10px;
+    left: 18px;
+    font-weight: bold;
+    font-size: 14px;
+    background-color: white;
+    padding: 0 5px;
+}

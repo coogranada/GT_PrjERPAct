@@ -66,8 +66,7 @@
                                                     formControlName="cuenta3" placeholder="0000000" appSoloNumero
                                                     #cuenta3 />
                                                 <input type="text" class="form-control cuenta-corta" maxlength="1"
-                                                    formControlName="cuenta4" placeholder="0" appSoloNumero
-                                                    #cuenta4 />
+                                                    formControlName="cuenta4" placeholder="0" appSoloNumero #cuenta4 />
 
                                                 <button type="button" class="btn Gt-btn-verde btn-icon btn-buscar"
                                                     (click)="buscarProductosCuentaTransa()">
@@ -266,9 +265,8 @@
     <div class="col-md-12">
         <div class="panel panel-white ">
             <div class="panel-heading" style="
-    border-bottom-width: 0px;
-    padding-bottom: 0px;
-">
+            border-bottom-width: 0px;
+            padding-bottom: 0px; padding-top: 10px">
                 <section class="caja-main">
 
                     <div class="row">
@@ -276,7 +274,7 @@
 
                         <div class="col-md-8 col-lg-8 col-sm-8 espacioCol1 pad0L pad5R">
                             <div class="panel panel-default" id="PanelTab">
-                                <div class="panel-body">
+                                <div class="panel-body pad0T">
                                     <div class="col-xs-12 col-md-12 col-lg-12">
                                         <div class="tabbable">
                                             <ul class="nav nav-tabs">
@@ -311,7 +309,7 @@
                                                 </li>
                                             </ul>
                                             <div class="tab-content">
-                                                <!-- Inicio tab1 -->
+                                                <!-- Inicio tab1 Tesorería-->
                                                 <div class="tab-pane" id="tab1">
 
                                                     <div class="row">
@@ -321,7 +319,8 @@
                                                                 <input type="text" class="form-control" placeholder=""
                                                                     [(ngModel)]="OtraTransaccionCodigo"
                                                                     (blur)="buscarCodigoOtraTransaccion()"
-                                                                    (input)="limpiarcamposOtraTransa('codigo')" appSoloNumero>
+                                                                    (input)="limpiarcamposOtraTransa('codigo')"
+                                                                    appSoloNumero maxlength="5">
                                                             </div>
                                                         </div>
                                                         <div class="col-lg-6 col-md-6 col-sm-6">
@@ -354,7 +353,8 @@
                                                                 <input type="text" class="form-control" placeholder=""
                                                                     [(ngModel)]="OtraTransaccionDocumento"
                                                                     (blur)="buscarDocumentoOtraTransaccion()"
-                                                                    (input)="limpiarcamposOtraTransaDoc('documento')">
+                                                                    (input)="limpiarcamposOtraTransaDoc('documento')"
+                                                                    maxlength="20">
                                                             </div>
                                                         </div>
 
@@ -376,6 +376,139 @@
                                                                     <i class="glyphicon glyphicon-search"></i>
                                                                 </button>
                                                             </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <!-- RECAUDOS-->
+                                                    <div *ngIf="OtraTransaccionCodigo == 16298 || OtraTransaccionCodigo == '16298' "
+                                                        class="col-xs-12 col-md-12 col-lg-12 contorno-rutas div-espacio1">
+                                                        <span class="titulo">Recaudos</span>
+
+                                                        <div class="row">
+                                                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label><strong>Factura:</strong></label>
+                                                                    <input type="text" class="form-control"
+                                                                        placeholder=""
+                                                                        [(ngModel)]="OtraTransaccionFactura">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label><strong>Código -
+                                                                            Descripción:</strong></label>
+                                                                    <input type="text" class="form-control"
+                                                                        placeholder=""
+                                                                        [(ngModel)]="OtraTransaccionCodigoDescrip">
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                    <!-- GIROS-->
+                                                    <div *ngIf="OtraTransaccionCodigo == 16343 || OtraTransaccionCodigo == '16343' "
+                                                        class="col-xs-12 col-md-12 col-lg-12 contorno-rutas div-espacio1">
+                                                        <span class="titulo">Giros - Quien Recibe</span>
+
+
+                                                        <div class="row">
+                                                            <div class="col-lg-3 col-md-3 col-sm-3">
+                                                                <div class="form-group">
+                                                                    <label><strong>Documento:</strong></label>
+                                                                    <input type="text" class="form-control"
+                                                                        placeholder=""
+                                                                        [(ngModel)]="OtraTransaccionDocumentoRec"
+                                                                        (blur)="buscarDocumentoOtraTransaccionRec()"
+                                                                        (input)="limpiarcamposOtraTransaDocRec('documento')">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label><strong>Nombre:</strong></label>
+                                                                    <input type="text" class="form-control pmayuscula"
+                                                                        placeholder=""
+                                                                        [(ngModel)]="OtraTransaccionNombreRec"
+                                                                        (input)="limpiarcamposOtraTransaDocRec('nombre')">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-1 col-md-1 col-sm-1">
+                                                                <div class="form-group">
+                                                                    <label>&nbsp;</label>
+                                                                    <button type="button"
+                                                                        (click)="buscarNombreOtraTransaccionRec()"
+                                                                        class="btn Gt-btn-verde btn-icon btn-buscar">
+                                                                        <i class="glyphicon glyphicon-search"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="row">
+                                                            <div class="col-lg-9 col-md-9 col-sm-9">
+                                                                <div class="form-group">
+                                                                    <label><strong>Oficina:</strong></label>
+                                                                    <select class="form-control"
+                                                                        (change)="capturarOficina($event)">
+                                                                        <option value=0>--seleccione</option>
+                                                                        <option *ngFor="let i of ListOficinas"
+                                                                            [value]="i.IdClase">
+                                                                            {{i.Descripcion}}</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+
+                                                    </div>
+
+                                                    <!-- RECAUDO EMPRESARIAL-->
+                                                    <div *ngIf="OtraTransaccionCodigo == 16177 || OtraTransaccionCodigo == '16177' "
+                                                        class="col-xs-12 col-md-12 col-lg-12 contorno-rutas div-espacio1">
+                                                        <span class="titulo">Recaudo empresarial</span>
+
+
+                                                        <div class="row">
+                                                            <div class="col-lg-2 col-md-2 col-sm-2">
+                                                                <div class="form-group">
+                                                                    <label><strong>Convenio:</strong></label>
+                                                                    <input type="text" class="form-control"
+                                                                        placeholder=""
+                                                                        [(ngModel)]="OtraTransaccionConvenioRe"
+                                                                        (blur)="buscarConvenioOtraTransaccionRe()"
+                                                                        (input)="limpiarcamposOtraTransaConvenioRe('codigo')"
+                                                                        appSoloNumero maxlength="4">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-7 col-md-7 col-sm-7">
+                                                                <div class="form-group">
+                                                                    <label><strong>Nombre:</strong></label>
+                                                                    <input type="text" class="form-control pmayuscula"
+                                                                        placeholder=""
+                                                                        [(ngModel)]="OtraTransaccionConvenioNombRe"
+                                                                        (input)="limpiarcamposOtraTransaConvenioRe('nombre')">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-1 col-md-1 col-sm-1">
+                                                                <div class="form-group">
+                                                                    <label>&nbsp;</label>
+                                                                    <button type="button"
+                                                                        (click)="buscarNombreOtraTransaccionConvenioRe()"
+                                                                        class="btn Gt-btn-verde btn-icon btn-buscar">
+                                                                        <i class="glyphicon glyphicon-search"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+
                                                         </div>
 
                                                     </div>
@@ -584,139 +717,171 @@
                                                 <div class="tab-pane" id="tab5">
                                                     <div class="row">
                                                         <div class="col-lg-12 col-md-12 col-sm-12">
-                                                            <div class="row">
-                                                                <div class="col-lg-1 col-md-1 col-sm-1">
-                                                                    <div class="form-group">
-                                                                        <label>Banco:</label>
-                                                                        <input type="text" class="form-control"
-                                                                            placeholder="">
+                                                            <form autocomplete="off" id="form" [formGroup]="formCheque">
+                                                                <div class="row">
+                                                                    <div class="col-lg-1 col-md-1 col-sm-1">
+                                                                        <div class="form-group">
+                                                                            <label><strong>Banco:</strong></label>
+                                                                            <input type="text" class="form-control"
+                                                                                placeholder="" formControlName="idBanco"
+                                                                                appSoloNumero maxlength="3">
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="col-lg-5 col-md-5 col-sm-5">
-                                                                    <div class="form-group">
-                                                                        <label>&nbsp;</label>
-                                                                        <input type="text" class="form-control"
-                                                                            placeholder="">
+                                                                    <div class="col-lg-5 col-md-5 col-sm-5">
+                                                                        <div class="form-group">
+                                                                            <label>&nbsp;</label>
+                                                                            <input type="text" class="form-control"
+                                                                                placeholder=""
+                                                                                formControlName="nombreBanco"
+                                                                                maxlength="40">
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
+                                                                    <div class="col-lg-1 col-md-1 col-sm-1">
+                                                                        <div class="form-group">
+                                                                            <label>&nbsp;</label>
+                                                                            <button type="button"
+                                                                                (click)="buscarDescripcionOtraTransaccion()"
+                                                                                class="btn Gt-btn-verde btn-icon btn-buscar">
+                                                                                <i class="glyphicon glyphicon-search"></i>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
 
-                                                            <div class="row">
-                                                                <div class="col-lg-3 col-md-3 col-sm-3">
-                                                                    <div class="form-group">
-                                                                        <label>Cuenta corriente:</label>
-                                                                        <input type="text" class="form-control"
-                                                                            placeholder="">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-3 col-md-3 col-sm-3">
-                                                                    <div class="form-group">
-                                                                        <label>Número cheque:</label>
-                                                                        <input type="text" class="form-control"
-                                                                            placeholder="">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-3 col-md-3 col-sm-3">
-                                                                    <div class="form-group">
-                                                                        <label>Remesa:</label>
-                                                                        <select name="" id="" class="form-control">
-                                                                            <option value="1">--seleccione</option>
-                                                                            <option value="1">Al cobro</option>
-                                                                            <option value="1">Interna</option>
-                                                                            <option value="1">Local</option>
-                                                                            <option value="1">Negociada</option>
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-3 col-md-3 col-sm-3">
-                                                                    <div class="form-group">
-                                                                        <label>Valor cheque:</label>
-                                                                        <input type="text" class="form-control"
-                                                                            placeholder="">
-                                                                    </div>
                                                                 </div>
 
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-xs-12 col-md-12 col-lg-12"
-                                                                    style="justify-items: end; padding: 1em;">
-                                                                    <div class="actions clearfix">
+                                                                <div class="row">
+                                                                    <div class="col-lg-3 col-md-3 col-sm-3">
+                                                                        <div class="form-group">
+                                                                            <label><strong>Cuenta
+                                                                                    corriente:</strong></label>
+                                                                            <input type="text" class="form-control"
+                                                                                placeholder=""
+                                                                                formControlName="cuentaCorriente" maxlength="15">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-3 col-md-3 col-sm-3">
+                                                                        <div class="form-group">
+                                                                            <label><strong>Número
+                                                                                    cheque:</strong></label>
+                                                                            <input type="text" class="form-control"
+                                                                                placeholder=""
+                                                                                formControlName="numeroCheque"  maxlength="20">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-3 col-md-3 col-sm-3">
+                                                                        <div class="form-group">
+                                                                            <label><strong>Remesa:</strong></label>
+                                                                            <select name="" id="" class="form-control"
+                                                                                formControlName="idRemesa">
+                                                                                <option [ngValue]="null">--seleccione
+                                                                                </option>
+                                                                                <option *ngFor="let i of ListRemesas"
+                                                                                    [ngValue]="i.intClase">
+                                                                                    {{i.strDescripcion}}</option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-3 col-md-3 col-sm-3">
+                                                                        <div class="form-group">
+                                                                            <label><strong>Valor
+                                                                                    cheque:</strong></label>
+                                                                            <input type="text"
+                                                                                class="form-control txt-right"
+                                                                                placeholder=""
+                                                                                formControlName="valorCheque"
+                                                                                appMonedaDirectiva maxlength="12">
+                                                                        </div>
+                                                                    </div>
 
-                                                                        <button
-                                                                            class="btn Gt-btn-verde btn-icon legitRipple"
-                                                                            type="button">
-                                                                            <i class=""></i>&nbsp; AGREGAR
-                                                                        </button>&nbsp;
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-xs-12 col-md-12 col-lg-12"
+                                                                        style="justify-items: end; padding: 1em;">
+                                                                        <div class="actions clearfix">
 
-                                                                        <button
-                                                                            class="btn Gt-btn-morado btn-icon legitRipple"
-                                                                            type="reset">
-                                                                            LIMPIAR
-                                                                        </button>&nbsp;
+                                                                            <button
+                                                                                class="btn Gt-btn-verde btn-icon legitRipple"
+                                                                                type="button" (click)="agregarCheque()">
+                                                                                <i class=""></i>&nbsp; AGREGAR
+                                                                            </button>&nbsp;
 
-                                                                        <button
-                                                                            class="btn Gt-btn-verde btn-icon legitRipple"
-                                                                            type="button">
-                                                                            <i class=""></i>&nbsp; GUARDAR
-                                                                        </button>
+                                                                            <button
+                                                                                class="btn Gt-btn-morado btn-icon legitRipple"
+                                                                                type="reset">
+                                                                                LIMPIAR
+                                                                            </button>&nbsp;
 
+                                                                            <button
+                                                                                class="btn Gt-btn-verde btn-icon legitRipple"
+                                                                                type="button">
+                                                                                <i class=""></i>&nbsp; GUARDAR
+                                                                            </button>
+
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
 
-                                                            <div class="row">
-                                                                <hr>
-                                                                <table class="table table-hover">
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th>Banco</th>
-                                                                            <th>Cuenta corriente</th>
-                                                                            <th>Nro cheque</th>
-                                                                            <th>Valor cheque</th>
-                                                                            <th>Remesa</th>
-                                                                            <th>Opciones</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        <!--
-                                                                        <tr>
-                                                                            <td>07-Bancolombia</td>
-                                                                            <td style="text-align: center;">123809128301
-                                                                            </td>
-                                                                            <td style="text-align: center;">0997</td>
-                                                                            <td>$2,000,000.00</td>
-                                                                            <td>Local</td>
-                                                                            <td class="operacionFija">
-                                                                                <button
-                                                                                    class="btn Gt-btn-verde btn-icon legitRipple">
-                                                                                    <i
-                                                                                        class="icon-pencil"></i></button>&nbsp;
-                                                                                <button
-                                                                                    class="btn Gt-btn-morado btn-icon legitRipple">
-                                                                                    <i
-                                                                                        class="glyphicon glyphicon-trash"></i></button>
-                                                                            </td>
+                                                                <div class="row">
+                                                                    <hr>
+                                                                    <table class="table table-hover">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Banco</th>
+                                                                                <th>Cuenta corriente</th>
+                                                                                <th>Nro cheque</th>
+                                                                                <th>Valor cheque</th>
+                                                                                <th>Remesa</th>
+                                                                                <th>Opciones</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <tr
+                                                                                *ngFor="let item of ListCheques; let i = index">
+                                                                                <td>
+                                                                                    {{item.idBanco}} -
+                                                                                    {{item.nombreBanco}}
+                                                                                </td>
+                                                                                <td>
+                                                                                    {{item.cuentaCorriente}}
+                                                                                </td>
+                                                                                <td>
+                                                                                    {{item.numeroCheque}}
+                                                                                </td>
+                                                                                <td>
+                                                                                    {{item.valorCheque | currency}}
+                                                                                </td>
+                                                                                <td>
+                                                                                    {{item.descripcionRemesa}}
+                                                                                </td>
+                                                                                <td>
+                                                                                    <button
+                                                                                        class="btn Gt-btn-morado btn-icon legitRipple"
+                                                                                        type="button"
+                                                                                        (click)="eliminarCheque(i)">
+                                                                                        <i
+                                                                                            class="glyphicon glyphicon-trash"></i>
+                                                                                    </button>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
 
-                                                                        </tr>
-                                                                        -->
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-
-                                                            <div class="row">
-                                                                <div class="col-lg-6 col-md-6 col-sm-6"></div>
-                                                                <div class="col-lg-6 col-md-6 col-sm-6">
-                                                                    <div class="form-group">
-                                                                        <label for=""><strong>Total
-                                                                                cheques:</strong></label>
-                                                                        <input type="text" currencyMask
-                                                                            [options]="{precision : 2 }"
-                                                                            class="form-control  txt-bold txt-total"
-                                                                            value="" />
+                                                                <div class="row">
+                                                                    <div class="col-lg-6 col-md-6 col-sm-6"></div>
+                                                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                                                        <div class="form-group">
+                                                                            <label for=""><strong>Total
+                                                                                    cheques:</strong></label>
+                                                                            <input type="text"
+                                                                                class="form-control txt-bold txt-right"
+                                                                                appMonedaDirectiva [disabled]="true"
+                                                                                [value]="TotalCheques" />
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
 
+                                                            </form>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -805,7 +970,7 @@
                                     <label class="txt-principal txt-bold">Cheque:</label>
                                     <input type="text" appMonedaDirectiva class="form-control  txt-bold txt-right"
                                         [(ngModel)]="TotalCheque" (blur)="recalcularSaldoTotal()"
-                                        [disabled]="!HabilitaCheque" maxlength="12" />
+                                        (blur)="habilitaCheque()" [disabled]="!HabilitaCheque" maxlength="12" />
                                 </div>
                                 <div class="form-group">
                                     <label class="txt-principal txt-bold">Total:</label>
@@ -841,6 +1006,8 @@
     data-popup="tooltip" data-placement="top" data-trigger="hover">
 <input type="hidden" #ModalBuscarNombres data-toggle="modal" data-target="#ModalBuscarNombres" data-popup="tooltip"
     data-placement="top" data-trigger="hover">
+<input type="hidden" #ModalOtrasTransaccionesConvenios data-toggle="modal"
+    data-target="#ModalOtrasTransaccionesConvenios" data-popup="tooltip" data-placement="top" data-trigger="hover">
 
 <!-- Modal Condiciones -->
 <div id="ModalCondiciones" class="modal fade" data-backdrop="static" data-keyboard="false">
@@ -1025,6 +1192,50 @@
     </div>
 </div>
 <!--Fin Modal búsqueda documentos nombre -->
+<!-- Modal búsqueda convenios nombre -->
+<div id="ModalOtrasTransaccionesConvenios" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal"
+                    (click)="limpiarBusquedaNombre()">&times;</button>
+                <h6 class="modal-title">Convenios</h6>
+            </div>
+            <div class="modal-body pad0T modal1-body ">
+                <div class="table-responsive scrollTabla">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th><strong>Nit</strong></th>
+                                <th><strong>Nombre</strong></th>
+                                <th><strong>Convenio</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let i of ListConveniosBusqueda"
+                                (click)="seleccionarOtraTransaccionNombreConvenioRe(i)">
+                                <td data-dismiss="modal">
+                                    {{i.strNit}}
+                                </td>
+                                <td data-dismiss="modal">
+                                    {{i.strNombre}}
+                                </td>
+                                <td data-dismiss="modal">
+                                    {{i.intConvenio}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal"
+                    (click)="limpiarBusquedaNombre()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Fin Modal búsqueda convenios nombre -->
 <!--Modal Registro firmas -->
 <div id="ModalImagenesRegistroFirmas" class="modal fade" data-backdrop="static">
     <div class="modal-dialog">
