@@ -266,7 +266,7 @@ export class RadicadosComponent implements OnInit {
     this.encabezadoRadicado.cancelacion = data.Cancelacion;
     this.Decision.length = 0;
     this.cargandoDatos = true;
-    this.MiListaProductosService.GetDetalleRadicados(data.Radicado,this.TipoCliente).subscribe({
+    this.MiListaProductosService.GetDetalleRadicados(data.Radicado,this.TipoCliente, data.Origen).subscribe({
       next: (result) => {
         this.negociacionRadicado.FormaPago = result.Negociacion.FormaPago;
         this.negociacionRadicado.curCuota = result.Negociacion.curCuota;

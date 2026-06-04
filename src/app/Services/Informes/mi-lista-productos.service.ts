@@ -389,11 +389,12 @@ export class MiListaProductosService {
     this.url = `${this.environment.Url}/GetRadicados?tercero=${tercero}`;
     return this._http.get<any>(this.url);
   }
-  GetDetalleRadicados(radicado: string, TipoCliente: number): Observable<any> {
+  GetDetalleRadicados(radicado: string, TipoCliente: number, Origen: string): Observable<any> {
     this.url = `${this.environment.Url}/GetDetalleRadicados`;
     const params = new HttpParams()
       .set('radicado', radicado)
-      .set('TipoCliente', TipoCliente);
+      .set('TipoCliente', TipoCliente)
+      .set('Origen', Origen);
     return this._http.get<any>(this.url, { params: params });
   }
   GetDataAhorrosCancelados(tercero: number): Observable<any> {

@@ -666,7 +666,7 @@ export class AsesoriaTerminoComponent implements OnInit {
     this.asesoriaterminoForm.get('Variable')?.setValue(this.dataFrecuencia);
     this.MapearInteresesBuscar(dato.InteresxPagar, dato.ValorAportes, dato.Retencion);
     this.asesoriaterminoForm.get('Edad')?.setValue(dato.Edad);
-    this.asesoriaterminoForm.get('IdTipoDocumento')?.setValue(dato.IdTipoDocumento);
+    this.asesoriaterminoForm.get('IdTipoDocumento')?.setValue(dato.TipoDocumento);
 
     this.AdicionarPuntosFrom.get('AdicionarPunto')?.reset();
     this.AdicionarPuntosFrom.get('AdicionarPuntoDescripcion')?.reset();   
@@ -1507,7 +1507,11 @@ export class AsesoriaTerminoComponent implements OnInit {
   }
 
   onChangeTipoDocumento() {
-    this.BloquearNuevoAsociadoForm = null;
+    this.creacionFrom.get('PrimerNombre')?.enable();
+    this.creacionFrom.get('SegundoNombre')?.enable();
+    this.creacionFrom.get('PrimerApellido')?.enable();
+    this.creacionFrom.get('SegundoApellido')?.enable();
+    this.creacionFrom.get('TelefonoAsesoria')?.enable();
     this.creacionFrom.get('PrimerNombre')?.reset();
     if (this.creacionFrom.get('TipoDocumento')?.value == 3) {
       this.creacionFrom.get('PrimerNombre')?.reset();
@@ -1960,7 +1964,7 @@ export class AsesoriaTerminoComponent implements OnInit {
           } else if (result.length === 1) {
             const producto = result[0].IdProducto;
             const edad = this.asesoriaterminoForm.get('Edad')?.value;
-            const idTipoDocumento = this.creacionFrom.get('TipoDocumento')?.value;
+            const idTipoDocumento = this.creacionFrom.get('IdTipoDocumento')?.value;
             if (producto === 302) {
               if (this.asesoriaterminoForm.get('IdTipoDocumento')?.value === 3 || idTipoDocumento == '3') {
                  this.asesoriaterminoForm.get('IdProducto')?.setValue("");
@@ -2280,7 +2284,7 @@ export class AsesoriaTerminoComponent implements OnInit {
     const IdTipoDocumento =  new FormControl(0, []);
     this.asesoriaterminoForm = new FormGroup({
       Edad: Edad,
-      IdTipoDocumento : IdTipoDocumento,
+      IdTipoDocumento : TipoDocumento,
       NumeroAsesoria: NumeroAsesoria,
       IdProducto: IdProducto,
       DescripcionProducto: DescripcionProducto,

@@ -4169,11 +4169,12 @@ CalcularSimularPago(){
     const idTercero = this.gestionCreditoForm.get('IdTercero')?.value;
     const radicado = this.gestionCreditoForm.get('Radicado')?.value;
     const numeroDocumento = this.gestionCreditoForm.get('NumeroDocumento')?.value;
+    const origen = 'RADICADO';
     if (!idTercero || !radicado) return;
 
     this.loading.show();
     forkJoin({
-      detalleRadicado: this.miListaProductosService.GetDetalleRadicados(radicado, this.gestionCreditoForm.get('TipoCliente')?.value).pipe(
+      detalleRadicado: this.miListaProductosService.GetDetalleRadicados(radicado, this.gestionCreditoForm.get('TipoCliente')?.value, origen).pipe(
         catchError(error => {
           console.error('Error al obtener detalle del radicado:', error);
           return of(null);
