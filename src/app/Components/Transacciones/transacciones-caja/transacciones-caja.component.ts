@@ -12,6 +12,7 @@ import { LoginService } from '../../../Services/Login/login.service';
 import { lastValueFrom } from 'rxjs';
 import { ShareComponentModule } from '../../../Modules/share-component.module';
 import { ModuleValidationService } from '../../../Services/Enviroment/moduleValidation.service';
+import { ChequeDTO } from '../../../Models/Transacciones/TransaccionesCaja/Cheque.model';
 
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -31,6 +32,7 @@ export class TransaccionesCajaComponent implements OnInit {
   @ViewChild('ModalOtrasTransacciones', { static: true }) private ModalOtrasTransacciones!: ElementRef;
   @ViewChild('ModalImagenRegistroFirmas', { static: true }) private ModalImagenRegistroFirmas!: ElementRef;
   @ViewChild('ModalOtrasTransaccionesNombres', { static: true }) private ModalOtrasTransaccionesNombres!: ElementRef;
+  @ViewChild('ModalOtrasTransaccionesConvenios', { static: true }) private ModalOtrasTransaccionesConvenios!: ElementRef;
   @ViewChild('ModalBuscarNombres', { static: true }) private ModalBuscarNombres!: ElementRef;
 
   @ViewChild('pdfViewer') pdfViewer!: ElementRef;
@@ -47,6 +49,8 @@ export class TransaccionesCajaComponent implements OnInit {
   //#region "Definición variables"
   formBusqueda!: FormGroup;
   formTransaccion!: FormGroup;
+  formCheque!: FormGroup;
+
 
   public UsuarioActual: string = "";
   public OficinaActual: string = "";
@@ -60,9 +64,17 @@ export class TransaccionesCajaComponent implements OnInit {
   public ListTransaccionxPerfilFiltrado: any;
   public ListAutorizados: any;
   public ListDocumentosBusqueda: any;
+  public ListConveniosBusqueda: any;
+  public ListOficinas: any[] = [];
+  public ListRemesas: any[] = [];
+  public ListCheques: ChequeDTO[] = [];
   public OtraTransaccionCodigo: any = "";
   public OtraTransaccionIdTercero: any = "";
+  public OtraTransaccionIdTerceroRec: any = "";
   public OtraTransaccionDocumento: any = "";
+  public OtraTransaccionDocumentoRec: any = "";
+  public OtraTransaccionConvenioRe: any = "";
+
   public base64Data: any;
 
   public TipoProductoSelected: number = 0;
@@ -72,12 +84,15 @@ export class TransaccionesCajaComponent implements OnInit {
   public TotalSaldo: number = 0;
   public TotalEfectivo: number = 0;
   public TotalCheque: number = 0;
+  public TotalCheques: number = 0;
   public IdOficinaActual: number = 0;
   public IdUsuarioActual: number = 0;
+  public OrigenSeleccionBN: number = 0;
   public NaturalezaTransa: number | null = null;
   public TabPorDefecto: number | null = null;
   public ProductoSeleccionado: number | null = null;
   public CodigoTransa: number | null = null;
+  public OtraTransaccionIdOficinaD: number = 0;
 
   public TipoTransaccionStrSelected: string = "";
   public DocumentoSelected: string = "";
@@ -95,7 +110,11 @@ export class TransaccionesCajaComponent implements OnInit {
   public NombreBusqueda: string = "";
   public OtraTransaccionDescripcion: string = "";
   public OtraTransaccionNombre: string = "";
+  public OtraTransaccionNombreRec: string = "";
+  public OtraTransaccionConvenioNombRe: string = "";
   public OtraTransaccionComentario: string = "";
+  public OtraTransaccionFactura: string = "";
+  public OtraTransaccionCodigoDescrip: string = "";
   public converted_image: string = "";
   public ValidadoraStr: string = "";
 
@@ -131,7 +150,7 @@ export class TransaccionesCajaComponent implements OnInit {
   //#region "Inicialización"
   ngOnInit() {
     this.moduleValidationService.ValidatePermissionsModule(this.Modulo);
-    
+
     let data = localStorage.getItem('Data');
     let DataUser = JSON.parse(window.atob(data == null ? "" : data));
     if (DataUser != null) {
@@ -163,6 +182,14 @@ export class TransaccionesCajaComponent implements OnInit {
       idTransaccion: [null],
     });
 
+    this.formCheque = this.fb.group({
+      idBanco: [null, Validators.required],
+      nombreBanco: ['', Validators.required],
+      cuentaCorriente: ['', Validators.required],
+      numeroCheque: ['', Validators.required],
+      idRemesa: [null, Validators.required],
+      valorCheque: [0, Validators.required]
+    });
 
     $('#ModalCondiciones').on('hidden.bs.modal', function () {
       $('body').css('padding-right', '0');
@@ -174,6 +201,8 @@ export class TransaccionesCajaComponent implements OnInit {
     this.ObtenerOtrasTransaccionesxPerfil();
     this.obtenerValidadora();
     this.validarServicioImpresion();
+    this.obtenerListas();
+    this.obtenerRemesas();
   }
 
   validarEstadoTaquilla() {
@@ -233,6 +262,21 @@ export class TransaccionesCajaComponent implements OnInit {
         }
       });
   }
+
+  obtenerRemesas() {
+    this.transaccionesCajaService
+      .ObtenerRemesas()
+      .subscribe({
+        next: (resultado: any) => {
+          this.ListRemesas = resultado;
+        },
+        error: (err) => {
+          this.loading.hide();
+          console.error('Error obtener remesas:', err);
+        }
+      });
+  }
+
   //#endregion
 
   //#region "Obtener información general"
@@ -281,6 +325,21 @@ export class TransaccionesCajaComponent implements OnInit {
           console.error('ObtenerOtrasTransaccionesxPerfil - ' + err);
         }
       });
+  }
+
+  obtenerListas() {
+    this.transaccionesCajaService.ObtenerListas().subscribe({
+      next: (respuesta: any[]) => {
+        this.ListOficinas = respuesta.filter(item =>
+          item.IdTipo === 999 &&
+          item.IdClase !== 3 &&
+          item.IdClase !== this.IdOficinaActual
+        );
+      },
+      error: (err) => {
+        console.error('Error al cargar parámetros de informes:', err);
+      }
+    });
   }
   //#endregion
 
@@ -368,6 +427,11 @@ export class TransaccionesCajaComponent implements OnInit {
       }
     }
 
+  }
+
+  capturarOficina(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    this.OtraTransaccionIdOficinaD = Number(selectElement.value);
   }
 
   //#endregion
@@ -871,6 +935,7 @@ export class TransaccionesCajaComponent implements OnInit {
         this.ListCarteraConvenio = [];
         this.tabsHabilitados = [];
         this.ListAutorizados = [];
+        this.ListTransaccionxPerfilFiltrado = [];
 
         //variables globales
         this.TotalSaldo = 0;
@@ -897,11 +962,20 @@ export class TransaccionesCajaComponent implements OnInit {
         this.NaturalezaTransa = null;
         this.CodigoTransa = null;
         break;
+      case 2: //Limpiar solo valores transaccion
+        this.TotalSaldo = 0;
+        this.TotalCheque = 0;
+        this.TotalEfectivo = 0;
+        break;
     }
   }
 
   limpiarBusquedaNombre() {
     this.ListDocumentosBusqueda = [];
+  }
+
+  limpiarBusquedaNombreConvenioRe() {
+    this.ListConveniosBusqueda = [];
   }
   //#endregion
 
@@ -996,6 +1070,10 @@ export class TransaccionesCajaComponent implements OnInit {
     return Number(limpio) || 0;
   }
 
+  habilitaCheque() {
+    this.tabsHabilitados.push(5);
+    this.activarChequesTab();
+  }
   //#endregion
 
   //#region "Gestión Modales"
@@ -1442,12 +1520,42 @@ export class TransaccionesCajaComponent implements OnInit {
   seleccionarOtraTransaccion(item: any) {
     this.OtraTransaccionCodigo = item.intCodigo;
     this.OtraTransaccionDescripcion = item.strDescripcion;
+    this.HabilitaEfectivo = item?.HabilitaEfectivo ?? false;
+    this.HabilitaCheque = item?.HabilitaCheque ?? false;
+    this.limpiarFormulario(2);
   }
 
   seleccionarOtraTransaccionNombres(item: any) {
-    this.OtraTransaccionDocumento = item.Documento;
-    this.OtraTransaccionNombre = item.Nombre;
-    this.OtraTransaccionIdTercero = item.IdTercero;
+    const origen = this.OrigenSeleccionBN;
+    if (origen == 1) {
+      this.OtraTransaccionDocumento = item.Documento;
+      this.OtraTransaccionNombre = item.Nombre;
+      this.OtraTransaccionIdTercero = item.IdTercero;
+    } else if (origen == 2) {
+      this.OtraTransaccionDocumentoRec = item.Documento;
+      this.OtraTransaccionNombreRec = item.Nombre;
+      this.OtraTransaccionIdTerceroRec = item.IdTercero;
+    }
+
+
+    setTimeout(() => {
+      this.limpiarBusquedaNombre();
+    }, 300);
+  }
+
+  seleccionarOtraTransaccionNombreConvenioRe(item: any) {
+    this.OtraTransaccionConvenioRe = item.intConvenio;
+    this.OtraTransaccionConvenioNombRe = item.strNombre;
+
+    setTimeout(() => {
+      this.limpiarBusquedaNombreConvenioRe();
+    }, 300);
+  }
+
+  seleccionarOtraTransaccionNombresRec(item: any) {
+    this.OtraTransaccionDocumentoRec = item.Documento;
+    this.OtraTransaccionNombreRec = item.Nombre;
+    this.OtraTransaccionIdTerceroRec = item.IdTercero;
 
     setTimeout(() => {
       this.limpiarBusquedaNombre();
@@ -1457,8 +1565,10 @@ export class TransaccionesCajaComponent implements OnInit {
   limpiarcamposOtraTransa(tipo: string) {
     if (tipo === 'codigo') {
       this.OtraTransaccionDescripcion = '';
+      this.limpiarCamposOtraTransaRecaudo();
     } else {
       this.OtraTransaccionCodigo = '';
+      this.limpiarCamposOtraTransaRecaudo();
     }
   }
 
@@ -1472,6 +1582,24 @@ export class TransaccionesCajaComponent implements OnInit {
     }
   }
 
+  limpiarcamposOtraTransaDocRec(tipo: string) {
+    if (tipo === 'documento') {
+      this.OtraTransaccionNombreRec = "";
+      this.OtraTransaccionIdTerceroRec = "";
+    } else {
+      this.OtraTransaccionDocumentoRec = "";
+      this.OtraTransaccionIdTerceroRec = "";
+    }
+  }
+
+  limpiarcamposOtraTransaConvenioRe(tipo: string) {
+    if (tipo === 'codigo') {
+      this.OtraTransaccionConvenioNombRe = "";
+    } else {
+      this.OtraTransaccionConvenioRe = "";
+    }
+  }
+
   limpiarcamposOtraTransaDocNom(i: number) {
     switch (i) {
       case 0:
@@ -1481,13 +1609,28 @@ export class TransaccionesCajaComponent implements OnInit {
         this.OtraTransaccionComentario = "";
         this.OtraTransaccionCodigo = "";
         this.OtraTransaccionDescripcion = "";
+        this.OtraTransaccionCodigoDescrip = "";
+        this.OtraTransaccionFactura = "";
+        this.OtraTransaccionDocumentoRec = "";
+        this.OtraTransaccionNombreRec = "";
+        this.OtraTransaccionIdTerceroRec = "";
+        this.OtraTransaccionIdOficinaD = 0;
         break;
       case 1:
         this.OtraTransaccionDocumento = "";
         this.OtraTransaccionNombre = "";
         this.OtraTransaccionIdTercero = "";
         break;
-
+      case 2: //Solo quien recibe GIROS
+        this.OtraTransaccionDocumentoRec = "";
+        this.OtraTransaccionNombreRec = "";
+        this.OtraTransaccionIdTerceroRec = "";
+        this.OtraTransaccionIdOficinaD = 0;
+        break;
+      case 3: //Solo convenios recaudo
+        this.OtraTransaccionConvenioRe = "";
+        this.OtraTransaccionConvenioNombRe = "";
+        break;
     }
 
   }
@@ -1495,6 +1638,11 @@ export class TransaccionesCajaComponent implements OnInit {
   limpiarcamposOtraTransaCodDes() {
     this.OtraTransaccionCodigo = "";
     this.OtraTransaccionDescripcion = "";
+  }
+
+  limpiarCamposOtraTransaRecaudo() {
+    this.OtraTransaccionFactura = "";
+    this.OtraTransaccionCodigoDescrip = "";
   }
 
   buscarCodigoOtraTransaccion() {
@@ -1525,6 +1673,9 @@ export class TransaccionesCajaComponent implements OnInit {
       // Setear descripción
       this.loading.hide();
       this.OtraTransaccionDescripcion = encontrado.strDescripcion;
+      this.HabilitaEfectivo = encontrado?.HabilitaEfectivo ?? false;
+      this.HabilitaCheque = encontrado?.HabilitaCheque ?? false;
+      this.limpiarFormulario(2);
     } else {
       this.loading.hide();
       this.OtraTransaccionDescripcion = "";
@@ -1605,8 +1756,76 @@ export class TransaccionesCajaComponent implements OnInit {
       })
   }
 
+  buscarDocumentoOtraTransaccionRec() {
+    if (!this.OtraTransaccionDocumentoRec) {
+      this.limpiarcamposOtraTransaDocNom(2);
+      return;
+    }
+
+    this.OtraTransaccionDocumentoRec = this.OtraTransaccionDocumentoRec.trim();
+
+    if (!this.OtraTransaccionDocumentoRec) {
+      this.limpiarcamposOtraTransaDocNom(2);
+      return;
+    }
+
+    //Buscar
+    this.loading.show();
+    this.transaccionesCajaService.ObtenerEncabezadoTransa(this.OtraTransaccionDocumentoRec)
+      .subscribe({
+        next: (result: any) => {
+          if (!result || result === 'null' || (Array.isArray(result) && result.length === 0)) {
+            this.loading.hide();
+            this.limpiarcamposOtraTransaDocNom(2);
+            this.notif.onWarning('Advertencia', 'No se encontró documento.')
+            return;
+          } else {
+            this.loading.hide();
+            this.OtraTransaccionDocumentoRec = result.Documento;
+            this.OtraTransaccionNombreRec = result.Nombre;
+            this.OtraTransaccionIdTerceroRec = result.IdTercero;
+          }
+        }, error: (err) => {
+          this.loading.hide();
+          this.limpiarcamposOtraTransaDocNom(2);
+          console.log('Errror búsqueda por documento: ' + err);
+          this.notif.onWarning('Advertencia', 'No se encontró documento.')
+        }
+      })
+  }
+
+  buscarConvenioOtraTransaccionRe() {
+    if (!this.OtraTransaccionConvenioRe) {
+      this.limpiarcamposOtraTransaDocNom(3);
+      return;
+    }
+
+    //Buscar
+    this.loading.show();
+    this.transaccionesCajaService.ObtenerConvenioRecaudo(this.OtraTransaccionConvenioRe, '')
+      .subscribe({
+        next: (result: any) => {
+          if (!result || result === 'null' || (Array.isArray(result) && result.length === 0)) {
+            this.loading.hide();
+            this.limpiarcamposOtraTransaDocNom(3);
+            this.notif.onWarning('Advertencia', 'No se encontró convenio.')
+            return;
+          } else {
+            this.loading.hide();
+            this.OtraTransaccionConvenioNombRe = result[0]?.strNombre;
+          }
+        }, error: (err) => {
+          this.loading.hide();
+          this.limpiarcamposOtraTransaDocNom(3);
+          console.log('Error búsqueda por convenio: ' + err);
+          this.notif.onWarning('Advertencia', 'No se encontró convenio.')
+        }
+      })
+  }
+
   buscarNombreOtraTransaccion() {
     this.loading.show();
+    this.OrigenSeleccionBN = 1;
     const nombre = this.OtraTransaccionNombre;
     this.transaccionesCajaService.ObtenerEncabezadoNombreTransa(nombre)
       .subscribe({
@@ -1632,8 +1851,104 @@ export class TransaccionesCajaComponent implements OnInit {
       });
   }
 
+  buscarNombreOtraTransaccionRec() {
+    this.loading.show();
+    this.OrigenSeleccionBN = 2;
+    const nombre = this.OtraTransaccionNombreRec;
+    this.transaccionesCajaService.ObtenerEncabezadoNombreTransa(nombre)
+      .subscribe({
+        next: (result: any) => {
+          if (result.length === 0) {
+            this.notif.onWarning('Advertencia', 'No se encontró documento.');
+            this.limpiarcamposOtraTransaDocNom(2);
+            this.loading.hide();
+            return;
+          }
+
+          this.ListDocumentosBusqueda = result;
+          this.ModalOtrasTransaccionesNombres.nativeElement.click();
+          this.loading.hide();
+        }, error: (err) => {
+          this.loading.hide();
+          console.log('error búsqueda nombre personas: ' + err);
+          this.ListDocumentosBusqueda = [];
+          this.limpiarcamposOtraTransaDocNom(1);
+          this.notif.onWarning('Advertencia', 'No se encontró documento.');
+
+        }
+      });
+  }
+
+  buscarNombreOtraTransaccionConvenioRe() {
+    this.loading.show();
+    const nombre = this.OtraTransaccionConvenioNombRe;
+    this.transaccionesCajaService.ObtenerConvenioRecaudo(0, nombre)
+      .subscribe({
+        next: (result: any) => {
+          if (result.length === 0) {
+            this.notif.onWarning('Advertencia', 'No se encontró convenio.');
+            this.limpiarcamposOtraTransaDocNom(3);
+            this.loading.hide();
+            return;
+          }
+
+          this.ListConveniosBusqueda = result;
+          this.ModalOtrasTransaccionesConvenios.nativeElement.click();
+          this.loading.hide();
+        }, error: (err) => {
+          this.loading.hide();
+          console.log('error búsqueda nombre convenios: ' + err);
+          this.ListDocumentosBusqueda = [];
+          this.limpiarcamposOtraTransaDocNom(1);
+          this.notif.onWarning('Advertencia', 'No se encontró convenio.');
+
+        }
+      });
+  }
 
   //#endregion
+
+  //#region "Tab Cheque"
+  agregarCheque(): void {
+    if (this.formCheque.invalid) {
+      return;
+    }
+
+    const remesa = this.ListRemesas.find(
+      x => x.intClase == this.formCheque.value.idRemesa
+    );
+    const cheque: ChequeDTO = {
+      idBanco: this.formCheque.value.idBanco,
+      nombreBanco: this.formCheque.value.nombreBanco,
+      cuentaCorriente: this.formCheque.value.cuentaCorriente,
+      numeroCheque: this.formCheque.value.numeroCheque,
+      idRemesa: this.formCheque.value.idRemesa,
+      descripcionRemesa: remesa?.strDescripcion || '',
+      valorCheque: Number(this.formCheque.value.valorCheque)
+    };
+    this.ListCheques.push(cheque);
+    this.calcularTotalCheque();
+    this.formCheque.reset({
+      idBanco: null,
+      nombreBanco: '',
+      cuentaCorriente: '',
+      numeroCheque: '',
+      idRemesa: null,
+      valorCheque: 0
+    });
+  }
+
+  calcularTotalCheque(): void {
+    this.TotalCheques = this.ListCheques
+      .reduce((sum, item) => sum + item.valorCheque, 0);
+  }
+
+  eliminarCheque(index: number): void{
+    this.ListCheques.splice(index, 1);
+    this.calcularTotalCheque();
+  }
+
+  //#end region
 
   //#region "GUARDAR TRANSACCIONES"
   guardarTransaccion() {
@@ -1707,7 +2022,7 @@ export class TransaccionesCajaComponent implements OnInit {
       idTransaccion: this.CodigoTransa,
       idOficina: this.IdOficinaActual,
       idTercero: this.TerceroSelected,
-      valor: this.TotalSaldo,
+      valorEfectivo: this.TotalEfectivo ?? 0,
       oficinaActual: this.OficinaActual,
       comentario: "Convenio vivir Olivos automático ERP"
     }
@@ -1723,13 +2038,15 @@ export class TransaccionesCajaComponent implements OnInit {
           this.loading.hide();
 
           if (!result.Exito) {
-            this.notif.onDanger('Error', result.Mensaje);
+            console.log('error guardar transacción recaudo: ' + result.Mensaje);
+            this.notif.onDanger('Error', 'No se pudo realizar el proceso.');
             return;
           }
 
           this.pdfTransBase64 = result.PdfTransaccion;
           this.generarImpresion();
-
+          this.limpiarFormulario(2);
+          this.generarImpresion();
           this.ListCarteraConvenio = [];
 
           this.TotalSaldo = 0;
@@ -1751,59 +2068,108 @@ export class TransaccionesCajaComponent implements OnInit {
   }
 
   guardarTesoreria() {
+    if (!this.validarTransaccionTesoreria()) {
+      return;
+    }
+
+
+    this.loading.show();
+
+    var transaccion = {
+      idUsuario: this.IdUsuarioActual,
+      idTransaccion: this.OtraTransaccionCodigo,
+      idOficina: this.IdOficinaActual,
+      idOficinaDestino: this.IdOficinaActual,
+      idTercero: this.OtraTransaccionIdTercero,
+      valorEfectivo: this.TotalEfectivo ?? 0,
+      valorCheque: this.TotalCheque ?? 0,
+      oficinaActual: this.OficinaActual,
+      comentario: this.OtraTransaccionComentario,
+      documento: this.OtraTransaccionDocumento,
+      codigoDescr: this.OtraTransaccionCodigoDescrip,
+      factura: this.OtraTransaccionFactura,
+      idConvenio: 0
+    }
+
+
+    switch (String(this.OtraTransaccionCodigo)) {
+      case "16343": //GIROS
+        transaccion.idTercero = this.OtraTransaccionIdTerceroRec;
+        transaccion.idOficinaDestino = this.OtraTransaccionIdOficinaD;
+        break;
+      case "16177": //RECAUDO EMPRESARIAL
+        transaccion.idConvenio = this.OtraTransaccionConvenioRe;
+        break;
+    }
+
+
+
+    this.transaccionesCajaService.GuardarTransaccion(transaccion).subscribe(
+      result => {
+        this.loading.hide();
+
+        this.pdfTransBase64 = result.PdfTransaccion;
+        this.generarImpresion();
+
+        this.limpiarFormulario(2);//Limpieza campos efectivo total
+        this.activarTransaTab();
+        this.notif.onSuccess('Exitoso', 'La transacción ' + result.Transaccion + ' se guardó correctamente.');
+        this.limpiarFormulario(1);//Limpieza general
+        this.limpiarcamposOtraTransaDocNom(0); // Limpieza tab
+        this.imprimirValidadoraTransa(result);
+      },
+      error => {
+        this.loading.hide();
+        let mensaje = error.Mensaje;
+        console.log('error guardar transacción tesorería: ' + mensaje);
+        this.notif.onWarning('Advertencia', mensaje);
+      }
+    );
+  }
+
+  //#endregion
+
+  //#region "Validaciones"
+  validarTransaccionTesoreria(): boolean {
     if (this.OtraTransaccionIdTercero == null || this.OtraTransaccionIdTercero == "") {
       this.notif.onWarning('Advertencia', 'Documento no válido.');
-      return;
+      return false;
     }
 
     if (this.OtraTransaccionCodigo == null || this.OtraTransaccionCodigo == "") {
       this.notif.onWarning('Advertencia', 'Transacción no válida.');
-      return;
+      return false;
     }
 
-    this.loading.show();
-
-    const transaccion = {
-      idUsuario: this.IdUsuarioActual,
-      idTransaccion: this.OtraTransaccionCodigo,
-      idOficina: this.IdOficinaActual,
-      idTercero: this.OtraTransaccionIdTercero,
-      valor: this.TotalSaldo,
-      oficinaActual: this.OficinaActual,
-      comentario: this.OtraTransaccionComentario
-    }
-
-    this.transaccionesCajaService.GuardarTransaccion(transaccion)
-      .subscribe({
-        next: (result: any) => {
-          this.loading.hide();
-
-          if (!result.Exito) {
-            this.notif.onDanger('Error', result.Mensaje);
-            return;
-          }
-
-          this.pdfTransBase64 = result.PdfTransaccion;
-          this.generarImpresion();
-
-          this.TotalSaldo = 0;
-          this.TotalCheque = 0;
-          this.TotalEfectivo = 0;
-          this.activarTransaTab();
-          this.notif.onSuccess('Exitoso', 'La transacción ' + result.Transaccion + ' se guardó correctamente.');
-          this.limpiarFormulario(1);//Limpieza general
-          this.limpiarcamposOtraTransaDocNom(0); // Limpieza tab
-          this.imprimirValidadoraTransa(result);
-
-        }, error: (err) => {
-          this.loading.hide();
-          console.log('error guardar transacción tesorería: ' + err);
-          this.notif.onDanger('Error', 'No se pudo realizar el proceso.');
+    switch (String(this.OtraTransaccionCodigo)) {
+      case "16343": // GIROS
+        if (this.OtraTransaccionIdTercero === this.OtraTransaccionIdTerceroRec) {
+          this.notif.onWarning('Advertencia', 'Documento de quien envía y recibe debe ser diferente.');
+          return false;
         }
-      });
+
+        if (String(this.OtraTransaccionIdTerceroRec) === "0" || String(this.OtraTransaccionIdTerceroRec) === "") {
+          this.notif.onWarning('Advertencia', 'Documento de quien recibe es obligatorio.');
+          return false;
+        }
+
+        if (String(this.OtraTransaccionIdOficinaD) === "0" || String(this.OtraTransaccionIdOficinaD) === "") {
+          this.notif.onWarning('Advertencia', 'Oficina donde se recibirá el giro es obligatoria.');
+          return false;
+        }
+        break;
+      case "16177": // RECAUDO EMPRESARIAL
+        if (String(this.OtraTransaccionConvenioRe) === "0" || String(this.OtraTransaccionConvenioRe) === "") {
+          this.notif.onWarning('Advertencia', 'Convenio es obligaotrio.');
+          return false;
+        }
+    }
+
+    return true;
   }
 
-  //#endregion
+  //#endregion 
+
 
 
 }
