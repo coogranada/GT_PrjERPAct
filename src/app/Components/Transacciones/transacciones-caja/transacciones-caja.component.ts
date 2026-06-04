@@ -34,6 +34,8 @@ export class TransaccionesCajaComponent implements OnInit {
   @ViewChild('ModalOtrasTransaccionesNombres', { static: true }) private ModalOtrasTransaccionesNombres!: ElementRef;
   @ViewChild('ModalOtrasTransaccionesConvenios', { static: true }) private ModalOtrasTransaccionesConvenios!: ElementRef;
   @ViewChild('ModalBuscarNombres', { static: true }) private ModalBuscarNombres!: ElementRef;
+  @ViewChild('ModalBancos', { static: true }) private ModalBancos!: ElementRef;
+
 
   @ViewChild('pdfViewer') pdfViewer!: ElementRef;
   @ViewChild('tesoreriaTab', { static: true }) private tesoreriaTab!: ElementRef;
@@ -67,6 +69,8 @@ export class TransaccionesCajaComponent implements OnInit {
   public ListConveniosBusqueda: any;
   public ListOficinas: any[] = [];
   public ListRemesas: any[] = [];
+  public ListBancos: any[] = [];
+  public ListBancosFiltrados: any[] = [];
   public ListCheques: ChequeDTO[] = [];
   public OtraTransaccionCodigo: any = "";
   public OtraTransaccionIdTercero: any = "";
@@ -203,6 +207,7 @@ export class TransaccionesCajaComponent implements OnInit {
     this.validarServicioImpresion();
     this.obtenerListas();
     this.obtenerRemesas();
+    this.obtenerBancos();
   }
 
   validarEstadoTaquilla() {
@@ -273,6 +278,20 @@ export class TransaccionesCajaComponent implements OnInit {
         error: (err) => {
           this.loading.hide();
           console.error('Error obtener remesas:', err);
+        }
+      });
+  }
+
+  obtenerBancos() {
+    this.transaccionesCajaService
+      .ObtenerBancos()
+      .subscribe({
+        next: (resultado: any) => {
+          this.ListBancos = resultado;
+        },
+        error: (err) => {
+          this.loading.hide();
+          console.error('Error obtener bancos:', err);
         }
       });
   }
@@ -753,18 +772,17 @@ export class TransaccionesCajaComponent implements OnInit {
         next: (result: any) => {
           if (result.length === 0) {
             this.notif.onWarning('Advertencia', 'No se encontró información.');
-            this.loading.hide(); 
+            this.loading2 = false;
             return;
           }
 
           this.ListDocumentosBusqueda = result;
-          this.loading.hide(); 
+          this.loading2 = false;
         }, error: (err) => {
-          this.loading.hide(); 
+          this.loading2 = false;
           console.log('error búsqueda nombre personas: ' + err);
           this.ListDocumentosBusqueda = [];
           this.notif.onWarning('Advertencia', 'No se encontró información.');
-
         }
       });
   }
@@ -1914,11 +1932,24 @@ export class TransaccionesCajaComponent implements OnInit {
       return;
     }
 
+    const idBanco = this.formCheque.value.idBanco;
+    const numeroCheque = this.formCheque.value.numeroCheque;
+
+    const existe = this.ListCheques.some(x =>
+      x.idBanco === idBanco &&
+      x.numeroCheque === numeroCheque
+    );
+
+    if (existe) {
+      this.notif.onWarning('Advertencia', 'El cheque ya está relacionado.');
+      return
+    }
+
     const remesa = this.ListRemesas.find(
       x => x.intClase == this.formCheque.value.idRemesa
     );
     const cheque: ChequeDTO = {
-      idBanco: this.formCheque.value.idBanco,
+      idBanco: Number(this.formCheque.value.idBanco),
       nombreBanco: this.formCheque.value.nombreBanco,
       cuentaCorriente: this.formCheque.value.cuentaCorriente,
       numeroCheque: this.formCheque.value.numeroCheque,
@@ -1943,12 +1974,96 @@ export class TransaccionesCajaComponent implements OnInit {
       .reduce((sum, item) => sum + item.valorCheque, 0);
   }
 
-  eliminarCheque(index: number): void{
+  eliminarCheque(index: number): void {
     this.ListCheques.splice(index, 1);
     this.calcularTotalCheque();
   }
 
-  //#end region
+  consultarBanco(): void {
+    const idBanco = this.formCheque.get('idBanco')?.value;
+
+    if (!idBanco && idBanco !== 0) {
+      this.formCheque.patchValue({
+        nombreBanco: ''
+      });
+      return;
+    }
+
+    const banco = this.ListBancos.find(
+      (b: any) => b.intCodigo === Number(idBanco)
+    );
+
+    this.formCheque.patchValue({
+      nombreBanco: banco?.strNombre || ''
+    });
+  }
+
+  consultarBancoNombre(): void {
+    const nombreBanco = this.formCheque.get('nombreBanco')?.value;
+
+    if (!nombreBanco) {
+      this.formCheque.patchValue({
+        idBanco: null
+      });
+      return;
+    }
+
+    const resultados = this.ListBancos.filter(
+      (b: any) =>
+        b.strNombre.toLowerCase().includes(nombreBanco.toLowerCase())
+    );
+
+    if (resultados.length === 1) {
+      this.formCheque.patchValue({
+        idBanco: resultados[0].intCodigo,
+        nombreBanco: resultados[0].strNombre
+      });
+    } else if (resultados.length > 1) {
+      this.ListBancosFiltrados = resultados;
+      this.ModalBancos.nativeElement.click();
+    } else {
+      // Ninguno
+      this.notif.onWarning('Advertencia', 'No se encontró banco.');
+      this.formCheque.patchValue({
+        nombreBanco: '',
+        idBanco: null
+      });
+    }
+  }
+
+  seleccionarBanco(i: any) {
+    this.formCheque.patchValue({
+      idBanco: i.intCodigo,
+      nombreBanco: i.strNombre
+    });
+  }
+
+  limpiarcamposBanco(tipo: string) {
+    if (tipo === 'codigo') {
+      this.formCheque.patchValue({
+        nombreBanco: ''
+      });
+    } else {
+      this.formCheque.patchValue({
+        idBanco: null
+      });
+    }
+  }
+
+  editarCheque(i: any, j: number) {
+    this.formCheque.patchValue({
+      idBanco: Number(i.idBanco),
+      nombreBanco: i.nombreBanco,
+      cuentaCorriente: i.cuentaCorriente,
+      numeroCheque: i.numeroCheque,
+      idRemesa: i.idRemesa,
+      valorCheque: Number(i.valorCheque)
+    });
+    this.ListCheques.splice(i,j);
+    this.calcularTotalCheque();
+  }
+
+  //#endregion
 
   //#region "GUARDAR TRANSACCIONES"
   guardarTransaccion() {

@@ -274,7 +274,7 @@
 
                         <div class="col-md-8 col-lg-8 col-sm-8 espacioCol1 pad0L pad5R">
                             <div class="panel panel-default" id="PanelTab">
-                                <div class="panel-body pad0T">
+                                <div class="panel-body pad0T pad0B">
                                     <div class="col-xs-12 col-md-12 col-lg-12">
                                         <div class="tabbable">
                                             <ul class="nav nav-tabs">
@@ -724,7 +724,9 @@
                                                                             <label><strong>Banco:</strong></label>
                                                                             <input type="text" class="form-control"
                                                                                 placeholder="" formControlName="idBanco"
-                                                                                appSoloNumero maxlength="3">
+                                                                                appSoloNumero maxlength="3"
+                                                                                (input)="limpiarcamposBanco('codigo')"
+                                                                                (blur)="consultarBanco()">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-lg-5 col-md-5 col-sm-5">
@@ -733,16 +735,18 @@
                                                                             <input type="text" class="form-control"
                                                                                 placeholder=""
                                                                                 formControlName="nombreBanco"
-                                                                                maxlength="40">
+                                                                                maxlength="40"
+                                                                                (input)="limpiarcamposBanco('nombre')">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-lg-1 col-md-1 col-sm-1">
                                                                         <div class="form-group">
                                                                             <label>&nbsp;</label>
                                                                             <button type="button"
-                                                                                (click)="buscarDescripcionOtraTransaccion()"
+                                                                                (click)="consultarBancoNombre()"
                                                                                 class="btn Gt-btn-verde btn-icon btn-buscar">
-                                                                                <i class="glyphicon glyphicon-search"></i>
+                                                                                <i
+                                                                                    class="glyphicon glyphicon-search"></i>
                                                                             </button>
                                                                         </div>
                                                                     </div>
@@ -756,7 +760,8 @@
                                                                                     corriente:</strong></label>
                                                                             <input type="text" class="form-control"
                                                                                 placeholder=""
-                                                                                formControlName="cuentaCorriente" maxlength="15">
+                                                                                formControlName="cuentaCorriente"
+                                                                                maxlength="15">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-lg-3 col-md-3 col-sm-3">
@@ -765,7 +770,8 @@
                                                                                     cheque:</strong></label>
                                                                             <input type="text" class="form-control"
                                                                                 placeholder=""
-                                                                                formControlName="numeroCheque"  maxlength="20">
+                                                                                formControlName="numeroCheque"
+                                                                                maxlength="20">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-lg-3 col-md-3 col-sm-3">
@@ -802,7 +808,7 @@
                                                                             <button
                                                                                 class="btn Gt-btn-verde btn-icon legitRipple"
                                                                                 type="button" (click)="agregarCheque()">
-                                                                                <i class=""></i>&nbsp; AGREGAR
+                                                                                <i class=""></i> AGREGAR
                                                                             </button>&nbsp;
 
                                                                             <button
@@ -811,72 +817,82 @@
                                                                                 LIMPIAR
                                                                             </button>&nbsp;
 
-                                                                            <button
-                                                                                class="btn Gt-btn-verde btn-icon legitRipple"
-                                                                                type="button">
-                                                                                <i class=""></i>&nbsp; GUARDAR
-                                                                            </button>
-
                                                                         </div>
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="row">
                                                                     <hr>
-                                                                    <table class="table table-hover">
-                                                                        <thead>
-                                                                            <tr>
-                                                                                <th>Banco</th>
-                                                                                <th>Cuenta corriente</th>
-                                                                                <th>Nro cheque</th>
-                                                                                <th>Valor cheque</th>
-                                                                                <th>Remesa</th>
-                                                                                <th>Opciones</th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            <tr
-                                                                                *ngFor="let item of ListCheques; let i = index">
-                                                                                <td>
-                                                                                    {{item.idBanco}} -
-                                                                                    {{item.nombreBanco}}
-                                                                                </td>
-                                                                                <td>
-                                                                                    {{item.cuentaCorriente}}
-                                                                                </td>
-                                                                                <td>
-                                                                                    {{item.numeroCheque}}
-                                                                                </td>
-                                                                                <td>
-                                                                                    {{item.valorCheque | currency}}
-                                                                                </td>
-                                                                                <td>
-                                                                                    {{item.descripcionRemesa}}
-                                                                                </td>
-                                                                                <td>
-                                                                                    <button
-                                                                                        class="btn Gt-btn-morado btn-icon legitRipple"
-                                                                                        type="button"
-                                                                                        (click)="eliminarCheque(i)">
-                                                                                        <i
-                                                                                            class="glyphicon glyphicon-trash"></i>
-                                                                                    </button>
-                                                                                </td>
-                                                                            </tr>
-                                                                        </tbody>
-                                                                    </table>
+                                                                    <div class="tabla-wrapper">
+                                                                        <table id="TablaCheques" class="table table-sm">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>Banco</th>
+                                                                                    <th>Cuenta corriente</th>
+                                                                                    <th>Cheque</th>
+                                                                                    <th>Valor</th>
+                                                                                    <th>Remesa</th>
+                                                                                    <th class="operacionFija">Opciones
+                                                                                    </th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr
+                                                                                    *ngFor="let item of ListCheques; let i = index">
+                                                                                    <td>
+                                                                                        {{item.idBanco}} -
+                                                                                        {{item.nombreBanco}}
+                                                                                    </td>
+                                                                                    <td style="text-align: right;">
+                                                                                        {{item.cuentaCorriente}}
+                                                                                    </td>
+                                                                                    <td style="text-align: right">
+                                                                                        {{item.numeroCheque}}
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        {{item.valorCheque |
+                                                                                        currency}}
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        {{item.descripcionRemesa}}
+                                                                                    </td>
+                                                                                    <td class="operacionFija">
+                                                                                        <button
+                                                                                            class="btn Gt-btn-verde btn-icon legitRipple"
+                                                                                            type="button"
+                                                                                            (click)="editarCheque(item, i)">
+                                                                                            <i
+                                                                                                class="glyphicon glyphicon-pencil"></i>
+                                                                                        </button>
+                                                                                        &nbsp;
+                                                                                        <button
+                                                                                            class="btn Gt-btn-morado btn-icon legitRipple"
+                                                                                            type="button"
+                                                                                            (click)="eliminarCheque(i)">
+                                                                                            <i
+                                                                                                class="glyphicon glyphicon-trash"></i>
+                                                                                        </button>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+
                                                                 </div>
 
                                                                 <div class="row">
-                                                                    <div class="col-lg-6 col-md-6 col-sm-6"></div>
-                                                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                                                    <div class="col-lg-7 col-md-7 col-sm-7"></div>
+                                                                    <div class="col-lg-2 col-md-2 col-sm-2"
+                                                                        style="justify-items: end;">
+
+                                                                    </div>
+                                                                    <div class="col-lg-3 col-md-3 col-sm-3">
+                                                                        <br>
                                                                         <div class="form-group">
-                                                                            <label for=""><strong>Total
-                                                                                    cheques:</strong></label>
                                                                             <input type="text"
                                                                                 class="form-control txt-bold txt-right"
                                                                                 appMonedaDirectiva [disabled]="true"
-                                                                                [value]="TotalCheques" />
+                                                                                [(ngModel)]="TotalCheques" />
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1008,6 +1024,8 @@
     data-placement="top" data-trigger="hover">
 <input type="hidden" #ModalOtrasTransaccionesConvenios data-toggle="modal"
     data-target="#ModalOtrasTransaccionesConvenios" data-popup="tooltip" data-placement="top" data-trigger="hover">
+<input type="hidden" #ModalBancos data-toggle="modal" data-target="#ModalBancos" data-popup="tooltip"
+    data-placement="top" data-trigger="hover">
 
 <!-- Modal Condiciones -->
 <div id="ModalCondiciones" class="modal fade" data-backdrop="static" data-keyboard="false">
@@ -1338,3 +1356,40 @@
     </div>
 </div>
 <!--Fin Modal búsqueda por nombre -->
+<!-- Modal Bancos -->
+<div id="ModalBancos" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Bancos</h6>
+            </div>
+            <div class="modal-body pad0T modal1-body ">
+                <div class="table-responsive scrollTabla">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th><strong>Código</strong></th>
+                                <th><strong>Banco</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let i of ListBancosFiltrados" (click)="seleccionarBanco(i)">
+                                <td data-dismiss="modal">
+                                    {{i.intCodigo}}
+                                </td>
+                                <td data-dismiss="modal">
+                                    {{i.strNombre}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Fin Modal Bancos -->

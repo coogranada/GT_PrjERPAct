@@ -167,14 +167,9 @@ export class TransaccionesCajaService {
         return this._http.get<any[]>(url, { params });
     }
 
-    ObtenerBancos(Codigo: number, Nombre: string): Observable<any[]> {
-        const url = `${this.environment.Url}/ObtenerBancos`;
-
-        const params = new HttpParams()
-            .set('Codigo', Codigo)
-            .set('Nombre', Nombre);
-
-        return this._http.get<any[]>(url, { params });
+    ObtenerBancos(): Observable<any> {
+        this.url = `${this.environment.Url}/ObtenerBancos`;
+        return this._http.get<any>(this.url);
     }
 
 
