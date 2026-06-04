@@ -71,7 +71,7 @@ export class AccionistasComponent implements OnInit {
     const dataDoc : any[] = [];
     this.clientesGetListService.GetTipoDocumento().subscribe((result : any) => {
         result.forEach((element : any) => {
-          if (element.Clase !== 4 && element.Clase !== 5 && element.Clase !== 7 && element.Clase !== 8) {
+          if (element.Clase !== 4 && element.Clase !== 5 && element.Clase !== 7) {
             dataDoc.push(element);
           }
         });
@@ -122,6 +122,9 @@ export class AccionistasComponent implements OnInit {
 
 
   GetAccionista() {
+    this.accionistasFrom.get('TipoDocumento').reset();
+    this.accionistasFrom.get('RazonNombre').reset();
+
     if (this.accionistasFrom.get('NumeroDocumento').value !== null
     && this.accionistasFrom.get('NumeroDocumento').value !== undefined
     && this.accionistasFrom.get('NumeroDocumento').value !== '') {

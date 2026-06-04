@@ -3639,6 +3639,7 @@ export class DisponiblesComponent implements OnInit {
               if (result.length === 0) {
                 this.notif.warning('Advertencia', 'No se encontró el asociado.', ConfiguracionNotificacion.configRightTop);
               } else if (result.length === 1) {
+                this.DisponibleForm.get('IdTipoDocumento')?.setValue(result[0].IdTipoDocumento);
                 this.DisponibleForm.get('NumeroDocumento')?.setValue(result[0].NumeroDocumento);
                 this.DisponibleForm.get('Nombre')?.setValue(result[0].PrimerApellido + ' ' +
                   result[0].SegundoApellido + ' ' + result[0].PrimerNombre + ' ' + result[0].SegundoNombre);

@@ -566,7 +566,7 @@
                         <div class="col-md-3">
                             <label class="textNegrilla">Tipo documento:</label>
                             <span class="grande"> *</span>
-                            <select class="form-control" formControlName="TipoDocumento" (change)="onChangeTipoDocumento(); onChangeCreacionForm()">
+                             <select class="form-control" formControlName="TipoDocumento" (change)="onChangeTipoDocumento(); onChangeCreacionForm()">
                                 <option value="">-- Seleccione --</option>
                                 <option *ngFor="let tipoDocumento of tiposDeDocumento"
                                     [value]="tipoDocumento.Clase">

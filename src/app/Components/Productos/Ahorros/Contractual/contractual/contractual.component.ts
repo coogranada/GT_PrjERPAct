@@ -1712,6 +1712,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
               if (result.length === 0) {
                 this.notif.onWarning('Advertencia', 'No se encontró el asociado.');
               } else if (result.length === 1) {
+                this.contractualFrom.get('IdTipoDocumento')?.setValue(result[0].IdTipoDocumento);
                 this.contractualFrom.get('NumeroDocumento')?.setValue(result[0].NumeroDocumento);
                 this.contractualFrom.get('Nombre')?.setValue(result[0].PrimerApellido + ' ' +
                   result[0].SegundoApellido + ' ' + result[0].PrimerNombre + ' ' + result[0].SegundoNombre);
