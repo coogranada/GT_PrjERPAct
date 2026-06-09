@@ -143,5 +143,8 @@
             <button class="btn Gt-btn-verde" (click)="onActualizar()" [disabled]="btnActualizarBloqueado">Actualizar</button>   
         </div>
     </form>
+    <div class="loader-overlay" *ngIf="isLoading">
+        <div class="spinner"></div>
+    </div>
 </div>
 
