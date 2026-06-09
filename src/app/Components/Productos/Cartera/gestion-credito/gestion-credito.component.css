@@ -5,14 +5,6 @@
     margin: 0;
     width: 400px;
 }
-
-.grande {
-    font-size: 25px !important;
-    color: #D84315;
-    margin-top: -5px !important;
-    margin-left: 6px;
-    position: absolute;
-}
 .textNegrilla {
     color: #565656;
     font-weight: bold;
@@ -203,7 +195,6 @@ th.celda-fija-izquierda {
         z-index: 1;
     }
 }
-
 .tr-selected:hover {
     background-color: rgb(229, 229, 229);
 }
@@ -332,17 +323,6 @@ th.celda-fija-izquierda {
     font-weight: bold;
 }
 
-@media (max-width: 1550px) {
-
-    .numero-doc {
-        width: var(--col-wider-1-4);
-    }
-
-    .nombre-asociado {
-        width: var(--col-smaller-3-4);
-    }
-}
-
 @media (min-width: 1600px) {
     .label-pagare,
     .label-relacion {
@@ -371,21 +351,17 @@ th.celda-fija-izquierda {
 {
     padding: 0;
 }
-
 .pdf-modal {
     width: 100%;
     height: 1000px;
 }
-
 .text-center {
     text-align: center;
 }
-
 .cancelar {
     background-color: #6d6b6bc4;
     color: white !important;
 }
-
 .tabla-last-column-fixed th:last-child,
 .tabla-last-column-fixed td:last-child {
     position: sticky;
@@ -393,28 +369,23 @@ th.celda-fija-izquierda {
     background: white;
     z-index: 2;
 }
-
 .tabla-last-column-fixed tr[style*="background"] td:last-child {
     background: inherit;
 }
-
 .scrollTabla {
     max-height: 400px;      
     overflow: auto;        
 }
-
 .horizontal-scroll {
     width: 100%;
     border-collapse: collapse;
 }
-
 .horizontal-scroll thead th {
     position: sticky;
     top: 0;
     background-color: #ffffff; 
     z-index: 10;
 }
-
 .horizontal-scroll tfoot td {
     position: sticky;
     bottom: 0;
@@ -422,22 +393,18 @@ th.celda-fija-izquierda {
     z-index: 9;
     font-weight: bold;
 }
-
 .detalle-acordeon {
     background-color:  rgb(229, 229, 229);;
     border-top: 1px solid #ddd;
     padding: 15px;
     animation: slideDown 0.3s ease-out;
 }
-
 .detalle-acordeon table thead th {
     background-color: rgb(229, 229, 229) !important;
 }
-
 .detalle-acordeon table tbody td {
     background-color: rgb(229, 229, 229) !important;
 }
-
 .icono-acordeon{
     display: inline-flex;
     align-items: center;
@@ -452,85 +419,70 @@ th.celda-fija-izquierda {
     user-select: none;
     outline: none;
 }
-
 .icono-acordeon:hover{
     transform: scale(1.15);
 }
-
 tr.fila-detalle,
 tr.fila-detalle td{
     background-color: rgb(229,229,229) !important;
 }
-
 tr.fila-detalle td{
     padding: 0 !important;
     border-top: 0 !important;
 }
-
 .detalle-acordeon{
     background-color: rgb(229,229,229);
     padding: 15px;
     margin: 0;
 }
-
 .detalle-acordeon table{
     width: 100%;
     border-collapse: collapse;
     table-layout: auto;
     margin-bottom: 0;
 }
-
 .detalle-acordeon table thead th,
 .detalle-acordeon table tbody td{
     padding: 10px 16px !important;
 }
-
 .detalle-acordeon .table > thead > tr > th,
 .detalle-acordeon .table > tbody > tr > td{
     padding-left: 16px !important;
     padding-right: 16px !important;
 }
-
 .detalle-acordeon tbody td:nth-child(8),
 .detalle-acordeon tbody td:nth-child(7){
     text-align: right;
 }
-
 .icono-acordeon:focus,
 .icono-acordeon:active{
   outline: none;
   box-shadow: none;
 }
-
 .table-border {
     border: 1px solid #474646 !important;
     border-collapse: collapse;
 }
-
 .detalle-acordeon{
     background:#ffffff;
     padding:12px 50px;
 }
-
 @media (min-width: 1900px){
     .detalle-acordeon{
         padding:12px 150px;
     }
 }
-
 .row.text-center label {
     line-height: 28px;         
     margin-bottom: 0;
     display: inline-block;
 }
-
 .label-uso-codeudor {
     display: inline-block;
     margin: 0;
     line-height: 38px;             
     vertical-align: middle;
 }
-
 .circle-badge {
     display: inline-flex;
     align-items: center;
@@ -545,8 +497,6 @@ tr.fila-detalle td{
     position: relative;
     top: -15px;   
 }
-
 .badge-verde{ background:#4caf50; color:#fff; }
 .badge-amarillo{ background: #ffc107; color:#222; }
 .badge-morado{ background:rgb(133,38,98); color:#fff; }
-
