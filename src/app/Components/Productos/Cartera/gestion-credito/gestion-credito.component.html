@@ -202,7 +202,7 @@
                             <input type="text" class="form-control" id="SelectDocumento"
                                 formControlName="NumeroDocumento" maxlength="15">
                         </div>
-                        <div class="col-xs-6 col-md-5 col-lg-3 nombre-asociado"
+                        <div class="col-xs-6 col-md-5 col-lg-3"
                             [title]="gestionCreditoForm.get('Nombre')?.value">
                             <input type="text" class="form-control pmayuscula" formControlName="Nombre">
                         </div>
@@ -1965,7 +1965,7 @@
                             <!-- Inicio valorCuotaTab -->
                             <form method="get" [formGroup]="CuotaForm">
                                 <div [hidden]="tabActivo !== Tabs.ValorCuota">
-                                    <article class="ac-text-cr">
+                                    <article>
                                         <section class="container cuota">
                                             <input class="ac-input-sg" id="ac-sg-4" name="ac-sg-4" type="checkbox" />
                                             <label class="ac-label-sg" for="ac-sg-4">Calcular cuota</label>
@@ -2879,7 +2879,7 @@
 
                             <!-- Cupo Tab -->
                             <div [hidden]="tabActivo !== Tabs.Cupo">
-                                <article class="ac-text-cr">
+                                <article>
                                     <form method="get" [formGroup]="cupoForm">
                                         <div class="col-xs-12 col-md-12 col-lg-12">
                                             <div class="container">

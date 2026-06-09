@@ -2944,19 +2944,30 @@ export class FichaAnalisisComponent implements OnInit {
 
     if (!esVigente) {
 
-      const rFin = grupos["SECTOR FINANCIERO"] || {};
-      const rReal = grupos["SECTOR REAL"] || {};
-      const rCoog = grupos["COOGRANADA"] || {};
+    const rReal = grupos["SECTOR REAL"] || {};
+    const rCoog = grupos["COOGRANADA"] || {};
+
+      // Máximo financiero excluyendo Real, Coogranada y Telcos
+      const maxFinanciero = Object.entries(grupos)
+        .filter(([nombre]) =>
+          nombre !== "SECTOR REAL" &&
+          nombre !== "COOGRANADA" &&
+          nombre !== "SECTOR TELCOS"
+        )
+        .reduce((max, [, valor]: any) => {
+          return Math.max(max, valor?.OtorgadoMax || 0);
+        }, 0);
+ 
 
       if (i === 1) {
         this.FichaAnalisisDataForm.get("MaxOpCancelRealAsoData")?.setValue((rReal?.OtorgadoMax || 0));
-        this.FichaAnalisisDataForm.get("MaxOpCancelFinanAsoData")?.setValue((rFin?.OtorgadoMax || 0));
+        this.FichaAnalisisDataForm.get("MaxOpCancelFinanAsoData")?.setValue((maxFinanciero || 0));
         this.FichaAnalisisDataForm.get("MaxOpCancelFinanCoograAsoData")?.setValue((rCoog?.OtorgadoMax || 0));
       }
       else if (i === 2 && esPrincipal && !esVigente) {
         this.codSelected[index].MaxOpCancelRealData = rReal?.OtorgadoMax || 0;
         this.codSelected[index].MaxOpCancelFinanCoograData = rCoog?.OtorgadoMax || 0
-        this.codSelected[index].MaxOpCancelFinanData = rFin?.OtorgadoMax || 0;
+        this.codSelected[index].MaxOpCancelFinanData = maxFinanciero || 0;
 
       }
     }
@@ -3063,11 +3074,18 @@ export class FichaAnalisisComponent implements OnInit {
 CargarIngresoData(i: number, index: number) {
   let tipoOcupa: boolean | undefined;
   let lista: any;
+
   if (i === 1) {
     tipoOcupa = this.resultadoInfoRadicado?.[0]?.TipoOcupacion;
     this.tipoOcupa = tipoOcupa ?? null;
+  } else if (i === 2) {
+    tipoOcupa = this.codSelected?.[index]?.TipoOcupacion;
+    this.tipoOcupaCod = tipoOcupa ?? null;
+  }
 
-    const productValue = this.resultadoInfoRadicado?.[0]?.ProductValueList;
+
+  if (tipoOcupa === true) {
+      const productValue = this.resultadoInfoRadicado?.[0]?.ProductValueList;
     if (!productValue) {
       console.warn('ProductValueList no disponible (i=1)');
       return;
@@ -3080,29 +3098,7 @@ CargarIngresoData(i: number, index: number) {
       return;
     }
 
-  } else if (i === 2) {
-    tipoOcupa = this.codSelected?.[index]?.TipoOcupacion;
-    this.tipoOcupaCod = tipoOcupa ?? null;
-
-    const productValue = this.codSelected?.[index]?.ProductValueList;
-    if (!productValue) {
-      console.warn('ProductValueList no disponible (i=2)');
-      return;
-    }
-
-    try {
-      lista = JSON.parse(productValue);
-    } catch {
-      console.error('Error parseando ProductValueList (i=2)');
-      return;
-    }
-  }
-
-  if (tipoOcupa === undefined || !lista) {
-    console.warn('Tipo de ocupación o lista inválidos');
-    return;
-  }
-  if (tipoOcupa === true) {
+  
     const valorMedio = +(lista?.[0]?.[0]?.value ?? 0) * 1000;
     const valorMin   = +(lista?.[0]?.[1]?.value ?? 0) * 1000;
     const valorMax   = +(lista?.[0]?.[2]?.value ?? 0) * 1000;

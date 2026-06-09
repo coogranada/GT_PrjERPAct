@@ -14,7 +14,6 @@ import { PorcentajeDirective } from '../../../../shared/directives/porcentaje.di
 import { diferenciaEnMeses } from '../../../../../utils/helpers';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { ShareComponentModule } from '../../../../../Modules/share-component.module';
-import { LoadingService } from '../../../../../Services/shared/loading.service';
 
 @Component({
   selector: 'app-cambiar-infocredito-form',
@@ -33,6 +32,7 @@ export class CambiarInfoCreditoForm {
   @ViewChild('inputTasaNominal') inputTasaNominal!: ElementRef;
   @ViewChild('plazo') inputPlazo!: ElementRef;
 
+  isLoading = false;
   btnActualizarBloqueadoManual = true;
   yaCalculoPlazoCuotaVariable = false;
   valorOriginalTasa: number | null = null;
@@ -140,7 +140,6 @@ export class CambiarInfoCreditoForm {
   constructor(
     private carteraService: CarteraService,
     private notif: ToastrService, 
-    private loading: LoadingService
   ) { }
 
   ngOnInit() {
@@ -345,10 +344,10 @@ export class CambiarInfoCreditoForm {
 
       case Operacion.CambiarPlazo:
         this.idNovedad = Novedad.CambiarPlazo;
-        this.loading.show()
+        this.isLoading = true;
         this.carteraService.getNuevoPlazo(this.context.detalleCredito.Encabezado.IdCuenta).subscribe({
           next: (result) => {
-            this.loading.hide()
+            this.isLoading = false;
             if (!result) return;
             this.plazos = result;
             if (this.usaSelectPlazo) {
@@ -370,16 +369,16 @@ export class CambiarInfoCreditoForm {
           },
           error: (error: HttpErrorResponse) => {
             console.log(error)
-            this.loading.hide()
+            this.isLoading = false;
           }
         })
 
         break;
       case Operacion.CambiarSistema:
         this.idNovedad = Novedad.CambiarSistema;
-        this.loading.show()
+        this.isLoading = true;
 
-        this.loading.hide()
+        this.isLoading = false;
         const hoy = new Date();
         const plazoFaltanteMeses = diferenciaEnMeses(hoy, this.context.detalleCredito.fechaVencimiento);
         this.aplicarMaximoPeriodoCapital(plazoFaltanteMeses);
@@ -391,10 +390,10 @@ export class CambiarInfoCreditoForm {
         const idCuenta = this.context.detalleCredito.Encabezado.IdCuenta;
         this.periodosPagoCapital = this.periodosPago;
 
-        this.loading.show()
+        this.isLoading = true;
         this.carteraService.getReestructuracionReliquidacion(idCuenta).subscribe({
           next: result => {
-            this.loading.hide()
+            this.isLoading = false;
 
             if (result?.Reestructuracion && result.Reestructuracion.length) {
               result.Reestructuracion.sort((a, b) => b.Contador - a.Contador);
@@ -548,14 +547,14 @@ export class CambiarInfoCreditoForm {
     this.dtoParaCalcular = { idCuenta, idNovedad, ...valor };
 
     try {
-      this.loading.show();
+      this.isLoading = true;;
       const result = await firstValueFrom(this.carteraService.calcularCambioDatos(this.dtoParaCalcular));
-      this.loading.hide();
+      this.isLoading = false;;
       this.datosCalculados = result;
       return result;
     } catch (error: any) {
       console.log(error);
-      this.loading.hide();
+      this.isLoading = false;;
       const mensajeError = ERROR_MESSAGES[error.ErrorCode as keyof typeof ERROR_MESSAGES]
       if (error?.ErrorCode && mensajeError) {
         this.notif.warning('Advertencia', mensajeError, ConfiguracionNotificacion.configRightTop);
@@ -574,14 +573,14 @@ export class CambiarInfoCreditoForm {
     this.dtoParaCalcular = { idCuenta, idNovedad, ...valor };
     
     try {
-      this.loading.show();
+      this.isLoading = true;;
       const result = await firstValueFrom(this.carteraService.calcularCambioReestructuracion(this.dtoParaCalcular));
-      this.loading.hide();
+      this.isLoading = false;;
       this.datosCalculados = result;
       return result;
     } catch (error: any) {
       console.log(error);
-      this.loading.hide();
+      this.isLoading = false;;
       const mensajeError = ERROR_MESSAGES[error.ErrorCode as keyof typeof ERROR_MESSAGES]
       if (error?.ErrorCode && mensajeError) {
         this.notif.warning('Advertencia', mensajeError, ConfiguracionNotificacion.configRightTop);
@@ -728,16 +727,16 @@ export class CambiarInfoCreditoForm {
 
       this.dtoParaCalcular = { ...this.dtoParaCalcular, plazo };
 
-      this.loading.show();
+      this.isLoading = true;;
       this.carteraService.actualizarCreditoReest({ ...this.dtoParaCalcular, acta }).subscribe({
         next: () => {
           this.finalizar.emit({ idNovedad: this.idNovedad!, idOperacion: this.context.operacion });
-          this.loading.hide();
+          this.isLoading = false;;
           this.close.emit();
         },
         error: (error: HttpErrorResponse) => {
           console.log(error)
-          this.loading.hide();
+          this.isLoading = false;;
         }
       });
 
@@ -758,16 +757,16 @@ export class CambiarInfoCreditoForm {
         break;
     }
 
-    this.loading.show();
+    this.isLoading = true;;
     this.carteraService.actualizarCredito(this.dtoParaCalcular).subscribe({
       next: () => {
         this.finalizar.emit({ idNovedad: this.idNovedad!, idOperacion: this.context.operacion });
-        this.loading.hide();
+        this.isLoading = false;;
         this.close.emit();
       },
       error: (error: HttpErrorResponse) => {
         console.log(error)
-        this.loading.hide();
+        this.isLoading = false;;
       }
     })
   }
