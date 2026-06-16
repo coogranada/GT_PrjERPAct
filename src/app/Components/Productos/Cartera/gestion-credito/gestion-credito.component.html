@@ -710,14 +710,14 @@
                                 
                                     <div class="col-sm-3">
                                         <div class="form-group">
-                                            <label class="fw-bold">Fecha de calificación</label>
+                                            <label class="textNegrilla">Fecha de calificación</label>
                                             <input type="text" class="form-control" formControlName="DtmFecha">
                                         </div>
                                     </div>
                                 
                                     <div class="col-sm-3">
                                         <div class="form-group">
-                                            <label class="fw-bold">Causal</label>
+                                            <label class="textNegrilla">Causal</label>
                                             <span class="grande"> *</span>
                                             <select class="form-control" name="select" formControlName="IdCausal">
                                                 @if(!calificacionForm.get('IdCausal')?.value){
@@ -732,7 +732,7 @@
 
                                     <div class="col-sm-3">
                                         <div class="form-group">
-                                            <label class="fw-bold">Cumplimiento</label>
+                                            <label class="textNegrilla">Cumplimiento</label>
                                             <select class="form-control" name="select" formControlName="Cumplimiento">
                                                 <option *ngFor="let cumplimiento of resultListaCalificaciones" [value]="cumplimiento.DescripcionFormaPago">
                                                     {{cumplimiento.DescripcionFormaPago}}
@@ -743,7 +743,7 @@
                                 
                                     <div class="col-sm-3">
                                         <div class="form-group">
-                                            <label class="fw-bold">Recalificación</label>
+                                            <label class="textNegrilla">Recalificación</label>
                                             <select class="form-control" name="select" formControlName="Recalificacion">
                                                 @if(!calificacionForm.get('Recalificacion')?.value){
                                                     <option value="">-- Seleccione --</option>
@@ -759,7 +759,7 @@
                                 <div class="row">
                                     <div class="col-sm-3">
                                         <div class="form-group">
-                                            <label class="fw-bold">Reestructurado</label>
+                                            <label class="textNegrilla">Reestructurado</label>
                                             <select class="form-control" name="select" formControlName="Reestructurado">
                                                 @if(!calificacionForm.get('Reestructurado')?.value){
                                                     <option value="">-- Seleccione --</option>
@@ -773,7 +773,7 @@
                                 
                                     <div class="col-sm-3">
                                         <div class="form-group">
-                                            <label class="fw-bold">Cualitativa</label>
+                                            <label class="textNegrilla">Cualitativa</label>
                                             <select class="form-control" name="select" formControlName="Cualitativa">
                                                 @if(!calificacionForm.get('Cualitativa')?.value){
                                                     <option value="">-- Seleccione --</option>
@@ -787,7 +787,7 @@
                                 
                                     <div class="col-sm-3">
                                         <div class="form-group">
-                                            <label class="fw-bold">Modelo</label>
+                                            <label class="textNegrilla">Modelo</label>
                                             <select class="form-control" name="select" formControlName="Modelo">
                                                 <option *ngFor="let modelo of resultListaCalificaciones" [value]="modelo.DescripcionFormaPago">
                                                     {{modelo.DescripcionFormaPago}}
@@ -2517,31 +2517,31 @@
                                     <div class="fechas">
                                         <div>
                                             <div class="form-group">
-                                                <label class="fw-bold">Apertura:</label>
+                                                <label class="textNegrilla">Apertura:</label>
                                                 <span class="text-danger"></span>
                                                 <input type="text" class="form-control" [attr.disabled]="true"
                                                     formControlName="fechaApertura" />
                                             </div>
                                             <div class="form-group">
-                                                <label class="fw-bold">Última transacción:</label>
+                                                <label class="textNegrilla">Última transacción:</label>
                                                 <span class="text-danger"></span>
                                                 <input type="text" class="form-control" [attr.disabled]="true"
                                                     formControlName="fechaUltimaTrans" />
                                             </div>
                                             <div class="form-group">
-                                                <label class="fw-bold">Cancelación:</label>
+                                                <label class="textNegrilla">Cancelación:</label>
                                                 <span class="text-danger"></span>
                                                 <input type="text" class="form-control" [attr.disabled]="true"
                                                     formControlName="fechaCancelacion" />
                                             </div>
                                             <div class="form-group">
-                                                <label class="fw-bold">Vencimiento:</label>
+                                                <label class="textNegrilla">Vencimiento:</label>
                                                 <span class="text-danger"></span>
                                                 <input type="text" class="form-control" [attr.disabled]="true"
                                                     formControlName="fechaVencimiento" />
                                             </div>
                                             <div class="form-group">
-                                                <label class="fw-bold">Cambio fecha de pago:</label>
+                                                <label class="textNegrilla">Cambio fecha de pago:</label>
                                                 <span class="text-danger"></span>
                                                 <input type="text" class="form-control" [attr.disabled]="true"
                                                     formControlName="cambioFechaPago" />
@@ -2549,25 +2549,25 @@
                                         </div>
                                         <div>
                                             <div class="form-group">
-                                                <label class="fw-bold">Próximo pago:</label>
+                                                <label class="textNegrilla">Próximo pago:</label>
                                                 <span class="text-danger"></span>
                                                 <input type="text" class="form-control" [attr.disabled]="true"
                                                     formControlName="fechaProximoPago" />
                                             </div>
                                             <div class="form-group">
-                                                <label class="fw-bold">Entró a contingencia:</label>
+                                                <label class="textNegrilla">Entró a contingencia:</label>
                                                 <span class="text-danger"></span>
                                                 <input type="text" class="form-control" [attr.disabled]="true"
                                                     formControlName="fechaContingencia" />
                                             </div>
                                             <div class="form-group">
-                                                <label class="fw-bold">Inicio período gracia:</label>
+                                                <label class="textNegrilla">Inicio período gracia:</label>
                                                 <span class="text-danger"></span>
                                                 <input type="text" class="form-control" [attr.disabled]="true"
                                                     formControlName="fechaInicioPeriodoGracia" />
                                             </div>
                                             <div class="form-group">
-                                                <label class="fw-bold">Cambio de tasa:</label>
+                                                <label class="textNegrilla">Cambio de tasa:</label>
                                                 <span class="text-danger"></span>
                                                 <input type="text" class="form-control" [attr.disabled]="true"
                                                     formControlName="fechaCambioTasa" />

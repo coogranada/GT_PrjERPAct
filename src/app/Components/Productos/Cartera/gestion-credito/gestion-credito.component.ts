@@ -1091,7 +1091,7 @@ export class GestionCreditoComponent {
     .subscribe({
       next: (res) => {
         if (!res?.Exitoso) {
-          this.notif.warning('Advertencia', res.Mensaje);
+          this.notif.warning('Advertencia', res.Mensaje, ConfiguracionNotificacion.configRightTop);
           return;
         }
         this.guardarLogGestionCredito(jsonLog);
@@ -1099,7 +1099,7 @@ export class GestionCreditoComponent {
         this.cerrarModalYRefrescarCambiarGarantia();
       },
       error: () => {
-        this.notif.error('Error', 'No se pudo guardar');
+        this.notif.error('Error', 'No se pudo guardar', ConfiguracionNotificacion.configRightTop);
       }
     });
   }
@@ -1590,7 +1590,7 @@ export class GestionCreditoComponent {
             this.debitoAutomaticoFrom.get('IdConsecutivoDebito')?.setValue(result[0].IdConsecutivo);
             this.debitoAutomaticoFrom.get('IdDigitoDebito')?.setValue(result[0].IdDigito);
           } else if (result.Mensaje !== undefined || result.Mensaje !== null) {
-            this.notif.warning('Advertencia', result.Mensaje);
+            this.notif.warning('Advertencia', result.Mensaje, ConfiguracionNotificacion.configRightTop);
             this.debitoAutomaticoFrom.get('DocumentoDebito')?.reset();
             this.debitoAutomaticoFrom.get('NombreDebito')?.reset();
             this.resultCuentaDebito = undefined;
@@ -1961,7 +1961,7 @@ export class GestionCreditoComponent {
       },
       error: () => {
         this.loading.hide();
-        this.notif.error('Error', 'Error al obtener las líneas.');
+        this.notif.error('Error', 'Error al obtener las líneas.', ConfiguracionNotificacion.configRightTop);
       }
     });
   }
