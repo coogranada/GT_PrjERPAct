@@ -1210,12 +1210,9 @@ export class GestionCreditoComponent {
   }
 
   private handleErrorCambioCalificacion(err: HttpErrorResponse) {
-
-    console.error('Error al cambiar calificación:', err);
-
     this.notif.error(
       'Error',
-      'Error al actualizar la calificación.',
+      'El cambio de calificación no se realizó correctamente.',
       ConfiguracionNotificacion.configRightTop
     );
   }
@@ -1315,6 +1312,10 @@ export class GestionCreditoComponent {
       this.gestionCreditoOperacionForm.get('Codigo')?.reset();
       this.cuotaTabBloqueado = false;
     }, 200);
+  }
+
+  onClickLimpiarModalCalificacion() {
+    this.calificacionForm.reset(this.calificacionInicial);
   }
   //Fin calificacion
 

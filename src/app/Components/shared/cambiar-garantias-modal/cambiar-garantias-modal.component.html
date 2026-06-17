@@ -84,9 +84,13 @@
                                                             </i>
                                                         </span>
                                                         } @else {
-                                                            <span class="icono-acordeon" tabindex="-1" [title]="'No hay registros'">
-                                                                <i class="icon-circle"></i>
-                                                            </span>
+                                                        <span class="icono-acordeon" tabindex="-1">
+                                                          <div class="mensajeInfo">
+                                                            <i class="icon-circle"></i>
+                                                            <span class="mensajeInfoText">No hay registros</span>
+                                                          </div>
+                                                        </span>
+
                                                         }
                                                         {{mapTipoGarantia(item.Tipo)}}
                                                     </td>
