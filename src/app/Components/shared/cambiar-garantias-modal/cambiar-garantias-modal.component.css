@@ -138,31 +138,3 @@ tr.tr-selected {
     z-index: 2;
     font-weight: bold;
 }
-
-.mensajeInfo {
-  display: inline-block;
-  position: relative; 
-}
-
-.mensajeInfoText {
-  visibility: hidden;
-  width: 220px;
-  background-color: rgba(63, 63, 63, 0.95);
-  color: white;
-  text-align: center;
-  padding: 5px;
-  border-radius: 6px;
-
-  position: absolute;
-  top: 50%;
-  left: 120%;              /* 👈 sale hacia la derecha */
-  transform: translateY(-50%);
-
-  z-index: 9999;
-}
-
-/* mostrar tooltip */
-.mensajeInfo:hover .mensajeInfoText {
-  visibility: visible;
-}
-

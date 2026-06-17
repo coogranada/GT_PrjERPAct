@@ -7,6 +7,7 @@ import { CarteraService } from '../../../Services/Productos/cartera.service';
 import { finalize } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { ConfiguracionNotificacion } from '../../../../environments/config.noticaciones';
+import { TooltipService } from '../../../Services/Tooltip/tooltip.service';
 
 @Component({
   selector: 'app-cambiar-garantias-modal',
@@ -87,6 +88,7 @@ export class CambiarGarantiasModalComponent {
   constructor(private loading: LoadingService,
     private carteraService: CarteraService,
     private notif: ToastrService,
+    private tooltipService: TooltipService,
   ) {
   }
 

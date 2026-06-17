@@ -73,10 +73,10 @@
                                                         @if(item.CantidadCreditos > 0) {
                                                         <span class="icono-acordeon" tabindex="-1"
                                                             (click)="onClickDetalleGarantia(item.Consecutivo, item.Tipo, 'codeudorDisponibles')"
-                                                            [title]="(mostrarDetalleGarantia &&
+                                                            [attr.data-tooltip]="(mostrarDetalleGarantia &&
                                                             filaSeleccionadaGarantia === item.Consecutivo &&
                                                             tablaDetalleActiva === 'codeudorDisponibles')
-                                                            ? 'Ocultar detalle' : 'Ver detalle'">
+                                                            ? 'Ocultar detalle' : 'Ver detalleVer'">
                                                             <i [ngClass]="(mostrarDetalleGarantia &&
                                                        filaSeleccionadaGarantia === item.Consecutivo &&
                                                        tablaDetalleActiva === 'codeudorDisponibles')
@@ -84,13 +84,9 @@
                                                             </i>
                                                         </span>
                                                         } @else {
-                                                        <span class="icono-acordeon" tabindex="-1">
-                                                          <div class="mensajeInfo">
-                                                            <i class="icon-circle"></i>
-                                                            <span class="mensajeInfoText">No hay registros</span>
-                                                          </div>
-                                                        </span>
-
+                                                            <span class="icono-acordeon" tabindex="-1">
+                                                              <i class="icon-circle" data-tooltip="No hay registros"></i>
+                                                            </span>
                                                         }
                                                         {{mapTipoGarantia(item.Tipo)}}
                                                     </td>
@@ -101,17 +97,15 @@
                                                     <td class="text-right">{{item.Respalda | currency:'$'}}</td>
                                                     <td class="text-center">{{item.CantidadCreditos}}</td>
                                                     <td class="text-center">
-                                                      <span
-                                                        [title]="!puedeAgregarGarantiaCodeudor(item) 
-                                                          ? 'La garantía no tiene cobertura disponible.' : ''" >
-                                                        <button 
-                                                          class="btn Gt-btn-verde btn-icon legitRipple"
-                                                          [disabled]="!puedeAgregarGarantiaCodeudor(item)"
-                                                          (click)="onClickAgregarGarantia(i,'codeudor',$event)"
-                                                        >
-                                                          <i class="icon-arrow-down5"></i>
-                                                        </button>
-                                                      </span>
+                                                        <span [attr.data-tooltip]="!puedeAgregarGarantiaCodeudor(item) 
+                                                            ? 'La garantía no tiene cobertura disponible.' : null">
+                                                          <button 
+                                                            class="btn Gt-btn-verde btn-icon legitRipple"
+                                                            [disabled]="!puedeAgregarGarantiaCodeudor(item)"
+                                                            (click)="onClickAgregarGarantia(i,'codeudor',$event)">
+                                                            <i class="icon-arrow-down5"></i>
+                                                          </button>
+                                                        </span>
                                                     </td>
                                                 </tr>
                                                 <tr *ngIf="mostrarDetalleGarantia &&
@@ -220,7 +214,7 @@
                                                      @if(item.CantidadCreditos > 0) {
                                                     <span class="icono-acordeon" tabindex="-1"
                                                         (click)="onClickDetalleGarantia(item.Consecutivo, item.Tipo, 'deudorDisponibles')"
-                                                        [title]="(mostrarDetalleGarantia &&
+                                                        [attr.data-tooltip]="(mostrarDetalleGarantia &&
                                                   filaSeleccionadaGarantia === item.Consecutivo &&
                                                   tablaDetalleActiva === 'deudorDisponibles') ? 'Ocultar detalle' : 'Ver detalle'">
                                                         <i
@@ -229,9 +223,9 @@
                                                         </i>
                                                     </span>
                                                     } @else {
-                                                    <span class="icono-acordeon" tabindex="-1" [title]="'No hay registros.'">
-                                                        <i class="icon-circle"></i>
-                                                    </span>
+                                                        <span class="icono-acordeon" tabindex="-1">
+                                                          <i class="icon-circle" data-tooltip="No hay registros"></i>
+                                                        </span>
                                                     }
                                                     {{ mapTipoGarantia(item.Tipo) }}
                                                 </td> 
@@ -437,7 +431,7 @@
                                               class="icono-acordeon"
                                               tabindex="-1"
                                               (click)="onClickDetalleGarantia(item.lngConsecutivo, item.Tipo, 'compartidas', item.IdGarantia)"
-                                              [title]="(mostrarDetalleGarantia &&
+                                              [attr.data-tooltip]="(mostrarDetalleGarantia &&
                                                         filaSeleccionadaGarantia === item.lngConsecutivo &&
                                                         tablaDetalleActiva === 'compartidas')
                                                         ? 'Ocultar detalle' : 'Ver detalle'">
