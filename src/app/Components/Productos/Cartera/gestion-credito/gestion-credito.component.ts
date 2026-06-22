@@ -3,7 +3,7 @@ import { ControlContainer, FormControl, FormGroup, Validators } from '@angular/f
 import { OperacionesService } from '../../../../Services/Maestros/operaciones.service';
 import { FormaPagoEnum, Tabs, TipoBusquedaResumen, TipoSistemas } from '../../../../Models/Productos/cartera/gestion-credito.enum';
 import { CarteraService } from '../../../../Services/Productos/cartera.service';
-import { ActualizarPagareDto, CalcularCuota, CambiarCalificacionDto, CambiarFormaPagoDto, CambiarLineaCreditoDto, CodeudorDraft, CuentaCarteraDetalle, CuentaCarteraResumen, CuentaFormateada, DebitoAutomaticoCreditoDto, Diferido, FechasCredito, GarantiaDisponible, GarantiaPersonalCod, GarantiaReal, HistorialOperacion, LineaCambioListDto, LogCambiarCodeudores, ManejarSeguroCreditoDto, ObservacionRadicado, Provision, Referencia, ResultadoOperacionDto, CambiarInfoCreditoLog, CambiarGarantiaDto, CambiarGarantiasRequestDto, DetalleGarantiaCreditoDto, GarantiaRealAsignada, ObtenerCodeudorBasicoModel, PeriodoPago, GarantiaCompartida } from '../../../../Models/Productos/cartera/gestion-credito.model';
+import { ActualizarPagareDto, CalcularCuota, CambiarCalificacionDto, CambiarFormaPagoDto, CambiarLineaCreditoDto, CodeudorDraft, CuentaCarteraDetalle, CuentaCarteraResumen, CuentaFormateada, DebitoAutomaticoCreditoDto, Diferido, FechasCredito, GarantiaDisponible, GarantiaPersonalCod, GarantiaReal, HistorialOperacion, LineaCambioListDto, LogCambiarCodeudores, ManejarSeguroCreditoDto, ObservacionRadicado, Provision, Referencia, ResultadoOperacionDto, CambiarInfoCreditoLog, CambiarGarantiaDto, CambiarGarantiasRequestDto, DetalleGarantiaCreditoDto, GarantiaRealAsignada, ObtenerCodeudorBasicoModel, PeriodoPago, GarantiaCompartida, DevolverReest } from '../../../../Models/Productos/cartera/gestion-credito.model';
 import { catchError, concatMap, finalize, firstValueFrom, forkJoin, Observable, of, switchMap, tap } from 'rxjs';
 import { MiListaProductosService } from '../../../../Services/Informes/mi-lista-productos.service';
 import { ToastrService } from 'ngx-toastr';
@@ -418,7 +418,7 @@ export class GestionCreditoComponent {
     const PeriodoGracia = new FormControl({ value: '', disabled: true }, []);
     const TasaPeriodicaL = new FormControl({ value: '', disabled: true }, []);
     const TasaLiquidada = new FormControl({ value: '', disabled: true }, []);
-    const EfectivaLiquidada = new FormControl({ value: '', disabled: true }, []);;
+    const EfectivaLiquidada = new FormControl({ value: '', disabled: true }, []);
     const TasaPeriodicaP = new FormControl({ value: '', disabled: true }, []);
     const TasaPactada = new FormControl({ value: '', disabled: true }, []);
     const EfectivaPactada = new FormControl({ value: '', disabled: true }, []);
@@ -842,6 +842,8 @@ export class GestionCreditoComponent {
         this.estaAbiertoModalCambios = true;
       } else if (operacionCodigo === '140') { //Reesructurar
         await this.habilitarReestructurar();
+      } else if (operacionCodigo === '143') { //Devolver reestructuración
+        await this.devolverReestructurado();
       } else if (operacionCodigo === '21') {
         this.habilitarCambioFormaPago();
       } else if (operacionCodigo === '133') {
@@ -1346,6 +1348,78 @@ export class GestionCreditoComponent {
     this.cambiarInfoCreditoContext = this.buildCambiarInfoCreditoContext();
     this.estaAbiertoModalCambios = true;
   }
+
+  private async devolverReestructurado() {
+    await this.buscarReestructuracionReliquidacion();
+    const hoy = new Date();
+
+    const ultimaReest = this.lstReestructuracion.find(r => {
+      const fecha = new Date(r.Fecha);
+      return fecha.toDateString() === hoy.toDateString();
+    });
+
+    if (!ultimaReest) {
+      this.notif.warning('Advertencia', "Hoy no se ha realizado reestructuración al crédito.", ConfiguracionNotificacion.configRightTop);
+      this.gestionCreditoOperacionForm.get('Codigo')?.reset();
+      return;
+    }
+
+    const fechaUltimaReest = new Date(ultimaReest.Fecha);
+    const fechaUltimaTransaccion = new Date(this.gestionCreditoForm.get('fechaUltimaTrans')?.value);
+
+    if(fechaUltimaTransaccion >= fechaUltimaReest) {
+      this.notif.warning('Advertencia', "Se realizó una transacción despues de la reestructuración.", ConfiguracionNotificacion.configRightTop);
+      this.gestionCreditoOperacionForm.get('Codigo')?.reset();
+      return;
+    }
+
+    Swal.fire({
+      title: 'Advertencia',
+      text: '',
+      html: '¿Está seguro que desea devolver reestructurado?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Si',
+      cancelButtonText: 'No',
+      confirmButtonColor: 'rgb(13,165,80)',
+      cancelButtonColor: 'rgb(160,0,87)',
+      allowOutsideClick: false,
+      allowEscapeKey: false
+    }).then((results) => {
+      if (results.value) {
+
+        const dataStr = localStorage.getItem('Data');
+        let infoUsuario;
+        if (dataStr) {
+          infoUsuario = JSON.parse(window.atob(dataStr));
+
+        }
+        const IdCuenta = this.gestionCreditoForm.get('IdCuenta')?.value;
+        const NombreUsuario: string = infoUsuario.Usuario;
+
+        this.loading.show();
+        this.carteraService.devolverReestructuracion({ IdCuenta, NombreUsuario }).subscribe({
+          next: () => {
+            this.onFinalizarActualizacionCredito({ idNovedad: Novedad.DevolverReestructuracion, idOperacion: Operacion.DevolverReestructuracion });
+            this.loading.hide();
+
+
+          },
+          error: (error: HttpErrorResponse) => {
+            console.log(error);
+            this.loading.hide();
+          }
+        });
+
+      } else {
+        this.gestionCreditoOperacionForm.reset();
+      }
+    });
+
+  }
+
+
+
 
   private async getPeriodosPago(): Promise<PeriodoPago[] | null> {
     try {
@@ -2818,6 +2892,7 @@ export class GestionCreditoComponent {
     const IdCuenta = this.gestionCreditoForm.get('IdCuenta')?.value;
     if (!IdCuenta) return;
 
+    this.loading.show();
     try {
       const result = await firstValueFrom(
         this.carteraService.getSaldosCartera(IdCuenta)
@@ -2844,6 +2919,8 @@ export class GestionCreditoComponent {
     } catch (error) {
       const errorMessage = <any>error;
       console.log(errorMessage);
+    } finally {
+      this.loading.hide();
     }
   }
 // FIN SALDOS
@@ -3912,6 +3989,9 @@ CalcularSimularPago(){
       };
       this.guardarLogGestionCredito(logCambiarSistema, Operacion.CambiarSistema);
       novedad = 'El cambio de sistema';
+    } else if(idNovedad === Novedad.DevolverReestructuracion) {
+      // log....
+      novedad = 'La devolución';
     }
 
     this.gestionCreditoOperacionForm.get('Codigo')?.reset();

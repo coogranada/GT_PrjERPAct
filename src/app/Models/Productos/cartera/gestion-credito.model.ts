@@ -335,6 +335,11 @@ export interface DetallesLogCredito {
   Actualiza: CambiarInfoCreditoLog
 }
 
+export interface DevolverReest {
+  IdCuenta: number;
+  NombreUsuario: string;
+}
+
 export interface DatosForm {
   Sistema: string;
   IdSistema: number;

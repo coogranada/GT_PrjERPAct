@@ -179,7 +179,7 @@ export class CambiarInfoCreditoForm {
 
     acta?.valueChanges.subscribe(() => {
       // Evitar que marque dirty el form para que el boton calcular no se habilite
-      acta?.markAsPristine();
+      if(this.datosCalculados) acta.markAsPristine();
     });
 
     plazo.valueChanges.subscribe(valor => {
@@ -190,8 +190,7 @@ export class CambiarInfoCreditoForm {
       }
     });
 
-    const sistemaControl = this.cambiarInfoCreditoForm.controls.sistemaSelect;
-    sistemaControl.valueChanges.subscribe(idSistema => {
+    sistemaSelect.valueChanges.subscribe(idSistema => {
       this.aplicarReglasSistema(idSistema);
       if (this.context.operacion === Operacion.ReestructurarCambioPlazo) {
         const perGraciaControl = this.cambiarInfoCreditoForm.controls.periodoGracia;
@@ -524,17 +523,6 @@ export class CambiarInfoCreditoForm {
       }
     }
 
-    // if (
-    //   idSisOriginal == idSistema 
-    //   && idPerCapOriginal == idPerCap 
-    //   && idPerIntOriginal == idPerInt 
-    //   && perGraciaOriginal == periodoGracia
-    //   && plazoOriginal == plazo
-    // ) {
-    //   this.notif.warning('Advertencia', 'Debe cambiar datos.', ConfiguracionNotificacion.configRightTop);
-    //   return false;
-    // }
-
     return true;
   }
 
@@ -547,14 +535,14 @@ export class CambiarInfoCreditoForm {
     this.dtoParaCalcular = { idCuenta, idNovedad, ...valor };
 
     try {
-      this.isLoading = true;;
+      this.isLoading = true;
       const result = await firstValueFrom(this.carteraService.calcularCambioDatos(this.dtoParaCalcular));
-      this.isLoading = false;;
+      this.isLoading = false;
       this.datosCalculados = result;
       return result;
     } catch (error: any) {
       console.log(error);
-      this.isLoading = false;;
+      this.isLoading = false;
       const mensajeError = ERROR_MESSAGES[error.ErrorCode as keyof typeof ERROR_MESSAGES]
       if (error?.ErrorCode && mensajeError) {
         this.notif.warning('Advertencia', mensajeError, ConfiguracionNotificacion.configRightTop);
@@ -573,14 +561,14 @@ export class CambiarInfoCreditoForm {
     this.dtoParaCalcular = { idCuenta, idNovedad, ...valor };
     
     try {
-      this.isLoading = true;;
+      this.isLoading = true;
       const result = await firstValueFrom(this.carteraService.calcularCambioReestructuracion(this.dtoParaCalcular));
-      this.isLoading = false;;
+      this.isLoading = false;
       this.datosCalculados = result;
       return result;
     } catch (error: any) {
       console.log(error);
-      this.isLoading = false;;
+      this.isLoading = false;
       const mensajeError = ERROR_MESSAGES[error.ErrorCode as keyof typeof ERROR_MESSAGES]
       if (error?.ErrorCode && mensajeError) {
         this.notif.warning('Advertencia', mensajeError, ConfiguracionNotificacion.configRightTop);
@@ -727,16 +715,16 @@ export class CambiarInfoCreditoForm {
 
       this.dtoParaCalcular = { ...this.dtoParaCalcular, plazo };
 
-      this.isLoading = true;;
+      this.isLoading = true;
       this.carteraService.actualizarCreditoReest({ ...this.dtoParaCalcular, acta }).subscribe({
         next: () => {
           this.finalizar.emit({ idNovedad: this.idNovedad!, idOperacion: this.context.operacion });
-          this.isLoading = false;;
+          this.isLoading = false;
           this.close.emit();
         },
         error: (error: HttpErrorResponse) => {
-          console.log(error)
-          this.isLoading = false;;
+          console.log(error);
+          this.isLoading = false;
         }
       });
 
@@ -757,16 +745,16 @@ export class CambiarInfoCreditoForm {
         break;
     }
 
-    this.isLoading = true;;
+    this.isLoading = true;
     this.carteraService.actualizarCredito(this.dtoParaCalcular).subscribe({
       next: () => {
         this.finalizar.emit({ idNovedad: this.idNovedad!, idOperacion: this.context.operacion });
-        this.isLoading = false;;
+        this.isLoading = false;
         this.close.emit();
       },
       error: (error: HttpErrorResponse) => {
         console.log(error)
-        this.isLoading = false;;
+        this.isLoading = false;
       }
     })
   }
