@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, Input} from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input, SimpleChanges} from '@angular/core';
 import { ClientesGetListService } from '../../../../../Services/Clientes/clientesGetList.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AccionistaModel } from '../../../../../Models/Clientes/Juridicos/AccionistaModel';
@@ -19,6 +19,7 @@ export class AccionistasComponent implements OnInit {
   @Output() emitEvent = new EventEmitter(); // variable que emite para dar siguiente
   @Input() infoTabAllAccionista: any;
   @Input() OperacionActual: any;
+  @Input() juridico: any;
   //#endregion
   //#region carga variables
   public siguiente = false;
@@ -58,11 +59,23 @@ export class AccionistasComponent implements OnInit {
   constructor(private clientesGetListService: ClientesGetListService, private notif: AlertService,
     private juridicoService: JuridicosService, private generalesService: GeneralesService, private loading: LoadingService) { }
 
+  
+  
+  ngOnChanges() {
+    console.log('CAMBIO:', this.juridico);
+
+    if (this.juridico) {
+    console.log('NIT:', this.juridico.Nit);
+    }
+  }
+
+  
+
   ngOnInit() {
     this.IrArriba();
     this.itemAccionistas = [];
     this.GetTipoDocumentoAccionista();
-    this.validarAccionistas();
+    this.validarAccionistas();    
   }
   
 
@@ -120,8 +133,14 @@ export class AccionistasComponent implements OnInit {
     }
   }
 
-
-  GetAccionista() {
+  GetAccionista() {    
+    const DocumentoJuridico = this.juridico.Nit;
+    const DocumentoAccionista = this.accionistasFrom.get('NumeroDocumento').value;
+    if(DocumentoJuridico == DocumentoAccionista ) {
+        this.notif.onWarning('Advertencia', 'El accionista debe ser diferente al titular.');-+
+          this.accionistasFrom.get('NumeroDocumento').reset();
+          return;
+    }
     this.accionistasFrom.get('TipoDocumento').reset();
     this.accionistasFrom.get('RazonNombre').reset();
 
@@ -178,7 +197,7 @@ export class AccionistasComponent implements OnInit {
         }
       });
       if (this.validar) {
-          this.notif.onWarning('Advertencia', 'El accionista ya fue ingresado.');
+          this.notif.onWarning('Advertencia', 'El accionista ya fue ingresado.');-+
           this.accionistasFrom.get('NumeroDocumento').reset();
           } else {
             const documentoConsulta = this.accionistasFrom.get('NumeroDocumento').value;
@@ -223,11 +242,6 @@ export class AccionistasComponent implements OnInit {
             );
           }
     }
-      // }  else {
-      //   this.notif.onWarning('Advertencia', 'Los autorizados deben ser diferentes al titular de la cuenta.',
-      //     ConfiguracionNotificacion.configRightTop);
-      //   this.clearTitulares();
-      // }
     }
   }
 

@@ -1,5 +1,5 @@
 import { DatePipe, formatDate } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, DoCheck } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, DoCheck, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import moment from 'moment';
@@ -246,6 +246,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
   lineasDestino: any[] = [];
   resultRadicados: any[] = [];
   procesosWorkManager: any[] = [];
+  data: any;
 
 
   updateTipoRelacion(id: number) {
@@ -6574,6 +6575,8 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
 
   console.log('RESULT', result);
   console.log('JuridicoDto', result?.JuridicoDto);
+  this.data = result;
+
 
   if (result?.JuridicoDto && result?.BasicosDto) {
     this.CargarDataFormularioBaisco(result.JuridicoDto, result.BasicosDto);
