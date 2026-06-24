@@ -1,0 +1,140 @@
+.scrollTabla {
+    max-height: 400px;
+    overflow: auto;
+}
+
+.detalle-acordeon {
+    background: #ffffff;
+    padding: 12px 50px;
+    margin: 0;
+    animation: slideDown 0.3s ease-out;
+}
+
+@media (min-width: 1900px) {
+    .detalle-acordeon {
+        padding: 12px 150px;
+    }
+}
+
+.detalle-acordeon table {
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.table thead th {
+    font-weight: bold;
+}
+
+.detalle-acordeon table thead th {
+    background-color: rgb(229, 229, 229) !important;
+}
+
+.table td {
+    padding: 1px 5px 0;
+}
+
+.table tbody tr {
+    height: 45px;
+}
+
+
+.detalle-acordeon .table > thead > tr > th,
+.detalle-acordeon .table > tbody > tr > td {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+}
+
+.detalle-acordeon tbody td:nth-child(7) {
+    text-align: right;
+}
+
+tr.fila-detalle, tr.fila-detalle td {
+    background-color: rgb(229, 229, 229) !important;
+}
+
+tr.fila-detalle td {
+    padding: 0 !important;
+    border-top: 0 !important;
+}
+
+.icono-acordeon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    margin-right: 6px;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    transition: transform 0.2s ease;
+    user-select: none;
+    outline: none;
+}
+
+.icono-acordeon:hover {
+    transform: scale(1.15);
+}
+
+.icono-acordeon:focus,
+.icono-acordeon:active {
+    outline: none;
+    box-shadow: none;
+}
+
+.table-border {
+    border: 1px solid #474646 !important;
+}
+
+.label-uso-codeudor {
+    display: inline-block;
+    margin: 0;
+    line-height: 38px;
+    vertical-align: middle;
+}
+
+.circle-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 700;
+    margin-left: 8px;
+    vertical-align: middle;
+    position: relative;
+    top: -15px;
+}
+
+.textNegrilla {
+    color: #565656;
+    font-weight: bold;
+}
+
+.badge-amarillo {
+    background: #ffc107;
+    color: #222;
+}
+
+.fila-expandida {
+    background-color: rgb(229, 229, 229) !important;
+}
+
+.fila-expandida:hover {
+    background-color: rgb(229, 229, 229) !important;
+}
+
+tr.tr-selected {
+    background-color: rgb(229, 229, 229) !important;
+}
+
+.encabezado-fijo thead th {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 2;
+    font-weight: bold;
+}

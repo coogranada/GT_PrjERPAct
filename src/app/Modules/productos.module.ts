@@ -22,6 +22,7 @@ import { TipoDocumentoPipe } from '../Pipes/utilidades/tipo-documento.pipe';
 import { DatacreditoComponent } from '../Components/Productos/Creditos/datacredito/datacredito/datacredito.component';
 import { CambiarInfoCreditoForm } from "../Components/Productos/Cartera/gestion-credito/cambiar-infocredito-form/cambiar-infocredito-form.component";
 import { ModalComponent } from '../Components/shared/modal/modal.component';
+import { CambiarGarantiasModalComponent } from '../Components/shared/cambiar-garantias-modal/cambiar-garantias-modal.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { ModalComponent } from '../Components/shared/modal/modal.component';
     ProductosRoutingModule,
     ShareComponentModule,
     FormsModule,
+    CambiarGarantiasModalComponent,
     CurrencyMaskModule,
     NgxLoadingModule.forRoot({
         backdropBackgroundColour: 'rgba(255,255,255,0.8)'
