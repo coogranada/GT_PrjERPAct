@@ -270,7 +270,7 @@
                                     <div class="col-xs-12 col-md-12 col-lg-2">
                                         <label class="textNegrilla">Valor titulo:</label>
                                         <span class="grande"> *</span>
-                                        <input style="text-align:right" type="text" class="form-control" formControlName="ValorTotal" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:',',precision: 2}" (blur)="ValidarValor()" (keypress)="onChangeDataForm($event)" maxlength="17" [attr.disabled]="BloquearNegociacion">
+                                        <input style="text-align:right" type="text" class="form-control" formControlName="ValorTotal" appMonedaDirectiva (blur)="ValidarValor()" (keypress)="onChangeDataForm($event)" maxlength="17" [attr.disabled]="BloquearNegociacion">
                                     </div>
                                     <!-- Fin CuotaMes  -->
 

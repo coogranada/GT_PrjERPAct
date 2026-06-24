@@ -134,7 +134,7 @@ export class AccionistasComponent implements OnInit {
   }
 
   GetAccionista() {    
-    const DocumentoJuridico = this.juridico.Nit;
+    let DocumentoJuridico = this.juridico?.Nit;  
     const DocumentoAccionista = this.accionistasFrom.get('NumeroDocumento').value;
     if(DocumentoJuridico == DocumentoAccionista ) {
         this.notif.onWarning('Advertencia', 'El accionista debe ser diferente al titular.');-+
@@ -572,7 +572,7 @@ export class AccionistasComponent implements OnInit {
     const IdJuridico = new FormControl('', []);
     const IdPersonaAccionista = new FormControl('', []);
     const TipoDocumento = new FormControl('', [Validators.required]);
-    const NumeroDocumento = new FormControl('', [Validators.required, Validators.pattern('[0-9]{4,15}')]);
+    const NumeroDocumento = new FormControl('', [Validators.required]);
     const RazonNombre = new FormControl('', [Validators.required, Validators.pattern('[A-Za-zñÑ. 0-9]+')]);
     const EsPeps = new FormControl('', [Validators.required]);
     const Participacion = new FormControl('', [Validators.required, Validators.pattern('[0-9]{1,3}')]);

@@ -405,51 +405,84 @@ export class EntrevistaComponent implements OnInit {
     }
   }
  
-  GuardarJuridicoCompleto() {
-    this.loading.show();
-    let data = localStorage.getItem('Data');
-    const dataUser = JSON.parse(window.atob(data == null ? "" : data));
-    console.log('Cantidad -' + this.entrevistaModelLst.length);
-    console.log('Cliente selec - '+ this.clienteSeleccionado);
-    if (this.infoTabAllEntrevista.BasicosDto.IdRelacion === '15' && this.entrevistaModelLst.length === 0) {
-      this.loading.show();
-      this.siguiente = true;
-      this.emitEvent.emit(this.positionTab);
-      this.infoTabAllEntrevista.EntrevistaDto = {};
-      this.tratamientoModel.Acepto = true;
-      this.tratamientoModel.FechaAceptacion = formatDate(this.infoTabAllEntrevista.JuridicoDto.FechaMatricula, 'yyyy-MM-dd HH:mm:ss', 'en');
-      this.tratamientoModel.IdAsesor = dataUser.lngTercero;
-      this.tratamientoModel.IdTercero = 0;
-      this.tratamientoModel.fechaNoAceptacion = formatDate(new Date(), 'yyyy-MM-dd HH:mm:ss', 'en');
-      this.infoTabAllEntrevista.tratamientoDto = this.tratamientoModel;
-      this.infoTabAllEntrevista.userWork = dataUser.Usuario;
-      this.tratamientoForm.get('checkTratamiento')?.setValue(true);
-      this.GuardarJuridico(this.infoTabAllEntrevista);
+ GuardarJuridicoCompleto(): void {
+  this.loading.show();
+
+  try {
+    const data = localStorage.getItem('Data');
+    const dataUser = data ? JSON.parse(window.atob(data)) : null;
+
+    console.log('Cantidad -', this.entrevistaModelLst.length);
+    console.log('Cliente selec -', this.clienteSeleccionado);
+
+    const isRelacion15 = this.infoTabAllEntrevista.BasicosDto.IdRelacion === '15';
+    const noEntrevistas = this.entrevistaModelLst.length === 0;
+
+    if (isRelacion15 && noEntrevistas) {
+      this.procesarSinEntrevista(dataUser);
     } else {
-      this.loading.show();
-      const valide = this.ValidarPreguntasEntrevistas();
-      if (!valide) {
-        this.notif.onWarning('Advertencia', 'Debe responder todas las preguntas.');
-        this.loading.hide();
-     } else {
-        this.loading.show();
-        this.allItemFormEntrevista = [];
-        this.infoTabAllEntrevista.EntrevistaDto = {};
-        this.allItemFormEntrevista.push(this.entrevistaForm.value);
-        this.MapearInformacionEntrevista();
-        this.infoTabAllEntrevista.EntrevistaDto = this.entrevistaModelLst;
-        this.tratamientoModel.Acepto = true;
-        this.tratamientoModel.FechaAceptacion = formatDate(this.infoTabAllEntrevista.JuridicoDto.FechaMatricula, 'yyyy-MM-dd HH:mm:ss', 'en');
-        this.tratamientoModel.IdAsesor = dataUser.lngTercero;
-        this.tratamientoModel.IdTercero = 0;
-        this.tratamientoModel.fechaNoAceptacion = formatDate(new Date(), 'yyyy-MM-dd HH:mm:ss', 'en');
-        this.infoTabAllEntrevista.tratamientoDto = this.tratamientoModel;
-        this.infoTabAllEntrevista.userWork = dataUser.Usuario;
-        console.log(this.infoTabAllEntrevista);
-        this.GuardarJuridico(this.infoTabAllEntrevista);
-      }
+      this.procesarConEntrevista(dataUser);
     }
+
+  } catch (error) {
+    console.error('Error en GuardarJuridicoCompleto:', error);
+    this.notif.onDanger('Error', 'Ocurrió un problema al procesar la información.');
+  } finally {
+    this.loading.hide();
   }
+ }
+ private procesarSinEntrevista(dataUser: any): void {
+  this.siguiente = true;
+  this.emitEvent.emit(this.positionTab);
+
+  this.infoTabAllEntrevista.EntrevistaDto = {};
+
+  this.configurarTratamiento(dataUser);
+
+  this.tratamientoForm.get('checkTratamiento')?.setValue(true);
+
+  this.GuardarJuridico(this.infoTabAllEntrevista);
+}
+private procesarConEntrevista(dataUser: any): void {
+  const valido = this.ValidarPreguntasEntrevistas();
+
+  if (!valido) {
+    this.notif.onWarning('Advertencia', 'Debe responder todas las preguntas.');
+    return;
+  }
+
+  this.infoTabAllEntrevista.EntrevistaDto = {};
+  this.allItemFormEntrevista = [];
+
+  this.allItemFormEntrevista.push(this.entrevistaForm.value);
+
+  this.MapearInformacionEntrevista();
+  this.infoTabAllEntrevista.EntrevistaDto = this.entrevistaModelLst;
+
+  this.configurarTratamiento(dataUser);
+
+  console.log(this.infoTabAllEntrevista);
+
+  this.GuardarJuridico(this.infoTabAllEntrevista);
+}
+private configurarTratamiento(dataUser: any): void {
+  this.tratamientoModel = {
+    ...this.tratamientoModel,
+    Acepto: true,
+    FechaAceptacion: formatDate(
+      this.infoTabAllEntrevista.JuridicoDto.FechaMatricula,
+      'yyyy-MM-dd HH:mm:ss',
+      'en'
+    ),
+    IdAsesor: dataUser?.lngTercero,
+    IdTercero: 0,
+    fechaNoAceptacion: formatDate(new Date(), 'yyyy-MM-dd HH:mm:ss', 'en')
+  };
+
+  this.infoTabAllEntrevista.tratamientoDto = this.tratamientoModel;
+  this.infoTabAllEntrevista.userWork = dataUser?.Usuario;
+}
+
 
     private MapearInformacionEntrevista() {
     this.allItemFormEntrevista.forEach(entrevista => {
@@ -600,46 +633,70 @@ export class EntrevistaComponent implements OnInit {
     });
   }
 
-  private GuardarJuridico(infoTotal : any) {
-    this.loading.show();
-    if (this.infoTabAllEntrevista.BasicosDto.IdRelacion === 5) {
-      infoTotal.BasicosDto.DebitoAutomatico = this.tratamientoForm.get('checkDebitoAutomatico')?.value;
-    } else {      
+  private GuardarJuridico(infoTotal: any): void {
+
+  if (this.infoTabAllEntrevista.BasicosDto.IdRelacion === 5) {
+    infoTotal.BasicosDto.DebitoAutomatico = 
+      this.tratamientoForm.get('checkDebitoAutomatico')?.value;
+  } else {
     infoTotal.BasicosDto.DebitoAutomatico = false;
-    }
-    console.log('infoTotal - Guardar juridico: ' + JSON.stringify(infoTotal));
-  
-    this.loading.show();
-    this.juridicoService.GuardarJuridicosAll(infoTotal).subscribe(result => {
-    
-      if (result != null) {
-        this.loading.show();
+  }
+
+  console.log('infoTotal - Guardar juridico: ', infoTotal);
+
+  this.juridicoService.GuardarJuridicosAll(infoTotal).subscribe({
+    next: (result) => {
+
+      if (result) {
+
         localStorage.setItem('IdModuloActivo', window.btoa(JSON.stringify(12)));
+
         const dataJuridico = result;
         const AnimoLucro = infoTotal.BasicosDto.AnimoLucro ? 'Si' : 'No';
-        this.GuardarLog({...infoTotal, BasicosDto: { ...infoTotal.BasicosDto, AnimoLucro }}, this.OperacionSeleccionada, 0, dataJuridico.BasicosDto.IdTercero,12);
+
+        this.GuardarLog(
+          {
+            ...infoTotal,
+            BasicosDto: { ...infoTotal.BasicosDto, AnimoLucro }
+          },
+          this.OperacionSeleccionada,
+          0,
+          dataJuridico.BasicosDto.IdTercero,
+          12
+        );
+
         this.notif.onSuccess('Exitoso', 'El registro se realizó correctamente.');
-        this.emitEventGuardado.emit({
-          cargar: '1', consultar: infoTotal.JuridicoDto.Nit, consultarTercero: dataJuridico.BasicosDto.IdTercero,
-          relacion: dataJuridico.BasicosDto.IdRelacion  });
+
+       
+      this.emitEventGuardado.emit({
+        cargar: '1',
+        consultar: infoTotal.JuridicoDto?.Nit,
+        consultarTercero: dataJuridico.BasicosDto?.IdTercero,
+        relacion: dataJuridico.BasicosDto?.IdRelacion
+      });
+
+
         this.entrevistaModelLst = [];
         this.DesbloquearRespuesta3 = true;
         this.DesbloquearRespuesta16 = true;
         this.DesbloquearRespuesta13 = true;
-        this.loading.hide();
-        this.IrArriba();
-      }
-      else {
-        this.loading.hide();
-        console.log('result - Guardar juridico: ' + result);
-      }
-    }, error => {
-        this.loading.hide();
-      console.error('Error al realizar el registro - juridicos: ' + error);
-      this.notif.onDanger('Error', 'No se pudo realizar el registro - Error: ' + error);
-    });
 
-  }
+        this.IrArriba();
+      } else {
+        console.log('result vacío:', result);
+      }
+
+      this.loading.hide(); 
+
+    },
+    error: (error) => {
+      console.error('Error al guardar:', error);
+      this.notif.onDanger('Error', 'No se pudo realizar el registro');
+
+      this.loading.hide();
+    }
+  });
+}
 
   ActualizarEntrevista() {
     if (this.EditarFrom) {
