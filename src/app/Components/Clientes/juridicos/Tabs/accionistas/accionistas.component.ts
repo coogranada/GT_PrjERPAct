@@ -84,9 +84,9 @@ export class AccionistasComponent implements OnInit {
     const dataDoc : any[] = [];
     this.clientesGetListService.GetTipoDocumento().subscribe((result : any) => {
         result.forEach((element : any) => {
-          if (element.Clase !== 4 && element.Clase !== 5 && element.Clase !== 7) {
+          // if (element.Clase !== 4 && element.Clase !== 5 && element.Clase !== 7) {
             dataDoc.push(element);
-          }
+          // }
         });
         this.dataTipoDocumento = dataDoc;
       },
@@ -101,26 +101,26 @@ export class AccionistasComponent implements OnInit {
 
   //#region Metodos funcionales
 
-  validarTipoDocumento() {
-    const tipoDoc = this.accionistasFrom.controls.TipoDocumento.value;
-    if (+tipoDoc.Clase === 9) {
-      this.accionistasFrom.get('NumeroDocumento').reset();
-      this.accionistasFrom.controls['NumeroDocumento'].setErrors(null);
-      this.accionistasFrom.controls['NumeroDocumento'].clearValidators();
-      this.accionistasFrom.controls['NumeroDocumento'].setValidators(null);
+  // validarTipoDocumento() {
+  //   const tipoDoc = this.accionistasFrom.controls.TipoDocumento.value;
+  //   if (+tipoDoc.Clase === 9) {
+  //     this.accionistasFrom.get('NumeroDocumento').reset();
+  //     this.accionistasFrom.controls['NumeroDocumento'].setErrors(null);
+  //     this.accionistasFrom.controls['NumeroDocumento'].clearValidators();
+  //     this.accionistasFrom.controls['NumeroDocumento'].setValidators(null);
 
-      this.accionistasFrom.controls['NumeroDocumento'].setValidators([Validators.required,
-      Validators.pattern('[A-Za-zñÑ0-9]{4,15}')]);
-      this.accionistasFrom.controls['NumeroDocumento'].setErrors({ 'incorrect': true });
-      this.mostrarLetras = true;
-      this.mostrarNumero = false;
-    } else {
-      this.accionistasFrom.controls['NumeroDocumento'].setValidators([Validators.required,
-      Validators.pattern('[0-9]{4,15}')]);
-      this.mostrarLetras = false;
-      this.mostrarNumero = true;
-    }
-  }
+  //     this.accionistasFrom.controls['NumeroDocumento'].setValidators([Validators.required,
+  //     Validators.pattern('[A-Za-zñÑ0-9]{4,15}')]);
+  //     this.accionistasFrom.controls['NumeroDocumento'].setErrors({ 'incorrect': true });
+  //     this.mostrarLetras = true;
+  //     this.mostrarNumero = false;
+  //   } else {
+  //     this.accionistasFrom.controls['NumeroDocumento'].setValidators([Validators.required,
+  //     Validators.pattern('[0-9]{4,15}')]);
+  //     this.mostrarLetras = false;
+  //     this.mostrarNumero = true;
+  //   }
+  // }
 
   validarParticipacion() {
     const valorParticipa = +this.accionistasFrom.get('Participacion').value;
@@ -133,118 +133,92 @@ export class AccionistasComponent implements OnInit {
     }
   }
 
-  GetAccionista() {    
-    let DocumentoJuridico = this.juridico?.Nit;  
-    const DocumentoAccionista = this.accionistasFrom.get('NumeroDocumento').value;
-    if(DocumentoJuridico == DocumentoAccionista ) {
-        this.notif.onWarning('Advertencia', 'El accionista debe ser diferente al titular.');-+
-          this.accionistasFrom.get('NumeroDocumento').reset();
-          return;
-    }
-    this.accionistasFrom.get('TipoDocumento').reset();
-    this.accionistasFrom.get('RazonNombre').reset();
+  GetAccionista() {
+  const documentoControl = this.accionistasFrom.get('NumeroDocumento');
+  const tipoControl = this.accionistasFrom.get('TipoDocumento');
+  const razonControl = this.accionistasFrom.get('RazonNombre');
 
-    if (this.accionistasFrom.get('NumeroDocumento').value !== null
-    && this.accionistasFrom.get('NumeroDocumento').value !== undefined
-    && this.accionistasFrom.get('NumeroDocumento').value !== '') {
+  const documentoAccionista = documentoControl.value?.trim();
+  const documentoJuridico = this.juridico?.Nit;
 
-    if (this.itemAccionistas.length === 0) {
-          const documentoConsulta = this.accionistasFrom.get('NumeroDocumento').value;
-          this.clientesGetListService.GetAccionistas(documentoConsulta).subscribe(
-            result => {
-              if (result === null) {
-                this.notif.onWarning('Advertencia', 'No se encontró accionista.');
-                this.bloquearFormAcc = null;
-              } else {
-                this.esOld = true;
-                this.esNew = false;
-                this.bloquearFormAcc = true;
-                this.accionistasFrom.get('IdPersonaAccionista').setValue(result.IdPersonas);
-                this.accionistasFrom.get('NumeroDocumento').setValue(result.NumeroDocumento);
-                this.dataTipoDocumento.forEach(elementTipo => {
-                  if (elementTipo.Clase === result.IdTipoDocumento) {
-                    this.tipoDocumentoCargado = elementTipo;
-                    this.accionistasFrom.get('TipoDocumento').setValue(elementTipo);
-                  } 
-                });
-                if (result.PrimerNombre == null || result.PrimerNombre == undefined) {
-                  result.PrimerNombre = '';
-                }
-                if (result.SegundoNombre == null || result.SegundoNombre == undefined) {
-                  result.SegundoNombre = '';
-                }
-                if (result.PrimerApellido == null || result.PrimerApellido == undefined) {
-                  result.PrimerApellido = '';
-                }
-                if (result.SegundoApellido == null || result.SegundoApellido == undefined) {
-                  result.SegundoApellido = '';
-                }
-                this.accionistasFrom.get('RazonNombre').setValue(result.PrimerNombre + ' ' + result.SegundoNombre + ' '
-                  + result.PrimerApellido + ' ' + result.SegundoApellido);
-              } 
-            },
-            error => {
-              const errorMessage = <any>error;
-              console.log(errorMessage);
-            }
-          );
-    } else {
-      this.validar = false;
-      const documentoConsulta = this.accionistasFrom.get('NumeroDocumento').value.trim();
-      this.itemAccionistas.forEach(elementAcc => {
-        if (elementAcc.NumeroDocumento === documentoConsulta) {
-          this.validar = true;
-        }
-      });
-      if (this.validar) {
-          this.notif.onWarning('Advertencia', 'El accionista ya fue ingresado.');-+
-          this.accionistasFrom.get('NumeroDocumento').reset();
-          } else {
-            const documentoConsulta = this.accionistasFrom.get('NumeroDocumento').value;
-            this.clientesGetListService.GetAccionistas(documentoConsulta).subscribe(
-              result => {
-                if (result === null) {
-                  this.notif.onWarning('Advertencia', 'No se encontró accionista.');
-                  this.bloquearFormAcc = null;
-                } else  {
-                  this.esOld = true;
-                  this.esNew = false;
-                  this.bloquearFormAcc = true;
-                  this.accionistasFrom.get('IdPersonaAccionista').setValue(result.IdPersonas);
-                  this.accionistasFrom.get('NumeroDocumento').setValue(result.NumeroDocumento);
-                  this.dataTipoDocumento.forEach(elementTipo => {
-                    if (elementTipo.Clase === result.IdTipoDocumento) {
-                      this.tipoDocumentoCargado = elementTipo;
-                      this.accionistasFrom.get('TipoDocumento').setValue(elementTipo);
-                    } 
-                  });
-                  if (result.PrimerNombre == null || result.PrimerNombre == undefined) {
-                    result.PrimerNombre = '';
-                  }
-                  if (result.SegundoNombre == null || result.SegundoNombre == undefined) {
-                    result.SegundoNombre = '';
-                  }
-                  if (result.PrimerApellido == null || result.PrimerApellido == undefined) {
-                    result.PrimerApellido = '';
-                  }
-                  if (result.SegundoApellido == null || result.SegundoApellido == undefined) {
-                    result.SegundoApellido = '';
-                  }
-                  this.accionistasFrom.get('RazonNombre').setValue(result.PrimerNombre + ' ' + result.SegundoNombre + ' '
-                    + result.PrimerApellido + ' ' + result.SegundoApellido);
-                }
-              },
-              error => {
-                // this.loading.hide();
-                const errorMessage = <any>error;
-                console.log(errorMessage);
-              }
-            );
-          }
-    }
-    }
+  if (documentoJuridico === documentoAccionista) {
+    this.notif.onWarning('Advertencia', 'El accionista debe ser diferente al titular.');
+    documentoControl.reset();
+    return;
+  }
+  if (!documentoAccionista) {
+    return;
   }
 
+  const existe = this.itemAccionistas.some(
+    x => x.NumeroDocumento === documentoAccionista
+  );
+
+  if (existe) {
+    this.notif.onWarning('Advertencia', 'El accionista ya fue ingresado.');
+    documentoControl.reset();
+    return;
+  }
+  tipoControl.reset();
+  razonControl.reset();
+
+  this.clientesGetListService.GetAccionistas(documentoAccionista).subscribe(
+    result => this.procesarAccionista(result),
+    error => console.log(error)
+  );
+}
+
+private procesarAccionista(result: any) {
+  const tipoControl = this.accionistasFrom.get('TipoDocumento');
+  const razonControl = this.accionistasFrom.get('RazonNombre');
+
+  if (!result) {
+    this.notif.onWarning('Advertencia', 'No se encontró accionista.');
+    this.bloquearFormAcc = null;
+    return;
+  }
+
+  const tipo = this.dataTipoDocumento.find(
+    t => t.Clase === result.IdTipoDocumento
+  );
+
+  if (tipo) {
+
+   
+    if (tipo.Clase === 4 || tipo.Clase === 7) {
+      this.notif.onWarning('Advertencia', 'El accionista no puede ser menor.');
+
+      tipoControl.reset();
+      razonControl.reset();
+
+      return;
+    }
+
+    this.tipoDocumentoCargado = tipo;
+    tipoControl.setValue(tipo);
+  }
+
+  
+  this.esOld = true;
+  this.esNew = false;
+  this.bloquearFormAcc = true;
+
+  this.accionistasFrom.patchValue({
+    IdPersonaAccionista: result.IdPersonas,
+    NumeroDocumento: result.NumeroDocumento
+  });
+
+  const nombreCompleto = [
+    result.PrimerNombre,
+    result.SegundoNombre,
+    result.PrimerApellido,
+    result.SegundoApellido
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  razonControl.setValue(nombreCompleto);
+}
  
   validarCero(campo : string){
     if(this.accionistasFrom.get(campo)?.value == 0)

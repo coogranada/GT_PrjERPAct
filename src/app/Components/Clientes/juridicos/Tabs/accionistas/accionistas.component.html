@@ -21,7 +21,7 @@
                         <div class="form-group" id="1">
                             <label class="textBlod">Tipo documento: </label>
                             <span class="textBigRed" *ngIf="obligatoriCliente">*</span>
-                            <select class="form-control" name="select" formControlName="TipoDocumento" (change)="GenericoSelect('TipoDocumento',accionistasFrom); validarTipoDocumento()" [attr.disabled]="bloquearFormAcc">
+                            <select class="form-control" name="select" formControlName="TipoDocumento" (change)="GenericoSelect('TipoDocumento',accionistasFrom)" [attr.disabled]="bloquearFormAcc">
                 <option value="0">-- Seleccione --</option>
                 <option *ngFor="let tipoDocumento of dataTipoDocumento" [ngValue]="tipoDocumento">
                   {{tipoDocumento.Descripcion}}
