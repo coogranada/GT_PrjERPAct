@@ -66,6 +66,7 @@ export class CambiarInfoCreditoForm {
   plazoMinimo: number | null = null;
   plazoMaximo: number | null = null;
   ejemplosPlazosValidos: number[] = [];
+  maxPeriodoGracia = 0;
 
   get periodoCapitalMeses() {
     return PERIODOS_MESES[this.cambiarInfoCreditoForm.controls.periodoCapitalSelect.value as keyof typeof PERIODOS_MESES];
@@ -151,6 +152,7 @@ export class CambiarInfoCreditoForm {
       tasaNominal = this.context.datosFormData.TasaLiquidada;
       tasaEfectiva = this.context.datosFormData.EfectivaLiquidada;
     }
+    this.maxPeriodoGracia = (this.context.detalleCredito.Encabezado.DiasGraciaLinea ?? 0) / 30;
 
     this.cambiarInfoCreditoForm = new FormGroup({
       sistema: new FormControl({ value: this.context.datosFormData.Sistema, disabled: true }),
@@ -168,7 +170,7 @@ export class CambiarInfoCreditoForm {
       indicador: new FormControl({ value: this.context.datosFormData.Indicador, disabled: true }),
       siglaIndicador: new FormControl({ value: this.context.datosFormData.SiglaIndicador, disabled: true }),
       puntos: new FormControl({ value: this.context.datosFormData.Puntos, disabled: true }, [Validators.min(0), Validators.max(99)]),
-      periodoGracia: new FormControl({ value: this.context.datosFormData.PeriodoGracia, disabled: true }, [Validators.min(0), Validators.max(99)]),
+      periodoGracia: new FormControl({ value: this.context.datosFormData.PeriodoGracia, disabled: true }, [Validators.min(0), Validators.max(this.maxPeriodoGracia)]),
       reestrucutradoIndicador: new FormControl({ value: 0, disabled: true }),
       acta: new FormControl<number | null>(null)
     });
@@ -405,7 +407,7 @@ export class CambiarInfoCreditoForm {
             const plazoControl = this.cambiarInfoCreditoForm.controls.plazo;
             plazoControl.enable();
             this.inputPlazo.nativeElement.select();
-            if (!this.esCuotaVariable()) this.cambiarInfoCreditoForm.controls.periodoGracia.enable();
+            if (!this.esCuotaVariable() && this.maxPeriodoGracia > 0) this.cambiarInfoCreditoForm.controls.periodoGracia.enable();
 
             this.cambiarInfoCreditoForm.markAsDirty();
           },
@@ -414,16 +416,6 @@ export class CambiarInfoCreditoForm {
         break;
 
     }
-  }
-
-  private convertirDiasAPeriodos(dias: number, idPeriodoInteres: number) {
-    return dias / (PERIODOS_MESES[idPeriodoInteres as keyof typeof PERIODOS_MESES] * 30); 
-  }
-
-
-  private generarMultiplos(desde: number, multiplo: number) { 
-    const multiploInferior = Math.ceil(desde / multiplo) * multiplo;
-    return [multiploInferior, multiploInferior + multiplo * 1, multiploInferior + multiplo * 2];
   }
 
   private validarCambioTasa(): boolean {

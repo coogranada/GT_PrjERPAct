@@ -1332,7 +1332,7 @@ export class GestionCreditoComponent {
     });
 
     if(seHizoReestructuracionHoy) {
-      this.notif.warning('Advertencia', "Ya se realizó una reestructuración al crédito el día de hoy.", ConfiguracionNotificacion.configRightTop);
+      this.notif.warning('Advertencia', "El crédito ya fué reestructurado hoy.", ConfiguracionNotificacion.configRightTop);
       this.gestionCreditoOperacionForm.get('Codigo')?.reset();
       return;
     }
@@ -3398,6 +3398,7 @@ CalcularSimularPago(){
   async buscarReestructuracionReliquidacion(): Promise<void> {
     const idCuenta = this.gestionCreditoForm.get('IdCuenta')?.value;
     if (!idCuenta) return;
+    this.loading.show();
     try {
       const result = await firstValueFrom(
         this.carteraService.getReestructuracionReliquidacion(idCuenta)
@@ -3416,6 +3417,8 @@ CalcularSimularPago(){
 
     } catch (error) {
       console.error('Error al obtener reestructuración/reliquidación', error);
+    } finally {
+      this.loading.hide();
     }
   }
   // FIN CAMBIOS
@@ -3989,8 +3992,12 @@ CalcularSimularPago(){
       };
       this.guardarLogGestionCredito(logCambiarSistema, Operacion.CambiarSistema);
       novedad = 'El cambio de sistema';
-    } else if(idNovedad === Novedad.DevolverReestructuracion) {
-      // log....
+    } else if (idNovedad === Novedad.DevolverReestructuracion) {
+      const logDevolverReest = {
+        Anterior: omit(Anterior, TASAS_KEYS),
+        Actualiza: omit(Actualiza, TASAS_KEYS)
+      };
+      this.guardarLogGestionCredito(logDevolverReest, Operacion.DevolverReestructuracion);
       novedad = 'La devolución';
     }
 
