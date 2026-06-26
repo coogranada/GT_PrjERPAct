@@ -2174,43 +2174,42 @@
                                         </div>
                                         <div class="table-responsive scrollTabla"
                                             *ngIf="lstReestructuracion.length > 0">
-                                            <table class="table table-hover">
-                                                <colgroup>
-                                                    <col style="width: 11%;">
-                                                    <col style="width: 11%;">
-                                                    <col style="width: 11%;">
-                                                    <col style="width: 10%;">
-                                                    <col style="width: 10%;">
-                                                    <col style="width: 11%;">
-                                                    <col style="width: 12%;">
-                                                    <col style="width: 12%;">
-                                                    <col style="width: 12%;">
-                                                </colgroup>
+                                            <table class="table table-hover tabla-last-column-fixed">
                                                 <thead>
                                                     <tr class="encabezadoTablas">
-                                                        <th><strong>Monto</strong></th>
-                                                        <th><strong>Saldo</strong></th>
-                                                        <th><strong>Cuota</strong></th>
+                                                        <th class="text-center"><strong>Nro</strong></th>
+                                                        <th class="text-center"><strong>Monto</strong></th>
+                                                        <th class="text-center"><strong>Saldo</strong></th>
+                                                        <th class="text-center"><strong>Cuota</strong></th>
+                                                        <th class="text-center"><strong>Acta</strong></th>
                                                         <th class="text-center"><strong>Plazo</strong></th>
-                                                        <th><strong>Tasa</strong></th>
-                                                        <th><strong>Fecha</strong></th>
-                                                        <th><strong>Novedad</strong></th>
-                                                        <th><strong>Calif. Actual</strong></th>
-                                                        <th><strong>Calif. Anterior</strong></th>
+                                                        <th class="text-center"><strong>Periodo interes</strong></th>
+                                                        <th class="text-center"><strong>Tasa periodica</strong></th>
+                                                        <th class="text-center"><strong>Calif. Actual</strong></th>
+                                                        <th class="text-center"><strong>Calif. Anterior</strong></th>
+                                                        <th class="text-center"><strong>Periodo gracia</strong></th>
+                                                        <th class="text-center"><strong>Fecha inicio gracia</strong></th>
+                                                        <th class="text-center"><strong>Fecha cambio</strong></th>
+                                                        <th class="text-center"><strong>Operación</strong></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody
                                                     *ngFor="let itemReestructura of lstReestructuracion; let j = index">
                                                     <tr class="filRes_{{j}}" (click)="CambiarColor(j,3)">
-                                                        <td>{{ itemReestructura.Monto | currency }}</td>
-                                                        <td>{{ itemReestructura.Saldo | currency }}</td>
-                                                        <td>{{ itemReestructura.Cuota | currency }}</td>
+                                                        <td class="text-center">{{ itemReestructura.Contador }}</td>
+                                                        <td class="text-right">{{ itemReestructura.Monto | currency }}</td>
+                                                        <td class="text-right">{{ itemReestructura.Saldo | currency }}</td>
+                                                        <td class="text-right">{{ itemReestructura.Cuota | currency }}</td>
+                                                        <td>{{ itemReestructura.Acta }}</td>
                                                         <td class="text-center">{{itemReestructura.Plazo }} </td>
-                                                        <td>{{ itemReestructura.Tasa }} %</td>
-                                                        <td>{{ itemReestructura.Fecha }} </td>
-                                                        <td>{{ itemReestructura.Novedad }} </td>
+                                                        <td class="text-center">{{itemReestructura.PeriodoInteres }} </td>
+                                                        <td class="text-center">{{ itemReestructura.Tasa }} %</td>
                                                         <td class="text-center">{{ itemReestructura.CalAct }} </td>
                                                         <td class="text-center">{{ itemReestructura.CalAnt }} </td>
+                                                        <td class="text-center">{{ (itemReestructura.PeriodoGracia ?? 0) / 30 }}</td>
+                                                        <td style="min-width: 135px;">{{ itemReestructura.FechaInicioGracia | date:'yyyy/MM/dd HH:mm:ss' }}</td>
+                                                        <td>{{ itemReestructura.Fecha }} </td>
+                                                        <td>{{ itemReestructura.Novedad }} </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -2230,34 +2229,36 @@
                                             <table class="table table-hover tabla-last-column-fixed">
                                                 <thead>
                                                     <tr class="encabezadoTablas">
-                                                        <th><strong>Monto</strong></th>
-                                                        <th><strong>Saldo</strong></th>
-                                                        <th><strong>Cuota</strong></th>
-                                                        <th><strong>Cuota libranza</strong></th>
+                                                        <th class="text-center"><strong>Nro</strong></th>
+                                                        <th class="text-center"><strong>Monto</strong></th>
+                                                        <th class="text-center"><strong>Saldo</strong></th>
+                                                        <th class="text-center"><strong>Cuota</strong></th>
+                                                        <th class="text-center"><strong>Cuota libranza</strong></th>
                                                         <th class="text-center"><strong>Plazo</strong></th>
-                                                        <th><strong>Periodo interes</strong></th>
-                                                        <th><strong>Tasa periodica</strong></th>
-                                                        <th><strong>Tasa nominal</strong></th>
-                                                        <th><strong>Puntos</strong></th>
-                                                        <th><strong>Periodo gracia</strong></th>
-                                                        <th><strong>Fecha inicio gracia</strong></th>
-                                                        <th><strong>Fecha cambio</strong></th>
-                                                        <th><strong>Operación</strong></th>
+                                                        <th class="text-center"><strong>Periodo interes</strong></th>
+                                                        <th class="text-center"><strong>Tasa periodica</strong></th>
+                                                        <th class="text-center"><strong>Tasa nominal</strong></th>
+                                                        <th class="text-center"><strong>Puntos</strong></th>
+                                                        <th class="text-center"><strong>Periodo gracia</strong></th>
+                                                        <th class="text-center"><strong>Fecha inicio gracia</strong></th>
+                                                        <th class="text-center"><strong>Fecha cambio</strong></th>
+                                                        <th class="text-center"><strong>Operación</strong></th>
                                                         
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr class="filRel_{{j}}" (click)="CambiarColor(j,4)" *ngFor="let itemReliquida of lstReliquidacion; let j = index">
-                                                        <td>{{ itemReliquida.Monto | currency }}</td>
-                                                        <td>{{ itemReliquida.Saldo | currency }}</td>
-                                                        <td>{{ itemReliquida.Cuota | currency }}</td>
+                                                        <td class="text-center">{{ lstReliquidacion.length - j }}</td>
+                                                        <td class="text-right">{{ itemReliquida.Monto | currency }}</td>
+                                                        <td class="text-right">{{ itemReliquida.Saldo | currency }}</td>
+                                                        <td class="text-right">{{ itemReliquida.Cuota | currency }}</td>
                                                         <td class="text-center">{{ itemReliquida.CuotaLibranza ?? 0 | currency }}</td>
                                                         <td class="text-center">{{ itemReliquida.Plazo }}</td>
                                                         <td class="text-center">{{ itemReliquida.PeriodoInteres }}</td>
                                                         <td class="text-center">{{ itemReliquida.Tasa | number:'1.4-4' }} %</td>
                                                         <td class="text-center">{{ itemReliquida.TasaNominal | number:'1.4-4' }} %</td>
                                                         <td class="text-center">{{ itemReliquida.Puntos ?? 0 | number:'1.4-4' }} %</td>
-                                                        <td class="text-center">{{ itemReliquida.PeriodoGracia ?? 0 }}</td>
+                                                        <td class="text-center">{{ (itemReliquida.PeriodoGracia ?? 0) / 30 }}</td>
                                                         <td style="min-width: 135px;">{{ itemReliquida.FechaInicioGracia | date:'yyyy/MM/dd HH:mm:ss' }}</td>
                                                         <td>{{ itemReliquida.Fecha | date:'yyyy/MM/dd HH:mm:ss' }}</td>
                                                         <td>{{ itemReliquida.Novedad.includes('Disminuir Cuota') ? 'Cambio de Cuota' : itemReliquida.Novedad }}</td>                                                    
