@@ -25,6 +25,7 @@ export class AccionistasComponent implements OnInit {
   public siguiente = false;
   public positionTab = 8;
   public dataTipoDocumento : any[] = [];
+  public dataTipoDocumentoLista : any[] = [];
   public itemAccionistas: any[] = [];
   public mostrarNumero = false;
   public mostrarLetras = false;
@@ -82,13 +83,18 @@ export class AccionistasComponent implements OnInit {
   //#region  Metodos de carga
   GetTipoDocumentoAccionista() {
     const dataDoc : any[] = [];
+    const datalista:  any[] = [];     
     this.clientesGetListService.GetTipoDocumento().subscribe((result : any) => {
         result.forEach((element : any) => {
           // if (element.Clase !== 4 && element.Clase !== 5 && element.Clase !== 7) {
             dataDoc.push(element);
           // }
+           if (element.Clase !== 4 && element.Clase !== 5 && element.Clase !== 7) {
+            datalista.push(element);
+          }
         });
-        this.dataTipoDocumento = dataDoc;
+        this.dataTipoDocumento = datalista;
+        this.dataTipoDocumentoLista = dataDoc;
       },
       (error : any) => {
         const errorMessage = <any>error;
@@ -171,6 +177,7 @@ export class AccionistasComponent implements OnInit {
 private procesarAccionista(result: any) {
   const tipoControl = this.accionistasFrom.get('TipoDocumento');
   const razonControl = this.accionistasFrom.get('RazonNombre');
+  const DocumentoControl = this.accionistasFrom.get('NumeroDocumento');
 
   if (!result) {
     this.notif.onWarning('Advertencia', 'No se encontró accionista.');
@@ -178,7 +185,7 @@ private procesarAccionista(result: any) {
     return;
   }
 
-  const tipo = this.dataTipoDocumento.find(
+  const tipo = this.dataTipoDocumentoLista.find(
     t => t.Clase === result.IdTipoDocumento
   );
 
@@ -188,6 +195,7 @@ private procesarAccionista(result: any) {
     if (tipo.Clase === 4 || tipo.Clase === 7) {
       this.notif.onWarning('Advertencia', 'El accionista no puede ser menor.');
 
+      DocumentoControl.reset();
       tipoControl.reset();
       razonControl.reset();
 
