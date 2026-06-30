@@ -17,6 +17,7 @@ export class ContabilidadTabComponent implements OnInit {
   private lngTercero: number = 0;
   public ListTagContabilidad: any[] = [];
   public ColorAnterior: any;
+  public ListSubSalud: any[] = [];
 
   getContabilidad(lngtercero : number) {
     this.ListTagContabilidad.length = 0;
@@ -33,12 +34,26 @@ export class ContabilidadTabComponent implements OnInit {
           }
         }
       }, error => {
-
         console.log(error);
       });
 
 
   }
+  getContabilidadSubSalud(lngtercero: number) {
+  this.ListSubSalud = [];
+
+  this.MiListaProductosService.getContabilidadSubSalud(lngtercero).subscribe(
+      (result: any) => {
+        if (result && result.length > 0) {
+          this.ListSubSalud = result;
+        }
+      },
+      error => {
+        console.log(error);
+      }
+    );
+}
+
 
   SetlngTercero(lngTercero: number) {
     this.lngTercero = lngTercero;

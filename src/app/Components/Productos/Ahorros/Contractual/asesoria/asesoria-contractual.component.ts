@@ -1997,7 +1997,7 @@ private resetUI(): void {
     const IdRelacionTipo = new FormControl('', []);
     const Clase = new FormControl('', [Validators.required]);
     const Plazo = new FormControl('', [Validators.required, Validators.pattern('[0-9]*')]);
-    const CuotaMes = new FormControl('', [Validators.pattern('[0-9]*')]);
+    const CuotaMes = new FormControl('', []);
     const ValorPlan = new FormControl('', [Validators.required]);
     const TasaNominal = new FormControl('', [Validators.required]);
     const TasaEfectiva = new FormControl('', [Validators.required]);

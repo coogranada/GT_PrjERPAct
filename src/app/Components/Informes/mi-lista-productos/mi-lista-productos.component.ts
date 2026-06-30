@@ -1185,6 +1185,7 @@ export class MiListaProductosComponent implements OnInit {
     this.coodeudorTabComponent.getCodeudores(resultEnca);
     this.contabilidadComponent.SetlngTercero(resultEnca);
     this.contabilidadComponent.getContabilidad(resultEnca);
+    this.contabilidadComponent.getContabilidadSubSalud(resultEnca);
     //this.convenioComponent.getLosOlivos(NumeroDocumento);
   }
 

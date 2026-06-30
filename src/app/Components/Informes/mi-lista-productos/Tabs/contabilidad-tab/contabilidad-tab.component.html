@@ -38,3 +38,48 @@
         </table>
     </div>
 </div>
+
+    <label><strong>Subsidios de salud año vigente</strong></label>
+<div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat"
+     *ngIf="ListSubSalud.length > 0">
+
+  <div class="table-responsive scrollTabla">
+    <table class="table table-hover">
+      
+      <thead class="encabezadoTablasContabilidad">
+        <tr>
+          <th><strong>Cuenta</strong></th>
+          <th style="min-width: 200px;"><strong>Nombre</strong></th>
+          <th><strong>Oficina</strong></th>
+          <th><strong>Valor Total</strong></th>
+          <th><strong>Cantidad</strong></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let item of ListSubSalud; let i = index"
+            class="filconta{{i}}"
+            (click)="CambiarColor(i)">
+
+          <td>{{ item.Cuenta }}</td>
+
+          <td [ngClass]="{
+                'columnName': item.Nombre?.length < 30,
+                'columnNameX2': item.Nombre?.length >= 30 && item.Nombre?.length < 40,
+                'columnNameX3': item.Nombre?.length >= 40
+              }">
+            {{ item.Nombre }}
+          </td>        
+
+          <td>{{ item.Oficina }}</td>
+
+          <td>{{ item.Saldo }}</td>
+
+          <td>{{ item.Cantidad }}</td>
+
+        </tr>
+      </tbody>
+
+    </table>
+  </div>
+</div>

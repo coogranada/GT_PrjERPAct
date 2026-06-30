@@ -210,9 +210,9 @@
                             <input type="text" class="form-control" formControlName="DescripcionProducto"
                                 (blur)="ValidarCampoProducto()" (input)="LimpiarCampos('DescripcionProducto')"
                                 [attr.disabled]="BloquaerProducto">
-                            <span class="help-block validationSpan" *ngIf="MostrasAlertaProducto">
+                            <!-- <span class="help-block validationSpan" *ngIf="MostrasAlertaProducto">
                                 Campo obligatorio.
-                            </span>
+                            </span> -->
                         </div>
                         <div class="col-xs-1 col-md-1 col-lg-1">
                             <button type="button" class="btn Gt-btn-verde btn-icon legitRipple"
@@ -463,10 +463,10 @@
                                             [attr.disabled]="BloquearCuotaMes" (blur)="ValorTotalPlan()"
                                             (blur)="ObtenerTasa()" currencyMask [options]="{prefix:'$ ',thousands:'.', decimal:'',precision: 0}"
                                             maxlength="12">
-                                        <span class="help-block validationSpan"
+                                        <!-- <span class="help-block validationSpan"
                                             *ngIf="contractualFrom.controls['CuotaMes'].errors?.['pattern']">
                                             La cuota mes solo acepta números y ceros como decimales.
-                                        </span>
+                                        </span> -->
                                     </div>
                                     <!-- Fin CuotaMes  -->
 
