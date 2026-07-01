@@ -24,7 +24,7 @@
           <th class="CuentaFija">Cuenta</th>
           <th>Nombre de la cuenta</th>
           <th>Saldo</th>
-          <th>Oficina</th>
+          <th class="text-center">Oficina</th>
           <th></th>
         </tr>
       </thead>
@@ -53,7 +53,7 @@
           <td [ngClass]="{
               'oficina': item.Oficina.length <= 15,
               'oficinaX2': item.Oficina.length > 15
-            }">
+            }" class="text-center" >
             {{item.Oficina}}
           </td>
           
@@ -99,8 +99,9 @@
           <th class="CuentaFija">Cuenta</th>
           <th>Nombre de la cuenta</th>
           <th>Saldo</th>
-          <th>Oficina</th>
           <th class="text-center">Cantidad</th>
+          <th></th>
+     
         </tr>
       </thead>
 
@@ -125,15 +126,11 @@
             {{item.Saldo}}
           </td>
 
-          <td [ngClass]="{
-              'oficina': item.Oficina.length <= 15,
-              'oficinaX2': item.Oficina.length > 15
-            }">
-            {{item.Oficina}}
+          <td class="text-center">
+             {{item.Cantidad}}
           </td>
 
-          <td class="text-center">
-            {{item.Cantidad}}
+          <td>           
           </td>
 
         </tr>
