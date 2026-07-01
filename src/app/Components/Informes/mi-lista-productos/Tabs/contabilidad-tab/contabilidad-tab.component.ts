@@ -58,17 +58,21 @@ export class ContabilidadTabComponent implements OnInit {
   SetlngTercero(lngTercero: number) {
     this.lngTercero = lngTercero;
   }
+CambiarColor(fil: number, event: any) {
 
-  CambiarColor(fil : number) {
+    const fila = $(event.currentTarget);  
+    const tabla = fila.closest("table");
 
-    $(".filconta" + this.ColorAnterior).css("background", "#FFFFFF");
-    $(".filconta" + fil).css("background", "#e5e5e5");
-    $(".strcuentaConta" + this.ColorAnterior).css("background", "#FFFFFF");
-    $(".strcuentaConta" + fil).css("background", "#e5e5e5");
+  
+    tabla.find("[class*='filconta'], [class*='filcontal'], [class*='strcuentaConta']")
+         .css("background", "#FFFFFF");
+
+
+    tabla.find(".filconta" + fil).css("background", "#e5e5e5");
+    tabla.find(".filcontal" + fil).css("background", "#e5e5e5");
+    tabla.find(".strcuentaConta" + fil).css("background", "#e5e5e5");
 
     this.ColorAnterior = fil;
-    // limpia sombreado anterior
-
 }
 
 }
