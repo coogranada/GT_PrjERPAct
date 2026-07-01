@@ -4,6 +4,42 @@
         No hay registros
     </div>
 </div>
+
+<div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="ListTagContabilidad.length > 0">
+    <div class="table-responsive scrollTabla">
+        <table id="tablaIngresos" class="table table-hover">
+            <thead class="encabezadoTablasContabilidad">
+                <tr>
+                    <th class="CuentaFija">
+                        <strong>Cuenta</strong>
+                    </th>
+                    <th style="min-width: 190px;">
+                        <strong>Nombre de la cuenta</strong>
+                    </th>
+                    <th>
+                        <strong>Saldo</strong>
+                    </th>
+                    <th>
+                        <strong>Oficina</strong>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of ListTagContabilidad; let i = index" class="filconta{{i}}" (click)="CambiarColor(i)">
+                    <td style="min-width: 150px;" class="CuentaFija strcuentaConta{{i}}">{{item.Cuenta}}</td>
+                    <td [ngClass]="{'columnName': item.Nombre.length < 29,
+                    'columnNameX2': item.Nombre.length > 29 && item.Nombre.length < 35,
+                    'columnNameX3': item.Nombre.length >= 35 && item.Nombre.length <=40,
+                    'columnNameX4': item.Nombre.length > 40}">{{item.Nombre}}</td>
+                    <td style="min-width: 165px;"> {{item.Saldo}}</td>
+                    <td [ngClass]="{'oficina': item.Oficina.length <= 15,
+                    'oficinaX2': item.Oficina.length > 15 }">{{item.Oficina}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
 <div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="ListTagContabilidad.length > 0">
     <div class="table-responsive scrollTabla">
         <table id="tablaIngresos" class="table table-hover">
