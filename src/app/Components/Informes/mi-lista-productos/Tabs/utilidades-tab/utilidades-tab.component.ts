@@ -127,277 +127,441 @@ export class UtilidadesTabComponent implements OnInit, DoCheck {
     )
   }
 
-  Consultar() {
-    this.DataRetenciones = 0;
-    this.DataSaldos = 0;
-    var opcionSel = $("#OpcionSe").val();
-    this.selectOpt = opcionSel;
-    var yearSel : any = $("#YearSelected").val();
-    var anexo = $("#anexoSelected").val();
-    this.YearSel = yearSel;
-    var validaAnexo = this.valueS;
-    let datas = localStorage.getItem("Data");
-    var dataUsuario = JSON.parse(window.atob(datas == null ?"" :datas));
-    this.TerceroUsuario = dataUsuario.lngTercero;
-    this.UsuarioModifica = dataUsuario.Usuario;
-    if (
-      this.idTerceroCertificate != null &&
-      this.idTerceroCertificate != undefined &&
-      this.idTerceroCertificate != 0 &&
-      this.idTerceroCertificate != ""
-    ) {
-      if (opcionSel == "-" || opcionSel == "" || opcionSel == undefined) {
-        this.showMsg1 = true;
-      } else if (yearSel == null || yearSel == undefined || yearSel == "") {
-        this.showMsg1 = false;
-        this.showMsg2 = true;
-      } else if (anexo == null || anexo == undefined || anexo == "" || anexo == "-" && (opcionSel == "1")) {
-        this.ValidAnexo = true;
-        this.showMsg1 = false;
-        this.showMsg2 = false;
-      } else {
-        if (
-          validaAnexo == "-" ||
-          validaAnexo == null ||
-          validaAnexo == "" ||
-          validaAnexo == undefined
-        ) {
-          this.codigoAnexo = null;
-          this.anexoPdf = null;
-        } else {
-          this.codigoAnexo = this.valueS;
-          this.anexoPdf = this.valueS;
-        }
-        this.ValidAnexo = false;
-        this.showMsg5 = false;
-        this.showMsg1 = false;
-        this.showMsg2 = false;
+Consultar() {
 
-        if (opcionSel == "0") {
-          this.yearGravable = yearSel;
-          this.loading.show();
-          this.MiListaProductosService.getCertificadoSaldos(
-            yearSel,
-            this.idTerceroCertificate
-          ).subscribe(
-            (result) => {
-              if (result.TipoAlerta == 2) {
-                this.loading.hide();
-                this.notif.onWarning(
-                  "Advertencia",
-                  "El año ingresado no es valido.");
-              } else if (result.TipoAlerta == 3) {
-                this.loading.hide();
-                this.notif.onWarning(
-                  "Advertencia",
-                  "No se encontró registro.");
-              } else {
-                this.certificadoSaldos.NumeroDocumento = result.NumeroDocumento;
-                this.DataRetenciones = 0;
-                this.DataSaldos = 1;
-                let datas = localStorage.getItem("Data")
-                var dataUser = JSON.parse(window.atob(datas == null ? "" : datas));
-                var idTerceroUsuario = dataUser.lngTercero;
-                this.loading.show();
-                var Oficina = dataUser.Oficina;
+  this.DataRetenciones = 0;
+  this.DataSaldos = 0;
 
-                this.MiListaProductosService.getCertificadoSaldosPdf(
-                  yearSel,
-                  this.idTerceroCertificate,
-                  idTerceroUsuario,
-                  Oficina
-                ).subscribe(
-                  (resultp) => {
-                    const pdfinBase64 = resultp.FileStream._buffer;
-                    this.base64MailSaldos = pdfinBase64;
-                    const byteArray = new Uint8Array(
-                      atob(pdfinBase64)
-                        .split("")
-                        .map((char) => char.charCodeAt(0))
-                    );
-                    const newBolb = new Blob([byteArray], {
-                      type: "application/pdf",
-                    });
-                    // this.linkPdf = URL.createObjectURL(newBolb);
-                    const url = window.URL.createObjectURL(newBolb);
-                    document.querySelector("object")!.data = url;
-                    document.querySelector("object")!.name = "Certificado";
-                    document.querySelector("object")!.type = "application/pdf";
-                    $("#abrirModalCertificate").click();
-                    this.loading.hide();
-                  },
-                  (errorp) => {
-                    this.loading.hide();
-                    this.notif.onDanger(
-                      "Error",
-                      errorp);
-                  }
-                );
-                $("#OpcionSe").val("-");
-                $("#anexoSelected").val("-");
-                $("#YearSelected").val("");
-                $("#MesSelected").val("");
+  const opcionSel = $("#OpcionSe").val();
+  const yearSel: any = $("#YearSelected").val();
+  const anexo = $("#anexoSelected").val();
 
+  this.selectOpt = opcionSel;
+  this.YearSel = yearSel;
 
+  const datas = localStorage.getItem("Data");
+  const dataUsuario = datas
+    ? JSON.parse(window.atob(datas))
+    : null;
 
-              }
-              //#region Guarda log
-              let datas = localStorage.getItem("Data");
-              var dataLocalStorage = JSON.parse(window.atob(datas == null ?"": datas));
-              var LogMisProductosData = new LogMisProductos();
-              var nuevoItem = new DatosProductos();
-              LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
-              LogMisProductosData.IdModulo = 69;
-              LogMisProductosData.IdOperacion = 57;
-              LogMisProductosData.IdOpcion = 6; // saldo y retenciones  
-              LogMisProductosData.IdTercero = this.idTerceroCertificate;
-              LogMisProductosData.IdUsuarioERP = dataLocalStorage.IdUsuario;
-              LogMisProductosData.IdCuenta = null;
-              nuevoItem.NumeroCuenta = null;
-              nuevoItem.FechaInicial = yearSel.toString();
-              nuevoItem.FechaFinal = null;
-              LogMisProductosData.DatosProductos = nuevoItem;
-              this.setLogMisProductos(LogMisProductosData);
-              // #endregion
+  this.TerceroUsuario = dataUsuario?.lngTercero;
+  this.UsuarioModifica = dataUsuario?.Usuario;
 
-            },
-            (error) => {
-              this.loading.hide();
-              this.notif.onDanger(
-                "Error.",
-                error);
-              console.log(error);
-            }
-          );
-        }
-        if (opcionSel == "1") {
-          this.showMsg3 = false;
-          this.showMsg4 = false;
-          this.loading.show();
-          this.yearGravable = yearSel;
-          if (
-            this.codigoAnexo == undefined ||
-            this.codigoAnexo == null ||
-            this.codigoAnexo == ""
-          ) {
-            this.codigoAnexo = null;
-          }
+  //#region Validación Asociado
 
-          this.MiListaProductosService.getCertificadoRetenciones(
-            yearSel,
-            this.idTerceroCertificate,
-            this.codigoAnexo
-          ).subscribe(
-            (result) => {
-              var anexo = this.codigoAnexo;
-              if (result.TipoAlerta == 2) {
-                this.loading.hide();
-                this.notif.onWarning(
-                  "Advertencia",
-                  "El año ingresado no es valido.");
-              } else if (result.TipoAlerta == 3) {
-                this.loading.hide();
-                this.notif.onWarning(
-                  "Advertencia",
-                  "No se encontró registro.");
-              } else {
-                this.titularRetiene.NumeroDocumento = result.NumeroDocumento;
-
-                this.DataRetenciones = 1;
-                this.DataSaldos = 0;
-                let datas = localStorage.getItem("Data")
-                var dataUser = JSON.parse(window.atob(datas == null ? "" : datas));
-                var idTerceroUsuario = dataUser.lngTercero;
-                var Oficina = dataUser.Oficina;
-
-                this.loading.show();
-                this.MiListaProductosService.getCertificadoRetencionPdf(
-                  yearSel,
-                  this.idTerceroCertificate,
-                  this.codigoAnexo,
-                  idTerceroUsuario,
-                  Oficina
-                ).subscribe(
-                  (resultp) => {
-                    const pdfinBase64 = resultp.FileStream._buffer;
-                    this.base64MailRetenciones = pdfinBase64;
-                    const byteArray = new Uint8Array(
-                      atob(pdfinBase64)
-                        .split("")
-                        .map((char) => char.charCodeAt(0))
-                    );
-                    const newBolb = new Blob([byteArray], {
-                      type: "application/pdf",
-                    });
-                    // this.linkPdf = URL.createObjectURL(newBolb);
-                    const url = window.URL.createObjectURL(newBolb);
-                    document.querySelector("object")!.data = url;
-                    document.querySelector("object")!.name = "Certificado";
-                    document.querySelector("object")!.type = "application/pdf";
-                    $("#abrirModalCertificateRetenciones").click();
-                    this.loading.hide();
-                  },
-                  (errorP) => {
-                    this.loadingPdfCertificate = false;
-                    this.notif.onDanger(
-                      "Error",
-                      errorP,);
-                  }
-                );
-                $("#OpcionSe").val("-");
-                $("#anexoSelected").val("-");
-                this.valueS = "-";
-                $("#YearSelected").val("");
-                $("#anexoCertificate").hide();
-                $("#MesSelected").val("");
-                $("#primerBotons").show();
-                $("#segundoBotons").hide();
-                $("#primerDiv").hide();
-                $("#segundoDiv").hide();
-                this.codigoAnexo = "";
-
-
-
-              }
-
-                //#region Guarda log
-                let datas = localStorage.getItem("Data");
-              var dataLocalStorage = JSON.parse(window.atob(datas == null ?"": datas));
-                var LogMisProductosData = new LogMisProductos();
-                var nuevoItem = new DatosProductos();
-                LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
-                LogMisProductosData.IdModulo = 69;
-                LogMisProductosData.IdOperacion = 57;
-                LogMisProductosData.IdOpcion = 7; // Retencion en la fte 
-                LogMisProductosData.IdTercero = this.idTerceroCertificate;
-                LogMisProductosData.IdUsuarioERP = dataLocalStorage.IdUsuario;
-                LogMisProductosData.IdCuenta = null;
-                nuevoItem.NumeroCuenta = null;
-                nuevoItem.FechaInicial = yearSel.toString() + "-" + anexo;
-                nuevoItem.FechaFinal = null;
-                LogMisProductosData.DatosProductos = nuevoItem;
-                this.setLogMisProductos(LogMisProductosData);
-
-                // #endregion
-
-            },
-            (error) => {
-              this.loading.hide();
-              this.notif.onDanger(
-                "Error.",
-                error);
-              console.log(error);
-            }
-          );
-        }
-      }
-    } else {
-      this.loading.hide();
-      this.notif.onWarning(
-        "Advertencia",
-        "Debe buscar un asociado para realizar esta consulta.");
-    }
+  if (
+    !this.idTerceroCertificate ||
+    this.idTerceroCertificate === 0
+  ) {
+    this.notif.onWarning(
+      "Advertencia",
+      "Debe buscar un asociado para realizar esta consulta."
+    );
+    return;
   }
+
+  //#endregion
+
+  //#region Validaciones
+
+  if (
+    opcionSel === "-" ||
+    opcionSel === "" ||
+    opcionSel === undefined
+  ) {
+    this.showMsg1 = true;
+    return;
+  }
+
+  if (
+    yearSel === null ||
+    yearSel === undefined ||
+    yearSel === ""
+  ) {
+    this.showMsg1 = false;
+    this.showMsg2 = true;
+    return;
+  }
+
+  if (
+    opcionSel === "1" &&
+    (
+      anexo === null ||
+      anexo === undefined ||
+      anexo === "" ||
+      anexo === "-"
+    )
+  ) {
+    this.ValidAnexo = true;
+    this.showMsg1 = false;
+    this.showMsg2 = false;
+    return;
+  }
+
+  //#endregion
+
+  this.codigoAnexo =
+    this.valueS && this.valueS !== "-"
+      ? this.valueS
+      : null;
+
+  this.anexoPdf = this.codigoAnexo;
+
+  this.ValidAnexo = false;
+  this.showMsg5 = false;
+  this.showMsg1 = false;
+  this.showMsg2 = false;
+
+  if (opcionSel === "0") {
+    this.consultarSaldos(
+      yearSel,
+      dataUsuario
+    );
+  }
+
+  if (opcionSel === "1") {
+    this.consultarRetenciones(
+      yearSel,
+      dataUsuario
+    );
+  }
+}
+
+private consultarSaldos(
+  yearSel: any,
+  dataUsuario: any
+): void {
+
+  this.yearGravable = yearSel;
+  this.loading.show();
+
+  this.MiListaProductosService.getCertificadoSaldos(
+    yearSel,
+    this.idTerceroCertificate
+  ).subscribe(
+    (result) => {
+
+      if (result.TipoAlerta == 2) {
+
+        this.loading.hide();
+
+        this.notif.onWarning(
+          "Advertencia",
+          "El año ingresado no es valido."
+        );
+
+        return;
+      }
+
+      if (result.TipoAlerta == 3) {
+
+        this.loading.hide();
+
+        this.notif.onWarning(
+          "Advertencia",
+          "No se encontró registro."
+        );
+
+        return;
+      }
+
+      this.certificadoSaldos.NumeroDocumento =
+        result.NumeroDocumento;
+
+      this.DataRetenciones = 0;
+      this.DataSaldos = 1;
+
+  
+
+      this.MiListaProductosService.getCertificadoSaldosPdf(
+        yearSel,
+        this.idTerceroCertificate,
+        dataUsuario.lngTercero,
+        dataUsuario.Oficina
+      ).subscribe(
+        (resultp) => {
+
+          try {
+
+            const pdfinBase64 =
+              resultp?.FileStream?._buffer;
+
+            if (!pdfinBase64) {
+              throw new Error("PDF vacío");
+            }
+
+            this.base64MailSaldos = pdfinBase64;
+
+            this.mostrarPdf(pdfinBase64);
+
+            $("#abrirModalCertificate").click();
+
+          } catch (e) {
+
+            console.error("Error procesando PDF", e);
+
+            this.notif.onDanger(
+              "Error",
+              "No fue posible generar el PDF."
+            );
+
+          } finally {
+
+            this.loading.hide();
+          }
+        },
+        (errorp) => {
+
+          this.loading.hide();
+
+          this.notif.onDanger(
+            "Error",
+            errorp
+          );
+        }
+      );
+
+      $("#OpcionSe").val("-");
+      $("#anexoSelected").val("-");
+      $("#YearSelected").val("");
+      $("#MesSelected").val("");
+
+      //#region Guarda log
+
+      const log = new LogMisProductos();
+      const datosProducto = new DatosProductos();
+
+      log.IdOficina = parseInt(
+        dataUsuario.NumeroOficina
+      );
+
+      log.IdModulo = 69;
+      log.IdOperacion = 57;
+      log.IdOpcion = 6;
+      log.IdTercero = this.idTerceroCertificate;
+      log.IdUsuarioERP = dataUsuario.IdUsuario;
+      log.IdCuenta = null;
+
+      datosProducto.NumeroCuenta = null;
+      datosProducto.FechaInicial = yearSel.toString();
+      datosProducto.FechaFinal = null;
+
+      log.DatosProductos = datosProducto;
+
+      this.setLogMisProductos(log);
+
+      //#endregion
+
+    },
+    (error) => {
+
+      this.loading.hide();
+
+      this.notif.onDanger(
+        "Error.",
+        error
+      );
+
+      console.log(error);
+    }
+  );
+}
+
+private consultarRetenciones(
+  yearSel: any,
+  dataUsuario: any
+): void {
+
+  this.showMsg3 = false;
+  this.showMsg4 = false;
+  this.loading.show();
+
+  this.yearGravable = yearSel;
+
+  if (
+    this.codigoAnexo === undefined ||
+    this.codigoAnexo === null ||
+    this.codigoAnexo === ""
+  ) {
+    this.codigoAnexo = null;
+  }
+
+  this.MiListaProductosService.getCertificadoRetenciones(
+    yearSel,
+    this.idTerceroCertificate,
+    this.codigoAnexo
+  ).subscribe(
+    (result) => {
+
+      const anexo = this.codigoAnexo;
+
+      if (result.TipoAlerta == 2) {
+
+        this.loading.hide();
+
+        this.notif.onWarning(
+          "Advertencia",
+          "El año ingresado no es valido."
+        );
+
+        return;
+      }
+
+      if (result.TipoAlerta == 3) {
+
+        this.loading.hide();
+
+        this.notif.onWarning(
+          "Advertencia",
+          "No se encontró registro."
+        );
+
+        return;
+      }
+
+      this.titularRetiene.NumeroDocumento =
+        result.NumeroDocumento;
+
+      this.DataRetenciones = 1;
+      this.DataSaldos = 0;
+
+      this.MiListaProductosService.getCertificadoRetencionPdf(
+        yearSel,
+        this.idTerceroCertificate,
+        this.codigoAnexo,
+        dataUsuario.lngTercero,
+        dataUsuario.Oficina
+      ).subscribe(
+        (resultp) => {
+
+          try {
+
+            const pdfinBase64 =
+              resultp?.FileStream?._buffer;
+
+            if (!pdfinBase64) {
+              throw new Error("PDF vacío");
+            }
+
+            this.base64MailRetenciones =
+              pdfinBase64;
+
+            this.mostrarPdf(pdfinBase64);
+
+            $("#abrirModalCertificateRetenciones").click();
+
+          } catch (e) {
+
+            console.error(
+              "Error procesando PDF",
+              e
+            );
+
+            this.notif.onDanger(
+              "Error",
+              "No fue posible generar el PDF."
+            );
+
+          } finally {
+
+            this.loading.hide();
+          }
+        },
+        (errorP) => {
+
+          this.loading.hide();
+
+          this.loadingPdfCertificate = false;
+
+          this.notif.onDanger(
+            "Error",
+            errorP
+          );
+        }
+      );
+
+      $("#OpcionSe").val("-");
+      $("#anexoSelected").val("-");
+      this.valueS = "-";
+      $("#YearSelected").val("");
+      $("#anexoCertificate").hide();
+      $("#MesSelected").val("");
+      $("#primerBotons").show();
+      $("#segundoBotons").hide();
+      $("#primerDiv").hide();
+      $("#segundoDiv").hide();
+
+      this.codigoAnexo = "";
+
+      //#region Guarda log
+
+      const log = new LogMisProductos();
+      const datosProducto = new DatosProductos();
+
+      log.IdOficina = parseInt(
+        dataUsuario.NumeroOficina
+      );
+
+      log.IdModulo = 69;
+      log.IdOperacion = 57;
+      log.IdOpcion = 7;
+      log.IdTercero = this.idTerceroCertificate;
+      log.IdUsuarioERP = dataUsuario.IdUsuario;
+      log.IdCuenta = null;
+
+      datosProducto.NumeroCuenta = null;
+      datosProducto.FechaInicial =
+        yearSel.toString() + "-" + anexo;
+
+      datosProducto.FechaFinal = null;
+
+      log.DatosProductos = datosProducto;
+
+      this.setLogMisProductos(log);
+
+      //#endregion
+    },
+    (error) => {
+
+      this.loading.hide();
+
+      this.notif.onDanger(
+        "Error.",
+        error
+      );
+
+      console.log(error);
+    }
+  );
+}
+
+private mostrarPdf(base64: string): void {
+
+  const byteArray = new Uint8Array(
+    atob(base64)
+      .split("")
+      .map((char) => char.charCodeAt(0))
+  );
+
+  const blob = new Blob(
+    [byteArray],
+    {
+      type: "application/pdf"
+    }
+  );
+
+  const url =
+    window.URL.createObjectURL(blob);
+
+  const objectPdf =
+    document.querySelector("object") as HTMLObjectElement;
+
+  if (objectPdf) {
+    objectPdf.data = url;
+    objectPdf.name = "Certificado";
+    objectPdf.type = "application/pdf";
+  }
+}
 
   GenerarCertificadoSaldosPdf() {
     var opcionSel = this.selectOpt;
