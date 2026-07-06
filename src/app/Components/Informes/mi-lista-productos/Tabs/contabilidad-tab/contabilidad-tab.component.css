@@ -48,3 +48,18 @@
     padding: 1px 5px 0;
     white-space: nowrap;
 }
+.img-reglamento {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}
+
+#modalVerImagen .modal-dialog {
+  max-width: 95vw;
+  width: 95vw;
+}
+
+#modalVerImagen .modal-body {
+  overflow-x: auto;
+  text-align: center;
+}

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MiListaProductosService } from '../../../../../Services/Informes/mi-lista-productos.service'
 
 @Component({
@@ -7,7 +7,8 @@ import { MiListaProductosService } from '../../../../../Services/Informes/mi-lis
   styleUrls: ['./contabilidad-tab.component.css'],
   standalone : false
 })
-export class ContabilidadTabComponent implements OnInit {
+export class ContabilidadTabComponent implements OnInit { 
+ @ViewChild('modalImagen', { static: false }) modalImagen!: ElementRef;
 
   constructor(private MiListaProductosService: MiListaProductosService) { }
 
@@ -74,5 +75,15 @@ CambiarColor(fil: number, event: any) {
 
     this.ColorAnterior = fil;
 }
+
+public imagenModal: string = '';
+
+VerAyuda(): void {
+  this.imagenModal = 'assets/images/ReglamentoSalud.png';
+  this.modalImagen.nativeElement.click();
+}
+
+
+
 
 }
