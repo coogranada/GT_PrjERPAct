@@ -1,0 +1,289 @@
+<div class="panel panel-white">
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-xs-12 col-md-3 col-lg-3">
+        <div class="container">
+          <ul class="nav nav-tabs">
+            <li>
+              <a>FILTROS GESTIÓN CRÉDITOS</a>
+            </li>
+          </ul>
+          <div>
+            <div>
+              <div class="row">
+                <div class="col-md-8 col-lg-8 col-sm-8  panel-default" id="PanelDatos">
+                  <div class="panel-body ">
+                    <div class="row" id="SelectFilter">
+
+                      <div class="col-xs-12 col-md-4 col-lg-4">
+                        <div class="form-group">
+                          <label class="textNegrilla">Filtro:</label>
+                          <span class="grande"> *</span>
+                          <select class="form-control form-control-lg" id="select" name="select"
+                            [(ngModel)]="filtroSelect" (change)="obtenerFiltro()">
+                            <option value="0" selected="true">
+                              --Seleccione--
+                            </option>
+                            <option *ngFor="let item of Filtros" [value]="item.idFiltro">
+                              {{item.NombreFiltro}}
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <form [formGroup]="formulario" autocomplete="off">
+
+                        <!-- OFICINA -->
+                        <div class="col-xs-12 col-md-4 col-lg-4" *ngIf="filtroSelect == 3">
+                          <div class="form-group">
+                            <label class="textNegrilla">{{tituloGenerico}}</label>
+                            <span class="grande"> *</span>
+                            <select class="form-control" formControlName="@IdOficina">
+                              <option value=0>--Seleccione--</option>
+                              <option *ngFor="let item of ListOficina" [value]="item.id">
+                                {{item.descri}}
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <!-- OPERACIÓN -->
+                        <div class="col-xs-12 col-md-4 col-lg-4" *ngIf="filtroSelect == 2">
+                          <div class="form-group">
+                            <label class="textNegrilla">{{tituloGenerico}}</label>
+                            <span class="grande"> *</span>
+                            <select class="form-control" formControlName="@Operacion">
+                              <option value="">--Seleccione--</option>
+                              <option *ngFor="let item of resultOperaciones"
+                                [value]="item.ERP_tblOperacion.IdOperacion">
+
+                                {{ item.ERP_tblOperacion.Descripcion }}
+
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <!-- USUARIO -->
+                        <div class="col-xs-12 col-md-4 col-lg-4" *ngIf="filtroSelect == 4">
+                          <div class="form-group">
+                            <label class="textNegrilla">{{tituloGenerico}}</label>
+                            <span class="grande"> *</span>
+                            <input type="text" class="form-control" formControlName="@Usuario" />
+                          </div>
+                        </div>
+
+                        <!-- ✅ CUENTA NUEVO -->
+                        <div class="col-xs-12 col-md-4 col-lg-4" *ngIf="filtroSelect == 5">
+                          <div class="form-group">
+                            <label class="textNegrilla">{{tituloGenerico}}</label>
+                            <span class="grande"> *</span>
+                            <input type="text" class="form-control" formControlName="@Cuenta" />
+                          </div>
+                        </div>
+
+                        <!-- BOTON + -->
+                        <button
+                          class="btn Gt-btn-verde btn-icon legitRipple"
+                          style="top: 20px"
+                          (click)="MostrarPanel()"
+                          *ngIf="
+                            (filtroSelect == 2 && formulario.controls['@Operacion']?.value != '') ||
+                            (filtroSelect == 3 && formulario.controls['@IdOficina']?.value != 0) ||
+                            (filtroSelect == 4 && (formulario.controls['@Usuario']?.value?.length || 0) >= 3) ||
+                            (filtroSelect == 5 && (formulario.controls['@Cuenta']?.value?.length || 0) > 0)
+                          ">
+                          <i class="icon-plus3" aria-hidden="true"></i>
+                        </button>
+
+                        <!-- FECHAS -->
+                        <div class="row">
+                          <div class="col-md-12 col-lg-12 col-sm-12">
+                            <div class="col-md-4 col-lg-4 col-sm-4">
+                              <div class="form-group">
+                                <label class="textNegrilla">Fecha Inicial:</label>
+                                <span class="grande"> *</span>
+                                <input type="date" class="form-control" formControlName="@FechaInicial" />
+                              </div>
+                            </div>
+
+                            <div class="col-md-4 col-lg-4 col-sm-4">
+                              <div class="form-group">
+                                <label class="textNegrilla">Fecha Final:</label>
+                                <span class="grande"> *</span>
+                                <input type="date" class="form-control" formControlName="@FechaFinal" />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- TABLA FILTROS -->
+                        <div class="row">
+                          <div class="col-md-12 col-lg-12 col-sm-12" *ngIf="filtrosAgregado.length > 0">
+                            <div class="table-responsive scrollTablaFiltros">
+                              <table class="table table-hover tablaBorder table-fixed">
+                                <tbody>
+                                  <tr *ngFor="let item of filtrosAgregado">
+                                    <td>{{item.NombreFiltro}}</td>
+                                    <td><strong>{{item.Validacion}}</strong></td>
+                                    <td>{{item.ValorInicial}}</td>
+                                    <td>
+                                      <i class="icon-cross3" (click)="EliminarFiltro(item)"
+                                        style="background-color: #852662;color:white; font-size: 25px;"></i>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+
+                        @if (mostrarBotones()) {
+                        <div class="col-md-12 col-lg-12 col-sm-12 text-right">
+                          <br>
+
+                          <button type="button" class="btn Gt-btn-verde btn-icon legitRipple"
+                            (click)="ejecutarSP(false)">
+                            Ver informe
+                          </button>
+
+                          &nbsp;&nbsp;&nbsp;
+
+                          <button type="submit" class="btn Gt-btn-verde" (click)="ejecutarSP(true)">
+                            Generar informe
+                          </button>
+                        </div>
+                        }
+
+
+                      </form>
+
+                    </div>
+                  </div>
+                </div>
+
+                <!-- COLUMNAS -->
+                <div class="col-md-4 col-lg-4 col-sm-4 panel-default">
+                  <div class="table-responsive scrollTablaCampos">
+                    <table class="table table-hover tablaBorder table-fixed">
+                      <thead>
+                        <tr class="encabezadoTablas">
+                          <th class="textNegrilla">
+                            <strong>Campo</strong>
+                          </th>
+                          <th class="textNegrilla">
+                            <strong>Permitir</strong>
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <tr>
+                          <td style="color: #333333;">
+                            Seleccionar todos
+                          </td>
+                          <td>
+                            <input type="checkbox" class="switchery selectedAll" [checked]="selectedAll"
+                              (change)="SeleccionaTodoCampos(-1)">
+                          </td>
+                        </tr>
+
+                        <tr *ngFor="let permitir of ListfilteredColumnasInf; let i = index">
+                          <td style="color: #333333;">
+                            {{ permitir.displayName }}
+                          </td>
+                          <td>
+                            <input type="checkbox" [(ngModel)]="permitir.selected"
+                              class="switchery check_{{ permitir.id }}" (change)="SeleccionaTodoCampos(i)">
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL RESULTADOS -->
+<input type="hidden" #ShowModalList data-toggle="modal" data-target="#ShowModalList">
+
+<div id="ShowModalList" class="modal fade">
+  <div style="width: 88%; margin: 30px auto; height: 90%;">
+    <div class="modal-content modal-xl">
+
+      <div class="modal-header bg-morado">
+        <button type="button" class="close" data-dismiss="modal" (click)="onModalCerrar()">&times;</button>
+        <h6 class="modal-title">Informe Gestión Créditos</h6>
+      </div>
+
+      <div class="modal-body">
+        <div class="scrollTabla" (scroll)="onScroll($event)">
+
+          <app-tabla-virtual [datos]="resultadoInforme" [columnas]="encabezados" [formatear]="formatearValor"
+            [mostrarTotal]="true">
+          </app-tabla-virtual>
+
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn Gt-btn-verde" (click)="exportarExcel2()">
+          <i class="icon-download4"></i> EXCEL
+        </button>
+
+        <button class="btn Gt-btn-morado" data-dismiss="modal" (click)="onModalCerrar()">Cerrar</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="ModalProgressBar"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="ModalProgressBarTitle"
+     data-backdrop="static">
+
+    <div class="modal-dialog modal-lg" style="margin-top: 10%;">
+        <br>
+
+        <div class="panel panel-body">
+            <div class="text-center">
+                <h5 class="no-margin text-semibold">
+                    Generando Informe . . .
+                </h5>
+                <br>
+            </div>
+
+            <div class="progress progress-rounded" style="height: 25px;">
+                <div class="progress-bar"
+                     role="progressbar"
+                     [style.width.%]="progreso"
+                     [attr.aria-valuenow]="progreso"
+                     aria-valuemin="0"
+                     aria-valuemax="100"
+                     style="background-color: #852662;">
+
+                    <span style="font-size: 18px;">
+                        {{ progreso }}% Completado
+                    </span>
+
+                </div>
+            </div>
+
+        </div>
+
+        <br>
+    </div>
+
+</div>

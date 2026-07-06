@@ -72,6 +72,8 @@ export class LogAuditoriaComponent implements OnInit {
             this.Operaciones.push(element);
           else if (element.IdOperaciones == 141) // Log Recaudo Olivos
             this.Operaciones.push(element);
+          else if (element.IdOperaciones == 144) // Log Gestion de Creditos
+            this.Operaciones.push(element);
         });
       },
       (err) => {
