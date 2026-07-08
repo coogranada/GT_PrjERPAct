@@ -1,15 +1,4 @@
-<div class="col-xs-12 col-md-12 col-lg-12"><br>
-    <div class="col-xs-12 col-md-4 col-lg-10"></div>
-    <div class="col-xs-12 col-md-4 col-lg-2">
-        <button class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-backdrop="static" data-keyboard="false" (click)="VerAyuda()">
-            Ver Ayuda
-        </button>&nbsp;    
-        <button   #modalImagen  type="button"  style="display:none"  data-toggle="modal"  data-target="#modalVerImagen">
-        </button> 
-    </div>
-</div>
-<br>
-<br>
+
 <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="ListTagContabilidad.length <= 0">
     <br>
     <div class="alert alert-secondary" role="alert">
@@ -17,8 +6,7 @@
     </div>
 </div>
 
-<div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat"
-     *ngIf="ListTagContabilidad.length > 0">
+<div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="ListTagContabilidad.length > 0">
 
   <div class="table-responsive scrollTabla">
 
@@ -82,20 +70,31 @@
 
   </div>
 </div>
-
-<div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="ListTagContabilidad.length > 0">
-    <div class="table-responsive scrollTabla">
-        <table id="tablaIngresos" class="table table-hover">
-           
-        </table>
+<div class="col-xs-12 col-md-12 col-lg-12"><br>
+    <div class="col-xs-12 col-md-4 col-lg-10">
+        <label><strong>Subsidios de salud año vigente</strong></label>
+    </div>
+    <div class="col-xs-12 col-md-4 col-lg-2">
+        
+<div class="col-xs-12 col-md-4 col-lg-2" style="margin-bottom:20px;">
+    <button class="btn Gt-btn-verde btn-icon legitRipple"  data-toggle="modal" data-backdrop="static" data-keyboard="false" (click)="VerAyuda()">
+        Ver Ayuda
+    </button>
+</div>
+&nbsp;    
+        <button   #modalImagen  type="button"  style="display:none"  data-toggle="modal"  data-target="#modalVerImagen">
+        </button> 
     </div>
 </div>
-<div class="col-xs-12 col-md-12 col-lg-12" *ngIf="ListSubSalud.length > 0">
-  <label><strong>Subsidios de salud año vigente</strong></label>
-</div>
 
-<div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat"
-     *ngIf="ListSubSalud.length > 0">
+
+<div class="col-xs-12 col-md-12 col-lg-12" *ngIf="ListSubSalud.length <= 0">
+    <br>
+    <div class="alert alert-secondary" role="alert">
+        No hay registros
+    </div>
+</div>
+<div class="col-xs-12 col-md-12 col-lg-12 panel panel-flat" *ngIf="ListSubSalud.length > 0">
 
   <div class="table-responsive scrollTabla">
 
@@ -150,13 +149,23 @@
           <td class="text-center"> 
             {{item.CantidadMaxima}}          
           </td>
+          <td class="text-right">
+              {{ item.ValorMaximo | number:'1.2-2' }}
+            </td>
 
-          <td class="text-right"> 
-            {{item.ValorMaximo}}          
-          </td>
 
         </tr>
       </tbody>
+        <tfoot class="total-tfoot">
+          <tr>
+          <td ></td>
+          <td ></td>
+          <td class="text-right">{{ totalSaldo | number:'1.2-2' }}</td>
+          <td ></td>
+          <td ></td>
+          <td ></td>
+         
+        </tfoot>     
 
     </table>
 

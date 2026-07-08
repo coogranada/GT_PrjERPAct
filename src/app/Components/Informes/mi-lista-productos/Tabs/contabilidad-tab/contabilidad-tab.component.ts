@@ -40,17 +40,31 @@ export class ContabilidadTabComponent implements OnInit {
 
 
   }
-  getContabilidadSubSalud(lngtercero: number) {
-  this.ListSubSalud = [];
 
-  this.MiListaProductosService.getContabilidadSubSalud(lngtercero).subscribe(
-      (result: any) => {
-        if (result && result.length > 0) {
-          this.ListSubSalud = result;
-        }
+totalSaldo: number = 0;
+
+getContabilidadSubSalud(lngtercero: number): void {
+  this.ListSubSalud = [];
+  this.totalSaldo = 0;
+
+  this.MiListaProductosService.getContabilidadSubSalud(lngtercero)
+    .subscribe(
+      (result: any[]) => {
+
+        this.ListSubSalud = (result || []).map((item: any) => ({
+          ...item,
+          Saldo: Number((item.Saldo || '0').toString().replace(/,/g, '')),
+          ValorMaximo: Number((item.ValorMaximo || '0').toString().replace(/,/g, ''))
+        }));
+
+        this.totalSaldo = this.ListSubSalud.reduce(
+          (acumulado: number, item: any) => acumulado + item.Saldo,
+          0
+        );
+
       },
-      error => {
-        console.log(error);
+      (error) => {
+        console.error(error);
       }
     );
 }

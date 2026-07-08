@@ -932,43 +932,82 @@ export class CarteraTabComponent implements OnInit {
 
   }
 
-  SendMailCpM() {
+  SendMailCpM(): void {
+  if (this.validaPlantillla === true) {
+    this.loading.show();
+    const yearInicial = Number(
+      $(".yearInit_Cartera").val()
+    );
+    const yearFinal = Number(
+      $(".yearEnd_Cartera").val()
+    );
+    const mesInicial = Number(
+      $(".MesInit_Cartera").val()
+    );
+    const mesFinal = Number(
+      $(".MesEnd_Cartera").val()
+    );
+    const data = localStorage.getItem("Data");
+    const dataLocalStorage = JSON.parse(
+      window.atob(data != null ? data : "")
+    );
+    const oficina = dataLocalStorage.Oficina;
+    const fechaInicio =
+      yearInicial + "-" + mesInicial + "-1";
 
-    if (this.validaPlantillla == true) {
-      this.loading.show();
-      var yearInicial = Number($(".yearInit_Cartera").val());
-      var yearFinal = Number($(".yearEnd_Cartera").val());
-      var MesInicial = Number($(".MesInit_Cartera").val());
-      var MesFinal = Number($(".MesEnd_Cartera").val());
-      let data = localStorage.getItem("Data");
-      var dataLocalStorage = JSON.parse(window.atob(data != null ? data : ""));
-      var Oficina = dataLocalStorage.Oficina;
-      var FechaInicio = yearInicial + "-" + MesInicial + "-1";
+    const tercero = Number(
+      $("#TerceroPrincipal").val()
+    );
 
-       var Tercero = Number($("#TerceroPrincipal").val());
-
-      this.MiListaProductosService.sendMailCartera(this.lngCuenta, "Coogranada",Oficina,this.NombreProducto,"CarteraPadre",FechaInicio,yearFinal,MesFinal,null).subscribe(
+    this.MiListaProductosService
+      .sendMailCartera(
+        this.lngCuenta,
+        "Coogranada",
+        oficina,
+        this.NombreProducto,
+        "CarteraPadre",
+        fechaInicio,
+        yearFinal,
+        mesFinal,
+        null
+      )
+      .subscribe(
         result => {
-          this.loading.hide();
-          this.Response(result);
+          try {
+            this.Response(result);
+            //#region Guarda log
+            const logMisProductosData =
+              new LogMisProductos();
 
-          //#region Guarda log
-          let data = localStorage.getItem("Data");
-      var dataLocalStorage = JSON.parse(window.atob(data != null ? data : ""));
-          var LogMisProductosData = new LogMisProductos();
-          var nuevoItem = new DatosProductos();
-          LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
-          LogMisProductosData.IdModulo = 69;
-          LogMisProductosData.IdOperacion = 50;
-          LogMisProductosData.IdOpcion = 12; // Envio correo 
-          LogMisProductosData.IdTercero = Tercero;
-          LogMisProductosData.IdCuenta = this.lngCuenta
-          LogMisProductosData.IdUsuarioERP = dataLocalStorage.IdUsuario;
-          nuevoItem.FechaInicial = "";
-          nuevoItem.FechaFinal = "";
-          LogMisProductosData.DatosProductos = nuevoItem;
-          this.setLogMisProductos(LogMisProductosData);
-          // #endregion
+            const nuevoItem =
+              new DatosProductos();
+
+            logMisProductosData.IdOficina =
+              parseInt(dataLocalStorage.NumeroOficina);
+
+            logMisProductosData.IdModulo = 69;
+            logMisProductosData.IdOperacion = 50;
+            logMisProductosData.IdOpcion = 12;
+            logMisProductosData.IdTercero = tercero;
+            logMisProductosData.IdCuenta = this.lngCuenta;
+            logMisProductosData.IdUsuarioERP =
+              dataLocalStorage.IdUsuario;
+
+            nuevoItem.FechaInicial = "";
+            nuevoItem.FechaFinal = "";
+
+            logMisProductosData.DatosProductos =
+              nuevoItem;
+
+            this.setLogMisProductos(
+              logMisProductosData
+            );
+
+            //#endregion
+
+          } finally {
+            this.loading.hide();
+          }
         },
         error => {
           this.loading.hide();
@@ -984,25 +1023,22 @@ export class CarteraTabComponent implements OnInit {
             allowEscapeKey: false,
           });
         }
-      )
-    } else {
-      this.loading.hide();
-      swal.fire({
-        title: "Info",
-        text: "",
-        html: "Por favor comunicarse con el administrador para gestionar la plantilla del email.",
-        icon: "info",
-        showCancelButton: false,
-        confirmButtonColor: "rgb(13,165,80)",
-        cancelButtonColor: "rgb(160,0,87)",
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-      });
-    }
+      );
 
-
-
+  } else {
+    swal.fire({
+      title: "Info",
+      text: "",
+      html: "Por favor comunicarse con el administrador para gestionar la plantilla del email.",
+      icon: "info",
+      showCancelButton: false,
+      confirmButtonColor: "rgb(13,165,80)",
+      cancelButtonColor: "rgb(160,0,87)",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+    });
   }
+}
 
   opcionSelectedYearInit(year : string) {
     $(".yearInit_Cartera").val(Number(year));

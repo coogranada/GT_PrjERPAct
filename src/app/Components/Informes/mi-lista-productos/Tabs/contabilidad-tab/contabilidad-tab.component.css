@@ -63,3 +63,19 @@
   overflow-x: auto;
   text-align: center;
 }
+
+.total-tfoot {
+    tr:first-child {
+        background-color: rgb(178 178 178 / 40%);
+    }
+    td {
+        border-top: 2px solid #000;
+        font-weight: bold;
+    }
+}
+
+
+tfoot tr {
+    height: 40px; 
+}
+

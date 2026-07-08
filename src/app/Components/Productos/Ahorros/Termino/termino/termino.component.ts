@@ -292,32 +292,43 @@ export class TerminoComponent implements OnInit {
       }
     );
   }
-  ObtenerEstado() {
-    let data = localStorage.getItem('Data')
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
-    const arrayExample = {
-      'IdOperacion': 9,
-      'IdPerfil': this.dataUser.idPerfilUsuario,
-      'IdModulo': '19'
-    };
-    this.loading.show();
-    this.operacionesService.ObtenerEstadosXOperacionesData(arrayExample).subscribe(
+  ObtenerEstado(): void {
+  const data = localStorage.getItem('Data');
+  this.dataUser = JSON.parse(
+    window.atob(data == null ? "" : data)
+  );
+  const arrayExample = {
+    IdOperacion: 9,
+    IdPerfil: this.dataUser.idPerfilUsuario,
+    IdModulo: '19'
+  };
+  this.loading.show();
+  this.operacionesService
+    .ObtenerEstadosXOperacionesData(arrayExample)
+    .subscribe(
       result => {
         setTimeout(() => {
-          this.resultEstados = result;
-          this.TerminoForm.get('IdEstado')?.setValue("0");
-          $('#SelectEstadoCuenta').focus().select();
-          this.loading.hide();
+          try {
+            this.resultEstados = result;
+            this.TerminoForm
+              .get('IdEstado')?.setValue('0');
+              $('#SelectEstadoCuenta').focus().select();
+          } finally {
+            this.loading.hide();
+          }
         }, 1000);
       },
       error => {
         this.loading.hide();
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        this.notif.onDanger(
+          'Error',
+          errorMessage
+        );
         console.log(errorMessage);
       }
     );
-  }
+}
   btnDeleteReciprocidad: boolean = false;
   bloquearCesionTitulo: boolean = false;
   ValorSeleccionado() {
