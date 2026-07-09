@@ -822,28 +822,356 @@
         <!--/ Fin Modal Debito Automatico -->
 
         <!-- MODAL CAMBIAR GARANTIAS -->
-         @if(mostrarModal) {
-            <app-cambiar-garantias-modal
-                #modalGarantias
-                
-                [datosCuenta]="datosCuenta"
-                [SaldoCapital]="carteraInfo.SaldoCapital"
-                
-                [garantiasForm]="garantiasForm"
-                [listGarantiasDisponiblesDeudor]="listGarantiasDisponiblesDeudor"
-                [listGarantiasDisponiblesCodeudor]="listGarantiasDisponiblesCodeudor"
-                [garantiasCompartidasBackendInput]="garantiasCompartidasBackend"
-                [garantiasRealesAsignadasInput]="garantiasRealesAsignadas"
-                [garantiasCompartidas]="garantiasCompartidas"
-                [codeudoresBasico]="codeudoresBasico"
-                [mostrarGarantiasCodeudor]="mostrarGarantiasCodeudor"
-                (cerrar)="onClickCerrarModalGarantias()"
-                (changeCodeudor)="onChangeCodeudor($event)"
-                (confirmar)="onClickConfirmarCambiosGarantia($event)"
-            ></app-cambiar-garantias-modal>
-         }
+        @if(mostrarModal) {
+           <app-cambiar-garantias-modal
+               #modalGarantias
+
+               [datosCuenta]="datosCuenta"
+               [SaldoCapital]="carteraInfo.SaldoCapital"
+
+               [garantiasForm]="garantiasForm"
+               [listGarantiasDisponiblesDeudor]="listGarantiasDisponiblesDeudor"
+               [listGarantiasDisponiblesCodeudor]="listGarantiasDisponiblesCodeudor"
+               [garantiasCompartidasBackendInput]="garantiasCompartidasBackend"
+               [garantiasRealesAsignadasInput]="garantiasRealesAsignadas"
+               [garantiasCompartidas]="garantiasCompartidas"
+               [codeudoresBasico]="codeudoresBasico"
+               [mostrarGarantiasCodeudor]="mostrarGarantiasCodeudor"
+               (cerrar)="onClickCerrarModalGarantias()"
+               (changeCodeudor)="onChangeCodeudor($event)"
+               (confirmar)="onClickConfirmarCambiosGarantia($event)"
+           ></app-cambiar-garantias-modal>
+        }
 
         <!-- FIN CAMBIAR GARANTIAS -->
+
+
+        <!-- MODAL PROCESO INSOLVENCIA -->
+        <div id="procesoInsolvencia" class="modal" data-backdrop="static" data-keyboard="false"> 
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-morado">
+                        <button type="button" class="close" data-dismiss="modal" (click)="onClickCerrarModalCodeudores()">&times;</button>
+                        <h6 class="modal-title">Proceso insolvencia</h6>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                        
+                            <form class="mb-3" [formGroup]="insolvenciaForm">
+                                <div class="row">
+
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label class="textNegrilla">Causal</label>
+                                            <span class="grande"> *</span>
+                                            <select class="form-control" name="select" formControlName="IdCausal">
+                                                @if(!insolvenciaForm.get('IdCausal')?.value){
+                                                    <option value="">-- Seleccione --</option>
+                                                }
+                                                <option *ngFor="let causal of resultCausalesInsolvencia" [value]="causal.IdFormaPago">
+                                                    {{causal.DescripcionFormaPago}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label class="textNegrilla">Detalle</label>
+                                            <span class="grande"> *</span>
+                                            <select class="form-control" formControlName="Detalle">
+                                                <option value="">-- Seleccione --</option>
+                                            
+                                                <option *ngFor="let item of detallesInsolvencia"
+                                                        [value]="item.id">
+                                                    {{item.descripcion}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+<!-- 
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="documento">Documento:</label>
+                                            <span class="grande"> *</span>
+                                            <input type="text" autocomplete="off" id="documento" class="form-control" maxlength="30" formControlName="documento" (blur)="onBlurDocumentoDeudor()" (input)="onChangeDocumentoCodeudor()">
+                                            <span class="help-block validationSpan"
+                                                *ngIf="codeudorForm.controls['documento'].errors?.['minlength']">
+                                                Debe tener al menos 6 caracteres.
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label for="nombre">Nombre:</label>
+                                            <input type="text" id="nobrem" class="form-control" formControlName="nombre">
+                                        </div>
+                                    </div> -->
+                                </div>
+                            <!-- ADMISION -->
+                            <div class="row"
+                                 *ngIf="insolvenciaForm.get('Detalle')?.value === 'ADMISION'">
+                            
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Fecha admisión:</label>
+                                        <span class="grande"> *</span>
+                                        <input type="date"
+                                               class="form-control"
+                                               formControlName="FechaAdmision">
+                                    </div>
+                                </div>
+                            
+                            </div>
+                            
+                            <!-- NOTIFICACION -->
+                            <div class="row"
+                                 *ngIf="insolvenciaForm.get('Detalle')?.value === 'NOTIFICACION'">
+                            
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Fecha notificación:</label>
+                                        <span class="grande"> *</span>
+                                        <input type="date"
+                                               class="form-control"
+                                               formControlName="FechaNotificacion">
+                                    </div>
+                                </div>
+                            
+                            </div>
+                            
+                            <!-- INICIO_NEGOCIACION -->
+                            <div class="row"
+                                 *ngIf="insolvenciaForm.get('Detalle')?.value === 'INICIO_NEGOCIACION'">
+                            
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Fecha inicio negociación:</label>
+                                        <span class="grande"> *</span>
+                                        <input type="date"
+                                               class="form-control"
+                                               formControlName="FechaInicioNegociacion">
+                                    </div>
+                                </div>
+                            
+                            </div>
+                            
+                            <!-- APROBACION_ACUERDO -->
+                            <div class="row"
+                                 *ngIf="insolvenciaForm.get('Detalle')?.value === 'APROBACION_ACUERDO'">
+                            
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Fecha aprobación acuerdo:</label>
+                                        <span class="grande"> *</span>
+                                        <input type="date"
+                                               class="form-control"
+                                               formControlName="FechaAprobacionAcuerdo">
+                                    </div>
+                                </div>
+                            
+                            </div>
+                            
+                            <!-- TERMINACION_ACUERDO -->
+                            <div class="row"
+                                 *ngIf="insolvenciaForm.get('Detalle')?.value === 'TERMINACION_ACUERDO'">
+                            
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Fecha terminación acuerdo:</label>
+                                        <span class="grande"> *</span>
+                                        <input type="date"
+                                               class="form-control"
+                                               formControlName="FechaTerminacionAcuerdo">
+                                    </div>
+                                </div>
+                            
+                            </div>
+                            
+                            <!-- INCUMPLIMIENTO_ACUERDO -->
+                            <div class="row"
+                                 *ngIf="insolvenciaForm.get('Detalle')?.value === 'INCUMPLIMIENTO_ACUERDO'">
+                            
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Fecha incumplimiento acuerdo:</label>
+                                        <span class="grande"> *</span>
+                                        <input type="date"
+                                               class="form-control"
+                                               formControlName="FechaIncumplimientoAcuerdo">
+                                    </div>
+                                </div>
+                            
+                            </div>
+                            
+                            <!-- LIQUIDACION -->
+                            <div class="row"
+                                 *ngIf="insolvenciaForm.get('Detalle')?.value === 'LIQUIDACION'">
+                            
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Fecha liquidación:</label>
+                                        <span class="grande"> *</span>
+                                        <input type="date"
+                                               class="form-control"
+                                               formControlName="FechaLiquidacion">
+                                    </div>
+                                </div>
+                            
+                            </div>
+                            
+                            <!-- ACUERDO_PAGO -->
+                            <div *ngIf="insolvenciaForm.get('Detalle')?.value === 'ACUERDO_PAGO'">
+                            
+                                <div class="row">
+                                
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Valor reconocido:</label>
+                                            <span class="grande"> *</span>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   formControlName="ValorReconocido">
+                                        </div>
+                                    </div>
+                                
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Capital reconocido:</label>
+                                            <span class="grande"> *</span>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   formControlName="CapitalReconocido">
+                                        </div>
+                                    </div>
+                                
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Intereses reconocidos:</label>
+                                            <span class="grande"> *</span>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   formControlName="InteresesReconocidos">
+                                        </div>
+                                    </div>
+                                
+                                </div>
+                            
+                                <div class="row">
+                                
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Condonaciones aprobadas:</label>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   formControlName="CondonacionesAprobadas">
+                                        </div>
+                                    </div>
+                                
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Nuevas condiciones de pago:</label>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   formControlName="NuevasCondicionesPago">
+                                        </div>
+                                    </div>
+                                
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Número cuotas pactadas:</label>
+                                            <span class="grande"> *</span>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   formControlName="NumeroCuotasPactadas">
+                                        </div>
+                                    </div>
+                                
+                                </div>
+                            
+                            </div>
+                            
+                            <!-- DESMARCAR -->
+                            <div class="row"
+                                 *ngIf="insolvenciaForm.get('Detalle')?.value === 'DESMARCAR'">
+                            
+                                <div class="col-md-12">
+                                    <div class="alert alert-warning">
+                                        Esta operación desmarcará el proceso de insolvencia y actualizará el estado de la cuenta.
+                                    </div>
+                                </div>
+                            
+                            </div>
+
+                                <div class="row">
+                                    <div class="form-group form-group-flex flex-end">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal"
+                                            (click)="onClickCancelarInsolvencia()">
+                                            Cancelar
+                                        </button>
+                                        <button type="button" class="btn Gt-btn-morado" [disabled]=""
+                                            (click)="onClickLimpiarInsolvencia()">
+                                            Limpiar
+                                        </button>
+                                        <button type="button" class="btn Gt-btn-verde" [disabled]=""
+                                            (click)="onClickGuardarInsolvencia()">
+                                            Guardar
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </form>
+                        
+                            <!-- <article>
+                                <div class="alert alert-secondary" role="alert" *ngIf="codeudoresDraft.length === 0">
+                                    No hay registros
+                                </div>
+                                <div class="table-responsive scrollTabla" *ngIf="codeudoresDraft.length > 0">
+                                    <table class="table table-hover encabezado-fijo">
+                                        <colgroup>
+                                            <col style="width: 30%;">
+                                            <col style="width: 50%;">
+                                            <col style="width: 20%;">
+                                        </colgroup>
+                                        <thead>
+                                            <tr>
+                                                <th>Documento</th>
+                                                <th>Nombre</th>
+                                                <th class="text-center">Opciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let codeudor of codeudoresDraft; let i = index"
+                                                (click)="selectRow('codeudoresDraft', i)" [class.tr-selected]="selectedRows['codeudoresDraft'] === i">
+                                                <td>
+                                                    <div>{{ codeudor.documento }}</div>
+                                                </td>
+                                                <td>
+                                                    <div>{{ codeudor.nombreCompleto }}</div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <button class="btn Gt-btn-morado btn-icon legitRipple" (click)="onClickEliminarCodeudor(codeudor.idTercero)">
+                                                        <i class="icon-bin2"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </article> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+        <button type="button" style="visibility:hidden" #openProcesoInsolvenciaModal class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#procesoInsolvencia">
+            <i class="icon-search4"></i>
+        </button>
+        <!-- FIN PROCESO INSOLVENCIA -->
+
 
         <!-- TABS -->
         <div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelTab">
@@ -2267,6 +2595,58 @@
                                             </table>
                                         </div>
                                     </div>
+                                    <br>
+                                    <!-- Inicio Insolvencia -->
+                                    <div>
+                                        <h3 class="tab-title">Proceso de insolvencia</h3>
+                                    </div>
+                                    <div>
+                                        <div *ngIf="lstReliquidacion.length <= 0">
+                                            <div class="alert alert-secondary" role="alert">
+                                                No hay registros
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive scrollTabla" *ngIf="lstReliquidacion.length > 0">
+                                            <table class="table table-hover tabla-last-column-fixed">
+                                                <thead>
+                                                    <tr class="encabezadoTablas">
+                                                        <th><strong>Monto</strong></th>
+                                                        <th><strong>Saldo</strong></th>
+                                                        <th><strong>Cuota</strong></th>
+                                                        <th><strong>Cuota libranza</strong></th>
+                                                        <th class="text-center"><strong>Plazo</strong></th>
+                                                        <th><strong>Periodo interes</strong></th>
+                                                        <th><strong>Tasa periodica</strong></th>
+                                                        <th><strong>Tasa nominal</strong></th>
+                                                        <th><strong>Puntos</strong></th>
+                                                        <th><strong>Periodo gracia</strong></th>
+                                                        <th><strong>Fecha inicio gracia</strong></th>
+                                                        <th><strong>Fecha cambio</strong></th>
+                                                        <th><strong>Operación</strong></th>
+                                                        
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="filRel_{{j}}" (click)="CambiarColor(j,4)" *ngFor="let itemReliquida of lstReliquidacion; let j = index">
+                                                        <td>{{ itemReliquida.Monto | currency }}</td>
+                                                        <td>{{ itemReliquida.Saldo | currency }}</td>
+                                                        <td>{{ itemReliquida.Cuota | currency }}</td>
+                                                        <td class="text-center">{{ itemReliquida.CuotaLibranza ?? 0 | currency }}</td>
+                                                        <td class="text-center">{{ itemReliquida.Plazo }}</td>
+                                                        <td class="text-center">{{ itemReliquida.PeriodoInteres }}</td>
+                                                        <td class="text-center">{{ itemReliquida.Tasa | number:'1.4-4' }} %</td>
+                                                        <td class="text-center">{{ itemReliquida.TasaNominal | number:'1.4-4' }} %</td>
+                                                        <td class="text-center">{{ itemReliquida.Puntos ?? 0 | number:'1.4-4' }} %</td>
+                                                        <td class="text-center">{{ itemReliquida.PeriodoGracia ?? 0 }}</td>
+                                                        <td style="min-width: 135px;">{{ itemReliquida.FechaInicioGracia | date:'yyyy/MM/dd HH:mm:ss' }}</td>
+                                                        <td>{{ itemReliquida.Fecha | date:'yyyy/MM/dd HH:mm:ss' }}</td>
+                                                        <td>{{ itemReliquida.Novedad.includes('Disminuir Cuota') ? 'Cambio de Cuota' : itemReliquida.Novedad }}</td>                                                    
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <!-- Fin Insolvencia-->
                                 </section>
                             </div>
                             <!-- Fin CambiosTab -->

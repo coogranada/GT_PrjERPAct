@@ -582,3 +582,19 @@ export interface GarantiaCompartida {
   GrupoGarantia?: string;
   Descripcion: string;
 }
+
+
+export interface CrearInsolvencia {
+  oficina: number;
+  producto: number;
+  consecutivo: number;
+
+  estadoActual: number;
+
+  formaPago: number;
+  edoTaquilla: number;
+
+  motivo: number;
+
+  usuario: number;
+}

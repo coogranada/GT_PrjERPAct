@@ -335,7 +335,7 @@ export class LogGestionCreditosComponent {
     );
 
     if (temp) {
-      this.notif.onWarning('Advertencia', 'Filtro ya existe');
+      this.notif.onWarning('Advertencia', 'Filtro ya existe.');
       this.limpiarSelected();
       return;
     }

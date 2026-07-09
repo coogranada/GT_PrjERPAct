@@ -289,7 +289,7 @@ export const formateadoresPorOperacion: Record<number, FormateadorOperacion> = {
       ...registro,
       Detalles: `
         <strong>Anterior:</strong> ${formatear(anteriorGarantias)}
-        | <strong>Actual:</strong> ${formatear(actualGarantias)}
+        | <strong>Actualiza:</strong> ${formatear(actualGarantias)}
         | <strong>Agregadas:</strong> ${formatear(agregadas)}
         | <strong>Eliminadas:</strong> ${formatear(eliminadas)}
       `

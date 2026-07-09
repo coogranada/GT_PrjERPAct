@@ -3,7 +3,7 @@ import { ControlContainer, FormControl, FormGroup, Validators } from '@angular/f
 import { OperacionesService } from '../../../../Services/Maestros/operaciones.service';
 import { FormaPagoEnum, Tabs, TipoBusquedaResumen, TipoSistemas } from '../../../../Models/Productos/cartera/gestion-credito.enum';
 import { CarteraService } from '../../../../Services/Productos/cartera.service';
-import { ActualizarPagareDto, CalcularCuota, CambiarCalificacionDto, CambiarFormaPagoDto, CambiarLineaCreditoDto, CodeudorDraft, CuentaCarteraDetalle, CuentaCarteraResumen, CuentaFormateada, DebitoAutomaticoCreditoDto, Diferido, FechasCredito, GarantiaDisponible, GarantiaPersonalCod, GarantiaReal, HistorialOperacion, LineaCambioListDto, LogCambiarCodeudores, ManejarSeguroCreditoDto, ObservacionRadicado, Provision, Referencia, ResultadoOperacionDto, CambiarInfoCreditoLog, CambiarGarantiaDto, CambiarGarantiasRequestDto, DetalleGarantiaCreditoDto, GarantiaRealAsignada, ObtenerCodeudorBasicoModel, PeriodoPago, GarantiaCompartida, DevolverReest } from '../../../../Models/Productos/cartera/gestion-credito.model';
+import { ActualizarPagareDto, CalcularCuota, CambiarCalificacionDto, CambiarFormaPagoDto, CambiarLineaCreditoDto, CodeudorDraft, CuentaCarteraDetalle, CuentaCarteraResumen, CuentaFormateada, DebitoAutomaticoCreditoDto, Diferido, FechasCredito, GarantiaDisponible, GarantiaPersonalCod, GarantiaReal, HistorialOperacion, LineaCambioListDto, LogCambiarCodeudores, ManejarSeguroCreditoDto, ObservacionRadicado, Provision, Referencia, ResultadoOperacionDto, CambiarInfoCreditoLog, CambiarGarantiaDto, CambiarGarantiasRequestDto, DetalleGarantiaCreditoDto, GarantiaRealAsignada, ObtenerCodeudorBasicoModel, PeriodoPago, GarantiaCompartida, CrearInsolvencia, DevolverReest } from '../../../../Models/Productos/cartera/gestion-credito.model';
 import { catchError, concatMap, finalize, firstValueFrom, forkJoin, Observable, of, switchMap, tap } from 'rxjs';
 import { MiListaProductosService } from '../../../../Services/Informes/mi-lista-productos.service';
 import { ToastrService } from 'ngx-toastr';
@@ -51,6 +51,7 @@ export class GestionCreditoComponent {
   @ViewChild('ModalRegistrarDebitoAutomatico', { static: true }) private ModalRegistrarDebitoAutomatico!: ElementRef;
   @ViewChild('openCambiarGarantiasModal', { static: true }) private openCambiarGarantiasModal!: ElementRef;
   @ViewChild('modalGarantias') modalGarantias!: CambiarGarantiasModalComponent;
+  @ViewChild('openProcesoInsolvenciaModal', { static: true }) private openProcesoInsolvenciaModal!: ElementRef;
 
   private codModulo = 45;
   public dataUser: any;
@@ -120,12 +121,26 @@ export class GestionCreditoComponent {
   public BloquearCuentaOrigen: boolean | null = false;
   public BloquearNombreDebito: boolean | null = false;
   
-
   //Calificación
   public calificacionForm!: FormGroup;
   public calificacionInicial: any;
   public resultCausales: any[] = [];
   public resultListaCalificaciones: any[] = [];
+
+  //Insolvencia
+  public resultCausalesInsolvencia: any[] = [];
+  public insolvenciaForm!: FormGroup;
+  public detallesInsolvencia = [
+    { id: 'ADMISION', descripcion: 'Fecha de admisión a insolvencia' },
+    { id: 'NOTIFICACION', descripcion: 'Fecha de notificación' },
+    { id: 'INICIO_NEGOCIACION', descripcion: 'Fecha de inicio de negociación' },
+    { id: 'APROBACION_ACUERDO', descripcion: 'Fecha de aprobación del acuerdo' },
+    { id: 'TERMINACION_ACUERDO', descripcion: 'Fecha de terminación del acuerdo' },
+    { id: 'INCUMPLIMIENTO_ACUERDO', descripcion: 'Fecha de incumplimiento del acuerdo' },
+    { id: 'LIQUIDACION', descripcion: 'Fecha de liquidación' },
+    { id: 'ACUERDO_PAGO', descripcion: 'Acuerdo de pago' },
+    { id: 'DESMARCAR', descripcion: 'Desmarcar insolvencia' }
+  ];
 
   //Garantias
   public datosCuenta: any;
@@ -571,6 +586,27 @@ export class GestionCreditoComponent {
       Modelo: new FormControl({value: '', disabled: true}),
     });
 
+    this.insolvenciaForm = new FormGroup({
+      IdCausal: new FormControl(''),
+      Detalle: new FormControl(''),
+    
+      FechaAdmision: new FormControl(''),
+      FechaNotificacion: new FormControl(''),
+      FechaInicioNegociacion: new FormControl(''),
+      FechaAprobacionAcuerdo: new FormControl(''),
+      FechaTerminacionAcuerdo: new FormControl(''),
+      FechaIncumplimientoAcuerdo: new FormControl(''),
+      FechaLiquidacion: new FormControl(''),
+    
+      ValorReconocido: new FormControl(''),
+      CapitalReconocido: new FormControl(''),
+      InteresesReconocidos: new FormControl(''),
+      CondonacionesAprobadas: new FormControl(''),
+      NuevasCondicionesPago: new FormControl(''),
+      NumeroCuotasPactadas: new FormControl('')
+    });
+
+
     this.garantiasForm = new FormGroup({
       codeudorSeleccionado: new FormControl('', Validators.required)
     });
@@ -759,7 +795,7 @@ export class GestionCreditoComponent {
 
     const operacionCodigo = this.gestionCreditoOperacionForm.get('Codigo')?.value;
     this.operacionActual = this.resultOperaciones.find((op: any) => op.IdOperaciones == operacionCodigo)?.ERP_tblOperacion?.Descripcion;
-
+    
     if (operacionCodigo === '2') { // Buscar
       this.limpiarFormulario(true);
       this.cuotaTabBloqueado = false;
@@ -850,10 +886,133 @@ export class GestionCreditoComponent {
         this.habilitarCambiarCalificacion();
       } else if (operacionCodigo === '134') {
         this.habilitarCambiarGarantia();
-
+      } else if (operacionCodigo === '145') {
+        this.habilitarProcesoInsolvencia()
       }
     }
   }
+
+  //Inicio Proceso Insolvencia
+
+  habilitarProcesoInsolvencia() {
+    this.getCausalInsolvencia();
+    this.openProcesoInsolvenciaModal.nativeElement.click();
+  }
+
+  getCausalInsolvencia() {
+    this.carteraService.getCausalInsolvencia().pipe(
+      catchError(error => {
+        console.error('Error al obtener causales:', error);
+        return of(null);
+      })
+    ).subscribe(
+      result => {
+        this.resultCausalesInsolvencia = result;
+      }
+    );
+  }
+
+  onClickLimpiarInsolvencia(): void {
+    this.insolvenciaForm.reset();
+  
+    this.insolvenciaForm.patchValue({
+      IdCausal: '',
+      Detalle: '',
+    
+      FechaAdmision: '',
+      FechaNotificacion: '',
+      FechaInicioNegociacion: '',
+      FechaAprobacionAcuerdo: '',
+      FechaTerminacionAcuerdo: '',
+      FechaIncumplimientoAcuerdo: '',
+      FechaLiquidacion: '',
+    
+      ValorReconocido: '',
+      CapitalReconocido: '',
+      InteresesReconocidos: '',
+      CondonacionesAprobadas: '',
+      NuevasCondicionesPago: '',
+      NumeroCuotasPactadas: ''
+    });
+  
+    this.insolvenciaForm.markAsPristine();
+    this.insolvenciaForm.markAsUntouched();
+    this.insolvenciaForm.updateValueAndValidity();
+  }
+
+  onClickCancelarInsolvencia() {
+    this.onClickLimpiarInsolvencia();
+    this.gestionCreditoForm.get('IdCuenta')?.setValue('');
+  }
+
+  onClickGuardarInsolvencia(): void {
+  
+    if (!this.insolvenciaForm.get('IdCausal')?.value) {
+      this.notif.warning(
+        'Advertencia',
+        'Debe seleccionar una causal de insolvencia.',
+        ConfiguracionNotificacion.configRightTop
+      );
+      return;
+    }
+  
+    const dto: CrearInsolvencia = {
+      oficina: Number(this.gestionCreditoForm.get('IdOficinaCuenta')?.value),
+      producto: Number(this.gestionCreditoForm.get('IdProductoCuenta')?.value),
+      consecutivo: Number(this.gestionCreditoForm.get('IdConsecutivo')?.value),
+      estadoActual: Number(this.gestionCreditoForm.get('IdEstadoCuenta')?.value),
+      formaPago: Number(this.gestionCreditoForm.get('IdFormaPago')?.value),
+      // Ajustar según el valor real en pantalla
+      edoTaquilla: 0,
+    
+      motivo: Number(this.insolvenciaForm.get('IdCausal')?.value),
+    
+      usuario: this.dataUser.IdUsuario
+    };
+  
+    this.carteraService.crearInsolvencia(dto)
+      .subscribe({
+        next: (resp) => {
+        
+          if (resp.Exitoso) {
+          
+            this.notif.success(
+              resp.Mensaje,
+              'Proceso de insolvencia',
+              ConfiguracionNotificacion.configRightTop
+            );
+          
+            this.onClickLimpiarInsolvencia();
+          
+            document.getElementById('btnCerrarProcesoInsolvencia')?.click();
+          
+            const idCuenta = this.gestionCreditoForm.get('IdCuenta')?.value;
+          
+            if (idCuenta) {
+              this.buscarCuentaDetalle(idCuenta);
+            }
+          
+          } else {
+            this.notif.warning(
+              resp.Mensaje,
+              'Advertencia',
+              ConfiguracionNotificacion.configRightTop
+            );
+          }
+        },
+        error: (error) => {
+          this.notif.error(
+            error?.error?.Message ??
+            'Error al registrar la insolvencia.',
+            'Error',
+            ConfiguracionNotificacion.configRightTop
+          );
+        }
+      });
+  }
+  
+  //Fin Proceso Insolvencia
+
 
   //Inicio cambiar garantias
   
