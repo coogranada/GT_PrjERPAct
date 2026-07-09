@@ -11,11 +11,13 @@ import { OficinasService } from '../../Services/Maestros/oficinas.service';
 import { UsuariosService } from '../../Services/Maestros/usuarios.service';
 import { WebSocketService } from '../../Services/WebSocket/web-socket.service';
 import { AlertService } from '../../Services/Alert/alert.service';
+import * as CryptoJS from 'crypto-js';
 const PrimaryWhite = 'rgb(13,165,80)';
 const SecondaryGrey = 'rgb(13,165,80,0.7)';
 import { detectIncognito } from "detectincognitojs";
 import { Router } from '@angular/router';
 import { LoadingService } from '../../Services/shared/loading.service';
+import { PassEncriptJs } from '../../Models/Generales/PasswordEncript.model';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -32,6 +34,8 @@ export class LoginComponent implements OnInit {
   public primaryColour = PrimaryWhite;
   public secondaryColour = SecondaryGrey;
   public  SessionUser = new SessionUser();
+  private PassJs = new PassEncriptJs();
+
   constructor(private loginService: LoginService, private notif: AlertService,
     private environment: EnvironmentService,private usuariosServices: UsuariosService,
     private clientesGetListService: ClientesGetListService,private route : Router,
@@ -154,6 +158,12 @@ export class LoginComponent implements OnInit {
     localStorage.removeItem('token');
     const now: Date = new Date();
     this.loading.show();
+    //DFRAMIREZ: encriptar clave autenticación
+    const claveEncriptada = btoa(btoa(this.loginFrom.get('Clave')?.value)).toString();
+    this.loginFrom.patchValue({
+      Clave: claveEncriptada
+    })
+
     this.loginService.userAuthentication(this.loginFrom.value).subscribe(
       (data: any) => {
         this.loading.hide();
