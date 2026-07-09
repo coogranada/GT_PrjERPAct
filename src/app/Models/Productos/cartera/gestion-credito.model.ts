@@ -67,6 +67,7 @@ export interface GestionCreditoEncabezado {
   IdLinea: number;
   TasaLinea: number;
   PlazoMaximoLinea: number | null;
+  DiasGraciaLinea: number | null;
 }
 
 export interface SeguroHipotecario {
@@ -335,6 +336,11 @@ export interface DetallesLogCredito {
   Actualiza: CambiarInfoCreditoLog
 }
 
+export interface DevolverReest {
+  IdCuenta: number;
+  NombreUsuario: string;
+}
+
 export interface DatosForm {
   Sistema: string;
   IdSistema: number;
@@ -575,4 +581,20 @@ export interface GarantiaCompartida {
   CantidadCreditos: number;
   GrupoGarantia?: string;
   Descripcion: string;
+}
+
+
+export interface CrearInsolvencia {
+  oficina: number;
+  producto: number;
+  consecutivo: number;
+
+  estadoActual: number;
+
+  formaPago: number;
+  edoTaquilla: number;
+
+  motivo: number;
+
+  usuario: number;
 }

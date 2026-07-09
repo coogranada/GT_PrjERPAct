@@ -1185,6 +1185,7 @@ export class MiListaProductosComponent implements OnInit {
     this.coodeudorTabComponent.getCodeudores(resultEnca);
     this.contabilidadComponent.SetlngTercero(resultEnca);
     this.contabilidadComponent.getContabilidad(resultEnca);
+    this.contabilidadComponent.getContabilidadSubSalud(resultEnca);
     //this.convenioComponent.getLosOlivos(NumeroDocumento);
   }
 
@@ -1587,108 +1588,107 @@ export class MiListaProductosComponent implements OnInit {
     }
   }
 
-  SendEmail() {
-    this.loading.show();
+  SendEmail(): void {
+  this.loading.show();
+  const datas = localStorage.getItem("Data");
+  const dataLocalStorage = JSON.parse(
+    window.atob(datas == null ? "" : datas)  );
 
-    if (this.OpcionEstadoCuenta) {
-        let datas = localStorage.getItem("Data");
-        var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
-      var NombreEstadoCuenta = "ESTADO GENERAL DE CUENTAS ACTIVAS";
-      if (!this.validaEstadoCuenta) {
-        NombreEstadoCuenta = "ESTADO GENERAL DE CUENTAS CANCELADAS";
-      }
-      var Tercero = Number($("#TerceroPrincipal").val());
+  const tercero = Number(
+    $("#TerceroPrincipal").val()
+  );
+  let nombreEstadoCuenta = "";
+  let tipoReporte = "";
 
-      this.MiListaProductosService.sendMailCartera(Tercero, "Coogranada", dataLocalStorage.Oficina,NombreEstadoCuenta,"EC",null,null,null,this.validaEstadoCuenta).subscribe(
-        result => {
-          this.loading.hide();
-          this.Response(result);
+  if (this.OpcionEstadoCuenta) {
 
-          //#region Guarda log
-          let datas = localStorage.getItem("Data");
-    var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
-          var LogMisProductosData = new LogMisProductos();
-          var nuevoItem = new DatosProductos();
-          LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
-          LogMisProductosData.IdModulo = 69;
-          LogMisProductosData.IdOperacion = 87;
-          LogMisProductosData.IdOpcion = 12; // Envio correo 
-          LogMisProductosData.IdTercero = Tercero;
-          LogMisProductosData.IdUsuarioERP = dataLocalStorage.IdUsuario;
-          nuevoItem.FechaInicial = "";
-          nuevoItem.FechaFinal = "";
-          LogMisProductosData.DatosProductos = nuevoItem;
-          this.setLogMisProductos(LogMisProductosData);
-          // #endregion
-          
-        },
-        error => {
-          this.loading.hide();
-          swal.fire({
-            title: "Error",
-            text: "",
-            html: "Ha ocurrido un error enviando el email.",
-            icon: "error",
-            showCancelButton: false,
-            confirmButtonColor: "rgb(13,165,80)",
-            cancelButtonColor: "rgb(160,0,87)",
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-          });
-        }
-      )
-    } else {
-        let datas = localStorage.getItem("Data");
-        var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
-      var NombreEstadoCuenta = "ANÁLISIS DE CUENTAS ACTIVAS";
-      if (!this.validaEstadoCuenta) {
-        NombreEstadoCuenta = "ANÁLISIS DE CUENTAS CANCELADAS";
-      }
-      var Tercero = Number($("#TerceroPrincipal").val());
+    nombreEstadoCuenta =
+      this.validaEstadoCuenta
+        ? "ESTADO GENERAL DE CUENTAS ACTIVAS"
+        : "ESTADO GENERAL DE CUENTAS CANCELADAS";
 
-      this.MiListaProductosService.sendMailCartera(Tercero, "Coogranada", dataLocalStorage.Oficina,NombreEstadoCuenta,"AC",null,null,null,this.validaEstadoCuenta).subscribe(
-        result => {
-          this.loading.hide();
-          this.Response(result);
+    tipoReporte = "EC";
 
-          //#region Guarda log
-          let datas = localStorage.getItem("Data");
-          var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
-          var LogMisProductosData = new LogMisProductos();
-          var nuevoItem = new DatosProductos();
-          LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
-          LogMisProductosData.IdModulo = 69;
-          LogMisProductosData.IdOperacion = 87;
-          LogMisProductosData.IdOpcion = 12; // Envio correo 
-          LogMisProductosData.IdTercero = Tercero;
-          LogMisProductosData.IdUsuarioERP = dataLocalStorage.IdUsuario;
-          nuevoItem.FechaInicial = "";
-          nuevoItem.FechaFinal = "";
-          LogMisProductosData.DatosProductos = nuevoItem;
-          this.setLogMisProductos(LogMisProductosData);
-          // #endregion
+  } else {
 
+    nombreEstadoCuenta =
+      this.validaEstadoCuenta
+        ? "ANÁLISIS DE CUENTAS ACTIVAS"
+        : "ANÁLISIS DE CUENTAS CANCELADAS";
 
-        },
-        error => {
-          this.loading.hide(); 
-          swal.fire({
-            title: "Error",
-            text: "",
-            html: "Ha ocurrido un error enviando el email.",
-            icon: "error",
-            showCancelButton: false,
-            confirmButtonColor: "rgb(13,165,80)",
-            cancelButtonColor: "rgb(160,0,87)",
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-          });
-        }
-      )
-    }
-
-
+    tipoReporte = "AC";
   }
+
+  this.MiListaProductosService
+    .sendMailCartera(
+      tercero,
+      "Coogranada",
+      dataLocalStorage.Oficina,
+      nombreEstadoCuenta,
+      tipoReporte,
+      null,
+      null,
+      null,
+      this.validaEstadoCuenta
+    )
+    .subscribe(
+      result => {
+        try {
+          this.Response(result);
+          //#region Guarda log
+          const logMisProductosData =
+            new LogMisProductos();
+
+          const nuevoItem =
+            new DatosProductos();
+
+          logMisProductosData.IdOficina =
+            parseInt(
+              dataLocalStorage.NumeroOficina
+            );
+
+          logMisProductosData.IdModulo = 69;
+          logMisProductosData.IdOperacion = 87;
+          logMisProductosData.IdOpcion = 12;
+          logMisProductosData.IdTercero = tercero;
+          logMisProductosData.IdUsuarioERP =
+            dataLocalStorage.IdUsuario;
+
+          nuevoItem.FechaInicial = "";
+          nuevoItem.FechaFinal = "";
+
+          logMisProductosData.DatosProductos =
+            nuevoItem;
+
+          this.setLogMisProductos(
+            logMisProductosData
+          );
+
+          //#endregion
+
+        } finally {
+          this.loading.hide();
+        }
+      },
+      error => {
+        this.loading.hide();
+        swal.fire({
+          title: "Error",
+          text: "",
+          html:
+            "Ha ocurrido un error enviando el email.",
+          icon: "error",
+          showCancelButton: false,
+          confirmButtonColor:
+            "rgb(13,165,80)",
+          cancelButtonColor:
+            "rgb(160,0,87)",
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+        });
+      }
+    );
+}
 
 
   generarEXCEL(): void {

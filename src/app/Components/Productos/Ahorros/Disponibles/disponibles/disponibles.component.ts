@@ -3996,26 +3996,32 @@ export class DisponiblesComponent implements OnInit {
     );
   }
   ObtenerEstado() {
-    this.loading.show();
-    let datas = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(datas == null ? "" : datas));
-    const arrayExample = {
-      'IdOperacion': 9,
-      'IdPerfil': this.dataUser.idPerfilUsuario,
-      'IdModulo': '38'
-    };
-    this.operacionesService.ObtenerEstadosXOperacionesData(arrayExample).subscribe(
+  this.loading.show();
+  const datas = localStorage.getItem('Data');
+  this.dataUser = JSON.parse(
+    window.atob(datas == null ? "" : datas)
+  );
+  const arrayExample = {
+    IdOperacion: 9,
+    IdPerfil: this.dataUser.idPerfilUsuario,
+    IdModulo: '38'
+  };
+  this.operacionesService
+    .ObtenerEstadosXOperacionesData(arrayExample)
+    .subscribe(
       result => {
+        this.loading.hide();
         this.resultEstados = result;
-        $('#SelectEstadoCuenta').focus().select();
+        $('#SelectEstadoCuenta')
+          .focus()
+          .select();
       },
       error => {
         this.loading.hide();
-        const errorMessage = <any>error;
-        console.log(errorMessage);
+        console.log(error);
       }
     );
-  }
+}
   BuscarAsesor() {
     let IdAsesor = '*';
     let NombreAsesor = '*';

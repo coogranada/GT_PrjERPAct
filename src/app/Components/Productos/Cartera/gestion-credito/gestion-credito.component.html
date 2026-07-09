@@ -202,7 +202,7 @@
                             <input type="text" class="form-control" id="SelectDocumento"
                                 formControlName="NumeroDocumento" maxlength="15">
                         </div>
-                        <div class="col-xs-6 col-md-5 col-lg-3 nombre-asociado"
+                        <div class="col-xs-6 col-md-5 col-lg-3"
                             [title]="gestionCreditoForm.get('Nombre')?.value">
                             <input type="text" class="form-control pmayuscula" formControlName="Nombre">
                         </div>
@@ -710,14 +710,14 @@
                                 
                                     <div class="col-sm-3">
                                         <div class="form-group">
-                                            <label class="fw-bold">Fecha de calificación</label>
+                                            <label class="textNegrilla">Fecha de calificación</label>
                                             <input type="text" class="form-control" formControlName="DtmFecha">
                                         </div>
                                     </div>
                                 
                                     <div class="col-sm-3">
                                         <div class="form-group">
-                                            <label class="fw-bold">Causal</label>
+                                            <label class="textNegrilla">Causal</label>
                                             <span class="grande"> *</span>
                                             <select class="form-control" name="select" formControlName="IdCausal">
                                                 @if(!calificacionForm.get('IdCausal')?.value){
@@ -732,7 +732,7 @@
 
                                     <div class="col-sm-3">
                                         <div class="form-group">
-                                            <label class="fw-bold">Cumplimiento</label>
+                                            <label class="textNegrilla">Cumplimiento</label>
                                             <select class="form-control" name="select" formControlName="Cumplimiento">
                                                 <option *ngFor="let cumplimiento of resultListaCalificaciones" [value]="cumplimiento.DescripcionFormaPago">
                                                     {{cumplimiento.DescripcionFormaPago}}
@@ -743,7 +743,7 @@
                                 
                                     <div class="col-sm-3">
                                         <div class="form-group">
-                                            <label class="fw-bold">Recalificación</label>
+                                            <label class="textNegrilla">Recalificación</label>
                                             <select class="form-control" name="select" formControlName="Recalificacion">
                                                 @if(!calificacionForm.get('Recalificacion')?.value){
                                                     <option value="">-- Seleccione --</option>
@@ -759,7 +759,7 @@
                                 <div class="row">
                                     <div class="col-sm-3">
                                         <div class="form-group">
-                                            <label class="fw-bold">Reestructurado</label>
+                                            <label class="textNegrilla">Reestructurado</label>
                                             <select class="form-control" name="select" formControlName="Reestructurado">
                                                 @if(!calificacionForm.get('Reestructurado')?.value){
                                                     <option value="">-- Seleccione --</option>
@@ -773,7 +773,7 @@
                                 
                                     <div class="col-sm-3">
                                         <div class="form-group">
-                                            <label class="fw-bold">Cualitativa</label>
+                                            <label class="textNegrilla">Cualitativa</label>
                                             <select class="form-control" name="select" formControlName="Cualitativa">
                                                 @if(!calificacionForm.get('Cualitativa')?.value){
                                                     <option value="">-- Seleccione --</option>
@@ -787,7 +787,7 @@
                                 
                                     <div class="col-sm-3">
                                         <div class="form-group">
-                                            <label class="fw-bold">Modelo</label>
+                                            <label class="textNegrilla">Modelo</label>
                                             <select class="form-control" name="select" formControlName="Modelo">
                                                 <option *ngFor="let modelo of resultListaCalificaciones" [value]="modelo.DescripcionFormaPago">
                                                     {{modelo.DescripcionFormaPago}}
@@ -801,6 +801,10 @@
                                     <div class="form-group form-group-flex flex-end">
                                         <button type="button" class="cancelar btn btn-default legitRipple" 
                                             (click)="onClickCerrarModalCalificacion()"> Cancelar
+                                        </button>
+                                        <button type="button" class="btn Gt-btn-morado" [disabled]="!huboCambioCalificacion"
+                                            (click)="onClickLimpiarModalCalificacion()">
+                                            Limpiar
                                         </button>
                                         <button class="btn Gt-btn-verde btn-icon legitRipple"
                                             [disabled]="!huboCambioCalificacion"
@@ -818,640 +822,357 @@
         <!--/ Fin Modal Debito Automatico -->
 
         <!-- MODAL CAMBIAR GARANTIAS -->
-        <div id="cambiarGarantias" class="modal fade" data-backdrop="static">
-            <div style="width: 88%; margin: 30px auto; height: 90%;">
-                <div>
-                    <div class="modal-content modal-xl">
-        
-                        <!-- HEADER -->
-                        <div class="modal-header bg-morado">
-                            <button type="button" class="close" data-dismiss="modal" (click)="onClickCerrarModalGarantias()">
-                                &times;
-                            </button>
-        
-                            <h6 class="modal-title">Cambiar garantías</h6>
-                        </div>
-        
-                        <!-- BODY -->
-                        <div class="modal-body">
-                            <!-- CODEUDOR -->
-                            <form [formGroup]="garantiasForm">
+        @if(mostrarModal) {
+           <app-cambiar-garantias-modal
+               #modalGarantias
+
+               [datosCuenta]="datosCuenta"
+               [SaldoCapital]="carteraInfo.SaldoCapital"
+
+               [garantiasForm]="garantiasForm"
+               [listGarantiasDisponiblesDeudor]="listGarantiasDisponiblesDeudor"
+               [listGarantiasDisponiblesCodeudor]="listGarantiasDisponiblesCodeudor"
+               [garantiasCompartidasBackendInput]="garantiasCompartidasBackend"
+               [garantiasRealesAsignadasInput]="garantiasRealesAsignadas"
+               [garantiasCompartidas]="garantiasCompartidas"
+               [codeudoresBasico]="codeudoresBasico"
+               [mostrarGarantiasCodeudor]="mostrarGarantiasCodeudor"
+               (cerrar)="onClickCerrarModalGarantias()"
+               (changeCodeudor)="onChangeCodeudor($event)"
+               (confirmar)="onClickConfirmarCambiosGarantia($event)"
+           ></app-cambiar-garantias-modal>
+        }
+
+        <!-- FIN CAMBIAR GARANTIAS -->
+
+
+        <!-- MODAL PROCESO INSOLVENCIA -->
+        <div id="procesoInsolvencia" class="modal" data-backdrop="static" data-keyboard="false"> 
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-morado">
+                        <button type="button" class="close" data-dismiss="modal" (click)="onClickCerrarModalCodeudores()">&times;</button>
+                        <h6 class="modal-title">Proceso insolvencia</h6>
+                    </div>
+                    <div class="modal-body">
+                        <div class="panel-body">
+                        
+                            <form class="mb-3" [formGroup]="insolvenciaForm">
                                 <div class="row">
-                                    <div class="col-xs-12 col-md-4 col-lg-4">
+
+                                    <div class="col-sm-3">
                                         <div class="form-group">
-                                            <label>Codeudor:</label>
-                                            <select class="form-control" formControlName="codeudorSeleccionado"
-                                                (change)="onChangeCodeudor($event)">
-                                                @if(codeudoresBasico.length == 0) {
-                                                <option value="">-- No hay registros --</option>
-                                                } @else {
-                                                <option value="">-- Seleccione --</option>
-                                                <option *ngFor="let c of codeudoresBasico" [value]="c.IdTercero">
-                                                    {{ c.NumeroDocumento }} -
-                                                    {{ c.NombreCompleto }}
-                                                </option>
+                                            <label class="textNegrilla">Causal</label>
+                                            <span class="grande"> *</span>
+                                            <select class="form-control" name="select" formControlName="IdCausal">
+                                                @if(!insolvenciaForm.get('IdCausal')?.value){
+                                                    <option value="">-- Seleccione --</option>
                                                 }
+                                                <option *ngFor="let causal of resultCausalesInsolvencia" [value]="causal.IdFormaPago">
+                                                    {{causal.DescripcionFormaPago}}
+                                                </option>
                                             </select>
                                         </div>
                                     </div>
+
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label class="textNegrilla">Detalle</label>
+                                            <span class="grande"> *</span>
+                                            <select class="form-control" formControlName="Detalle">
+                                                <option value="">-- Seleccione --</option>
+                                            
+                                                <option *ngFor="let item of detallesInsolvencia"
+                                                        [value]="item.id">
+                                                    {{item.descripcion}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+<!-- 
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="documento">Documento:</label>
+                                            <span class="grande"> *</span>
+                                            <input type="text" autocomplete="off" id="documento" class="form-control" maxlength="30" formControlName="documento" (blur)="onBlurDocumentoDeudor()" (input)="onChangeDocumentoCodeudor()">
+                                            <span class="help-block validationSpan"
+                                                *ngIf="codeudorForm.controls['documento'].errors?.['minlength']">
+                                                Debe tener al menos 6 caracteres.
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label for="nombre">Nombre:</label>
+                                            <input type="text" id="nobrem" class="form-control" formControlName="nombre">
+                                        </div>
+                                    </div> -->
                                 </div>
+                            <!-- ADMISION -->
+                            <div class="row"
+                                 *ngIf="insolvenciaForm.get('Detalle')?.value === 'ADMISION'">
+                            
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Fecha admisión:</label>
+                                        <span class="grande"> *</span>
+                                        <input type="date"
+                                               class="form-control"
+                                               formControlName="FechaAdmision">
+                                    </div>
+                                </div>
+                            
+                            </div>
+                            
+                            <!-- NOTIFICACION -->
+                            <div class="row"
+                                 *ngIf="insolvenciaForm.get('Detalle')?.value === 'NOTIFICACION'">
+                            
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Fecha notificación:</label>
+                                        <span class="grande"> *</span>
+                                        <input type="date"
+                                               class="form-control"
+                                               formControlName="FechaNotificacion">
+                                    </div>
+                                </div>
+                            
+                            </div>
+                            
+                            <!-- INICIO_NEGOCIACION -->
+                            <div class="row"
+                                 *ngIf="insolvenciaForm.get('Detalle')?.value === 'INICIO_NEGOCIACION'">
+                            
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Fecha inicio negociación:</label>
+                                        <span class="grande"> *</span>
+                                        <input type="date"
+                                               class="form-control"
+                                               formControlName="FechaInicioNegociacion">
+                                    </div>
+                                </div>
+                            
+                            </div>
+                            
+                            <!-- APROBACION_ACUERDO -->
+                            <div class="row"
+                                 *ngIf="insolvenciaForm.get('Detalle')?.value === 'APROBACION_ACUERDO'">
+                            
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Fecha aprobación acuerdo:</label>
+                                        <span class="grande"> *</span>
+                                        <input type="date"
+                                               class="form-control"
+                                               formControlName="FechaAprobacionAcuerdo">
+                                    </div>
+                                </div>
+                            
+                            </div>
+                            
+                            <!-- TERMINACION_ACUERDO -->
+                            <div class="row"
+                                 *ngIf="insolvenciaForm.get('Detalle')?.value === 'TERMINACION_ACUERDO'">
+                            
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Fecha terminación acuerdo:</label>
+                                        <span class="grande"> *</span>
+                                        <input type="date"
+                                               class="form-control"
+                                               formControlName="FechaTerminacionAcuerdo">
+                                    </div>
+                                </div>
+                            
+                            </div>
+                            
+                            <!-- INCUMPLIMIENTO_ACUERDO -->
+                            <div class="row"
+                                 *ngIf="insolvenciaForm.get('Detalle')?.value === 'INCUMPLIMIENTO_ACUERDO'">
+                            
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Fecha incumplimiento acuerdo:</label>
+                                        <span class="grande"> *</span>
+                                        <input type="date"
+                                               class="form-control"
+                                               formControlName="FechaIncumplimientoAcuerdo">
+                                    </div>
+                                </div>
+                            
+                            </div>
+                            
+                            <!-- LIQUIDACION -->
+                            <div class="row"
+                                 *ngIf="insolvenciaForm.get('Detalle')?.value === 'LIQUIDACION'">
+                            
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Fecha liquidación:</label>
+                                        <span class="grande"> *</span>
+                                        <input type="date"
+                                               class="form-control"
+                                               formControlName="FechaLiquidacion">
+                                    </div>
+                                </div>
+                            
+                            </div>
+                            
+                            <!-- ACUERDO_PAGO -->
+                            <div *ngIf="insolvenciaForm.get('Detalle')?.value === 'ACUERDO_PAGO'">
+                            
+                                <div class="row">
+                                
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Valor reconocido:</label>
+                                            <span class="grande"> *</span>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   formControlName="ValorReconocido">
+                                        </div>
+                                    </div>
+                                
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Capital reconocido:</label>
+                                            <span class="grande"> *</span>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   formControlName="CapitalReconocido">
+                                        </div>
+                                    </div>
+                                
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Intereses reconocidos:</label>
+                                            <span class="grande"> *</span>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   formControlName="InteresesReconocidos">
+                                        </div>
+                                    </div>
+                                
+                                </div>
+                            
+                                <div class="row">
+                                
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Condonaciones aprobadas:</label>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   formControlName="CondonacionesAprobadas">
+                                        </div>
+                                    </div>
+                                
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Nuevas condiciones de pago:</label>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   formControlName="NuevasCondicionesPago">
+                                        </div>
+                                    </div>
+                                
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Número cuotas pactadas:</label>
+                                            <span class="grande"> *</span>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   formControlName="NumeroCuotasPactadas">
+                                        </div>
+                                    </div>
+                                
+                                </div>
+                            
+                            </div>
+                            
+                            <!-- DESMARCAR -->
+                            <div class="row"
+                                 *ngIf="insolvenciaForm.get('Detalle')?.value === 'DESMARCAR'">
+                            
+                                <div class="col-md-12">
+                                    <div class="alert alert-warning">
+                                        Esta operación desmarcará el proceso de insolvencia y actualizará el estado de la cuenta.
+                                    </div>
+                                </div>
+                            
+                            </div>
+
+                                <div class="row">
+                                    <div class="form-group form-group-flex flex-end">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal"
+                                            (click)="onClickCancelarInsolvencia()">
+                                            Cancelar
+                                        </button>
+                                        <button type="button" class="btn Gt-btn-morado" [disabled]=""
+                                            (click)="onClickLimpiarInsolvencia()">
+                                            Limpiar
+                                        </button>
+                                        <button type="button" class="btn Gt-btn-verde" [disabled]=""
+                                            (click)="onClickGuardarInsolvencia()">
+                                            Guardar
+                                        </button>
+                                    </div>
+                                </div>
+
                             </form>
-        
-                            <!-- GARANTIAS DISPONIBLES CODEUDOR -->
-                            <div *ngIf="mostrarGarantiasCodeudor">
-                                <label class="textNegrilla"> Garantías Disponibles Codeudor </label>
-                                <!-- AGREGAR ESTE BLOQUE - Mensaje cuando no hay registros -->
-                                @if (listGarantiasDisponiblesCodeudor.length === 0) {
-                                <div class="alert alert-secondary" role="alert">
+                        
+                            <!-- <article>
+                                <div class="alert alert-secondary" role="alert" *ngIf="codeudoresDraft.length === 0">
                                     No hay registros
                                 </div>
-                                }
-                                @else {
-                                <div class="table-responsive scrollTabla panel panel-default" #tablaCodeudor>
+                                <div class="table-responsive scrollTabla" *ngIf="codeudoresDraft.length > 0">
                                     <table class="table table-hover encabezado-fijo">
+                                        <colgroup>
+                                            <col style="width: 30%;">
+                                            <col style="width: 50%;">
+                                            <col style="width: 20%;">
+                                        </colgroup>
                                         <thead>
                                             <tr>
-                                                <th class="text-center">Tipo garantía</th>
-                                                <th class="text-center">Garantía</th>
-                                                <th class="text-center">Clase</th>
-                                                <th class="text-center">Descripción</th>
-                                                <th class="text-center">Valor cobertura</th>
-                                                <th class="text-center">Valor respalda</th>
-                                                <th class="text-center">Créditos</th>
+                                                <th>Documento</th>
+                                                <th>Nombre</th>
                                                 <th class="text-center">Opciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <ng-container *ngFor="let item of listGarantiasDisponiblesCodeudor; let i=index">
-                                                <tr [attr.id]="'codeudor-fila-' + item.Consecutivo"
-                                                    (click)="selectRowGarantias('codeudorDisponibles', i, item.Consecutivo)"
-                                                    [class.tr-selected]="isRowSelected('codeudorDisponibles', i, item.Consecutivo)"
-                                                    [class.fila-expandida]="mostrarDetalleGarantia &&
-                                                                        filaSeleccionadaGarantia === item.Consecutivo &&
-                                                                        tablaDetalleActiva === 'codeudorDisponibles'">
-                                                    <td>
-                                                        @if(item.CantidadCreditos > 0) {
-                                                        <span class="icono-acordeon" tabindex="-1"
-                                                            (click)="onClickDetalleGarantia(item.Consecutivo, item.Tipo, 'codeudorDisponibles')"
-                                                            [title]="(mostrarDetalleGarantia &&
-                                                            filaSeleccionadaGarantia === item.Consecutivo &&
-                                                            tablaDetalleActiva === 'codeudorDisponibles')
-                                                            ? 'Ocultar detalle' : 'Ver detalle'">
-                                                            <i [ngClass]="(mostrarDetalleGarantia &&
-                                                       filaSeleccionadaGarantia === item.Consecutivo &&
-                                                       tablaDetalleActiva === 'codeudorDisponibles')
-                                                        ? 'icon-chevron-up': 'icon-chevron-down'">
-                                                            </i>
-                                                        </span>
-                                                        } @else {
-                                                            <span class="icono-acordeon" tabindex="-1" [title]="'No hay registros'">
-                                                                <i class="icon-circle"></i>
-                                                            </span>
-                                                        }
-                                                        {{item.Tipo}}
-                                                    </td>
-                                                    <td>{{item.Matricula}}</td>
-                                                    <td>{{item.Clase}}</td>
-                                                    <td>{{item.Descripcion}}</td>
-                                                    <td class="text-right">{{item.Cobertura | currency:'$'}}</td>
-                                                    <td class="text-right">{{item.Respalda | currency:'$'}}</td>
-                                                    <td class="text-center">{{item.CantidadCreditos}}</td>
-                                                    <td class="text-center">
-                                                      <span
-                                                        [title]="!puedeAgregarGarantiaCodeudor(item) 
-                                                          ? 'La garantía no tiene cobertura disponible' : ''" >
-                                                        <button 
-                                                          class="btn Gt-btn-verde btn-icon legitRipple"
-                                                          [disabled]="!puedeAgregarGarantiaCodeudor(item)"
-                                                          (click)="onClickAgregarGarantia(i,'codeudor',$event)"
-                                                        >
-                                                          <i class="icon-arrow-down5"></i>
-                                                        </button>
-                                                      </span>
-                                                    </td>
-                                                </tr>
-                                                <tr *ngIf="mostrarDetalleGarantia &&
-                                                       filaSeleccionadaGarantia === item.Consecutivo &&
-                                                       tablaDetalleActiva === 'codeudorDisponibles'" class="fila-detalle">
-                                                    <td colspan="11">
-                                                        <div class="detalle-acordeon">
-                                                            <div class="table-responsive">
-                                                                <table class="table table-sm table-border">
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th>Garantía</th>
-                                                                            <th>Cuenta</th>
-                                                                            <th>Línea</th>
-                                                                            <th>Nombre línea</th>
-                                                                            <th>Documento deudor</th>
-                                                                            <th>Nombre deudor</th>
-                                                                            <th>Valor crédito</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        <tr *ngFor="let d of detalleGarantiaCreditos">
-                                                                            <td>{{d.strMatricula}}</td>
-                                                                            <td>{{d.Cuenta}}</td>
-                                                                            <td>{{d.Linea}}</td>
-                                                                            <td>
-                                                                                {{ (d.NombreLinea || '').slice(0,50) }}{{
-                                                                                (d.NombreLinea || '').length > 50 ? '...' : ''
-                                                                                }}
-                                                                            </td>
-                                                                            <td>{{d.IdDeudor}}</td>
-                                                                            <td>{{d.NombreDeudor}}</td>
-                                                                            <td>{{d.ValorCredito | currency:'$'}}</td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </ng-container>
+                                            <tr *ngFor="let codeudor of codeudoresDraft; let i = index"
+                                                (click)="selectRow('codeudoresDraft', i)" [class.tr-selected]="selectedRows['codeudoresDraft'] === i">
+                                                <td>
+                                                    <div>{{ codeudor.documento }}</div>
+                                                </td>
+                                                <td>
+                                                    <div>{{ codeudor.nombreCompleto }}</div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <button class="btn Gt-btn-morado btn-icon legitRipple" (click)="onClickEliminarCodeudor(codeudor.idTercero)">
+                                                        <i class="icon-bin2"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
-                                }
-                                <br>
-                                <div class="row text-center">
-                                    <div class="col-xs-12 col-md-3">
-                                        <label><strong>Total cobertura:</strong> {{ valorCoberturaDisponibleCodeudor |
-                                            currency:'$' }}</label>
-                                    </div>
-                                    <div class="col-xs-12 col-md-3">
-                                        <label><strong>Total respaldado:</strong> {{ valorRespaldadoDisponibleCodeudor |
-                                            currency:'$' }}</label>
-                                    </div>
-                                    <div class="col-xs-12 col-md-3">
-                                        <label><strong>Total disponible:</strong> {{ valorCoberturaDisponibleCodeudor -
-                                            valorRespaldadoDisponibleCodeudor | currency:'$' }}</label>
-                                    </div>
-                                    <div class="col-xs-12 col-md-3 text-center">
-                                        <label class="label-uso-codeudor">
-                                            <span class="circle-badge" [ngClass]="{
-                                                'badge-verde': obtenerEstado(valorRespaldadoDisponibleCodeudor, valorCoberturaDisponibleCodeudor) === 'VERDE',
-                                                'badge-amarillo': obtenerEstado(valorRespaldadoDisponibleCodeudor, valorCoberturaDisponibleCodeudor) === 'AMARILLO',
-                                                'badge-morado': obtenerEstado(valorRespaldadoDisponibleCodeudor, valorCoberturaDisponibleCodeudor) === 'ROJO'
-                                              }">
-                                                {{ obtenerPorcentaje(valorCoberturaDisponibleCodeudor -
-                                                valorRespaldadoDisponibleCodeudor, valorCoberturaDisponibleCodeudor) |
-                                                number:'1.0-0' }}%
-                                            </span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="clearfix"></div>
-                                <br>
-                            </div>
-        
-                            <!-- GARANTIAS DISPONIBLES DEUDOR -->
-                            <label class="textNegrilla"> Garantías Disponibles Deudor </label>
-                            <!-- AGREGAR ESTE BLOQUE - Mensaje cuando no hay registros -->
-                            @if(listGarantiasDisponiblesDeudor.length === 0) {
-                            <div class="alert alert-secondary" role="alert">
-                                No hay registros
-                            </div>
-                            } @else {
-                            <div class="table-responsive scrollTabla panel panel-default" #tablaDeudor>
-                                <table class="table table-hover encabezado-fijo">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-center">Tipo garantía</th>
-                                            <th class="text-center">Garantía</th>
-                                            <th class="text-center">Clase</th>
-                                            <th class="text-center">Descripción</th>
-                                            <th class="text-center">Valor cobertura</th>
-                                            <th class="text-center">Valor respalda</th>
-                                            <th class="text-center">Créditos</th>
-                                            <th class="text-center">Opciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <ng-container *ngFor="let item of listGarantiasDisponiblesDeudor; let i=index">
-                                            <tr [attr.id]="'deudor-fila-' + item.Consecutivo"
-                                                (click)="selectRowGarantias('deudorDisponibles', i, item.Consecutivo)"
-                                                [class.tr-selected]="isRowSelected('deudorDisponibles', i, item.Consecutivo)">
-                                                <td>
-                                                    @if(item.CantidadCreditos > 0) {
-                                                    <span class="icono-acordeon" tabindex="-1"
-                                                        (click)="onClickDetalleGarantia(item.Consecutivo, item.Tipo, 'deudorDisponibles')"
-                                                        [title]="(mostrarDetalleGarantia &&
-                                                  filaSeleccionadaGarantia === item.Consecutivo &&
-                                                  tablaDetalleActiva === 'deudorDisponibles') ? 'Ocultar detalle' : 'Ver detalle'">
-                                                        <i
-                                                            [ngClass]=" (mostrarDetalleGarantia && filaSeleccionadaGarantia === item.Consecutivo &&
-                                             tablaDetalleActiva === 'deudorDisponibles') ? 'icon-chevron-up' : 'icon-chevron-down' ">
-                                                        </i>
-                                                    </span>
-                                                    } @else {
-                                                    <span class="icono-acordeon" tabindex="-1" [title]="'No hay registros'">
-                                                        <i class="icon-circle"></i>
-                                                    </span>
-                                                    }
-                                                    {{item.Tipo}}
-                                                </td>
-                                                <td>{{item.Matricula}}</td>
-                                                <td>{{item.Clase}}</td>
-                                                <td>{{item.Descripcion}}</td>
-                                                <td class="text-right">{{item.Cobertura | currency:'$'}}</td>
-                                                <td class="text-right">{{item.Respalda | currency:'$'}}</td>
-        
-                                                <td class="text-center">{{item.CantidadCreditos}}</td>
-                                                <td class="text-center">
-                                                    <button class="btn Gt-btn-verde btn-icon legitRipple"
-                                                        (click)="onClickAgregarGarantia(i,'deudor',$event)">
-                                                        <i class="icon-arrow-down5"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            <tr *ngIf="mostrarDetalleGarantia && filaSeleccionadaGarantia === item.Consecutivo && tablaDetalleActiva === 'deudorDisponibles'"
-                                                class="fila-detalle">
-                                                <td colspan="11">
-                                                    <div class="detalle-acordeon">
-                                                        <div class="table-responsive">
-                                                            <table class="table table-sm table-border">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th>Garantía</th>
-                                                                        <th>Cuenta</th>
-                                                                        <th>Línea</th>
-                                                                        <th>Nombre línea</th>
-                                                                        <th>Documento deudor</th>
-                                                                        <th>Nombre deudor</th>
-                                                                        <th>Valor crédito</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr *ngFor="let d of detalleGarantiaCreditos">
-                                                                        <td>{{d.strMatricula}}</td>
-                                                                        <td>{{d.Cuenta}}</td>
-                                                                        <td>{{d.Linea}}</td>
-                                                                        <td>
-                                                                            {{ (d.NombreLinea || '').slice(0,50) }}{{
-                                                                            (d.NombreLinea || '').length > 50 ? '...' : '' }}
-                                                                        </td>
-                                                                        <td>{{d.IdDeudor}}</td>
-                                                                        <td>{{d.NombreDeudor}}</td>
-                                                                        <td>{{d.ValorCredito | currency:'$'}}</td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </ng-container>
-                                    </tbody>
-                                </table>
-                            </div>
-                            }
-                            <br>
-                            <div class="row text-center">
-                                <div class="col-xs-12 col-md-3">
-                                    <label><strong>Total cobertura:</strong> {{ valorCoberturaDisponibleDeudor | currency:'$'
-                                        }}</label>
-                                </div>
-                                <div class="col-xs-12 col-md-3">
-                                    <label><strong>Total respaldado:</strong> {{ valorRespaldadoDisponibleDeudor | currency:'$'
-                                        }}</label>
-                                </div>
-                                <div class="col-xs-12 col-md-3">
-                                    <label><strong>Total disponible:</strong> {{ valorCoberturaDisponibleDeudor -
-                                        valorRespaldadoDisponibleDeudor | currency:'$' }}</label>
-                                </div>
-                                <div class="col-xs-12 col-md-3 text-center">
-                                    <label class="label-uso-codeudor">
-                                        <span class="circle-badge" [ngClass]="{
-                                                'badge-verde': obtenerEstado(valorRespaldadoDisponibleDeudor, valorCoberturaDisponibleDeudor) === 'VERDE',
-                                                'badge-amarillo': obtenerEstado(valorRespaldadoDisponibleDeudor, valorCoberturaDisponibleDeudor) === 'AMARILLO',
-                                                'badge-morado': obtenerEstado(valorRespaldadoDisponibleDeudor, valorCoberturaDisponibleDeudor) === 'ROJO'
-                                              }">
-                                            {{ obtenerPorcentaje(valorCoberturaDisponibleDeudor -
-                                            valorRespaldadoDisponibleDeudor, valorCoberturaDisponibleDeudor) | number:'1.0-0'
-                                            }}%
-                                        </span>
-                                    </label>
-                                </div>
-        
-                            </div>
-        
-                            <div class="clearfix"></div>
-                            <br>
-        
-                            <!-- GARANTIAS ASIGNADAS -->
-                            <label class="textNegrilla">Garantías Asignadas</label>
-        
-                            <div class="table-responsive scrollTabla panel panel-default" #tablaAsignadas>
-                                <table class="table table-hover encabezado-fijo">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-center">Tipo garantía</th>
-                                            <th class="text-center">Garantía</th>
-                                            <th class="text-center">Clase</th>
-                                            <th class="text-center">Descripción</th>
-                                            <th class="text-center">Valor cobertura</th>
-                                            <th class="text-center">Valor respalda</th>
-                                            <th class="text-center">Créditos</th>
-                                            <th class="text-center">Opciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <ng-container *ngFor="let item of garantiasRealesAsignadas; let i=index">
-        
-                                            <tr [attr.id]="'asignadas-fila-' + item.Consecutivo"
-                                                (click)="selectRowGarantias('asignadas', i, item.Consecutivo)"
-                                                [class.tr-selected]="isRowSelected('asignadas', i, item.Consecutivo)"
-                                                [class.fila-expandida]="mostrarDetalleGarantia &&
-                                                                filaSeleccionadaGarantia === item.Consecutivo &&
-                                                                tablaDetalleActiva === 'asignadas'">
-                                                <td>
-                                                    @if(item.CantidadCreditos > 0) {
-                                                    <span class="icono-acordeon" tabindex="-1"
-                                                        (click)="onClickDetalleGarantia(item.Consecutivo, item.Tipo, 'asignadas', item.Matricula)"
-                                                        [title]="(mostrarDetalleGarantia &&
-                                                    filaSeleccionadaGarantia === item.Consecutivo &&
-                                                    tablaDetalleActiva === 'asignadas')
-                                                    ? 'Ocultar detalle' : 'Ver detalle'">
-                                                        <i [ngClass]=" (mostrarDetalleGarantia && filaSeleccionadaGarantia === item.Consecutivo &&
-                                               tablaDetalleActiva === 'asignadas')
-                                                ? 'icon-chevron-up' : 'icon-chevron-down' ">
-                                                        </i>
-                                                    </span>
-                                                    }
-                                                    {{item.Tipo}}
-                                                </td>
-                                                <td>{{item.Matricula}}</td>
-                                                <td>{{item.Clase}}</td>
-                                                <td>{{item.Descripcion}}</td>
-                                                <td class="text-right">{{item.Cobertura | currency:'$'}}</td>
-                                                <td class="text-right">{{item.TotalDeuda | currency:'$'}}</td>
-                                                <td class="text-center">{{item.CantidadCreditos}}</td>
-                                                <td class="text-center">
-                                                    <button class="btn Gt-btn-verde btn-icon legitRipple"
-                                                        (click)="onClickEliminarGarantia(i,$event)">
-                                                        <i class="icon-arrow-up5"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            <tr *ngIf="mostrarDetalleGarantia &&
-                                               filaSeleccionadaGarantia === item.Consecutivo &&
-                                               tablaDetalleActiva === 'asignadas'" class="fila-detalle">
-                                                <td colspan="11">
-                                                    <div class="detalle-acordeon">
-                                                        <div class="table-responsive">
-        
-                                                            <table class="table table-sm table-border">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th>Garantía</th>
-                                                                        <th>Cuenta</th>
-                                                                        <th>Línea</th>
-                                                                        <th>Nombre línea</th>
-                                                                        <th>Documento deudor</th>
-                                                                        <th>Nombre deudor</th>
-                                                                        <th>Valor crédito</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr *ngFor="let d of detalleGarantiaCreditos">
-                                                                        <td>{{d.strMatricula}}</td>
-                                                                        <td>{{d.Cuenta}}</td>
-                                                                        <td>{{d.Linea}}</td>
-                                                                        <td>
-                                                                            {{ (d.NombreLinea || '').slice(0,50) }}{{
-                                                                            (d.NombreLinea || '').length > 50 ? '...' : '' }}
-                                                                        </td>
-                                                                        <td>{{d.IdDeudor}}</td>
-                                                                        <td>{{d.NombreDeudor}}</td>
-                                                                        <td>{{d.ValorCredito | currency:'$'}}</td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </ng-container>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- <br> -->
-        
-                            <div class="clearfix"></div>
-                            <br>
-        
-                            <!-- GARANTIAS COMPARTIDAS -->
-                         
+                            </article> -->
                         </div>
-        
-                        <!-- FOOTER -->
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal"
-                                (click)="onClickCerrarModalGarantias()">
-                                Cancelar
-                            </button>
-                            <button type="button" class="btn Gt-btn-morado" [disabled]="isDisabledLimpiarGarantiasButton"
-                                (click)="onClickLimpiarGarantias()">
-                                Limpiar
-                            </button>
-                            <button type="button" class="btn Gt-btn-verde" [disabled]="isDisabledConfirmarGarantiasButton"
-                                (click)="onClickConfirmarCambiosGarantia()">
-                                Actualizar
-                            </button>
-                        </div>
-        
-                        <div class="modal-body">
-                            <!-- GARANTIAS COMPARTIDAS -->
-                            <label class="textNegrilla">Garantías Compartidas</label>
-                                                    
-                            @if (garantiasCompartidas.length === 0) {
-                              <div class="alert alert-secondary">
-                                No hay registros
-                              </div>
-                            }
-                            @else {
-                              <div class="table-responsive scrollTabla panel panel-default">
-                                <table class="table table-hover encabezado-fijo">
-                                
-                                  <thead>
-                                    <tr>
-                                      <th class="text-center">Tipo garantía</th>
-                                      <th class="text-center">Garantía</th>
-                                      <th class="text-center">Clase</th>
-                                      <th class="text-center">Descripción</th>
-                                      <th class="text-center">Cobertura</th>
-                                      <th class="text-center">Respalda</th>
-                                      <th class="text-center">Créditos</th>
-                                    </tr>
-                                  </thead>
-                              
-                                  <tbody>
-                                    <ng-container *ngFor="let item of garantiasCompartidas; let i = index">
-                                    
-                                      <!-- FILA PRINCIPAL -->
-                                      <tr
-                                        [attr.id]="'compartidas-fila-' + item.lngConsecutivo"
-                                        (click)="selectRowGarantias('compartidas', i, item.lngConsecutivo)"
-                                        [class.tr-selected]="isRowSelected('compartidas', i, item.lngConsecutivo)"
-                                        [class.fila-expandida]="mostrarDetalleGarantia &&
-                                                                filaSeleccionadaGarantia === item.lngConsecutivo &&
-                                                                tablaDetalleActiva === 'compartidas'">
-                            
-                                        <td>
-                                          @if(item.CantidadCreditos > 0) {
-                                            <span
-                                              class="icono-acordeon"
-                                              tabindex="-1"
-                                              (click)="onClickDetalleGarantia(item.lngConsecutivo, item.Tipo, 'compartidas', item.IdGarantia)"
-                                              [title]="(mostrarDetalleGarantia &&
-                                                        filaSeleccionadaGarantia === item.lngConsecutivo &&
-                                                        tablaDetalleActiva === 'compartidas')
-                                                        ? 'Ocultar detalle' : 'Ver detalle'">
-                            
-                                              <i [ngClass]="(mostrarDetalleGarantia &&
-                                                            filaSeleccionadaGarantia === item.lngConsecutivo &&
-                                                            tablaDetalleActiva === 'compartidas')
-                                                            ? 'icon-chevron-up' : 'icon-chevron-down'">
-                                              </i>
-                                            </span>
-                                          }
-                                      
-                                          {{ mapTipoGarantia(item.Tipo, true) }}
-                                        </td>
-                                    
-                                        <td>{{ item.IdGarantia }}</td>
-                                        <td>{{ item.Clase }}</td>
-                                        <td>{{ item.Descripcion }}</td>
-                                        <td class="text-right">{{ item.Cobertura | currency:'$' }}</td>
-                                        <td class="text-right">{{ item.Respalda | currency:'$' }}</td>
-                                        <td class="text-center">{{ item.CantidadCreditos }}</td>
-                                    
-                                      </tr>
-                                  
-                                      <!-- DETALLE -->
-                                      <tr *ngIf="mostrarDetalleGarantia &&
-                                                 filaSeleccionadaGarantia === item.lngConsecutivo &&
-                                                 tablaDetalleActiva === 'compartidas'"
-                                          class="fila-detalle">
-                                  
-                                        <td colspan="11">
-                                          <div class="detalle-acordeon">
-                                            <div class="table-responsive">
-                                            
-                                              <table class="table table-sm table-border">
-                                                <thead>
-                                                  <tr>
-                                                    <th>Garantía</th>
-                                                    <th>Cuenta</th>
-                                                    <th>Línea</th>
-                                                    <th>Nombre línea</th>
-                                                    <th>Documento deudor</th>
-                                                    <th>Nombre deudor</th>
-                                                    <th>Valor crédito</th>
-                                                  </tr>
-                                                </thead>
-                                            
-                                                <tbody>
-                                                  <tr *ngFor="let d of detalleGarantiaCreditos">
-                                                    <td>{{ d.strMatricula }}</td>
-                                                    <td>{{ d.Cuenta }}</td>
-                                                    <td>{{ d.Linea }}</td>
-                                                    <td>
-                                                      {{ (d.NombreLinea || '').slice(0,50) }}
-                                                      {{ (d.NombreLinea || '').length > 50 ? '...' : '' }}
-                                                    </td>
-                                                    <td>{{ d.IdDeudor }}</td>
-                                                    <td>{{ d.NombreDeudor }}</td>
-                                                    <td>{{ d.ValorCredito | currency:'$' }}</td>
-                                                  </tr>
-                                                </tbody>
-                                            
-                                              </table>
-                                          
-                                            </div>
-                                          </div>
-                                        </td>
-                                    
-                                      </tr>
-                                  
-                                    </ng-container>
-                                  </tbody>
-                                </table>
-                              </div>
-                            }
-                            
-                            <br>
-                            
-                            <!-- TOTALES -->
-                            <div class="row text-center">
-                            
-                                <div class="col-xs-12 col-md-3">
-                                <label>
-                                  <strong>Total cobertura:</strong>
-                                  {{ valorCoberturaCompartidas | currency:'$' }}
-                                </label>
-                                </div>
-                          
-                                <div class="col-xs-12 col-md-3">
-                                <label>
-                                  <strong>Total respaldado:</strong>
-                                  {{ valorRespaldadoCompartidas | currency:'$' }}
-                                </label>
-                                </div>
-                          
-                                <div class="col-xs-12 col-md-3">
-                                <label>
-                                  <strong>Total disponible:</strong>
-                                  {{ valorCoberturaCompartidas - valorRespaldadoCompartidas | currency:'$' }}
-                                </label>
-                                </div>
-                                <div class="col-xs-12 col-md-3">
-                                    <label><strong>Valor a respaldar:</strong> {{ carteraInfo.SaldoCapital | currency:'$'
-                                        }}</label>
-                                </div>
-                            </div>
-                            <br>
-                             
-                            <div class="row text-center">
-                                <div class="col-xs-12 col-md-3"></div>
-                                <div class="col-xs-12 col-md-3"></div>
-                                <div class="col-xs-12 col-md-3"></div>
-                                <div class="col-xs-12 col-md-3 text-center">
-                                <label class="label-uso-codeudor">
-                                  <span class="circle-badge"
-                                    [ngClass]="{
-                                      'badge-verde': obtenerEstado(valorRespaldadoCompartidas, valorCoberturaCompartidas) === 'VERDE',
-                                      'badge-amarillo': obtenerEstado(valorRespaldadoCompartidas, valorCoberturaCompartidas) === 'AMARILLO',
-                                      'badge-morado': obtenerEstado(valorRespaldadoCompartidas, valorCoberturaCompartidas) === 'ROJO'
-                                    }">
-                            
-                                    {{
-                                      obtenerPorcentaje(
-                                        valorCoberturaCompartidas - valorRespaldadoCompartidas,
-                                        valorCoberturaCompartidas
-                                      ) | number:'1.0-0'
-                                    }}%
-                            
-                                  </span>
-                                </label>
-                                </div>
-                            </div>
-                          
-                            
-                            <div class="clearfix"></div>
-                            <br>
-                        </div>
-
                     </div>
                 </div>
             </div>
+        
         </div>
-
-        <button type="button" style="visibility:hidden" #openCambiarGarantiasModal class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#cambiarGarantias">
-          <i class="icon-search4"></i>
+        <button type="button" style="visibility:hidden" #openProcesoInsolvenciaModal class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#procesoInsolvencia">
+            <i class="icon-search4"></i>
         </button>
-        <!-- FIN CAMBIAR GARANTIAS -->
+        <!-- FIN PROCESO INSOLVENCIA -->
+
+
         <!-- TABS -->
         <div class="col-md-12 col-lg-12 col-sm-12 panel panel-default" id="PanelTab">
             <div class="panel-body">
@@ -1965,7 +1686,7 @@
                             <!-- Inicio valorCuotaTab -->
                             <form method="get" [formGroup]="CuotaForm">
                                 <div [hidden]="tabActivo !== Tabs.ValorCuota">
-                                    <article class="ac-text-cr">
+                                    <article>
                                         <section class="container cuota">
                                             <input class="ac-input-sg" id="ac-sg-4" name="ac-sg-4" type="checkbox" />
                                             <label class="ac-label-sg" for="ac-sg-4">Calcular cuota</label>
@@ -2106,7 +1827,7 @@
                                                     <div class="col-xs-12 col-md-2 col-lg-2" style="padding-bottom: 0; flex-shrink: 0;">
                                                     <div class="form-group" style="margin-bottom: 0;">
                                                         <label><strong>Efectivo:</strong></label>                                                            
-                                                        <input type="text" currencyMask [options]="{precision: 2,   decimal: '.',     thousands: ',',  allowNegative: false}" class="form-control txt-bold" formControlName="EfectivoSimularPago" />   
+                                                        <input type="text" appMonedaDirectiva class="form-control txt-bold align-right" formControlName="EfectivoSimularPago" />   
                                                     </div>
                                                     </div>
                                                     <!-- Botón Calcular -->
@@ -2781,43 +2502,42 @@
                                         </div>
                                         <div class="table-responsive scrollTabla"
                                             *ngIf="lstReestructuracion.length > 0">
-                                            <table class="table table-hover">
-                                                <colgroup>
-                                                    <col style="width: 11%;">
-                                                    <col style="width: 11%;">
-                                                    <col style="width: 11%;">
-                                                    <col style="width: 10%;">
-                                                    <col style="width: 10%;">
-                                                    <col style="width: 11%;">
-                                                    <col style="width: 12%;">
-                                                    <col style="width: 12%;">
-                                                    <col style="width: 12%;">
-                                                </colgroup>
+                                            <table class="table table-hover tabla-last-column-fixed">
                                                 <thead>
                                                     <tr class="encabezadoTablas">
-                                                        <th><strong>Monto</strong></th>
-                                                        <th><strong>Saldo</strong></th>
-                                                        <th><strong>Cuota</strong></th>
+                                                        <th class="text-center"><strong>Nro</strong></th>
+                                                        <th class="text-center"><strong>Monto</strong></th>
+                                                        <th class="text-center"><strong>Saldo</strong></th>
+                                                        <th class="text-center"><strong>Cuota</strong></th>
+                                                        <th class="text-center"><strong>Acta</strong></th>
                                                         <th class="text-center"><strong>Plazo</strong></th>
-                                                        <th><strong>Tasa</strong></th>
-                                                        <th><strong>Fecha</strong></th>
-                                                        <th><strong>Novedad</strong></th>
-                                                        <th><strong>Calif. Actual</strong></th>
-                                                        <th><strong>Calif. Anterior</strong></th>
+                                                        <th class="text-center"><strong>Periodo interes</strong></th>
+                                                        <th class="text-center"><strong>Tasa periodica</strong></th>
+                                                        <th class="text-center"><strong>Calif. Actual</strong></th>
+                                                        <th class="text-center"><strong>Calif. Anterior</strong></th>
+                                                        <th class="text-center"><strong>Periodo gracia</strong></th>
+                                                        <th class="text-center"><strong>Fecha inicio gracia</strong></th>
+                                                        <th class="text-center"><strong>Fecha cambio</strong></th>
+                                                        <th class="text-center"><strong>Operación</strong></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody
                                                     *ngFor="let itemReestructura of lstReestructuracion; let j = index">
                                                     <tr class="filRes_{{j}}" (click)="CambiarColor(j,3)">
-                                                        <td>{{ itemReestructura.Monto | currency }}</td>
-                                                        <td>{{ itemReestructura.Saldo | currency }}</td>
-                                                        <td>{{ itemReestructura.Cuota | currency }}</td>
+                                                        <td class="text-center">{{ itemReestructura.Contador }}</td>
+                                                        <td class="text-right">{{ itemReestructura.Monto | currency }}</td>
+                                                        <td class="text-right">{{ itemReestructura.Saldo | currency }}</td>
+                                                        <td class="text-right">{{ itemReestructura.Cuota | currency }}</td>
+                                                        <td>{{ itemReestructura.Acta }}</td>
                                                         <td class="text-center">{{itemReestructura.Plazo }} </td>
-                                                        <td>{{ itemReestructura.Tasa }} %</td>
-                                                        <td>{{ itemReestructura.Fecha }} </td>
-                                                        <td>{{ itemReestructura.Novedad }} </td>
+                                                        <td class="text-center">{{itemReestructura.PeriodoInteres }} </td>
+                                                        <td class="text-center">{{ itemReestructura.Tasa }} %</td>
                                                         <td class="text-center">{{ itemReestructura.CalAct }} </td>
                                                         <td class="text-center">{{ itemReestructura.CalAnt }} </td>
+                                                        <td class="text-center">{{ (itemReestructura.PeriodoGracia ?? 0) / 30 }}</td>
+                                                        <td style="min-width: 135px;">{{ itemReestructura.FechaInicioGracia | date:'yyyy/MM/dd HH:mm:ss' }}</td>
+                                                        <td>{{ itemReestructura.Fecha }} </td>
+                                                        <td>{{ itemReestructura.Novedad }} </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -2826,6 +2546,59 @@
                                     <br>
                                     <div>
                                         <h3 class="tab-title">Reliquidación del crédito</h3>
+                                    </div>
+                                    <div>
+                                        <div *ngIf="lstReliquidacion.length <= 0">
+                                            <div class="alert alert-secondary" role="alert">
+                                                No hay registros
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive scrollTabla" *ngIf="lstReliquidacion.length > 0">
+                                            <table class="table table-hover tabla-last-column-fixed">
+                                                <thead>
+                                                    <tr class="encabezadoTablas">
+                                                        <th class="text-center"><strong>Nro</strong></th>
+                                                        <th class="text-center"><strong>Monto</strong></th>
+                                                        <th class="text-center"><strong>Saldo</strong></th>
+                                                        <th class="text-center"><strong>Cuota</strong></th>
+                                                        <th class="text-center"><strong>Cuota libranza</strong></th>
+                                                        <th class="text-center"><strong>Plazo</strong></th>
+                                                        <th class="text-center"><strong>Periodo interes</strong></th>
+                                                        <th class="text-center"><strong>Tasa periodica</strong></th>
+                                                        <th class="text-center"><strong>Tasa nominal</strong></th>
+                                                        <th class="text-center"><strong>Puntos</strong></th>
+                                                        <th class="text-center"><strong>Periodo gracia</strong></th>
+                                                        <th class="text-center"><strong>Fecha inicio gracia</strong></th>
+                                                        <th class="text-center"><strong>Fecha cambio</strong></th>
+                                                        <th class="text-center"><strong>Operación</strong></th>
+                                                        
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="filRel_{{j}}" (click)="CambiarColor(j,4)" *ngFor="let itemReliquida of lstReliquidacion; let j = index">
+                                                        <td class="text-center">{{ lstReliquidacion.length - j }}</td>
+                                                        <td class="text-right">{{ itemReliquida.Monto | currency }}</td>
+                                                        <td class="text-right">{{ itemReliquida.Saldo | currency }}</td>
+                                                        <td class="text-right">{{ itemReliquida.Cuota | currency }}</td>
+                                                        <td class="text-center">{{ itemReliquida.CuotaLibranza ?? 0 | currency }}</td>
+                                                        <td class="text-center">{{ itemReliquida.Plazo }}</td>
+                                                        <td class="text-center">{{ itemReliquida.PeriodoInteres }}</td>
+                                                        <td class="text-center">{{ itemReliquida.Tasa | number:'1.4-4' }} %</td>
+                                                        <td class="text-center">{{ itemReliquida.TasaNominal | number:'1.4-4' }} %</td>
+                                                        <td class="text-center">{{ itemReliquida.Puntos ?? 0 | number:'1.4-4' }} %</td>
+                                                        <td class="text-center">{{ (itemReliquida.PeriodoGracia ?? 0) / 30 }}</td>
+                                                        <td style="min-width: 135px;">{{ itemReliquida.FechaInicioGracia | date:'yyyy/MM/dd HH:mm:ss' }}</td>
+                                                        <td>{{ itemReliquida.Fecha | date:'yyyy/MM/dd HH:mm:ss' }}</td>
+                                                        <td>{{ itemReliquida.Novedad.includes('Disminuir Cuota') ? 'Cambio de Cuota' : itemReliquida.Novedad }}</td>                                                    
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <!-- Inicio Insolvencia -->
+                                    <div>
+                                        <h3 class="tab-title">Proceso de insolvencia</h3>
                                     </div>
                                     <div>
                                         <div *ngIf="lstReliquidacion.length <= 0">
@@ -2873,13 +2646,14 @@
                                             </table>
                                         </div>
                                     </div>
+                                    <!-- Fin Insolvencia-->
                                 </section>
                             </div>
                             <!-- Fin CambiosTab -->
 
                             <!-- Cupo Tab -->
                             <div [hidden]="tabActivo !== Tabs.Cupo">
-                                <article class="ac-text-cr">
+                                <article>
                                     <form method="get" [formGroup]="cupoForm">
                                         <div class="col-xs-12 col-md-12 col-lg-12">
                                             <div class="container">
@@ -3128,31 +2902,31 @@
                                     <div class="fechas">
                                         <div>
                                             <div class="form-group">
-                                                <label class="fw-bold">Apertura:</label>
+                                                <label class="textNegrilla">Apertura:</label>
                                                 <span class="text-danger"></span>
                                                 <input type="text" class="form-control" [attr.disabled]="true"
                                                     formControlName="fechaApertura" />
                                             </div>
                                             <div class="form-group">
-                                                <label class="fw-bold">Última transacción:</label>
+                                                <label class="textNegrilla">Última transacción:</label>
                                                 <span class="text-danger"></span>
                                                 <input type="text" class="form-control" [attr.disabled]="true"
                                                     formControlName="fechaUltimaTrans" />
                                             </div>
                                             <div class="form-group">
-                                                <label class="fw-bold">Cancelación:</label>
+                                                <label class="textNegrilla">Cancelación:</label>
                                                 <span class="text-danger"></span>
                                                 <input type="text" class="form-control" [attr.disabled]="true"
                                                     formControlName="fechaCancelacion" />
                                             </div>
                                             <div class="form-group">
-                                                <label class="fw-bold">Vencimiento:</label>
+                                                <label class="textNegrilla">Vencimiento:</label>
                                                 <span class="text-danger"></span>
                                                 <input type="text" class="form-control" [attr.disabled]="true"
                                                     formControlName="fechaVencimiento" />
                                             </div>
                                             <div class="form-group">
-                                                <label class="fw-bold">Cambio fecha de pago:</label>
+                                                <label class="textNegrilla">Cambio fecha de pago:</label>
                                                 <span class="text-danger"></span>
                                                 <input type="text" class="form-control" [attr.disabled]="true"
                                                     formControlName="cambioFechaPago" />
@@ -3160,25 +2934,25 @@
                                         </div>
                                         <div>
                                             <div class="form-group">
-                                                <label class="fw-bold">Próximo pago:</label>
+                                                <label class="textNegrilla">Próximo pago:</label>
                                                 <span class="text-danger"></span>
                                                 <input type="text" class="form-control" [attr.disabled]="true"
                                                     formControlName="fechaProximoPago" />
                                             </div>
                                             <div class="form-group">
-                                                <label class="fw-bold">Entró a contingencia:</label>
+                                                <label class="textNegrilla">Entró a contingencia:</label>
                                                 <span class="text-danger"></span>
                                                 <input type="text" class="form-control" [attr.disabled]="true"
                                                     formControlName="fechaContingencia" />
                                             </div>
                                             <div class="form-group">
-                                                <label class="fw-bold">Inicio período gracia:</label>
+                                                <label class="textNegrilla">Inicio período gracia:</label>
                                                 <span class="text-danger"></span>
                                                 <input type="text" class="form-control" [attr.disabled]="true"
                                                     formControlName="fechaInicioPeriodoGracia" />
                                             </div>
                                             <div class="form-group">
-                                                <label class="fw-bold">Cambio de tasa:</label>
+                                                <label class="textNegrilla">Cambio de tasa:</label>
                                                 <span class="text-danger"></span>
                                                 <input type="text" class="form-control" [attr.disabled]="true"
                                                     formControlName="fechaCambioTasa" />

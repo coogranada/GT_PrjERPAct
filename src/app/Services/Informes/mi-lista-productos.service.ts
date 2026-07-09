@@ -258,6 +258,10 @@ export class MiListaProductosService {
     this.url = `${this.environment.Url}/MuestraContabilidadMisProdu?lngTercero=${tercero}`;
     return this._http.get<any>(this.url);
   }
+   getContabilidadSubSalud(tercero: number): Observable<any> {
+    this.url = `${this.environment.Url}/getContabilidadSubSalud?lngTercero=${tercero}`;
+    return this._http.get<any>(this.url);
+  }
   GetReferenciasCartera(tercero: number, TipoCliente: number): Observable<any> {
     this.url = `${this.environment.Url}/ObtenerListaReferenciasCartera`;
     const params = new HttpParams()

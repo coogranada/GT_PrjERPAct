@@ -355,58 +355,154 @@ export class CarteraTabComponent implements OnInit {
   }
 
   generarEXCEL(): void {
-    var sel1 = Number($(".SelectedMovimiento_Cartera").val());
-    if (sel1 == 1) {
-      this.loading.show();
-      var FechaInicio = $("#fechaInicartera").val();
-      var FechaFin = $("#fechaendcartera").val();
-      this.MiListaProductosService.GenerarXlxsMovimientoCartera(this.lngCuenta, FechaInicio, FechaFin).subscribe(
+
+  const sel1 = Number($(".SelectedMovimiento_Cartera").val());
+
+  if (sel1 === 1) {
+
+    const fechaInicio = $("#fechaInicartera").val();
+    const fechaFin = $("#fechaendcartera").val();
+
+    this.loading.show();
+
+    this.MiListaProductosService
+      .GenerarXlxsMovimientoCartera(
+        this.lngCuenta,
+        fechaInicio,
+        fechaFin
+      )
+      .subscribe(
         result => {
-          var baseg4 = result;
-          const linkSource = `data:application/xlsx;base64,${baseg4}`;
-          const downloadLink = document.createElement("a");
-          const fileName = "Movimiento_" + this.NumeroDocumento + ".xlsx";
-          downloadLink.href = linkSource;
-          downloadLink.download = fileName;
-          this.loading.hide();
-          downloadLink.click();
+
+          try {
+
+            const base64 = result;
+
+            const linkSource =
+              `data:application/xlsx;base64,${base64}`;
+
+            const downloadLink =
+              document.createElement("a");
+
+            const fileName =
+              `Movimiento_${this.NumeroDocumento}.xlsx`;
+
+            downloadLink.href = linkSource;
+            downloadLink.download = fileName;
+
+            downloadLink.click();
+
+          } catch (e) {
+
+            console.error(e);
+
+            this.notif.onDanger(
+              "Error",
+              "No fue posible generar el archivo Excel."
+            );
+
+          } finally {
+
+            this.loading.hide();
+          }
         },
         error => {
+
           this.loading.hide();
+
           console.log(error);
+
+          this.notif.onDanger(
+            "Error",
+            "Ocurrió un error al generar el archivo."
+          );
         }
+      );
+  }
+
+  const selec = Number($(".SelectedExtracto_Cartera").val());
+
+  if (selec === 2) {
+
+    const data = localStorage.getItem("Data");
+
+    const dataLocalStorage = JSON.parse(
+      window.atob(data != null ? data : "")
+    );
+
+    const yearInicial =
+      Number($(".yearInit_Cartera").val());
+
+    const yearFinal =
+      Number($(".yearEnd_Cartera").val());
+
+    const mesInicial =
+      Number($(".MesInit_Cartera").val());
+
+    const mesFinal =
+      Number($(".MesEnd_Cartera").val());
+
+    const fechaInicio =
+      yearInicial + "-" + mesInicial + "-1";
+
+    this.loading.show();
+
+    this.MiListaProductosService
+      .GenerarXlsxCartera(
+        this.lngCuenta,
+        fechaInicio,
+        yearFinal,
+        mesFinal,
+        dataLocalStorage.Oficina
       )
-    }
-    var selec = Number($(".SelectedExtracto_Cartera").val());
-
-    if (selec == 2) {
-      let data = localStorage.getItem("Data");
-      var dataLocalStorage = JSON.parse(window.atob(data != null ? data : ""));
-
-      var yearInicial = Number($(".yearInit_Cartera").val());
-      var yearFinal = Number($(".yearEnd_Cartera").val());
-      var MesInicial = Number($(".MesInit_Cartera").val());
-      var MesFinal = Number($(".MesEnd_Cartera").val());
-      var FechaInici = yearInicial + "-" + MesInicial + "-1";
-      this.loading.show();
-
-      this.MiListaProductosService.GenerarXlsxCartera(this.lngCuenta, FechaInici,yearFinal,MesFinal,dataLocalStorage.Oficina).subscribe(
+      .subscribe(
         result => {
-          var baseg4 = result;
-          const linkSource = `data:application/xlsx;base64,${baseg4}`;
-          const downloadLink = document.createElement("a");
-          const fileName = "Extracto_" + this.NumeroDocumento + ".xlsx";
-          downloadLink.href = linkSource;
-          downloadLink.download = fileName;
-          this.loading.hide();
-          downloadLink.click();
+
+          try {
+
+            const base64 = result;
+
+            const linkSource =
+              `data:application/xlsx;base64,${base64}`;
+
+            const downloadLink =
+              document.createElement("a");
+
+            const fileName =
+              `Extracto_${this.NumeroDocumento}.xlsx`;
+
+            downloadLink.href = linkSource;
+            downloadLink.download = fileName;
+
+            downloadLink.click();
+
+          } catch (e) {
+
+            console.error(e);
+
+            this.notif.onDanger(
+              "Error",
+              "No fue posible generar el archivo Excel."
+            );
+
+          } finally {
+
+            this.loading.hide();
+          }
         },
         error => {
+
           this.loading.hide();
+
           console.log(error);
+
+          this.notif.onDanger(
+            "Error",
+            "Ocurrió un error al generar el archivo."
+          );
         }
-      )
-    }
+      );
+  }
   }
 
   opcionSelectedFechasVidaTD(value : number) {
@@ -521,114 +617,250 @@ export class CarteraTabComponent implements OnInit {
   }
 
   ConsultarExtracto() {
-    var yearInicial = Number($(".yearInit_Cartera").val());
-    var yearFinal = Number($(".yearEnd_Cartera").val());
-    var MesInicial = Number($(".MesInit_Cartera").val());
-    var MesFinal = Number($(".MesEnd_Cartera").val());
-    var selExtracto = $(".SelectedExtracto_Cartera").val();
 
-    if (selExtracto == '-') {
-      this.SelectErroneo = true;
-      this.validaAnoInicial = false;
-      this.validaAnoFinal = false;
-      this.validaMesInicial = false;
-      this.validaMesFinal = false;
-    }else if (yearInicial > yearFinal) {
-      this.validaAnoInicial = true;
-      this.validaAnoFinal = false;
-      this.validaMesInicial = false;
-      this.validaMesFinal = false;
-      this.SelectErroneo = false;
-    } else if (yearFinal < yearInicial) {
-      this.validaAnoInicial = false;
-      this.validaAnoFinal = true;
-      this.validaMesInicial = false;
-      this.validaMesFinal = false;
-      this.SelectErroneo = false;
-    } else if ((MesInicial > MesFinal) && yearInicial == yearFinal) {
-      this.validaAnoInicial = false;
-      this.validaAnoFinal = false;
-      this.validaMesInicial = true;
-      this.validaMesFinal = false;
-      this.SelectErroneo = false;
-    } else if ((MesFinal < MesInicial) && yearInicial == yearFinal) {
-      this.validaAnoInicial = false;
-      this.validaAnoFinal = false;
-      this.validaMesInicial = false;
-      this.validaMesFinal = true;
-      this.SelectErroneo = false;
-    } else {
-      this.validaAnoInicial = false;
-      this.validaAnoFinal = false;
-      this.validaMesInicial = false;
-      this.validaMesFinal = false;
-      this.SelectErroneo = false;
+  const yearInicial = Number($(".yearInit_Cartera").val());
+  const yearFinal = Number($(".yearEnd_Cartera").val());
+  const MesInicial = Number($(".MesInit_Cartera").val());
+  const MesFinal = Number($(".MesEnd_Cartera").val());
+  const selExtracto = $(".SelectedExtracto_Cartera").val();
 
-      this.loading.show();
-      let data = localStorage.getItem("Data");
-      var dataLocalStorage = JSON.parse(window.atob(data != null ? data : ""));
+  if (selExtracto == '-') {
 
-      var FechaInicio = yearInicial + "-" + MesInicial + "-1";
+    this.SelectErroneo = true;
+    this.validaAnoInicial = false;
+    this.validaAnoFinal = false;
+    this.validaMesInicial = false;
+    this.validaMesFinal = false;
 
-      var Oficina = dataLocalStorage.Oficina;
+  } else if (yearInicial > yearFinal) {
 
-        this.loading.show();
-        this.MiListaProductosService.getExtractosCartera(this.lngCuenta, FechaInicio, yearFinal,MesFinal,Oficina).subscribe(
-          result => {
-            this.loading.hide();
-            this.MapeaEncabezadoExtracto(result);
+    this.validaAnoInicial = true;
+    this.validaAnoFinal = false;
+    this.validaMesInicial = false;
+    this.validaMesFinal = false;
+    this.SelectErroneo = false;
 
-            if (result.Detalles !== null) {
-              this.MiListaProductosService.GenerarPdfCartera(this.lngCuenta, FechaInicio, yearFinal,MesFinal,Oficina).subscribe(
-                result => {
-                  const pdfinBase64 = result.FileStream._buffer;
-                  const byteArray = new Uint8Array(atob(pdfinBase64).split('').map(char => char.charCodeAt(0)));
-                  const newBolb = new Blob([byteArray], { type: 'application/pdf' });
-                  this.linkPdf = URL.createObjectURL(newBolb);
-                  const url = window.URL.createObjectURL(newBolb);
-                  document.getElementById('objepdfExtCartera')?.setAttribute("data", url);
-                  document.getElementById('objepdfExtCartera')?.setAttribute("type", "application/pdf");
-                  $("#objepdfExtCartera").show();
-                  $("#objepdfmovimientoCartera").hide();
-                },
-                error => {
-                  this.loading.hide();
-                  console.log(error);
+  } else if (yearFinal < yearInicial) {
+
+    this.validaAnoInicial = false;
+    this.validaAnoFinal = true;
+    this.validaMesInicial = false;
+    this.validaMesFinal = false;
+    this.SelectErroneo = false;
+
+  } else if (
+    (MesInicial > MesFinal) &&
+    yearInicial == yearFinal
+  ) {
+
+    this.validaAnoInicial = false;
+    this.validaAnoFinal = false;
+    this.validaMesInicial = true;
+    this.validaMesFinal = false;
+    this.SelectErroneo = false;
+
+  } else if (
+    (MesFinal < MesInicial) &&
+    yearInicial == yearFinal
+  ) {
+
+    this.validaAnoInicial = false;
+    this.validaAnoFinal = false;
+    this.validaMesInicial = false;
+    this.validaMesFinal = true;
+    this.SelectErroneo = false;
+
+  } else {
+
+    this.validaAnoInicial = false;
+    this.validaAnoFinal = false;
+    this.validaMesInicial = false;
+    this.validaMesFinal = false;
+    this.SelectErroneo = false;
+
+    this.loading.show();
+
+    const data = localStorage.getItem("Data");
+
+    const dataLocalStorage = JSON.parse(
+      window.atob(data != null ? data : "")
+    );
+
+    const FechaInicio =
+      yearInicial + "-" + MesInicial + "-1";
+
+    const Oficina =
+      dataLocalStorage.Oficina;
+
+    this.MiListaProductosService.getExtractosCartera(
+      this.lngCuenta,
+      FechaInicio,
+      yearFinal,
+      MesFinal,
+      Oficina
+    ).subscribe(
+      result => {
+
+        this.loading.hide();
+
+        this.MapeaEncabezadoExtracto(result);
+
+        if (result.Detalles !== null) {
+
+          this.MiListaProductosService.GenerarPdfCartera(
+            this.lngCuenta,
+            FechaInicio,
+            yearFinal,
+            MesFinal,
+            Oficina
+          ).subscribe(
+            resultPdf => {
+
+              try {
+
+                const pdfinBase64 =
+                  resultPdf?.FileStream?._buffer;
+
+                if (!pdfinBase64) {
+                  throw new Error("PDF vacío.");
                 }
-              )
-            } else {
-              this.DetallesExtractoCartera.length = 0;
-              this.DetallesMovimientosCartera.length = 0;
+
+                const byteArray = new Uint8Array(
+                  atob(pdfinBase64)
+                    .split('')
+                    .map(char =>
+                      char.charCodeAt(0)
+                    )
+                );
+
+                const newBlob = new Blob(
+                  [byteArray],
+                  {
+                    type: 'application/pdf'
+                  }
+                );
+
+                this.linkPdf =
+                  URL.createObjectURL(newBlob);
+
+                const url =
+                  window.URL.createObjectURL(
+                    newBlob
+                  );
+
+                document
+                  .getElementById('objepdfExtCartera')
+                  ?.setAttribute("data", url);
+
+                document
+                  .getElementById('objepdfExtCartera')
+                  ?.setAttribute(
+                    "type",
+                    "application/pdf"
+                  );
+
+                $("#objepdfExtCartera").show();
+                $("#objepdfmovimientoCartera").hide();
+
+              } catch (e) {
+
+                console.error(
+                  "Error procesando PDF",
+                  e
+                );
+
+                this.notif.onDanger(
+                  "Error",
+                  "No fue posible visualizar el PDF."
+                );
+              }
+            },
+            error => {
+
+              console.log(error);
+
+              this.notif.onDanger(
+                "Error",
+                "Error generando el PDF."
+              );
             }
+          );
 
-          //#region Guarda log
-          let data = localStorage.getItem("Data");
-          var dataLocalStorage = JSON.parse(window.atob(data != null ? data : ""));
-          var LogMisProductosData = new LogMisProductos();
-            var nuevoItem = new DatosProductos();
+        } else {
 
-          LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
-          LogMisProductosData.IdModulo = 69;
-          LogMisProductosData.IdOperacion = 50;
-          LogMisProductosData.IdOpcion = 3; // Extrato
-          LogMisProductosData.IdTercero = this.lngTercero;
-          LogMisProductosData.IdUsuarioERP = dataLocalStorage.IdUsuario;
-          LogMisProductosData.IdCuenta = this.lngCuenta;
-          nuevoItem.NumeroCuenta = result.Encabezado.Cuenta;
-          nuevoItem.CuentaHija = this.validaHijaTD;
-          nuevoItem.FechaInicial = yearInicial.toString() +"/"+ MesInicial.toString();
-          nuevoItem.FechaFinal = yearFinal.toString() +"/"+ MesFinal.toString();
-          LogMisProductosData.DatosProductos = nuevoItem;
-          this.setLogMisProductos(LogMisProductosData);
-          // #endregion
+          this.DetallesExtractoCartera.length = 0;
+          this.DetallesMovimientosCartera.length = 0;
+        }
 
-          },
-          error => {
-            this.loading.hide();
-            console.log(error);
-          }
-        )
-    }
+        //#region Guarda log
+
+        const dataLog = localStorage.getItem("Data");
+
+        const dataLocalStorageLog = JSON.parse(
+          window.atob(dataLog != null ? dataLog : "")
+        );
+
+        const LogMisProductosData =
+          new LogMisProductos();
+
+        const nuevoItem =
+          new DatosProductos();
+
+        LogMisProductosData.IdOficina =
+          parseInt(
+            dataLocalStorageLog.NumeroOficina
+          );
+
+        LogMisProductosData.IdModulo = 69;
+        LogMisProductosData.IdOperacion = 50;
+        LogMisProductosData.IdOpcion = 3;
+        LogMisProductosData.IdTercero =
+          this.lngTercero;
+
+        LogMisProductosData.IdUsuarioERP =
+          dataLocalStorageLog.IdUsuario;
+
+        LogMisProductosData.IdCuenta =
+          this.lngCuenta;
+
+        nuevoItem.NumeroCuenta =
+          result.Encabezado.Cuenta;
+
+        nuevoItem.CuentaHija =
+          this.validaHijaTD;
+
+        nuevoItem.FechaInicial =
+          yearInicial.toString() +
+          "/" +
+          MesInicial.toString();
+
+        nuevoItem.FechaFinal =
+          yearFinal.toString() +
+          "/" +
+          MesFinal.toString();
+
+        LogMisProductosData.DatosProductos =
+          nuevoItem;
+
+        this.setLogMisProductos(
+          LogMisProductosData
+        );
+
+        //#endregion
+      },
+      error => {
+
+        this.loading.hide();
+
+        console.log(error);
+
+        this.notif.onDanger(
+          "Error",
+          "Error consultando el extracto."
+        );
+      }
+    );
+  }
   }
 
   SendMailSeguros() {
@@ -700,43 +932,82 @@ export class CarteraTabComponent implements OnInit {
 
   }
 
-  SendMailCpM() {
+  SendMailCpM(): void {
+  if (this.validaPlantillla === true) {
+    this.loading.show();
+    const yearInicial = Number(
+      $(".yearInit_Cartera").val()
+    );
+    const yearFinal = Number(
+      $(".yearEnd_Cartera").val()
+    );
+    const mesInicial = Number(
+      $(".MesInit_Cartera").val()
+    );
+    const mesFinal = Number(
+      $(".MesEnd_Cartera").val()
+    );
+    const data = localStorage.getItem("Data");
+    const dataLocalStorage = JSON.parse(
+      window.atob(data != null ? data : "")
+    );
+    const oficina = dataLocalStorage.Oficina;
+    const fechaInicio =
+      yearInicial + "-" + mesInicial + "-1";
 
-    if (this.validaPlantillla == true) {
-      this.loading.show();
-      var yearInicial = Number($(".yearInit_Cartera").val());
-      var yearFinal = Number($(".yearEnd_Cartera").val());
-      var MesInicial = Number($(".MesInit_Cartera").val());
-      var MesFinal = Number($(".MesEnd_Cartera").val());
-      let data = localStorage.getItem("Data");
-      var dataLocalStorage = JSON.parse(window.atob(data != null ? data : ""));
-      var Oficina = dataLocalStorage.Oficina;
-      var FechaInicio = yearInicial + "-" + MesInicial + "-1";
+    const tercero = Number(
+      $("#TerceroPrincipal").val()
+    );
 
-       var Tercero = Number($("#TerceroPrincipal").val());
-
-      this.MiListaProductosService.sendMailCartera(this.lngCuenta, "Coogranada",Oficina,this.NombreProducto,"CarteraPadre",FechaInicio,yearFinal,MesFinal,null).subscribe(
+    this.MiListaProductosService
+      .sendMailCartera(
+        this.lngCuenta,
+        "Coogranada",
+        oficina,
+        this.NombreProducto,
+        "CarteraPadre",
+        fechaInicio,
+        yearFinal,
+        mesFinal,
+        null
+      )
+      .subscribe(
         result => {
-          this.loading.hide();
-          this.Response(result);
+          try {
+            this.Response(result);
+            //#region Guarda log
+            const logMisProductosData =
+              new LogMisProductos();
 
-          //#region Guarda log
-          let data = localStorage.getItem("Data");
-      var dataLocalStorage = JSON.parse(window.atob(data != null ? data : ""));
-          var LogMisProductosData = new LogMisProductos();
-          var nuevoItem = new DatosProductos();
-          LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
-          LogMisProductosData.IdModulo = 69;
-          LogMisProductosData.IdOperacion = 50;
-          LogMisProductosData.IdOpcion = 12; // Envio correo 
-          LogMisProductosData.IdTercero = Tercero;
-          LogMisProductosData.IdCuenta = this.lngCuenta
-          LogMisProductosData.IdUsuarioERP = dataLocalStorage.IdUsuario;
-          nuevoItem.FechaInicial = "";
-          nuevoItem.FechaFinal = "";
-          LogMisProductosData.DatosProductos = nuevoItem;
-          this.setLogMisProductos(LogMisProductosData);
-          // #endregion
+            const nuevoItem =
+              new DatosProductos();
+
+            logMisProductosData.IdOficina =
+              parseInt(dataLocalStorage.NumeroOficina);
+
+            logMisProductosData.IdModulo = 69;
+            logMisProductosData.IdOperacion = 50;
+            logMisProductosData.IdOpcion = 12;
+            logMisProductosData.IdTercero = tercero;
+            logMisProductosData.IdCuenta = this.lngCuenta;
+            logMisProductosData.IdUsuarioERP =
+              dataLocalStorage.IdUsuario;
+
+            nuevoItem.FechaInicial = "";
+            nuevoItem.FechaFinal = "";
+
+            logMisProductosData.DatosProductos =
+              nuevoItem;
+
+            this.setLogMisProductos(
+              logMisProductosData
+            );
+
+            //#endregion
+
+          } finally {
+            this.loading.hide();
+          }
         },
         error => {
           this.loading.hide();
@@ -752,25 +1023,22 @@ export class CarteraTabComponent implements OnInit {
             allowEscapeKey: false,
           });
         }
-      )
-    } else {
-      this.loading.hide();
-      swal.fire({
-        title: "Info",
-        text: "",
-        html: "Por favor comunicarse con el administrador para gestionar la plantilla del email.",
-        icon: "info",
-        showCancelButton: false,
-        confirmButtonColor: "rgb(13,165,80)",
-        cancelButtonColor: "rgb(160,0,87)",
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-      });
-    }
+      );
 
-
-
+  } else {
+    swal.fire({
+      title: "Info",
+      text: "",
+      html: "Por favor comunicarse con el administrador para gestionar la plantilla del email.",
+      icon: "info",
+      showCancelButton: false,
+      confirmButtonColor: "rgb(13,165,80)",
+      cancelButtonColor: "rgb(160,0,87)",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+    });
   }
+}
 
   opcionSelectedYearInit(year : string) {
     $(".yearInit_Cartera").val(Number(year));
@@ -1154,67 +1422,174 @@ export class CarteraTabComponent implements OnInit {
     return null;
   }
 
-  generarPDF() {
-    this.SelectionExtOrMov = Number($(".SelectedMovimiento_Cartera").val());
-    var FechaInicio = $("#fechaInicartera").val();
-    var FechaFin = $("#fechaendcartera").val();
+ generarPDF(): void {
 
-    var selec1 = Number($(".SelectedMovimiento_Cartera").val());
+  this.SelectionExtOrMov = Number(
+    $(".SelectedMovimiento_Cartera").val()
+  );
 
-    if (selec1 == 1) {
-      //pdf movimiento
-      this.loading.show();
-      this.MiListaProductosService.GenerarPdfMovimientoCartera(this.lngCuenta, FechaInicio, FechaFin).subscribe(
+  const fechaInicio = $("#fechaInicartera").val();
+  const fechaFin = $("#fechaendcartera").val();
+
+  const selecMovimiento = Number(
+    $(".SelectedMovimiento_Cartera").val()
+  );
+
+  if (selecMovimiento === 1) {
+
+    this.loading.show();
+
+    this.MiListaProductosService
+      .GenerarPdfMovimientoCartera(
+        this.lngCuenta,
+        fechaInicio,
+        fechaFin
+      )
+      .subscribe(
         result => {
-          var baseg4 = result.FileStream;
-          const linkSource = `data:application/pdf;base64,${baseg4._buffer}`;
-          const downloadLink = document.createElement("a");
-          const fileName = "Movimiento_" + this.NumeroDocumento + ".pdf";
-          downloadLink.href = linkSource;
-          downloadLink.download = fileName;
-          this.loading.hide();
-          downloadLink.click();
+
+          try {
+
+            const base64 =
+              result?.FileStream?._buffer;
+
+            if (!base64) {
+              throw new Error("PDF vacío");
+            }
+
+            const linkSource =
+              `data:application/pdf;base64,${base64}`;
+
+            const downloadLink =
+              document.createElement("a");
+
+            const fileName =
+              `Movimiento_${this.NumeroDocumento}.pdf`;
+
+            downloadLink.href = linkSource;
+            downloadLink.download = fileName;
+
+            downloadLink.click();
+
+          } catch (e) {
+
+            console.error(e);
+
+            this.notif.onDanger(
+              "Error",
+              "No fue posible generar el PDF."
+            );
+
+          } finally {
+
+            this.loading.hide();
+          }
         },
         error => {
+
           this.loading.hide();
+
           console.log(error);
+
+          this.notif.onDanger(
+            "Error",
+            "Ocurrió un error al generar el PDF."
+          );
         }
-      )
-
-    }
-
-    var selec = Number($(".SelectedExtracto_Cartera").val());
-    if (selec == 2) {
-      //pdf Extracto
-      this.loading.show();
-      let data = localStorage.getItem("Data");
-      var dataLocalStorage = JSON.parse(window.atob(data != null ? data : ""));
-
-      var yearInicial = Number($(".yearInit_Cartera").val());
-      var yearFinal = Number($(".yearEnd_Cartera").val());
-      var MesInicial = Number($(".MesInit_Cartera").val());
-      var MesFinal = Number($(".MesEnd_Cartera").val());
-      var FechaInici = yearInicial + "-" + MesInicial + "-1";
-      this.MiListaProductosService.GenerarPdfCartera(this.lngCuenta, FechaInici,yearFinal,MesFinal,dataLocalStorage.Oficina).subscribe(
-        result => {
-          var baseg4 = result.FileStream;
-          const linkSource = `data:application/pdf;base64,${baseg4._buffer}`;
-          const downloadLink = document.createElement("a");
-          const fileName = "Extracto_" + this.NumeroDocumento + ".pdf";
-          downloadLink.href = linkSource;
-          downloadLink.download = fileName;
-          this.loading.hide();
-          downloadLink.click();
-        },
-        error => {
-          this.loading.hide();
-          console.log(error);
-        }
-      )
-
-    }
-
+      );
   }
+
+  const selecExtracto = Number(
+    $(".SelectedExtracto_Cartera").val()
+  );
+
+  if (selecExtracto === 2) {
+
+    const data = localStorage.getItem("Data");
+
+    const dataLocalStorage = JSON.parse(
+      window.atob(data != null ? data : "")
+    );
+
+    const yearInicial =
+      Number($(".yearInit_Cartera").val());
+
+    const yearFinal =
+      Number($(".yearEnd_Cartera").val());
+
+    const mesInicial =
+      Number($(".MesInit_Cartera").val());
+
+    const mesFinal =
+      Number($(".MesEnd_Cartera").val());
+
+    const fechaInici =
+      yearInicial + "-" + mesInicial + "-1";
+
+    this.loading.show();
+
+    this.MiListaProductosService
+      .GenerarPdfCartera(
+        this.lngCuenta,
+        fechaInici,
+        yearFinal,
+        mesFinal,
+        dataLocalStorage.Oficina
+      )
+      .subscribe(
+        result => {
+
+          try {
+
+            const base64 =
+              result?.FileStream?._buffer;
+
+            if (!base64) {
+              throw new Error("PDF vacío");
+            }
+
+            const linkSource =
+              `data:application/pdf;base64,${base64}`;
+
+            const downloadLink =
+              document.createElement("a");
+
+            const fileName =
+              `Extracto_${this.NumeroDocumento}.pdf`;
+
+            downloadLink.href = linkSource;
+            downloadLink.download = fileName;
+
+            downloadLink.click();
+
+          } catch (e) {
+
+            console.error(e);
+
+            this.notif.onDanger(
+              "Error",
+              "No fue posible generar el PDF."
+            );
+
+          } finally {
+
+            this.loading.hide();
+          }
+        },
+        error => {
+
+          this.loading.hide();
+
+          console.log(error);
+
+          this.notif.onDanger(
+            "Error",
+            "Ocurrió un error al generar el PDF."
+          );
+        }
+      );
+  }
+}
 
   getCartera(tercero : any, numerodocumento : any) {
     this.NumeroDocumento = numerodocumento;
@@ -1834,9 +2209,7 @@ export class CarteraTabComponent implements OnInit {
       }
     }
   }
-
-
-
+  
   ListaReferencias() {
     this.ReferenciasFamPer.length = 0;
     this.ReferencasFinCom.length = 0;
@@ -2904,191 +3277,419 @@ export class CarteraTabComponent implements OnInit {
   }
 
   Consultar() {
-    this.SelectionExtOrMov = this.ExtactoCartera.get('MovExtSelectorCartera')?.value;
-    var FechaInicio = $("#fechaInicartera").val();
-    var FechaFin = $("#fechaendcartera").val();
 
-    this.fechaInicioC = FechaInicio;
-    this.fechaFinC = FechaFin;
-    var fecha = new Date();
-    this.today = fecha;
+  this.SelectionExtOrMov =
+    this.ExtactoCartera.get('MovExtSelectorCartera')?.value;
 
-    if (FechaInicio == "") {
-      this.InicioVacida = true;
-      this.Extractos.length = 0;
-      this.Movimientos.length = 0;
-    } else if (FechaFin == "") {
-      this.FinVacida = true;
-      this.Extractos.length = 0;
-      this.Movimientos.length = 0;
-    }else if (FechaInicio != null && FechaFin != null && FechaInicio > FechaFin) {
-      this.FechaMayorAmenor = true;
-      this.InicioVacida = false;
-      this.FinVacida = false;
-      this.Extractos.length = 0;
-      this.Movimientos.length = 0;
-    } else if ((this.SelectionExtOrMov == "-") || (this.SelectionExtOrMov == undefined)) {
-      this.SelectErroneo = true;
-      this.FechaMayorAmenor = false;
-    } else if (FechaInicio != null && FechaInicio < this.fechaAperturaCuenta) {
-      this.inicioNoValida = true;
-      this.SelectErroneo = false;
-      this.FechaMayorAmenor = false;
-    } else if (FechaFin != null && FechaFin > this.fechaAperturaActualDisabled) {
-      this.finNoValida = true;
-      this.inicioNoValida = false;
-      this.SelectErroneo = false;
-      this.FechaMayorAmenor = false;
-    }
-    else {
-      this.FechaMayorAmenor = false;
-      this.SelectErroneo = false;
-      this.inicioNoValida = false;
-      this.finNoValida = false;
+  const FechaInicio = $("#fechaInicartera").val();
+  const FechaFin = $("#fechaendcartera").val();
 
-      if (this.SelectionExtOrMov == 2 && FechaInicio != null && FechaFin != null) {
-        this.ExtactoCartera.get('FechaIniciocartera')?.setValue(FechaInicio);
-        this.ExtactoCartera.get('FechaFincartera')?.setValue(FechaFin);
-        this.loading.show();
-        let data = localStorage.getItem("Data");
-        var dataLocalStorage = JSON.parse(window.atob(data != null ? data : ""));
-       
-        var yearInicial = Number($(".yearInit_Cartera").val());
-        var yearFinal = Number($(".yearEnd_Cartera").val());
-        var MesInicial = Number($(".MesInit_Cartera").val());
-        var MesFinal = Number($(".MesEnd_Cartera").val());
-        var FechaInici = yearInicial + "-" + MesInicial + "-1";
-        this.MiListaProductosService.getExtractosCartera(this.lngCuenta, FechaInici, yearFinal,MesFinal,dataLocalStorage.Oficina).subscribe(
-          result => {
-            this.loading.hide();
-            //71723010
-            this.MapeaEncabezadoExtracto(result);
-            if (result.Detalles !== null) {
-              this.MiListaProductosService.GenerarPdfCartera(this.lngCuenta, FechaInici, yearFinal,MesFinal,dataLocalStorage.Oficina).subscribe(
-                result => {
-                  const pdfinBase64 = result.FileStream._buffer;
-                  const byteArray = new Uint8Array(atob(pdfinBase64).split('').map(char => char.charCodeAt(0)));
-                  const newBolb = new Blob([byteArray], { type: 'application/pdf' });
-                  this.linkPdf = URL.createObjectURL(newBolb);
-                  const url = window.URL.createObjectURL(newBolb);
-                  //document.querySelector("object").data = url;
-                  //document.querySelector("object").type = 'application/pdf';
-                  document.getElementById('objepdfExtCartera')?.setAttribute("data", url);
-                  document.getElementById('objepdfExtCartera')?.setAttribute("type", "application/pdf");
-                  $("#objepdfExtCartera").show();
-                  $("#objepdfmovimientoCartera").hide();
+  this.fechaInicioC = FechaInicio;
+  this.fechaFinC = FechaFin;
+
+  this.today = new Date();
+
+  if (FechaInicio == "") {
+
+    this.InicioVacida = true;
+    this.Extractos.length = 0;
+    this.Movimientos.length = 0;
+    return;
+  }
+
+  if (FechaFin == "") {
+
+    this.FinVacida = true;
+    this.Extractos.length = 0;
+    this.Movimientos.length = 0;
+    return;
+  }
+
+  if (
+    FechaInicio != null &&
+    FechaFin != null &&
+    FechaInicio > FechaFin
+  ) {
+
+    this.FechaMayorAmenor = true;
+    this.InicioVacida = false;
+    this.FinVacida = false;
+
+    this.Extractos.length = 0;
+    this.Movimientos.length = 0;
+
+    return;
+  }
+
+  if (
+    this.SelectionExtOrMov == "-" ||
+    this.SelectionExtOrMov == undefined
+  ) {
+
+    this.SelectErroneo = true;
+    this.FechaMayorAmenor = false;
+
+    return;
+  }
+
+  if (
+    FechaInicio != null &&
+    FechaInicio < this.fechaAperturaCuenta
+  ) {
+
+    this.inicioNoValida = true;
+    this.SelectErroneo = false;
+    this.FechaMayorAmenor = false;
+
+    return;
+  }
+
+  if (
+    FechaFin != null &&
+    FechaFin > this.fechaAperturaActualDisabled
+  ) {
+
+    this.finNoValida = true;
+    this.inicioNoValida = false;
+    this.SelectErroneo = false;
+    this.FechaMayorAmenor = false;
+
+    return;
+  }
+
+  this.FechaMayorAmenor = false;
+  this.SelectErroneo = false;
+  this.inicioNoValida = false;
+  this.finNoValida = false;
+
+  const data = localStorage.getItem("Data");
+
+  const dataLocalStorage = JSON.parse(
+    window.atob(data != null ? data : "")
+  );
+
+  //#region EXTRACTOS
+
+  if (
+    this.SelectionExtOrMov == 2 &&
+    FechaInicio != null &&
+    FechaFin != null
+  ) {
+
+    this.ExtactoCartera.get('FechaIniciocartera')
+      ?.setValue(FechaInicio);
+
+    this.ExtactoCartera.get('FechaFincartera')
+      ?.setValue(FechaFin);
+
+    const yearInicial =
+      Number($(".yearInit_Cartera").val());
+
+    const yearFinal =
+      Number($(".yearEnd_Cartera").val());
+
+    const MesInicial =
+      Number($(".MesInit_Cartera").val());
+
+    const MesFinal =
+      Number($(".MesEnd_Cartera").val());
+
+    const FechaInici =
+      yearInicial + "-" + MesInicial + "-1";
+
+    this.loading.show();
+
+    this.MiListaProductosService
+      .getExtractosCartera(
+        this.lngCuenta,
+        FechaInici,
+        yearFinal,
+        MesFinal,
+        dataLocalStorage.Oficina
+      )
+      .subscribe(
+        result => {
+
+          this.loading.hide();
+
+          this.MapeaEncabezadoExtracto(result);
+
+          if (result.Detalles !== null) {
+
+            this.MiListaProductosService
+              .GenerarPdfCartera(
+                this.lngCuenta,
+                FechaInici,
+                yearFinal,
+                MesFinal,
+                dataLocalStorage.Oficina
+              )
+              .subscribe(
+                resultPdf => {
+
+                  try {
+
+                    const pdfinBase64 =
+                      resultPdf?.FileStream?._buffer;
+
+                    if (!pdfinBase64) {
+                      throw new Error("PDF vacío");
+                    }
+
+                    const byteArray =
+                      new Uint8Array(
+                        atob(pdfinBase64)
+                          .split('')
+                          .map(char =>
+                            char.charCodeAt(0)
+                          )
+                      );
+
+                    const newBlob = new Blob(
+                      [byteArray],
+                      {
+                        type: 'application/pdf'
+                      }
+                    );
+
+                    this.linkPdf =
+                      URL.createObjectURL(newBlob);
+
+                    const url =
+                      URL.createObjectURL(newBlob);
+
+                    document
+                      .getElementById('objepdfExtCartera')
+                      ?.setAttribute("data", url);
+
+                    document
+                      .getElementById('objepdfExtCartera')
+                      ?.setAttribute(
+                        "type",
+                        "application/pdf"
+                      );
+
+                    $("#objepdfExtCartera").show();
+                    $("#objepdfmovimientoCartera").hide();
+
+                  } catch (e) {
+
+                    console.error(e);
+                  }
                 },
                 error => {
-                  this.loading.hide();
+
                   console.log(error);
                 }
-              )
-            } else {
-              this.DetallesExtractoCartera.length = 0;
-              this.DetallesMovimientosCartera.length = 0;
-            }
+              );
 
-          //#region Guarda log
-          let data = localStorage.getItem("Data");
-          var dataLocalStorage = JSON.parse(window.atob(data != null ? data : ""));
-          var LogMisProductosData = new LogMisProductos();
-            var nuevoItem = new DatosProductos();
+          } else {
 
-          LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
-          LogMisProductosData.IdModulo = 69;
-          LogMisProductosData.IdOperacion = 50;
-          LogMisProductosData.IdOpcion = 3; // Extrato
-          LogMisProductosData.IdTercero = this.lngTercero;
-          LogMisProductosData.IdUsuarioERP = dataLocalStorage.IdUsuario;
-          LogMisProductosData.IdCuenta = this.lngCuenta;
-          nuevoItem.NumeroCuenta = result.Encabezado.Cuenta;
-          nuevoItem.CuentaHija = this.validaHijaTD;
-          nuevoItem.FechaInicial = FechaInicio == null ? "" :FechaInicio.toString();
-          nuevoItem.FechaFinal = FechaFin == null ? "" : FechaFin.toString();
-          LogMisProductosData.DatosProductos = nuevoItem;
-          this.setLogMisProductos(LogMisProductosData);
-          // #endregion
-
-          },
-          error => {
-            this.loading.hide();
-            console.log(error);
+            this.DetallesExtractoCartera.length = 0;
+            this.DetallesMovimientosCartera.length = 0;
           }
-        )
-      } else if (this.SelectionExtOrMov == 1 && FechaInicio != null && FechaFin != null) {
-        this.ExtactoCartera.get('FechaIniciocartera')?.setValue(FechaInicio);
-        this.ExtactoCartera.get('FechaFincartera')?.setValue(FechaFin);
-        this.loading.show();
-        this.MiListaProductosService.getMovimientosCartera(this.lngCuenta, FechaInicio, FechaFin).subscribe(
-          result => {
-            this.loading.show();
-            this.MapeaEncabezadoExtractoMovimientos(result)
 
-            if (result.Detalles !== null) {
-              this.MiListaProductosService.GenerarPdfMovimientoCartera(this.lngCuenta, FechaInicio, FechaFin).subscribe(
-                result => {
+          //#region LOG
+
+          const log = new LogMisProductos();
+          const nuevoItem = new DatosProductos();
+
+          log.IdOficina = parseInt(
+            dataLocalStorage.NumeroOficina
+          );
+
+          log.IdModulo = 69;
+          log.IdOperacion = 50;
+          log.IdOpcion = 3;
+          log.IdTercero = this.lngTercero;
+          log.IdUsuarioERP = dataLocalStorage.IdUsuario;
+          log.IdCuenta = this.lngCuenta;
+
+          nuevoItem.NumeroCuenta =
+            result.Encabezado.Cuenta;
+
+          nuevoItem.CuentaHija =
+            this.validaHijaTD;
+
+          nuevoItem.FechaInicial =
+            FechaInicio?.toString() || "";
+
+          nuevoItem.FechaFinal =
+            FechaFin?.toString() || "";
+
+          log.DatosProductos = nuevoItem;
+
+          this.setLogMisProductos(log);
+
+          //#endregion
+        },
+        error => {
+
+          this.loading.hide();
+
+          console.log(error);
+
+          $("#objepdfExtCartera").hide();
+          $("#objepdfmovimientoCartera").hide();
+        }
+      );
+  }
+
+  //#region MOVIMIENTOS
+
+  else if (
+    this.SelectionExtOrMov == 1 &&
+    FechaInicio != null &&
+    FechaFin != null
+  ) {
+
+    this.ExtactoCartera.get('FechaIniciocartera')
+      ?.setValue(FechaInicio);
+
+    this.ExtactoCartera.get('FechaFincartera')
+      ?.setValue(FechaFin);
+
+    this.loading.show();
+
+    this.MiListaProductosService
+      .getMovimientosCartera(
+        this.lngCuenta,
+        FechaInicio,
+        FechaFin
+      )
+      .subscribe(
+        result => {
+
+          // ELIMINADO loading.show()
+
+          this.MapeaEncabezadoExtractoMovimientos(result);
+
+          if (result.Detalles !== null) {
+
+            this.MiListaProductosService
+              .GenerarPdfMovimientoCartera(
+                this.lngCuenta,
+                FechaInicio,
+                FechaFin
+              )
+              .subscribe(
+                resultPdf => {
+
                   this.loading.hide();
-                  const pdfinBase64 = result.FileStream._buffer;
-                  const byteArray = new Uint8Array(atob(pdfinBase64).split('').map(char => char.charCodeAt(0)));
-                  const newBolb = new Blob([byteArray], { type: 'application/pdf' });
-                  this.linkPdf = URL.createObjectURL(newBolb);
-                  const url = window.URL.createObjectURL(newBolb);
-                  //document.querySelector("object").data = url;
-                  //document.querySelector("object").type = 'application/pdf';
-                  document.getElementById('objepdfmovimientoCartera')?.setAttribute("data", url);
-                  document.getElementById('objepdfmovimientoCartera')?.setAttribute("type", "application/pdf");
+
+                  const pdfinBase64 =
+                    resultPdf.FileStream._buffer;
+
+                  const byteArray =
+                    new Uint8Array(
+                      atob(pdfinBase64)
+                        .split('')
+                        .map(char =>
+                          char.charCodeAt(0)
+                        )
+                    );
+
+                  const newBlob = new Blob(
+                    [byteArray],
+                    {
+                      type: 'application/pdf'
+                    }
+                  );
+
+                  this.linkPdf =
+                    URL.createObjectURL(newBlob);
+
+                  const url =
+                    URL.createObjectURL(newBlob);
+
+                  document
+                    .getElementById('objepdfmovimientoCartera')
+                    ?.setAttribute("data", url);
+
+                  document
+                    .getElementById('objepdfmovimientoCartera')
+                    ?.setAttribute(
+                      "type",
+                      "application/pdf"
+                    );
+
                   $("#objepdfExtCartera").hide();
                   $("#objepdfmovimientoCartera").show();
+
                 },
                 error => {
+
                   this.loading.hide();
+
                   console.log(error);
+
                   $("#objepdfExtCartera").hide();
                   $("#objepdfmovimientoCartera").hide();
                 }
-              )
+              );
 
-            } else {
-              this.loading.hide();
-              this.DetallesMovimientosCartera.length = 0;
-              this.HabilitaMensate = 1
-              $("#objepdfExtCartera").hide();
-              $("#objepdfmovimientoCartera").hide();
-            }
+          } else {
 
-            //#region Guarda log
-            let data = localStorage.getItem("Data");
-            var dataLocalStorage = JSON.parse(window.atob(data != null ? data : ""));
-            var LogMisProductosData = new LogMisProductos();
-            var nuevoItem = new DatosProductos();
-            LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
-            LogMisProductosData.IdModulo = 69;
-            LogMisProductosData.IdOperacion = 50;
-            LogMisProductosData.IdOpcion = 2; // Movimiento
-            LogMisProductosData.IdTercero = this.lngTercero;
-            LogMisProductosData.IdUsuarioERP = dataLocalStorage.IdUsuario;
-            LogMisProductosData.IdCuenta = this.lngCuenta;
-            nuevoItem.NumeroCuenta = result.Encabezado.Cuenta;
-            nuevoItem.CuentaHija = this.validaHijaTD;
-            nuevoItem.FechaInicial = FechaInicio == null ? "" :FechaInicio.toString();
-            nuevoItem.FechaFinal = FechaFin == null ? "" : FechaFin.toString();
-            LogMisProductosData.DatosProductos = nuevoItem;
-            this.setLogMisProductos(LogMisProductosData);
-            // #endregion
-
-          },
-          error => {
             this.loading.hide();
-            console.log(error);
+
+            this.DetallesMovimientosCartera.length = 0;
+
+            this.HabilitaMensate = 1;
+
             $("#objepdfExtCartera").hide();
             $("#objepdfmovimientoCartera").hide();
           }
-        )
 
-      }
-    }
+          //#region LOG
 
+          const log = new LogMisProductos();
+          const nuevoItem = new DatosProductos();
+
+          log.IdOficina = parseInt(
+            dataLocalStorage.NumeroOficina
+          );
+
+          log.IdModulo = 69;
+          log.IdOperacion = 50;
+          log.IdOpcion = 2;
+          log.IdTercero = this.lngTercero;
+          log.IdUsuarioERP = dataLocalStorage.IdUsuario;
+          log.IdCuenta = this.lngCuenta;
+
+          nuevoItem.NumeroCuenta =
+            result.Encabezado.Cuenta;
+
+          nuevoItem.CuentaHija =
+            this.validaHijaTD;
+
+          nuevoItem.FechaInicial =
+            FechaInicio?.toString() || "";
+
+          nuevoItem.FechaFinal =
+            FechaFin?.toString() || "";
+
+          log.DatosProductos = nuevoItem;
+
+          this.setLogMisProductos(log);
+
+          //#endregion
+        },
+        error => {
+
+          this.loading.hide();
+
+          console.log(error);
+
+          $("#objepdfExtCartera").hide();
+          $("#objepdfmovimientoCartera").hide();
+        }
+      );
   }
+}
+
+
+
+  
   Limpiar() {
     this.ExtactoCartera.get('MovExtSelectorCartera')?.setValue('-');
     this.ExtactoCartera.get('MovExtYearCartera')?.setValue('-');

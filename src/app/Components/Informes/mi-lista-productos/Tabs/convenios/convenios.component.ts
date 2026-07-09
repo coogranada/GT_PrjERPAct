@@ -1539,32 +1539,56 @@ export class ConveniosComponent implements OnInit {
 
   }
 
-  SendMailSegurosEx() {
-    if (this.validaMail == true) {
-      this.loading.show();
-      this.MiListaProductosService.sendMailProductos(this.ExtractoSeguroForm.value).subscribe(
+  SendMailSegurosEx(): void {
+  if (this.validaMail === true) {
+    this.loading.show();
+    this.MiListaProductosService
+      .sendMailProductos(this.ExtractoSeguroForm.value)
+      .subscribe(
         result => {
-          this.loading.hide();
-          this.Response(result);
+          try {
+            this.Response(result);
+            const tercero = Number(
+              $("#TerceroPrincipal").val()
+            );
+            const datas = localStorage.getItem("Data");
 
-          var Tercero = Number($("#TerceroPrincipal").val());
-          //#region Guarda log
-          let datas = localStorage.getItem("Data");
-          var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
-          var LogMisProductosData = new LogMisProductos();
-          var nuevoItem = new DatosProductos();
-          LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
-          LogMisProductosData.IdModulo = 69;
-          LogMisProductosData.IdOperacion = 80;
-          LogMisProductosData.IdOpcion = 12; // Envio correo 
-          LogMisProductosData.IdTercero = Tercero;
-          LogMisProductosData.IdCuenta = this.idCuenta;
-          LogMisProductosData.IdUsuarioERP = dataLocalStorage.IdUsuario;
-          nuevoItem.FechaInicial = "";
-          nuevoItem.FechaFinal = "";
-          LogMisProductosData.DatosProductos = nuevoItem;
-          this.setLogMisProductos(LogMisProductosData);
-          // #endregion
+            const dataLocalStorage = JSON.parse(
+              window.atob(datas == null ? "" : datas)
+            );
+            //#region Guarda log
+            const logMisProductosData =
+              new LogMisProductos();
+
+            const nuevoItem =
+              new DatosProductos();
+
+            logMisProductosData.IdOficina =
+              parseInt(dataLocalStorage.NumeroOficina);
+
+            logMisProductosData.IdModulo = 69;
+            logMisProductosData.IdOperacion = 80;
+            logMisProductosData.IdOpcion = 12;
+            logMisProductosData.IdTercero = tercero;
+            logMisProductosData.IdCuenta = this.idCuenta;
+            logMisProductosData.IdUsuarioERP =
+            dataLocalStorage.IdUsuario;
+
+            nuevoItem.FechaInicial = "";
+            nuevoItem.FechaFinal = "";
+
+            logMisProductosData.DatosProductos =
+              nuevoItem;
+
+            this.setLogMisProductos(
+              logMisProductosData
+            );
+
+            //#endregion
+
+          } finally {
+            this.loading.hide();
+          }
         },
         error => {
           this.loading.hide();
@@ -1580,23 +1604,23 @@ export class ConveniosComponent implements OnInit {
             allowEscapeKey: false,
           });
         }
-      )
-    } else {
-      this.loading.hide();
-      swal.fire({
-        title: "Info",
-        text: "",
-        html: "Por favor comunicarse con el administrador para gestionar la plantilla del email.",
-        icon: "info",
-        showCancelButton: false,
-        confirmButtonColor: "rgb(13,165,80)",
-        cancelButtonColor: "rgb(160,0,87)",
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-      });
-    }
+      );
 
+  } else {
+    swal.fire({
+      title: "Info",
+      text: "",
+      html: "Por favor comunicarse con el administrador para gestionar la plantilla del email.",
+      icon: "info",
+      showCancelButton: false,
+      confirmButtonColor: "rgb(13,165,80)",
+      cancelButtonColor: "rgb(160,0,87)",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+    });
   }
+}
+
 
   Response(value : any) {
 

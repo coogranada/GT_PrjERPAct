@@ -125,7 +125,7 @@
             <div class="col-sm-3" [hidden]="context.operacion !== '140'">
                 <div class="form-group">
                     <label class="bold">Acta:</label>
-                    <input type="text" appSoloNumero class="form-control input__border" formControlName="acta" maxlength="20">
+                    <input type="text" appSoloNumero class="form-control input__border" formControlName="acta" maxlength="9">
                 </div>
             </div>
 
@@ -143,5 +143,8 @@
             <button class="btn Gt-btn-verde" (click)="onActualizar()" [disabled]="btnActualizarBloqueado">Actualizar</button>   
         </div>
     </form>
+    <div class="loader-overlay" *ngIf="isLoading">
+        <div class="spinner"></div>
+    </div>
 </div>
 

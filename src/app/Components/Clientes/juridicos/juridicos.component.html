@@ -142,8 +142,18 @@
                             </div>
 
                             <div id="accionistas" class="tab-pane fade">
-                                <app-accionistas *ngIf="condicion" #accionistasComponent (emitEvent)="SiguienteTab($event)" [infoTabAllAccionista]="infoTabAll" [mostrarActualizar]="mostrarBotonesActualizar" [mostrarAgregar]="mostrarBotonesAgregar" [mostrarSiguiente]="mostrarBotonesSiguiente"
-                                    [mostrarLimpiar]="mostrarBotonesLimpiar" [activarBtnOpciones]="ActivarBtnOpciones"></app-accionistas>
+                                <app-accionistas 
+                                *ngIf="condicion" 
+                                #accionistasComponent 
+                                (emitEvent)="SiguienteTab($event)"
+                                [juridico]="data?.JuridicoDto"   
+                                [infoTabAllAccionista]="infoTabAll" 
+                                [mostrarActualizar]="mostrarBotonesActualizar" 
+                                [mostrarAgregar]="mostrarBotonesAgregar"
+                                [mostrarSiguiente]="mostrarBotonesSiguiente"
+                                [mostrarLimpiar]="mostrarBotonesLimpiar" 
+                                [activarBtnOpciones]="ActivarBtnOpciones">
+                                </app-accionistas>
                             </div>
 
                             <div id="referencias" class="tab-pane fade">

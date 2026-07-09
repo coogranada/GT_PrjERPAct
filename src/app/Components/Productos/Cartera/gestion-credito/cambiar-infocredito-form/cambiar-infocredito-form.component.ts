@@ -14,7 +14,6 @@ import { PorcentajeDirective } from '../../../../shared/directives/porcentaje.di
 import { diferenciaEnMeses } from '../../../../../utils/helpers';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { ShareComponentModule } from '../../../../../Modules/share-component.module';
-import { LoadingService } from '../../../../../Services/shared/loading.service';
 
 @Component({
   selector: 'app-cambiar-infocredito-form',
@@ -33,6 +32,7 @@ export class CambiarInfoCreditoForm {
   @ViewChild('inputTasaNominal') inputTasaNominal!: ElementRef;
   @ViewChild('plazo') inputPlazo!: ElementRef;
 
+  isLoading = false;
   btnActualizarBloqueadoManual = true;
   yaCalculoPlazoCuotaVariable = false;
   valorOriginalTasa: number | null = null;
@@ -66,6 +66,7 @@ export class CambiarInfoCreditoForm {
   plazoMinimo: number | null = null;
   plazoMaximo: number | null = null;
   ejemplosPlazosValidos: number[] = [];
+  maxPeriodoGracia = 0;
 
   get periodoCapitalMeses() {
     return PERIODOS_MESES[this.cambiarInfoCreditoForm.controls.periodoCapitalSelect.value as keyof typeof PERIODOS_MESES];
@@ -140,7 +141,6 @@ export class CambiarInfoCreditoForm {
   constructor(
     private carteraService: CarteraService,
     private notif: ToastrService, 
-    private loading: LoadingService
   ) { }
 
   ngOnInit() {
@@ -152,6 +152,7 @@ export class CambiarInfoCreditoForm {
       tasaNominal = this.context.datosFormData.TasaLiquidada;
       tasaEfectiva = this.context.datosFormData.EfectivaLiquidada;
     }
+    this.maxPeriodoGracia = (this.context.detalleCredito.Encabezado.DiasGraciaLinea ?? 0) / 30;
 
     this.cambiarInfoCreditoForm = new FormGroup({
       sistema: new FormControl({ value: this.context.datosFormData.Sistema, disabled: true }),
@@ -169,7 +170,7 @@ export class CambiarInfoCreditoForm {
       indicador: new FormControl({ value: this.context.datosFormData.Indicador, disabled: true }),
       siglaIndicador: new FormControl({ value: this.context.datosFormData.SiglaIndicador, disabled: true }),
       puntos: new FormControl({ value: this.context.datosFormData.Puntos, disabled: true }, [Validators.min(0), Validators.max(99)]),
-      periodoGracia: new FormControl({ value: this.context.datosFormData.PeriodoGracia, disabled: true }, [Validators.min(0), Validators.max(99)]),
+      periodoGracia: new FormControl({ value: this.context.datosFormData.PeriodoGracia, disabled: true }, [Validators.min(0), Validators.max(this.maxPeriodoGracia)]),
       reestrucutradoIndicador: new FormControl({ value: 0, disabled: true }),
       acta: new FormControl<number | null>(null)
     });
@@ -180,7 +181,7 @@ export class CambiarInfoCreditoForm {
 
     acta?.valueChanges.subscribe(() => {
       // Evitar que marque dirty el form para que el boton calcular no se habilite
-      acta?.markAsPristine();
+      if(this.datosCalculados) acta.markAsPristine();
     });
 
     plazo.valueChanges.subscribe(valor => {
@@ -191,8 +192,7 @@ export class CambiarInfoCreditoForm {
       }
     });
 
-    const sistemaControl = this.cambiarInfoCreditoForm.controls.sistemaSelect;
-    sistemaControl.valueChanges.subscribe(idSistema => {
+    sistemaSelect.valueChanges.subscribe(idSistema => {
       this.aplicarReglasSistema(idSistema);
       if (this.context.operacion === Operacion.ReestructurarCambioPlazo) {
         const perGraciaControl = this.cambiarInfoCreditoForm.controls.periodoGracia;
@@ -345,10 +345,10 @@ export class CambiarInfoCreditoForm {
 
       case Operacion.CambiarPlazo:
         this.idNovedad = Novedad.CambiarPlazo;
-        this.loading.show()
+        this.isLoading = true;
         this.carteraService.getNuevoPlazo(this.context.detalleCredito.Encabezado.IdCuenta).subscribe({
           next: (result) => {
-            this.loading.hide()
+            this.isLoading = false;
             if (!result) return;
             this.plazos = result;
             if (this.usaSelectPlazo) {
@@ -370,16 +370,16 @@ export class CambiarInfoCreditoForm {
           },
           error: (error: HttpErrorResponse) => {
             console.log(error)
-            this.loading.hide()
+            this.isLoading = false;
           }
         })
 
         break;
       case Operacion.CambiarSistema:
         this.idNovedad = Novedad.CambiarSistema;
-        this.loading.show()
+        this.isLoading = true;
 
-        this.loading.hide()
+        this.isLoading = false;
         const hoy = new Date();
         const plazoFaltanteMeses = diferenciaEnMeses(hoy, this.context.detalleCredito.fechaVencimiento);
         this.aplicarMaximoPeriodoCapital(plazoFaltanteMeses);
@@ -391,10 +391,10 @@ export class CambiarInfoCreditoForm {
         const idCuenta = this.context.detalleCredito.Encabezado.IdCuenta;
         this.periodosPagoCapital = this.periodosPago;
 
-        this.loading.show()
+        this.isLoading = true;
         this.carteraService.getReestructuracionReliquidacion(idCuenta).subscribe({
           next: result => {
-            this.loading.hide()
+            this.isLoading = false;
 
             if (result?.Reestructuracion && result.Reestructuracion.length) {
               result.Reestructuracion.sort((a, b) => b.Contador - a.Contador);
@@ -407,7 +407,7 @@ export class CambiarInfoCreditoForm {
             const plazoControl = this.cambiarInfoCreditoForm.controls.plazo;
             plazoControl.enable();
             this.inputPlazo.nativeElement.select();
-            if (!this.esCuotaVariable()) this.cambiarInfoCreditoForm.controls.periodoGracia.enable();
+            if (!this.esCuotaVariable() && this.maxPeriodoGracia > 0) this.cambiarInfoCreditoForm.controls.periodoGracia.enable();
 
             this.cambiarInfoCreditoForm.markAsDirty();
           },
@@ -416,16 +416,6 @@ export class CambiarInfoCreditoForm {
         break;
 
     }
-  }
-
-  private convertirDiasAPeriodos(dias: number, idPeriodoInteres: number) {
-    return dias / (PERIODOS_MESES[idPeriodoInteres as keyof typeof PERIODOS_MESES] * 30); 
-  }
-
-
-  private generarMultiplos(desde: number, multiplo: number) { 
-    const multiploInferior = Math.ceil(desde / multiplo) * multiplo;
-    return [multiploInferior, multiploInferior + multiplo * 1, multiploInferior + multiplo * 2];
   }
 
   private validarCambioTasa(): boolean {
@@ -525,17 +515,6 @@ export class CambiarInfoCreditoForm {
       }
     }
 
-    // if (
-    //   idSisOriginal == idSistema 
-    //   && idPerCapOriginal == idPerCap 
-    //   && idPerIntOriginal == idPerInt 
-    //   && perGraciaOriginal == periodoGracia
-    //   && plazoOriginal == plazo
-    // ) {
-    //   this.notif.warning('Advertencia', 'Debe cambiar datos.', ConfiguracionNotificacion.configRightTop);
-    //   return false;
-    // }
-
     return true;
   }
 
@@ -548,14 +527,14 @@ export class CambiarInfoCreditoForm {
     this.dtoParaCalcular = { idCuenta, idNovedad, ...valor };
 
     try {
-      this.loading.show();
+      this.isLoading = true;
       const result = await firstValueFrom(this.carteraService.calcularCambioDatos(this.dtoParaCalcular));
-      this.loading.hide();
+      this.isLoading = false;
       this.datosCalculados = result;
       return result;
     } catch (error: any) {
       console.log(error);
-      this.loading.hide();
+      this.isLoading = false;
       const mensajeError = ERROR_MESSAGES[error.ErrorCode as keyof typeof ERROR_MESSAGES]
       if (error?.ErrorCode && mensajeError) {
         this.notif.warning('Advertencia', mensajeError, ConfiguracionNotificacion.configRightTop);
@@ -574,14 +553,14 @@ export class CambiarInfoCreditoForm {
     this.dtoParaCalcular = { idCuenta, idNovedad, ...valor };
     
     try {
-      this.loading.show();
+      this.isLoading = true;
       const result = await firstValueFrom(this.carteraService.calcularCambioReestructuracion(this.dtoParaCalcular));
-      this.loading.hide();
+      this.isLoading = false;
       this.datosCalculados = result;
       return result;
     } catch (error: any) {
       console.log(error);
-      this.loading.hide();
+      this.isLoading = false;
       const mensajeError = ERROR_MESSAGES[error.ErrorCode as keyof typeof ERROR_MESSAGES]
       if (error?.ErrorCode && mensajeError) {
         this.notif.warning('Advertencia', mensajeError, ConfiguracionNotificacion.configRightTop);
@@ -728,16 +707,16 @@ export class CambiarInfoCreditoForm {
 
       this.dtoParaCalcular = { ...this.dtoParaCalcular, plazo };
 
-      this.loading.show();
+      this.isLoading = true;
       this.carteraService.actualizarCreditoReest({ ...this.dtoParaCalcular, acta }).subscribe({
         next: () => {
           this.finalizar.emit({ idNovedad: this.idNovedad!, idOperacion: this.context.operacion });
-          this.loading.hide();
+          this.isLoading = false;
           this.close.emit();
         },
         error: (error: HttpErrorResponse) => {
-          console.log(error)
-          this.loading.hide();
+          console.log(error);
+          this.isLoading = false;
         }
       });
 
@@ -758,16 +737,16 @@ export class CambiarInfoCreditoForm {
         break;
     }
 
-    this.loading.show();
+    this.isLoading = true;
     this.carteraService.actualizarCredito(this.dtoParaCalcular).subscribe({
       next: () => {
         this.finalizar.emit({ idNovedad: this.idNovedad!, idOperacion: this.context.operacion });
-        this.loading.hide();
+        this.isLoading = false;
         this.close.emit();
       },
       error: (error: HttpErrorResponse) => {
         console.log(error)
-        this.loading.hide();
+        this.isLoading = false;
       }
     })
   }

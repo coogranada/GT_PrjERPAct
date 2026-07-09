@@ -1091,148 +1091,240 @@ export class AsesoriaTerminoComponent implements OnInit {
       this.ColorAnterior2 = fil;
     }
   }
-  GuardarAsesoria() {
-    const requiredFieldNames = ['NumeroDocumento', 'Nombre', 'IdProducto', 'DescripcionProducto', 'Plazo', 'ValorTotal', 'IdFrecuenciaPago', 'TasaNominal', 'TasaEfectiva'];
-    const isSomeRequiredFieldMissing = requiredFieldNames.some(fieldName => !this.asesoriaterminoForm.get(fieldName)?.value || !(this.asesoriaterminoForm.get(fieldName)?.value + '').trim());
-    if (isSomeRequiredFieldMissing) {
-      this.notif.warning('Advertencia', 'Datos incompletos para guardar asesoria.', ConfiguracionNotificacion.configRightTop);
-      return;
-    }
+  GuardarAsesoria(): void {
+  const form = this.asesoriaterminoForm;
 
-    if (this.asesoriaterminoForm.get('Plazo')?.value !== undefined && this.asesoriaterminoForm.get('Plazo')?.value !== null &&
-      this.ArrayCondiciones && JSON.parse(this.asesoriaterminoForm.get('Plazo')?.value) >= this.ArrayCondiciones.PlazoMinimo &&
-      JSON.parse(this.asesoriaterminoForm.get('Plazo')?.value) <= this.ArrayCondiciones.PlazoMaximo &&
-      (Number(this.asesoriaterminoForm.get('Plazo')?.value) % 30) == 0) {
-      if (this.asesoriaterminoForm.get('strCodigo')?.value == null || this.asesoriaterminoForm.get('strCodigo')?.value == undefined || this.asesoriaterminoForm.get('strCodigo')?.value == '') {
-        swal.fire({
-          title: '¿Desea agregar un asesor externo?',
-          text: '',
-          icon: 'question',
-          showCancelButton: true,
-          confirmButtonText: 'Si',
-          cancelButtonText: 'No',
-          confirmButtonColor: 'rgb(13,165,80)',
-          cancelButtonColor: 'rgb(160,0,87)',
-          allowOutsideClick: false,
-          allowEscapeKey: false
-        }).then((results) => {
-          if (results.value) {
-            setTimeout(() => {
-              this.generalesService.Autofocus('SelectAsesorExterno');
-            }, 500);
-            this.VolverArriba();
-            return;
-          } else
-            this.GuardarAsesoria2();
-        });
-      } else
-        this.GuardarAsesoria2();
-    }
+  const requiredFields = [
+    'NumeroDocumento',
+    'Nombre',
+    'IdProducto',
+    'DescripcionProducto',
+    'Plazo',
+    'ValorTotal',
+    'IdFrecuenciaPago',
+    'TasaNominal',
+    'TasaEfectiva'
+  ];
+
+  const hasMissingFields = requiredFields.some(field => {
+    const value = form.get(field)?.value;
+    return !value || !String(value).trim();
+  });
+
+  if (hasMissingFields) {
+    this.notif.warning(
+      'Advertencia',
+      'Datos incompletos para guardar asesoria.',
+      ConfiguracionNotificacion.configRightTop
+    );
+    return;
   }
-  GuardarAsesoria2() {
-    var TasaAdicionalSin = this.asesoriaterminoForm.get('TasaAdicional')?.value;
-    TasaAdicionalSin = TasaAdicionalSin.replace("%", "");
-    if (TasaAdicionalSin !== this.datoTasaAdicional)
-      this.asesoriaterminoForm.get('TasaAdicional')?.setValue(this.datoTasaAdicional);
 
-    const puntosAdicionales: number = (this.AdicionarPuntosFrom.get('AdicionarPunto')?.value == null || this.AdicionarPuntosFrom.get('AdicionarPunto')?.value === '--Seleccione--') ? 56 : this.AdicionarPuntosFrom.get('AdicionarPunto')?.value;
-    this.asesoriaterminoForm.get('FechaCreacion')?.setValue(formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en'));
-    console.log('format date', formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en'))
-    let p: number = 0;
-    let puntos: any[] = this.resultPuntosAdicionales.filter((x : any) => x.IdPuntosAdicionales == Number(puntosAdicionales));
-    if (puntos.length > 0) {
-      p = puntos[0].PuntosAdicionales;
-      p *= 10;
-    }
-    let data = localStorage.getItem("Data");
-    var dataLocalStorage = JSON.parse(window.atob(data == null ? "" : data));
-    let payload: any = {
-      IdUsuarioERP: dataLocalStorage.IdUsuario,
-      NumeroAsesoria: 0,
-      NumeroOficina: this.asesoriaterminoForm.get('NumeroOficina')?.value,
-      IdProducto: this.asesoriaterminoForm.get('IdProducto')?.value,
-      IdAsesor: this.asesoriaterminoForm.get('IdAsesor')?.value,
-      TasaNominal: Number(this.datoTasaNominal),
-      NumeroDocumento: this.asesoriaterminoForm.get('NumeroDocumento')?.value,
-      Plazo: this.asesoriaterminoForm.get('Plazo')?.value,
-      IdFrecuenciaPago: this.asesoriaterminoForm.get('IdFrecuenciaPago')?.value,
-      Tasa : 0,
-      IdIndicador:0,
-      Puntos: 0,
-      ValorTitulo: this.asesoriaterminoForm.get('ValorTotal')?.value,
-      Retencion: this.asesoriaterminoForm.get('TotalRetencion')?.value,
-      Intereses: this.asesoriaterminoForm.get('TotalInteresBruto')?.value,
-      Herencia: 0,
-      TasaAdicional: this.asesoriaterminoForm.get('TasaAdicional')?.value,
-      PuntosAdicionales: p,
-      Aportes: this.asesoriaterminoForm.get('TotalAportes')?.value,
-      IdRelacion: this.asesoriaterminoForm.get('Clase')?.value,
-      IdAsesorExterno : this.asesoriaterminoForm.get('strCodigo')?.value,
-    }
-    const newTerceroData = this.creacionFrom.value;
-    if(newTerceroData.SegundoNombre === null) newTerceroData.SegundoNombre = '';
-    if(newTerceroData.PrimerApellido === null) newTerceroData.PrimerApellido = '';
-    if(newTerceroData.SegundoApellido === null) newTerceroData.SegundoApellido = '';
-    Object.keys(newTerceroData).forEach(key => {
-      newTerceroData[key] = this.capitalize(newTerceroData[key]);
+  const plazo = Number(form.get('Plazo')?.value);
+
+  const isPlazoValido =
+    plazo &&
+    this.ArrayCondiciones &&
+    plazo >= this.ArrayCondiciones.PlazoMinimo &&
+    plazo <= this.ArrayCondiciones.PlazoMaximo &&
+    plazo % 30 === 0;
+
+  if (!isPlazoValido) return;
+
+  const asesorExterno = form.get('strCodigo')?.value;
+
+  if (!asesorExterno) {
+    swal.fire({
+      title: '¿Desea agregar un asesor externo?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Si',
+      cancelButtonText: 'No',
+      confirmButtonColor: 'rgb(13,165,80)',
+      cancelButtonColor: 'rgb(160,0,87)',
+      allowOutsideClick: false,
+      allowEscapeKey: false
+    }).then(result => {
+      if (result.value) {
+        setTimeout(() => {
+          this.generalesService.Autofocus('SelectAsesorExterno');
+        }, 500);
+
+        this.VolverArriba();
+      } else {
+        this.GuardarAsesoria2();
+      }
     });
-    if (newTerceroData.TipoDocumento) payload = { ...payload, ...newTerceroData };
-    console.log("payload", payload)
-    this.BloquearPuntosA = false;
-    this.BloquearNegociacion = false;
-    this.BloquearProducto = false;
-    this.showBtnCalcularIntereses = false;
-    this.BloquearAsesorExterno = false;
-    this.BloquearNombre = false;
-    this.btnGuardar = true;
-    this.AsesoriaTerminoServices.GuardarAsesoria(payload).subscribe(async x => {
-      console.log(x);
+
+    return;
+  }
+
+  this.GuardarAsesoria2();
+}GuardarAsesoria2(): void {
+  const form = this.asesoriaterminoForm;
+
+  // ✅ Normalizar tasa adicional
+  const tasaForm = (form.get('TasaAdicional')?.value || '').replace('%', '');
+
+  if (tasaForm !== this.datoTasaAdicional) {
+    form.get('TasaAdicional')?.setValue(this.datoTasaAdicional);
+  }
+
+  // ✅ Puntos adicionales
+  const puntoSeleccionado =
+    this.AdicionarPuntosFrom.get('AdicionarPunto')?.value;
+
+  const puntosAdicionalesId =
+    !puntoSeleccionado || puntoSeleccionado === '--Seleccione--'
+      ? 56
+      : Number(puntoSeleccionado);
+
+  const puntosEncontrados = this.resultPuntosAdicionales.find(
+    (x: any) => x.IdPuntosAdicionales === puntosAdicionalesId
+  );
+
+  const puntos = puntosEncontrados ? puntosEncontrados.PuntosAdicionales * 10 : 0;
+
+  // ✅ Fecha
+  const fechaActual = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
+  form.get('FechaCreacion')?.setValue(fechaActual);
+
+  // ✅ Usuario
+  const dataEncoded = localStorage.getItem('Data') ?? '';
+  const dataDecoded = dataEncoded ? JSON.parse(window.atob(dataEncoded)) : {};
+
+  // ✅ Payload base
+  let payload: any = {
+    IdUsuarioERP: dataDecoded?.IdUsuario,
+    NumeroAsesoria: 0,
+    NumeroOficina: form.get('NumeroOficina')?.value,
+    IdProducto: form.get('IdProducto')?.value,
+    IdAsesor: form.get('IdAsesor')?.value,
+    TasaNominal: Number(this.datoTasaNominal),
+    NumeroDocumento: form.get('NumeroDocumento')?.value,
+    Plazo: form.get('Plazo')?.value,
+    IdFrecuenciaPago: form.get('IdFrecuenciaPago')?.value,
+    Tasa: 0,
+    IdIndicador: 0,
+    Puntos: 0,
+    ValorTitulo: form.get('ValorTotal')?.value,
+    Retencion: form.get('TotalRetencion')?.value,
+    Intereses: form.get('TotalInteresBruto')?.value,
+    Herencia: 0,
+    TasaAdicional: form.get('TasaAdicional')?.value,
+    PuntosAdicionales: puntos,
+    Aportes: form.get('TotalAportes')?.value,
+    IdRelacion: form.get('Clase')?.value,
+    IdAsesorExterno: form.get('strCodigo')?.value
+  };
+
+  // ✅ Normalizar tercero
+  let tercero = { ...this.creacionFrom.value };
+
+  ['SegundoNombre', 'PrimerApellido', 'SegundoApellido'].forEach(campo => {
+    if (!tercero[campo]) tercero[campo] = '';
+  });
+
+  Object.keys(tercero).forEach(key => {
+    tercero[key] = this.capitalize(tercero[key]);
+  });
+
+  if (tercero.TipoDocumento) {
+    payload = { ...payload, ...tercero };
+  }
+
+  // ✅ Bloqueos UI
+  this.BloquearPuntosA = false;
+  this.BloquearNegociacion = false;
+  this.BloquearProducto = false;
+  this.showBtnCalcularIntereses = false;
+  this.BloquearAsesorExterno = false;
+  this.BloquearNombre = false;
+  this.btnGuardar = true;
+
+  // ✅ Servicio
+  this.AsesoriaTerminoServices.GuardarAsesoria(payload).subscribe({
+    next: async (resp: any) => {
       this.inputFrecuencia = false;
       this.selectFrecuencia = true;
-      this.notif.success('Exitoso', 'La asesoría se guardó correctamente.', ConfiguracionNotificacion.configRightTop);
-      if (x != null && x.NumeroAsesoria != null && x.NumeroAsesoria != 0) {
-        this.asesoriaterminoForm.controls['NumeroAsesoria'].setValue(x.NumeroAsesoria);
-        await this.BotonBuscarAsesoriaTermino();    
+
+      this.notif.success(
+        'Exitoso',
+        'La asesoría se guardó correctamente.',
+        ConfiguracionNotificacion.configRightTop
+      );
+
+      if (resp?.NumeroAsesoria) {
+        form.get('NumeroAsesoria')?.setValue(resp.NumeroAsesoria);
+        await this.BotonBuscarAsesoriaTermino();
+
         this.isSavingAsesoria = true;
 
-        const currentRelacionId = this.asesoriaterminoForm.get('Clase')?.value;
-        const Relacion = this.resultRelacion.find((relacion : any) => relacion.Clase === currentRelacionId).Descripcion;
-        let logAsesoria: any = {
-          Relacion,
-          AsesorExterno: this.asesoriaterminoForm.get('strNombre')?.value,
-          Producto: this.asesoriaterminoForm.get('DescripcionProducto')?.value,
-          Plazo: payload.Plazo,
-          ValorTitulo: payload.ValorTitulo,
-          FrecuenciaPago: this.asesoriaterminoForm.get('DescripcionFrecuenciaPago')?.value,
-          PuntosAdicionales: p / 10,
-          TasaEfectiva: this.asesoriaterminoForm.get('TasaEfectiva')?.value,
-          TasaNominal: this.asesoriaterminoForm.get('TasaNominal')?.value,
-          TasaAportes: this.asesoriaterminoForm.get('TasaAdicional')?.value.slice(0,-2) + '%',
-          FechaVencimiento: this.asesoriaterminoForm.get('FechaVencimiento')?.value,
-          InteresBruto: this.asesoriaterminoForm.get('InteresBruto')?.value,
-          Retencion: this.asesoriaterminoForm.get('Retencion')?.value,
-          Aportes: this.asesoriaterminoForm.get('Aportes')?.value,
-          InteresNeto: this.asesoriaterminoForm.get('InteresNeto')?.value,
-          TotalInteresBruto: this.asesoriaterminoForm.get('TotalInteresBruto')?.value,
-          TotalRetencion: this.asesoriaterminoForm.get('TotalRetencion')?.value,
-          TotalAportes: this.asesoriaterminoForm.get('TotalAportes')?.value,
-          TotalInteresNeto: this.asesoriaterminoForm.get('TotalInteresNeto')?.value,
-        }
-        if (!logAsesoria.AsesorExterno) delete logAsesoria.AsesorExterno;
-        let newTerceroData = this.creacionFrom.value;
-        if (newTerceroData.TipoDocumento) {
-          const tipoDocumento = this.tiposDeDocumento.find((tipoD : any) => tipoD.Clase == newTerceroData.TipoDocumento).Descripcion;
-          if(newTerceroData.TipoDocumento == 3) newTerceroData = { RazonSocial: newTerceroData.PrimerNombre, TelefonoAsesoria: newTerceroData.TelefonoAsesoria, TipoDocumento: tipoDocumento }
-          logAsesoria = { ...logAsesoria, ...newTerceroData };
-          logAsesoria.TipoDocumento = tipoDocumento;
-        }        
-        this.GuardarlogAsesoria(logAsesoria);
+        this.registrarLogAsesoria(payload, puntos);
       }
-      
-    },error => {
+    },
+    error: (err) => {
+      console.error('Error guardando asesoría', err);
+    }
+  });
+}
+private registrarLogAsesoria(payload: any, puntos: number): void {
+  const form = this.asesoriaterminoForm;
 
-    });
+  const relacionId = form.get('Clase')?.value;
+
+  const relacion = this.resultRelacion.find(
+    (r: any) => r.Clase === relacionId
+  )?.Descripcion;
+
+  let log: any = {
+    Relacion: relacion,
+    AsesorExterno: form.get('strNombre')?.value,
+    Producto: form.get('DescripcionProducto')?.value,
+    Plazo: payload.Plazo,
+    ValorTitulo: payload.ValorTitulo,
+    FrecuenciaPago: form.get('DescripcionFrecuenciaPago')?.value,
+    PuntosAdicionales: puntos / 10,
+    TasaEfectiva: form.get('TasaEfectiva')?.value,
+    TasaNominal: form.get('TasaNominal')?.value,
+    TasaAportes:
+      (form.get('TasaAdicional')?.value || '').slice(0, -2) + '%',
+    FechaVencimiento: form.get('FechaVencimiento')?.value,
+    InteresBruto: form.get('InteresBruto')?.value,
+    Retencion: form.get('Retencion')?.value,
+    Aportes: form.get('Aportes')?.value,
+    InteresNeto: form.get('InteresNeto')?.value,
+    TotalInteresBruto: form.get('TotalInteresBruto')?.value,
+    TotalRetencion: form.get('TotalRetencion')?.value,
+    TotalAportes: form.get('TotalAportes')?.value,
+    TotalInteresNeto: form.get('TotalInteresNeto')?.value
+  };
+
+  if (!log.AsesorExterno) {
+    delete log.AsesorExterno;
   }
+
+  let tercero = { ...this.creacionFrom.value };
+
+  if (tercero.TipoDocumento) {
+    const tipoDoc = this.tiposDeDocumento.find(
+      (t: any) => t.Clase == tercero.TipoDocumento
+    )?.Descripcion;
+
+    if (tercero.TipoDocumento == 3) {
+      tercero = {
+        RazonSocial: tercero.PrimerNombre,
+        TelefonoAsesoria: tercero.TelefonoAsesoria,
+        TipoDocumento: tipoDoc
+      };
+    }
+
+    log = { ...log, ...tercero, TipoDocumento: tipoDoc };
+  }
+
+  this.GuardarlogAsesoria(log);
+}
+ 
   GuardarlogAsesoria(objLog: any) {
     const currentDate = formatDate(new Date().toISOString(), 'yyyy/MM/dd HH:mm:ss', 'en');
     this.generalesService.GuardarlogAsesoria(objLog,this.asesoriaterminoOperacionFrom.get('Codigo')?.value || 43, currentDate,
@@ -1717,11 +1809,10 @@ export class AsesoriaTerminoComponent implements OnInit {
     );
   }
 
-  capitalize(str: string) {
-    if (!str) return str; 
-    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-  }
-  
+capitalize(str: any): any {
+  if (typeof str !== 'string' || !str) return str;
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
   GuardarNombre() {
     const requiredFieldNames = ['PrimerNombre', 'TelefonoAsesoria'];
     if (this.creacionFrom.get('TipoDocumento')?.value != 3) requiredFieldNames.push('PrimerApellido');

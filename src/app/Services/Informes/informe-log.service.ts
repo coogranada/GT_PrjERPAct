@@ -319,4 +319,16 @@ export class InformeLogService {
     campo.NombreAs = nombreAs
     Campos.push(campo);
   }
+
+  GetFiltrosGestionCreditos(): Filtro[] {
+    let Filtros: Filtro[] = [];
+
+    this.AddFiltro(Filtros, 1, "Fecha");
+    this.AddFiltro(Filtros, 2, "Operación");
+    this.AddFiltro(Filtros, 3, "Oficina");
+    this.AddFiltro(Filtros, 4, "Usuario");
+    this.AddFiltro(Filtros, 5, "Cuenta");
+
+    return this.GetOrderAlf(Filtros);
+  }
 }

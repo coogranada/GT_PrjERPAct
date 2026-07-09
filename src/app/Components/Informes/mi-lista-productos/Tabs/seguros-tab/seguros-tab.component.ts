@@ -550,37 +550,71 @@ export class SegurosTabComponent implements OnInit {
     }, 5000);
   }
 
-  SendMailSeguros() {
-    if (this.validaMail == true) {
-      this.loading.show();
-      this.MiListaProductosService.sendMailProductos(this.ExtactoSeguro.value).subscribe(
+SendMailSeguros(): void {
+
+  if (this.validaMail === true) {
+
+    this.loading.show();
+
+    this.MiListaProductosService
+      .sendMailProductos(this.ExtactoSeguro.value)
+      .subscribe(
         result => {
-          this.loading.hide();
-          this.Response(result);
 
-          var Tercero = Number($("#TerceroPrincipal").val());
-          //#region Guarda log
-          let datas = localStorage.getItem("Data");
-          var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
-          var LogMisProductosData = new LogMisProductos();
-          var nuevoItem = new DatosProductos();
-          LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
-          LogMisProductosData.IdModulo = 69;
-          LogMisProductosData.IdOperacion = 51;
-          LogMisProductosData.IdOpcion = 12; // Envio correo 
-          LogMisProductosData.IdTercero = Tercero;
-          LogMisProductosData.IdCuenta = this.idCuenta;
-          LogMisProductosData.IdUsuarioERP = dataLocalStorage.IdUsuario;
-          nuevoItem.FechaInicial = "";
-          nuevoItem.FechaFinal = "";
-          LogMisProductosData.DatosProductos = nuevoItem;
-          this.setLogMisProductos(LogMisProductosData);
-          // #endregion
+          try {
 
+            this.Response(result);
 
+            const tercero = Number(
+              $("#TerceroPrincipal").val()
+            );
+
+            const datas = localStorage.getItem("Data");
+
+            const dataLocalStorage = JSON.parse(
+              window.atob(datas == null ? "" : datas)
+            );
+
+            //#region Guarda log
+
+            const logMisProductosData =
+              new LogMisProductos();
+
+            const nuevoItem =
+              new DatosProductos();
+
+            logMisProductosData.IdOficina =
+              parseInt(dataLocalStorage.NumeroOficina);
+
+            logMisProductosData.IdModulo = 69;
+            logMisProductosData.IdOperacion = 51;
+            logMisProductosData.IdOpcion = 12; // Envío correo
+            logMisProductosData.IdTercero = tercero;
+            logMisProductosData.IdCuenta = this.idCuenta;
+            logMisProductosData.IdUsuarioERP =
+              dataLocalStorage.IdUsuario;
+
+            nuevoItem.FechaInicial = "";
+            nuevoItem.FechaFinal = "";
+
+            logMisProductosData.DatosProductos =
+              nuevoItem;
+
+            this.setLogMisProductos(
+              logMisProductosData
+            );
+
+            //#endregion
+
+          } finally {
+
+            this.loading.hide();
+          }
         },
         error => {
+
           this.loading.hide();
+
           swal.fire({
             title: "Error",
             text: "",
@@ -593,53 +627,79 @@ export class SegurosTabComponent implements OnInit {
             allowEscapeKey: false,
           });
         }
-      )
-    } else {
-      this.loading.hide();
-      swal.fire({
-        title: "Info",
-        text: "",
-        html: "Por favor comunicarse con el administrador para gestionar la plantilla del email.",
-        icon: "info",
-        showCancelButton: false,
-        confirmButtonColor: "rgb(13,165,80)",
-        cancelButtonColor: "rgb(160,0,87)",
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-      });
-    }
+      );
 
+  } else {
+
+    swal.fire({
+      title: "Info",
+      text: "",
+      html: "Por favor comunicarse con el administrador para gestionar la plantilla del email.",
+      icon: "info",
+      showCancelButton: false,
+      confirmButtonColor: "rgb(13,165,80)",
+      cancelButtonColor: "rgb(160,0,87)",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+    });
   }
+}
 
-  SendMailSegurosVhi() {
-    if (this.validaMail == true) {
-      this.loading.show();
-      this.MiListaProductosService.sendMailProductos(this.ExtactoSeguroVhi.value).subscribe(
+  SendMailSegurosVhi(): void {
+  if (this.validaMail === true) {
+    this.loading.show();
+    this.MiListaProductosService
+      .sendMailProductos(this.ExtactoSeguroVhi.value)
+      .subscribe(
         result => {
-          this.loading.hide();
-          this.Response(result);
+          try {
+            this.Response(result);
+            const tercero = Number(
+              $("#TerceroPrincipal").val()
+            );
+            const datas = localStorage.getItem("Data");
+            const dataLocalStorage = JSON.parse(
+              window.atob(datas == null ? "" : datas)
+            );
+            //#region Guarda log
+            const logMisProductosData =
+              new LogMisProductos();
 
-          var Tercero = Number($("#TerceroPrincipal").val());
-          //#region Guarda log
-          let datas = localStorage.getItem("Data");
-          var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
-          var LogMisProductosData = new LogMisProductos();
-          var nuevoItem = new DatosProductos();
-          LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
-          LogMisProductosData.IdModulo = 69;
-          LogMisProductosData.IdOperacion = 51;
-          LogMisProductosData.IdOpcion = 12; // Envio correo 
-          LogMisProductosData.IdTercero = Tercero;
-          LogMisProductosData.IdCuenta = this.idCuenta;
-          LogMisProductosData.IdUsuarioERP = dataLocalStorage.IdUsuario;
-          nuevoItem.FechaInicial = "";
-          nuevoItem.FechaFinal = "";
-          LogMisProductosData.DatosProductos = nuevoItem;
-          this.setLogMisProductos(LogMisProductosData);
-          // #endregion
+            const nuevoItem =
+              new DatosProductos();
+
+            logMisProductosData.IdOficina =
+              parseInt(dataLocalStorage.NumeroOficina);
+
+            logMisProductosData.IdModulo = 69;
+            logMisProductosData.IdOperacion = 51;
+            logMisProductosData.IdOpcion = 12;
+            logMisProductosData.IdTercero = tercero;
+            logMisProductosData.IdCuenta = this.idCuenta;
+            logMisProductosData.IdUsuarioERP =
+              dataLocalStorage.IdUsuario;
+
+            nuevoItem.FechaInicial = "";
+            nuevoItem.FechaFinal = "";
+
+            logMisProductosData.DatosProductos =
+              nuevoItem;
+
+            this.setLogMisProductos(
+              logMisProductosData
+            );
+
+            //#endregion
+
+          } finally {
+
+            this.loading.hide();
+          }
         },
         error => {
+
           this.loading.hide();
+
           swal.fire({
             title: "Error",
             text: "",
@@ -652,23 +712,23 @@ export class SegurosTabComponent implements OnInit {
             allowEscapeKey: false,
           });
         }
-      )
-    } else {
-      this.loading.hide();
-      swal.fire({
-        title: "Info",
-        text: "",
-        html: "Por favor comunicarse con el administrador para gestionar la plantilla del email.",
-        icon: "info",
-        showCancelButton: false,
-        confirmButtonColor: "rgb(13,165,80)",
-        cancelButtonColor: "rgb(160,0,87)",
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-      });
-    }
+      );
 
+  } else {
+
+    swal.fire({
+      title: "Info",
+      text: "",
+      html: "Por favor comunicarse con el administrador para gestionar la plantilla del email.",
+      icon: "info",
+      showCancelButton: false,
+      confirmButtonColor: "rgb(13,165,80)",
+      cancelButtonColor: "rgb(160,0,87)",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+    });
   }
+}
 
   Response(value : any) {
 

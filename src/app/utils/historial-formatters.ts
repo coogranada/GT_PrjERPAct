@@ -1,3 +1,4 @@
+import { Operacion } from "../Models/Productos/cartera/cambiar-tasa-context";
 import { CodeudorDraft, HistorialOperacion, LogCambiarCodeudores, DetallesLogCredito, CambiarInfoCreditoLog } from "../Models/Productos/cartera/gestion-credito.model";
 
 type FormateadorOperacion = (r: HistorialOperacion) => HistorialOperacion;
@@ -169,6 +170,20 @@ export const formateadoresPorOperacion: Record<number, FormateadorOperacion> = {
       Detalles: `<strong>Anterior:</strong> ${formatear(detalles.Anterior)} | <strong>Actualiza:</strong> ${formatear(detalles.Actualiza)}`
     };
   },
+  143: (registro) => {
+    const detalles: DetallesLogCredito = JSON.parse(registro.Detalles);
+
+    const formatear = ({ Sistema, PeriodoCapital, PeriodoInteres, Plazo, PeriodoGracia }: Partial<CambiarInfoCreditoLog>) => {
+      return Object.entries({ Sistema, PeriodoCapital, PeriodoInteres, Plazo, PeriodoGracia })
+        .map(([key, value]) => `${key}: ${value ?? ''}`)
+        .join(' - ');
+    };
+
+    return {
+      ...registro,
+      Detalles: `<strong>Anterior:</strong> ${formatear(detalles.Anterior)} | <strong>Actualiza:</strong> ${formatear(detalles.Actualiza)}`
+    };
+  },
   21: (registro) => {
     if (!registro?.Detalles) return registro;
       
@@ -274,7 +289,7 @@ export const formateadoresPorOperacion: Record<number, FormateadorOperacion> = {
       ...registro,
       Detalles: `
         <strong>Anterior:</strong> ${formatear(anteriorGarantias)}
-        | <strong>Actual:</strong> ${formatear(actualGarantias)}
+        | <strong>Actualiza:</strong> ${formatear(actualGarantias)}
         | <strong>Agregadas:</strong> ${formatear(agregadas)}
         | <strong>Eliminadas:</strong> ${formatear(eliminadas)}
       `

@@ -279,9 +279,9 @@
                                         <span *ngIf="!obligatorio" class="grande"> *</span>
                                         <input *ngIf="showDecimals" style="text-align:right" type="text" id="SelectCuotaMes" class="form-control" formControlName="CuotaMes" [attr.disabled]="BloquearCuotaMes" (blur)="ValorTotalPlan()" (blur)="ObtenerTasa()" currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: 2 }" maxlength="15">
                                         <input *ngIf="!showDecimals" style="text-align:right" type="text" id="SelectCuotaMes" class="form-control" formControlName="CuotaMes" [attr.disabled]="BloquearCuotaMes" (blur)="ValorTotalPlan()" (blur)="ObtenerTasa()" currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: 0 }" maxlength="12">
-                                        <span class="help-block validationSpan" *ngIf="asesoriacontractualFrom.controls['CuotaMes'].errors?.['pattern']">
+                                        <!-- <span class="help-block validationSpan" *ngIf="asesoriacontractualFrom.controls['CuotaMes'].errors?.['pattern']">
                                             La cuota mes solo acepta números y ceros como  decimales.
-                                        </span>
+                                        </span> -->
                                     </div>
                                     <!-- Fin CuotaMes  -->
 

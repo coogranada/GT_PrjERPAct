@@ -17,11 +17,13 @@ export enum Operacion {
     CambiarPlazo = '135',
     CambiarSistema = '139',
     ReestructurarCambioPlazo = '140',
+    DevolverReestructuracion = '143',
 }
 
 export enum Novedad {
     CambiarTasa = 93,
     CambiarPlazo = 94,
     CambiarCuota = 111,
-    CambiarSistema = 262
+    CambiarSistema = 262,
+    DevolverReestructuracion = 112
 }
