@@ -7,3 +7,13 @@ export interface ChequeDTO {
  descripcionRemesa: string;
  valorCheque: number;
 }
+
+export interface ChequeRetDTO {
+ cuentaBanco: number;
+ nombreBanco: string;
+ beneficiario: string;
+ numeroCheque: number;
+ valorCheque: number;
+ idBanco: number;
+ observacion: string;
+}

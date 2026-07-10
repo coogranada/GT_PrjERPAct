@@ -318,7 +318,7 @@
                                                                 <label><strong>Transacción:</strong></label>
                                                                 <input type="text" class="form-control" placeholder=""
                                                                     [(ngModel)]="OtraTransaccionCodigo"
-                                                                    (blur)="buscarCodigoOtraTransaccion()"
+                                                                    (blur)="buscarCodigoOtraTransaccion(); setearValorAutomaticoTran()"
                                                                     (input)="limpiarcamposOtraTransa('codigo')"
                                                                     appSoloNumero maxlength="5">
                                                             </div>
@@ -328,7 +328,8 @@
                                                                 <label><strong>Descripción:</strong></label>
                                                                 <input type="text" class="form-control" placeholder=""
                                                                     [(ngModel)]="OtraTransaccionDescripcion"
-                                                                    (input)="limpiarcamposOtraTransa('descripcion')">
+                                                                    (input)="limpiarcamposOtraTransa('descripcion')"
+                                                                    (blur)="setearValorAutomaticoTran()">
                                                             </div>
                                                         </div>
 
@@ -352,7 +353,7 @@
                                                                 <label><strong>Documento:</strong></label>
                                                                 <input type="text" class="form-control" placeholder=""
                                                                     [(ngModel)]="OtraTransaccionDocumento"
-                                                                    (blur)="buscarDocumentoOtraTransaccion()"
+                                                                    (blur)="buscarDocumentoOtraTransaccion(); setearValorAutomatico()"
                                                                     (input)="limpiarcamposOtraTransaDoc('documento')"
                                                                     maxlength="20">
                                                             </div>
@@ -363,7 +364,8 @@
                                                                 <label><strong>Nombre:</strong></label>
                                                                 <input type="text" class="form-control pmayuscula"
                                                                     placeholder="" [(ngModel)]="OtraTransaccionNombre"
-                                                                    (input)="limpiarcamposOtraTransaDoc('nombre')">
+                                                                    (input)="limpiarcamposOtraTransaDoc('nombre')"
+                                                                    (blur)="setearValorAutomatico()">
                                                             </div>
                                                         </div>
 
@@ -513,7 +515,212 @@
 
                                                     </div>
 
-                                                    <div class="row">
+                                                    <!-- SUSTITUIR CHEQUES-->
+                                                    <div *ngIf="OtraTransaccionCodigo == 16262 || OtraTransaccionCodigo == '16262' "
+                                                        class="col-xs-12 col-md-12 col-lg-12 contorno-rutas div-espacio1">
+                                                        <span class="titulo">Sustituir cheque</span>
+
+
+                                                        <form autocomplete="off" id="form" [formGroup]="formSustituir">
+
+                                                            <div class="row">
+                                                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                                                    <div class="form-group">
+                                                                        <label><strong>Observaciones:</strong></label>
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder=""
+                                                                            formControlName="observaciones"
+                                                                            maxlength="250">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label><strong>Banco origen:</strong></label>
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder="" formControlName="cuentaBanco"
+                                                                            appSoloNumero maxlength="10"
+                                                                            (input)="limpiarcamposBancoSust('cuenta', formSustituir)"
+                                                                            (blur)="consultarBancoSust(formSustituir)">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-5 col-md-5 col-sm-5">
+                                                                    <div class="form-group">
+                                                                        <label>&nbsp;</label>
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder="" formControlName="nombreBanco"
+                                                                            maxlength="40"
+                                                                            (input)="limpiarcamposBancoSust('nombre', formSustituir)">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-1 col-md-1 col-sm-1">
+                                                                    <div class="form-group">
+                                                                        <label>&nbsp;</label>
+                                                                        <button type="button"
+                                                                            (click)="consultarBancoNombreSust(formSustituir)"
+                                                                            class="btn Gt-btn-verde btn-icon btn-buscar">
+                                                                            <i class="glyphicon glyphicon-search"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label><strong>Cheque actual:</strong></label>
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder=""
+                                                                            formControlName="chequeActual" maxlength="8"
+                                                                            appSoloNumero (blur)="validarChequeSust()">
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+
+                                                        </form>
+
+                                                    </div>
+
+                                                    <!-- CAMBIO CHEQUES INTERNOS-->
+                                                    <div *ngIf="OtraTransaccionCodigo == 16076 || OtraTransaccionCodigo == '16076' "
+                                                        class="col-xs-12 col-md-12 col-lg-12 contorno-rutas div-espacio1">
+                                                        <span class="titulo">Cambio de cheque interno</span>
+
+
+                                                        <form autocomplete="off" id="form" [formGroup]="formCambCheInt">
+
+                                                            <div class="row">
+                                                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                                                    <div class="form-group">
+                                                                        <label><strong>Observaciones:</strong></label>
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder=""
+                                                                            formControlName="observaciones"
+                                                                            maxlength="250">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label><strong>Banco:</strong></label>
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder="" formControlName="cuentaBanco"
+                                                                            appSoloNumero maxlength="10"
+                                                                            (input)="limpiarcamposBancoSust('cuenta', formCambCheInt)"
+                                                                            (blur)="consultarBancoSust(formCambCheInt)">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-5 col-md-5 col-sm-5">
+                                                                    <div class="form-group">
+                                                                        <label>&nbsp;</label>
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder="" formControlName="nombreBanco"
+                                                                            maxlength="40"
+                                                                            (input)="limpiarcamposBancoSust('nombre', formCambCheInt)">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-1 col-md-1 col-sm-1">
+                                                                    <div class="form-group">
+                                                                        <label>&nbsp;</label>
+                                                                        <button type="button"
+                                                                            (click)="consultarBancoNombreSust(formCambCheInt)"
+                                                                            class="btn Gt-btn-verde btn-icon btn-buscar">
+                                                                            <i class="glyphicon glyphicon-search"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label><strong>Cheque:</strong></label>
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder=""
+                                                                            formControlName="chequeActual" maxlength="8"
+                                                                            appSoloNumero
+                                                                            (blur)="validarChequeInterno()">
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="col-lg-9 col-md-9 col-sm-9">
+                                                                    <div class="form-group">
+                                                                        <label><strong>Beneficiario:</strong></label>
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder=""
+                                                                            formControlName="beneficiario"
+                                                                            maxlength="200">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label><strong>Valor:</strong></label>
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder="" formControlName="valor"
+                                                                            appMonedaDirectiva>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+                                                        </form>
+
+                                                    </div>
+
+                                                    <!-- CAMBIO CHEQUES EXTERNOS-->
+                                                    <div *ngIf="OtraTransaccionCodigo == 16077 || OtraTransaccionCodigo == '16077' "
+                                                        class="col-xs-12 col-md-12 col-lg-12 contorno-rutas div-espacio1">
+                                                        <span class="titulo">Cambio de cheque externo</span>
+
+
+                                                        <form autocomplete="off" id="form" [formGroup]="formCambCheInt">
+
+                                                            <div class="row">
+                                                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label><strong>Valor total
+                                                                                Cheque(s):</strong></label>
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder="" formControlName="valorCheque"
+                                                                            appMonedaDirectiva>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-2 col-m-2 col-sm-2">
+                                                                </div>
+                                                                <div class="col-lg-3 col-m-3 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label><strong>Tasa GMF:</strong></label>
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder="" formControlName="nombreBanco"
+                                                                            maxlength="40">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-lg-3 col-m-3 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label><strong>Valor GMF:</strong></label>
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder="" formControlName="nombreBanco"
+                                                                            maxlength="40">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+
+
+                                                        </form>
+
+                                                    </div>
+
+                                                    <!-- Comentario-->
+                                                    <div class="row"
+                                                        *ngIf="OtraTransaccionCodigo != 16262 && OtraTransaccionCodigo != '16262' && OtraTransaccionCodigo != 16076 && OtraTransaccionCodigo != '16076' ">
                                                         <div class="col-lg-12 col-md-12 col-sm-12">
                                                             <div class="form-group">
                                                                 <label><strong>Comentario:</strong></label>
@@ -715,7 +922,8 @@
 
                                                 <!-- Inicio tab5 -->
                                                 <div class="tab-pane" id="tab5">
-                                                    <div class="row">
+
+                                                    <div *ngIf="NaturalezaTransa == -1" class="row">
                                                         <div class="col-lg-12 col-md-12 col-sm-12">
                                                             <form autocomplete="off" id="form" [formGroup]="formCheque">
                                                                 <div class="row">
@@ -761,7 +969,7 @@
                                                                             <input type="text" class="form-control"
                                                                                 placeholder=""
                                                                                 formControlName="cuentaCorriente"
-                                                                                maxlength="15">
+                                                                                maxlength="15" appSoloNumero>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-lg-3 col-md-3 col-sm-3">
@@ -771,7 +979,7 @@
                                                                             <input type="text" class="form-control"
                                                                                 placeholder=""
                                                                                 formControlName="numeroCheque"
-                                                                                maxlength="20">
+                                                                                maxlength="8" appSoloNumero>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-lg-3 col-md-3 col-sm-3">
@@ -849,7 +1057,7 @@
                                                                                     <td style="text-align: right">
                                                                                         {{item.numeroCheque}}
                                                                                     </td>
-                                                                                    <td>
+                                                                                    <td style="text-align: right">
                                                                                         {{item.valorCheque |
                                                                                         currency}}
                                                                                     </td>
@@ -892,14 +1100,191 @@
                                                                             <input type="text"
                                                                                 class="form-control txt-bold txt-right"
                                                                                 appMonedaDirectiva [disabled]="true"
-                                                                                [(ngModel)]="TotalCheques" />
+                                                                                [(ngModel)]="TotalCheques"
+                                                                                [ngModelOptions]="{standalone: true}" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div *ngIf="NaturalezaTransa == 1" class="row">
+                                                        <div class="col-lg-12 col-md-12 col-sm-12">
+                                                            <form autocomplete="off" id="form"
+                                                                [formGroup]="formChequeRet">
+                                                                <div class="row">
+                                                                    <div class="col-lg-3 col-md-3 col-sm-3">
+                                                                        <div class="form-group">
+                                                                            <label><strong>Banco:</strong></label>
+                                                                            <input type="text" class="form-control"
+                                                                                placeholder=""
+                                                                                formControlName="cuentaBanco"
+                                                                                appSoloNumero maxlength="10"
+                                                                                (input)="limpiarcamposBancoRet('cuenta')"
+                                                                                (blur)="consultarBancoRet()">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-5 col-md-5 col-sm-5">
+                                                                        <div class="form-group">
+                                                                            <label>&nbsp;</label>
+                                                                            <input type="text" class="form-control"
+                                                                                placeholder=""
+                                                                                formControlName="nombreBanco"
+                                                                                maxlength="40"
+                                                                                (input)="limpiarcamposBancoRet('nombre')">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-1 col-md-1 col-sm-1">
+                                                                        <div class="form-group">
+                                                                            <label>&nbsp;</label>
+                                                                            <button type="button"
+                                                                                (click)="consultarBancoNombreRet()"
+                                                                                class="btn Gt-btn-verde btn-icon btn-buscar">
+                                                                                <i
+                                                                                    class="glyphicon glyphicon-search"></i>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+
+                                                                <div class="row">
+                                                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                                                        <div class="form-group">
+                                                                            <label><strong>Beneficiario:</strong></label>
+                                                                            <input type="text"
+                                                                                class="form-control text-uppercase"
+                                                                                placeholder=""
+                                                                                formControlName="beneficiario"
+                                                                                maxlength="60">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-3 col-md-3 col-sm-3">
+                                                                        <div class="form-group">
+                                                                            <label><strong>Número
+                                                                                    cheque:</strong></label>
+                                                                            <input type="text" class="form-control"
+                                                                                placeholder=""
+                                                                                formControlName="numeroCheque"
+                                                                                maxlength="8" appSoloNumero>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-3 col-md-3 col-sm-3">
+                                                                        <div class="form-group">
+                                                                            <label><strong>Valor
+                                                                                    cheque:</strong></label>
+                                                                            <input type="text"
+                                                                                class="form-control txt-right"
+                                                                                placeholder=""
+                                                                                formControlName="valorCheque"
+                                                                                appMonedaDirectiva maxlength="12">
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-xs-12 col-md-12 col-lg-12"
+                                                                        style="justify-items: end; padding: 1em;">
+                                                                        <div class="actions clearfix">
+
+                                                                            <button
+                                                                                class="btn Gt-btn-verde btn-icon legitRipple"
+                                                                                type="button"
+                                                                                (click)="agregarChequeRet()">
+                                                                                <i class=""></i> AGREGAR
+                                                                            </button>&nbsp;
+
+                                                                            <button
+                                                                                class="btn Gt-btn-morado btn-icon legitRipple"
+                                                                                type="reset">
+                                                                                LIMPIAR
+                                                                            </button>&nbsp;
+
                                                                         </div>
                                                                     </div>
                                                                 </div>
 
+                                                                <div class="row">
+                                                                    <hr>
+                                                                    <div class="tabla-wrapper">
+                                                                        <table id="TablaCheques" class="table table-sm">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>Banco</th>
+                                                                                    <th>Beneficiario</th>
+                                                                                    <th style="text-align: center">
+                                                                                        Cheque</th>
+                                                                                    <th style="text-align: right">Valor
+                                                                                    </th>
+                                                                                    <th class="operacionFija">Opciones
+                                                                                    </th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr
+                                                                                    *ngFor="let item of ListChequesRet; let i = index">
+                                                                                    <td>
+                                                                                        {{item.cuentaBanco}} -
+                                                                                        {{item.nombreBanco}}
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        {{item.beneficiario}}
+                                                                                    </td>
+
+                                                                                    <td style="text-align: center">
+                                                                                        {{item.numeroCheque}}
+                                                                                    </td>
+                                                                                    <td style="text-align: right">
+                                                                                        {{item.valorCheque |
+                                                                                        currency}}
+                                                                                    </td>
+                                                                                    <td class="operacionFija">
+                                                                                        <button
+                                                                                            class="btn Gt-btn-verde btn-icon legitRipple"
+                                                                                            type="button"
+                                                                                            (click)="editarChequeRet(item, i)">
+                                                                                            <i
+                                                                                                class="glyphicon glyphicon-pencil"></i>
+                                                                                        </button>
+                                                                                        &nbsp;
+                                                                                        <button
+                                                                                            class="btn Gt-btn-morado btn-icon legitRipple"
+                                                                                            type="button"
+                                                                                            (click)="eliminarChequeRet(i)">
+                                                                                            <i
+                                                                                                class="glyphicon glyphicon-trash"></i>
+                                                                                        </button>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+
+                                                                </div>
+
+                                                                <div class="row">
+                                                                    <div class="col-lg-7 col-md-7 col-sm-7"></div>
+                                                                    <div class="col-lg-2 col-md-2 col-sm-2"
+                                                                        style="justify-items: end;">
+
+                                                                    </div>
+                                                                    <div class="col-lg-3 col-md-3 col-sm-3">
+                                                                        <br>
+                                                                        <div class="form-group">
+                                                                            <input type="text"
+                                                                                class="form-control txt-bold txt-right"
+                                                                                appMonedaDirectiva [disabled]="true"
+                                                                                [(ngModel)]="TotalChequesRet"
+                                                                                [ngModelOptions]="{standalone: true}" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </form>
                                                         </div>
                                                     </div>
+
                                                 </div>
 
                                                 <!-- Inicio tab6 -->
@@ -1026,6 +1411,10 @@
     data-target="#ModalOtrasTransaccionesConvenios" data-popup="tooltip" data-placement="top" data-trigger="hover">
 <input type="hidden" #ModalBancos data-toggle="modal" data-target="#ModalBancos" data-popup="tooltip"
     data-placement="top" data-trigger="hover">
+<input type="hidden" #ModalCuentasBancos data-toggle="modal" data-target="#ModalCuentasBancos" data-popup="tooltip"
+    data-placement="top" data-trigger="hover">
+<input type="hidden" #ModalCuentasBancosPuc data-toggle="modal" data-target="#ModalCuentasBancosPuc"
+    data-popup="tooltip" data-placement="top" data-trigger="hover">
 
 <!-- Modal Condiciones -->
 <div id="ModalCondiciones" class="modal fade" data-backdrop="static" data-keyboard="false">
@@ -1152,7 +1541,7 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let i of ListOtrasTransaccionxPerfilFiltrado"
-                                (click)="seleccionarOtraTransaccion(i)">
+                                (click)="seleccionarOtraTransaccion(i); setearValorAutomaticoTran()">
                                 <td data-dismiss="modal">
                                     {{i.intCodigo}}
                                 </td>
@@ -1393,3 +1782,85 @@
     </div>
 </div>
 <!--Fin Modal Bancos -->
+<!-- Modal Cuentas Bancos -->
+<div id="ModalCuentasBancos" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Cuentas de bancos</h6>
+            </div>
+            <div class="modal-body pad0T modal1-body ">
+                <div class="table-responsive scrollTabla">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th><strong>Cuenta puc</strong></th>
+                                <th><strong>Banco</strong></th>
+                                <th><strong>Cheque inicial</strong></th>
+                                <th><strong>Cheque Final</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let i of ListCuentasBFiltrados" (click)="seleccionarBancoRet(i)">
+                                <td data-dismiss="modal">
+                                    {{i.strCodigo}}
+                                </td>
+                                <td data-dismiss="modal">
+                                    {{i.strNombre}}
+                                </td>
+                                <td data-dismiss="modal">
+                                    {{i.lngChequeInicial}}
+                                </td>
+                                <td data-dismiss="modal">
+                                    {{i.lngChequeFinal}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Fin Modal Cuentas Bancos -->
+<!-- Modal Cuentas Bancos PUC-->
+<div id="ModalCuentasBancosPuc" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg">
+            <div class="modal-header bg-morado">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h6 class="modal-title">Cuentas de bancos</h6>
+            </div>
+            <div class="modal-body pad0T modal1-body ">
+                <div class="table-responsive scrollTabla">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th><strong>Cuenta puc</strong></th>
+                                <th><strong>Banco</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let i of ListBancosPucFiltrados" (click)="seleccionarBancoSust(i)">
+                                <td data-dismiss="modal">
+                                    {{i.strCodigo}}
+                                </td>
+                                <td data-dismiss="modal">
+                                    {{i.strNombre}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Fin Modal Cuentas Bancos PUC -->

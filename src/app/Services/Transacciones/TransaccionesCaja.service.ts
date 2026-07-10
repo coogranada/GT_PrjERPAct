@@ -58,14 +58,28 @@ export class TransaccionesCajaService {
         return this._http.get<any>(this.url);
     }
 
-    ObtenerEncabezadoTransa(Documento: string): Observable<any> {
-        this.url = `${this.environment.Url}/ObtenerEncabezadoTransa?Documento=` + Documento;
-        return this._http.get<any>(this.url);
+    ObtenerEncabezadoTransa(Documento: string, IdOficina: number): Observable<any> {
+        const params = {
+            Documento: Documento,
+            IdOficina: IdOficina
+        };
+
+        return this._http.get<any>(
+            `${this.environment.Url}/ObtenerEncabezadoTransa`,
+            { params }
+        );
     }
 
-    ObtenerEncabezadoNombreTransa(Nombre: string): Observable<any> {
-        this.url = `${this.environment.Url}/ObtenerEncabezadoNombreTransa?Nombre=` + Nombre;
-        return this._http.get<any>(this.url);
+    ObtenerEncabezadoNombreTransa(Nombre: string,  IdOficina: number): Observable<any> {
+        const params = {
+            Nombre: Nombre,
+            IdOficina: IdOficina
+        };
+
+        return this._http.get<any>(
+            `${this.environment.Url}/ObtenerEncabezadoNombreTransa`,
+            { params }
+        );
     }
 
     RecaudarOlivos(Solicitud: any): Observable<any> {
@@ -125,9 +139,16 @@ export class TransaccionesCajaService {
         return this._http.post<any>(this.url, IdPerfil);
     }
 
-    GuardarTransaccion(Solicitud: any): Observable<any> {
+    GuardarTransaccion(Solicitud: any, Cheque: any, ChequeRet: any): Observable<any> {
         this.url = `${this.environment.Url}/GuardarTransaccion`;
-        return this._http.post<any>(this.url, Solicitud);
+
+        const body = {
+            transaccion: Solicitud,
+            chequeDto: Cheque,
+            ChequeRetDto: ChequeRet
+        };
+
+        return this._http.post<any>(this.url, body);
     }
 
     ValidarAutorizaNovedad(Usuario: string, IdNovedad: number): Observable<any> {
@@ -138,6 +159,18 @@ export class TransaccionesCajaService {
 
         return this._http.get<any>(
             `${this.environment.Url}/ValidarAutorizaNovedad`,
+            { params }
+        );
+    }
+
+    ValidarCheque(IdBanco: number, Cheque: string): Observable<any> {
+        const params = {
+            IdBanco: IdBanco,
+            Cheque: Cheque
+        };
+
+        return this._http.get<any>(
+            `${this.environment.Url}/ValidarCheque`,
             { params }
         );
     }
@@ -172,5 +205,38 @@ export class TransaccionesCajaService {
         return this._http.get<any>(this.url);
     }
 
+    ObtenerBancosPuc(): Observable<any> {
+        this.url = `${this.environment.Url}/ObtenerBancosPuc`;
+        return this._http.get<any>(this.url);
+    }
 
+    ObtenerCuentasBancos(IdUsuario: number): Observable<any> {
+        this.url = `${this.environment.Url}/ObtenerCuentasBancos?IdUsuario=` + IdUsuario;
+        return this._http.get<any>(this.url);
+    }
+
+    ValidarChequeEmitido(CuentaPuc: number, Cheque: number): Observable<any[]> {
+        const url = `${this.environment.Url}/ValidarChequeEmitido`;
+
+        const params = new HttpParams()
+            .set('CuentaPuc', CuentaPuc)
+            .set('Cheque', Cheque);
+
+        return this._http.get<any[]>(url, { params });
+    }
+    
+    ObtenerChequeEmitido(IdPuc: number, Cheque: number): Observable<any[]> {
+        const url = `${this.environment.Url}/ObtenerChequeEmitido`;
+
+        const params = new HttpParams()
+            .set('IdPuc', IdPuc)
+            .set('Cheque', Cheque);
+
+        return this._http.get<any[]>(url, { params });
+    }
+
+    ObtenerReembolso(IdOficina: number): Observable<any> {
+        this.url = `${this.environment.Url}/ObtenerReembolso?IdOficina=` + IdOficina;
+        return this._http.get<any>(this.url);
+    }
 }

@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, numberAttribute, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertService } from '../../../Services/Alert/alert.service';
 import { TransaccionesCajaService } from '../../../Services/Transacciones/TransaccionesCaja.service';
@@ -12,7 +12,7 @@ import { LoginService } from '../../../Services/Login/login.service';
 import { lastValueFrom } from 'rxjs';
 import { ShareComponentModule } from '../../../Modules/share-component.module';
 import { ModuleValidationService } from '../../../Services/Enviroment/moduleValidation.service';
-import { ChequeDTO } from '../../../Models/Transacciones/TransaccionesCaja/Cheque.model';
+import { ChequeDTO, ChequeRetDTO } from '../../../Models/Transacciones/TransaccionesCaja/Cheque.model';
 
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -27,6 +27,9 @@ const ColorSecundario = 'rgb(13,165,80,0.7)';
 export class TransaccionesCajaComponent implements OnInit {
 
   public Modulo = 87;
+  public IdAutorizaReimprimir = 260
+  public IdAutorizaMismoUsuario = 247
+  public IdOficinaCentral = 3
 
   @ViewChild('ModalCondiciones', { static: true }) private ModalCondiciones!: ElementRef;
   @ViewChild('ModalOtrasTransacciones', { static: true }) private ModalOtrasTransacciones!: ElementRef;
@@ -35,6 +38,8 @@ export class TransaccionesCajaComponent implements OnInit {
   @ViewChild('ModalOtrasTransaccionesConvenios', { static: true }) private ModalOtrasTransaccionesConvenios!: ElementRef;
   @ViewChild('ModalBuscarNombres', { static: true }) private ModalBuscarNombres!: ElementRef;
   @ViewChild('ModalBancos', { static: true }) private ModalBancos!: ElementRef;
+  @ViewChild('ModalCuentasBancos', { static: true }) private ModalCuentasBancos!: ElementRef;
+  @ViewChild('ModalCuentasBancosPuc', { static: true }) private ModalCuentasBancosPuc!: ElementRef;
 
 
   @ViewChild('pdfViewer') pdfViewer!: ElementRef;
@@ -52,10 +57,13 @@ export class TransaccionesCajaComponent implements OnInit {
   formBusqueda!: FormGroup;
   formTransaccion!: FormGroup;
   formCheque!: FormGroup;
-
+  formChequeRet!: FormGroup;
+  formSustituir !: FormGroup;
+  formCambCheInt !: FormGroup;
 
   public UsuarioActual: string = "";
   public OficinaActual: string = "";
+  public DocumentoUsActual: string = "";
   public ListCatProducto: any;
   public ListProducto: any;
   public ListCarteraConvenio: any;
@@ -70,14 +78,23 @@ export class TransaccionesCajaComponent implements OnInit {
   public ListOficinas: any[] = [];
   public ListRemesas: any[] = [];
   public ListBancos: any[] = [];
+  public ListBancosPuc: any[] = [];
+  public ListCuentasBancos: any[] = [];
+  public ListCuentasBFiltrados: any[] = [];
   public ListBancosFiltrados: any[] = [];
+  public ListBancosPucFiltrados: any[] = [];
   public ListCheques: ChequeDTO[] = [];
+  public ListChequesRet: ChequeRetDTO[] = [];
+  public ListChequesUltimo: ChequeDTO[] = [];
+  public ListChequesRetUltimo: ChequeRetDTO[] = [];
   public OtraTransaccionCodigo: any = "";
   public OtraTransaccionIdTercero: any = "";
   public OtraTransaccionIdTerceroRec: any = "";
   public OtraTransaccionDocumento: any = "";
   public OtraTransaccionDocumentoRec: any = "";
   public OtraTransaccionConvenioRe: any = "";
+  public OtraTransaccionTerceroData: any = "";
+
 
   public base64Data: any;
 
@@ -89,14 +106,18 @@ export class TransaccionesCajaComponent implements OnInit {
   public TotalEfectivo: number = 0;
   public TotalCheque: number = 0;
   public TotalCheques: number = 0;
+  public TotalChequesRet: number = 0;
   public IdOficinaActual: number = 0;
   public IdUsuarioActual: number = 0;
+  public IdUsuarioAutoriza: number = 0;
   public OrigenSeleccionBN: number = 0;
   public NaturalezaTransa: number | null = null;
   public TabPorDefecto: number | null = null;
   public ProductoSeleccionado: number | null = null;
   public CodigoTransa: number | null = null;
   public OtraTransaccionIdOficinaD: number = 0;
+  public OtraTransaccionValorChequeSust: number = 0;
+
 
   public TipoTransaccionStrSelected: string = "";
   public DocumentoSelected: string = "";
@@ -119,8 +140,10 @@ export class TransaccionesCajaComponent implements OnInit {
   public OtraTransaccionComentario: string = "";
   public OtraTransaccionFactura: string = "";
   public OtraTransaccionCodigoDescrip: string = "";
+  public OtraTransaccionBeneficiarioSust: string = "";
   public converted_image: string = "";
   public ValidadoraStr: string = "";
+
 
 
   public pdfUrl!: SafeResourceUrl;
@@ -162,11 +185,14 @@ export class TransaccionesCajaComponent implements OnInit {
       this.OficinaActual = DataUser.Oficina;
       this.IdUsuarioActual = Number(DataUser.IdUsuarioSGF);
       this.IdOficinaActual = Number(DataUser.NumeroOficina);
+      this.DocumentoUsActual = DataUser.Documento;;
+
     } else {
       this.UsuarioActual = "";
       this.OficinaActual = "";
       this.IdUsuarioActual = 0;
       this.IdOficinaActual = 0;
+      this.DocumentoUsActual = "";
     }
 
     this.validarEstadoTaquilla();
@@ -195,6 +221,33 @@ export class TransaccionesCajaComponent implements OnInit {
       valorCheque: [0, Validators.required]
     });
 
+    this.formChequeRet = this.fb.group({
+      cuentaBanco: [null, Validators.required],
+      nombreBanco: ['', Validators.required],
+      beneficiario: ['', Validators.required],
+      numeroCheque: [null, Validators.required],
+      valorCheque: [0, Validators.required],
+      idBanco: [0],
+    });
+
+    this.formSustituir = this.fb.group({
+      cuentaBanco: [null, Validators.required],
+      nombreBanco: ['', Validators.required],
+      chequeActual: [null, Validators.required],
+      observaciones: ['', Validators.required],
+      idBanco: [null],
+    });
+
+    this.formCambCheInt = this.fb.group({
+      cuentaBanco: [null, Validators.required],
+      nombreBanco: ['', Validators.required],
+      chequeActual: [null, Validators.required],
+      observaciones: ['', Validators.required],
+      idBanco: [null],
+      beneficiario:[{ value: '', disabled: true }, Validators.required],
+      valor: { value: null, disabled: true },
+    });
+
     $('#ModalCondiciones').on('hidden.bs.modal', function () {
       $('body').css('padding-right', '0');
       $('body').removeClass('modal-open');
@@ -208,6 +261,9 @@ export class TransaccionesCajaComponent implements OnInit {
     this.obtenerListas();
     this.obtenerRemesas();
     this.obtenerBancos();
+    this.obtenerCuentasBancos();
+    this.obtenerCuentasBancosPuc();
+
   }
 
   validarEstadoTaquilla() {
@@ -228,7 +284,6 @@ export class TransaccionesCajaComponent implements OnInit {
         }
       });
   }
-
 
   obtenerValidadora() {
     this.transaccionesCajaService
@@ -296,6 +351,34 @@ export class TransaccionesCajaComponent implements OnInit {
       });
   }
 
+  obtenerCuentasBancos() {
+    this.transaccionesCajaService
+      .ObtenerCuentasBancos(this.IdUsuarioActual)
+      .subscribe({
+        next: (resultado: any) => {
+          this.ListCuentasBancos = resultado;
+        },
+        error: (err) => {
+          this.loading.hide();
+          console.error('Error obtener cuentas de bancos:', err);
+        }
+      });
+  }
+
+
+  obtenerCuentasBancosPuc() {
+    this.transaccionesCajaService
+      .ObtenerBancosPuc()
+      .subscribe({
+        next: (resultado: any) => {
+          this.ListBancosPuc = resultado;
+        },
+        error: (err) => {
+          this.loading.hide();
+          console.error('Error obtener cuentas de bancos puc:', err);
+        }
+      });
+  }
   //#endregion
 
   //#region "Obtener información general"
@@ -430,7 +513,10 @@ export class TransaccionesCajaComponent implements OnInit {
 
     this.ListOtrasTransaccionxPerfilBase = [... this.ListOtrasTransaccionxPerfilFiltrado];
 
-
+    //Optimizaren un solo metodo
+    this.limpiarcamposOtraTransaDocNom(0); //Limpieza tab tesoreria
+    this.limpiarcamposCheque(0); //Limpieza tab cheque consigna
+    this.limpiarcamposChequeRet(0); //Limpieza tab cheque retira
   }
 
   capturarDocumento(input: HTMLInputElement) {
@@ -721,7 +807,7 @@ export class TransaccionesCajaComponent implements OnInit {
 
   buscarEncabezado(i: number, datos?: any) {
     if (i == 0) {
-      this.transaccionesCajaService.ObtenerEncabezadoTransa(this.DocumentoBusqueda)
+      this.transaccionesCajaService.ObtenerEncabezadoTransa(this.DocumentoBusqueda, this.IdOficinaActual)
         .subscribe({
           next: (response: any) => {
             if (!response || response === 'null' || (Array.isArray(response) && response.length === 0)) {
@@ -767,7 +853,7 @@ export class TransaccionesCajaComponent implements OnInit {
   busquedaNombres() {
     this.loading2 = true;
     const nombre = this.NombreBusqueda;
-    this.transaccionesCajaService.ObtenerEncabezadoNombreTransa(nombre)
+    this.transaccionesCajaService.ObtenerEncabezadoNombreTransa(nombre, this.IdOficinaActual)
       .subscribe({
         next: (result: any) => {
           if (result.length === 0) {
@@ -897,7 +983,7 @@ export class TransaccionesCajaComponent implements OnInit {
 
   limpiarFormulario(i: number) {
     switch (i) {
-      case 0:
+      case 0: //limpieza general
         this.VolverArriba();
         this.activarTransaTab();
 
@@ -905,6 +991,7 @@ export class TransaccionesCajaComponent implements OnInit {
         this.formBusqueda.reset();
         this.formBusqueda.get('idTipoProducto')?.reset('');
         this.formTransaccion.get('idTransaccion')?.reset('');
+        this.limpiarFormSustituir();
 
         //arreglos
         this.ListProducto = [];
@@ -917,11 +1004,14 @@ export class TransaccionesCajaComponent implements OnInit {
         this.TotalSaldo = 0;
         this.TotalEfectivo = 0;
         this.TotalCheque = 0;
+        this.TotalCheques = 0;
+        this.TotalChequesRet = 0;
         this.TipoProductoSelected = 0;
         this.TerceroSelected = 0;
         this.TipoTransaccionSelected = 0;
         this.IdCuentaSelected = 0;
         this.ProductoSeleccionado = 0;
+        this.IdUsuarioAutoriza = 0;
         this.SelectAll = false;
         this.ActivaMovtoSelected = false;
         this.HabilitaCheque = false;
@@ -941,12 +1031,16 @@ export class TransaccionesCajaComponent implements OnInit {
 
         //tab Tesorería
         this.limpiarcamposOtraTransaDocNom(0);
+
+        //tab Cheque
+        this.limpiarcamposCheque(0);
         break;
       case 1:
         this.activarTransaTab();
 
         //formularios
         this.formTransaccion.get('idTransaccion')?.reset('');
+        this.limpiarFormSustituir();
 
         //arreglos
         this.ListProducto = [];
@@ -959,10 +1053,13 @@ export class TransaccionesCajaComponent implements OnInit {
         this.TotalSaldo = 0;
         this.TotalEfectivo = 0;
         this.TotalCheque = 0;
+        this.TotalCheques = 0;
+        this.TotalChequesRet = 0;
         this.TerceroSelected = 0;
         this.TipoTransaccionSelected = 0;
         this.IdCuentaSelected = 0;
         this.ProductoSeleccionado = 0;
+        this.IdUsuarioAutoriza = 0;
         this.SelectAll = false;
         this.ActivaMovtoSelected = false;
         this.HabilitaCheque = false;
@@ -994,6 +1091,16 @@ export class TransaccionesCajaComponent implements OnInit {
 
   limpiarBusquedaNombreConvenioRe() {
     this.ListConveniosBusqueda = [];
+  }
+
+  limpiarFormSustituir() {
+    this.formSustituir.patchValue({
+      cuentaBanco: null,
+      nombreBanco: '',
+      chequeActual: null,
+      observaciones: '',
+      idBanco: null
+    });
   }
   //#endregion
 
@@ -1089,8 +1196,10 @@ export class TransaccionesCajaComponent implements OnInit {
   }
 
   habilitaCheque() {
-    this.tabsHabilitados.push(5);
-    this.activarChequesTab();
+    if (this.TotalCheque > 0) {
+      this.tabsHabilitados.push(5);
+      this.activarChequesTab();
+    }
   }
   //#endregion
 
@@ -1432,6 +1541,11 @@ export class TransaccionesCajaComponent implements OnInit {
 
       if (!result.isConfirmed) {
         continuar = false;
+
+        if (data.Naturaleza == -1 && data.Cheque > 0) {
+          this.imprimirValidadoraRelCheque();
+        }
+
         break;
       }
       contador++;
@@ -1441,6 +1555,10 @@ export class TransaccionesCajaComponent implements OnInit {
 
         if (!autorizado) {
           continuar = false;
+
+          this.imprimirValidadoraRelCheque(); //Validar que solo muestre para consignación
+
+
           break;
         }
       }
@@ -1489,14 +1607,14 @@ export class TransaccionesCajaComponent implements OnInit {
           }
 
           const response1: any = await lastValueFrom(
-            this.transaccionesCajaService.ValidarAutorizaNovedad(usuario, 260)
+            this.transaccionesCajaService.ValidarAutorizaNovedad(usuario, this.IdAutorizaReimprimir)
           );
 
           this.loading.hide();
           if (response1?.ObjAlertasDto?.TipoAlerta === 'Error') {
             swal.showValidationMessage("Usuario no está autorizado para reimprimir.");
             return false;
-          } else if (response1 === false) {
+          } else if (response1.resultado === false) {
             swal.showValidationMessage("Usuario no está autorizado para reimprimir.");
             return false;
           }
@@ -1515,22 +1633,34 @@ export class TransaccionesCajaComponent implements OnInit {
     return result.isConfirmed && result.value == true;
   }
 
-  validarClave() {
+  async imprimirValidadoraRelCheque() {
+    let continuar = true;
 
+    while (continuar) {
+      const result = await swal.fire({
+        title: '',
+        html: `
+        <h5><strong>RELACIÓN DE CHEQUES</strong></h5>
+        Inserte el documento en la validadora, seleccione <strong>Aceptar</strong>.<br>
+      `,
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'Aceptar',
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: 'rgb(13,165,80)',
+        cancelButtonColor: 'rgb(160,0,87)',
+        allowOutsideClick: false,
+        allowEscapeKey: false
+      });
+
+      if (result.isConfirmed) {
+        await this.validadoraService.printDataRelCheque(this.ListChequesUltimo, this.ValidadoraStr);
+      } else {
+        continuar = false;
+      }
+    }
   }
 
-  imprimirValidadora1() { //Solo para pruebas
-    this.validadoraService.printData({
-      Fecha: "2026/03/09 10:39:05",
-      Cajero: "DFRAMIREZ",
-      Cuenta: "004-700-0000001-0",
-      Efectivo: 13250,
-      Cheque: 0,
-      Transaccion: 1123123,
-      NombreTrans: "Convenio Vivir Olivos",
-      DescripcionTrans: "Otras Transacciones"
-    }, this.ValidadoraStr);
-  }
   //#endregion
 
   //#region "Tab Tesorería"
@@ -1549,10 +1679,12 @@ export class TransaccionesCajaComponent implements OnInit {
       this.OtraTransaccionDocumento = item.Documento;
       this.OtraTransaccionNombre = item.Nombre;
       this.OtraTransaccionIdTercero = item.IdTercero;
+      this.OtraTransaccionTerceroData = item;
     } else if (origen == 2) {
       this.OtraTransaccionDocumentoRec = item.Documento;
       this.OtraTransaccionNombreRec = item.Nombre;
       this.OtraTransaccionIdTerceroRec = item.IdTercero;
+      this.OtraTransaccionTerceroData = item;
     }
 
 
@@ -1667,7 +1799,7 @@ export class TransaccionesCajaComponent implements OnInit {
 
     if (!this.OtraTransaccionCodigo) return;
 
-    this.OtraTransaccionCodigo = this.OtraTransaccionCodigo.trim();
+    this.OtraTransaccionCodigo = String(this.OtraTransaccionCodigo).trim();
 
     if (!this.OtraTransaccionCodigo) return;
 
@@ -1742,7 +1874,7 @@ export class TransaccionesCajaComponent implements OnInit {
       return;
     }
 
-    this.OtraTransaccionDocumento = this.OtraTransaccionDocumento.trim();
+    this.OtraTransaccionDocumento = String(this.OtraTransaccionDocumento).trim();
 
     if (!this.OtraTransaccionDocumento) {
       this.limpiarcamposOtraTransaDocNom(1);
@@ -1751,7 +1883,7 @@ export class TransaccionesCajaComponent implements OnInit {
 
     //Buscar
     this.loading.show();
-    this.transaccionesCajaService.ObtenerEncabezadoTransa(this.OtraTransaccionDocumento)
+    this.transaccionesCajaService.ObtenerEncabezadoTransa(this.OtraTransaccionDocumento, this.IdOficinaActual)
       .subscribe({
         next: (result: any) => {
           if (!result || result === 'null' || (Array.isArray(result) && result.length === 0)) {
@@ -1764,6 +1896,7 @@ export class TransaccionesCajaComponent implements OnInit {
             this.OtraTransaccionDocumento = result.Documento;
             this.OtraTransaccionNombre = result.Nombre;
             this.OtraTransaccionIdTercero = result.IdTercero;
+            this.OtraTransaccionTerceroData = result;
           }
         }, error: (err) => {
           this.loading.hide();
@@ -1789,7 +1922,7 @@ export class TransaccionesCajaComponent implements OnInit {
 
     //Buscar
     this.loading.show();
-    this.transaccionesCajaService.ObtenerEncabezadoTransa(this.OtraTransaccionDocumentoRec)
+    this.transaccionesCajaService.ObtenerEncabezadoTransa(this.OtraTransaccionDocumentoRec, this.IdOficinaActual)
       .subscribe({
         next: (result: any) => {
           if (!result || result === 'null' || (Array.isArray(result) && result.length === 0)) {
@@ -1845,7 +1978,7 @@ export class TransaccionesCajaComponent implements OnInit {
     this.loading.show();
     this.OrigenSeleccionBN = 1;
     const nombre = this.OtraTransaccionNombre;
-    this.transaccionesCajaService.ObtenerEncabezadoNombreTransa(nombre)
+    this.transaccionesCajaService.ObtenerEncabezadoNombreTransa(nombre, this.IdOficinaActual)
       .subscribe({
         next: (result: any) => {
           if (result.length === 0) {
@@ -1873,7 +2006,7 @@ export class TransaccionesCajaComponent implements OnInit {
     this.loading.show();
     this.OrigenSeleccionBN = 2;
     const nombre = this.OtraTransaccionNombreRec;
-    this.transaccionesCajaService.ObtenerEncabezadoNombreTransa(nombre)
+    this.transaccionesCajaService.ObtenerEncabezadoNombreTransa(nombre, this.IdOficinaActual)
       .subscribe({
         next: (result: any) => {
           if (result.length === 0) {
@@ -1924,15 +2057,110 @@ export class TransaccionesCajaComponent implements OnInit {
       });
   }
 
+  obtenerReembolso(oficina: boolean) {
+    var oficinaB: Number = 0;
+    if (oficina) {
+      oficinaB = Number(this.IdOficinaActual);
+    } else {
+      oficinaB = Number(this.IdOficinaCentral);
+    }
+
+    this.loading.show();
+    this.transaccionesCajaService.ObtenerReembolso(Number(oficinaB))
+      .subscribe({
+        next: (resultado: any) => {
+          if (resultado !== null) {
+            this.TotalEfectivo = Number(resultado?.sngMonto || 0);
+            this.OtraTransaccionDocumento = Number(resultado?.strDocumento || 0);
+            this.recalcularSaldoTotal();
+            this.buscarDocumentoOtraTransaccion();
+            this.loading.hide();
+          } else {
+            this.notif.onWarning('Advertencia', 'Oficina no tiene asignado un responsable de caja menor.');
+            this.TotalEfectivo = Number(0);
+            this.recalcularSaldoTotal();
+            this.loading.hide();
+          }
+        },
+        error: (err) => {
+          this.loading.hide();
+          console.error('Error:', err);
+          this.notif.onWarning('Error', 'Ocurrió un error en la petición');
+        }
+      });
+  }
+
+  setearValorAutomaticoTran() {
+
+    setTimeout(() => {
+      if (this.OtraTransaccionCodigo == null || this.OtraTransaccionCodigo == "") {
+        return;
+      }
+
+      if (this.OtraTransaccionDescripcion == null || this.OtraTransaccionDescripcion == "") {
+        return;
+      }
+
+      switch (String(this.OtraTransaccionCodigo)) {
+        case "16111": // Reembolso caja mejor
+          this.obtenerReembolso(true);
+          break;
+        case "16677": // Reembolso caja mejor central
+          this.obtenerReembolso(false);
+          break;
+      }
+
+    }, 500);
+
+
+  }
+
+
+  setearValorAutomatico() {
+
+    setTimeout(() => {
+      if (this.OtraTransaccionCodigo == null || this.OtraTransaccionCodigo == "") {
+        return;
+      }
+
+      if (this.OtraTransaccionIdTercero == null || this.OtraTransaccionIdTercero == "") {
+        return;
+      }
+
+
+      switch (String(this.OtraTransaccionCodigo)) {
+        case "16406": // Cancelar C x P
+          this.TotalEfectivo = this.OtraTransaccionTerceroData.SaldoAcreedores;
+          this.recalcularSaldoTotal();
+          break;
+      }
+
+    }, 500);
+
+
+  }
+
+
   //#endregion
 
   //#region "Tab Cheque"
+  isAdding = false;
   agregarCheque(): void {
     if (this.formCheque.invalid) {
+      this.notif.onWarning('Advertencia', 'Todos los campos del cheque son obligatorios.');
+      this.isAdding = false;
       return;
     }
 
-    const idBanco = this.formCheque.value.idBanco;
+    if (Number(this.formCheque.value.valorCheque) <= 0) {
+      this.notif.onWarning('Advertencia', 'El valor del cheque debe ser mayor a cero.');
+      this.isAdding = false;
+      return;
+    }
+
+
+    this.isAdding = true;
+    const idBanco = Number(this.formCheque.value.idBanco);
     const numeroCheque = this.formCheque.value.numeroCheque;
 
     const existe = this.ListCheques.some(x =>
@@ -1948,6 +2176,7 @@ export class TransaccionesCajaComponent implements OnInit {
     const remesa = this.ListRemesas.find(
       x => x.intClase == this.formCheque.value.idRemesa
     );
+
     const cheque: ChequeDTO = {
       idBanco: Number(this.formCheque.value.idBanco),
       nombreBanco: this.formCheque.value.nombreBanco,
@@ -1955,28 +2184,167 @@ export class TransaccionesCajaComponent implements OnInit {
       numeroCheque: this.formCheque.value.numeroCheque,
       idRemesa: this.formCheque.value.idRemesa,
       descripcionRemesa: remesa?.strDescripcion || '',
-      valorCheque: Number(this.formCheque.value.valorCheque)
+      valorCheque: Number(
+        this.formCheque.value.valorCheque?.toString().replace(/,/g, '')
+      )
     };
-    this.ListCheques.push(cheque);
-    this.calcularTotalCheque();
-    this.formCheque.reset({
-      idBanco: null,
-      nombreBanco: '',
-      cuentaCorriente: '',
-      numeroCheque: '',
-      idRemesa: null,
-      valorCheque: 0
+
+    this.transaccionesCajaService.ValidarCheque(cheque.idBanco, cheque.numeroCheque).subscribe({
+      next: (result: any) => {
+        if (result === true) {
+
+          const existePost = this.ListCheques.some(x =>
+            x.idBanco === cheque.idBanco &&
+            x.numeroCheque === cheque.numeroCheque
+          );
+
+          if (!existePost) {
+            this.ListCheques.push(cheque);
+            this.calcularTotalCheque();
+            this.formCheque.reset({
+              idBanco: null,
+              nombreBanco: '',
+              cuentaCorriente: '',
+              numeroCheque: '',
+              idRemesa: null,
+              valorCheque: 0
+            });
+          }
+
+        } else {
+          this.notif.onWarning('Advertencia', 'El cheque ' + numeroCheque + ' ya fue ingresado en otra transacción.');
+          this.isAdding = false;
+        }
+      }, error: (err) => {
+        console.log('error validando cheque ' + err);
+        this.notif.onDanger('Error', 'No se pudo validar cheque.');
+        this.isAdding = false;
+      }
+    });
+  }
+
+  agregarChequeRet(): void {
+    if (this.formChequeRet.invalid) {
+      this.notif.onWarning('Advertencia', 'Todos los campos para emitir el cheque son obligatorios.');
+      this.isAdding = false;
+      return;
+    }
+
+    if (Number(this.formChequeRet.value.valorCheque) <= 0) {
+      this.notif.onWarning('Advertencia', 'El valor del cheque debe ser mayor a cero.');
+      this.isAdding = false;
+      return;
+    }
+
+
+    var { cuentaBanco, numeroCheque } = this.formChequeRet.value;
+
+    const registro = this.ListCuentasBancos.find(item =>
+      item.strCodigo === String(cuentaBanco)
+    );
+
+
+
+    if (!registro || numeroCheque < registro.lngChequeInicial || numeroCheque > registro.lngChequeFinal) {
+
+      const rangoIni = registro?.lngChequeInicial ?? 'N/A';
+      const rangoFin = registro?.lngChequeFinal ?? 'N/A';
+
+      this.notif.onWarning('Advertencia', `El cheque no está en el rango válido [${rangoIni} - ${rangoFin}].`);
+
+      this.isAdding = false;
+      return;
+    }
+
+    this.isAdding = true;
+    numeroCheque = this.formChequeRet.value.numeroCheque;
+
+    const existe = this.ListChequesRet.some(x =>
+      x.numeroCheque === Number(numeroCheque)
+    );
+
+    if (existe) {
+      this.notif.onWarning('Advertencia', 'El cheque ya está relacionado.');
+      return
+    }
+
+    const cheque: ChequeRetDTO = {
+      cuentaBanco: Number(this.formChequeRet.value.cuentaBanco),
+      nombreBanco: this.formChequeRet.value.nombreBanco,
+      beneficiario: this.formChequeRet.value.beneficiario.toString().toUpperCase(),
+      numeroCheque: Number(this.formChequeRet.value.numeroCheque),
+      valorCheque: Number(
+        this.formChequeRet.value.valorCheque?.toString().replace(/,/g, '')
+      ),
+      idBanco: Number(this.formChequeRet.value.idBanco),
+      observacion: ''
+    };
+
+    this.loading.show();
+    this.transaccionesCajaService.ValidarChequeEmitido(cheque.cuentaBanco, cheque.numeroCheque).subscribe({
+      next: (result: any) => {
+        if (result === false) {
+
+          const existePost = this.ListChequesRet.some(x =>
+            x.cuentaBanco === cheque.cuentaBanco &&
+            x.numeroCheque === cheque.numeroCheque
+          );
+
+          if (!existePost) {
+            this.ListChequesRet.push(cheque);
+            this.calcularTotalChequeRet();
+            this.formChequeRet.reset({
+              cuentaBanco: null,
+              nombreBanco: '',
+              beneficiario: '',
+              numeroCheque: null,
+              valorCheque: 0
+            });
+            this.loading.hide();
+          }
+          this.loading.hide();
+        } else {
+          this.notif.onWarning('Advertencia', 'El cheque ' + numeroCheque + ' ya fue girado.');
+          this.isAdding = false;
+          this.loading.hide();
+        }
+      }, error: (err) => {
+        console.log('error validando cheque ' + err);
+        this.notif.onDanger('Error', 'No se pudo validar cheque.');
+        this.isAdding = false;
+        this.loading.hide();
+      }
     });
   }
 
   calcularTotalCheque(): void {
-    this.TotalCheques = this.ListCheques
-      .reduce((sum, item) => sum + item.valorCheque, 0);
+    this.TotalCheques = this.ListCheques.reduce((sum, item) => {
+      const valor = Number(
+        item.valorCheque?.toString().replace(/,/g, '')
+      ) || 0;
+
+      return sum + valor;
+    }, 0);
+  }
+
+  calcularTotalChequeRet(): void {
+    this.TotalChequesRet = this.ListChequesRet.reduce((sum, item) => {
+      const valor = Number(
+        item.valorCheque?.toString().replace(/,/g, '')
+      ) || 0;
+
+      return sum + valor;
+    }, 0);
   }
 
   eliminarCheque(index: number): void {
     this.ListCheques.splice(index, 1);
     this.calcularTotalCheque();
+  }
+
+  eliminarChequeRet(index: number): void {
+    this.ListChequesRet.splice(index, 1);
+    this.calcularTotalChequeRet();
   }
 
   consultarBanco(): void {
@@ -1995,6 +2363,50 @@ export class TransaccionesCajaComponent implements OnInit {
 
     this.formCheque.patchValue({
       nombreBanco: banco?.strNombre || ''
+    });
+  }
+
+  consultarBancoRet(): void {
+    const cuentaBanco = this.formChequeRet.get('cuentaBanco')?.value;
+
+    if (!cuentaBanco && cuentaBanco !== 0) {
+      this.formChequeRet.patchValue({
+        nombreBanco: '',
+        idBanco: 0
+      });
+      return;
+    }
+
+
+    const banco = this.ListCuentasBancos.find(
+      (b: any) => b.strCodigo === cuentaBanco
+    );
+
+    this.formChequeRet.patchValue({
+      nombreBanco: banco?.strNombre || '',
+      idBanco: banco?.intIdPuc
+    });
+  }
+
+  consultarBancoSust(form: FormGroup): void {
+    const cuentaBanco = form.get('cuentaBanco')?.value;
+
+    if (!cuentaBanco && cuentaBanco !== 0) {
+      form.patchValue({
+        nombreBanco: '',
+        idBanco: 0
+      });
+      return;
+    }
+
+
+    const banco = this.ListBancosPuc.find(
+      (b: any) => b.strCodigo === cuentaBanco
+    );
+
+    form.patchValue({
+      nombreBanco: banco?.strNombre || '',
+      idBanco: banco?.intIdPuc || 0
     });
   }
 
@@ -2031,10 +2443,98 @@ export class TransaccionesCajaComponent implements OnInit {
     }
   }
 
+  consultarBancoNombreRet(): void {
+    const nombreBanco = this.formChequeRet.get('nombreBanco')?.value;
+
+    if (!nombreBanco) {
+      this.formChequeRet.patchValue({
+        cuentaBanco: null,
+        idBanco: 0
+      });
+      return;
+    }
+
+    const resultados = this.ListCuentasBancos.filter(
+      (b: any) =>
+        b.strNombre.toLowerCase().includes(nombreBanco.toLowerCase())
+    );
+
+    if (resultados.length === 1) {
+      this.formChequeRet.patchValue({
+        cuentaBanco: resultados[0].strCodigo,
+        nombreBanco: resultados[0].strNombre,
+        idBanco: resultados[0].intIdPuc
+      });
+    } else if (resultados.length > 1) {
+      this.ListCuentasBFiltrados = resultados;
+      this.ModalCuentasBancos.nativeElement.click();
+    } else {
+      // Ninguno
+      this.notif.onWarning('Advertencia', 'No se encontró cuenta de banco.');
+      this.formChequeRet.patchValue({
+        nombreBanco: '',
+        cuentaBanco: null,
+        idBanco: 0
+      });
+    }
+  }
+
+  consultarBancoNombreSust(form: FormGroup): void {
+    const nombreBanco = form.get('nombreBanco')?.value;
+
+    if (!nombreBanco) {
+      form.patchValue({
+        cuentaBanco: null,
+        idBanco: 0
+      });
+      return;
+    }
+
+    const resultados = this.ListBancosPuc.filter(
+      (b: any) =>
+        b.strNombre.toLowerCase().includes(nombreBanco.toLowerCase())
+    );
+
+    if (resultados.length === 1) {
+      form.patchValue({
+        cuentaBanco: resultados[0].strCodigo,
+        nombreBanco: resultados[0].strNombre,
+        idBanco: resultados[0].intIdPuc
+      });
+    } else if (resultados.length > 1) {
+      this.ListBancosPucFiltrados = resultados;
+      this.ModalCuentasBancosPuc.nativeElement.click();
+    } else {
+      // Ninguno
+      this.notif.onWarning('Advertencia', 'No se encontró cuenta de banco.');
+      form.patchValue({
+        nombreBanco: '',
+        cuentaBanco: null,
+        idBanco: 0
+      });
+    }
+  }
+
   seleccionarBanco(i: any) {
     this.formCheque.patchValue({
       idBanco: i.intCodigo,
       nombreBanco: i.strNombre
+    });
+  }
+
+  seleccionarBancoRet(i: any) {
+    this.formChequeRet.patchValue({
+      cuentaBanco: i.strCodigo,
+      nombreBanco: i.strNombre,
+      idBanco: i.intIdPuc
+    });
+  }
+
+  seleccionarBancoSust(i: any) {
+    this.formSustituir.patchValue({
+      cuentaBanco: i.strCodigo,
+      nombreBanco: i.strNombre,
+      idBanco: i.intIdPuc
     });
   }
 
@@ -2050,7 +2550,35 @@ export class TransaccionesCajaComponent implements OnInit {
     }
   }
 
-  editarCheque(i: any, j: number) {
+  limpiarcamposBancoRet(tipo: string) {
+    if (tipo === 'cuenta') {
+      this.formChequeRet.patchValue({
+        nombreBanco: '',
+        idBanco: 0
+      });
+    } else {
+      this.formChequeRet.patchValue({
+        cuentaBanco: null,
+        idBanco: 0
+      });
+    }
+  }
+
+  limpiarcamposBancoSust(tipo: string, form: FormGroup) {
+    if (tipo === 'cuenta') {
+      form.patchValue({
+        nombreBanco: '',
+        idBanco: 0
+      });
+    } else {
+      form.patchValue({
+        cuentaBanco: null,
+        idBanco: 0
+      });
+    }
+  }
+
+  editarCheque(i: any, index: number) {
     this.formCheque.patchValue({
       idBanco: Number(i.idBanco),
       nombreBanco: i.nombreBanco,
@@ -2059,8 +2587,131 @@ export class TransaccionesCajaComponent implements OnInit {
       idRemesa: i.idRemesa,
       valorCheque: Number(i.valorCheque)
     });
-    this.ListCheques.splice(i,j);
+    this.ListCheques.splice(index, 1);
     this.calcularTotalCheque();
+  }
+
+  editarChequeRet(i: any, index: number) {
+    this.formChequeRet.patchValue({
+      cuentaBanco: Number(i.cuentaBanco),
+      nombreBanco: i.nombreBanco,
+      beneficiario: i.beneficiario,
+      numeroCheque: i.numeroCheque,
+      valorCheque: Number(i.valorCheque),
+      idBanco: Number(i.idBanco)
+    });
+    this.ListChequesRet.splice(index, 1);
+    this.calcularTotalChequeRet();
+  }
+
+  limpiarcamposCheque(i: number) {
+    switch (i) {
+      case 0:
+        this.ListCheques = [];
+        this.TotalCheques = 0;
+        break;
+    }
+  }
+
+  limpiarcamposChequeRet(i: number) {
+    switch (i) {
+      case 0:
+        this.ListChequesRet = [];
+        this.TotalChequesRet = 0;
+        break;
+    }
+  }
+
+  validarChequeSust() {
+    const chequeActual = this.formSustituir.get('chequeActual')?.value;
+    const nombreBanco = this.formSustituir.get('nombreBanco')?.value;
+    const cuentaBanco = this.formSustituir.get('cuentaBanco')?.value;
+    const idPuc = this.formSustituir.get('idBanco')?.value;
+
+
+    if (chequeActual && idPuc) {
+      this.loading.show();
+      this.transaccionesCajaService.ObtenerChequeEmitido(idPuc, Number(chequeActual))
+        .subscribe({
+          next: (resultado: any) => {
+            this.loading.hide();
+            if (resultado !== null) {
+              this.TotalCheque = Number(resultado?.curValor || 0);
+
+              this.OtraTransaccionValorChequeSust = Number(resultado?.curValor || 0);
+              this.OtraTransaccionBeneficiarioSust = resultado?.strBeneficiario || '';
+
+              this.recalcularSaldoTotal();
+              this.formChequeRet.patchValue({
+                beneficiario: resultado?.strBeneficiario || '',
+                cuentaBanco: cuentaBanco,
+                nombreBanco: nombreBanco,
+                idBanco: idPuc
+              })
+              this.habilitaCheque();
+            } else {
+              this.notif.onWarning('Advertencia', 'No se encontró el cheque ' + chequeActual + ' en los emitidos.');
+              this.formSustituir.get('chequeActual')?.setValue(null);
+              this.TotalCheque = Number(0);
+              this.recalcularSaldoTotal();
+              this.formChequeRet.patchValue({
+                beneficiario: '',
+                cuentaBanco: null,
+                nombreBanco: '',
+                idBanco: 0
+              })
+            }
+          },
+          error: (err) => {
+            this.loading.hide();
+            console.error('Error:', err);
+            this.notif.onWarning('Error', 'Ocurrió un error en la petición');
+          }
+        });
+    }
+  }
+
+  validarChequeInterno() {
+    const chequeActual = this.formCambCheInt.get('chequeActual')?.value;
+    const nombreBanco = this.formCambCheInt.get('nombreBanco')?.value;
+    const cuentaBanco = this.formCambCheInt.get('cuentaBanco')?.value;
+    const idPuc = this.formCambCheInt.get('idBanco')?.value;
+
+
+    if (chequeActual && idPuc) {
+      this.loading.show();
+      this.transaccionesCajaService.ObtenerChequeEmitido(idPuc, Number(chequeActual))
+        .subscribe({
+          next: (resultado: any) => {
+            this.loading.hide();
+            if (resultado !== null) {
+              this.TotalEfectivo = Number(resultado?.curValor || 0);
+              this.recalcularSaldoTotal();
+              this.formCambCheInt.patchValue({
+                beneficiario: resultado?.strBeneficiario || '',
+                valor: Number(resultado?.curValor || 0 )
+              })
+            } else {
+              this.notif.onWarning('Advertencia', 'No se encontró el cheque ' + chequeActual + ' en los emitidos.');
+              this.formSustituir.get('chequeActual')?.setValue(null);
+              this.TotalEfectivo = Number(0);
+              this.recalcularTotal();
+              this.formChequeRet.patchValue({
+                beneficiario: '',
+                cuentaBanco: null,
+                nombreBanco: '',
+                idBanco: 0,
+                valor: 0
+              })
+            }
+          },
+          error: (err) => {
+            this.loading.hide();
+            console.error('Error:', err);
+            this.notif.onWarning('Error', 'Ocurrió un error en la petición');
+          }
+        });
+    }
   }
 
   //#endregion
@@ -2096,7 +2747,7 @@ export class TransaccionesCajaComponent implements OnInit {
     });
   }
 
-  guardarRecaudo() {
+  async guardarRecaudo() {
     const seleccionados = this.ListCarteraConvenio
       .filter((x: any) => x.selected);
 
@@ -2109,6 +2760,17 @@ export class TransaccionesCajaComponent implements OnInit {
       this.notif.onWarning('Advertencia', "Debe seleccionar los registros en orden consecutivo, desde la primera fila.");
       return;
     }
+
+    let autorizado = true;
+
+    if (!this.validarMismoUsuario()) {
+      autorizado = await this.validarGuardadoMismoUsuario();
+
+      if (!autorizado) {
+        return;
+      }
+    }
+
     this.loading.show();
 
     const recaudo = {
@@ -2139,7 +2801,8 @@ export class TransaccionesCajaComponent implements OnInit {
       idTercero: this.TerceroSelected,
       valorEfectivo: this.TotalEfectivo ?? 0,
       oficinaActual: this.OficinaActual,
-      comentario: "Convenio vivir Olivos automático ERP"
+      comentario: "Convenio vivir Olivos automático ERP",
+      idUsuarioAutoriza: this.IdUsuarioAutoriza
     }
 
     const request = {
@@ -2178,15 +2841,35 @@ export class TransaccionesCajaComponent implements OnInit {
           this.notif.onDanger('Error', 'No se pudo realizar el proceso.');
         }
       });
-
-
   }
 
-  guardarTesoreria() {
+  async guardarTesoreria() {
     if (!this.validarTransaccionTesoreria()) {
       return;
     }
 
+    if (this.NaturalezaTransa == -1) {
+      if (!this.validarTransaccionChequeConsigna()) {
+        return;
+      }
+    }
+
+    if (this.NaturalezaTransa == 1) {
+      if (!this.validarTransaccionChequeRetiro()) {
+        return;
+      }
+    }
+
+
+    let autorizado = true;
+
+    if (!this.validarMismoUsuario()) {
+      autorizado = await this.validarGuardadoMismoUsuario();
+
+      if (!autorizado) {
+        return;
+      }
+    }
 
     this.loading.show();
 
@@ -2199,12 +2882,38 @@ export class TransaccionesCajaComponent implements OnInit {
       valorEfectivo: this.TotalEfectivo ?? 0,
       valorCheque: this.TotalCheque ?? 0,
       oficinaActual: this.OficinaActual,
+      cuenta: this.CuentaSelected,
       comentario: this.OtraTransaccionComentario,
       documento: this.OtraTransaccionDocumento,
       codigoDescr: this.OtraTransaccionCodigoDescrip,
       factura: this.OtraTransaccionFactura,
-      idConvenio: 0
+      idConvenio: 0, // dejar en cero por defecto
+      idUsuarioAutoriza: this.IdUsuarioAutoriza,
+      naturaleza: this.NaturalezaTransa,
+      idPuc: 0 // dejar en cero por defecto
     }
+
+    this.ListChequesUltimo = this.ListCheques; // Se hace copia del objeto
+    this.ListChequesRetUltimo = this.ListChequesRet; // Se hace copia del objeto
+
+    var cheque = this.ListCheques.map(c => ({
+      intBanco: c.idBanco,
+      strCheque: c.numeroCheque,
+      strCtaCorriente: c.cuentaCorriente,
+      curValor: c.valorCheque,
+      intRemesaTipo: c.idRemesa
+    }));
+
+    var chequeRet = this.ListChequesRet.map(c => ({
+      strCodigo: c.cuentaBanco,
+      strNombre: c.nombreBanco,
+      strBeneficiario: c.beneficiario,
+      curValor: c.valorCheque,
+      intBanco: c.idBanco,
+      lngCheque: c.numeroCheque,
+      intNaturaleza: -1,
+      strObservacion: ''
+    }));
 
 
     switch (String(this.OtraTransaccionCodigo)) {
@@ -2215,22 +2924,66 @@ export class TransaccionesCajaComponent implements OnInit {
       case "16177": //RECAUDO EMPRESARIAL
         transaccion.idConvenio = this.OtraTransaccionConvenioRe;
         break;
+      case "16262": //SUSTITUIR CHEQUE
+        transaccion.idPuc = Number(this.formSustituir.get('idBanco')?.value) || 0;
+        const cuentaBanco = Number(this.formSustituir.get('cuentaBanco')?.value);
+        const nombreBanco = this.formSustituir.get('nombreBanco')?.value;
+        const chequeActual = Number(this.formSustituir.get('chequeActual')?.value);
+        const idBanco = Number(this.formSustituir.get('idBanco')?.value);
+        const observacion = this.formSustituir.get('observaciones')?.value;
+
+        chequeRet.push({
+          strCodigo: cuentaBanco,
+          strNombre: nombreBanco,
+          strBeneficiario: this.OtraTransaccionBeneficiarioSust,
+          curValor: this.OtraTransaccionValorChequeSust,
+          intBanco: idBanco,
+          lngCheque: chequeActual,
+          intNaturaleza: 1,
+          strObservacion: observacion
+        });
+        break;
+      case "16076": //CAMBIAR CHEQUE INTERNO
+        transaccion.idPuc = Number(this.formCambCheInt.get('idBanco')?.value) || 0;
+        const cuentaBancoCI = Number(this.formCambCheInt.get('cuentaBanco')?.value);
+        const nombreBancoCI = this.formCambCheInt.get('nombreBanco')?.value;
+        const chequeActualCI = Number(this.formCambCheInt.get('chequeActual')?.value);
+        const idBancoCI = Number(this.formCambCheInt.get('idBanco')?.value);
+        const valorCI = this.formCambCheInt.get('valor')?.value;
+        const beneficiarioCI = this.formCambCheInt.get('beneficiario')?.value;
+        const observacionCI = this.formCambCheInt.get('observaciones')?.value;
+
+        
+
+        chequeRet.push({
+          strCodigo: cuentaBancoCI,
+          strNombre: nombreBancoCI,
+          strBeneficiario: beneficiarioCI,
+          curValor: valorCI,
+          intBanco: idBancoCI,
+          lngCheque: chequeActualCI,
+          intNaturaleza: 1,
+          strObservacion: observacionCI
+        });
+        break;
     }
 
 
 
-    this.transaccionesCajaService.GuardarTransaccion(transaccion).subscribe(
+    this.transaccionesCajaService.GuardarTransaccion(transaccion, cheque, chequeRet).subscribe(
       result => {
         this.loading.hide();
 
         this.pdfTransBase64 = result.PdfTransaccion;
         this.generarImpresion();
 
-        this.limpiarFormulario(2);//Limpieza campos efectivo total
-        this.activarTransaTab();
+        this.activarTransaTab(); //volver al tab
         this.notif.onSuccess('Exitoso', 'La transacción ' + result.Transaccion + ' se guardó correctamente.');
-        this.limpiarFormulario(1);//Limpieza general
-        this.limpiarcamposOtraTransaDocNom(0); // Limpieza tab
+        this.limpiarFormulario(2); //Limpieza campos efectivo total
+        this.limpiarFormulario(1); //Limpieza general
+        this.limpiarcamposOtraTransaDocNom(0); //Limpieza tab tesoreria
+        this.limpiarcamposCheque(0); //Limpieza tab cheque
+        this.limpiarcamposChequeRet(0);//Limpieza tab cheque retiros
         this.imprimirValidadoraTransa(result);
       },
       error => {
@@ -2245,16 +2998,101 @@ export class TransaccionesCajaComponent implements OnInit {
   //#endregion
 
   //#region "Validaciones"
-  validarTransaccionTesoreria(): boolean {
-    if (this.OtraTransaccionIdTercero == null || this.OtraTransaccionIdTercero == "") {
-      this.notif.onWarning('Advertencia', 'Documento no válido.');
+  async validarGuardadoMismoUsuario(): Promise<boolean> {
+    const result = await swal.fire({
+      title: 'Autorización requerida',
+      html: `
+            <form autocomplete="off">
+            <p>La transacción involucra el usuario actual, se requiere autorización para guardar.</>
+            <input type="text" id="usuarioAutMU" class="swal2-input" placeholder="Usuario" autocomplete="off">
+            <input type="password" id="claveAutMU" class="swal2-input" placeholder="Clave" autocomplete="new-password">
+            </form>
+            `,
+      confirmButtonText: 'Validar',
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: 'rgb(13,165,80)',
+      cancelButtonColor: 'rgb(160,0,87)',
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+
+      preConfirm: async () => {
+        const usuario = (document.getElementById('usuarioAutMU') as HTMLInputElement).value;
+        const clave = (document.getElementById('claveAutMU') as HTMLInputElement).value;
+
+        try {
+          this.loading.show();
+          const response: any = await lastValueFrom(
+            this.loginService.userAuthentication({
+              Usuario: usuario,
+              clave: clave
+            })
+          );
+
+          if (response?.ObjAlertasDto?.TipoAlerta === 'Error') {
+            this.loading.hide();
+            swal.showValidationMessage(response.ObjAlertasDto.Mensaje);
+            return false;
+          }
+
+          const response1: any = await lastValueFrom(
+            this.transaccionesCajaService.ValidarAutorizaNovedad(usuario, this.IdAutorizaMismoUsuario)
+          );
+
+          this.loading.hide();
+          if (response1?.ObjAlertasDto?.TipoAlerta === 'Error') {
+            swal.showValidationMessage("Usuario no autorizado para guardar transacción.");
+            return false;
+          } else if (response1.resultado === false) {
+            swal.showValidationMessage("Usuario no autorizado para guardar transacción.");
+            return false;
+          }
+
+          this.IdUsuarioAutoriza = response1.codigoUsuario;
+          this.loading.hide();
+          return true;
+
+        } catch (err: any) {
+          this.loading.hide();
+          swal.showValidationMessage(err?.Mensaje || 'Error de autenticación.');
+          return false;
+        }
+      }
+    });
+
+    return result.isConfirmed && result.value == true;
+  }
+
+  validarMismoUsuario(): boolean {
+
+    const actual = this.DocumentoUsActual;
+
+    const documentos = [
+      this.OtraTransaccionDocumento,
+      this.OtraTransaccionDocumentoRec,
+      this.DocumentoSelected
+    ].filter(d => d);
+
+    const coincide = documentos.some(d => d === actual);
+
+    if (coincide) {
       return false;
     }
+    return true;
+  }
+
+  validarTransaccionTesoreria(): boolean {
 
     if (this.OtraTransaccionCodigo == null || this.OtraTransaccionCodigo == "") {
       this.notif.onWarning('Advertencia', 'Transacción no válida.');
       return false;
     }
+
+    if (this.OtraTransaccionIdTercero == null || this.OtraTransaccionIdTercero == "") {
+      this.notif.onWarning('Advertencia', 'Documento no válido.');
+      return false;
+    }
+
 
     switch (String(this.OtraTransaccionCodigo)) {
       case "16343": // GIROS
@@ -2275,15 +3113,80 @@ export class TransaccionesCajaComponent implements OnInit {
         break;
       case "16177": // RECAUDO EMPRESARIAL
         if (String(this.OtraTransaccionConvenioRe) === "0" || String(this.OtraTransaccionConvenioRe) === "") {
-          this.notif.onWarning('Advertencia', 'Convenio es obligaotrio.');
+          this.notif.onWarning('Advertencia', 'Convenio es obligatorio.');
           return false;
         }
+        break;
+      case "16262": // SUSTITUIR CHEQUES
+        const idPuc = this.formSustituir.get('idBanco')?.value;
+        const chequeActual = this.formSustituir.get('chequeActual')?.value;
+        const nombreBanco = this.formSustituir.get('nombreBanco')?.value.trim();
+        const observaciones = this.formSustituir.get('observaciones')?.value.trim();
+
+        if (Number(idPuc) <= 0) {
+          this.notif.onWarning('Advertencia', 'Debe buscar un banco de origen válido.');
+          return false;
+        }
+
+        if (Number(chequeActual) <= 0) {
+          this.notif.onWarning('Advertencia', 'El cheque actual es obligatorio.');
+          return false;
+        }
+
+        if (String(nombreBanco) === "") {
+          this.notif.onWarning('Advertencia', 'El banco de origen es obligatorio.');
+          return false;
+        }
+
+        if (String(observaciones) === "") {
+          this.notif.onWarning('Advertencia', 'El campo observaciones es obligatorio.');
+          return false;
+        }
+        break;
     }
 
     return true;
   }
 
+  validarTransaccionChequeConsigna(): boolean {
+
+    if (!this.TotalCheque || Number(this.TotalCheque) === 0) {
+      return true;
+    }
+
+    if (this.ListCheques.length === 0) {
+      this.notif.onWarning('Advertencia', 'Debe ingresar al menos un cheque.');
+      return false;
+    }
+
+    if (Number(this.TotalCheque) !== Number(this.TotalCheques)) {
+      this.notif.onWarning('Advertencia', 'El valor en cheque debe coincidir con el total de cheques agregados.');
+      return false;
+    }
+
+    return true;
+  }
+
+  validarTransaccionChequeRetiro(): boolean {
+
+    if (!this.TotalCheque || Number(this.TotalCheque) === 0) {
+      return true;
+    }
+
+    if (this.ListChequesRet.length === 0) {
+      this.notif.onWarning('Advertencia', 'Debe emitir al menos un cheque.');
+      return false;
+    }
+
+    if (Number(this.TotalCheque) !== Number(this.TotalChequesRet)) {
+      this.notif.onWarning('Advertencia', 'El valor en cheque debe coincidir con el total de cheques emitidos.');
+      return false;
+    }
+
+    return true;
+  }
   //#endregion 
+
 
 
 
