@@ -34,7 +34,6 @@ export class LoginComponent implements OnInit {
   public primaryColour = PrimaryWhite;
   public secondaryColour = SecondaryGrey;
   public  SessionUser = new SessionUser();
-  private PassJs = new PassEncriptJs();
 
   constructor(private loginService: LoginService, private notif: AlertService,
     private environment: EnvironmentService,private usuariosServices: UsuariosService,
