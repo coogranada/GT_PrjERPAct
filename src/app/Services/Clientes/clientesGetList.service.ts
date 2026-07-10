@@ -2,7 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { EnvironmentService } from '../Enviroment/enviroment.service';
 import { Observable } from 'rxjs';
-@Injectable()
+
+@Injectable({
+  providedIn: 'root'
+})
+
 export class ClientesGetListService {
     private url: string = "";
     constructor(private _http: HttpClient,private environment: EnvironmentService) { }

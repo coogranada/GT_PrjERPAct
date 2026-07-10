@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MiListaProductosService } from '../../../../../Services/Informes/mi-lista-productos.service'
 
+
 @Component({
   selector: 'app-contabilidad-tab',
   templateUrl: './contabilidad-tab.component.html',
@@ -9,6 +10,7 @@ import { MiListaProductosService } from '../../../../../Services/Informes/mi-lis
 })
 export class ContabilidadTabComponent implements OnInit { 
  @ViewChild('modalImagen', { static: false }) modalImagen!: ElementRef;
+  
 
   constructor(private MiListaProductosService: MiListaProductosService) { }
 
@@ -70,7 +72,7 @@ getContabilidadSubSalud(lngtercero: number): void {
 }
 
 
-  SetlngTercero(lngTercero: number) {
+SetlngTercero(lngTercero: number) {
     this.lngTercero = lngTercero;
   }
 CambiarColor(fil: number, event: any) {
@@ -96,6 +98,8 @@ VerAyuda(): void {
   this.imagenModal = 'assets/images/ReglamentoSalud.png';
   this.modalImagen.nativeElement.click();
 }
+
+
 
 
 

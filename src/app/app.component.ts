@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
       this.handleOffline();
     }
 
-    this.initializeCatalogs();
+    // this.initializeCatalogs();
     this.setupTokenRefresh();
     this.handleNavigationChanges();
     this.blockDevTools();
@@ -87,13 +87,13 @@ export class AppComponent implements OnInit {
     });
   }
 
-  private initializeCatalogs(): void {
-    this.GetCargos();
-    this.GetEstadosSeguro();
-    this.GetLetra();
-    this.GetSeguros();
-    this.GetTipoEmpleo();
-  }
+  // private initializeCatalogs(): void {
+  //   this.GetCargos();
+  //   this.GetEstadosSeguro();
+  //   this.GetLetra();
+  //   this.GetSeguros();
+  //   this.GetTipoEmpleo();
+  // }
 
   GetLetra(): void {
     this.fetchAndStore(this.clientesGetListService.GetLetras(), 'letras');

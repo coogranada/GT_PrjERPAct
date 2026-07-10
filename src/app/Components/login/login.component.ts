@@ -16,6 +16,7 @@ const SecondaryGrey = 'rgb(13,165,80,0.7)';
 import { detectIncognito } from "detectincognitojs";
 import { Router } from '@angular/router';
 import { LoadingService } from '../../Services/shared/loading.service';
+import { CatalogosService } from '../../Services/Clientes/CatalogosService';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -36,19 +37,20 @@ export class LoginComponent implements OnInit {
     private environment: EnvironmentService,private usuariosServices: UsuariosService,
     private clientesGetListService: ClientesGetListService,private route : Router,
     private oficinasService: OficinasService, private webSocket : WebSocketService,
-    private loading: LoadingService) {}
+    private loading: LoadingService,
+   private catalogosService: CatalogosService) {}
 
   ngOnInit() {
     this.validateForm();
-    this.GetProfesion();
-    this.GetParentescos();
-    this.GetParentescosChange();
-    this.GetParentescosPeps();
-    this.GetOficinas();
-    this.GetMarcar();
-    this.GetTipoContacto();
-    this.GetConceptosaAll();
-    this.GetPeriodosPago();
+  //   this.GetProfesion();
+  //   this.GetParentescos();
+  //   this.GetParentescosChange();
+  //   this.GetParentescosPeps();
+  //   this.GetOficinas();
+  //   this.GetMarcar();
+  //   this.GetTipoContacto();
+  //   this.GetConceptosaAll();
+  //   this.GetPeriodosPago();
   }
   GetParentescos() {
     this.clientesGetListService.GetParentescos().subscribe(
@@ -216,7 +218,8 @@ export class LoginComponent implements OnInit {
                   this.loginService.GetToken(this.dataUser.IdUsuario).subscribe(async (x : any) => {
                     var res = x;
                     localStorage.setItem('token', res.token);
-                    this.ValidarMetodosCarga();
+                    // this.ValidarMetodosCarga(); 
+                    this.catalogosService.cargarCatalogosSiNoExisten(); // ysalazar ajuste
                     localStorage.setItem('parentescoChange', window.btoa(JSON.stringify(result)));
                     let browser = await detectIncognito();
                     let strBrowser: string = browser.browserName + "-" + (browser.isPrivate == true ? "Incognito" : "No Incognito");
