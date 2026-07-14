@@ -10,6 +10,11 @@ export class SecurityService {
   GetToken() {
     return localStorage.getItem('token');
   }
+
+  GetRefreshToken() {
+    return localStorage.getItem('refreshToken');
+  }
+
   GoLogin() {
     this.router.navigateByUrl('/Login');
     return null;
