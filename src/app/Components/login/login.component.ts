@@ -17,7 +17,7 @@ const SecondaryGrey = 'rgb(13,165,80,0.7)';
 import { detectIncognito } from "detectincognitojs";
 import { Router } from '@angular/router';
 import { LoadingService } from '../../Services/shared/loading.service';
-import { PassEncriptJs } from '../../Models/Generales/PasswordEncript.model';
+import { CatalogosService } from '../../Services/Clientes/CatalogosService';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -34,25 +34,25 @@ export class LoginComponent implements OnInit {
   public primaryColour = PrimaryWhite;
   public secondaryColour = SecondaryGrey;
   public  SessionUser = new SessionUser();
-  private PassJs = new PassEncriptJs();
 
   constructor(private loginService: LoginService, private notif: AlertService,
     private environment: EnvironmentService,private usuariosServices: UsuariosService,
     private clientesGetListService: ClientesGetListService,private route : Router,
     private oficinasService: OficinasService, private webSocket : WebSocketService,
-    private loading: LoadingService) {}
+    private loading: LoadingService,
+   private catalogosService: CatalogosService) {}
 
   ngOnInit() {
     this.validateForm();
-    this.GetProfesion();
-    this.GetParentescos();
-    this.GetParentescosChange();
-    this.GetParentescosPeps();
-    this.GetOficinas();
-    this.GetMarcar();
-    this.GetTipoContacto();
-    this.GetConceptosaAll();
-    this.GetPeriodosPago();
+  //   this.GetProfesion();
+  //   this.GetParentescos();
+  //   this.GetParentescosChange();
+  //   this.GetParentescosPeps();
+  //   this.GetOficinas();
+  //   this.GetMarcar();
+  //   this.GetTipoContacto();
+  //   this.GetConceptosaAll();
+  //   this.GetPeriodosPago();
   }
   GetParentescos() {
     this.clientesGetListService.GetParentescos().subscribe(
@@ -156,6 +156,7 @@ export class LoginComponent implements OnInit {
 //juanes
   isAuthenticated() {
     localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
     const now: Date = new Date();
     this.loading.show();
     //DFRAMIREZ: encriptar clave autenticación
@@ -222,67 +223,65 @@ export class LoginComponent implements OnInit {
               localStorage.setItem('userName', window.btoa(JSON.stringify(this.dataUser.Usuario)));
               this.isLoginError = false;
               this.clientesGetListService.GetParentescos().subscribe(
-                (result : any) => {
-                  this.loginService.GetToken(this.dataUser.IdUsuario).subscribe(async (x : any) => {
-                    var res = x;
-                    localStorage.setItem('token', res.token);
-                    this.ValidarMetodosCarga();
-                    localStorage.setItem('parentescoChange', window.btoa(JSON.stringify(result)));
-                    let browser = await detectIncognito();
-                    let strBrowser: string = browser.browserName + "-" + (browser.isPrivate == true ? "Incognito" : "No Incognito");
-                    let perfilLog: any[] = perfil;
-                    perfilLog.forEach(x => {
-                      delete x.$id;
-                      delete x.IdPerfilUsuario;
-                    });
-                    let payload: any = {
-                      UserId : this.dataUser.IdUsuario,
-                      Browser: strBrowser,
-                      IdOficina: this.dataUser.NumeroOficina,
-                      IdTercero: this.dataUser.lngTercero,
-                      Json : JSON.stringify(perfilLog)
-                    };
-                     this.loginService.SesionOtroDispositivo(this.dataUser.IdUsuario,strBrowser).subscribe(result => {
-                      if(result)
-                       {
-                         Swal.fire({
-                           title: "Advertencia",
-                           text: '¿Deseas cerrar la sesión en el navegador anterior?',
-                           icon: 'warning',
-                           showCancelButton: true,
-                           confirmButtonText: 'Si',
-                           cancelButtonText: 'No',
-                           confirmButtonColor: 'rgb(13,165,80)',
-                           cancelButtonColor: 'rgb(160,0,87)',
-                           allowOutsideClick: false,
-                           allowEscapeKey: false
-                         }).then((results : any) => {
-                           if (results.value) {
-                             this.webSocket.Init();
-                             setTimeout(() => {
-                              this.webSocket.Send("ClosedSesion",this.dataUser.IdUsuario);
-                             }, 700);
-                             setTimeout(() => {
-                              this.loginService.SetSesionUser(this.SessionUser).subscribe((result : any) => {
-                                this.IniciarSesion(payload);
-                              },
-                              (error : any )  => {
-                                console.error('Error SetSesionUser - ' + error);
-                              });   
-                             }, 1500);
-                           }
-                          });
-                       } else   
-                          this.loginService.SetSesionUser(this.SessionUser).subscribe((result : any) => {
+                async (result: any) => {
+                  localStorage.setItem('token', this.dataUser.token);
+                  localStorage.setItem('refreshToken', this.dataUser.refreshToken);
+                  // this.ValidarMetodosCarga(); 
+                    this.catalogosService.cargarCatalogosSiNoExisten(); // ysalazar ajuste
+                  localStorage.setItem('parentescoChange', window.btoa(JSON.stringify(result)));
+                  let browser = await detectIncognito();
+                  let strBrowser: string = browser.browserName + "-" + (browser.isPrivate == true ? "Incognito" : "No Incognito");
+                  let perfilLog: any[] = perfil;
+                  perfilLog.forEach(x => {
+                    delete x.$id;
+                    delete x.IdPerfilUsuario;
+                  });
+                  let payload: any = {
+                    UserId: this.dataUser.IdUsuario,
+                    Browser: strBrowser,
+                    IdOficina: this.dataUser.NumeroOficina,
+                    IdTercero: this.dataUser.lngTercero,
+                    Json: JSON.stringify(perfilLog)
+                  };
+                  this.loginService.SesionOtroDispositivo(this.dataUser.IdUsuario, strBrowser).subscribe(result => {
+                    if (result) {
+                      Swal.fire({
+                        title: "Advertencia",
+                        text: '¿Deseas cerrar la sesión en el navegador anterior?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Si',
+                        cancelButtonText: 'No',
+                        confirmButtonColor: 'rgb(13,165,80)',
+                        cancelButtonColor: 'rgb(160,0,87)',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                      }).then((results: any) => {
+                        if (results.value) {
+                          this.webSocket.Init();
+                          setTimeout(() => {
+                            this.webSocket.Send("ClosedSesion", this.dataUser.IdUsuario);
+                          }, 700);
+                          setTimeout(() => {
+                            this.loginService.SetSesionUser(this.SessionUser).subscribe((result: any) => {
                               this.IniciarSesion(payload);
-                          },
-                          (error : any )  => {
-                            console.error('Error SetSesionUser - ' + error);
-                          });   
-                    });
+                            },
+                              (error: any) => {
+                                console.error('Error SetSesionUser - ' + error);
+                              });
+                          }, 1500);
+                        }
+                      });
+                    } else
+                      this.loginService.SetSesionUser(this.SessionUser).subscribe((result: any) => {
+                        this.IniciarSesion(payload);
+                      },
+                        (error: any) => {
+                          console.error('Error SetSesionUser - ' + error);
+                        });
                   });
                 },
-                (error : any )  => {
+                (error: any) => {
                   const errorMessage = <any>error;
                   // this.notif.onDanger('Error', errorMessage);
                   console.error(errorMessage);

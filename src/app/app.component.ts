@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
       this.handleOffline();
     }
 
-    this.initializeCatalogs();
+    // this.initializeCatalogs();
     this.setupTokenRefresh();
     this.handleNavigationChanges();
     this.blockDevTools();
@@ -87,13 +87,13 @@ export class AppComponent implements OnInit {
     });
   }
 
-  private initializeCatalogs(): void {
-    this.GetCargos();
-    this.GetEstadosSeguro();
-    this.GetLetra();
-    this.GetSeguros();
-    this.GetTipoEmpleo();
-  }
+  // private initializeCatalogs(): void {
+  //   this.GetCargos();
+  //   this.GetEstadosSeguro();
+  //   this.GetLetra();
+  //   this.GetSeguros();
+  //   this.GetTipoEmpleo();
+  // }
 
   GetLetra(): void {
     this.fetchAndStore(this.clientesGetListService.GetLetras(), 'letras');
@@ -124,15 +124,17 @@ export class AppComponent implements OnInit {
     setInterval(() => this.refreshToken(), 3600000);
   }
 
-  private refreshToken(): void {
-    const token = this.Security.GetToken();
+  private refreshToken(): void {    
+    const refreshToken = this.Security.GetRefreshToken();
 
-    if (!token || !this.resulStore?.intlngTercero) return;
+    if (!refreshToken || !this.resulStore?.intlngTercero) return;
 
+    
     this.loginService
-      .GetToken(this.resulStore.intlngTercero)
+      .RefreshToken(refreshToken)
       .subscribe({
         next: (x: any) => {
+          console.log(x);
           localStorage.setItem('token', x.token);
         },
         error: (err) => console.error('Error refrescando token', err)

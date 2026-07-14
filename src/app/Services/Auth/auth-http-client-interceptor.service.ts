@@ -4,6 +4,7 @@ import { catchError, EMPTY, Observable, throwError } from 'rxjs';
 import { SecurityService } from './security.service';
 
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Injectable({
   providedIn: 'root'
@@ -53,6 +54,18 @@ export class AuthHttpClientInterceptorService implements HttpInterceptor {
         }
         if (err.status == 401) {
           localStorage.removeItem('token');
+          localStorage.removeItem('refreshToken');
+          Swal.fire({
+            title: 'Advertencia',
+            text: '',
+            html: 'Su session ha caducado ',
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonText: 'Aceptar',
+            confirmButtonColor: 'rgb(13,165,80)',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+          });
           this.router.navigate(['/login']);
           return throwError(() => err.error);
         }else if(err.status == 400)

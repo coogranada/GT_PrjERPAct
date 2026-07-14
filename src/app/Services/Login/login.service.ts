@@ -13,9 +13,9 @@ export class LoginService {
         this.url = `${this.environment.Url}/Authentication`;
         return this._http.post<any>(this.url, Datos);
     }  
-    GetToken(idTercero: string): Observable<any> {
-        this.url = `${this.environment.Url}/GetToken/=${idTercero}`;
-        return this._http.get<any>(this.url);
+    RefreshToken(refreshToken: string): Observable<any> {
+        this.url = `${this.environment.Url}/RefreshToken`;
+        return this._http.post<any>(this.url, { refreshToken });
     }
     PerfilesUsuario(data: string): Observable<any> {
         this.url = `${this.environment.Url}/PerfilesUsuario?usuario=${data}`;
