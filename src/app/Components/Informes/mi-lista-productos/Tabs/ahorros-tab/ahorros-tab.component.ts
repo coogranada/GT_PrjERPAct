@@ -1603,8 +1603,6 @@ export class AhorrosTabComponent implements OnInit {
             }
           }
         }
-
-        $("#loading").hide();
       },
       (error) => {
         this.ActivaCargando = false;
@@ -2083,7 +2081,6 @@ export class AhorrosTabComponent implements OnInit {
         this.Cupo.CuentaCupo = result;
       },
       (error) => {
-        this.loading.hide();
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -2742,21 +2739,18 @@ export class AhorrosTabComponent implements OnInit {
   }
 
   SendEmail() {
-    this.loading.show();
     this.validaMail = true; 
       this.SendMailAhorros();
    
   }
 
   SendEmailContactual() {
-    this.loading.show();
     this.validaMail = true;
     this.SendMailContractual();
    
   }
 
   SendEmailATermino() {
-    this.loading.show();
     this.validaMail = true;    
     this.SendMailAtermino();   
   }
