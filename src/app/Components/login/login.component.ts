@@ -270,6 +270,9 @@ export class LoginComponent implements OnInit {
                                 console.error('Error SetSesionUser - ' + error);
                               });
                           }, 1500);
+                        }else
+                        {
+                          this.loginFrom.get('Clave')?.reset();
                         }
                       });
                     } else
