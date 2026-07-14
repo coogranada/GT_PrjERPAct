@@ -367,196 +367,459 @@ export class InformeConsecutivoTituloComponent implements OnInit {
       }
     }
   }
+
   GenerarInforme() {
-    this.loading.show();
-    this.Informes.length = 0;
 
-    const FechaInicial = this.consecutivoOperacionFrom.get('FechaInicial')?.value;
-    const FechaFinal = this.consecutivoOperacionFrom.get('FechaFinal')?.value;
-    const MesAnterior = this.consecutivoOperacionFrom.get('MesAnterior')?.value;
-    this.consecutivoOperacionFrom.value.MesAnterior = MesAnterior + " 00:00:00"
-    this.consecutivoOperacionFrom.value.FechaInicial = FechaInicial + " 23:00:00"
-    this.consecutivoOperacionFrom.value.FechaFinal = FechaFinal + " 23:00:00"
-    if (this.consecutivoOperacionFrom.value.IdUsuario === "") this.consecutivoOperacionFrom.value.IdUsuario = null;
-    if (this.consecutivoOperacionFrom.value.IdOficina === "") this.consecutivoOperacionFrom.value.IdOficina = null;
-    if (this.consecutivoOperacionFrom.value.IdEstado === "") this.consecutivoOperacionFrom.value.IdEstado = null;
-    if (this.consecutivoOperacionFrom.value.operacion === "") this.consecutivoOperacionFrom.value.operacion = null;
+  this.loading.show();
+  this.Informes.length = 0;
 
-    if (FechaFinal >= FechaInicial) {
-      
-      this.ConsecutivotituloService.GetInformeLogConsecutivos(this.consecutivoOperacionFrom.value).subscribe(
+  const FechaInicial =
+    this.consecutivoOperacionFrom.get('FechaInicial')?.value;
+
+  const FechaFinal =
+    this.consecutivoOperacionFrom.get('FechaFinal')?.value;
+
+  const MesAnterior =
+    this.consecutivoOperacionFrom.get('MesAnterior')?.value;
+
+  this.consecutivoOperacionFrom.value.MesAnterior =
+    MesAnterior + ' 00:00:00';
+
+  this.consecutivoOperacionFrom.value.FechaInicial =
+    FechaInicial + ' 23:00:00';
+
+  this.consecutivoOperacionFrom.value.FechaFinal =
+    FechaFinal + ' 23:00:00';
+
+  if (this.consecutivoOperacionFrom.value.IdUsuario === '') {
+    this.consecutivoOperacionFrom.value.IdUsuario = null;
+  }
+
+  if (this.consecutivoOperacionFrom.value.IdOficina === '') {
+    this.consecutivoOperacionFrom.value.IdOficina = null;
+  }
+
+  if (this.consecutivoOperacionFrom.value.IdEstado === '') {
+    this.consecutivoOperacionFrom.value.IdEstado = null;
+  }
+
+  if (this.consecutivoOperacionFrom.value.operacion === '') {
+    this.consecutivoOperacionFrom.value.operacion = null;
+  }
+
+  if (FechaFinal >= FechaInicial) {
+
+    this.ConsecutivotituloService
+      .GetInformeLogConsecutivos(
+        this.consecutivoOperacionFrom.value
+      )
+      .subscribe(
         result => {
+
           this.loading.hide();
+
           this.Informes.length = 1;
-          $("#modalAbrir").click();
-          $("#InformeoBJECT").show();
+
+          $('#modalAbrir').click();
+          $('#InformeoBJECT').show();
+
           const pdfinBase64 = result.FileStream._buffer;
+
           const byteArray = new Uint8Array(
             atob(pdfinBase64)
-              .split("")
-              .map((char) => char.charCodeAt(0))
+              .split('')
+              .map(char => char.charCodeAt(0))
           );
-          const newBolb = new Blob([byteArray], { type: "application/pdf" });
-          this.linkPdf = URL.createObjectURL(newBolb);
-          const url = window.URL.createObjectURL(newBolb);
-          if( document.querySelector("object") != null)
-          document.querySelector("object")!.data = url;
-          document.querySelector("object")!.name = "Informes";
-          document.querySelector("object")!.type = "application/pdf";
+
+          const newBolb = new Blob(
+            [byteArray],
+            { type: 'application/pdf' }
+          );
+
+          this.linkPdf =
+            URL.createObjectURL(newBolb);
+
+          const url =
+            window.URL.createObjectURL(newBolb);
+
+          if (document.querySelector('object') != null) {
+            document.querySelector('object')!.data = url;
+          }
+
+          document.querySelector('object')!.name = 'Informes';
+          document.querySelector('object')!.type = 'application/pdf';
         },
         error => {
+
           this.loading.hide();
+
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+
+          this.notif.onDanger(
+            'Error',
+            errorMessage
+          );
+
           console.log(errorMessage);
         }
       );
-    }
+
+  } else {
+
+    this.loading.hide();
+
+    this.notif.onWarning(
+      'Advertencia',
+      'La fecha final debe ser mayor o igual a la fecha inicial.'
+    );
   }
-  BuscarInforme() {
-    this.loading.show();
+}
+ BuscarInforme() {
 
-    const FechaInicial = this.consecutivoOperacionFrom.get('FechaInicial')?.value;
-    const FechaFinal = this.consecutivoOperacionFrom.get('FechaFinal')?.value;
-    const MesAnterior = this.consecutivoOperacionFrom.get('MesAnterior')?.value;
-    this.consecutivoOperacionFrom.value.MesAnterior = MesAnterior + " 00:00:00"
-    this.consecutivoOperacionFrom.value.FechaInicial = FechaInicial + " 00:00:00"
-    this.consecutivoOperacionFrom.value.FechaFinal = FechaFinal + " 23:59:59"
-    if (this.consecutivoOperacionFrom.value.IdUsuario === "") this.consecutivoOperacionFrom.value.IdUsuario = null;
-    if (this.consecutivoOperacionFrom.value.IdOficina === "") this.consecutivoOperacionFrom.value.IdOficina = null;
-    if (this.consecutivoOperacionFrom.value.IdEstado === "") this.consecutivoOperacionFrom.value.IdEstado = null;
-    if (this.consecutivoOperacionFrom.value.operacion === "") this.consecutivoOperacionFrom.value.operacion = null;
+  this.loading.show();
 
-    if (FechaFinal >= FechaInicial) {
-      this.ConsecutivotituloService.ObtenerInformeLogConsectivo(this.consecutivoOperacionFrom.value).subscribe(
-          result => {
-            if (result.length > 0) {
-              this.GenerarInforme();
-            } else {
-              this.loading.hide();
-              this.notif.onWarning('Advertencia', 'No se encontraron títulos relacionados con estas fechas.');
-              this.consecutivoOperacionFrom.get('FechaInicial')?.reset();
-              this.consecutivoOperacionFrom.get('FechaFinal')?.reset();
-              this.generalesService.Autofocus('fechaInicial');
-              this.BloquearBoton = false;
-            }
-          },
-          error => {
+  const FechaInicial =
+    this.consecutivoOperacionFrom.get('FechaInicial')?.value;
+
+  const FechaFinal =
+    this.consecutivoOperacionFrom.get('FechaFinal')?.value;
+
+  const MesAnterior =
+    this.consecutivoOperacionFrom.get('MesAnterior')?.value;
+
+  this.consecutivoOperacionFrom.value.MesAnterior =
+    MesAnterior + ' 00:00:00';
+
+  this.consecutivoOperacionFrom.value.FechaInicial =
+    FechaInicial + ' 00:00:00';
+
+  this.consecutivoOperacionFrom.value.FechaFinal =
+    FechaFinal + ' 23:59:59';
+
+  if (this.consecutivoOperacionFrom.value.IdUsuario === '') {
+    this.consecutivoOperacionFrom.value.IdUsuario = null;
+  }
+
+  if (this.consecutivoOperacionFrom.value.IdOficina === '') {
+    this.consecutivoOperacionFrom.value.IdOficina = null;
+  }
+
+  if (this.consecutivoOperacionFrom.value.IdEstado === '') {
+    this.consecutivoOperacionFrom.value.IdEstado = null;
+  }
+
+  if (this.consecutivoOperacionFrom.value.operacion === '') {
+    this.consecutivoOperacionFrom.value.operacion = null;
+  }
+
+  if (FechaFinal >= FechaInicial) {
+
+    this.ConsecutivotituloService
+      .ObtenerInformeLogConsectivo(
+        this.consecutivoOperacionFrom.value
+      )
+      .subscribe(
+        result => {
+
+          if (result.length > 0) {
+
+            // Verificar que GenerarInforme()
+            // sea quien cierre el loading
+            this.GenerarInforme();
+
+          } else {
+
             this.loading.hide();
-            const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
-            console.log(errorMessage);
-          });
-    }
+
+            this.notif.onWarning(
+              'Advertencia',
+              'No se encontraron títulos relacionados con estas fechas.'
+            );
+
+            this.consecutivoOperacionFrom
+              .get('FechaInicial')
+              ?.reset();
+
+            this.consecutivoOperacionFrom
+              .get('FechaFinal')
+              ?.reset();
+
+            this.generalesService.Autofocus('fechaInicial');
+
+            this.BloquearBoton = false;
+          }
+        },
+        error => {
+
+          this.loading.hide();
+
+          const errorMessage = <any>error;
+
+          this.notif.onDanger(
+            'Error',
+            errorMessage
+          );
+
+          console.log(errorMessage);
+        }
+      );
+
+  } else {
+
+    this.loading.hide();
+
+    this.notif.onWarning(
+      'Advertencia',
+      'La fecha final debe ser mayor o igual a la fecha inicial.'
+    );
   }
+}
 
   GenerarInformeResumen() {
-    this.loading.show();
-    this.Informes.length = 0;
 
-    const FechaInicial = this.consecutivoOperacionFrom.get('FechaInicial')?.value;
-    const FechaFinal = this.consecutivoOperacionFrom.get('FechaFinal')?.value;
-    const MesAnterior = this.consecutivoOperacionFrom.get('MesAnterior')?.value;
-    this.consecutivoOperacionFrom.value.MesAnterior = MesAnterior + " 00:00:00"
-    this.consecutivoOperacionFrom.value.FechaInicial = FechaInicial + " 23:00:00"
-    this.consecutivoOperacionFrom.value.FechaFinal = FechaFinal + " 23:00:00"
-    if (this.consecutivoOperacionFrom.value.IdUsuario === "") this.consecutivoOperacionFrom.value.IdUsuario = null;
-    if (this.consecutivoOperacionFrom.value.IdOficina === "") this.consecutivoOperacionFrom.value.IdOficina = null;
-    if (this.consecutivoOperacionFrom.value.IdEstado === "") this.consecutivoOperacionFrom.value.IdEstado = null;
-    if (this.consecutivoOperacionFrom.value.operacion === "") this.consecutivoOperacionFrom.value.operacion = null;
+  this.loading.show();
+  this.Informes.length = 0;
 
-    if (this.validarDatosPapeleriaControl()) {
-      if (this.consecutivoOperacionFrom.get('IdModulo')?.value === "19" || this.consecutivoOperacionFrom.get('IdModulo')?.value === "20" || this.consecutivoOperacionFrom.get('IdModulo')?.value === "25") {
-        this.ConsecutivotituloService.ObtenerInformeTituloTerminoNuevo(this.consecutivoOperacionFrom.value).subscribe(
+  const FechaInicial =
+    this.consecutivoOperacionFrom.get('FechaInicial')?.value;
+
+  const FechaFinal =
+    this.consecutivoOperacionFrom.get('FechaFinal')?.value;
+
+  const MesAnterior =
+    this.consecutivoOperacionFrom.get('MesAnterior')?.value;
+
+  this.consecutivoOperacionFrom.value.MesAnterior =
+    MesAnterior + " 00:00:00";
+
+  this.consecutivoOperacionFrom.value.FechaInicial =
+    FechaInicial + " 23:00:00";
+
+  this.consecutivoOperacionFrom.value.FechaFinal =
+    FechaFinal + " 23:00:00";
+
+  if (this.consecutivoOperacionFrom.value.IdUsuario === "") {
+    this.consecutivoOperacionFrom.value.IdUsuario = null;
+  }
+
+  if (this.consecutivoOperacionFrom.value.IdOficina === "") {
+    this.consecutivoOperacionFrom.value.IdOficina = null;
+  }
+
+  if (this.consecutivoOperacionFrom.value.IdEstado === "") {
+    this.consecutivoOperacionFrom.value.IdEstado = null;
+  }
+
+  if (this.consecutivoOperacionFrom.value.operacion === "") {
+    this.consecutivoOperacionFrom.value.operacion = null;
+  }
+
+  if (this.validarDatosPapeleriaControl()) {
+
+    const idModulo =
+      this.consecutivoOperacionFrom.get('IdModulo')?.value;
+
+    const idDocumento =
+      this.consecutivoOperacionFrom.get('IdDocumentos')?.value;
+
+    if (
+      idModulo === "19" ||
+      idModulo === "20" ||
+      idModulo === "25"
+    ) {
+
+      this.ConsecutivotituloService
+        .ObtenerInformeTituloTerminoNuevo(
+          this.consecutivoOperacionFrom.value
+        )
+        .subscribe(
           result => {
+
             this.loading.hide();
+
             this.Informes.length = 1;
+
             $("#modalAbrir").click();
             $("#InformeoBJECT").show();
+
             const pdfinBase64 = result.FileStream._buffer;
+
             const byteArray = new Uint8Array(
               atob(pdfinBase64)
                 .split("")
-                .map((char) => char.charCodeAt(0))
+                .map(char => char.charCodeAt(0))
             );
-            const newBolb = new Blob([byteArray], { type: "application/pdf" });
-            this.linkPdf = URL.createObjectURL(newBolb);
-            const url = window.URL.createObjectURL(newBolb);
+
+            const newBolb = new Blob(
+              [byteArray],
+              { type: "application/pdf" }
+            );
+
+            this.linkPdf =
+              URL.createObjectURL(newBolb);
+
+            const url =
+              window.URL.createObjectURL(newBolb);
+
             document.querySelector("object")!.data = url;
             document.querySelector("object")!.name = "Informes";
             document.querySelector("object")!.type = "application/pdf";
           },
           error => {
+
             this.loading.hide();
+
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+
+            this.notif.onDanger(
+              'Error',
+              errorMessage
+            );
+
             console.log(errorMessage);
           }
         );
-      }
-      else if (this.consecutivoOperacionFrom.get('IdModulo')?.value === "38") {
-        if (this.consecutivoOperacionFrom.get('IdDocumentos')?.value === '1' || this.consecutivoOperacionFrom.get('IdDocumentos')?.value === '6') {
-          this.ConsecutivotituloService.ObtenerInformeTituloLibretasNuevo(this.consecutivoOperacionFrom.value).subscribe(
+
+    } else if (idModulo === "38") {
+
+      if (idDocumento === "1" || idDocumento === "6") {
+
+        this.ConsecutivotituloService
+          .ObtenerInformeTituloLibretasNuevo(
+            this.consecutivoOperacionFrom.value
+          )
+          .subscribe(
             result => {
+              this.loading.hide();
               this.Informes.length = 1;
+
               $("#modalAbrir").click();
               $("#InformeoBJECT").show();
+
               const pdfinBase64 = result.FileStream._buffer;
+
               const byteArray = new Uint8Array(
                 atob(pdfinBase64)
                   .split("")
-                  .map((char) => char.charCodeAt(0))
+                  .map(char => char.charCodeAt(0))
               );
-              const newBolb = new Blob([byteArray], { type: "application/pdf" });
-              this.linkPdf = URL.createObjectURL(newBolb);
-              const url = window.URL.createObjectURL(newBolb);
+
+              const newBolb = new Blob(
+                [byteArray],
+                { type: "application/pdf" }
+              );
+
+              this.linkPdf =
+                URL.createObjectURL(newBolb);
+
+              const url =
+                window.URL.createObjectURL(newBolb);
+
               document.querySelector("object")!.data = url;
               document.querySelector("object")!.name = "Informes";
               document.querySelector("object")!.type = "application/pdf";
-              this.loading.hide();
+
+              
             },
             error => {
+
               this.loading.hide();
+
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+
+              this.notif.onDanger(
+                'Error',
+                errorMessage
+              );
+
               console.log(errorMessage);
             }
           );
-        }
-        if (this.consecutivoOperacionFrom.get('IdDocumentos')?.value === '2') {
-          this.ConsecutivotituloService.ObtenerInformeTarjetasNuevo(this.consecutivoOperacionFrom.value).subscribe(
+
+      } else if (idDocumento === "2") {
+
+        this.ConsecutivotituloService
+          .ObtenerInformeTarjetasNuevo(
+            this.consecutivoOperacionFrom.value
+          )
+          .subscribe(
             result => {
+
               this.Informes.length = 1;
+
               $("#modalAbrir").click();
               $("#InformeoBJECT").show();
+
               const pdfinBase64 = result.FileStream._buffer;
+
               const byteArray = new Uint8Array(
                 atob(pdfinBase64)
                   .split("")
-                  .map((char) => char.charCodeAt(0))
+                  .map(char => char.charCodeAt(0))
               );
-              const newBolb = new Blob([byteArray], { type: "application/pdf" });
-              this.linkPdf = URL.createObjectURL(newBolb);
-              const url = window.URL.createObjectURL(newBolb);
+
+              const newBolb = new Blob(
+                [byteArray],
+                { type: "application/pdf" }
+              );
+
+              this.linkPdf =
+                URL.createObjectURL(newBolb);
+
+              const url =
+                window.URL.createObjectURL(newBolb);
+
               document.querySelector("object")!.data = url;
               document.querySelector("object")!.name = "Informes";
               document.querySelector("object")!.type = "application/pdf";
+
               this.loading.hide();
             },
             error => {
+
               this.loading.hide();
+
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+
+              this.notif.onDanger(
+                'Error',
+                errorMessage
+              );
+
               console.log(errorMessage);
             }
           );
-        }
+
+      } else {
+
+        this.loading.hide();
+
+        this.notif.onWarning(
+          'Advertencia',
+          'Documento no válido.'
+        );
       }
+
     } else {
-      this.notif.onWarning('Advertencia', 'Debe diligenciar todos los campos.');
+
       this.loading.hide();
+
+      this.notif.onWarning(
+        'Advertencia',
+        'Módulo no válido.'
+      );
     }
+
+  } else {
+
+    this.notif.onWarning(
+      'Advertencia',
+      'Debe diligenciar todos los campos.'
+    );
+
+    this.loading.hide();
   }
+}
 
   click() {
     if(this.consecutivoOperacionFrom.get('Codigo')?.value === "81") { this.BuscarInforme(); }

@@ -389,7 +389,6 @@ export class TransaccionesCajaComponent implements OnInit {
         this.ListCatProducto = result;
       },
       error => {
-        this.notif.onDanger('Error', error);
         console.error('ObtenerMotivosConsulta - ' + error);
       }
     )
@@ -1480,7 +1479,6 @@ export class TransaccionesCajaComponent implements OnInit {
       },
       error => {
         this.loading.hide();
-        this.notif.onDanger('Error', error);
         console.log(error);
       }
     );

@@ -196,7 +196,6 @@ export class DatacreditoComponent implements OnInit {
       },
       error => {
         this.loading.hide();
-        this.notif.onDanger('Error', error);
         console.error('ObtenerMotivosConsulta - ' + error);
       }
     );
@@ -210,7 +209,6 @@ export class DatacreditoComponent implements OnInit {
       },
       error => {
         this.loading.hide();
-        this.notif.onDanger('Error', error);
         console.error('ObtenerTiposIdentificacion - ' + error);
       }
     );
@@ -246,7 +244,6 @@ export class DatacreditoComponent implements OnInit {
       error => {
         this.loading.hide();
         this.LimpiarBusqueda();
-        this.notif.onDanger('Error', error);
         console.error('ObtenerTiposIdentificacion - ' + error);
       }
     );

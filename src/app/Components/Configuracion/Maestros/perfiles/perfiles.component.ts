@@ -105,7 +105,6 @@ export class PerfilesComponent implements OnInit {
         },
         error => {
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', error);
           console.log(errorMessage);
         });
     }
@@ -128,7 +127,6 @@ export class PerfilesComponent implements OnInit {
         },
         error => {
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', error);
           console.log(errorMessage);
         });
     }

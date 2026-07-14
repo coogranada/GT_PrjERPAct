@@ -274,7 +274,6 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         this.dataOperaciones = result;
       },
       error => {
-        this.notif.onDanger('Error', error);
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -6800,7 +6799,6 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           }
       },
       error => {
-        this.notif.onDanger('Error', error);
         const errorMessage = <any>error;
         console.log(errorMessage);
       });
@@ -6832,7 +6830,6 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
             }
           },
           error => {
-            this.notif.onDanger('Error', error);
             const errorMessage = <any>error;
             console.log(errorMessage);
           }

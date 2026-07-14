@@ -105,7 +105,6 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('oficinas', window.btoa(JSON.stringify(result)));
       },
       (error : any )  => {
-        this.notif.onDanger('Error', error);
         console.error(error);
       });
   }
@@ -316,7 +315,6 @@ export class LoginComponent implements OnInit {
          } else {
            this.loginFrom.controls["Clave"].reset();
            console.log(error);
-           this.notif.onDanger('Error', error);
            this.isLoginError = true;
          }
       });

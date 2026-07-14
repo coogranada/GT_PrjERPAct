@@ -45,7 +45,6 @@ export class LibretaDireccionesComponent implements OnInit {
         this.dataOficina = result;
       },
       error => {
-        this.notif.onDanger('Error', error);
         console.error(error);
       });
   }
