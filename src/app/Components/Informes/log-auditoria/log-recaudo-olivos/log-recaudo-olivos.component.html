@@ -74,7 +74,7 @@
                                                                 <label class="textNegrilla">Fecha Inicial:</label>
                                                                 <span class="grande"> *</span>
                                                                 <input type="date" class="form-control"
-                                                                    formControlName="@FechaInicial" />
+                                                                    formControlName="@FechaInicial" max="2999-12-31" />
                                                                 <span class="help-block validationSpan"
                                                                     *ngIf="formulario.controls['@FechaInicial'].errors?.['required'] && (formulario.controls['@FechaInicial'].dirty || formulario.controls['@FechaInicial'].touched)">
                                                                     La fecha inicial es obligatoria.
@@ -88,7 +88,7 @@
                                                                 <span class="grande"> *</span>
                                                                 <span class="text-danger"></span>
                                                                 <input type="date" class="form-control"
-                                                                    formControlName="@FechaFinal" />
+                                                                    formControlName="@FechaFinal" max="2999-12-31"/>
                                                                 <span class="help-block validationSpan"
                                                                     *ngIf="formulario.controls['@FechaFinal'].errors?.['required'] && (formulario.controls['@FechaFinal'].dirty || formulario.controls['@FechaFinal'].touched)">
                                                                     La fecha final es obligatoria.
