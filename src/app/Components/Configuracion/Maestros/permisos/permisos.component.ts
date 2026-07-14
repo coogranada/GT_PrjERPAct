@@ -171,7 +171,6 @@ export class PermisosComponent implements OnInit {
         }
       },(error : any) => {
         this.loading.hide();
-        this.notif.onDanger('Error', error);
         console.error('sendPermisos' + error);
       });
     this.selectedRowAdd = 0;
@@ -206,7 +205,6 @@ export class PermisosComponent implements OnInit {
             }
           },
           error => {
-            this.notif.onDanger('Error', error);
             console.error('returnPermisos' + error);
           });
       }

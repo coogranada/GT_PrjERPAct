@@ -65,7 +65,6 @@ export class HistorialComponent implements OnInit {
         });
       },
       error => {
-        this.notif.onDanger('Error', error);
         console.error(error);
       });
   }

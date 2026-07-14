@@ -854,7 +854,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           this.loading.hide();
         },
         error => {
-          this.notif.onDanger('Error', error);
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log(errorMessage);
         });
@@ -1546,7 +1546,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           });
         },
         error => {
-          this.notif.onDanger('Error', error);
           console.error('validarTipoOperacion - ' + error);
         }
       );
@@ -5740,7 +5739,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         this.dataEstado = result;
       },
       error => {
-        this.notif.onDanger('Error', error);
         console.error('validarTipoOperacion - ' + error);
       });
   }
@@ -6648,7 +6646,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                     },
                     error => {
                       const errorMessage = <any>error;
-                      this.notif.onDanger('Error', error);
                       console.log(errorMessage);
                     });
                 } else {
@@ -6693,7 +6690,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                     },
                     error => {
                       const errorMessage = <any>error;
-                      this.notif.onDanger('Error', error);
                       console.log(errorMessage);
                     });
                 } else {
@@ -6757,7 +6753,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                   },
                   error => {
                     const errorMessage = <any>error;
-                    this.notif.onDanger('Error', error);
                     console.log(errorMessage);
                   });
               } else {
@@ -6802,7 +6797,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                   },
                   error => {
                     const errorMessage = <any>error;
-                    this.notif.onDanger('Error', error);
                     console.log(errorMessage);
                   });
               } else {
@@ -6864,7 +6858,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
               },
               error => {
                 const errorMessage = <any>error;
-                this.notif.onDanger('Error', error);
                 console.log(errorMessage);
               });
             } else {
@@ -6909,7 +6902,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
               },
               error => {
                 const errorMessage = <any>error;
-                this.notif.onDanger('Error', error);
                 console.log(errorMessage);
               });
           } else {
@@ -7643,7 +7635,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         }
       },
       error => {
-        this.notif.onDanger('Error', error);
         console.log('ValidarVetados - ' + error);
       });
   }
@@ -7676,7 +7667,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         }
       },
       error => {
-        this.notif.onDanger('Error', error);
         console.log('ValidarVetados - ' + error);
       });
   }
@@ -7694,7 +7684,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         }
       },
       error => {
-        this.notif.onDanger('Error', error);
         console.log('ValidarVetados - ' + error);
       });
     return VRetorno;
@@ -7732,7 +7721,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           }
         },
         error => {
-          this.notif.onDanger('Error', error);
           console.log('ValidarVetados - ' + error);
         });
     } else {
@@ -7815,7 +7803,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                 }
               },
               error => {
-                this.notif.onDanger('Error', error);
                 console.log('ValidarVetados - ' + error);
               });
           }
@@ -8979,7 +8966,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         this.dataGenNit = result;
       },
       error => {
-        this.notif.onDanger('Error', error);
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -9565,7 +9551,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         }
       },
       error => {
-        this.notif.onDanger('Error', error);
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -9606,7 +9591,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         }
       },
       error => {
-        this.notif.onDanger('Error', error);
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -9697,7 +9681,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         }
       },
       error => {
-        this.notif.onDanger('Error', error);
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -11268,7 +11251,6 @@ enviarWorkManager() {
                 },
                 error => {
                   const errorMessage = <any>error;
-                  this.notif.onDanger('Error', error);
                   console.log(errorMessage);
                 });
               } else {
@@ -11313,7 +11295,6 @@ enviarWorkManager() {
                 },
                 error => {
                   const errorMessage = <any>error;
-                  this.notif.onDanger('Error', error);
                   console.log(errorMessage);
                 });
             } else {
@@ -22380,7 +22361,6 @@ enviarWorkManager() {
                       this.CedulaAsesor = '';
                     }
                   }, error => {
-                    this.notif.onDanger('Error', error);
                     console.error('asignarSegmento -' + error);
                   });
               } else {
@@ -23677,7 +23657,6 @@ enviarWorkManager() {
         },
         error => {
           this.blockBtnBasico = true;
-          this.notif.onDanger('Error', error);
           console.error('BuscarNaturalesAll - ' + error);
         }
       );
@@ -23728,7 +23707,6 @@ enviarWorkManager() {
         },
         error => {
           this.blockBtnBasico = true;
-          this.notif.onDanger('Error', error);
           console.error('BuscarNaturalesAll - ' + error);
         }
       );
@@ -23755,7 +23733,6 @@ enviarWorkManager() {
         }
       },
       error => {
-        this.notif.onDanger('Error', error);
         console.error('BuscarNaturalesAll - ' + error);
       }
     );
@@ -24202,7 +24179,6 @@ enviarWorkManager() {
         },
         error => {
           this.blockBtnBasico = false;
-          this.notif.onDanger('Error', error);
           console.error('MacarPPES - ' + error);
         });
     }
@@ -24301,7 +24277,6 @@ enviarWorkManager() {
               },
               error => {
                 this.blockBtnBasico = null;
-                this.notif.onDanger('Error', error);
                 console.error('MacarPPES - ' + error);
               });
           }

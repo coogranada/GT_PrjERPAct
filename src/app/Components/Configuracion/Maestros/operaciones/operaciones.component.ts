@@ -272,7 +272,6 @@ export class OperacionesComponent implements OnInit {
       },
       error => {
         this.loading.hide();
-        this.notif.onDanger('Error', error);
         console.error('sendPermisos' + error);
       });
     this.selectedRowAdd = 0;
@@ -314,7 +313,6 @@ export class OperacionesComponent implements OnInit {
             }
           },
           error => {
-            this.notif.onDanger('Error', error);
             console.error('returnPermisos' + error);
           });
       }

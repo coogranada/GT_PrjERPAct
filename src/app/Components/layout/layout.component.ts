@@ -537,7 +537,6 @@ export class LayoutComponent implements OnInit,OnDestroy {
       
     },error => {
       console.log(error);
-      this.notif.onDanger('Error', error);
     });
   }
   ngOnInit() {
@@ -968,7 +967,6 @@ this.userIdle.onTimeout().subscribe(() => {
           });
         },
         error => {
-          this.notif.onDanger('Error', error);
           console.error(error);
         });
     }
@@ -1013,7 +1011,6 @@ this.userIdle.onTimeout().subscribe(() => {
     },
       error => {
         console.log(error);
-        this.notif.onDanger('Error', error);
       }
     );
   }
@@ -1172,7 +1169,6 @@ this.userIdle.onTimeout().subscribe(() => {
       localStorage.clear();
     }, error => {
       console.log(error);
-      this.notif.onDanger('Error', error);
       this.isLoginError = true;
     });
   }

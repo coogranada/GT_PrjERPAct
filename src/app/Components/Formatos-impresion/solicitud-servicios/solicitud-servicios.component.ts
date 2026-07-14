@@ -296,7 +296,6 @@ export class SolicitudServiciosComponent implements OnInit {
         this.dataGenNit = result;
       },
       error => {
-        this.notif.onDanger('Error', error);
         const errorMessage = <any>error;
         console.log(errorMessage);
       });
