@@ -1495,7 +1495,7 @@ export class GestionCreditoComponent {
       return;
     }
 
-    const error = this.validarEdicionCredito(this.gestionCreditoOperacionForm.get('Codigo')?.value);
+    const error = this.validarEdicionCredito(this.gestionCreditoOperacionForm.get('Codigo')?.value) ?? this.validarEdicionCreditoAlCambiarSistema();
     if (error) {
       this.notif.warning('Advertencia', error, ConfiguracionNotificacion.configRightTop);
       this.gestionCreditoOperacionForm.get('Codigo')?.reset();

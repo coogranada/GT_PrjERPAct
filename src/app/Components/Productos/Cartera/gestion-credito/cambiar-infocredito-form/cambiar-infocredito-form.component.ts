@@ -198,7 +198,7 @@ export class CambiarInfoCreditoForm {
         const perGraciaControl = this.cambiarInfoCreditoForm.controls.periodoGracia;
         perGraciaControl.setValue(this.context.datosFormData.PeriodoGracia, { emitEvent: false }); //Valor original
         plazo.setValue(this.context.datosFormData.Plazo, { emitEvent: false });
-        perGraciaControl.enable();
+        if(this.maxPeriodoGracia > 0) perGraciaControl.enable();
         if (idSistema && this.esCuotaVariable(idSistema)) {
           perGraciaControl.setValue(0, { emitEvent: false });
           perGraciaControl.disable();
@@ -484,13 +484,6 @@ export class CambiarInfoCreditoForm {
   }
 
   private validarReestructurar() {
-    const {
-      IdPeriodoCapital: idPerCapOriginal,
-      IdPeriodoInteres: idPerIntOriginal,
-      IdSistema: idSisOriginal,
-      PeriodoGracia: perGraciaOriginal,
-      Plazo: plazoOriginal
-    } = this.context.datosFormData;
     const idPerCap = this.cambiarInfoCreditoForm.controls.periodoCapitalSelect.value;
     const idPerInt = this.cambiarInfoCreditoForm.controls.periodoInteresSelect.value;
     const idSistema = this.cambiarInfoCreditoForm.controls.sistemaSelect.value;
