@@ -962,7 +962,6 @@ export class GestionCreditoComponent {
       consecutivo: Number(this.gestionCreditoForm.get('IdConsecutivo')?.value),
       estadoActual: Number(this.gestionCreditoForm.get('IdEstadoCuenta')?.value),
       formaPago: Number(this.gestionCreditoForm.get('IdFormaPago')?.value),
-      // Ajustar según el valor real en pantalla
       edoTaquilla: 0,
     
       motivo: Number(this.insolvenciaForm.get('IdCausal')?.value),
