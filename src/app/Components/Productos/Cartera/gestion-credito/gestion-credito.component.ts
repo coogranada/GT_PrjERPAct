@@ -962,7 +962,6 @@ export class GestionCreditoComponent {
       consecutivo: Number(this.gestionCreditoForm.get('IdConsecutivo')?.value),
       estadoActual: Number(this.gestionCreditoForm.get('IdEstadoCuenta')?.value),
       formaPago: Number(this.gestionCreditoForm.get('IdFormaPago')?.value),
-      // Ajustar según el valor real en pantalla
       edoTaquilla: 0,
     
       motivo: Number(this.insolvenciaForm.get('IdCausal')?.value),
@@ -1496,7 +1495,7 @@ export class GestionCreditoComponent {
       return;
     }
 
-    const error = this.validarEdicionCredito(this.gestionCreditoOperacionForm.get('Codigo')?.value);
+    const error = this.validarEdicionCredito(this.gestionCreditoOperacionForm.get('Codigo')?.value) ?? this.validarEdicionCreditoAlCambiarSistema();
     if (error) {
       this.notif.warning('Advertencia', error, ConfiguracionNotificacion.configRightTop);
       this.gestionCreditoOperacionForm.get('Codigo')?.reset();

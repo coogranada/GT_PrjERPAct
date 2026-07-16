@@ -126,15 +126,12 @@ export class AppComponent implements OnInit {
 
   private refreshToken(): void {    
     const refreshToken = this.Security.GetRefreshToken();
-
     if (!refreshToken || !this.resulStore?.intlngTercero) return;
 
-    
     this.loginService
       .RefreshToken(refreshToken)
       .subscribe({
         next: (x: any) => {
-          console.log(x);
           localStorage.setItem('token', x.token);
         },
         error: (err) => console.error('Error refrescando token', err)
