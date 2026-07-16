@@ -85,11 +85,12 @@ export class fichaAnalisisService {
     this.url = `${this.environment.Url}/ObtenerListaChequeoFA`;
     return this._http.get<any>(this.url);
   }
-  GetDetalleRadicados(radicado: string, TipoCliente: number): Observable<any> {
+  GetDetalleRadicados(radicado: string, TipoCliente: number, origen: string): Observable<any> {
     this.url = `${this.environment.Url}/GetDetalleRadicados`;
     const params = new HttpParams()
       .set('radicado', radicado)
-      .set('TipoCliente', TipoCliente);
+      .set('TipoCliente', TipoCliente)
+      .set('origen', origen);
     return this._http.get<any>(this.url, { params: params });
   }
   GetDataAhorrosActivos(tercero: number): Observable<any> {

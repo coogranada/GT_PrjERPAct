@@ -3281,7 +3281,7 @@ CargarIngresoData(i: number, index: number) {
   }
 
   obtenerSaldosVigentes(radicado: number) {
-    this.FichaAnalisisService.GetDetalleRadicados(radicado.toString(), 0).subscribe(
+    this.FichaAnalisisService.GetDetalleRadicados(radicado.toString(), 0, 'RADICADO').subscribe(
       result => {
         this.SaldosVigentesRecoge = result?.SaldosVigentes || [];
       },
