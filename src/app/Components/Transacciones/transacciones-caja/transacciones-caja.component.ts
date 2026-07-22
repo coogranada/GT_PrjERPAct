@@ -244,7 +244,7 @@ export class TransaccionesCajaComponent implements OnInit {
       chequeActual: [null, Validators.required],
       observaciones: ['', Validators.required],
       idBanco: [null],
-      beneficiario:[{ value: '', disabled: true }, Validators.required],
+      beneficiario: [{ value: '', disabled: true }, Validators.required],
       valor: { value: null, disabled: true },
     });
 
@@ -991,6 +991,7 @@ export class TransaccionesCajaComponent implements OnInit {
         this.formBusqueda.get('idTipoProducto')?.reset('');
         this.formTransaccion.get('idTransaccion')?.reset('');
         this.limpiarFormSustituir();
+        this.limpiarFormCambCheInt();
 
         //arreglos
         this.ListProducto = [];
@@ -1040,6 +1041,7 @@ export class TransaccionesCajaComponent implements OnInit {
         //formularios
         this.formTransaccion.get('idTransaccion')?.reset('');
         this.limpiarFormSustituir();
+        this.limpiarFormCambCheInt();
 
         //arreglos
         this.ListProducto = [];
@@ -1101,6 +1103,19 @@ export class TransaccionesCajaComponent implements OnInit {
       idBanco: null
     });
   }
+
+  limpiarFormCambCheInt() {
+    this.formCambCheInt.patchValue({
+      cuentaBanco: null,
+      nombreBanco: '',
+      chequeActual: null,
+      observaciones: '',
+      idBanco: null,
+      beneficiario: '',
+      valor: null
+    });
+  }
+
   //#endregion
 
   //#region "Funciones especiales Olivos"
@@ -2687,7 +2702,7 @@ export class TransaccionesCajaComponent implements OnInit {
               this.recalcularSaldoTotal();
               this.formCambCheInt.patchValue({
                 beneficiario: resultado?.strBeneficiario || '',
-                valor: Number(resultado?.curValor || 0 )
+                valor: Number(resultado?.curValor || 0)
               })
             } else {
               this.notif.onWarning('Advertencia', 'No se encontró el cheque ' + chequeActual + ' en los emitidos.');
@@ -2923,12 +2938,13 @@ export class TransaccionesCajaComponent implements OnInit {
         transaccion.idConvenio = this.OtraTransaccionConvenioRe;
         break;
       case "16262": //SUSTITUIR CHEQUE
-        transaccion.idPuc = Number(this.formSustituir.get('idBanco')?.value) || 0;
         const cuentaBanco = Number(this.formSustituir.get('cuentaBanco')?.value);
         const nombreBanco = this.formSustituir.get('nombreBanco')?.value;
         const chequeActual = Number(this.formSustituir.get('chequeActual')?.value);
         const idBanco = Number(this.formSustituir.get('idBanco')?.value);
         const observacion = this.formSustituir.get('observaciones')?.value;
+        transaccion.idPuc = Number(this.formSustituir.get('idBanco')?.value) || 0;
+        transaccion.comentario = observacion
 
         chequeRet.push({
           strCodigo: cuentaBanco,
@@ -2942,7 +2958,6 @@ export class TransaccionesCajaComponent implements OnInit {
         });
         break;
       case "16076": //CAMBIAR CHEQUE INTERNO
-        transaccion.idPuc = Number(this.formCambCheInt.get('idBanco')?.value) || 0;
         const cuentaBancoCI = Number(this.formCambCheInt.get('cuentaBanco')?.value);
         const nombreBancoCI = this.formCambCheInt.get('nombreBanco')?.value;
         const chequeActualCI = Number(this.formCambCheInt.get('chequeActual')?.value);
@@ -2950,8 +2965,8 @@ export class TransaccionesCajaComponent implements OnInit {
         const valorCI = this.formCambCheInt.get('valor')?.value;
         const beneficiarioCI = this.formCambCheInt.get('beneficiario')?.value;
         const observacionCI = this.formCambCheInt.get('observaciones')?.value;
-
-        
+        transaccion.idPuc = Number(this.formCambCheInt.get('idBanco')?.value) || 0;
+        transaccion.comentario = observacionCI;
 
         chequeRet.push({
           strCodigo: cuentaBancoCI,
