@@ -923,7 +923,7 @@
                                                 <!-- Inicio tab5 -->
                                                 <div class="tab-pane" id="tab5">
 
-                                                    <div *ngIf="NaturalezaTransa == -1" class="row">
+                                                    <div *ngIf="NaturalezaTransa == -1 || (NaturalezaTransa == 1  && OtraTransaccionCodigo == '16077') || (NaturalezaTransa == 1  && OtraTransaccionCodigo == 16077)" class="row">
                                                         <div class="col-lg-12 col-md-12 col-sm-12">
                                                             <form autocomplete="off" id="form" [formGroup]="formCheque">
                                                                 <div class="row">
@@ -1110,7 +1110,7 @@
                                                     </div>
 
 
-                                                    <div *ngIf="NaturalezaTransa == 1" class="row">
+                                                    <div *ngIf="NaturalezaTransa == 1 || (NaturalezaTransa == 1  && OtraTransaccionCodigo != '16077') || (NaturalezaTransa == 1  && OtraTransaccionCodigo != 16077)" class="row">
                                                         <div class="col-lg-12 col-md-12 col-sm-12">
                                                             <form autocomplete="off" id="form"
                                                                 [formGroup]="formChequeRet">

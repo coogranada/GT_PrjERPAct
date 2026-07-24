@@ -4599,6 +4599,7 @@ export class CarteraTabComponent implements OnInit {
   }
 
   Response(value : any) {
+    this.loading.hide();
     if (value == "0" ||  value == 0) {
       swal.fire({
         title: "Exitoso",

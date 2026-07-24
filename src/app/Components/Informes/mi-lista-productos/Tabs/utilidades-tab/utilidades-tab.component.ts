@@ -657,7 +657,7 @@ private mostrarPdf(base64: string): void {
   }
 
   SendEmailCertificateSaldos() {
-    this.loadingPdfSaldos = true;
+    this.loading.show();
     this.ValidaPlantillaMail();
     setTimeout(() => {
       this.MailSaldos();
@@ -665,6 +665,7 @@ private mostrarPdf(base64: string): void {
   }
 
   MailSaldos() {
+    this.loading.show();
     if (this.validaCertificadoSaldos == true) {
       let datas = localStorage.getItem("Data");
       var dataLocal = JSON.parse(window.atob(datas == null? "" : datas));
@@ -679,7 +680,7 @@ private mostrarPdf(base64: string): void {
             this.DataEmailSaldos
           ).subscribe(
             (result) => {
-              this.loadingPdfSaldos = false;
+              this.loading.hide();
               this.Response(result);
 
               var Tercero = Number($("#TerceroPrincipal").val());
@@ -701,7 +702,7 @@ private mostrarPdf(base64: string): void {
           // #endregion
             },
             (error) => {
-              this.loadingPdfSaldos = false;
+              this.loading.hide();
               swal.fire({
                 title: "Error",
                 text: "",
@@ -716,11 +717,11 @@ private mostrarPdf(base64: string): void {
             }
           );
         } else {
-          this.loadingPdfSaldos = false;
+          this.loading.hide();
           swal.fire({
-            title: "Info",
+            title: "Exitoso",
             text: "",
-            html: "Por favor comunicarse con el administrador para gestionar la plantilla del email.",
+            html: "El email se envió correctamente.",
             icon: "info",
             showCancelButton: false,
             confirmButtonColor: "rgb(13,165,80)",
@@ -731,7 +732,7 @@ private mostrarPdf(base64: string): void {
         }
   }
   SendEmailCertificateRetenciones() {
-    this.loadingPdfCertificate = true;
+    this.loading.show();
     this.ValidaPlantillaMail();
     setTimeout(() => {
       this.MailRetenciones();
@@ -755,7 +756,7 @@ private mostrarPdf(base64: string): void {
             this.DataEmailCertificado
           ).subscribe(
             (result) => {
-              this.loadingPdfCertificate = false;
+              this.loading.hide();
               this.Response(result);
 
 
@@ -781,7 +782,7 @@ private mostrarPdf(base64: string): void {
 
             },
             (error) => {
-              this.loadingPdfCertificate = false;
+              this.loading.hide();
               console.log(error);
               swal.fire({
                 title: "Error",
@@ -799,9 +800,9 @@ private mostrarPdf(base64: string): void {
     } else {
       this.loadingPdfCertificate = false;
       swal.fire({
-        title: "Info",
+        title: "Exitoso",
         text: "",
-        html: "Por favor comunicarce con el administrador para gestionar la plantilla del email.",
+        html: "El email se envió correctamente..",
         icon: "info",
         showCancelButton: false,
         confirmButtonColor: "rgb(13,165,80)",
@@ -813,6 +814,7 @@ private mostrarPdf(base64: string): void {
   }
 
   Response(value : any) {
+    this.loading.hide();
     if (value == "0" ||  value == 0) {
       swal.fire({
         title: "Exitoso",

@@ -1215,6 +1215,10 @@ export class TransaccionesCajaComponent implements OnInit {
       this.activarChequesTab();
     }
   }
+
+  habilitaChequeVacio() {
+    this.tabsHabilitados.push(5);
+  }
   //#endregion
 
   //#region "Gestión Modales"
@@ -2115,11 +2119,14 @@ export class TransaccionesCajaComponent implements OnInit {
       }
 
       switch (String(this.OtraTransaccionCodigo)) {
-        case "16111": // Reembolso caja mejor
+        case "16111": // Reembolso caja menor
           this.obtenerReembolso(true);
           break;
-        case "16677": // Reembolso caja mejor central
+        case "16677": // Reembolso caja menor central
           this.obtenerReembolso(false);
+          break;
+        case "16077": // Cambio cheque externo
+          this.habilitaChequeVacio();
           break;
       }
 
