@@ -583,18 +583,69 @@ export interface GarantiaCompartida {
   Descripcion: string;
 }
 
-
 export interface CrearInsolvencia {
+  idCuenta: number;
   oficina: number;
   producto: number;
   consecutivo: number;
-
   estadoActual: number;
-
   formaPago: number;
   edoTaquilla: number;
-
   motivo: number;
-
+  tipoInstancia: number;
   usuario: number;
+  tipoSeguimiento: number;
+  fechaEvento?: string;
+  valorReconocido?: number;
+  capitalReconocido?: number;
+  interesesReconocidos?: number;
+  condonacionesAprobadas?: number;
+  nuevasCondicionesPago?: string;
+  numeroCuotasPactadas?: number;
+}
+
+export interface TipoSeguimientoInsolvencia {
+  intTipoSeguimiento: number;
+  strDescripcion: string;
+}
+
+export interface InsolvenciaHistoricoDto {
+  lngIdSeguimiento: number;
+  intTipoSeguimiento: number;
+  Motivo: string;
+  TipoSeguimiento: string;
+  dtmFechaEvento: Date;
+  dtmFechaCreacion: Date;
+  dtmFechaCreacionInsolvencia: Date;
+  TieneDetalle: boolean;
+}
+
+export interface InsolvenciaAcuerdoPagoDto {
+  lngIdAcuerdoPago: number;
+  lngIdSeguimiento: number;
+  curValorReconocido: number;
+  curCapitalReconocido: number;
+  curInteresesReconocidos: number;
+  curCondonacionesAprobadas: number;
+  intNumeroCuotasPactadas: number;
+  strNuevasCondicionesPago: string;
+  dtmFechaCreacion: Date;
+  strUsuarioCreacion: string;
+}
+
+export interface MotivoInsolvencia {
+  intMotivo: number;
+  strDescripcion: string;
+  dtmFecha: string;
+}
+
+export interface InstanciaInsolvencia {
+  IdInstancia: number;
+  Descripcion: string;
+}
+
+export interface InstanciaInsolvencia {
+  intTipoInstancia: number;
+  strDescripcion: string;
+  dtmFecha: string;
 }

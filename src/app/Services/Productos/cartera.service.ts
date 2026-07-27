@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { EnvironmentService } from '../Enviroment/enviroment.service';
 import { Observable, retry } from 'rxjs';
 import { TipoBusquedaResumen } from '../../Models/Productos/cartera/gestion-credito.enum';
-import { ActualizarPagareCupoDto, ActualizarPagareDto, BaseRequestAlCalcular, CalcularDatosRequest, CambiarCalificacionDto, CambiarFormaPagoDto, CambiarGarantiaDto, CambiarGarantiasRequestDto, CambiarLineaCreditoDto, CuentaCarteraDetalle, CuentaCarteraResumen, CuentaFormateada, CupoInfo, DebitoAutomaticoCreditoDto, DetalleGarantiaCreditoDto, Diferido, GarantiaCompartida, GarantiaDisponible, GarantiaRealAsignada, GarantiasResponse, HistorialOperacion, LineaCambioListDto, ManejarSeguroCreditoDto, ObservacionRadicado, ObtenerCodeudorBasicoModel, PeriodoPago, PersonaNaturalBusquedaDto, Provision, ReesRelResponse, ResultadoOperacionDto, ResultCalcularCambioDatos, UltimaCalificacionDto, CrearInsolvencia, DevolverReest } from '../../Models/Productos/cartera/gestion-credito.model';
+import { ActualizarPagareCupoDto, ActualizarPagareDto, BaseRequestAlCalcular, CalcularDatosRequest, CambiarCalificacionDto, CambiarFormaPagoDto, CambiarGarantiaDto, CambiarGarantiasRequestDto, CambiarLineaCreditoDto, CuentaCarteraDetalle, CuentaCarteraResumen, CuentaFormateada, CupoInfo, DebitoAutomaticoCreditoDto, DetalleGarantiaCreditoDto, Diferido, GarantiaCompartida, GarantiaDisponible, GarantiaRealAsignada, GarantiasResponse, HistorialOperacion, LineaCambioListDto, ManejarSeguroCreditoDto, ObservacionRadicado, ObtenerCodeudorBasicoModel, PeriodoPago, PersonaNaturalBusquedaDto, Provision, ReesRelResponse, ResultadoOperacionDto, ResultCalcularCambioDatos, UltimaCalificacionDto, CrearInsolvencia, DevolverReest, TipoSeguimientoInsolvencia, InsolvenciaHistoricoDto, InsolvenciaAcuerdoPagoDto, MotivoInsolvencia, InstanciaInsolvencia } from '../../Models/Productos/cartera/gestion-credito.model';
 import { buildParams } from '../../utils/helpers';
 
 @Injectable({
@@ -290,6 +290,41 @@ export class CarteraService {
         url,
         insovencia
       );
+    }
+
+    validarInsolvencia(idCuenta: number): Observable<boolean> {
+        const url = `${this.environment.Url}/ValidarInsolvencia?idCuenta=${idCuenta}`;
+        return this._http.get<boolean>(url);
+    }
+
+    getTiposSeguimientoInsolvencia(): Observable<TipoSeguimientoInsolvencia[]> {
+        this.url = `${this.environment.Url}/ObtenerTiposSeguimientoInsolvencia`;
+        return this._http.get<TipoSeguimientoInsolvencia[]>(this.url);
+    }
+
+    getHistoricoInsolvencia(idCuenta: number): Observable<InsolvenciaHistoricoDto[]> {
+        const url =`${this.environment.Url}/ObtenerHistoricoInsolvencia?idCuenta=${idCuenta}`;
+        return this._http.get<InsolvenciaHistoricoDto[]>(url);
+    }
+
+    getDetalleAcuerdoPago(idSeguimiento: number): Observable<InsolvenciaAcuerdoPagoDto> {
+        const url =`${this.environment.Url}/ObtenerDetalleAcuerdoPago?idSeguimiento=${idSeguimiento}`;
+        return this._http.get<InsolvenciaAcuerdoPagoDto>(url);
+    }
+
+    getMotivoInsolvencia(idCuenta: number): Observable<MotivoInsolvencia> {
+        const url = `${this.environment.Url}/ObtenerMotivoInsolvencia?idCuenta=${idCuenta}`;
+        return this._http.get<MotivoInsolvencia>(url);
+    }
+
+    getInstanciasInsolvencia(): Observable<InstanciaInsolvencia[]> {
+        const url = `${this.environment.Url}/ObtenerInstanciasInsolvencia`;
+        return this._http.get<InstanciaInsolvencia[]>(url);
+    }
+
+    getInstanciaInsolvencia(idCuenta: number): Observable<InstanciaInsolvencia> {
+        const url =`${this.environment.Url}/ObtenerInstanciaInsolvencia?idCuenta=${idCuenta}`;
+        return this._http.get<InstanciaInsolvencia>(url);
     }
 
 }
