@@ -262,8 +262,8 @@ export class GestionCreditoComponent {
     this.validateForm();
     this.loadOperaciones();
     this.getFormasPago();
+    
   }
-
   validateForm() {
     const IdAsesor = new FormControl({ value: '', disabled: true }, [Validators.required]);
     const NombreAsesor = new FormControl({ value: '', disabled: true }, [Validators.required]);
@@ -801,8 +801,13 @@ export class GestionCreditoComponent {
       this.limpiarFormulario(true);
       this.cuotaTabBloqueado = false;
     } else{
+      if(operacionCodigo === '124'){
+        this.cuotaTabBloqueado = false;
+      }else{
       this.cuotaTabBloqueado = true; // bloqueo del tab de calcular cuota
       this.onSaldosTabClick(); // que se pare siempre en ese tab en el buscar de entrada
+      }
+      
 
       if (this.advertenciaOperacionSinCuenta()) return;
 
