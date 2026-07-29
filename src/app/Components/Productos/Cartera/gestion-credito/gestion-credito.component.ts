@@ -2031,7 +2031,15 @@ obtenerNumeroDetalle(
     const fechaUltimaTransaccion = new Date(this.gestionCreditoForm.get('fechaUltimaTrans')?.value);
 
     if(fechaUltimaTransaccion >= fechaUltimaReest) {
-      this.notif.warning('Advertencia', "Se realizó una transacción despues de la reestructuración.", ConfiguracionNotificacion.configRightTop);
+      this.notif.warning('Advertencia', "Se realizó una transacción después de la reestructuración.", ConfiguracionNotificacion.configRightTop);
+      this.gestionCreditoOperacionForm.get('Codigo')?.reset();
+      return;
+    }
+
+    let data: string | null = localStorage.getItem('Data');
+    const datosUsuario = JSON.parse(window.atob(data ?? ""));
+    if (datosUsuario?.NumeroOficina != this.gestionCreditoForm.get('NumeroOficina')?.value) {
+      this.notif.warning('Advertencia', ERROR_MESSAGES.OTRA_OFICINA, ConfiguracionNotificacion.configRightTop);
       this.gestionCreditoOperacionForm.get('Codigo')?.reset();
       return;
     }
