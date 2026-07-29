@@ -2919,6 +2919,8 @@ export class CarteraTabComponent implements OnInit {
       this.carteraInfo.TotalMoraCal = 0;
       this.carteraInfo.TotalDiferidosCal = 0;
       this.carteraInfo.TotalPagarCal = 0;
+      this.carteraInfo.PagoMini = 0; 
+      this.carteraInfo.PagoTotal = 0;
       this.CarteraForm.get('NCoutas')?.setValue("");
       this.CarteraForm.get('ACuotas')?.setValue(false);
       this.CarteraForm.get('CancelaCredito')?.setValue(false);

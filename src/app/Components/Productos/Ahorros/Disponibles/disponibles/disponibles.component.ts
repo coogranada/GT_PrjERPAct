@@ -3951,6 +3951,12 @@ export class DisponiblesComponent implements OnInit {
               else if (+this.DisponibleForm.get('IdMedioPago')?.value === 50 || +this.DisponibleForm.get('IdMedioPago')?.value === 70 )
                 this.resultMedioPago = this.resultMedioPago.filter((x: any) => x.IdMedioPago === 50 || x.IdMedioPago === 70 );
 
+              // Jurídico (TipoDocumento = 3)
+              if (+this.DisponibleForm.get('IdTipoDocumento')?.value === 3) {
+                this.resultMedioPago = this.resultMedioPago.filter(                  
+                (x: any) => x.IdMedioPago !== 50 && x.IdMedioPago !== 70);
+              }
+
                 setTimeout(() => {
                  
                 }, 300);
