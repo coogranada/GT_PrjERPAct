@@ -848,7 +848,7 @@
 
         <!-- MODAL PROCESO INSOLVENCIA -->
         <div id="procesoInsolvencia" class="modal" data-backdrop="static" data-keyboard="false"> 
-            <div class="modal-dialog modal-lg">
+            <div style="width: 80%; margin: 30px auto; height: 90%;">
                 <div class="modal-content">
                     <div class="modal-header bg-morado">
                         <button type="button" class="close" data-dismiss="modal" (click)="onClickCerrarModalCodeudores()">&times;</button>
@@ -862,33 +862,20 @@
 
                                     <div class="col-sm-3">
                                         <div class="form-group">
-                                        
-                                            <label class="textNegrilla">
-                                                Instancia
-                                            </label>
+                                            <label class="textNegrilla"> Instancia: </label>
                                             <span class="grande">*</span>
-<select
-    class="form-control"
-    formControlName="IdInstancia">
-
-    <option value="">
-        -- Seleccione --
-    </option>
-
-    <option
-        *ngFor="let instancia of instanciasInsolvencia"
-        [value]="instancia.IdInstancia">
-
-        {{ instancia.Descripcion }}
-
-    </option>
-
-</select>
+                                            <select class="form-control" formControlName="IdInstancia">
+                                                <option value=""> -- Seleccione -- </option>
+                                                <option *ngFor="let instancia of instanciasInsolvencia"
+                                                    [value]="instancia.IdInstancia">
+                                                    {{ instancia.Descripcion }}
+                                                </option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col-sm-3">
                                         <div class="form-group">
-                                            <label class="textNegrilla">Causal</label>
+                                            <label class="textNegrilla"> Causal: </label>
                                             <span class="grande"> *</span>
                                             <select class="form-control" name="select" formControlName="IdCausal">
                                                 @if(!insolvenciaForm.get('IdCausal')?.value){
@@ -903,7 +890,7 @@
 
                                     <div class="col-sm-4">
                                         <div class="form-group">
-                                            <label class="textNegrilla">Detalle</label>
+                                            <label class="textNegrilla"> Detalle: </label>
                                             <span class="grande"> *</span>
                                         
                                             <select
@@ -925,25 +912,6 @@
                                         </div>
                                     </div>
                                     
-                                    <!-- 
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="documento">Documento:</label>
-                                            <span class="grande"> *</span>
-                                            <input type="text" autocomplete="off" id="documento" class="form-control" maxlength="30" formControlName="documento" (blur)="onBlurDocumentoDeudor()" (input)="onChangeDocumentoCodeudor()">
-                                            <span class="help-block validationSpan"
-                                                *ngIf="codeudorForm.controls['documento'].errors?.['minlength']">
-                                                Debe tener al menos 6 caracteres.
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-5">
-                                        <div class="form-group">
-                                            <label for="nombre">Nombre:</label>
-                                            <input type="text" id="nobrem" class="form-control" formControlName="nombre">
-                                        </div>
-                                    </div> -->
                                 </div>
 
                                 <!-- ADMISION -->
@@ -1085,77 +1053,92 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Valor reconocido:</label>
-                                                <span class="grande"> *</span>
+                                                <span class="grande">*</span>
                                             
                                                 <input
                                                     type="text"
                                                     class="form-control"
-                                                    formControlName="ValorReconocido">
+                                                    formControlName="ValorReconocido"
+                                                    maxlength="12"
+                                                    appMonedaDirectiva>
                                             </div>
                                         </div>
-
+                                    
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Capital reconocido:</label>
-                                                <span class="grande"> *</span>
+                                                <span class="grande">*</span>
                                             
                                                 <input
                                                     type="text"
                                                     class="form-control"
-                                                    formControlName="CapitalReconocido">
+                                                    formControlName="CapitalReconocido"
+                                                    maxlength="12"
+                                                    appMonedaDirectiva>
                                             </div>
                                         </div>
                                     
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Intereses reconocidos:</label>
-                                                <span class="grande"> *</span>
                                             
                                                 <input
                                                     type="text"
                                                     class="form-control"
-                                                    formControlName="InteresesReconocidos">
+                                                    formControlName="InteresesReconocidos"
+                                                    maxlength="12"
+                                                    appMonedaDirectiva>
                                             </div>
                                         </div>
-
-                                        </div>
+                                    
+                                    </div>
                                 
                                     <div class="row">
                                     
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Condonaciones aprobadas:</label>
-                                                <input type="text" class="form-control" formControlName="CondonacionesAprobadas">
+                                            
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    formControlName="CondonacionesAprobadas"
+                                                    maxlength="12"
+                                                    appMonedaDirectiva>
                                             </div>
                                         </div>
                                     
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Nuevas condiciones de pago:</label>
+                                                <span class="grande">*</span>
                                             
                                                 <input
                                                     type="text"
                                                     class="form-control"
-                                                    formControlName="NuevasCondicionesPago">
+                                                    formControlName="NuevasCondicionesPago"
+                                                    maxlength="200">
                                             </div>
                                         </div>
                                     
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Número cuotas pactadas:</label>
-                                                <span class="grande"> *</span>
+                                                <span class="grande">*</span>
                                             
                                                 <input
                                                     type="text"
                                                     class="form-control"
-                                                    formControlName="NumeroCuotasPactadas">
+                                                    formControlName="NumeroCuotasPactadas"
+                                                    maxlength="4"
+                                                    appSoloNumero>
                                             </div>
                                         </div>
                                     
                                     </div>
                                 
                                 </div>
-                                
+
                                 <!-- DESMARCAR -->
                                 <div class="row"
                                      *ngIf="insolvenciaForm.get('IdTipoSeguimiento')?.value == 9">
@@ -1186,10 +1169,11 @@
                                 </div>
 
                                 <!-- Inicio Insolvencia -->
-
+                                                            
                                 <div>
                                     <h3 class="tab-title">Proceso de insolvencia</h3>
                                 </div>
+                                
 
                                 <div class="table-responsive scrollTabla" *ngIf="historicoInsolvencia.length > 0">
                                 
@@ -1197,26 +1181,35 @@
                                     
                                         <thead>
                                             <tr class="encabezadoTablas">
-                                                <th style="width: 40px;"></th>
                                             
                                                 <th class="text-center">
-                                                    <strong>N°</strong>
+                                                    <strong>Nro</strong>
                                                 </th>
+                                            
+                                                <th>
+                                                    <strong>Instancia</strong>
+                                                </th>
+                                            
                                                 <th>
                                                     <strong>Causal</strong>
                                                 </th>
+                                            
                                                 <th>
                                                     <strong>Detalle</strong>
                                                 </th>
+                                            
                                                 <th class="text-center">
                                                     <strong>Fecha evento</strong>
                                                 </th>
+                                            
                                                 <th class="text-center">
                                                     <strong>Creación detalle</strong>
                                                 </th>
+                                            
                                                 <th class="text-center">
                                                     <strong>Creación insolvencia</strong>
                                                 </th>
+                                            
                                             </tr>
                                         </thead>
                                     
@@ -1229,15 +1222,18 @@
                                                         detalleAcuerdo &&
                                                         detalleAcuerdo.lngIdSeguimiento === item.lngIdSeguimiento
                                                     ">
-
-                                                    <td class="text-center" style="width: 40px;">
+                                                    <td class="text-center">
                                                     
                                                         <span
                                                             *ngIf="item.TieneDetalle"
                                                             class="icono-acordeon"
                                                             tabindex="-1"
-                                                            (click)="verDetalleAcuerdo(item)">
-
+                                                            (click)="verDetalleAcuerdo(item)"
+                                                            [attr.data-tooltip]="
+                                                                detalleAcuerdo &&
+                                                                detalleAcuerdo.lngIdSeguimiento === item.lngIdSeguimiento
+                                                                    ? 'Ocultar detalle'
+                                                                    : 'Ver detalle' ">
                                                             <i
                                                                 [ngClass]="
                                                                     detalleAcuerdo &&
@@ -1249,10 +1245,12 @@
                                                         
                                                         </span>
                                                     
+                                                        {{ obtenerNumeroDetalle(item) }}
+                                                    
                                                     </td>
                                                 
-                                                    <td class="text-center">
-                                                        {{ obtenerNumeroDetalle(item) }}
+                                                    <td>
+                                                        {{ item.Instancia }}
                                                     </td>
                                                 
                                                     <td>
@@ -1283,7 +1281,6 @@
                                                         detalleAcuerdo.lngIdSeguimiento === item.lngIdSeguimiento
                                                     "
                                                     class="fila-detalle">
-
                                                     <td colspan="7">
                                                     
                                                         <div class="detalle-acordeon">
@@ -1323,6 +1320,7 @@
                                                                     </thead>
                                                                 
                                                                     <tbody>
+                                                                    
                                                                         <tr>
                                                                         
                                                                             <td class="text-right">
@@ -1350,6 +1348,7 @@
                                                                             </td>
                                                                         
                                                                         </tr>
+                                                                    
                                                                     </tbody>
                                                                 
                                                                 </table>
@@ -1367,49 +1366,9 @@
                                         </tbody>
                                     
                                     </table>
-                                
                                 </div>
-
                                 <!-- Fin Insolvencia -->
                             </form>
-                        
-                            <!-- <article>
-                                <div class="alert alert-secondary" role="alert" *ngIf="codeudoresDraft.length === 0">
-                                    No hay registros
-                                </div>
-                                <div class="table-responsive scrollTabla" *ngIf="codeudoresDraft.length > 0">
-                                    <table class="table table-hover encabezado-fijo">
-                                        <colgroup>
-                                            <col style="width: 30%;">
-                                            <col style="width: 50%;">
-                                            <col style="width: 20%;">
-                                        </colgroup>
-                                        <thead>
-                                            <tr>
-                                                <th>Documento</th>
-                                                <th>Nombre</th>
-                                                <th class="text-center">Opciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr *ngFor="let codeudor of codeudoresDraft; let i = index"
-                                                (click)="selectRow('codeudoresDraft', i)" [class.tr-selected]="selectedRows['codeudoresDraft'] === i">
-                                                <td>
-                                                    <div>{{ codeudor.documento }}</div>
-                                                </td>
-                                                <td>
-                                                    <div>{{ codeudor.nombreCompleto }}</div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <button class="btn Gt-btn-morado btn-icon legitRipple" (click)="onClickEliminarCodeudor(codeudor.idTercero)">
-                                                        <i class="icon-bin2"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </article> -->
                         </div>
                     </div>
                 </div>
@@ -2846,21 +2805,19 @@
                                     </div>
                                     <br>
                                     <!-- Inicio Insolvencia -->
-
-                                    <div>
-                                        <h3 class="tab-title">Proceso de insolvencia</h3>
-                                    </div>
-
                                     <div class="table-responsive scrollTabla" *ngIf="historicoInsolvencia.length > 0">
-
+                                    
                                         <table class="table table-hover">
                                         
                                             <thead>
                                                 <tr class="encabezadoTablas">
-                                                    <th style="width: 40px;"></th>
                                                 
                                                     <th class="text-center">
-                                                        <strong>N°</strong>
+                                                        <strong>Nro</strong>
+                                                    </th>
+                                                
+                                                    <th>
+                                                        <strong>Instancia</strong>
                                                     </th>
                                                 
                                                     <th>
@@ -2882,6 +2839,7 @@
                                                     <th class="text-center">
                                                         <strong>Creación insolvencia</strong>
                                                     </th>
+                                                
                                                 </tr>
                                             </thead>
                                         
@@ -2894,15 +2852,20 @@
                                                             detalleAcuerdo &&
                                                             detalleAcuerdo.lngIdSeguimiento === item.lngIdSeguimiento
                                                         ">
-                                    
-                                                        <td class="text-center" style="width: 40px;">
+
+                                                        <td class="text-center">
                                                         
                                                             <span
                                                                 *ngIf="item.TieneDetalle"
                                                                 class="icono-acordeon"
                                                                 tabindex="-1"
-                                                                (click)="verDetalleAcuerdo(item)">
-                                    
+                                                                (click)="verDetalleAcuerdo(item)"
+                                                                [attr.data-tooltip]="
+                                                                    detalleAcuerdo &&
+                                                                    detalleAcuerdo.lngIdSeguimiento === item.lngIdSeguimiento
+                                                                        ? 'Ocultar detalle'
+                                                                        : 'Ver detalle' ">
+
                                                                 <i
                                                                     [ngClass]="
                                                                         detalleAcuerdo &&
@@ -2914,10 +2877,12 @@
                                                             
                                                             </span>
                                                         
+                                                            {{ obtenerNumeroDetalle(item) }}
+                                                        
                                                         </td>
                                                     
-                                                        <td class="text-center">
-                                                            {{ obtenerNumeroDetalle(item) }}
+                                                        <td>
+                                                            {{ item.Instancia }}
                                                         </td>
                                                     
                                                         <td>
@@ -2948,7 +2913,7 @@
                                                             detalleAcuerdo.lngIdSeguimiento === item.lngIdSeguimiento
                                                         "
                                                         class="fila-detalle">
-                                    
+
                                                         <td colspan="7">
                                                         
                                                             <div class="detalle-acordeon">
@@ -2988,6 +2953,7 @@
                                                                         </thead>
                                                                     
                                                                         <tbody>
+                                                                        
                                                                             <tr>
                                                                             
                                                                                 <td class="text-right">
@@ -3015,6 +2981,7 @@
                                                                                 </td>
                                                                             
                                                                             </tr>
+                                                                        
                                                                         </tbody>
                                                                     
                                                                     </table>
@@ -3032,10 +2999,9 @@
                                             </tbody>
                                         
                                         </table>
-
                                     </div>
-
                                     <!-- Fin Insolvencia -->
+
                                 </section>
                             </div>
                             <!-- Fin CambiosTab -->

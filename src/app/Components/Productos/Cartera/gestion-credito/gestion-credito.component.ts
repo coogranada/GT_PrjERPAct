@@ -26,6 +26,7 @@ import { ERROR_MESSAGES, ErrorCode, PERIODOS_MESES } from '../../../../utils/con
 import { LoadingService } from '../../../../Services/shared/loading.service';
 import { diferenciaEnDias, diferenciaEnMeses, omit } from '../../../../utils/helpers';
 import { CambiarGarantiasModalComponent } from '../../../shared/cambiar-garantias-modal/cambiar-garantias-modal.component';
+import { TooltipService } from '../../../../Services/Tooltip/tooltip.service';
 
 @Component({
   selector: 'app-gestion-credito',
@@ -255,7 +256,8 @@ export class GestionCreditoComponent {
     private notif: ToastrService,
     private generalesService: GeneralesService,
     private busquedaService: BusquedaGenericaService,
-    private loading: LoadingService
+    private loading: LoadingService,
+    private tooltipService: TooltipService,
   ) { }
 
   ngOnInit() {
@@ -596,12 +598,34 @@ export class GestionCreditoComponent {
       FechaIncumplimientoAcuerdo: new FormControl(''),
       FechaLiquidacion: new FormControl(''),
     
-      ValorReconocido: new FormControl(''),
-      CapitalReconocido: new FormControl(''),
-      InteresesReconocidos: new FormControl(''),
-      CondonacionesAprobadas: new FormControl(''),
-      NuevasCondicionesPago: new FormControl(''),
-      NumeroCuotasPactadas: new FormControl('')
+    ValorReconocido: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(12)
+    ]),
+    
+    CapitalReconocido: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(12)
+    ]),
+    
+    InteresesReconocidos: new FormControl('', [
+      Validators.maxLength(12)
+    ]),
+    
+    CondonacionesAprobadas: new FormControl('', [
+      Validators.maxLength(12)
+    ]),
+    
+    NuevasCondicionesPago: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(200)
+    ]),
+    
+    NumeroCuotasPactadas: new FormControl('', [
+      Validators.required,
+      Validators.pattern('^[0-9]+$'),
+      Validators.maxLength(4)
+    ])
     });
 
     this.insolvenciaForm.valueChanges.subscribe(() => {
@@ -900,15 +924,39 @@ export class GestionCreditoComponent {
 
   //Inicio Proceso Insolvencia
 
-  habilitarProcesoInsolvencia() {
-    this.getCausalInsolvencia();
-    this.getTiposSeguimientoInsolvencia();
-    this.cargarHistoricoInsolvencia();
-    this.getInstanciasInsolvencia();
-    this.validarInsolvencia()
+  async habilitarProcesoInsolvencia() {
+    try {
+      this.loading.show();
 
-    this.openProcesoInsolvenciaModal.nativeElement.click();
+      const [
+        causales,
+        instancias,
+        tipos,
+        historico
+      ] = await Promise.all([
+        firstValueFrom(this.getCausalInsolvencia()),
+        firstValueFrom(this.getInstanciasInsolvencia()),
+        firstValueFrom(this.getTiposSeguimientoInsolvencia()),
+        firstValueFrom(this.getHistoricoInsolvencia())
+      ]);
+
+      this.resultCausalesInsolvencia = causales;
+      this.instanciasInsolvencia = instancias;
+      this.tiposSeguimientoInsolvencia = tipos;
+      this.historicoInsolvencia = historico;
+
+      this.filtrarDetallePermitido();
+      this.construirNumeracionInsolvencias();
+
+      this.validarInsolvencia();
+
+      this.openProcesoInsolvenciaModal.nativeElement.click();
+    }
+    finally {
+      this.loading.hide();
+    }
   }
+
 
   validarInsolvencia() {
     const idCuenta = Number(this.gestionCreditoForm.get('IdCuenta')?.value);
@@ -942,17 +990,39 @@ export class GestionCreditoComponent {
         }
       });
   }
-
-  getCausalInsolvencia() {
-    this.carteraService.getCausalInsolvencia().pipe(
+  
+  getCausalInsolvencia(): Observable<any[]> {
+    return this.carteraService.getCausalInsolvencia().pipe(
       catchError(error => {
-        console.error('Error al obtener causales:', error);
-        return of(null);
+        console.error(error);
+        return of([]);
       })
-    ).subscribe(
-      result => {
-        this.resultCausalesInsolvencia = result;
-      }
+    );
+  }
+
+  getInstanciasInsolvencia(): Observable<InstanciaInsolvencia[]> {
+    return this.carteraService.getInstanciasInsolvencia().pipe(
+      catchError(error => {
+        console.error(error);
+        return of([]);
+      })
+    );
+  }
+
+  getTiposSeguimientoInsolvencia(): Observable<TipoSeguimientoInsolvencia[]> {
+    return this.carteraService.getTiposSeguimientoInsolvencia().pipe(
+      catchError(error => {
+        console.error(error);
+        return of([]);
+      })
+    );
+  }
+
+  getHistoricoInsolvencia(): Observable<InsolvenciaHistoricoDto[]> {
+    const idCuenta = this.gestionCreditoForm.get('IdCuenta')?.value;
+
+    return this.carteraService.getHistoricoInsolvencia(idCuenta).pipe(
+      catchError(() => of([]))
     );
   }
 
@@ -992,91 +1062,100 @@ export class GestionCreditoComponent {
   }
 
   onChangeDetalleInsolvencia(): void {
-  
+
     const tipoSeguimiento = Number(
       this.insolvenciaForm.get('IdTipoSeguimiento')?.value
     );
-  
+
+    this.configurarValidadoresAcuerdoPago(tipoSeguimiento);
+
     const idCuenta = Number(
       this.gestionCreditoForm.get('IdCuenta')?.value
     );
-  
-    /* Validación local: no repetidos y orden secuencial. */
-    if (tipoSeguimiento) {
-      const detallesActuales = this.obtenerDetallesInsolvenciaActual();
-      const tiposRegistrados = detallesActuales.map(x => Number(x.intTipoSeguimiento));
 
-      if (tiposRegistrados.includes(tipoSeguimiento)) {
-      
-        this.notif.warning(
-          'Advertencia',
-          'El detalle ya fue registrado para esta insolvencia.',
-          ConfiguracionNotificacion.configRightTop
-        );
-      
-        this.insolvenciaForm.patchValue({
-          IdTipoSeguimiento: ''
-        });
-      
-        return;
-      }
-    
-      /* Primer detalle debe ser Admisión (1) */
-      if (tiposRegistrados.length === 0) {
-      
-        if (tipoSeguimiento !== 1) {
-        
+    if (tipoSeguimiento) {
+
+      const detallesActuales = this.obtenerDetallesInsolvenciaActual();
+
+      const ultimoTipo = detallesActuales.length
+        ? Math.max(
+            ...detallesActuales.map(x => Number(x.intTipoSeguimiento))
+          )
+        : 0;
+
+      const esNuevaInsolvencia = ultimoTipo === 9;
+
+      if (!esNuevaInsolvencia) {
+
+        const tiposRegistrados =
+          detallesActuales.map(x => Number(x.intTipoSeguimiento));
+
+        if (tiposRegistrados.includes(tipoSeguimiento)) {
+
           this.notif.warning(
             'Advertencia',
-            'El primer detalle debe ser Fecha de admisión a insolvencia.',
+            'El detalle ya fue registrado para esta insolvencia.',
             ConfiguracionNotificacion.configRightTop
           );
-        
+
           this.insolvenciaForm.patchValue({
             IdTipoSeguimiento: ''
           });
-        
+
           return;
         }
-      }
-      else {
-      
-        const ultimoTipo = Math.max(...tiposRegistrados);
-      
-        /* Debe registrar el siguiente paso */
-        if (tipoSeguimiento !== (ultimoTipo + 1)) {
-        
-          this.notif.warning(
-            'Advertencia',
-            `El proceso de insolvencia se encuentra en el seguimiento ${ultimoTipo + 1}.`,
-            ConfiguracionNotificacion.configRightTop
-          );
-        
-          this.insolvenciaForm.patchValue({
-            IdTipoSeguimiento: ''
-          });
-        
-          return;
+
+        if (tiposRegistrados.length === 0) {
+
+          if (tipoSeguimiento !== 1) {
+
+            this.notif.warning(
+              'Advertencia',
+              'El primer detalle debe ser Fecha de admisión a insolvencia.',
+              ConfiguracionNotificacion.configRightTop
+            );
+
+            this.insolvenciaForm.patchValue({
+              IdTipoSeguimiento: ''
+            });
+
+            return;
+          }
+        } else {
+
+          if (tipoSeguimiento !== (ultimoTipo + 1)) {
+
+            this.notif.warning(
+              'Advertencia',
+              `El proceso de insolvencia se encuentra en el seguimiento ${ultimoTipo + 1}.`,
+              ConfiguracionNotificacion.configRightTop
+            );
+
+            this.insolvenciaForm.patchValue({
+              IdTipoSeguimiento: ''
+            });
+
+            return;
+          }
         }
       }
     }
-  
-    /* Validaciones actuales de insolvencia */
+
     this.carteraService.validarInsolvencia(idCuenta)
       .subscribe((esInsolvente: boolean) => {
-      
+
         if (!esInsolvente && tipoSeguimiento === 9) {
-        
+
           this.notif.warning(
             'Advertencia',
             'El crédito no se encuentra marcado como insolvente.',
             ConfiguracionNotificacion.configRightTop
           );
-        
+
           this.insolvenciaForm.patchValue({
             IdTipoSeguimiento: ''
           });
-        
+
           return;
         }
       });
@@ -1116,15 +1195,15 @@ export class GestionCreditoComponent {
     }
   }
 
-  onClickGuardarInsolvencia(): void {
-  
+  private validarGuardarInsolvencia(): boolean {
+
     if (!this.insolvenciaForm.get('IdCausal')?.value) {
       this.notif.warning(
         'Advertencia',
         'Debe seleccionar una causal de insolvencia.',
         ConfiguracionNotificacion.configRightTop
       );
-      return;
+      return false;
     }
 
     if (!this.insolvenciaForm.get('IdInstancia')?.value) {
@@ -1133,146 +1212,246 @@ export class GestionCreditoComponent {
         'Debe seleccionar una instancia de insolvencia.',
         ConfiguracionNotificacion.configRightTop
       );
-      return;
+      return false;
+    }
+
+    const tipoSeguimiento = Number(
+      this.insolvenciaForm.get('IdTipoSeguimiento')?.value
+    );
+
+    switch (tipoSeguimiento) {
+
+      case 1:
+        if (!this.insolvenciaForm.get('FechaAdmision')?.value) {
+          this.notif.warning(
+            'Advertencia',
+            'Debe ingresar la fecha de admisión.',
+            ConfiguracionNotificacion.configRightTop
+          );
+          return false;
+        }
+        break;
+
+      case 2:
+        if (!this.insolvenciaForm.get('FechaNotificacion')?.value) {
+          this.notif.warning(
+            'Advertencia',
+            'Debe ingresar la fecha de notificación.',
+            ConfiguracionNotificacion.configRightTop
+          );
+          return false;
+        }
+        break;
+
+      case 3:
+        if (!this.insolvenciaForm.get('FechaInicioNegociacion')?.value) {
+          this.notif.warning(
+            'Advertencia',
+            'Debe ingresar la fecha de inicio de negociación.',
+            ConfiguracionNotificacion.configRightTop
+          );
+          return false;
+        }
+        break;
+
+      case 4:
+        if (!this.insolvenciaForm.get('FechaAprobacionAcuerdo')?.value) {
+          this.notif.warning(
+            'Advertencia',
+            'Debe ingresar la fecha de aprobación del acuerdo.',
+            ConfiguracionNotificacion.configRightTop
+          );
+          return false;
+        }
+        break;
+
+      case 5:
+        if (!this.insolvenciaForm.get('FechaTerminacionAcuerdo')?.value) {
+          this.notif.warning(
+            'Advertencia',
+            'Debe ingresar la fecha de terminación del acuerdo.',
+            ConfiguracionNotificacion.configRightTop
+          );
+          return false;
+        }
+        break;
+
+      case 6:
+        if (!this.insolvenciaForm.get('FechaIncumplimientoAcuerdo')?.value) {
+          this.notif.warning(
+            'Advertencia',
+            'Debe ingresar la fecha de incumplimiento del acuerdo.',
+            ConfiguracionNotificacion.configRightTop
+          );
+          return false;
+        }
+        break;
+
+      case 7:
+        if (!this.insolvenciaForm.get('FechaLiquidacion')?.value) {
+          this.notif.warning(
+            'Advertencia',
+            'Debe ingresar la fecha de liquidación.',
+            ConfiguracionNotificacion.configRightTop
+          );
+          return false;
+        }
+        break;
+
+      case 8:
+
+        if (!this.insolvenciaForm.get('ValorReconocido')?.value) {
+          this.notif.warning(
+            'Advertencia',
+            'Debe ingresar el valor reconocido.',
+            ConfiguracionNotificacion.configRightTop
+          );
+          return false;
+        }
+
+        if (!this.insolvenciaForm.get('CapitalReconocido')?.value) {
+          this.notif.warning(
+            'Advertencia',
+            'Debe ingresar el capital reconocido.',
+            ConfiguracionNotificacion.configRightTop
+          );
+          return false;
+        }
+
+        if (
+          !this.insolvenciaForm.get('NuevasCondicionesPago')
+            ?.value
+            ?.trim()
+        ) {
+          this.notif.warning(
+            'Advertencia',
+            'Debe ingresar las nuevas condiciones de pago.',
+            ConfiguracionNotificacion.configRightTop
+          );
+          return false;
+        }
+
+        if (!this.insolvenciaForm.get('NumeroCuotasPactadas')?.value) {
+          this.notif.warning(
+            'Advertencia',
+            'Debe ingresar el número de cuotas pactadas.',
+            ConfiguracionNotificacion.configRightTop
+          );
+          return false;
+        }
+
+        break;
     }
 
     const fechaEvento = this.obtenerFechaEvento();
+
     if (!this.validarFechaNoFutura(fechaEvento)) {
       this.notif.warning(
         'Advertencia',
-        'La fecha del evento no puede ser posterior a la fecha actual.',
+        'La fecha no puede ser mayor a la fecha actual.',
         ConfiguracionNotificacion.configRightTop
       );
+      return false;
+    }
+
+    return true;
+  }
+
+  private construirDtoInsolvencia(): CrearInsolvencia {
+    return {
+      idCuenta: Number( this.gestionCreditoForm.get('IdCuenta')?.value ),
+      oficina: Number( this.gestionCreditoForm.get('IdOficinaCuenta')?.value ),
+      producto: Number( this.gestionCreditoForm.get('IdProductoCuenta')?.value ),
+      consecutivo: Number( this.gestionCreditoForm.get('IdConsecutivo')?.value ),
+      estadoActual: Number( this.gestionCreditoForm.get('IdEstadoCuenta')?.value ),
+      formaPago: Number( this.gestionCreditoForm.get('IdFormaPago')?.value ),
+      motivo: Number( this.insolvenciaForm.get('IdCausal')?.value ),
+      tipoInstancia: Number( this.insolvenciaForm.get('IdInstancia')?.value ),
+      usuario: this.dataUser.IdUsuario,
+      edoTaquilla: 0,
+      tipoSeguimiento: Number( this.insolvenciaForm.get('IdTipoSeguimiento')?.value ),
+      fechaEvento: this.obtenerFechaEvento(),
+      valorReconocido: Number( this.insolvenciaForm.get('ValorReconocido')?.value || 0 ),
+      capitalReconocido: Number( this.insolvenciaForm.get('CapitalReconocido')?.value || 0 ),
+      interesesReconocidos: Number( this.insolvenciaForm.get('InteresesReconocidos')?.value || 0 ),
+      condonacionesAprobadas: Number( this.insolvenciaForm.get('CondonacionesAprobadas')?.value || 0 ),
+      nuevasCondicionesPago: this.insolvenciaForm.get('NuevasCondicionesPago')?.value,
+      numeroCuotasPactadas: Number( this.insolvenciaForm.get('NumeroCuotasPactadas')?.value || 0 )
+    };
+  }
+
+  onClickGuardarInsolvencia(): void {
+
+    if (!this.validarGuardarInsolvencia()) {
       return;
     }
-  
-    const dto: CrearInsolvencia = {
-      idCuenta: Number(this.gestionCreditoForm.get('IdCuenta')?.value),
-    
-      oficina: Number(
-        this.gestionCreditoForm.get('IdOficinaCuenta')?.value
-      ),
-    
-      producto: Number(
-        this.gestionCreditoForm.get('IdProductoCuenta')?.value
-      ),
-    
-      consecutivo: Number(
-        this.gestionCreditoForm.get('IdConsecutivo')?.value
-      ),
-    
-      estadoActual: Number(
-        this.gestionCreditoForm.get('IdEstadoCuenta')?.value
-      ),
-    
-      formaPago: Number(
-        this.gestionCreditoForm.get('IdFormaPago')?.value
-      ),
-    
-      motivo: Number(
-        this.insolvenciaForm.get('IdCausal')?.value
-      ),
-    
-      tipoInstancia: Number(
-        this.insolvenciaForm.get('IdInstancia')?.value
-      ),
-    
-      usuario: this.dataUser.IdUsuario,
-    
-      edoTaquilla: 0,
-    
-      tipoSeguimiento: Number(
-        this.insolvenciaForm.get('IdTipoSeguimiento')?.value
-      ),
-    
-      fechaEvento: this.obtenerFechaEvento(),
-    
-      valorReconocido: Number(
-        this.insolvenciaForm.get('ValorReconocido')?.value || 0
-      ),
-    
-      capitalReconocido: Number(
-        this.insolvenciaForm.get('CapitalReconocido')?.value || 0
-      ),
-    
-      interesesReconocidos: Number(
-        this.insolvenciaForm.get('InteresesReconocidos')?.value || 0
-      ),
-    
-      condonacionesAprobadas: Number(
-        this.insolvenciaForm.get('CondonacionesAprobadas')?.value || 0
-      ),
-    
-      nuevasCondicionesPago:
-        this.insolvenciaForm.get('NuevasCondicionesPago')?.value,
-    
-      numeroCuotasPactadas: Number(
-        this.insolvenciaForm.get('NumeroCuotasPactadas')?.value || 0
-      )
-    };
-    console.log(dto);
-    
+
+    const dto = this.construirDtoInsolvencia();
+
     this.isSavingInsolvencia = true;
     this.loading.show();
 
+    const jsonLog = this.construirLogInsolvencia();
+
     this.carteraService.crearInsolvencia(dto).subscribe({
-        next: (resp) => {
-          if (resp.Exitoso) {
-            this.notif.success(
-              resp.Mensaje,
-              'Proceso de insolvencia',
-              ConfiguracionNotificacion.configRightTop
-            );
-            const idCuenta = Number(
-              this.gestionCreditoForm.get('IdCuenta')?.value
-            );
-            this.buscarCuentaDetalle(idCuenta);
-            
-            this.onClickCancelarInsolvencia();
-          
-            document.getElementById('btnCerrarProcesoInsolvencia')?.click();
-          
-            this.loading.hide();
-            this.isSavingInsolvencia = false;
 
-            this.onCambiosTabClick();
-            window.scrollTo({top: document.body.scrollHeight,behavior: 'smooth'});
+      next: (resp) => {
 
-          } else {
-            this.notif.warning(
-              'Advertencia',
-              resp.Mensaje,
-              ConfiguracionNotificacion.configRightTop
-            );
-            this.loading.hide();
-            this.isSavingInsolvencia = false;
-          }
-        },
-        error: (error) => {
-          this.notif.error(
-            error?.error?.Message ??
-            'Error al registrar la insolvencia.',
-            'Error',
+        if (resp.Exitoso) {
+
+          this.notif.success(
+            'Exitoso',
+            resp.Mensaje,
             ConfiguracionNotificacion.configRightTop
           );
-          this.loading.hide();
-          this.isSavingInsolvencia = false;
-        }
-      });
-      
-  }
 
-  getTiposSeguimientoInsolvencia(): void {
-    this.carteraService.getTiposSeguimientoInsolvencia()
-      .pipe(
-        catchError(error => {
-          console.error('Error al obtener tipos de seguimiento:', error);
-          return of([]);
-        })
-      )
-      .subscribe(result => {
-        this.tiposSeguimientoInsolvencia = result;
-      });
+          this.guardarLogGestionCredito(jsonLog);
+
+          const idCuenta = Number(
+            this.gestionCreditoForm.get('IdCuenta')?.value
+          );
+
+          this.buscarCuentaDetalle(idCuenta);
+
+          this.onClickCancelarInsolvencia();
+
+          document
+            .getElementById('btnCerrarProcesoInsolvencia')
+            ?.click();
+
+          this.onCambiosTabClick();
+
+          window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: 'smooth'
+          });
+
+        } else {
+
+          this.notif.warning(
+            'Advertencia',
+            resp.Mensaje,
+            ConfiguracionNotificacion.configRightTop
+          );
+        }
+
+        this.loading.hide();
+        this.isSavingInsolvencia = false;
+      },
+
+      error: (error) => {
+
+        this.notif.error(
+          error?.error?.Message ??
+          'Error al registrar la insolvencia.',
+          'Error',
+          ConfiguracionNotificacion.configRightTop
+        );
+
+        this.loading.hide();
+        this.isSavingInsolvencia = false;
+      }
+    });
   }
 
   cargarHistoricoInsolvencia() {
@@ -1288,26 +1467,15 @@ export class GestionCreditoComponent {
         });
   }
 
-obtenerNumeroInsolvencia(
-  item: InsolvenciaHistoricoDto
-): number {
+  obtenerNumeroInsolvencia( item: InsolvenciaHistoricoDto  ): number {
+    const key = new Date(item.dtmFechaCreacionInsolvencia).toISOString();
+    return this.mapaNumeracionInsolvencias[key] ?? 0;
+  }
 
-  const key =
-    new Date(item.dtmFechaCreacionInsolvencia)
-      .toISOString();
-
-  return this.mapaNumeracionInsolvencias[key] ?? 0;
-}
-
-obtenerNumeroDetalle(
-  item: InsolvenciaHistoricoDto
-): string {
-
-  const numeroInsolvencia =
-    this.obtenerNumeroInsolvencia(item);
-
-  return `${numeroInsolvencia}.${item.intTipoSeguimiento}`;
-}
+  obtenerNumeroDetalle(item: InsolvenciaHistoricoDto): string {
+    const numeroInsolvencia =this.obtenerNumeroInsolvencia(item);
+    return `${numeroInsolvencia}.${item.intTipoSeguimiento}`;
+  }
 
   verDetalleAcuerdo(item: InsolvenciaHistoricoDto) {
 
@@ -1333,24 +1501,13 @@ obtenerNumeroDetalle(
   }
 
   private validarBotonesInsolvencia(): void {
-
-    // LIMPIAR:
-    // Se habilita cuando cualquier campo cambia
     this.isDisabledLimpiarInsolvenciaButton = !this.insolvenciaForm.dirty;
-
-    // GUARDAR:
-    // Se habilita únicamente cuando todos los datos requeridos
-    // para el detalle seleccionado estén diligenciados
-
-    const tipo = Number( this.insolvenciaForm.get('IdTipoSeguimiento')?.value );
-
+    const tipo = Number(this.insolvenciaForm.get('IdTipoSeguimiento')?.value);
     const causal = this.insolvenciaForm.get('IdCausal')?.value;
     const instancia = this.insolvenciaForm.get('IdInstancia')?.value;
-      
     let formularioCompleto = !!causal && !!instancia && !!tipo;
 
     switch (tipo) {
-
       case 1:
         formularioCompleto =
           formularioCompleto &&
@@ -1398,8 +1555,8 @@ obtenerNumeroDetalle(
           formularioCompleto &&
           !!this.insolvenciaForm.get('ValorReconocido')?.value &&
           !!this.insolvenciaForm.get('CapitalReconocido')?.value &&
-          !!this.insolvenciaForm.get('InteresesReconocidos')?.value &&
-          !!this.insolvenciaForm.get('NumeroCuotasPactadas')?.value;
+          !!this.insolvenciaForm.get('NumeroCuotasPactadas')?.value &&
+          !!this.insolvenciaForm.get('NuevasCondicionesPago')?.value?.trim();
         break;
 
       case 9:
@@ -1412,7 +1569,11 @@ obtenerNumeroDetalle(
     }
 
     this.isDisabledGuardarInsolvenciaButton =
-      !(this.insolvenciaForm.dirty && formularioCompleto);
+      !(
+        this.insolvenciaForm.dirty &&
+        formularioCompleto &&
+        this.insolvenciaForm.valid
+      );
   }
 
   private obtenerDetallesInsolvenciaActual(): InsolvenciaHistoricoDto[] {
@@ -1438,15 +1599,17 @@ obtenerNumeroDetalle(
 
   private filtrarDetallePermitido(): void {
 
-    const detallesActuales =
-      this.obtenerDetallesInsolvenciaActual();
+    const detallesActuales = this.obtenerDetallesInsolvenciaActual();
 
     const ultimo =
       detallesActuales.length
         ? Math.max(...detallesActuales.map(x => x.intTipoSeguimiento))
         : 0;
 
-    const siguiente = ultimo + 1;
+    const siguiente =
+      ultimo === 9
+        ? 1
+        : ultimo + 1;
 
     this.tiposSeguimientoInsolvencia =
       this.tiposSeguimientoInsolvencia.filter(
@@ -1497,24 +1660,81 @@ obtenerNumeroDetalle(
     return fechaIngresada.getTime() <= fechaActual.getTime();
   }
 
-  getInstanciasInsolvencia(): void {
-    this.carteraService
-      .getInstanciasInsolvencia()
-      .pipe(
-        catchError(error => {
-          console.error(
-            'Error al obtener instancias de insolvencia:',
-            error
-          );
-          return of([]);
-        })
-      )
-      .subscribe(result => {
-        this.instanciasInsolvencia = result;
-      });
+  private construirLogInsolvencia() {
+    return {
+      Anterior: '',
+      Actualiza: ''
+    };
   }
 
+  private configurarValidadoresAcuerdoPago(tipoSeguimiento: number): void {
   
+    if (tipoSeguimiento === 8) {
+    
+      this.insolvenciaForm.get('ValorReconocido')
+        ?.setValidators([
+          Validators.required,
+          Validators.maxLength(12)
+        ]);
+      
+      this.insolvenciaForm.get('CapitalReconocido')
+        ?.setValidators([
+          Validators.required,
+          Validators.maxLength(12)
+        ]);
+      
+      this.insolvenciaForm.get('InteresesReconocidos')
+        ?.setValidators([
+          Validators.maxLength(12)
+        ]);
+      
+      this.insolvenciaForm.get('CondonacionesAprobadas')
+        ?.setValidators([
+          Validators.maxLength(12)
+        ]);
+      
+      this.insolvenciaForm.get('NuevasCondicionesPago')
+        ?.setValidators([
+          Validators.required,
+          Validators.maxLength(200)
+        ]);
+      
+      this.insolvenciaForm.get('NumeroCuotasPactadas')
+        ?.setValidators([
+          Validators.required,
+          Validators.pattern('^[0-9]+$'),
+          Validators.maxLength(4)
+        ]);
+      
+    } else {
+    
+      this.insolvenciaForm.get('ValorReconocido')
+        ?.clearValidators();
+    
+      this.insolvenciaForm.get('CapitalReconocido')
+        ?.clearValidators();
+    
+      this.insolvenciaForm.get('InteresesReconocidos')
+        ?.clearValidators();
+    
+      this.insolvenciaForm.get('CondonacionesAprobadas')
+        ?.clearValidators();
+    
+      this.insolvenciaForm.get('NuevasCondicionesPago')
+        ?.clearValidators();
+    
+      this.insolvenciaForm.get('NumeroCuotasPactadas')
+        ?.clearValidators();
+    }
+  
+    this.insolvenciaForm.get('ValorReconocido')?.updateValueAndValidity();
+    this.insolvenciaForm.get('CapitalReconocido')?.updateValueAndValidity();
+    this.insolvenciaForm.get('InteresesReconocidos')?.updateValueAndValidity();
+    this.insolvenciaForm.get('CondonacionesAprobadas')?.updateValueAndValidity();
+    this.insolvenciaForm.get('NuevasCondicionesPago')?.updateValueAndValidity();
+    this.insolvenciaForm.get('NumeroCuotasPactadas')?.updateValueAndValidity();
+  }
+
   //Fin Proceso Insolvencia
 
 
@@ -1749,6 +1969,8 @@ obtenerNumeroDetalle(
     
     const jsonLog = this.construirLogCambioGarantia();
 
+    console.log(jsonLog, '❤️❤️');
+
     this.loading.show();
 
     this.carteraService.cambiarGarantias(dto)
@@ -1759,7 +1981,7 @@ obtenerNumeroDetalle(
           this.notif.warning('Advertencia', res.Mensaje, ConfiguracionNotificacion.configRightTop);
           return;
         }
-        this.guardarLogGestionCredito(jsonLog);
+        // this.guardarLogGestionCredito(jsonLog);
         this.notif.success('Exitoso', 'El cambio de garantía se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
         this.cerrarModalYRefrescarCambiarGarantia();
       },

@@ -612,6 +612,7 @@ export interface TipoSeguimientoInsolvencia {
 export interface InsolvenciaHistoricoDto {
   lngIdSeguimiento: number;
   intTipoSeguimiento: number;
+  Instancia: string;
   Motivo: string;
   TipoSeguimiento: string;
   dtmFechaEvento: Date;

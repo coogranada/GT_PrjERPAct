@@ -459,3 +459,14 @@ tr.fila-detalle td {
 .table-border {
     border: 1px solid #474646 !important;
 }
+
+
+.numero-detalle {
+    cursor: pointer;
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+.numero-detalle:hover {
+    opacity: 0.8;
+}
