@@ -1391,8 +1391,6 @@ export class GestionCreditoComponent {
     this.isSavingInsolvencia = true;
     this.loading.show();
 
-    const jsonLog = this.construirLogInsolvencia();
-
     this.carteraService.crearInsolvencia(dto).subscribe({
 
       next: (resp) => {
@@ -1405,7 +1403,7 @@ export class GestionCreditoComponent {
             ConfiguracionNotificacion.configRightTop
           );
 
-          this.guardarLogGestionCredito(jsonLog);
+          this.guardarLogGestionCredito({});
 
           const idCuenta = Number(
             this.gestionCreditoForm.get('IdCuenta')?.value
@@ -1415,9 +1413,7 @@ export class GestionCreditoComponent {
 
           this.onClickCancelarInsolvencia();
 
-          document
-            .getElementById('btnCerrarProcesoInsolvencia')
-            ?.click();
+          document.getElementById('btnCerrarProcesoInsolvencia')?.click();
 
           this.onCambiosTabClick();
 
@@ -1660,13 +1656,6 @@ export class GestionCreditoComponent {
     return fechaIngresada.getTime() <= fechaActual.getTime();
   }
 
-  private construirLogInsolvencia() {
-    return {
-      Anterior: '',
-      Actualiza: ''
-    };
-  }
-
   private configurarValidadoresAcuerdoPago(tipoSeguimiento: number): void {
   
     if (tipoSeguimiento === 8) {
@@ -1676,7 +1665,6 @@ export class GestionCreditoComponent {
           Validators.required,
           Validators.maxLength(12)
         ]);
-      
       this.insolvenciaForm.get('CapitalReconocido')
         ?.setValidators([
           Validators.required,
@@ -1707,24 +1695,12 @@ export class GestionCreditoComponent {
         ]);
       
     } else {
-    
-      this.insolvenciaForm.get('ValorReconocido')
-        ?.clearValidators();
-    
-      this.insolvenciaForm.get('CapitalReconocido')
-        ?.clearValidators();
-    
-      this.insolvenciaForm.get('InteresesReconocidos')
-        ?.clearValidators();
-    
-      this.insolvenciaForm.get('CondonacionesAprobadas')
-        ?.clearValidators();
-    
-      this.insolvenciaForm.get('NuevasCondicionesPago')
-        ?.clearValidators();
-    
-      this.insolvenciaForm.get('NumeroCuotasPactadas')
-        ?.clearValidators();
+      this.insolvenciaForm.get('ValorReconocido') ?.clearValidators();
+      this.insolvenciaForm.get('CapitalReconocido') ?.clearValidators();
+      this.insolvenciaForm.get('InteresesReconocidos') ?.clearValidators();
+      this.insolvenciaForm.get('CondonacionesAprobadas') ?.clearValidators();
+      this.insolvenciaForm.get('NuevasCondicionesPago') ?.clearValidators();
+      this.insolvenciaForm.get('NumeroCuotasPactadas') ?.clearValidators();
     }
   
     this.insolvenciaForm.get('ValorReconocido')?.updateValueAndValidity();

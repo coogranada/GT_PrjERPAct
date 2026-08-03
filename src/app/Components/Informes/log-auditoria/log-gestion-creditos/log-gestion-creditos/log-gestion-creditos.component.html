@@ -103,7 +103,7 @@
                               <div class="form-group">
                                 <label class="textNegrilla">Fecha Inicial:</label>
                                 <span class="grande"> *</span>
-                                <input type="date" class="form-control" formControlName="@FechaInicial" />
+                                <input type="date" class="form-control" formControlName="@FechaInicial" [max]="fechaMaxima"/>
                               </div>
                             </div>
 
@@ -111,7 +111,7 @@
                               <div class="form-group">
                                 <label class="textNegrilla">Fecha Final:</label>
                                 <span class="grande"> *</span>
-                                <input type="date" class="form-control" formControlName="@FechaFinal" />
+                                <input type="date" class="form-control" formControlName="@FechaFinal" [max]="fechaMaxima"/>
                               </div>
                             </div>
                           </div>
