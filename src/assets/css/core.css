@@ -2106,6 +2106,11 @@ fieldset[disabled] .btn-raised:not(.btn-flat):not(.btn-link) {
     padding-left: 11px;
     padding-right: 11px;
 }
+.btn-icon-refresh {
+    padding-left: 6.5px;
+    padding-right: 6.5px;
+}
+
 
 .btn-icon .checker,
 .btn-icon .choice {
