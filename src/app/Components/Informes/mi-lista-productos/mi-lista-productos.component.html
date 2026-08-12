@@ -20,7 +20,6 @@
                             <input type="hidden" id="TipoCliente" />
                         </div>
                     </div>
-
                     <div class="col-xs-12 col-md-4 col-lg-4">
                         <div class="form-group">
                             <label class="textNegrilla">Nombre</label>
@@ -28,12 +27,17 @@
                         </div>
                     </div>
                     <div class="col-xs-12 col-md-4 col-lg-1">
-                        <button type="button" *ngIf="!btnLupa" class="btn Gt-btn-verde btn-icon" (click)="BotonBuscarMisProductos()" [attr.disabled]="disbaleBusqueda">
-                          <i class="icon-search4"></i>
-                      </button>
-                        <button *ngIf="!btnBorrador" class="btn Gt-btn-morado btn-icon legitRipple" (click)="LimpiarFormularioBorrador()">
-                          <i class="icon-eraser2"></i>
-                      </button>
+                    <div style="display:flex; align-items:center; gap:4px;">
+                     <button type="button" *ngIf="!btnLupa" class="btn Gt-btn-verde btn-icon"(click)="BotonBuscarMisProductos()" [attr.disabled]="disbaleBusqueda">
+                        <i class="icon-search4"></i>
+                    </button>
+                    <button *ngIf="!btnBorrador" class="btn Gt-btn-morado btn-icon legitRipple" (click)="LimpiarFormularioBorrador()">
+                        <i class="icon-eraser2"></i>
+                    </button>
+                    <button type="button" class="btn btn-default btn-icon-refresh"(click)="BotonBuscarMisProductos()"[disabled]="!misProductosFrom.get('Documento')?.value">
+                        <i class="icon-sync" style="font-size:23px;"></i>
+                    </button>
+                    </div>
                     </div>
                     <div class="col-xs-12 col-md-4 col-lg-2" style="text-align: right; margin-top: 28px;">
                         Activos <input type="checkbox" class="switchery" formControlName=ProductosActivos (click)="ValidarSeleccion('si')" id="activosProduct"><br/> Cancelados <input type="checkbox" class="switchery" formControlName="ProductosCancelados"

@@ -72,6 +72,15 @@
                         <!-- Fin Cuenta -->
 
                         <div class="col-xs-1 col-md-1 col-lg-2">
+                             <button type="button" class="btn btn-default btn-icon"
+                               (click)="BuscarPorCuenta()"
+                                   [disabled]="
+                                   !TerminoForm.get('IdOficina')?.value ||
+                                   !TerminoForm.get('IdProductoCuenta')?.value ||
+                                   !TerminoForm.get('IdConsecutivo')?.value ||
+                                   !TerminoForm.get('IdDigito')?.value">
+                                    <i class="icon-sync" style="font-size:22px;"></i>
+                            </button>
                         </div>
 
                         <!-- Inicio Buscar -->

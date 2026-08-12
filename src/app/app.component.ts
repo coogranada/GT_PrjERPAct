@@ -36,31 +36,51 @@ export class AppComponent implements OnInit {
     this.loadUserFromStorage();
   }
 
-  ngOnInit(): void {
-    if (!navigator.onLine) {
-      this.handleOffline();
-    }
+ngOnInit(): void {
 
-    // this.initializeCatalogs();
-    this.setupTokenRefresh();
-    this.handleNavigationChanges();
-    this.blockDevTools();
+  this.loadUserFromStorage();
+
+  if (!navigator.onLine) {
+    this.handleOffline();
   }
+
+  this.setupTokenRefresh();
+  this.handleNavigationChanges();
+  this.blockDevTools();
+
+  window.addEventListener('error', (event) => {
+    console.error('Error global:', event);
+  });
+
+  window.addEventListener('unhandledrejection', (event) => {
+    console.error('Promesa rechazada:', event.reason);
+  });
+}
 
   // STORAGE
   private loadUserFromStorage(): void {
-    const data = localStorage.getItem('Data');
 
-    if (!data) {
-      this.logout();
-      return;
-    }
+  const data = localStorage.getItem('Data');
 
-    try {
-      this.resulStore = JSON.parse(atob(data));
-    } catch {
-      this.logout();
-    }
+  if (!data) {
+    console.warn('No existe información del usuario en LocalStorage');
+    this.logout();
+    return;
+  }
+
+  try {
+
+    const decodedData = atob(data);
+    this.resulStore = JSON.parse(decodedData);
+
+    console.log('Usuario cargado correctamente', this.resulStore);
+
+  } catch (error) {
+
+    console.error('Error leyendo Data del LocalStorage:', error);
+
+    this.logout();
+  }
   }
 
   private saveToStorage(key: string, data: any): void {
@@ -68,24 +88,42 @@ export class AppComponent implements OnInit {
   }
 
   private logout(): void {
-    localStorage.clear();
-    this.router.navigateByUrl('/Login');
+
+  localStorage.clear();
+
+  if (this.router.url !== '/Login') {
+    this.router.navigate(['/Login']);
   }
+}
 
 
-  private fetchAndStore(serviceCall: any, key: string, transform?: (data: any) => any): void {
-    serviceCall.subscribe({
-      next: (result: any) => {
-        const finalData = transform ? transform(result) : result;
-        this.saveToStorage(key, finalData);
-      },
-      
-      error: (error: HttpErrorResponse) => {
-      this.notif.onDanger('Error', error.message);
-      console.error(error);
-      }
+ private fetchAndStore(
+  serviceCall: any,
+  key: string,
+  transform?: (data: any) => any
+): void {
+
+  serviceCall.subscribe({
+
+    next: (result: any) => {
+
+      const finalData = transform
+        ? transform(result)
+        : result;
+
+      this.saveToStorage(key, finalData);
+    },
+
+    error: (error: HttpErrorResponse) => {
+
+      // Solo registrar el error en consola
+      console.error(`Error cargando ${key}:`, error);
+
+      // No mostrar notificación al usuario
+    }
     });
   }
+
 
   // private initializeCatalogs(): void {
   //   this.GetCargos();
@@ -152,10 +190,11 @@ export class AppComponent implements OnInit {
     this.handleOffline();
   }
 
-  private handleOffline(): void {
-    location.reload();
-  }
+private handleOffline(): void {
 
+  this.notif.onDanger('Sin conexión','No hay conexión a Internet');
+  console.warn('Aplicación sin conexión');
+}
 
   // SEGURIDAD UI
   private blockDevTools(): void {

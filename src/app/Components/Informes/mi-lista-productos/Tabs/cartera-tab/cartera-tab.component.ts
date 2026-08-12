@@ -865,7 +865,6 @@ export class CarteraTabComponent implements OnInit {
 
   SendMailSeguros() {
     if (this.validaPlantillla == true) {
-      this.loading.show();
       var yearInicial = Number($(".yearInit_Cartera").val());
       var yearFinal = Number($(".yearEnd_Cartera").val());
       var MesInicial = Number($(".MesInit_Cartera").val());
@@ -879,7 +878,6 @@ export class CarteraTabComponent implements OnInit {
 
       this.MiListaProductosService.sendMailCartera(this.lngCuenta, "Coogranada",Oficina,this.NombreProducto,"Cartera",FechaInicio,yearFinal,MesFinal,null).subscribe(
         result => {
-          this.loading.hide();
           this.Response(result);
 
           //#region Guarda log
@@ -916,7 +914,6 @@ export class CarteraTabComponent implements OnInit {
         }
       )
     } else {
-      this.loading.hide();
       swal.fire({
         title: "Info",
         text: "",
@@ -2919,6 +2916,8 @@ export class CarteraTabComponent implements OnInit {
       this.carteraInfo.TotalMoraCal = 0;
       this.carteraInfo.TotalDiferidosCal = 0;
       this.carteraInfo.TotalPagarCal = 0;
+      this.carteraInfo.PagoMini = 0; 
+      this.carteraInfo.PagoTotal = 0;
       this.CarteraForm.get('NCoutas')?.setValue("");
       this.CarteraForm.get('ACuotas')?.setValue(false);
       this.CarteraForm.get('CancelaCredito')?.setValue(false);

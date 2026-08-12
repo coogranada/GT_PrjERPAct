@@ -78,6 +78,15 @@
                         <!-- Fin Cuenta -->
 
                         <div class="col-xs-1 col-md-1 col-lg-2">
+                            <button type="button" class="btn btn-default btn-icon"
+                               (click)="onBlurCampoNumeroCuenta()"
+                                   [disabled]="
+                                   !gestionCreditoForm.get('IdOficina')?.value ||
+                                   !gestionCreditoForm.get('IdProductoCuenta')?.value ||
+                                   !gestionCreditoForm.get('IdConsecutivo')?.value ||
+                                   !gestionCreditoForm.get('IdDigito')?.value">
+                                    <i class="icon-sync" style="font-size:22px;"></i>
+                            </button>
                         </div>
 
                         <!-- Inicio Buscar -->
@@ -848,7 +857,7 @@
 
         <!-- MODAL PROCESO INSOLVENCIA -->
         <div id="procesoInsolvencia" class="modal" data-backdrop="static" data-keyboard="false"> 
-            <div class="modal-dialog modal-lg">
+            <div style="width: 80%; margin: 30px auto; height: 90%;">
                 <div class="modal-content">
                     <div class="modal-header bg-morado">
                         <button type="button" class="close" data-dismiss="modal" (click)="onClickCerrarModalCodeudores()">&times;</button>
@@ -862,7 +871,20 @@
 
                                     <div class="col-sm-3">
                                         <div class="form-group">
-                                            <label class="textNegrilla">Causal</label>
+                                            <label class="textNegrilla"> Instancia: </label>
+                                            <span class="grande">*</span>
+                                            <select class="form-control" formControlName="IdInstancia">
+                                                <option value=""> -- Seleccione -- </option>
+                                                <option *ngFor="let instancia of instanciasInsolvencia"
+                                                    [value]="instancia.IdInstancia">
+                                                    {{ instancia.Descripcion }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label class="textNegrilla"> Causal: </label>
                                             <span class="grande"> *</span>
                                             <select class="form-control" name="select" formControlName="IdCausal">
                                                 @if(!insolvenciaForm.get('IdCausal')?.value){
@@ -877,233 +899,266 @@
 
                                     <div class="col-sm-4">
                                         <div class="form-group">
-                                            <label class="textNegrilla">Detalle</label>
+                                            <label class="textNegrilla"> Detalle: </label>
                                             <span class="grande"> *</span>
-                                            <select class="form-control" formControlName="Detalle">
+                                        
+                                            <select
+                                                class="form-control"
+                                                formControlName="IdTipoSeguimiento"
+                                                (change)="onChangeDetalleInsolvencia()">
+                                    
                                                 <option value="">-- Seleccione --</option>
-                                            
-                                                <option *ngFor="let item of detallesInsolvencia"
-                                                        [value]="item.id">
-                                                    {{item.descripcion}}
+                                        
+                                                <option
+                                                    *ngFor="let item of tiposSeguimientoInsolvencia"
+                                                    [value]="item.intTipoSeguimiento">
+                                    
+                                                    {{ item.intTipoSeguimiento + ' ' + item.strDescripcion }}
+                                        
                                                 </option>
+                                            
                                             </select>
                                         </div>
                                     </div>
+                                    
+                                </div>
 
-<!-- 
+                                <!-- ADMISION -->
+                                <div class="row"
+                                     *ngIf="insolvenciaForm.get('IdTipoSeguimiento')?.value == 1">
+                                
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="documento">Documento:</label>
+                                            <label>Fecha admisión:</label>
                                             <span class="grande"> *</span>
-                                            <input type="text" autocomplete="off" id="documento" class="form-control" maxlength="30" formControlName="documento" (blur)="onBlurDocumentoDeudor()" (input)="onChangeDocumentoCodeudor()">
-                                            <span class="help-block validationSpan"
-                                                *ngIf="codeudorForm.controls['documento'].errors?.['minlength']">
-                                                Debe tener al menos 6 caracteres.
-                                            </span>
+                                        
+                                            <input
+                                                type="date"
+                                                class="form-control"
+                                                formControlName="FechaAdmision"
+                                                [max]="fechaMaxima">
                                         </div>
                                     </div>
-
-                                    <div class="col-md-5">
+                                
+                                </div>
+                                
+                                <!-- NOTIFICACION -->
+                                <div class="row"
+                                     *ngIf="insolvenciaForm.get('IdTipoSeguimiento')?.value == 2">
+                                
+                                    <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="nombre">Nombre:</label>
-                                            <input type="text" id="nobrem" class="form-control" formControlName="nombre">
+                                            <label>Fecha notificación:</label>
+                                            <span class="grande"> *</span>
+                                        
+                                            <input
+                                                type="date"
+                                                class="form-control"
+                                                formControlName="FechaNotificacion"
+                                                [max]="fechaMaxima">
                                         </div>
-                                    </div> -->
-                                </div>
-                            <!-- ADMISION -->
-                            <div class="row"
-                                 *ngIf="insolvenciaForm.get('Detalle')?.value === 'ADMISION'">
-                            
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Fecha admisión:</label>
-                                        <span class="grande"> *</span>
-                                        <input type="date"
-                                               class="form-control"
-                                               formControlName="FechaAdmision">
                                     </div>
+                                
                                 </div>
-                            
-                            </div>
-                            
-                            <!-- NOTIFICACION -->
-                            <div class="row"
-                                 *ngIf="insolvenciaForm.get('Detalle')?.value === 'NOTIFICACION'">
-                            
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Fecha notificación:</label>
-                                        <span class="grande"> *</span>
-                                        <input type="date"
-                                               class="form-control"
-                                               formControlName="FechaNotificacion">
+                                
+                                <!-- INICIO NEGOCIACION -->
+                                <div class="row"
+                                     *ngIf="insolvenciaForm.get('IdTipoSeguimiento')?.value == 3">
+                                
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Fecha inicio negociación:</label>
+                                            <span class="grande"> *</span>
+                                        
+                                            <input
+                                                type="date"
+                                                class="form-control"
+                                                formControlName="FechaInicioNegociacion"
+                                                [max]="fechaMaxima">
+                                        </div>
                                     </div>
+                                
                                 </div>
-                            
-                            </div>
-                            
-                            <!-- INICIO_NEGOCIACION -->
-                            <div class="row"
-                                 *ngIf="insolvenciaForm.get('Detalle')?.value === 'INICIO_NEGOCIACION'">
-                            
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Fecha inicio negociación:</label>
-                                        <span class="grande"> *</span>
-                                        <input type="date"
-                                               class="form-control"
-                                               formControlName="FechaInicioNegociacion">
+                                
+                                <!-- APROBACION ACUERDO -->
+                                <div class="row"
+                                     *ngIf="insolvenciaForm.get('IdTipoSeguimiento')?.value == 4">
+                                
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Fecha aprobación acuerdo:</label>
+                                            <span class="grande"> *</span>
+                                        
+                                            <input
+                                                type="date"
+                                                class="form-control"
+                                                formControlName="FechaAprobacionAcuerdo"
+                                                [max]="fechaMaxima">
+                                        </div>
                                     </div>
+                                
                                 </div>
-                            
-                            </div>
-                            
-                            <!-- APROBACION_ACUERDO -->
-                            <div class="row"
-                                 *ngIf="insolvenciaForm.get('Detalle')?.value === 'APROBACION_ACUERDO'">
-                            
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Fecha aprobación acuerdo:</label>
-                                        <span class="grande"> *</span>
-                                        <input type="date"
-                                               class="form-control"
-                                               formControlName="FechaAprobacionAcuerdo">
-                                    </div>
-                                </div>
-                            
-                            </div>
-                            
-                            <!-- TERMINACION_ACUERDO -->
-                            <div class="row"
-                                 *ngIf="insolvenciaForm.get('Detalle')?.value === 'TERMINACION_ACUERDO'">
-                            
+                                
+                                <!-- TERMINACION ACUERDO -->
+                                <div class="row" *ngIf="insolvenciaForm.get('IdTipoSeguimiento')?.value == 5">
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label>Fecha terminación acuerdo:</label>
                                         <span class="grande"> *</span>
-                                        <input type="date"
-                                               class="form-control"
-                                               formControlName="FechaTerminacionAcuerdo">
+                                    
+                                        <input
+                                            type="date"
+                                            class="form-control"
+                                            formControlName="FechaTerminacionAcuerdo"
+                                            [max]="fechaMaxima">
                                     </div>
                                 </div>
-                            
-                            </div>
-                            
-                            <!-- INCUMPLIMIENTO_ACUERDO -->
-                            <div class="row"
-                                 *ngIf="insolvenciaForm.get('Detalle')?.value === 'INCUMPLIMIENTO_ACUERDO'">
-                            
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Fecha incumplimiento acuerdo:</label>
-                                        <span class="grande"> *</span>
-                                        <input type="date"
-                                               class="form-control"
-                                               formControlName="FechaIncumplimientoAcuerdo">
-                                    </div>
+
                                 </div>
-                            
-                            </div>
-                            
-                            <!-- LIQUIDACION -->
-                            <div class="row"
-                                 *ngIf="insolvenciaForm.get('Detalle')?.value === 'LIQUIDACION'">
-                            
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Fecha liquidación:</label>
-                                        <span class="grande"> *</span>
-                                        <input type="date"
-                                               class="form-control"
-                                               formControlName="FechaLiquidacion">
-                                    </div>
-                                </div>
-                            
-                            </div>
-                            
-                            <!-- ACUERDO_PAGO -->
-                            <div *ngIf="insolvenciaForm.get('Detalle')?.value === 'ACUERDO_PAGO'">
-                            
-                                <div class="row">
+                                
+                                <!-- INCUMPLIMIENTO ACUERDO -->
+                                <div class="row"
+                                     *ngIf="insolvenciaForm.get('IdTipoSeguimiento')?.value == 6">
                                 
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label>Valor reconocido:</label>
+                                            <label>Fecha incumplimiento acuerdo:</label>
                                             <span class="grande"> *</span>
-                                            <input type="text"
-                                                   class="form-control"
-                                                   formControlName="ValorReconocido">
-                                        </div>
-                                    </div>
-                                
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Capital reconocido:</label>
-                                            <span class="grande"> *</span>
-                                            <input type="text"
-                                                   class="form-control"
-                                                   formControlName="CapitalReconocido">
-                                        </div>
-                                    </div>
-                                
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Intereses reconocidos:</label>
-                                            <span class="grande"> *</span>
-                                            <input type="text"
-                                                   class="form-control"
-                                                   formControlName="InteresesReconocidos">
+                                        
+                                            <input
+                                                type="date"
+                                                class="form-control"
+                                                formControlName="FechaIncumplimientoAcuerdo"
+                                                [max]="fechaMaxima">
                                         </div>
                                     </div>
                                 
                                 </div>
-                            
-                                <div class="row">
+                                
+                                <!-- LIQUIDACION -->
+                                <div class="row"
+                                     *ngIf="insolvenciaForm.get('IdTipoSeguimiento')?.value == 7">
                                 
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label>Condonaciones aprobadas:</label>
-                                            <input type="text"
-                                                   class="form-control"
-                                                   formControlName="CondonacionesAprobadas">
-                                        </div>
-                                    </div>
-                                
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Nuevas condiciones de pago:</label>
-                                            <input type="text"
-                                                   class="form-control"
-                                                   formControlName="NuevasCondicionesPago">
-                                        </div>
-                                    </div>
-                                
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Número cuotas pactadas:</label>
+                                            <label>Fecha liquidación:</label>
                                             <span class="grande"> *</span>
-                                            <input type="text"
-                                                   class="form-control"
-                                                   formControlName="NumeroCuotasPactadas">
+                                        
+                                            <input
+                                                type="date"
+                                                class="form-control"
+                                                formControlName="FechaLiquidacion"
+                                                [max]="fechaMaxima">
                                         </div>
                                     </div>
                                 
                                 </div>
-                            
-                            </div>
-                            
-                            <!-- DESMARCAR -->
-                            <div class="row"
-                                 *ngIf="insolvenciaForm.get('Detalle')?.value === 'DESMARCAR'">
-                            
-                                <div class="col-md-12">
-                                    <div class="alert alert-warning">
-                                        Esta operación desmarcará el proceso de insolvencia y actualizará el estado de la cuenta.
+                                
+                                <!-- ACUERDO PAGO -->
+                                <div *ngIf="insolvenciaForm.get('IdTipoSeguimiento')?.value == 8">
+                                
+                                    <div class="row">
+                                    
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Valor reconocido:</label>
+                                                <span class="grande">*</span>
+                                            
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    formControlName="ValorReconocido"
+                                                    maxlength="12"
+                                                    appMonedaDirectiva>
+                                            </div>
+                                        </div>
+                                    
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Capital reconocido:</label>
+                                                <span class="grande">*</span>
+                                            
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    formControlName="CapitalReconocido"
+                                                    maxlength="12"
+                                                    appMonedaDirectiva>
+                                            </div>
+                                        </div>
+                                    
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Intereses reconocidos:</label>
+                                            
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    formControlName="InteresesReconocidos"
+                                                    maxlength="12"
+                                                    appMonedaDirectiva>
+                                            </div>
+                                        </div>
+                                    
                                     </div>
+                                
+                                    <div class="row">
+                                    
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Condonaciones aprobadas:</label>
+                                            
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    formControlName="CondonacionesAprobadas"
+                                                    maxlength="12"
+                                                    appMonedaDirectiva>
+                                            </div>
+                                        </div>
+                                    
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Nuevas condiciones de pago:</label>
+                                                <span class="grande">*</span>
+                                            
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    formControlName="NuevasCondicionesPago"
+                                                    maxlength="200">
+                                            </div>
+                                        </div>
+                                    
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Número cuotas pactadas:</label>
+                                                <span class="grande">*</span>
+                                            
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    formControlName="NumeroCuotasPactadas"
+                                                    maxlength="4"
+                                                    appSoloNumero>
+                                            </div>
+                                        </div>
+                                    
+                                    </div>
+                                
                                 </div>
-                            
-                            </div>
+
+                                <!-- DESMARCAR -->
+                                <div class="row"
+                                     *ngIf="insolvenciaForm.get('IdTipoSeguimiento')?.value == 9">
+                                
+                                    <div class="col-md-12">
+                                        <div class="alert alert-warning">
+                                            Esta operación desmarcará el proceso de insolvencia y actualizará el estado de la cuenta.
+                                        </div>
+                                    </div>
+                                
+                                </div>
 
                                 <div class="row">
                                     <div class="form-group form-group-flex flex-end">
@@ -1111,63 +1166,225 @@
                                             (click)="onClickCancelarInsolvencia()">
                                             Cancelar
                                         </button>
-                                        <button type="button" class="btn Gt-btn-morado" [disabled]=""
+                                        <button type="button" class="btn Gt-btn-morado" [disabled]="isDisabledLimpiarInsolvenciaButton || isSavingInsolvencia"
                                             (click)="onClickLimpiarInsolvencia()">
                                             Limpiar
                                         </button>
-                                        <button type="button" class="btn Gt-btn-verde" [disabled]=""
+                                        <button type="button" class="btn Gt-btn-verde" [disabled]="isDisabledGuardarInsolvenciaButton || isSavingInsolvencia"
                                             (click)="onClickGuardarInsolvencia()">
                                             Guardar
                                         </button>
                                     </div>
                                 </div>
 
-                            </form>
-                        
-                            <!-- <article>
-                                <div class="alert alert-secondary" role="alert" *ngIf="codeudoresDraft.length === 0">
-                                    No hay registros
+                                <!-- Inicio Insolvencia -->
+                                                            
+                                <div>
+                                    <h3 class="tab-title">Proceso de insolvencia</h3>
                                 </div>
-                                <div class="table-responsive scrollTabla" *ngIf="codeudoresDraft.length > 0">
-                                    <table class="table table-hover encabezado-fijo">
-                                        <colgroup>
-                                            <col style="width: 30%;">
-                                            <col style="width: 50%;">
-                                            <col style="width: 20%;">
-                                        </colgroup>
+                                
+
+                                <div class="table-responsive scrollTabla" *ngIf="historicoInsolvencia.length > 0">
+                                
+                                    <table class="table table-hover">
+                                    
                                         <thead>
-                                            <tr>
-                                                <th>Documento</th>
-                                                <th>Nombre</th>
-                                                <th class="text-center">Opciones</th>
+                                            <tr class="encabezadoTablas">
+                                            
+                                                <th class="text-center">
+                                                    <strong>Nro</strong>
+                                                </th>
+                                            
+                                                <th>
+                                                    <strong>Instancia</strong>
+                                                </th>
+                                            
+                                                <th>
+                                                    <strong>Causal</strong>
+                                                </th>
+                                            
+                                                <th>
+                                                    <strong>Detalle</strong>
+                                                </th>
+                                            
+                                                <th class="text-center">
+                                                    <strong>Fecha evento</strong>
+                                                </th>
+                                            
+                                                <th class="text-center">
+                                                    <strong>Creación detalle</strong>
+                                                </th>
+                                            
+                                                <th class="text-center">
+                                                    <strong>Creación insolvencia</strong>
+                                                </th>
+                                            
                                             </tr>
                                         </thead>
+                                    
                                         <tbody>
-                                            <tr *ngFor="let codeudor of codeudoresDraft; let i = index"
-                                                (click)="selectRow('codeudoresDraft', i)" [class.tr-selected]="selectedRows['codeudoresDraft'] === i">
-                                                <td>
-                                                    <div>{{ codeudor.documento }}</div>
-                                                </td>
-                                                <td>
-                                                    <div>{{ codeudor.nombreCompleto }}</div>
-                                                </td>
-                                                <td class="text-center">
-                                                    <button class="btn Gt-btn-morado btn-icon legitRipple" (click)="onClickEliminarCodeudor(codeudor.idTercero)">
-                                                        <i class="icon-bin2"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
+                                        
+                                            <ng-container *ngFor="let item of historicoInsolvencia">
+                                            
+                                                <tr
+                                                    [class.fila-expandida]="
+                                                        detalleAcuerdo &&
+                                                        detalleAcuerdo.lngIdSeguimiento === item.lngIdSeguimiento
+                                                    ">
+                                                    <td class="text-center">
+                                                    
+                                                        <span
+                                                            *ngIf="item.TieneDetalle"
+                                                            class="icono-acordeon"
+                                                            tabindex="-1"
+                                                            (click)="verDetalleAcuerdo(item)"
+                                                            [attr.data-tooltip]="
+                                                                detalleAcuerdo &&
+                                                                detalleAcuerdo.lngIdSeguimiento === item.lngIdSeguimiento
+                                                                    ? 'Ocultar detalle'
+                                                                    : 'Ver detalle' ">
+                                                            <i
+                                                                [ngClass]="
+                                                                    detalleAcuerdo &&
+                                                                    detalleAcuerdo.lngIdSeguimiento === item.lngIdSeguimiento
+                                                                        ? 'icon-chevron-up'
+                                                                        : 'icon-chevron-down'
+                                                                ">
+                                                            </i>
+                                                        
+                                                        </span>
+                                                    
+                                                        {{ obtenerNumeroDetalle(item) }}
+                                                    
+                                                    </td>
+                                                
+                                                    <td>
+                                                        {{ item.Instancia }}
+                                                    </td>
+                                                
+                                                    <td>
+                                                        {{ item.Motivo }}
+                                                    </td>
+                                                
+                                                    <td>
+                                                        {{ item.TipoSeguimiento }}
+                                                    </td>
+                                                
+                                                    <td class="text-center">
+                                                        {{ item.dtmFechaEvento | date:'yyyy/MM/dd' }}
+                                                    </td>
+                                                
+                                                    <td class="text-center">
+                                                        {{ item.dtmFechaCreacion | date:'yyyy/MM/dd HH:mm:ss' }}
+                                                    </td>
+                                                
+                                                    <td class="text-center">
+                                                        {{ item.dtmFechaCreacionInsolvencia | date:'yyyy/MM/dd HH:mm:ss' }}
+                                                    </td>
+                                                
+                                                </tr>
+                                            
+                                                <tr
+                                                    *ngIf="
+                                                        detalleAcuerdo &&
+                                                        detalleAcuerdo.lngIdSeguimiento === item.lngIdSeguimiento
+                                                    "
+                                                    class="fila-detalle">
+                                                    <td colspan="7">
+                                                    
+                                                        <div class="detalle-acordeon">
+                                                        
+                                                            <div class="table-responsive">
+                                                            
+                                                                <table class="table table-sm table-border">
+                                                                
+                                                                    <thead>
+                                                                        <tr>
+                                                                        
+                                                                            <th class="text-right">
+                                                                                Valor reconocido
+                                                                            </th>
+                                                                        
+                                                                            <th class="text-right">
+                                                                                Capital reconocido
+                                                                            </th>
+                                                                        
+                                                                            <th class="text-right">
+                                                                                Intereses reconocidos
+                                                                            </th>
+                                                                        
+                                                                            <th class="text-right">
+                                                                                Condonaciones aprobadas
+                                                                            </th>
+                                                                        
+                                                                            <th class="text-center">
+                                                                                Cuotas pactadas
+                                                                            </th>
+                                                                        
+                                                                            <th class="text-center">
+                                                                                Condiciones pago
+                                                                            </th>
+                                                                        
+                                                                        </tr>
+                                                                    </thead>
+                                                                
+                                                                    <tbody>
+                                                                    
+                                                                        <tr>
+                                                                        
+                                                                            <td class="text-right">
+                                                                                {{ detalleAcuerdo.curValorReconocido | currency:'$' }}
+                                                                            </td>
+                                                                        
+                                                                            <td class="text-right">
+                                                                                {{ detalleAcuerdo.curCapitalReconocido | currency:'$' }}
+                                                                            </td>
+                                                                        
+                                                                            <td class="text-right">
+                                                                                {{ detalleAcuerdo.curInteresesReconocidos | currency:'$' }}
+                                                                            </td>
+                                                                        
+                                                                            <td class="text-right">
+                                                                                {{ detalleAcuerdo.curCondonacionesAprobadas | currency:'$' }}
+                                                                            </td>
+                                                                        
+                                                                            <td class="text-center">
+                                                                                {{ detalleAcuerdo.intNumeroCuotasPactadas }}
+                                                                            </td>
+                                                                        
+                                                                            <td class="text-center">
+                                                                                {{ detalleAcuerdo.strNuevasCondicionesPago }}
+                                                                            </td>
+                                                                        
+                                                                        </tr>
+                                                                    
+                                                                    </tbody>
+                                                                
+                                                                </table>
+                                                            
+                                                            </div>
+                                                        
+                                                        </div>
+                                                    
+                                                    </td>
+                                                
+                                                </tr>
+                                            
+                                            </ng-container>
+                                        
                                         </tbody>
+                                    
                                     </table>
                                 </div>
-                            </article> -->
+                                <!-- Fin Insolvencia -->
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         
         </div>
-        <button type="button" style="visibility:hidden" #openProcesoInsolvenciaModal class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#procesoInsolvencia">
+        <button id="btnCerrarProcesoInsolvencia" type="button" style="visibility:hidden" #openProcesoInsolvenciaModal class="btn Gt-btn-verde btn-icon legitRipple" data-toggle="modal" data-target="#procesoInsolvencia">
             <i class="icon-search4"></i>
         </button>
         <!-- FIN PROCESO INSOLVENCIA -->
@@ -2597,56 +2814,203 @@
                                     </div>
                                     <br>
                                     <!-- Inicio Insolvencia -->
-                                    <div>
-                                        <h3 class="tab-title">Proceso de insolvencia</h3>
-                                    </div>
-                                    <div>
-                                        <div *ngIf="lstReliquidacion.length <= 0">
-                                            <div class="alert alert-secondary" role="alert">
-                                                No hay registros
-                                            </div>
-                                        </div>
-                                        <div class="table-responsive scrollTabla" *ngIf="lstReliquidacion.length > 0">
-                                            <table class="table table-hover tabla-last-column-fixed">
-                                                <thead>
-                                                    <tr class="encabezadoTablas">
-                                                        <th><strong>Monto</strong></th>
-                                                        <th><strong>Saldo</strong></th>
-                                                        <th><strong>Cuota</strong></th>
-                                                        <th><strong>Cuota libranza</strong></th>
-                                                        <th class="text-center"><strong>Plazo</strong></th>
-                                                        <th><strong>Periodo interes</strong></th>
-                                                        <th><strong>Tasa periodica</strong></th>
-                                                        <th><strong>Tasa nominal</strong></th>
-                                                        <th><strong>Puntos</strong></th>
-                                                        <th><strong>Periodo gracia</strong></th>
-                                                        <th><strong>Fecha inicio gracia</strong></th>
-                                                        <th><strong>Fecha cambio</strong></th>
-                                                        <th><strong>Operación</strong></th>
+                                    <div class="table-responsive scrollTabla" *ngIf="historicoInsolvencia.length > 0">
+                                    
+                                        <table class="table table-hover">
+                                        
+                                            <thead>
+                                                <tr class="encabezadoTablas">
+                                                
+                                                    <th class="text-center">
+                                                        <strong>Nro</strong>
+                                                    </th>
+                                                
+                                                    <th>
+                                                        <strong>Instancia</strong>
+                                                    </th>
+                                                
+                                                    <th>
+                                                        <strong>Causal</strong>
+                                                    </th>
+                                                
+                                                    <th>
+                                                        <strong>Detalle</strong>
+                                                    </th>
+                                                
+                                                    <th class="text-center">
+                                                        <strong>Fecha evento</strong>
+                                                    </th>
+                                                
+                                                    <th class="text-center">
+                                                        <strong>Creación detalle</strong>
+                                                    </th>
+                                                
+                                                    <th class="text-center">
+                                                        <strong>Creación insolvencia</strong>
+                                                    </th>
+                                                
+                                                </tr>
+                                            </thead>
+                                        
+                                            <tbody>
+                                            
+                                                <ng-container *ngFor="let item of historicoInsolvencia">
+                                                
+                                                    <tr
+                                                        [class.fila-expandida]="
+                                                            detalleAcuerdo &&
+                                                            detalleAcuerdo.lngIdSeguimiento === item.lngIdSeguimiento
+                                                        ">
+
+                                                        <td class="text-center">
                                                         
+                                                            <span
+                                                                *ngIf="item.TieneDetalle"
+                                                                class="icono-acordeon"
+                                                                tabindex="-1"
+                                                                (click)="verDetalleAcuerdo(item)"
+                                                                [attr.data-tooltip]="
+                                                                    detalleAcuerdo &&
+                                                                    detalleAcuerdo.lngIdSeguimiento === item.lngIdSeguimiento
+                                                                        ? 'Ocultar detalle'
+                                                                        : 'Ver detalle' ">
+
+                                                                <i
+                                                                    [ngClass]="
+                                                                        detalleAcuerdo &&
+                                                                        detalleAcuerdo.lngIdSeguimiento === item.lngIdSeguimiento
+                                                                            ? 'icon-chevron-up'
+                                                                            : 'icon-chevron-down'
+                                                                    ">
+                                                                </i>
+                                                            
+                                                            </span>
+                                                        
+                                                            {{ obtenerNumeroDetalle(item) }}
+                                                        
+                                                        </td>
+                                                    
+                                                        <td>
+                                                            {{ item.Instancia }}
+                                                        </td>
+                                                    
+                                                        <td>
+                                                            {{ item.Motivo }}
+                                                        </td>
+                                                    
+                                                        <td>
+                                                            {{ item.TipoSeguimiento }}
+                                                        </td>
+                                                    
+                                                        <td class="text-center">
+                                                            {{ item.dtmFechaEvento | date:'yyyy/MM/dd' }}
+                                                        </td>
+                                                    
+                                                        <td class="text-center">
+                                                            {{ item.dtmFechaCreacion | date:'yyyy/MM/dd HH:mm:ss' }}
+                                                        </td>
+                                                    
+                                                        <td class="text-center">
+                                                            {{ item.dtmFechaCreacionInsolvencia | date:'yyyy/MM/dd HH:mm:ss' }}
+                                                        </td>
+                                                    
                                                     </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr class="filRel_{{j}}" (click)="CambiarColor(j,4)" *ngFor="let itemReliquida of lstReliquidacion; let j = index">
-                                                        <td>{{ itemReliquida.Monto | currency }}</td>
-                                                        <td>{{ itemReliquida.Saldo | currency }}</td>
-                                                        <td>{{ itemReliquida.Cuota | currency }}</td>
-                                                        <td class="text-center">{{ itemReliquida.CuotaLibranza ?? 0 | currency }}</td>
-                                                        <td class="text-center">{{ itemReliquida.Plazo }}</td>
-                                                        <td class="text-center">{{ itemReliquida.PeriodoInteres }}</td>
-                                                        <td class="text-center">{{ itemReliquida.Tasa | number:'1.4-4' }} %</td>
-                                                        <td class="text-center">{{ itemReliquida.TasaNominal | number:'1.4-4' }} %</td>
-                                                        <td class="text-center">{{ itemReliquida.Puntos ?? 0 | number:'1.4-4' }} %</td>
-                                                        <td class="text-center">{{ itemReliquida.PeriodoGracia ?? 0 }}</td>
-                                                        <td style="min-width: 135px;">{{ itemReliquida.FechaInicioGracia | date:'yyyy/MM/dd HH:mm:ss' }}</td>
-                                                        <td>{{ itemReliquida.Fecha | date:'yyyy/MM/dd HH:mm:ss' }}</td>
-                                                        <td>{{ itemReliquida.Novedad.includes('Disminuir Cuota') ? 'Cambio de Cuota' : itemReliquida.Novedad }}</td>                                                    
+                                                
+                                                    <tr
+                                                        *ngIf="
+                                                            detalleAcuerdo &&
+                                                            detalleAcuerdo.lngIdSeguimiento === item.lngIdSeguimiento
+                                                        "
+                                                        class="fila-detalle">
+
+                                                        <td colspan="7">
+                                                        
+                                                            <div class="detalle-acordeon">
+                                                            
+                                                                <div class="table-responsive">
+                                                                
+                                                                    <table class="table table-sm table-border">
+                                                                    
+                                                                        <thead>
+                                                                            <tr>
+                                                                            
+                                                                                <th class="text-right">
+                                                                                    Valor reconocido
+                                                                                </th>
+                                                                            
+                                                                                <th class="text-right">
+                                                                                    Capital reconocido
+                                                                                </th>
+                                                                            
+                                                                                <th class="text-right">
+                                                                                    Intereses reconocidos
+                                                                                </th>
+                                                                            
+                                                                                <th class="text-right">
+                                                                                    Condonaciones aprobadas
+                                                                                </th>
+                                                                            
+                                                                                <th class="text-center">
+                                                                                    Cuotas pactadas
+                                                                                </th>
+                                                                            
+                                                                                <th class="text-center">
+                                                                                    Condiciones pago
+                                                                                </th>
+                                                                            
+                                                                            </tr>
+                                                                        </thead>
+                                                                    
+                                                                        <tbody>
+                                                                        
+                                                                            <tr>
+                                                                            
+                                                                                <td class="text-right">
+                                                                                    {{ detalleAcuerdo.curValorReconocido | currency:'$' }}
+                                                                                </td>
+                                                                            
+                                                                                <td class="text-right">
+                                                                                    {{ detalleAcuerdo.curCapitalReconocido | currency:'$' }}
+                                                                                </td>
+                                                                            
+                                                                                <td class="text-right">
+                                                                                    {{ detalleAcuerdo.curInteresesReconocidos | currency:'$' }}
+                                                                                </td>
+                                                                            
+                                                                                <td class="text-right">
+                                                                                    {{ detalleAcuerdo.curCondonacionesAprobadas | currency:'$' }}
+                                                                                </td>
+                                                                            
+                                                                                <td class="text-center">
+                                                                                    {{ detalleAcuerdo.intNumeroCuotasPactadas }}
+                                                                                </td>
+                                                                            
+                                                                                <td class="text-center">
+                                                                                    {{ detalleAcuerdo.strNuevasCondicionesPago }}
+                                                                                </td>
+                                                                            
+                                                                            </tr>
+                                                                        
+                                                                        </tbody>
+                                                                    
+                                                                    </table>
+                                                                
+                                                                </div>
+                                                            
+                                                            </div>
+                                                        
+                                                        </td>
+                                                    
                                                     </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                                
+                                                </ng-container>
+                                            
+                                            </tbody>
+                                        
+                                        </table>
                                     </div>
-                                    <!-- Fin Insolvencia-->
+                                    <!-- Fin Insolvencia -->
+
                                 </section>
                             </div>
                             <!-- Fin CambiosTab -->

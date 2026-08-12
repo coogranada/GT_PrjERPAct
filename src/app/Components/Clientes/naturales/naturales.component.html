@@ -71,6 +71,14 @@
                                 <input ngui-auto-complete formControlName="oficina" [source]="dataOficinas" [attr.disabled]="disbaleOficina" value-property-name="Valor" display-property-name="Descripcion" list-formatter="Descripcion" class="form-control" (blur)="validarOficinaSeleccionada()">
                             </div>
                         </div>
+                        <div class="col-xs-12 col-md-1 col-lg-1" *ngIf="mostrarOficina">
+                        <button type="button" class="btn btn-default btn-icon"
+                            (click)="BuscarNatural()"
+                            [disabled]="
+                            !basicosFrom.get('oficina')?.value">
+                            <i class="icon-sync" style="font-size:22px;"></i>
+                        </button>
+                        </div>                        
                     </div>
                 </div>
             </form>

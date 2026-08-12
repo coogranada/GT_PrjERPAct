@@ -3951,6 +3951,12 @@ export class DisponiblesComponent implements OnInit {
               else if (+this.DisponibleForm.get('IdMedioPago')?.value === 50 || +this.DisponibleForm.get('IdMedioPago')?.value === 70 )
                 this.resultMedioPago = this.resultMedioPago.filter((x: any) => x.IdMedioPago === 50 || x.IdMedioPago === 70 );
 
+              // Jurídico (TipoDocumento = 3)
+              if (+this.DisponibleForm.get('IdTipoDocumento')?.value === 3) {
+                this.resultMedioPago = this.resultMedioPago.filter(                  
+                (x: any) => x.IdMedioPago !== 50 && x.IdMedioPago !== 70);
+              }
+
                 setTimeout(() => {
                  
                 }, 300);
@@ -4725,20 +4731,12 @@ export class DisponiblesComponent implements OnInit {
   }
   SeleccionMedioPago() {
   const cupoAprobado: string = `${this.DisponibleForm.get('CupoAprobado')?.value ?? ''}`;
+  this.BloquearPagare = false;
   const medioPagoAnterior : string = `${this.datoMedioPago ?? ''}`;
   this.PagareObligatorio = false;
   this.TarjetaObligatoria = false;
   this.ConvenioObligatorio = false;
   this.PlazoCorteObligatoria = false;
-
-  //DFRAMIREZ 25-06-2025 se comenta validación, para permitir cambios MP sin importar que tenga cupo aprobado
-  //if((medioPagoAnterior === '50' || medioPagoAnterior  === '70') && (cupoAprobado !== '' )){
-  //  this.notif.warning('Advertencia', 'No se puede cambiar medio de pago, cuenta tiene cupo.', ConfiguracionNotificacion.configRightTop);
-  //  this.VolverArriba(400);
-  //  this.DisponibleForm.get('IdMedioPago')?.setValue(this.datoMedioPago);
-  //  this.enableBtnActualizar = false;
-  //  return;
-  //}
 
     if (this.DisponibleForm.get('IdMedioPago')?.value === '0') {         // libreta
       if (this.DisponibleOperacionFrom.get('Codigo')?.value === '10' || this.DisponibleOperacionFrom.get('Codigo')?.value === '40') {
@@ -4792,8 +4790,7 @@ export class DisponiblesComponent implements OnInit {
       this.MostrarGarantias = true;
       this.MostrarDemas = false; 
       this.BloquearConvenio = null;
-      this.BloquearNumeroTarjeta = null;
-      this.BloquearPagare = null;
+      this.BloquearNumeroTarjeta = null;      
       this.BloquearDiaCortePlazo = false;
       this.BloquearCanales = false;
       this.PagareObligatorio = false;

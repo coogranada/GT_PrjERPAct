@@ -53,6 +53,8 @@ export class LogGestionCreditosComponent {
   public tituloGenerico: string = "";
   public alertGenerico: string = "";
   public SelectedNombre: string = "";
+  
+  public fechaMaxima = new Date().toISOString().split('T')[0];
 
   constructor(
     private notif: AlertService,
@@ -104,7 +106,7 @@ export class LogGestionCreditosComponent {
   ejecutarSP(origen: boolean) {
 
     if (this.formulario.invalid) {
-      this.notif.onWarning('Advertencia', 'Debe diligenciar los campos obligatorios.');
+      this.notif.onWarning('Debe diligenciar los campos obligatorios.', 'Advertencia');
       return;
     }
 
@@ -114,8 +116,7 @@ export class LogGestionCreditosComponent {
 
     if (columnasSeleccionadas.length === 0) {
       this.notif.onWarning(
-        'Advertencia',
-        'Debe seleccionar al menos un campo para generar el informe.'
+        'Debe seleccionar al menos un campo para generar el informe.', 'Advertencia'
       );
       return;
     }
@@ -138,7 +139,7 @@ export class LogGestionCreditosComponent {
 
           if (!respuesta || respuesta.length === 0) {
             this.notif.onWarning(
-              'Advertencia', 'No se encontraron datos para mostrar, verifique los filtros.'
+              'No se encontraron datos para mostrar, verifique los filtros.', 'Advertencia'
             );
             return;
           }
@@ -189,8 +190,8 @@ export class LogGestionCreditosComponent {
           }
 
           this.notif.onWarning(
-            'Advertencia',
-            mensaje
+            mensaje,
+            'Advertencia'
           );
         }
       });
@@ -223,8 +224,8 @@ export class LogGestionCreditosComponent {
 
     if (Cant === 0) {
       this.notif.onWarning(
-        'Advertencia',
-        'No se encuentran registros'
+        'No se encuentran registros',
+        'Advertencia'
       );
       return;
     }
@@ -288,7 +289,7 @@ export class LogGestionCreditosComponent {
           this.ListfilteredColumnasInf = [...this.ListColumnasInf];
         },
         error: () => {
-          this.notif.onWarning('Advertencia', 'Error al cargar columnas');
+          this.notif.onWarning('Error al cargar columnas', 'Advertencia');
         }
       });
   }
@@ -335,7 +336,7 @@ export class LogGestionCreditosComponent {
     );
 
     if (temp) {
-      this.notif.onWarning('Advertencia', 'Filtro ya existe.');
+      this.notif.onWarning('Filtro ya existe.', 'Advertencia');
       this.limpiarSelected();
       return;
     }
@@ -398,7 +399,7 @@ export class LogGestionCreditosComponent {
       const partes = cuenta.split('-');
 
       if (partes.length !== 4) {
-        this.notif.onWarning('Advertencia', 'Debe ingresar la cuenta en su formato.');
+        this.notif.onWarning('Debe ingresar la cuenta en su formato.', 'Advertencia');
         return;
       }
 
@@ -516,14 +517,14 @@ export class LogGestionCreditosComponent {
             );
             this.limpiarSelected();
           } else {
-            this.notif.onWarning('Advertencia', 'El usuario no existe en el sistema, valide el valor ingresado.');
+            this.notif.onWarning('El usuario no existe en el sistema, valide el valor ingresado.', 'Advertencia');
           }
           this.loading.hide();
 
         },
         err => {
           this.loading.hide();
-          this.notif.onWarning('Advertencia', 'Error al validar el usuario.');
+          this.notif.onWarning('Error al validar el usuario.', 'Advertencia');
         }
       );
   }
