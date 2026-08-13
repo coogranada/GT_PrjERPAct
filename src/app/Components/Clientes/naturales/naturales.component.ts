@@ -10971,70 +10971,7 @@ enviarWorkManager() {
   cancelServicio() {
     this.basicosFrom.get('operacion')?.reset();
   }
-
-
-  // SaveDataServicios() {
-  //   this.CargarServicios = 1;
-  //   const esVinculacion = this.serviciosFrom.get('esVinculacion')?.value;
-  //   const formValue = this.serviciosFrom.value;
-  //   // aqui valiar si los campos vienen llenos es para credito
-  //   if ((formValue.montoSolicitado !== ''  && formValue.montoSolicitado !== null && formValue.montoSolicitado !== undefined) &&
-  //      (formValue.plazoDeseado !== ''  && formValue.plazoDeseado !== null && formValue.plazoDeseado !== undefined) &&
-  //      (formValue.Destino !== ''  && formValue.Destino !== null && formValue.Destino !== undefined) ) {
-  //       this.motrarErrorCredito = false;
-  //       localStorage.setItem('Credito', 'true');
-  //       if (esVinculacion && esVinculacion !== null) {
-  //         localStorage.setItem('Vinculacion', 'true');
-  //         localStorage.setItem('Actualizacion', 'false');
-  //       } else {
-  //         localStorage.setItem('Vinculacion', 'false');
-  //         localStorage.setItem('Actualizacion', 'true');
-  //       }
-  //       // validar tambien que si llena algo en el campo documento de deudor no lo deje ir si no encuentra si lo limpia dejelo ir
-  //       localStorage.setItem('DataService', JSON.stringify(this.serviciosFrom.value));
-  //       this.serviciosFrom.get('operacionSeleccionada')?.setValue(this.basicosFrom.get('operacion')?.value);
-  //       const strNumeroDocumento = this.basicosFrom.get('DocumentoBusqueda')?.value;
-  //       if (strNumeroDocumento !== undefined && strNumeroDocumento !== null) {
-  //         this.CargarServiciosOn = true;
-  //         this.documentoConsultar = strNumeroDocumento;
-  //         this.GuardarLog('Imprimio afiliación - Asociado - ' + this.documentoConsultar, 3, 0, Number(localStorage.getItem('TerceroNatura')),11);
-  //         // this.AbrirImpresionServicios.nativeElement.click();
-  //         // await this.GenerarPDFHojaVida();
-  //         this.BlockDeudor = null;
-  //         this.BlockServiciosInput = null;
-  //         this.basicosFrom.get('operacion')?.reset();
-  //       }
-  //   } else if ((formValue.montoSolicitado === ''  || formValue.montoSolicitado === null || formValue.montoSolicitado === undefined) &&
-  //      (formValue.plazoDeseado === ''  || formValue.plazoDeseado === null || formValue.plazoDeseado === undefined) &&
-  //      (formValue.Destino === ''  || formValue.Destino === null || formValue.Destino === undefined)) {
-  //       this.motrarErrorCredito = false;
-  //       localStorage.setItem('Credito', 'false');
-  //       if (esVinculacion && esVinculacion !== null) {
-  //         localStorage.setItem('Vinculacion', 'true');
-  //         localStorage.setItem('Actualizacion', 'false');
-  //       } else {
-  //         localStorage.setItem('Vinculacion', 'false');
-  //         localStorage.setItem('Actualizacion', 'true');
-  //       }
-  //       // validar tambien que si llena algo en el campo documento de deudor no lo deje ir si no encuentra si lo limpia dejelo ir
-  //       localStorage.setItem('DataService', JSON.stringify(this.serviciosFrom.value));
-  //       this.serviciosFrom.get('operacionSeleccionada')?.setValue(this.basicosFrom.get('operacion')?.value);
-  //       const strNumeroDocumento = this.basicosFrom.get('DocumentoBusqueda')?.value;
-  //       if (strNumeroDocumento !== undefined && strNumeroDocumento !== null) {
-  //         this.CargarServiciosOn = true;
-  //         this.documentoConsultar = strNumeroDocumento;
-  //         this.GuardarLog('Imprimio afiliación - Asociado - ' + this.documentoConsultar, 3, 0, Number(localStorage.getItem('TerceroNatura')),11);
-  //         // this.AbrirImpresionServicios.nativeElement.click();
-  //         // await this.GenerarPDFHojaVida();
-  //         this.BlockDeudor = null;
-  //         this.BlockServiciosInput = null;
-  //         this.basicosFrom.get('operacion')?.reset();
-  //       }
-  //   } else {
-  //     this.motrarErrorCredito = true;
-  //   }
-  // }
-
+  
   onClickSolicitarServicio() {    
     this.serviciosFrom.markAllAsTouched(); 
     if(!this.serviciosFrom.get('proceso')?.value) return;
