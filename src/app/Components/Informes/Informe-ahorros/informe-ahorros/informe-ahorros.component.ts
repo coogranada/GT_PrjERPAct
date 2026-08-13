@@ -43,6 +43,7 @@ export class InformeAhorrosComponent implements OnInit {
   public intervaloProgreso: any;
   public selectedId: number = 0;
   public idOficina: number = 0;
+  public idTercero: number = 0;
   public OpcionSelected: Boolean = true;
   public validaOperacion: Boolean = true;
   public deshabilitarOficina: boolean = true;
@@ -170,6 +171,7 @@ export class InformeAhorrosComponent implements OnInit {
     var resultDataStore = JSON.parse(window.atob(datas == null ? "" : datas));
     this.idOficina = Number(resultDataStore.NumeroOficina);
     this.nombreOficina = resultDataStore.Oficina;
+    this.idTercero = Number(resultDataStore.intlngTercero);
     let profiles = localStorage.getItem("profiles");
     var resultDataStoreP = JSON.parse(window.atob(profiles == null ? "" : profiles));
     this.perfilesUsuario = resultDataStoreP;
@@ -332,7 +334,7 @@ export class InformeAhorrosComponent implements OnInit {
               NombreInforme: this.nombreInformeSelect
             }
             this.ModalCantidadRegistros(respuesta.length, false);
-            this.GuardarLog(LogData, this.selectedId, 0, 0, this.CodModulo);
+            this.GuardarLog(LogData, this.selectedId, 0, this.idTercero, this.CodModulo);
           }
           this.loading.hide();
           return;
@@ -894,7 +896,7 @@ export class InformeAhorrosComponent implements OnInit {
             });
             // Mostrar cantidad de registros
             this.ModalCantidadRegistros(this.resultadoInforme.length, false);
-            this.GuardarLog(LogData, this.selectedId, 0, 0, this.CodModulo);
+            this.GuardarLog(LogData, this.selectedId, 0, this.idTercero, this.CodModulo);
             this.loading.hide();
           },
           error => {
