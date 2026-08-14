@@ -160,6 +160,16 @@ export class GestionCreditoComponent {
   public mostrarDetalleGarantia = false;
   public valorCoberturaCompartidas: number = 0;
   public mostrarModal = false;
+  public tablaDetalleActiva = '';
+  public filaSeleccionadaGarantia: number | null = null;
+
+  public selectedRowsGarantias: {
+    [key: string]: number | null;
+  } = {
+    asignadas: null
+  };
+
+  public detalleGarantiaCreditos: DetalleGarantiaCreditoDto[] = [];
 
 
   private readonly NOMBRES_CAMPOS_NUMERO_CUENTA: string[] = ['IdOficinaCuenta', 'IdProductoCuenta', 'IdConsecutivo', 'IdDigito'];
@@ -174,7 +184,7 @@ export class GestionCreditoComponent {
   public encabezadosTablaModalAlBuscar: string[] = [];
   garantiasPersonalesCod: GarantiaPersonalCod[] = [];
   codeudoresDraft: CodeudorDraft[] = [];
-  garantiasReales: GarantiaReal[] = [];
+  garantiasReales: GarantiaRealAsignada[] = [];
   isDisabledConfirmarButton = true;
   codeudoresAnteriores: CodeudorDraft[]= [];
   estadoCargaTabs: Partial<Record<Tabs, boolean>> = {
@@ -806,6 +816,7 @@ export class GestionCreditoComponent {
         'Cuenta no se puede editar, crédito hijo.',
         ConfiguracionNotificacion.configRightTop
       );
+      this.loading.hide();
       this.esCreditoPadre = false;
       return false; 
     }
@@ -945,7 +956,7 @@ export class GestionCreditoComponent {
       this.tiposSeguimientoInsolvencia = tipos;
       this.historicoInsolvencia = historico;
 
-      this.filtrarDetallePermitido();
+      // this.filtrarDetallePermitido();
       this.construirNumeracionInsolvencias();
 
       this.validarInsolvencia();
@@ -1780,16 +1791,13 @@ export class GestionCreditoComponent {
 
   getGarantiasDisponibles(idTercero: number, codeudor: boolean) {
     this.loading.show();
-
     return this.carteraService.getGarantiasDisponibles(idTercero).pipe(
       tap((data: any) => {
-
         if (codeudor) {
           this.listGarantiasDisponiblesCodeudor = data ?? [];
         } else {
           this.listGarantiasDisponiblesDeudor = data ?? [];
         }
-
         this.loading.hide();
       })
     );
@@ -1839,25 +1847,18 @@ export class GestionCreditoComponent {
   }
 
   validarSaldo(totales: any): boolean {
-
-    console.log(totales.cobertura, totales.respalda, '😘');
-
-    if (!this.garantiasCompartidas || this.garantiasCompartidas.length === 0) {
-      this.notif.warning('Advertencia', 'Garantía no cubre el valor del crédito.', ConfiguracionNotificacion.configRightTop);
-      return false;
+    if ( this.garantiasCompartidas.length > 0) {
+      if ((totales.cobertura - totales.respalda) <= 0) {
+        this.notif.warning('Advertencia', 'Garantía no cubre el valor del crédito.', ConfiguracionNotificacion.configRightTop);
+        return false;
+      }
     }
-
-    if ((totales.cobertura - totales.respalda) <= 0) {
-      this.notif.warning('Advertencia', 'Garantía no cubre el valor del crédito.', ConfiguracionNotificacion.configRightTop);
-      return false;
-    }
-
     return true;
   }
 
   onChangeCodeudor(id: number) {
     if (!id) return;
-  
+    
     this.getGarantiasDisponibles(id, true)
       .subscribe({
         next: () => {
@@ -1889,8 +1890,6 @@ export class GestionCreditoComponent {
   }
 
   onClickConfirmarCambiosGarantia(data: any): void {
-
-
     const { asignadas, agregar, eliminar, compartidas, totales } = data;
 
     this.garantiasRealesAsignadas = asignadas;
@@ -1899,7 +1898,6 @@ export class GestionCreditoComponent {
     this.garantiasCompartidas = compartidas;
 
     if (!this.validarSaldo(totales)) return;
-
 
     const {
       IdOficinaCuenta,
@@ -1944,9 +1942,6 @@ export class GestionCreditoComponent {
     };
     
     const jsonLog = this.construirLogCambioGarantia();
-
-    console.log(jsonLog, '❤️❤️');
-
     this.loading.show();
 
     this.carteraService.cambiarGarantias(dto)
@@ -1957,7 +1952,8 @@ export class GestionCreditoComponent {
           this.notif.warning('Advertencia', res.Mensaje, ConfiguracionNotificacion.configRightTop);
           return;
         }
-        // this.guardarLogGestionCredito(jsonLog);
+        
+        this.guardarLogGestionCredito(jsonLog);
         this.notif.success('Exitoso', 'El cambio de garantía se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
         this.cerrarModalYRefrescarCambiarGarantia();
       },
@@ -1967,16 +1963,117 @@ export class GestionCreditoComponent {
     });
   }
 
+  selectRowGarantias(tableName: string, index: number, garantiaId?: any): void {
+    if (this.mostrarDetalleGarantia && garantiaId &&
+      this.filaSeleccionadaGarantia === garantiaId &&
+      this.tablaDetalleActiva === tableName) {
+      return;
+    }
+
+    if (this.selectedRowsGarantias[tableName] === index) {
+      this.selectedRowsGarantias[tableName] = null;
+    } else {
+      Object.keys(this.selectedRowsGarantias).forEach(key => {
+        this.selectedRowsGarantias[key] = null;
+      });
+      this.selectedRowsGarantias[tableName] = index;
+    }
+  }
+
   private cerrarModalYRefrescarCambiarGarantia() {
+    const idCuenta = this.gestionCreditoForm.get('IdCuenta')?.value
+
     this.onClickCerrarModalGarantias()
     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    this.BuscarDatosCartera(idCuenta);
     this.getGarantias();
     this.BuscarSaldosCartera();
     this.tabActivo = Tabs.Garantias;
     this.resetEstadoCargaTabs();
     this.cuotaTabBloqueado = false;
   }
+    
+  mapTipoGarantia(tipo: string): string {
+    if (!tipo) return '';
 
+    switch (tipo) {
+      case 'H': return 'Hipoteca';
+      case 'P': return 'Pignoración';
+      case 'T': return 'Títulos';
+      default: return tipo;
+    }
+  }
+
+  cerrarDetalleGarantia(event?: Event) {
+    if (event) event.stopPropagation();
+
+    this.mostrarDetalleGarantia = false;
+    this.filaSeleccionadaGarantia = null;
+    this.tablaDetalleActiva = '';
+    this.detalleGarantiaCreditos = [];
+  }
+
+
+  onClickDetalleGarantia(
+    garantiaId: number,
+    tipo: string,
+    tabla: string,
+    matricula: string
+  ) {
+
+    if (
+      this.mostrarDetalleGarantia &&
+      this.filaSeleccionadaGarantia === garantiaId &&
+      this.tablaDetalleActiva === tabla
+    ) {
+
+      this.cerrarDetalleGarantia();
+      return;
+    }
+
+    this.filaSeleccionadaGarantia = garantiaId;
+    this.tablaDetalleActiva = tabla;
+
+    this.loading.show();
+
+    this.carteraService
+      .obtenerDetalleGarantiaCreditos(
+        garantiaId,
+        this.mapTipoGarantia(tipo)
+      )
+      .pipe(
+        finalize(() => this.loading.hide())
+      )
+      .subscribe({
+        next: (data) => {
+
+          this.detalleGarantiaCreditos = data ?? [];
+          this.mostrarDetalleGarantia = true;
+
+        },
+        error: () => {
+
+          this.notif.warning(
+            'Advertencia',
+            'No fue posible consultar los créditos asociados.',
+            ConfiguracionNotificacion.configRightTop
+          );
+
+          this.cerrarDetalleGarantia();
+        }
+      });
+  }
+
+  isRowSelected(tableName: string, index: number, garantiaId: any ): boolean {
+    if (
+      this.mostrarDetalleGarantia &&
+      this.filaSeleccionadaGarantia === garantiaId &&
+      this.tablaDetalleActiva === tableName
+    ) {
+      return true;
+    }
+    return this.selectedRowsGarantias[tableName] === index;
+  }
 
   //Fin cambiar garantías
 
@@ -3757,6 +3854,22 @@ export class GestionCreditoComponent {
     this.onTabChange(Tabs.Saldos, () => this.BuscarSaldosCartera());
   }
 
+  saldoCapitalSiglaCTD() {
+    if ( this.gestionCreditoForm.get('esCreditoPadre')?.value &&
+        this.gestionCreditoForm.get('Sigla')?.value === 'CTD') {
+
+      const idCuenta = this.gestionCreditoForm.get('IdCuenta')?.value;
+      this.carteraService.getValorRespaldarCTD(idCuenta).subscribe({
+          next: (resp) => {
+            this.carteraInfo.SaldoCapital = resp.ValorRespaldar;
+          },
+          error: (error) => {
+            console.error(error);
+          }
+        });
+    }
+  }
+  
   async BuscarSaldosCartera() {
     const IdCuenta = this.gestionCreditoForm.get('IdCuenta')?.value;
     if (!IdCuenta) return;
@@ -3782,8 +3895,9 @@ export class GestionCreditoComponent {
       this.SaldosForm.get('CuotasPagas')?.setValue(result.CuotasPagas);
       this.SaldosForm.get('CuotasPendientes')?.setValue(result.CuotasPendientes);
       this.SaldosForm.get('CuotasMora')?.setValue(result.CuotasMora);
-
+      
       this.ActivarCalcularCuota();
+      this.saldoCapitalSiglaCTD() 
 
     } catch (error) {
       const errorMessage = <any>error;
@@ -3792,6 +3906,7 @@ export class GestionCreditoComponent {
       this.loading.hide();
     }
   }
+
 // FIN SALDOS
 
 // CALCULAR CUOTA
@@ -4078,26 +4193,47 @@ CalcularSimularPago(){
 
   }
 
+  // async getGarantias(): Promise<void> {
+  //   const idCuenta = this.gestionCreditoForm.get('IdCuenta')?.value;
+  //   if (!idCuenta) return;
+
+  //   this.loading.show();
+
+  //   try {
+  //     const garantiasData = await firstValueFrom(
+  //       this.carteraService.getGarantias(idCuenta)
+  //     );
+
+  //     if (garantiasData) {
+  //       const { lstCodeudores, lstGarantiaReal } = garantiasData;
+  //       this.garantiasPersonalesCod = lstCodeudores ?? [];
+  //       this.garantiasReales = lstGarantiaReal ?? []
+  //     }
+  //   } finally {
+  //     this.loading.hide();
+  //   }
+  // }
+
   async getGarantias(): Promise<void> {
     const idCuenta = this.gestionCreditoForm.get('IdCuenta')?.value;
-    if (!idCuenta) return;
-
+    if (!idCuenta) { return; }
     this.loading.show();
-
     try {
-      const garantiasData = await firstValueFrom(
-        this.carteraService.getGarantias(idCuenta)
+      const garantias = await firstValueFrom(
+        this.carteraService.getGarantiasAsignadas(idCuenta)
       );
-
-      if (garantiasData) {
-        const { lstCodeudores, lstGarantiaReal } = garantiasData;
-        this.garantiasPersonalesCod = lstCodeudores ?? [];
-        this.garantiasReales = lstGarantiaReal ?? []
-      }
+      const codeudores = await firstValueFrom(
+        this.carteraService.getCodeudoresGarantias(idCuenta)
+      );
+      this.garantiasReales = garantias ?? [];
+      this.garantiasPersonalesCod = codeudores ?? [];
+    } catch (error) {
+      console.error(error);
     } finally {
       this.loading.hide();
     }
   }
+
 
   resetTabGarantias() {
     this.garantiasPersonalesCod = [];

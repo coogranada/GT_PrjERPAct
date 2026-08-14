@@ -650,3 +650,7 @@ export interface InstanciaInsolvencia {
   strDescripcion: string;
   dtmFecha: string;
 }
+
+export interface ValorRespaldarCTD {
+  ValorRespaldar: number;
+}
