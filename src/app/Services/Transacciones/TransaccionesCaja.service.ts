@@ -114,6 +114,11 @@ export class TransaccionesCajaService {
         );
     }
 
+    ObtenerIndicadores(): Observable<any> {
+        this.url = `${this.environment.Url}/ObtenerIndicadores`;
+        return this._http.get<any>(this.url);
+    }
+
     ObtenerCuentaTesoreria(IdOficina: number): Observable<any> {
         this.url = `${this.environment.Url}/ObtenerCuentaTesoreria?IdOficina=` + IdOficina;
         return this._http.get<any>(this.url);

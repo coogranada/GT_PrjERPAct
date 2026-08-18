@@ -60,6 +60,8 @@ export class TransaccionesCajaComponent implements OnInit {
   formChequeRet!: FormGroup;
   formSustituir !: FormGroup;
   formCambCheInt !: FormGroup;
+  formCambCheExt !: FormGroup;
+
 
   public UsuarioActual: string = "";
   public OficinaActual: string = "";
@@ -111,6 +113,7 @@ export class TransaccionesCajaComponent implements OnInit {
   public IdUsuarioActual: number = 0;
   public IdUsuarioAutoriza: number = 0;
   public OrigenSeleccionBN: number = 0;
+  public IndicadorCodigo8: number = 0;
   public NaturalezaTransa: number | null = null;
   public TabPorDefecto: number | null = null;
   public ProductoSeleccionado: number | null = null;
@@ -196,6 +199,7 @@ export class TransaccionesCajaComponent implements OnInit {
     }
 
     this.validarEstadoTaquilla();
+    this.obtenerIndicadores();
     this.VolverArriba();
     this.vbleDocCuenta = false;
 
@@ -248,6 +252,12 @@ export class TransaccionesCajaComponent implements OnInit {
       valor: { value: null, disabled: true },
     });
 
+    this.formCambCheExt = this.fb.group({
+      tasaGMF: [{ value: '', disabled: true }],
+      valorCheques: { value: null, disabled: false },
+      valorGMF: { value: null, disabled: true }
+    });
+
     $('#ModalCondiciones').on('hidden.bs.modal', function () {
       $('body').css('padding-right', '0');
       $('body').removeClass('modal-open');
@@ -281,6 +291,22 @@ export class TransaccionesCajaComponent implements OnInit {
           this.loading.hide();
           console.error('Error:', err);
           this.notif.onWarning('Error', 'Ocurrió un error en la petición');
+        }
+      });
+  }
+
+  obtenerIndicadores() {
+    this.transaccionesCajaService
+      .ObtenerIndicadores()
+      .subscribe({
+        next: (resultado: any[]) => {
+          this.loading.hide();
+          this.IndicadorCodigo8 = resultado.find(x => x.intCodigo === 8)?.sngTasa ?? null;
+        },
+        error: (err) => {
+          this.loading.hide();
+          console.error('Error:', err);
+          this.notif.onWarning('Error', 'Ocurrió un error en la petición.');
         }
       });
   }
@@ -2127,6 +2153,9 @@ export class TransaccionesCajaComponent implements OnInit {
           break;
         case "16077": // Cambio cheque externo
           this.habilitaChequeVacio();
+          setTimeout(() => {
+            this.formCambCheExt.get('tasaGMF')?.setValue(this.IndicadorCodigo8);
+          }, 500);
           break;
       }
 
@@ -2153,11 +2182,31 @@ export class TransaccionesCajaComponent implements OnInit {
           this.TotalEfectivo = this.OtraTransaccionTerceroData.SaldoAcreedores;
           this.recalcularSaldoTotal();
           break;
+        case "16077": // Cambio cheques externos
+          var valorGMF = 0;
+          var valorCheques = 0;
+          valorGMF = this.formCambCheExt.get('valorGMF')?.value;
+          valorCheques = this.formCambCheExt.get('valorCheques')?.value;
+
+          this.TotalEfectivo = Number(valorCheques - valorGMF);
+          this.recalcularSaldoTotal();
+          break;
       }
 
     }, 500);
 
 
+  }
+
+  calcularGMFCamCheExt() {
+    var valorCheques = 0;
+    var valorGMF = 0;
+
+    valorCheques = this.formCambCheExt.get('valorCheques')?.value;
+    valorGMF = valorCheques * this.IndicadorCodigo8;
+    this.formCambCheExt.get('valorGMF')?.setValue(valorGMF);
+    this.setearValorAutomatico();
+    this.activarChequesTab();
   }
 
 
@@ -3163,26 +3212,57 @@ export class TransaccionesCajaComponent implements OnInit {
           return false;
         }
         break;
+      case "16077": // CAMBIO CHEQUE EXTERNO
+        const valorRelacionCh = this.formCambCheExt.get('valorCheques')?.value;
+        const valorGMF = this.formCambCheExt.get('valorGMF')?.value;
+
+        if (Number(valorRelacionCh) <= 0) {
+          this.notif.onWarning('Advertencia', 'Transacción debe ser mayor a cero.');
+          return false;
+        }
+
+        if (Number(valorGMF) <= 0) {
+          this.notif.onWarning('Advertencia', 'El valor del GMF es válido.');
+          return false;
+        }
+
+        if (!this.validarTransaccionChequeConsigna(true)) {
+          return false;
+        }
+
+        break;
     }
 
     return true;
   }
 
-  validarTransaccionChequeConsigna(): boolean {
+  validarTransaccionChequeConsigna(exigirCheque: boolean = false): boolean {
 
-    if (!this.TotalCheque || Number(this.TotalCheque) === 0) {
-      return true;
+    if (!exigirCheque) {
+      if (!this.TotalCheque || Number(this.TotalCheque) === 0) {
+        return true;
+      }
     }
 
-    if (this.ListCheques.length === 0) {
+    if (!this.ListCheques || this.ListCheques.length === 0) {
       this.notif.onWarning('Advertencia', 'Debe ingresar al menos un cheque.');
       return false;
     }
 
-    if (Number(this.TotalCheque) !== Number(this.TotalCheques)) {
-      this.notif.onWarning('Advertencia', 'El valor en cheque debe coincidir con el total de cheques agregados.');
-      return false;
+    if (!exigirCheque) {
+      if (Number(this.TotalCheque) !== Number(this.TotalCheques)) {
+        this.notif.onWarning('Advertencia', 'El valor en cheque debe coincidir con el total de cheques agregados.');
+        return false;
+      }
+    } else {
+      const valorRelacionCh = this.formCambCheExt.get('valorCheques')?.value;
+      if (Number(valorRelacionCh) !== Number(this.TotalCheques)) {
+        this.notif.onWarning('Advertencia', 'El valor total de cheques debe coincidir con el total de cheques agregados.');
+        return false;
+      }
     }
+
+
 
     return true;
   }
