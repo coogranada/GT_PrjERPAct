@@ -578,13 +578,6 @@ this.userIdle.onTimeout().subscribe(() => {
   this.boolBannner = false;
 });
 
-
-
-    // this.bnIdle.startWatching(60).subscribe((isTimedOut: boolean) => {
-    //   this.AbrirModalBanner.nativeElement.click();
-    //   this.bnIdle.stopTimer();
-    // });
-
     this.ocultarListaDirecciones = true;
     let data: string | null = localStorage.getItem('Data')
     if (data != null)

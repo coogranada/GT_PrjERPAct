@@ -320,17 +320,7 @@ export class SolicitudServiciosComponent implements OnInit {
             dataSeguros.push(element);
           }
         });
-    this.dataSegurosSol = dataSeguros;
-        // this.segurosEmit.emit(dataSeguros);
-        // this.loadSeguro  = false;
-        // localStorage.setItem('storageSeguros', window.btoa(JSON.stringify(dataSeguros)));
-    //   },
-    //   error => {
-    //     const errorMessage = <any>error;
-    //     this.notif.error('Error', errorMessage);
-    //     console.error(errorMessage);
-    //   }
-    // );
+    this.dataSegurosSol = dataSeguros;  
   }
   abrirSolicitud(documentoConsultar : string) {
     return new Promise((resolve) => {

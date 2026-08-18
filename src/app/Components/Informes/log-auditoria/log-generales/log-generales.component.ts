@@ -80,6 +80,7 @@ export class LogLogGeneralesComponent implements OnInit {
     this.NombreOficina = resultDataStore.Oficina;
   }
   getInformeList() {
+     this.loading.show();
     this.isShowDoc = false;
     this.isShowCuenta = false;
     this.filtroSelect = 0;
@@ -383,9 +384,8 @@ export class LogLogGeneralesComponent implements OnInit {
       cancelButtonText: "Cerrar",
       confirmButtonText: idDowload == true ? "Descargar" : "Ver Lista"
     }).then((result) => {
-      if (result.value) {
-      
-        this.loading.show();
+      if (result.value) {    
+        
         setTimeout(() => {
           if (idDowload)
             this.DescargarInforme();

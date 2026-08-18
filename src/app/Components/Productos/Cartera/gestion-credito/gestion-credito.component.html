@@ -2145,47 +2145,178 @@
                                             *ngIf="garantiasReales.length === 0">
                                             No hay registros
                                         </div>
+                                    
                                         <div class="table-responsive scrollTabla" *ngIf="garantiasReales.length > 0">
                                             <table class="table table-hover encabezado-fijo">
-                                                <colgroup>
-                                                    <col style="width: 20%;">
-                                                    <col style="width: 20%;">
-                                                    <col style="width: 20%;">
-                                                    <col style="width: 20%;">
-                                                    <col style="width: 20%;">
-                                                </colgroup>
                                                 <thead>
                                                     <tr>
+                                                        <th>Tipo garantía</th>
                                                         <th>Garantía</th>
                                                         <th>Clase</th>
+                                                        <th>Descripción</th>
                                                         <th>Valor cobertura</th>
-                                                        <th>Valor que respalda</th>
-                                                        <th class="text-center">Vencimiento póliza</th>
+                                                        <th>Valor respalda</th>
+                                                        <th class="text-center">Créditos</th>
                                                     </tr>
                                                 </thead>
+                                            
                                                 <tbody>
-                                                    <tr *ngFor="let garantia of garantiasReales; let i = index"
-                                                        (click)="selectRow('reales', i)"
-                                                        [class.tr-selected]="selectedRows['reales'] === i">
-                                                        <td>
-                                                            <div>{{ garantia.Garantia }}</div>
-                                                        </td>
-                                                        <td>
-                                                            <div>{{ garantia.Clase }}</div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="align-right-large">{{ garantia.ValorCobertura |
-                                                                currency }}</div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="align-right-large">{{ garantia.ValorRespalda |
-                                                                currency }}</div>
-                                                        </td>
-                                                        <td class="text-center">{{ garantia.VctoPoliza }}</td>
-                                                    </tr>
+                                                
+                                                    <ng-container
+                                                        *ngFor="let item of garantiasReales; let i = index">
+
+                                                        <!-- FILA PRINCIPAL -->
+                                                        <tr
+                                                            [attr.id]="'asignadas-fila-' + item.Consecutivo"
+                                                            (click)="selectRowGarantias('asignadas', i, item.Consecutivo)"
+                                                            [class.tr-selected]="isRowSelected('asignadas', i, item.Consecutivo)"
+                                                            [class.fila-expandida]="
+                                                                mostrarDetalleGarantia &&
+                                                                filaSeleccionadaGarantia === item.Consecutivo &&
+                                                                tablaDetalleActiva === 'asignadas'
+                                                            ">
+
+                                                            <td>
+                                                            
+                                                                <span
+                                                                    *ngIf="item.CantidadCreditos > 0"
+                                                                    class="icono-acordeon"
+                                                                    tabindex="-1"
+                                                                    (click)="onClickDetalleGarantia(
+                                                                        item.Consecutivo,
+                                                                        item.Tipo,
+                                                                        'asignadas',
+                                                                        item.Matricula
+                                                                    ); $event.stopPropagation()">
+
+                                                                    <i [ngClass]=" mostrarDetalleGarantia &&
+                                                                            filaSeleccionadaGarantia === item.Consecutivo &&
+                                                                            tablaDetalleActiva === 'asignadas'
+                                                                                ? 'icon-chevron-up'
+                                                                                : 'icon-chevron-down' ">
+                                                                    </i>
+                                                                
+                                                                </span>
+                                                            
+                                                                {{ mapTipoGarantia(item.Tipo) }}
+                                                            
+                                                            </td>
+                                                        
+                                                            <td>
+                                                                {{ item.Matricula }}
+                                                            </td>
+                                                        
+                                                            <td>
+                                                                {{ item.Clase }}
+                                                            </td>
+                                                        
+                                                            <td>
+                                                                {{ item.Descripcion }}
+                                                            </td>
+                                                        
+                                                            <td>
+                                                                <div class="align-right-large">
+                                                                    {{ item.Cobertura | currency }}
+                                                                </div>
+                                                            </td>
+                                                        
+                                                            <td>
+                                                                <div class="align-right-large">
+                                                                    {{ item.TotalDeuda | currency }}
+                                                                </div>
+                                                            </td>
+                                                        
+                                                            <td class="text-center">
+                                                                {{ item.CantidadCreditos }}
+                                                            </td>
+                                                        
+                                                        </tr>
+                                                    
+                                                        <!-- DETALLE -->
+                                                        <tr
+                                                            *ngIf="
+                                                                mostrarDetalleGarantia &&
+                                                                filaSeleccionadaGarantia === item.Consecutivo &&
+                                                                tablaDetalleActiva === 'asignadas'
+                                                            "
+                                                            class="fila-detalle">
+
+                                                            <td colspan="7">
+                                                            
+                                                                <div class="detalle-acordeon">
+                                                                
+                                                                    <div class="table-responsive">
+                                                                    
+                                                                        <table class="table table-sm table-border">
+                                                                        
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>Garantía</th>
+                                                                                    <th>Cuenta</th>
+                                                                                    <th>Línea</th>
+                                                                                    <th>Nombre línea</th>
+                                                                                    <th>Documento deudor</th>
+                                                                                    <th>Nombre deudor</th>
+                                                                                    <th>Valor crédito</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                        
+                                                                            <tbody>
+                                                                            
+                                                                                <tr
+                                                                                    *ngFor="let d of detalleGarantiaCreditos">
+
+                                                                                    <td>
+                                                                                        {{ d.strMatricula }}
+                                                                                    </td>
+                                                                                
+                                                                                    <td>
+                                                                                        {{ d.Cuenta }}
+                                                                                    </td>
+                                                                                
+                                                                                    <td>
+                                                                                        {{ d.Linea }}
+                                                                                    </td>
+                                                                                
+                                                                                    <td>
+                                                                                        {{ (d.NombreLinea || '').slice(0,50) }}
+                                                                                        {{ (d.NombreLinea || '').length > 50 ? '...' : '' }}
+                                                                                    </td>
+                                                                                
+                                                                                    <td>
+                                                                                        {{ d.IdDeudor }}
+                                                                                    </td>
+                                                                                
+                                                                                    <td>
+                                                                                        {{ d.NombreDeudor }}
+                                                                                    </td>
+                                                                                
+                                                                                    <td>
+                                                                                        {{ d.ValorCredito | currency }}
+                                                                                    </td>
+                                                                                
+                                                                                </tr>
+                                                                            
+                                                                            </tbody>
+                                                                        
+                                                                        </table>
+                                                                    
+                                                                    </div>
+                                                                
+                                                                </div>
+                                                            
+                                                            </td>
+                                                        
+                                                        </tr>
+                                                    
+                                                    </ng-container>
+                                                
                                                 </tbody>
+                                            
                                             </table>
+                                        
                                         </div>
+                                    
                                     </article>
                                 </section>
                             </div>

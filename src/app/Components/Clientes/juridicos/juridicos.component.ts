@@ -7614,67 +7614,6 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     this.AbrirSolicituJuridico.nativeElement.click();
     this.juridicosFrom.get('operacion')?.reset();
   }
-
-  // AbrirImpresionJuridicos() {
-  //   // this.CargarServicios = 1;
-  //   const esVinculacion = this.serviciosFrom.get('esVinculacion')?.value;
-  //   this.EnvioDataImpresion();
-  //   // aqui valiar si los campos vienen llenos es para credito
-
-  //   if (esVinculacion) {
-  //     this.GuardarLog('Imprimir afiliación - Asociado Juridico - ' + + this.documentoConsultar, 3, 0, this.JuridicoSeleccionado,12);
-      
-  //     } else {
-  //      this.GuardarLog('Imprimir afiliación - Asociado Juridico - ' + this.documentoConsultar, 3, 0, this.JuridicoSeleccionado,12);
-  //     }
- 
-  //   if ((this.serviciosFrom.value.montoSolicitado !== '' && this.serviciosFrom.value.montoSolicitado !== null && 
-  //   this.serviciosFrom.value.montoSolicitado !== undefined) &&
-  //     (this.serviciosFrom.value.plazoDeseado !== '' && this.serviciosFrom.value.plazoDeseado !== null && this.serviciosFrom.value.plazoDeseado !== undefined) &&
-  //     (this.serviciosFrom.value.Destino !== '' && this.serviciosFrom.value.Destino !== null && this.serviciosFrom.value.Destino !== undefined)) {
-  //     this.motrarErrorCredito = false;
-  //      localStorage.setItem('Credito', 'true');
-
-  //     if (esVinculacion && esVinculacion !== null) {
-  //       localStorage.setItem('Vinculacion', 'true');
-  //       localStorage.setItem('Actualizacion', 'false');
-  //     } else {
-  //       localStorage.setItem('Vinculacion', 'false');
-  //       localStorage.setItem('Actualizacion', 'true');
-  //     }
-  //     localStorage.setItem('DataService', JSON.stringify(this.serviciosFrom.value));
-  //     this.SetDataServicioSolicitado(this.serviciosFrom.value);
-
-  //     this.AbrirSolicituJuridico.nativeElement.click();
-  //     this.juridicosFrom.get('operacion')?.reset();
-  //     this.BlockServiciosInput = null;
-  //     this.serviciosFrom?.reset();
-
-  //   } else if ((this.serviciosFrom.value.montoSolicitado === '' || this.serviciosFrom.value.montoSolicitado === null || 
-  //   this.serviciosFrom.value.montoSolicitado === undefined) &&
-  //     (this.serviciosFrom.value.plazoDeseado === '' || this.serviciosFrom.value.plazoDeseado === null || this.serviciosFrom.value.plazoDeseado === undefined) &&
-  //     (this.serviciosFrom.value.Destino === '' || this.serviciosFrom.value.Destino === null || this.serviciosFrom.value.Destino === undefined)) {
-  //     this.motrarErrorCredito = false;
-  //     localStorage.setItem('Credito', 'false');
-  //     if (esVinculacion && esVinculacion !== null) {
-  //       localStorage.setItem('Vinculacion', 'true');
-  //       localStorage.setItem('Actualizacion', 'false');
-  //     } else {
-  //       localStorage.setItem('Vinculacion', 'false');
-  //       localStorage.setItem('Actualizacion', 'true');
-  //     }
-  //     localStorage.setItem('DataService', JSON.stringify(this.serviciosFrom.value));
-  //     this.SetDataServicioSolicitado(this.serviciosFrom.value);
-
-  //     this.AbrirSolicituJuridico.nativeElement.click();
-  //     this.juridicosFrom.get('operacion')?.reset();
-  //     this.BlockServiciosInput = null;
-  //     this.serviciosFrom?.reset();
-  //   } else {
-  //     this.motrarErrorCredito = true;
-  //   }
-  // }
-
   EnvioDataImpresion() {
     this.dataSendPrint.ListObjetoSocial = this.infoJuridicoComponent.dataObjetoSocial;
     this.dataSendPrint.ListOficinas = this.dataOficinas;
