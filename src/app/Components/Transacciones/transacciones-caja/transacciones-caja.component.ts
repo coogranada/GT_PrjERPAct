@@ -2203,10 +2203,12 @@ export class TransaccionesCajaComponent implements OnInit {
     var valorGMF = 0;
 
     valorCheques = this.formCambCheExt.get('valorCheques')?.value;
-    valorGMF = valorCheques * this.IndicadorCodigo8;
-    this.formCambCheExt.get('valorGMF')?.setValue(valorGMF);
-    this.setearValorAutomatico();
-    this.activarChequesTab();
+    if (valorCheques && valorCheques > 0) {
+      valorGMF = valorCheques * this.IndicadorCodigo8;
+      this.formCambCheExt.get('valorGMF')?.setValue(valorGMF);
+      this.setearValorAutomatico();
+      this.activarChequesTab();
+    }
   }
 
 
@@ -2959,7 +2961,8 @@ export class TransaccionesCajaComponent implements OnInit {
       idConvenio: 0, // dejar en cero por defecto
       idUsuarioAutoriza: this.IdUsuarioAutoriza,
       naturaleza: this.NaturalezaTransa,
-      idPuc: 0 // dejar en cero por defecto
+      idPuc: 0, // dejar en cero por defecto
+      valorChequeCambio: 0 // dejar en cero por defecto
     }
 
     this.ListChequesUltimo = this.ListCheques; // Se hace copia del objeto
@@ -3034,6 +3037,9 @@ export class TransaccionesCajaComponent implements OnInit {
           intNaturaleza: 1,
           strObservacion: observacionCI
         });
+        break;
+      case "16077": //CAMBIAR CHEQUE INTERNO
+        transaccion.valorChequeCambio = Number(this.formCambCheExt.get('valorCheques')?.value);
         break;
     }
 
@@ -3257,7 +3263,7 @@ export class TransaccionesCajaComponent implements OnInit {
     } else {
       const valorRelacionCh = this.formCambCheExt.get('valorCheques')?.value;
       if (Number(valorRelacionCh) !== Number(this.TotalCheques)) {
-        this.notif.onWarning('Advertencia', 'El valor total de cheques debe coincidir con el total de cheques agregados.');
+        this.notif.onWarning('Advertencia', 'El valor total de cheques debe coincidir con el total de cheques agregados ($ ' + valorRelacionCh + ').');
         return false;
       }
     }

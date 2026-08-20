@@ -174,5 +174,8 @@ export class TablaVirtualComponent implements OnChanges {
     return totales;
   }
 
+  get cantidadFilas(): number {
+    return this.datos?.length || 0;
+  }
 
 }
