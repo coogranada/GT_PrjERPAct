@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ModuleValidationService } from '../../../../Services/Enviroment/moduleValidation.service';
 import { forkJoin, fromEvent } from 'rxjs';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl, Validators, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 import { filter, map } from 'rxjs/operators';
 import { ConfiguracionNotificacion } from '../../../../../environments/config.noticaciones';
 import { OperacionesService } from '../../../../Services/Maestros/operaciones.service';
@@ -76,17 +76,17 @@ export class InformeAhorrosComponent implements OnInit {
   public ListGenericoFiltro: any[] = [];
   public ListColumnasInf: any[] = [];
   public ListfilteredColumnasInf: any[] = [];
-  public permitidosResult: any [] = [];
+  public permitidosResult: any[] = [];
   public formulario: FormGroup;
   public formularioD: FormGroup;
 
   CodModulo: number = 82
 
-  constructor(private excelReportService: ExceljsService, private fb: FormBuilder, private configuracionInformesS: ConfiguracionInformesService, private informeAhorrosService: InformeAhorrosService, private operacionesService: OperacionesService, 
-              private el: ElementRef, private moduleValidationService: ModuleValidationService,
-              private notif: ToastrService, private InformePerfilS:InformePerfilService,
-              private generalesService: GeneralesService,
-              private loading: LoadingService) {
+  constructor(private excelReportService: ExceljsService, private fb: FormBuilder, private configuracionInformesS: ConfiguracionInformesService, private informeAhorrosService: InformeAhorrosService, private operacionesService: OperacionesService,
+    private el: ElementRef, private moduleValidationService: ModuleValidationService,
+    private notif: ToastrService, private InformePerfilS: InformePerfilService,
+    private generalesService: GeneralesService,
+    private loading: LoadingService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -111,7 +111,7 @@ export class InformeAhorrosComponent implements OnInit {
   }
 
   obtenerInformesPermitidos() {
-    const peticiones  = this.perfilesUsuario.map((perfil : any) =>
+    const peticiones = this.perfilesUsuario.map((perfil: any) =>
       this.InformePerfilS.ObtenerInformesPermitidosP(perfil.IdPerfil)
     );
     forkJoin(peticiones).subscribe({
@@ -121,10 +121,10 @@ export class InformeAhorrosComponent implements OnInit {
         this.permitidosResult = this.permitidosResult.filter(
           (permiso, index, self) =>
             index == self.findIndex(p => p.IdInforme === permiso.IdInforme)
-          
+
         );
       },
-      error: (err) =>{
+      error: (err) => {
         console.error('Error al cargar configuración informes:', err);
       }
     })
@@ -190,19 +190,19 @@ export class InformeAhorrosComponent implements OnInit {
 
     this.OperacionSelect = operacion?.ERP_tblOperacion.Descripcion.toLowerCase();
 
-    this.configuracionInformesFiltro = this.configuracionInformes.filter((informe: any) =>{
+    this.configuracionInformesFiltro = this.configuracionInformes.filter((informe: any) => {
       return informe.IdModulo === this.selectedId && informe.IdTipo === false &&
-      this.permitidosResult.some((permiso) => permiso.IdInforme === informe.IdConfiguracion);
+        this.permitidosResult.some((permiso) => permiso.IdInforme === informe.IdConfiguracion);
     });
 
     this.configuracionInformesFiltroDina = this.configuracionInformes.filter((informe: any) => {
       return informe.IdModulo === this.selectedId && informe.IdTipo === true &&
-      this.permitidosResult.some((permiso) => permiso.IdInforme === informe.IdConfiguracion);
+        this.permitidosResult.some((permiso) => permiso.IdInforme === informe.IdConfiguracion);
     });
     this.filtrosAgregado = [];
     this.filtrosAgregadoWhere = [];
     this.allSelected = false;
-    if(this.configuracionInformesFiltro.length >= 1){
+    if (this.configuracionInformesFiltro.length >= 1) {
       setTimeout(() => {
         if (this.selectElementRef) {
           const selectElement = this.selectElementRef.nativeElement;
@@ -212,10 +212,10 @@ export class InformeAhorrosComponent implements OnInit {
         }
       }, 200);
     }
-    if(this.configuracionInformesFiltroDina.length >= 1){
+    if (this.configuracionInformesFiltroDina.length >= 1) {
       this.getListaFiltros();
     }
-    
+
   }
 
   informeSelected(event: Event) {
@@ -284,6 +284,11 @@ export class InformeAhorrosComponent implements OnInit {
         validators.push(Validators.maxLength(Number(param.TamanoCampo)));
       }
 
+      if (param.TipoDato === 'datetime') {
+        validators.push(this.fechaValidaValidator());
+      }
+
+
       this.formulario.addControl(param.NombreParametro, new FormControl('', validators));
 
       if (param.TipoDato === 'selectn' && param.IdTipo === 999) {
@@ -330,7 +335,7 @@ export class InformeAhorrosComponent implements OnInit {
             } else {
               this.encabezados = Object.keys(respuesta[0]).slice(1);
             }
-            const LogData ={
+            const LogData = {
               NombreInforme: this.nombreInformeSelect
             }
             this.ModalCantidadRegistros(respuesta.length, false);
@@ -364,44 +369,44 @@ export class InformeAhorrosComponent implements OnInit {
 
     var data = null;
     if (!this.resultadoInforme || this.resultadoInforme.length === 0) {
-    this.loading.hide(); ;
+      this.loading.hide();;
       this.notif.warning('Advertencia', 'No hay información para exportar.', ConfiguracionNotificacion.configRightTop);
     } else {
       data = this.resultadoInforme.map(row => {
-        if(this.selectedTab == 'dinamicos'){
+        if (this.selectedTab == 'dinamicos') {
           return Object.keys(row)
-          .reduce((obj, key) => {
-            const newkey = key.replace('_M', '');
+            .reduce((obj, key) => {
+              const newkey = key.replace('_M', '');
 
-            const valor = row[key];
-            if (typeof valor === 'string' && valor.includes('T') && !isNaN(Date.parse(valor))) {
-              (obj as { [key: string]: unknown })[newkey] = this.formatearValor(valor);
-            } else {
-              (obj as { [key: string]: unknown })[newkey] = valor;
-            }
+              const valor = row[key];
+              if (typeof valor === 'string' && valor.includes('T') && !isNaN(Date.parse(valor))) {
+                (obj as { [key: string]: unknown })[newkey] = this.formatearValor(valor);
+              } else {
+                (obj as { [key: string]: unknown })[newkey] = valor;
+              }
 
-            return obj;
-          }, {});
-        }else{
+              return obj;
+            }, {});
+        } else {
           return Object.keys(row).slice(1) //Predeterminados se les retira la primera fila
-          .reduce((obj, key) => {
-            const newkey = key.replace('_M', '');
+            .reduce((obj, key) => {
+              const newkey = key.replace('_M', '');
 
-            const valor = row[key];
-            if (typeof valor === 'string' && valor.includes('T') && !isNaN(Date.parse(valor))) {
-              (obj as { [key: string]: unknown })[newkey] = this.formatearValor(valor);
-            } else {
-              (obj as { [key: string]: unknown })[newkey] = valor;
-            }
+              const valor = row[key];
+              if (typeof valor === 'string' && valor.includes('T') && !isNaN(Date.parse(valor))) {
+                (obj as { [key: string]: unknown })[newkey] = this.formatearValor(valor);
+              } else {
+                (obj as { [key: string]: unknown })[newkey] = valor;
+              }
 
-            return obj;
-          }, {});
+              return obj;
+            }, {});
         }
-       
+
 
       });
       this.excelReportService.exportAsExcelFile(data, this.nombreInforme)
-      this.loading.hide(); ;
+      this.loading.hide();;
     }
   }
 
@@ -444,7 +449,7 @@ export class InformeAhorrosComponent implements OnInit {
       }
       return valor;
     }
-  
+
 
     if (typeof valor === 'string' && this.esFechaISO(valor)) {
       const fecha = new Date(valor);
@@ -520,10 +525,10 @@ export class InformeAhorrosComponent implements OnInit {
           if (idDowload) {
             this.exportarExcel2()
           } else {
-            
-            if(this.selectedTab == 'dinamicos'){
-              this.nombreInforme = "INFORME "+ this.OperacionSelect.toUpperCase();
-            }else{
+
+            if (this.selectedTab == 'dinamicos') {
+              this.nombreInforme = "INFORME " + this.OperacionSelect.toUpperCase();
+            } else {
               this.nombreInforme = this.nombreInformeSelect.toUpperCase();
             }
 
@@ -620,11 +625,11 @@ export class InformeAhorrosComponent implements OnInit {
     }, {});
 
     this.filtrosAgrupados = Object.keys(agrupados)
-    .sort((a, b) => a.localeCompare(b))
-    .reduce((acc: any, key) => {
-      acc[key] = agrupados[key];
-      return acc;
-    }, {});
+      .sort((a, b) => a.localeCompare(b))
+      .reduce((acc: any, key) => {
+        acc[key] = agrupados[key];
+        return acc;
+      }, {});
 
   }
 
@@ -640,14 +645,9 @@ export class InformeAhorrosComponent implements OnInit {
 
   crearFormularioParaFiltro(filtro: string) {
     const grupo: any = {};
+
     this.filtrosAgrupados[filtro].forEach(param => {
-      const valorInicial = (param.TipoDato === 'money') ? 0 : '';
-      grupo[param.NombreParametro] = new FormControl(valorInicial);
-    });
 
-    this.formularioD = new FormGroup(grupo);
-
-    for (let param of this.parametrosConfiguracionInfDina) {
       const validators = [];
 
       if (param.Requerido) {
@@ -655,31 +655,36 @@ export class InformeAhorrosComponent implements OnInit {
       }
 
       if (param.TamanoCampo && param.TipoDato === 'varchar') {
-        validators.push(Validators.maxLength(Number(param.TamanoCampo)));
+        validators.push(
+          Validators.maxLength(Number(param.TamanoCampo))
+        );
       }
 
-      const valorInicial = (param.TipoDato === 'money') ? 0 : '';
+      if (param.TipoDato === 'datetime') {
+        validators.push(this.fechaValidaValidator());
+      }
 
-      this.formularioD.addControl(param.NombreParametro, new FormControl(valorInicial, validators));
+      const valorInicial = param.TipoDato === 'money' ? 0 : '';
+
+      grupo[param.NombreParametro] = new FormControl(
+        valorInicial,
+        validators
+      );
 
       if (param.TipoDato === 'selectn' && param.IdTipo === 999) {
-        this.filtrarListasOficinas(param.IdTipo, param.NombreParametro);
+        this.filtrarListasOficinas(
+          param.IdTipo,
+          param.NombreParametro
+        );
       } else {
-        this.filtrarListas(param.IdTipo, param.NombreParametro);
+        this.filtrarListas(
+          param.IdTipo,
+          param.NombreParametro
+        );
       }
+    });
 
-    }
-
-    for (const [key, control] of Object.entries(this.formularioD.controls)) {
-      if (key.toLowerCase().includes('oficina')) {
-        control.setValue(this.idOficina);
-        if (this.idOficina !== 3) {
-          control.disable();
-        } else {
-          control.enable();
-        }
-      }
-    }
+    this.formularioD = new FormGroup(grupo);
   }
 
   agregarCriterio() {
@@ -700,8 +705,8 @@ export class InformeAhorrosComponent implements OnInit {
       return;
     }
 
-      const campos = this.filtrosAgrupados[this.filtroSeleccionado];
-      const valores = campos.map(campo => {
+    const campos = this.filtrosAgrupados[this.filtroSeleccionado];
+    const valores = campos.map(campo => {
       const valor = this.formularioD.get(campo.NombreParametro)?.value;
 
       let descripcion = valor;
@@ -741,14 +746,14 @@ export class InformeAhorrosComponent implements OnInit {
 
   }
 
-  agregarParametroOficinaA(){
+  agregarParametroOficinaA() {
     if (this.validarParametroOficina() && this.idOficina !== 3 && !this.filtroSeleccionado?.toLowerCase().includes('oficina')) {
       const existe = this.filtrosAgregado.some((f: any) => f.NombreFiltro.toLowerCase().includes('oficina'));
 
       if (!existe) {
 
         //Busca en el arreglo si contiene la palara oficina para hallar el nombre del parámetro que espera el SP
-        let nombreParametrosOficina: string="";
+        let nombreParametrosOficina: string = "";
         let aliasCamposOficina: string = "";
         let nombreFiltro;
         for (const clave in this.filtrosAgrupados) {
@@ -757,8 +762,8 @@ export class InformeAhorrosComponent implements OnInit {
             grupo.forEach(item => {
               if (item.NombreFiltro && item.NombreFiltro.toLowerCase().includes('oficina')) {
                 nombreFiltro = (item.NombreFiltro);
-                nombreParametrosOficina=(item.NombreParametro);
-                aliasCamposOficina=(item.AliasCampo);
+                nombreParametrosOficina = (item.NombreParametro);
+                aliasCamposOficina = (item.AliasCampo);
               }
             });
           }
@@ -769,7 +774,7 @@ export class InformeAhorrosComponent implements OnInit {
           NombreFiltro: nombreFiltro,
           Validacion: 'Es igual',
           ValorInicial: this.idOficina + " - " + this.nombreOficina,
-          Campos: [{ NombreParametro: nombreParametrosOficina, alias: aliasCamposOficina , Valor: this.idOficina, Descripcion: this.nombreOficina }]
+          Campos: [{ NombreParametro: nombreParametrosOficina, alias: aliasCamposOficina, Valor: this.idOficina, Descripcion: this.nombreOficina }]
         });
       }
     }
@@ -787,7 +792,7 @@ export class InformeAhorrosComponent implements OnInit {
   eliminarCriterio(item: any) {
 
     if (this.validarParametroOficina() && this.idOficina !== 3 && item.NombreFiltro?.toLowerCase().includes('oficina')) {
-      this.notif.warning('Advertencia', 'El filtro '+item.NombreFiltro.toLowerCase()+' es obligatorio.', ConfiguracionNotificacion.configRightTop);
+      this.notif.warning('Advertencia', 'El filtro ' + item.NombreFiltro.toLowerCase() + ' es obligatorio.', ConfiguracionNotificacion.configRightTop);
       return;
     }
 
@@ -840,8 +845,8 @@ export class InformeAhorrosComponent implements OnInit {
   }
 
   ejecutarSPDinamico() {
-  //Si el usuario no ha ingresado filtros, y oficina <>3 se crea el criterio obligatorio para filtrar por oficina
-    if(this.filtrosAgregado.length == 0){
+    //Si el usuario no ha ingresado filtros, y oficina <>3 se crea el criterio obligatorio para filtrar por oficina
+    if (this.filtrosAgregado.length == 0) {
       this.agregarParametroOficinaA();
       this.generarFiltrosWhere();
     }
@@ -854,7 +859,7 @@ export class InformeAhorrosComponent implements OnInit {
       resultado[param.NombreParametro] = param.Valor;
     });
 
-    const LogData ={
+    const LogData = {
       NombreInforme: selectedNomInf
     }
 
@@ -963,13 +968,45 @@ export class InformeAhorrosComponent implements OnInit {
     return esValido;
   }
 
-  GuardarLog(formulario : any, operacion : number, cuenta : number, tercero : number, modulo : number) {
+  GuardarLog(formulario: any, operacion: number, cuenta: number, tercero: number, modulo: number) {
     this.loading.show();
     this.generalesService.Guardarlog(formulario, operacion, cuenta, tercero, modulo).subscribe(
       result => {
         this.loading.hide();
         console.log(result);
       });
+  }
+
+  fechaValidaValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const valor = control.value;
+
+      if (!valor) {
+        return null;
+      }
+
+      const partes = valor.split('-');
+
+      if (partes.length !== 3) {
+        return { fechaInvalida: true };
+      }
+
+      const anio = Number(partes[0]);
+      const mes = Number(partes[1]);
+      const dia = Number(partes[2]);
+
+      const fecha = new Date(anio, mes - 1, dia);
+
+      if (
+        fecha.getFullYear() !== anio ||
+        fecha.getMonth() !== mes - 1 ||
+        fecha.getDate() !== dia
+      ) {
+        return { fechaInvalida: true };
+      }
+
+      return null;
+    };
   }
 
 }

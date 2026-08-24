@@ -1018,6 +1018,7 @@ export class TransaccionesCajaComponent implements OnInit {
         this.formTransaccion.get('idTransaccion')?.reset('');
         this.limpiarFormSustituir();
         this.limpiarFormCambCheInt();
+        this.limpiarFormCambCheExt();
 
         //arreglos
         this.ListProducto = [];
@@ -1068,6 +1069,7 @@ export class TransaccionesCajaComponent implements OnInit {
         this.formTransaccion.get('idTransaccion')?.reset('');
         this.limpiarFormSustituir();
         this.limpiarFormCambCheInt();
+        this.limpiarFormCambCheExt();
 
         //arreglos
         this.ListProducto = [];
@@ -1139,6 +1141,14 @@ export class TransaccionesCajaComponent implements OnInit {
       idBanco: null,
       beneficiario: '',
       valor: null
+    });
+  }
+
+  limpiarFormCambCheExt() {
+    this.formCambCheExt.patchValue({
+      tasaGMF: null,
+      valorCheques: null,
+      valorGMF: null
     });
   }
 
@@ -2133,6 +2143,34 @@ export class TransaccionesCajaComponent implements OnInit {
       });
   }
 
+  obtenerSaldoGiro() {
+    const oficinaB = Number(this.IdOficinaActual);
+
+    this.loading.show();
+    this.transaccionesCajaService.ObtenerReembolso(Number(oficinaB))
+      .subscribe({
+        next: (resultado: any) => {
+          if (resultado !== null) {
+            this.TotalEfectivo = Number(resultado?.sngMonto || 0);
+            this.OtraTransaccionDocumento = Number(resultado?.strDocumento || 0);
+            this.recalcularSaldoTotal();
+            this.buscarDocumentoOtraTransaccion();
+            this.loading.hide();
+          } else {
+            this.notif.onWarning('Advertencia', 'Oficina no tiene asignado un responsable de caja menor.');
+            this.TotalEfectivo = Number(0);
+            this.recalcularSaldoTotal();
+            this.loading.hide();
+          }
+        },
+        error: (err) => {
+          this.loading.hide();
+          console.error('Error:', err);
+          this.notif.onWarning('Error', 'Ocurrió un error en la petición');
+        }
+      });
+  }
+
   setearValorAutomaticoTran() {
 
     setTimeout(() => {
@@ -2153,6 +2191,7 @@ export class TransaccionesCajaComponent implements OnInit {
           break;
         case "16077": // Cambio cheque externo
           this.habilitaChequeVacio();
+          this.limpiarFormCambCheExt();
           setTimeout(() => {
             this.formCambCheExt.get('tasaGMF')?.setValue(this.IndicadorCodigo8);
           }, 500);
@@ -2189,6 +2228,10 @@ export class TransaccionesCajaComponent implements OnInit {
           valorCheques = this.formCambCheExt.get('valorCheques')?.value;
 
           this.TotalEfectivo = Number(valorCheques - valorGMF);
+          this.recalcularSaldoTotal();
+          break;
+        case "16344": // Entrega de giros
+          this.TotalEfectivo = this.OtraTransaccionTerceroData.SaldoGiros;
           this.recalcularSaldoTotal();
           break;
       }
@@ -3064,7 +3107,13 @@ export class TransaccionesCajaComponent implements OnInit {
       error => {
         this.loading.hide();
         let mensaje = error.Mensaje;
-        console.log('error guardar transacción tesorería: ' + mensaje);
+        console.log(error);
+        console.log('JSON:', JSON.stringify(error));
+        console.log('keys:', Object.keys(error));
+        console.log('message:', error.message);
+        console.log('error:', error.error);
+        console.log('status:', error.status);
+        console.log('statusText:', error.statusText);
         this.notif.onWarning('Advertencia', mensaje);
       }
     );
