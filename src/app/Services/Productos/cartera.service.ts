@@ -339,4 +339,14 @@ export class CarteraService {
         const params = new HttpParams().set('idCuenta', idCuenta);
         return this._http.get<GarantiaPersonalCod[]>(url, { params });
     }
+
+    getGarantiasDerivadas(garantia: number, tipo: string, idCuentaActual: number): Observable<GarantiaCompartida[]> {
+        const url = `${this.environment.Url}/ObtenerGarantiasDerivadas`;
+        const params = new HttpParams().set('garantia', garantia)
+            .set('tipo', tipo)
+            .set('idCuentaActual', idCuentaActual);
+        return this._http.get<GarantiaCompartida[]>(url, { params });
+    }
+
+    
 }

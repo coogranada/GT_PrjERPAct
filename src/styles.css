@@ -169,3 +169,8 @@
 
   text-align: center;
 }
+
+.tooltip-global {
+    white-space: pre-line !important;
+    text-align: left;
+}
