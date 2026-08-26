@@ -1728,12 +1728,16 @@ export class TransaccionesCajaComponent implements OnInit {
 
   seleccionarOtraTransaccionNombres(item: any) {
     const origen = this.OrigenSeleccionBN;
-    if (origen == 1) {
+    if (origen == 1) { //Busqueda tesoreria
       this.OtraTransaccionDocumento = item.Documento;
       this.OtraTransaccionNombre = item.Nombre;
       this.OtraTransaccionIdTercero = item.IdTercero;
       this.OtraTransaccionTerceroData = item;
-    } else if (origen == 2) {
+      setTimeout(() => {
+        this.setearValorAutomatico();
+      }, 200);
+
+    } else if (origen == 2) { //Busqueda recaudos
       this.OtraTransaccionDocumentoRec = item.Documento;
       this.OtraTransaccionNombreRec = item.Nombre;
       this.OtraTransaccionIdTerceroRec = item.IdTercero;
@@ -1782,6 +1786,7 @@ export class TransaccionesCajaComponent implements OnInit {
     } else {
       this.OtraTransaccionDocumento = "";
       this.OtraTransaccionIdTercero = "";
+      this.limpiarFormulario(2);
     }
   }
 
@@ -1924,6 +1929,7 @@ export class TransaccionesCajaComponent implements OnInit {
   buscarDocumentoOtraTransaccion() {
     if (!this.OtraTransaccionDocumento) {
       this.limpiarcamposOtraTransaDocNom(1);
+      this.limpiarFormulario(2);
       return;
     }
 
@@ -1931,6 +1937,7 @@ export class TransaccionesCajaComponent implements OnInit {
 
     if (!this.OtraTransaccionDocumento) {
       this.limpiarcamposOtraTransaDocNom(1);
+      this.limpiarFormulario(2);
       return;
     }
 
@@ -1942,6 +1949,7 @@ export class TransaccionesCajaComponent implements OnInit {
           if (!result || result === 'null' || (Array.isArray(result) && result.length === 0)) {
             this.loading.hide();
             this.limpiarcamposOtraTransaDocNom(1);
+            this.limpiarFormulario(2);
             this.notif.onWarning('Advertencia', 'No se encontró documento.')
             return;
           } else {
@@ -1954,6 +1962,7 @@ export class TransaccionesCajaComponent implements OnInit {
         }, error: (err) => {
           this.loading.hide();
           this.limpiarcamposOtraTransaDocNom(1);
+          this.limpiarFormulario(2);
           console.log('Errror búsqueda por documento: ' + err);
           this.notif.onWarning('Advertencia', 'No se encontró documento.')
         }
