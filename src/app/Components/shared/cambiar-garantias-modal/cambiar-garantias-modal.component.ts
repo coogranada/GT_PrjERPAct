@@ -1114,19 +1114,29 @@ export class CambiarGarantiasModalComponent {
             this.loading.hide();
             return;
           }
+
           derivadas.forEach(d => {
-
-            const existe = this.garantiasDerivadas.some(
-              x => Number(x.lngConsecutivo) === Number(d.lngConsecutivo)
-            );
-
+          
+            const existe =
+              this.garantiasCompartidas.some(
+                x => Number(x.lngConsecutivo) === Number(d.lngConsecutivo)
+              )
+              ||
+              this.garantiasRealesAsignadas.some(
+                x => Number(x.Consecutivo) === Number(d.lngConsecutivo)
+              )
+              ||
+              this.garantiasDerivadas.some(
+                x => Number(x.lngConsecutivo) === Number(d.lngConsecutivo)
+              );
+            
             if (!existe) {
               this.garantiasDerivadas.push({
                 ...d
               });
             }
-
-          });
+          
+          });      
 
           this.actualizarGarantiasCompartidasView();
           this.calcularTotalesGarantias();
