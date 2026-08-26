@@ -968,7 +968,6 @@ export class GestionCreditoComponent {
     }
   }
 
-
   validarInsolvencia() {
     const idCuenta = Number(this.gestionCreditoForm.get('IdCuenta')?.value);
 
