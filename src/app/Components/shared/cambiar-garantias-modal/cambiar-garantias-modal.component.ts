@@ -23,10 +23,11 @@ export class CambiarGarantiasModalComponent {
   //Garantias
   public garantiasRealesAsignadas: GarantiaRealAsignada[] = [];
   public garantiasCompartidasView: GarantiaCompartida[] = [];
+  public garantiasCompartidasInicial: GarantiaCompartida[] = [];
   public isDisabledSaveGarantiasButton: boolean = true;
   public garantiasRealesAsignadasInicial: GarantiaRealAsignada[] = [];
   public garantiasDisponiblesInicialDeudor: GarantiaDisponible[] = [];
-  public garantiasCompartidasInicial: GarantiaDisponible[] = [];
+  public garantiasDerivadas: GarantiaCompartida[] = [];
   public selectedRowsGarantia: Record<string, null | number> = {
     Consecutivo: null, Descripcion: null, Tipo: null, Respalda: null, Cobertura: null
   }
@@ -51,9 +52,9 @@ export class CambiarGarantiasModalComponent {
   @Input() garantiasEliminar: any[] = [];
   @Input() garantiasAgregar: any[] = [];
   @Input() listGarantiasDisponiblesDeudor: any[] = [];
-  @Input() listGarantiasDisponiblesCodeudor: any[] = [];
-  @Input() garantiasCompartidasBackendInput: any[] = [];
+  @Input() listGarantiasDisponiblesCodeudor: GarantiaDisponible[] = [];
   @Input() garantiasRealesAsignadasInput: any[] = [];
+  @Input() garantiasCompartidasBackendInput: any[] = [];
   @Input() garantiasCompartidas: any[] = [];
   @Input() detalleGarantiaCreditos: any[] = [];
   @Input() codeudoresBasico: any[] = [];
@@ -66,8 +67,8 @@ export class CambiarGarantiasModalComponent {
   @Input() valorRespaldadoCompartidas: number = 0;
   @Input() SaldoCapital: number = 0;
   @Input() datosCuenta!: {
-    idTercero: number,
-    idCuenta: number
+    idTercero: number;
+    idCuenta: number;
     idOficina: number;
     idProducto: number;
     idConsecutivo: number;
@@ -121,40 +122,53 @@ export class CambiarGarantiasModalComponent {
   }
 
   private actualizarGarantiasCompartidasView() {
+    const desdeBackend = [...(this.garantiasCompartidasBackendInput || [])];
 
-    const backend = this.garantiasCompartidasBackendInput || [];
-
-    const desdeAsignadas = this.garantiasRealesAsignadas
-      .filter(g => Number(g.CantidadCreditos) >= 1)
-      .map(g => ({
-        lngConsecutivo: Number(g.Consecutivo),
-        lngTercero: Number(g.IdTercero) || 0,
-        IdGarantia: g.Matricula,
-        Clase: g.Clase,
-        Descripcion: g.Descripcion,
-        Tipo: this.mapTipoGarantiaInverso(g.Tipo),
-        Cobertura: Number(g.Cobertura) || 0,
-        Respalda: Number(g.TotalDeuda) || 0,
-        CantidadCreditos: Number(g.CantidadCreditos) || 0,
-        GrupoGarantia: g.GrupoGarantia ?? ''
-      }));
-
-    const idsExistentes = new Set(
-      backend.map(x => Number(x.lngConsecutivo))
+    const idsDerivadasOcultas = new Set(
+      this.garantiasDerivadas.map(
+        x => Number(x.lngConsecutivo)
+      )
     );
 
-    const mapa = new Map<number, any>();
+    const backendFiltrado =
+      desdeBackend.filter(
+        x => !idsDerivadasOcultas.has(
+          Number(x.lngConsecutivo)
+        )
+      );
 
-    backend.forEach(x => {
+    const desdeAsignadas =
+      this.garantiasRealesAsignadas
+        .filter(g => Number(g.CantidadCreditos) > 0)
+        .map(g => ({
+          lngConsecutivo: Number(g.Consecutivo),
+          lngTercero: Number(g.IdTercero) || 0,
+          IdGarantia: g.Matricula,
+          Clase: g.Clase,
+          Descripcion: g.Descripcion,
+          Tipo: this.mapTipoGarantiaInverso(g.Tipo),
+          Cobertura: Number(g.Cobertura) || 0,
+          Respalda: Number(g.TotalDeuda) || 0,
+          CantidadCreditos: Number(g.CantidadCreditos) || 0,
+          GrupoGarantia: g.GrupoGarantia ?? ''
+        }));
+
+    const mapa = new Map<number, any>();
+          
+    backendFiltrado.forEach(x => {
       mapa.set(Number(x.lngConsecutivo), { ...x });
     });
-
+    
     desdeAsignadas.forEach(x => {
       mapa.set(Number(x.lngConsecutivo), { ...x });
     });
-
-    this.garantiasCompartidasView = Array.from(mapa.values());
-
+    
+    this.garantiasDerivadas.forEach(x => {
+      mapa.set(Number(x.lngConsecutivo), { ...x });
+    });
+    
+    this.garantiasCompartidasView =
+      Array.from(mapa.values());
   }
 
   private inicializarModal(): void {
@@ -179,7 +193,6 @@ export class CambiarGarantiasModalComponent {
       this.garantiasCompartidasInicial = JSON.parse(
         JSON.stringify(this.garantiasCompartidasView)
       );
-
       this.snapshotTomado = true;
     }
   }
@@ -188,7 +201,13 @@ export class CambiarGarantiasModalComponent {
 
     const saldoActual = Number(this.SaldoCapital) || 0;
     const idCuentaActual = this.datosCuenta?.idCuenta?.toString().trim();
+    (data ?? []).forEach(g => {
 
+      const existe = this.garantiasRealesAsignadas.some(
+        r => Number(r.Consecutivo) === Number(g.Consecutivo)
+      );
+
+    });
     return (data ?? [])
       .filter(g =>
         !this.garantiasRealesAsignadas.some(
@@ -271,11 +290,12 @@ export class CambiarGarantiasModalComponent {
       JSON.stringify(this.listGarantiasDisponiblesCodeudor)
     );
 
+    this.actualizarGarantiasCompartidasView();
+    
     this.garantiasCompartidasInicial = JSON.parse(
       JSON.stringify(this.garantiasCompartidasView)
     );
 
-    this.actualizarGarantiasCompartidasView();
     this.calcularTotalesGarantias();
     this.inicializarModal();
   }
@@ -296,7 +316,6 @@ export class CambiarGarantiasModalComponent {
     return 'ROJO';
   }
 
-  //Pasando Garantias
   selectRowGarantias(tableName: string, index: number, garantiaId?: any): void {
     if (this.mostrarDetalleGarantia && garantiaId &&
       this.filaSeleccionadaGarantia === garantiaId &&
@@ -327,7 +346,8 @@ export class CambiarGarantiasModalComponent {
     return Number(garantia.Cobertura) >= Number(garantia.Respalda);
   }
 
-  onClickAgregarGarantia(index: number, tipo: 'codeudor' | 'deudor', event?: Event) {
+  onClickAgregarGarantia(index: number,tipo: 'codeudor' | 'deudor',event?: Event) 
+  {
     this.mostrarDetalleGarantia = false;
     event?.stopPropagation();
 
@@ -338,11 +358,13 @@ export class CambiarGarantiasModalComponent {
     const garantia = lista[index];
 
     if (!garantia) return;
+
     const idTercero = tipo === 'codeudor'
       ? this.codeudorSeleccionadoId
       : this.datosCuenta.idTercero;
 
     const idCuentaActual = this.datosCuenta.idCuenta?.toString().trim();
+
     const valorActual = Number(this.SaldoCapital) || 0;
 
     let grupoGarantia = (garantia.GrupoGarantia || '').toString().trim();
@@ -350,8 +372,11 @@ export class CambiarGarantiasModalComponent {
     const nuevoGrupo = `${idCuentaActual}:${valorActual}`;
 
     if (!grupoGarantia) {
+
       grupoGarantia = nuevoGrupo;
+
     } else {
+
       const existe = grupoGarantia
         .split('-')
         .some((x: string) =>
@@ -373,6 +398,7 @@ export class CambiarGarantiasModalComponent {
       .forEach((item: string) => {
 
         if (!gruposUnicos.has(item)) {
+
           gruposUnicos.add(item);
 
           const partes = item.split(':');
@@ -383,7 +409,7 @@ export class CambiarGarantiasModalComponent {
         }
       });
 
-    const cantidadCreditos = gruposUnicos.size;
+    const cantidadCreditos = (Number(garantia.CantidadCreditos) || 0) + 1;
 
     const nueva: GarantiaRealAsignada = {
       Matricula: garantia.Matricula,
@@ -406,6 +432,12 @@ export class CambiarGarantiasModalComponent {
 
     this.garantiasAgregar.push(nueva);
 
+    if (tipo === 'codeudor') {
+      this.cargarGarantiasDerivadas(
+        Number(garantia.Consecutivo),
+        garantia.Tipo
+      );
+    }
     const idxCompartida = this.garantiasCompartidas.findIndex(
       x => Number(x.lngConsecutivo) === Number(garantia.Consecutivo)
     );
@@ -415,6 +447,7 @@ export class CambiarGarantiasModalComponent {
       this.garantiasCompartidas[idxCompartida] = {
         ...this.garantiasCompartidas[idxCompartida],
         Respalda: valorRespaldaAsignado,
+
         CantidadCreditos: cantidadCreditos,
         GrupoGarantia: grupoGarantia
       };
@@ -554,21 +587,16 @@ export class CambiarGarantiasModalComponent {
       this.sonMismasGarantias(
         this.garantiasRealesAsignadas,
         this.garantiasRealesAsignadasInicial,
-        false
       );
 
     this.isDisabledLimpiarGarantiasButton =
       this.sonMismasGarantias(
         this.garantiasRealesAsignadas,
         this.garantiasRealesAsignadasInicial,
-        true
       );
   }
 
-  private sonMismasGarantias(a: any[], b: any[], limpiarButton: boolean): boolean {
-    if (!limpiarButton) {
-      if (this.garantiasRealesAsignadas.length === 0) return true;
-    }
+  private sonMismasGarantias(a: any[], b: any[]): boolean {
 
     if (a.length !== b.length) return false;
 
@@ -585,18 +613,16 @@ export class CambiarGarantiasModalComponent {
 
   onClickLimpiarGarantias() {
     this.garantiasRealesAsignadas = JSON.parse(JSON.stringify(this.garantiasRealesAsignadasInicial));
-
     this.listGarantiasDisponiblesDeudor = JSON.parse(JSON.stringify(this.garantiasDisponiblesInicialDeudor));
     this.garantiasCompartidas = JSON.parse(JSON.stringify(this.garantiasCompartidasInicial));
+    this.garantiasCompartidasView = JSON.parse(JSON.stringify(this.garantiasCompartidasInicial));
     this.listGarantiasDisponiblesCodeudor = [];
 
     Object.keys(this.selectedRowsGarantias).forEach(key => {
       this.selectedRowsGarantias[key] = null;
     });
 
-
-    this.actualizarGarantiasCompartidasView();
-
+    this.garantiasDerivadas = [];
     this.garantiasAgregar = [];
     this.garantiasEliminar = [];
 
@@ -616,7 +642,6 @@ export class CambiarGarantiasModalComponent {
     this.isDisabledSaveGarantiasButton = true;
     this.mostrarGarantiasCodeudor = false;
     this.mostrarDetalleGarantia = false;
-
   }
 
   onChangeCodeudor() {
@@ -630,16 +655,19 @@ export class CambiarGarantiasModalComponent {
   }
 
   onClickCerrarModalGarantias() {
-
     this.snapshotTomado = false;
 
     this.garantiasForm.reset();
     this.cerrar.emit(true);
     this.garantiasAgregar = [];
     this.garantiasEliminar = [];
+    this.garantiasDerivadas = [];
     this.garantiasRealesAsignadas = [];
+    this.listGarantiasDisponiblesDeudor = [];
+    this.listGarantiasDisponiblesCodeudor =[]
     this.garantiasCompartidas = []
     this.isDisabledConfirmarGarantiasButton = true;
+    this.garantiasCompartidasView = [];
     this.isDisabledLimpiarGarantiasButton = true;
     this.isDisabledSaveGarantiasButton = true;
     this.mostrarGarantiasCodeudor = false;
@@ -654,15 +682,63 @@ export class CambiarGarantiasModalComponent {
     this.SaldoCapital = 0
   }
 
+  private EliminarDerivadasPorBase(baseId: number): void {
+
+    const derivadas = this.garantiasCompartidasView.filter(
+      x => Number(x.IdGarantiaBase) === Number(baseId)
+    );
+
+
+    if (!derivadas.length) {
+      return;
+    }
+
+    const consecutivos = derivadas.map(d => Number(d.lngConsecutivo));
+
+    // Eliminar de garantiasDerivadas
+    this.garantiasDerivadas = this.garantiasDerivadas.filter(
+      x => !consecutivos.includes(Number(x.lngConsecutivo))
+    );
+
+    // Eliminar de garantiasCompartidasView
+    this.garantiasCompartidasView = this.garantiasCompartidasView.filter(
+      x => !consecutivos.includes(Number(x.lngConsecutivo))
+    );
+
+        // Eliminar de garantiasCompartidas
+    this.garantiasCompartidas = this.garantiasCompartidas.filter(
+      x => !consecutivos.includes(Number(x.lngConsecutivo))
+    );
+
+            // Eliminar de garantiasCompartidas
+    this.garantiasCompartidasBackendInput = this.garantiasCompartidasBackendInput.filter(
+      x => !consecutivos.includes(Number(x.lngConsecutivo))
+    );
+
+  }
+
+  esGarantiaDerivada(garantia: any): boolean {
+    return !!garantia.IdGarantiaBase;
+  }
+
   onClickEliminarGarantia(index: number, event?: Event) {
+
     this.mostrarDetalleGarantia = false;
     event?.stopPropagation();
 
     const garantia = this.garantiasRealesAsignadas[index];
     const esDeudor = Number(garantia.IdTercero) === this.datosCuenta.idTercero;
     const hayCodeudorSeleccionado = !!this.codeudorSeleccionadoId;
+
     const esMismoCodeudor = Number(garantia.IdTercero) === Number(this.codeudorSeleccionadoId);
-    const idCuenta = this.datosCuenta.idCuenta;
+
+    // CODEUDOR:
+    // ocultar derivadas asociadas
+    if (!esDeudor) {
+      this.EliminarDerivadasPorBase(
+        Number(garantia.Consecutivo)
+      );
+    }
 
     let valorRespaldaDisponible = 0;
     let grupoGarantiaNuevo = '';
@@ -670,6 +746,7 @@ export class CambiarGarantiasModalComponent {
     const grupo = (garantia.GrupoGarantia || '').toString().trim();
 
     if (grupo) {
+
       const items = grupo.split('-')
         .map((x: string) => x.trim())
         .filter((x: string) => x);
@@ -688,16 +765,101 @@ export class CambiarGarantiasModalComponent {
       });
 
       grupoGarantiaNuevo = gruposFiltrados.join('-');
+
     } else {
+
       valorRespaldaDisponible = Number(garantia.TotalDeuda) || 0;
+
     }
 
     let cantidadCreditos = Number(garantia.CantidadCreditos) || 0;
-    cantidadCreditos -= 1;
-
-    if (cantidadCreditos < 0) cantidadCreditos = 0;
 
     if (esDeudor) {
+
+      cantidadCreditos--;
+
+      if (cantidadCreditos < 0) {
+        cantidadCreditos = 0;
+      }
+
+    } else {
+
+      // Regla de negocio:
+      // garantía de codeudor siempre sale
+      cantidadCreditos = 0;
+
+      grupoGarantiaNuevo = '';
+      valorRespaldaDisponible = 0;
+
+    }
+
+    if (cantidadCreditos === 0) {
+
+      grupoGarantiaNuevo = '';
+      valorRespaldaDisponible = 0;
+
+    }
+
+    // BACKEND INPUT
+    const idxBackend =
+      this.garantiasCompartidasBackendInput.findIndex(
+        x =>
+          Number(x.lngConsecutivo) ===
+          Number(garantia.Consecutivo)
+      );
+
+    if (idxBackend !== -1) {
+
+      if (
+        esDeudor &&
+        cantidadCreditos > 0
+      ) {
+
+        this.garantiasCompartidasBackendInput[idxBackend] = {
+          ...this.garantiasCompartidasBackendInput[idxBackend],
+          CantidadCreditos: cantidadCreditos,
+          Respalda: valorRespaldaDisponible,
+          GrupoGarantia: grupoGarantiaNuevo
+        };
+
+      } else {
+
+        this.garantiasCompartidasBackendInput.splice(
+          idxBackend,
+          1
+        );
+
+      }
+
+    }
+
+    // COMPARTIDAS
+    const idxCompartida =
+      this.garantiasCompartidas.findIndex(
+        x =>
+          Number(x.lngConsecutivo) ===
+          Number(garantia.Consecutivo)
+      );
+
+    if (idxCompartida !== -1) {
+
+      if ( esDeudor && cantidadCreditos > 0) {
+
+        this.garantiasCompartidas[idxCompartida] = {
+          ...this.garantiasCompartidas[idxCompartida],
+          CantidadCreditos: cantidadCreditos,
+          Respalda: valorRespaldaDisponible,
+          GrupoGarantia: grupoGarantiaNuevo
+        };
+
+      } else {
+        this.garantiasCompartidas.splice(idxCompartida, 1);
+      }
+    }
+
+    // DEVOLVER A DISPONIBLES DEUDOR
+    if (esDeudor) {
+
       this.listGarantiasDisponiblesDeudor.push({
         Consecutivo: garantia.Consecutivo,
         Matricula: garantia.Matricula,
@@ -710,41 +872,44 @@ export class CambiarGarantiasModalComponent {
         CantidadCreditos: cantidadCreditos,
         GrupoGarantia: grupoGarantiaNuevo
       });
+
     }
 
-    const idxAgregada = this.garantiasAgregar.findIndex(
-      g => Number(g.Consecutivo) === Number(garantia.Consecutivo)
-    );
+    const idxAgregada =this.garantiasAgregar.findIndex(
+        g =>Number(g.Consecutivo) === Number(garantia.Consecutivo)
+      );
 
     if (idxAgregada !== -1) {
-      this.garantiasAgregar.splice(idxAgregada, 1);
-    } else {
-      this.garantiasEliminar.push(garantia);
-    }
-    this.garantiasRealesAsignadas.splice(index, 1);
 
-    const idxCompartida = this.garantiasCompartidas.findIndex(
-      x => Number(x.lngConsecutivo) === Number(garantia.Consecutivo)
+      this.garantiasAgregar.splice(
+        idxAgregada,
+        1
+      );
+
+    } else {
+
+      const yaExisteEliminar = this.garantiasEliminar.some(
+          g => Number(g.Consecutivo) === Number(garantia.Consecutivo)
+        );
+        
+      if (!yaExisteEliminar) {
+        this.garantiasEliminar.push(garantia);
+      }
+
+    }
+
+    // ELIMINAR DE ASIGNADAS
+    this.garantiasRealesAsignadas.splice(
+      index,
+      1
     );
 
-    if (idxCompartida !== -1) {
-      if (!esDeudor) {
-        this.garantiasCompartidas.splice(idxCompartida, 1);
-      } else {
-        if (cantidadCreditos > 0) {
-          this.garantiasCompartidas[idxCompartida] = {
-            ...this.garantiasCompartidas[idxCompartida],
-            Respalda: valorRespaldaDisponible,
-            CantidadCreditos: cantidadCreditos,
-            GrupoGarantia: grupoGarantiaNuevo
-          };
-        } else {
-          this.garantiasCompartidas.splice(idxCompartida, 1);
-        }
-      }
-    }
-
-    if (!esDeudor && hayCodeudorSeleccionado && esMismoCodeudor) {
+    // DEVOLVER A DISPONIBLES CODEUDOR
+    if (
+      !esDeudor &&
+      hayCodeudorSeleccionado &&
+      esMismoCodeudor
+    ) {
 
       this.listGarantiasDisponiblesCodeudor.push({
         Consecutivo: garantia.Consecutivo,
@@ -755,12 +920,14 @@ export class CambiarGarantiasModalComponent {
         Respalda: valorRespaldaDisponible,
         Cobertura: garantia.Cobertura,
         IdTercero: garantia.IdTercero,
-        CantidadCreditos: cantidadCreditos,
-        GrupoGarantia: grupoGarantiaNuevo
+        CantidadCreditos: garantia.CantidadCreditos - 1,
+        GrupoGarantia: ''
       });
+
     }
 
     this.actualizarGarantiasCompartidasView();
+
     this.calcularTotalesGarantias();
 
   }
@@ -775,7 +942,6 @@ export class CambiarGarantiasModalComponent {
   }
 
   onClickDetalleGarantia(garantiaId: any, tipo?: any, tabla?: string, strMatricula?: string) {
-
     if (this.mostrarDetalleGarantia &&
       this.filaSeleccionadaGarantia === garantiaId &&
       this.tablaDetalleActiva === tabla
@@ -796,53 +962,76 @@ export class CambiarGarantiasModalComponent {
     this.carteraService.obtenerDetalleGarantiaCreditos(
       garantiaId,
       this.mapTipoGarantia(tipo)
-    )
-      .pipe(finalize(() => this.loading.hide()))
-      .subscribe({
-        next: (data) => {
+    ).pipe(finalize(() => this.loading.hide())).subscribe({
+      next: (data) => {
+        let detalle = data || [];
 
-          let detalle = data || [];
+        if (tabla === 'compartidas') {
+          const garantiaVista = this.garantiasCompartidasView.find(
+            x => Number(x.lngConsecutivo) === Number(garantiaId)
+          );
 
-          const idCuentaActual = Number(this.datosCuenta.idCuenta) || 0;
-          const esDisponibleOCompartida =
-            tabla === 'deudorDisponibles' ||
-            tabla === 'codeudorDisponibles' ||
-            tabla === 'compartidas';
+          if (garantiaVista?.GrupoGarantia) {
 
-          if (esDisponibleOCompartida) {
-            detalle = detalle.filter((item: any) => {
+            const cuentasVigentes = garantiaVista.GrupoGarantia
+              .split('-')
+              .map((x: string) => x.split(':')[0]?.trim());
 
-              const idDetalle = Number(
-                item.IdCuenta ?? item.lngIdCuenta ?? item.Cuenta
-              ) || 0;
-
-              return idDetalle !== idCuentaActual;
-            });
+            detalle = detalle.filter(
+              (item: any) =>
+                cuentasVigentes.includes(
+                  String(item.IdCuenta).trim()
+                )
+            );
           }
+        }
 
-          if (tabla === 'asignadas' || tabla === 'compartidas') {
+        const idCuentaActual = Number(this.datosCuenta.idCuenta) || 0;
+        const esDisponible = tabla === 'deudorDisponibles' || tabla === 'codeudorDisponibles';
 
-            const garantiaActual = this.garantiasRealesAsignadas.find(
-              g => Number(g.Consecutivo) === Number(garantiaId)
+        if (esDisponible) {
+          detalle = detalle.filter((item: any) => {
+            const idDetalle = Number(
+              item.IdCuenta ??
+              item.lngIdCuenta ??
+              item.Cuenta
+            ) || 0;
+            return idDetalle !== idCuentaActual;
+          });
+
+        }
+
+        if (tabla === 'asignadas' || tabla === 'compartidas') {
+
+          const garantiaActual = this.garantiasRealesAsignadas.find(
+            g => Number(g.Consecutivo) === Number(garantiaId)
+          );
+
+          const tieneCreditoActual = garantiaActual?.GrupoGarantia
+            ?.toString()
+            .split('-')
+            .some((x: string) =>
+              (x.split(':')[0] || '').trim() === String(idCuentaActual)
             );
 
-            const tieneCreditoActual = garantiaActual?.GrupoGarantia
-              ?.toString()
-              .split('-')
-              .some((x: string) =>
-                (x.split(':')[0] || '').trim() === String(idCuentaActual)
-              );
+          if (tieneCreditoActual) {
 
-            if (tieneCreditoActual) {
+            const yaExiste = detalle.some((item: any) => {
 
-              const yaExiste = detalle.some((item: any) => {
-                const idDetalle = Number(item.IdCuenta ?? item.lngIdCuenta ?? item.Cuenta) || 0;
-                return idDetalle === idCuentaActual;
-              });
+              const idDetalle = Number(
+                item.IdCuenta ??
+                item.lngIdCuenta ??
+                item.Cuenta
+              ) || 0;
 
-              if (!yaExiste) {
+              return idDetalle === idCuentaActual;
 
-                const garantiaBase: DetalleGarantiaCreditoDto = detalle.length > 0
+            });
+
+            if (!yaExiste) {
+
+              const garantiaBase: DetalleGarantiaCreditoDto =
+                detalle.length > 0
                   ? detalle[0]
                   : {
                     Garantia: garantiaId,
@@ -856,47 +1045,46 @@ export class CambiarGarantiasModalComponent {
                     ValorCredito: 0
                   };
 
-                const cuentaTexto = this.generarCuenta(
-                  this.datosCuenta.idOficina,
-                  this.datosCuenta.idProducto,
-                  this.datosCuenta.idConsecutivo,
-                  this.datosCuenta.idDigito);
-                const linea = this.datosCuenta.linea;
-                const nombreLinea = this.datosCuenta.nombreLinea;
-                const documento = this.datosCuenta.documento;
-                const nombre = this.datosCuenta.nombre;
-                const valorCredito = Number(this.SaldoCapital) || 0;
-                const registroFake: DetalleGarantiaCreditoDto = {
-                  ...garantiaBase,
-                  strMatricula: strMatricula || garantiaBase.strMatricula || '', 
-                  IdCuenta: idCuentaActual,
-                  Cuenta: cuentaTexto,
-                  Linea: linea,
-                  NombreLinea: nombreLinea,
-                  IdDeudor: documento,
-                  NombreDeudor: nombre,
-                  ValorCredito: valorCredito
-                };
-                detalle.push(registroFake);
-              }
+              const cuentaTexto = this.generarCuenta(
+                this.datosCuenta.idOficina,
+                this.datosCuenta.idProducto,
+                this.datosCuenta.idConsecutivo,
+                this.datosCuenta.idDigito
+              );
+
+              const registroFake: DetalleGarantiaCreditoDto = {
+                ...garantiaBase,
+                strMatricula:
+                  strMatricula ||
+                  garantiaBase.strMatricula ||
+                  '',
+                IdCuenta: idCuentaActual,
+                Cuenta: cuentaTexto,
+                Linea: this.datosCuenta.linea,
+                NombreLinea: this.datosCuenta.nombreLinea,
+                IdDeudor: this.datosCuenta.documento,
+                NombreDeudor: this.datosCuenta.nombre,
+                ValorCredito: Number(this.SaldoCapital) || 0
+              };
+
+              detalle.push(registroFake);
             }
           }
-
-          this.detalleGarantiaCreditos = detalle;
-          this.mostrarDetalleGarantia = true;
-        },
-
-        error: () => {
-
-          this.notif.warning(
-            'Advertencia',
-            'No fue posible consultar los créditos asociados.',
-            ConfiguracionNotificacion.configRightTop
-          );
-
-          this.cerrarDetalleGarantia();
         }
-      });
+
+        this.detalleGarantiaCreditos = detalle;
+        this.mostrarDetalleGarantia = true;
+      },
+      error: () => {
+        this.notif.warning(
+          'Advertencia',
+          'No fue posible consultar los créditos asociados.',
+          ConfiguracionNotificacion.configRightTop
+        );
+
+        this.cerrarDetalleGarantia();
+      }
+    });
   }
 
   private generarCuenta(oficina: any, producto: any, consecutivo: any, digito: any): string {
@@ -908,5 +1096,62 @@ export class CambiarGarantiasModalComponent {
     return `${ofi}-${pro}-${con}-${dig}`;
   }
 
+  obtenerTooltipGarantiaDerivada(item: GarantiaCompartida): string {
+    return (
+      `Garantía derivada:\n` +
+      `Garantía base: ${item.IdGarantiaBaseExterna}\n` +
+      `Crédito compartido: ${item.CreditoIntermedio ?? 'No disponible'}`
+    );
+  }
 
+  private cargarGarantiasDerivadas( garantia: number, tipo: string ): void {
+    this.loading.show();
+    this.carteraService.getGarantiasDerivadas(garantia,tipo,this.datosCuenta.idCuenta)
+      .subscribe({
+        next: derivadas => {
+          if (!derivadas?.length) {
+            
+            this.loading.hide();
+            return;
+          }
+
+          derivadas.forEach(d => {
+          
+            const existe =
+              this.garantiasCompartidas.some(
+                x => Number(x.lngConsecutivo) === Number(d.lngConsecutivo)
+              )
+              ||
+              this.garantiasRealesAsignadas.some(
+                x => Number(x.Consecutivo) === Number(d.lngConsecutivo)
+              )
+              ||
+              this.garantiasDerivadas.some(
+                x => Number(x.lngConsecutivo) === Number(d.lngConsecutivo)
+              );
+            
+            if (!existe) {
+              this.garantiasDerivadas.push({
+                ...d
+              });
+            }
+          
+          });      
+
+          this.actualizarGarantiasCompartidasView();
+          this.calcularTotalesGarantias();
+          this.loading.hide();
+
+        },
+
+        error: err => {
+          this.loading.hide();
+          console.error(
+            'Error consultando garantías derivadas',
+            err
+          );
+        }
+
+      });
+  }
 }

@@ -61,6 +61,8 @@ export class TransaccionesCajaComponent implements OnInit {
   formChequeRet!: FormGroup;
   formSustituir !: FormGroup;
   formCambCheInt !: FormGroup;
+  formCambCheExt !: FormGroup;
+
 
   public UsuarioActual: string = "";
   public OficinaActual: string = "";
@@ -112,6 +114,7 @@ export class TransaccionesCajaComponent implements OnInit {
   public IdUsuarioActual: number = 0;
   public IdUsuarioAutoriza: number = 0;
   public OrigenSeleccionBN: number = 0;
+  public IndicadorCodigo8: number = 0;
   public NaturalezaTransa: number | null = null;
   public TabPorDefecto: number | null = null;
   public ProductoSeleccionado: number | null = null;
@@ -195,6 +198,7 @@ export class TransaccionesCajaComponent implements OnInit {
     }
 
     this.validarEstadoTaquilla();
+    this.obtenerIndicadores();
     this.VolverArriba();
     this.vbleDocCuenta = false;
 
@@ -247,6 +251,12 @@ export class TransaccionesCajaComponent implements OnInit {
       valor: { value: null, disabled: true },
     });
 
+    this.formCambCheExt = this.fb.group({
+      tasaGMF: [{ value: '', disabled: true }],
+      valorCheques: { value: null, disabled: false },
+      valorGMF: { value: null, disabled: true }
+    });
+
     $('#ModalCondiciones').on('hidden.bs.modal', function () {
       $('body').css('padding-right', '0');
       $('body').removeClass('modal-open');
@@ -280,6 +290,22 @@ export class TransaccionesCajaComponent implements OnInit {
           this.loading.hide();
           console.error('Error:', err);
           this.notif.onWarning('Error', 'Ocurrió un error en la petición');
+        }
+      });
+  }
+
+  obtenerIndicadores() {
+    this.transaccionesCajaService
+      .ObtenerIndicadores()
+      .subscribe({
+        next: (resultado: any[]) => {
+          this.loading.hide();
+          this.IndicadorCodigo8 = resultado.find(x => x.intCodigo === 8)?.sngTasa ?? null;
+        },
+        error: (err) => {
+          this.loading.hide();
+          console.error('Error:', err);
+          this.notif.onWarning('Error', 'Ocurrió un error en la petición.');
         }
       });
   }
@@ -991,6 +1017,7 @@ export class TransaccionesCajaComponent implements OnInit {
         this.formTransaccion.get('idTransaccion')?.reset('');
         this.limpiarFormSustituir();
         this.limpiarFormCambCheInt();
+        this.limpiarFormCambCheExt();
 
         //arreglos
         this.ListProducto = [];
@@ -1041,6 +1068,7 @@ export class TransaccionesCajaComponent implements OnInit {
         this.formTransaccion.get('idTransaccion')?.reset('');
         this.limpiarFormSustituir();
         this.limpiarFormCambCheInt();
+        this.limpiarFormCambCheExt();
 
         //arreglos
         this.ListProducto = [];
@@ -1112,6 +1140,14 @@ export class TransaccionesCajaComponent implements OnInit {
       idBanco: null,
       beneficiario: '',
       valor: null
+    });
+  }
+
+  limpiarFormCambCheExt() {
+    this.formCambCheExt.patchValue({
+      tasaGMF: null,
+      valorCheques: null,
+      valorGMF: null
     });
   }
 
@@ -1691,12 +1727,16 @@ export class TransaccionesCajaComponent implements OnInit {
 
   seleccionarOtraTransaccionNombres(item: any) {
     const origen = this.OrigenSeleccionBN;
-    if (origen == 1) {
+    if (origen == 1) { //Busqueda tesoreria
       this.OtraTransaccionDocumento = item.Documento;
       this.OtraTransaccionNombre = item.Nombre;
       this.OtraTransaccionIdTercero = item.IdTercero;
       this.OtraTransaccionTerceroData = item;
-    } else if (origen == 2) {
+      setTimeout(() => {
+        this.setearValorAutomatico();
+      }, 200);
+
+    } else if (origen == 2) { //Busqueda recaudos
       this.OtraTransaccionDocumentoRec = item.Documento;
       this.OtraTransaccionNombreRec = item.Nombre;
       this.OtraTransaccionIdTerceroRec = item.IdTercero;
@@ -1745,6 +1785,7 @@ export class TransaccionesCajaComponent implements OnInit {
     } else {
       this.OtraTransaccionDocumento = "";
       this.OtraTransaccionIdTercero = "";
+      this.limpiarFormulario(2);
     }
   }
 
@@ -1887,6 +1928,7 @@ export class TransaccionesCajaComponent implements OnInit {
   buscarDocumentoOtraTransaccion() {
     if (!this.OtraTransaccionDocumento) {
       this.limpiarcamposOtraTransaDocNom(1);
+      this.limpiarFormulario(2);
       return;
     }
 
@@ -1894,6 +1936,7 @@ export class TransaccionesCajaComponent implements OnInit {
 
     if (!this.OtraTransaccionDocumento) {
       this.limpiarcamposOtraTransaDocNom(1);
+      this.limpiarFormulario(2);
       return;
     }
 
@@ -1905,6 +1948,7 @@ export class TransaccionesCajaComponent implements OnInit {
           if (!result || result === 'null' || (Array.isArray(result) && result.length === 0)) {
             this.loading.hide();
             this.limpiarcamposOtraTransaDocNom(1);
+            this.limpiarFormulario(2);
             this.notif.onWarning('Advertencia', 'No se encontró documento.')
             return;
           } else {
@@ -1917,6 +1961,7 @@ export class TransaccionesCajaComponent implements OnInit {
         }, error: (err) => {
           this.loading.hide();
           this.limpiarcamposOtraTransaDocNom(1);
+          this.limpiarFormulario(2);
           console.log('Errror búsqueda por documento: ' + err);
           this.notif.onWarning('Advertencia', 'No se encontró documento.')
         }
@@ -2106,6 +2151,34 @@ export class TransaccionesCajaComponent implements OnInit {
       });
   }
 
+  obtenerSaldoGiro() {
+    const oficinaB = Number(this.IdOficinaActual);
+
+    this.loading.show();
+    this.transaccionesCajaService.ObtenerReembolso(Number(oficinaB))
+      .subscribe({
+        next: (resultado: any) => {
+          if (resultado !== null) {
+            this.TotalEfectivo = Number(resultado?.sngMonto || 0);
+            this.OtraTransaccionDocumento = Number(resultado?.strDocumento || 0);
+            this.recalcularSaldoTotal();
+            this.buscarDocumentoOtraTransaccion();
+            this.loading.hide();
+          } else {
+            this.notif.onWarning('Advertencia', 'Oficina no tiene asignado un responsable de caja menor.');
+            this.TotalEfectivo = Number(0);
+            this.recalcularSaldoTotal();
+            this.loading.hide();
+          }
+        },
+        error: (err) => {
+          this.loading.hide();
+          console.error('Error:', err);
+          this.notif.onWarning('Error', 'Ocurrió un error en la petición');
+        }
+      });
+  }
+
   setearValorAutomaticoTran() {
 
     setTimeout(() => {
@@ -2126,6 +2199,10 @@ export class TransaccionesCajaComponent implements OnInit {
           break;
         case "16077": // Cambio cheque externo
           this.habilitaChequeVacio();
+          this.limpiarFormCambCheExt();
+          setTimeout(() => {
+            this.formCambCheExt.get('tasaGMF')?.setValue(this.IndicadorCodigo8);
+          }, 500);
           break;
       }
 
@@ -2152,11 +2229,37 @@ export class TransaccionesCajaComponent implements OnInit {
           this.TotalEfectivo = this.OtraTransaccionTerceroData.SaldoAcreedores;
           this.recalcularSaldoTotal();
           break;
+        case "16077": // Cambio cheques externos
+          var valorGMF = 0;
+          var valorCheques = 0;
+          valorGMF = this.formCambCheExt.get('valorGMF')?.value;
+          valorCheques = this.formCambCheExt.get('valorCheques')?.value;
+
+          this.TotalEfectivo = Number(valorCheques - valorGMF);
+          this.recalcularSaldoTotal();
+          break;
+        case "16344": // Entrega de giros
+          this.TotalEfectivo = this.OtraTransaccionTerceroData.SaldoGiros;
+          this.recalcularSaldoTotal();
+          break;
       }
 
     }, 500);
 
 
+  }
+
+  calcularGMFCamCheExt() {
+    var valorCheques = 0;
+    var valorGMF = 0;
+
+    valorCheques = this.formCambCheExt.get('valorCheques')?.value;
+    if (valorCheques && valorCheques > 0) {
+      valorGMF = valorCheques * this.IndicadorCodigo8;
+      this.formCambCheExt.get('valorGMF')?.setValue(valorGMF);
+      this.setearValorAutomatico();
+      this.activarChequesTab();
+    }
   }
 
 
@@ -2909,7 +3012,8 @@ export class TransaccionesCajaComponent implements OnInit {
       idConvenio: 0, // dejar en cero por defecto
       idUsuarioAutoriza: this.IdUsuarioAutoriza,
       naturaleza: this.NaturalezaTransa,
-      idPuc: 0 // dejar en cero por defecto
+      idPuc: 0, // dejar en cero por defecto
+      valorChequeCambio: 0 // dejar en cero por defecto
     }
 
     this.ListChequesUltimo = this.ListCheques; // Se hace copia del objeto
@@ -2985,6 +3089,9 @@ export class TransaccionesCajaComponent implements OnInit {
           strObservacion: observacionCI
         });
         break;
+      case "16077": //CAMBIAR CHEQUE INTERNO
+        transaccion.valorChequeCambio = Number(this.formCambCheExt.get('valorCheques')?.value);
+        break;
     }
 
 
@@ -3008,7 +3115,13 @@ export class TransaccionesCajaComponent implements OnInit {
       error => {
         this.loading.hide();
         let mensaje = error.Mensaje;
-        console.log('error guardar transacción tesorería: ' + mensaje);
+        console.log(error);
+        console.log('JSON:', JSON.stringify(error));
+        console.log('keys:', Object.keys(error));
+        console.log('message:', error.message);
+        console.log('error:', error.error);
+        console.log('status:', error.status);
+        console.log('statusText:', error.statusText);
         this.notif.onWarning('Advertencia', mensaje);
       }
     );
@@ -3162,26 +3275,57 @@ export class TransaccionesCajaComponent implements OnInit {
           return false;
         }
         break;
+      case "16077": // CAMBIO CHEQUE EXTERNO
+        const valorRelacionCh = this.formCambCheExt.get('valorCheques')?.value;
+        const valorGMF = this.formCambCheExt.get('valorGMF')?.value;
+
+        if (Number(valorRelacionCh) <= 0) {
+          this.notif.onWarning('Advertencia', 'Transacción debe ser mayor a cero.');
+          return false;
+        }
+
+        if (Number(valorGMF) <= 0) {
+          this.notif.onWarning('Advertencia', 'El valor del GMF es válido.');
+          return false;
+        }
+
+        if (!this.validarTransaccionChequeConsigna(true)) {
+          return false;
+        }
+
+        break;
     }
 
     return true;
   }
 
-  validarTransaccionChequeConsigna(): boolean {
+  validarTransaccionChequeConsigna(exigirCheque: boolean = false): boolean {
 
-    if (!this.TotalCheque || Number(this.TotalCheque) === 0) {
-      return true;
+    if (!exigirCheque) {
+      if (!this.TotalCheque || Number(this.TotalCheque) === 0) {
+        return true;
+      }
     }
 
-    if (this.ListCheques.length === 0) {
+    if (!this.ListCheques || this.ListCheques.length === 0) {
       this.notif.onWarning('Advertencia', 'Debe ingresar al menos un cheque.');
       return false;
     }
 
-    if (Number(this.TotalCheque) !== Number(this.TotalCheques)) {
-      this.notif.onWarning('Advertencia', 'El valor en cheque debe coincidir con el total de cheques agregados.');
-      return false;
+    if (!exigirCheque) {
+      if (Number(this.TotalCheque) !== Number(this.TotalCheques)) {
+        this.notif.onWarning('Advertencia', 'El valor en cheque debe coincidir con el total de cheques agregados.');
+        return false;
+      }
+    } else {
+      const valorRelacionCh = this.formCambCheExt.get('valorCheques')?.value;
+      if (Number(valorRelacionCh) !== Number(this.TotalCheques)) {
+        this.notif.onWarning('Advertencia', 'El valor total de cheques debe coincidir con el total de cheques agregados ($ ' + valorRelacionCh + ').');
+        return false;
+      }
     }
+
+
 
     return true;
   }

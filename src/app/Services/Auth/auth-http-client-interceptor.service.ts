@@ -46,7 +46,7 @@ export class AuthHttpClientInterceptorService implements HttpInterceptor {
     const skipError = req.url.includes('skipErrorHandling=true');
     const rawError = req.url.includes('rawError=true');
     return next.handle(authRequest).pipe(
-      
+
       map(event => {
         if (!(event instanceof HttpResponse))
           return event;
@@ -83,8 +83,13 @@ export class AuthHttpClientInterceptorService implements HttpInterceptor {
           });
           this.router.navigate(['/login']);
           return throwError(() => err.error);
-        } else if (err.status == 400)
+        } else if (err.status == 400) {
+          if (err.error?.payload) {
+            const body = this.encryption.decrypt(err.error.payload);
+            return throwError(() => body);
+          }          
           return throwError(() => err.error);
+        }
         return throwError(() => new Error('Error en la solicitud HTTP', err.error));
       }));
   }
