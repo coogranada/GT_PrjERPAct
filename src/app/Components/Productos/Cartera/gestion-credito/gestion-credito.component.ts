@@ -1737,19 +1737,25 @@ export class GestionCreditoComponent {
     
     const idTercero = this.gestionCreditoForm.get('IdTercero')?.value;
 
-    this.getGarantiasAsignadas().pipe( concatMap(
-      () => this.getGarantiasDisponibles(idTercero, false))).subscribe({
-      next: () => {
-        this.getGAarantiasCompartidas();
-        this.mostrarModal = true;
-
-        setTimeout(() => { this.modalGarantias.abrir(); });
-
-        this.loading.hide();  
-      }, error: () => {
-      this.loading.hide();
-    }
-    });
+    this.getGarantiasAsignadas().pipe(
+      concatMap(() =>
+          this.getGarantiasDisponibles(idTercero, false)
+        ),
+      concatMap(() =>
+          this.getGAarantiasCompartidas()
+        )
+      ).subscribe({
+        next: () => {   
+          this.mostrarModal = true;   
+          setTimeout(() => {
+            this.modalGarantias.abrir();
+          });   
+          this.loading.hide();
+        },
+        error: () => {
+          this.loading.hide();
+        }
+      });
   }
 
   getDatosSimulacion(){
@@ -1763,11 +1769,9 @@ export class GestionCreditoComponent {
       linea: this.gestionCreditoForm.get('IdLinea')?.value || '',
       nombreLinea: this.gestionCreditoForm.get('Linea')?.value || '',
       documento: this.gestionCreditoForm.get('NumeroDocumento')?.value ||
-        this.gestionCreditoForm.get('IdTercero')?.value ||
-        '',
+        this.gestionCreditoForm.get('IdTercero')?.value || '',
       nombre: this.gestionCreditoForm.get('NombreDeudor')?.value ||
-        this.gestionCreditoForm.get('Nombre')?.value ||
-        ''
+        this.gestionCreditoForm.get('Nombre')?.value || ''
     };  
   }
 
@@ -1818,17 +1822,17 @@ export class GestionCreditoComponent {
     );
   }
 
-  getGAarantiasCompartidas(){
+  getGAarantiasCompartidas() {
     const idTercero = this.gestionCreditoForm.get('IdTercero')?.value;
     const idCuenta = this.gestionCreditoForm.get('IdCuenta')?.value;
-    this.carteraService.getGarantiasCompartidas(idCuenta, idTercero)
-    .subscribe({ next: (data) => {
-        this.garantiasCompartidasBackend = data ?? [];
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    });
+    
+    return this.carteraService
+      .getGarantiasCompartidas(idCuenta, idTercero)
+      .pipe(
+        tap((data: any) => {
+          this.garantiasCompartidasBackend = data ?? [];
+        })
+      );
   }
 
   onClickCerrarModalGarantias() {

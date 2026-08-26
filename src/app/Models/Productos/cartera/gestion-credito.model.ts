@@ -573,6 +573,9 @@ export interface ObtenerCodeudorBasicoModel {
 export interface GarantiaCompartida {
   lngConsecutivo: number;
   IdGarantia: string;
+  IdGarantiaBase?: number | null;
+  IdGarantiaBaseExterna: string;
+  CreditoIntermedio?: string | null;
   Clase: string;
   Cobertura: number;
   Respalda: number;

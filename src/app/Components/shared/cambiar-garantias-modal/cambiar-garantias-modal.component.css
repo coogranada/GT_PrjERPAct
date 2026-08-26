@@ -38,8 +38,8 @@
 }
 
 
-.detalle-acordeon .table > thead > tr > th,
-.detalle-acordeon .table > tbody > tr > td {
+.detalle-acordeon .table>thead>tr>th,
+.detalle-acordeon .table>tbody>tr>td {
     padding-left: 16px !important;
     padding-right: 16px !important;
 }
@@ -48,7 +48,8 @@
     text-align: right;
 }
 
-tr.fila-detalle, tr.fila-detalle td {
+tr.fila-detalle,
+tr.fila-detalle td {
     background-color: rgb(229, 229, 229) !important;
 }
 
@@ -138,3 +139,19 @@ tr.tr-selected {
     z-index: 2;
     font-weight: bold;
 }
+
+/* DERIVADA */
+
+.badge-derivada {
+    display: inline-flex;
+    align-items: center;
+
+    border-radius: 12px;
+
+    background: #fff3cd;
+    color: #856404;
+
+    font-size: 11px;
+    font-weight: 600;
+}
+
