@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LoginService } from '../../../app/Services/Login/login.service';
 import { Router } from '@angular/router';
+import { StorageSecurity } from '../../utils/storage-security.util';
 declare var $: any;
 @Component({
   selector: 'app-aplicaciones-colaborativas',
@@ -15,9 +16,7 @@ export class AplicacionesColaborativasComponent implements OnInit {
   constructor(private loginService: LoginService, private router: Router) {}
   ngOnInit() {
     this.IrArriba();
-    let data : string | null = localStorage.getItem('Data');
-    this.DatosUsuario = JSON.parse(window.atob(data == null ? "" : data));
-
+    this.DatosUsuario = StorageSecurity.getData();   
     this.loginService.GetSesionXUsuario(this.DatosUsuario.IdUsuario).subscribe(
       (result : any) => {
         if (!result.Estado) {

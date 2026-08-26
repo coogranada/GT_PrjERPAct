@@ -10,6 +10,7 @@ import { map } from 'rxjs/operators';
 import { LoginService } from '../../../../../app/Services/Login/login.service';
 import { Router } from '@angular/router';
 import { AlertService } from '../../../../Services/Alert/alert.service';
+import { StorageSecurity } from '../../../../utils/storage-security.util';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -58,9 +59,7 @@ export class PerfilesComponent implements OnInit {
     this.moduleValidationService.ValidatePermissionsModule(this.CodModulo);
     this.ObtenerPerfiles();
     this.validateForm();
-    let data : string | null = localStorage.getItem('Data');
-    this.DatosUsuario = JSON.parse(window.atob(data == null ? "" : data));
-
+    this.DatosUsuario = StorageSecurity.getData();
     this.loginService.GetSesionXUsuario(this.DatosUsuario.IdUsuario).subscribe(
       result => {
         if (!result.Estado) {

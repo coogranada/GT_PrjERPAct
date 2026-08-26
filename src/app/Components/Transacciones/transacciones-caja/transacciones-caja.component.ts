@@ -13,6 +13,7 @@ import { lastValueFrom } from 'rxjs';
 import { ShareComponentModule } from '../../../Modules/share-component.module';
 import { ModuleValidationService } from '../../../Services/Enviroment/moduleValidation.service';
 import { ChequeDTO, ChequeRetDTO } from '../../../Models/Transacciones/TransaccionesCaja/Cheque.model';
+import { StorageSecurity } from '../../../utils/storage-security.util';
 
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -177,9 +178,7 @@ export class TransaccionesCajaComponent implements OnInit {
   //#region "Inicialización"
   ngOnInit() {
     this.moduleValidationService.ValidatePermissionsModule(this.Modulo);
-
-    let data = localStorage.getItem('Data');
-    let DataUser = JSON.parse(window.atob(data == null ? "" : data));
+    const DataUser = StorageSecurity.getData();
     if (DataUser != null) {
       this.UsuarioActual = DataUser.Usuario;
       this.OficinaActual = DataUser.Oficina;

@@ -10,6 +10,7 @@ import { fromEvent } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LoginService } from '../../../Services/Login/login.service';
 import { Router } from '@angular/router';
+import { StorageSecurity } from '../../../utils/storage-security.util';
 
 @Component({
   selector: 'app-gmf',
@@ -47,8 +48,7 @@ export class GMFComponent implements OnInit {
     //DFRAMIREZ: Se comentan lienas DAILY 23/01/2026
     //this.GFMFrom.get('FechaInicial')?.setValue(moment(_fechaAyer).format('YYYY-MM-DD'));
     //this.GFMFrom.get('FechaFinal')?.setValue(moment(_fechaAhora).format('YYYY-MM-DD'));
-    let datas = localStorage.getItem('Data');
-    this.DatosUsuario = JSON.parse(window.atob(datas == null ? "" : datas));
+    this.DatosUsuario = StorageSecurity.getData();
 
     this.loginService.GetSesionXUsuario(this.DatosUsuario.IdUsuario).subscribe(
       result => {

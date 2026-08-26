@@ -39,6 +39,7 @@ import { AlertService } from '../../../Services/Alert/alert.service';
 import { MiListaProductosService } from '../../../Services/Informes/mi-lista-productos.service';
 import { Estados } from '../../../../environments/Estados';
 import { LoadingService } from '../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../utils/storage-security.util';
 
 declare var $: any;
 const PrimaryWhite = 'rgb(13,165,80)';
@@ -261,8 +262,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     private MiListaProductosService: MiListaProductosService,
     private loading: LoadingService
     ) {
-      let data : string | null = localStorage.getItem('Data');
-      this.resultDataStore  = JSON.parse(window.atob(data == null ? "" : data));
+    this.resultDataStore = StorageSecurity.getData();
     this.moduloLocal = 12;
     const arrayExample = [{
       'IdModulo': this.moduloLocal,
@@ -311,8 +311,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     
     this.activarBasico = true;
     this.BloquearTabs();
-    let data : string | null = localStorage.getItem('Data');
-    this.DatosUsuario = JSON.parse(window.atob(data == null ? "" : data));
+    this.DatosUsuario = StorageSecurity.getData();
     
     this.loginService.GetSesionXUsuario(this.DatosUsuario.IdUsuario).subscribe(
       result => {
@@ -326,8 +325,6 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
   }
 
   ngAfterViewInit() {
-    let data : string | null = localStorage.getItem('Data');
-    const resultPerfil = JSON.parse(window.atob(data == null ? "" : data));
     this.infoJuridicoComponent.emitEventOficina.subscribe(result => {
       if (result) {
         this.bloquearOficina = true;
@@ -545,8 +542,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     
     const operaSeleccionada = +this.juridicosFrom.get('operacion')?.value;
     this.operacionSeleccion = operaSeleccionada;
-    let data : string | null = localStorage.getItem('Data');
-    const resultPerfil = JSON.parse(window.atob(data == null ? "" : data));
+    const resultPerfil = StorageSecurity.getData();     
     this.operacionesModel.idOperacion = operaSeleccionada;
     this.operacionesModel.idPerfil = resultPerfil.idPerfilUsuario;
     this.operacionesModel.idModulo = this.CodModulo;
@@ -559,8 +555,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       this.EnviarOperacionFormularios(operaSeleccionada);
       if (operaSeleccionada !== 2 && operaSeleccionada !== 5 && operaSeleccionada !== 23 && operaSeleccionada !== 31 && operaSeleccionada !== 9
         && operaSeleccionada !== 1) {
-          let data : string | null = localStorage.getItem('Data');
-        const DataUserLog = JSON.parse(window.atob(data == null ? "" : data));
+           const DataUserLog = StorageSecurity.getData();          
         if (DataUserLog.NumeroOficina !== '3') {
           this.gestionatrOperacionSeleccionada(operaSeleccionada, resultPerfil);        
         } else {
@@ -631,11 +626,8 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
             this.infoJuridicoComponent.MostrarConvenio = false;
             this.entrevistaComponent.MostrarFechaExento = false;
           // });
-        } else if (operaSeleccionada === 5) { // Creacion de asoaciados juridicos
-          let data = localStorage.getItem('Data');
-          const DataUserLog = JSON.parse(window.atob(data == null ? "" : data));
+        } else if (operaSeleccionada === 5) { // Creacion de asoaciados juridicos    
           this.OpcionSeleccionada = '/Creación juridico';
-
           this.ProAprobacion = '0';
           this.ProOficina = '0';
           this.ProNit = '0';
@@ -693,8 +685,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           this.AlertaProbaroNegar(operaSeleccionada);
 
         } else if (operaSeleccionada === 23) { // Gestion operaciones
-          let data = localStorage.getItem('Data');
-           const DataUserLog = JSON.parse(window.atob(data == null ? "" : data));
+          const DataUserLog = StorageSecurity.getData();           
           if (DataUserLog.NumeroOficina !== '3') {
             const strNit = this.infoJuridicoComponent.infoJuridicoFrom.get('Nit')?.value;
             if (strNit === '' || strNit === null || strNit === undefined) {
@@ -1013,8 +1004,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     }
   }
   AprobaroNegar(operaSeleccionada : any) {
-    let data = localStorage.getItem('Data');
-    const DataUserLog = JSON.parse(window.atob(data == null ? "" : data));
+    const DataUserLog = StorageSecurity.getData();    
     this.operacionesModel.idOperacion = operaSeleccionada;
     this.operacionesModel.idPerfil = DataUserLog.idPerfilUsuario;
     this.operacionesModel.idModulo = this.CodModulo;
@@ -1074,8 +1064,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     }
   }
   Editar() {
-    let data = localStorage.getItem('Data');
-    const resultPerfil = JSON.parse(window.atob(data == null ? "" : data));
+    const resultPerfil = StorageSecurity.getData();    
     const strNit = this.infoJuridicoComponent.infoJuridicoFrom.get('Nit')?.value;
     if (strNit === '' || strNit === null || strNit === undefined) {
       this.notif.onWarning('Advertencia', 'Debe buscar un asociado para realizar esta operación.');
@@ -1212,8 +1201,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     const valueState = this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.value;
     if (valueState !== null) {
       if (valueState.IdEstado != 42 && valueState.IdEstado != 47) {
-        let data = localStorage.getItem('Data');
-        const resultPerfil = JSON.parse(window.atob(data == null ? "" : data));
+        const resultPerfil = StorageSecurity.getData();   
         this.OpcionSeleccionada = '/Reingreso';
         const strNit = this.infoJuridicoComponent.infoJuridicoFrom.get('Nit')?.value;
         if (strNit === '' || strNit === null || strNit === undefined) {
@@ -1370,8 +1358,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     } else {
       this.bloquearBuscar = true;
       this.bloquearNombre = true;
-      let data = localStorage.getItem('Data');
-      const resultPerfil = JSON.parse(window.atob(data == null ? "" : data));
+      const resultPerfil = StorageSecurity.getData();   
       this.OpcionSeleccionada = '/Reingreso';
       const strNit = this.infoJuridicoComponent.infoJuridicoFrom.get('Nit')?.value;
       if (strNit === '' || strNit === null || strNit === undefined) {
@@ -1527,8 +1514,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     const valueState = this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.value;
     if (valueState !== null) {
       if (valueState.IdEstado != 42 && valueState.IdEstado != 47) {
-        let data = localStorage.getItem('Data');
-        const resultPerfil = JSON.parse(window.atob(data == null ? "" : data));
+        const resultPerfil = StorageSecurity.getData();  
         this.OpcionSeleccionada = '/Imprimir afiliación';
         const strNit = this.infoJuridicoComponent.infoJuridicoFrom.get('Nit')?.value;
         if (strNit === '' || strNit === null || strNit === undefined) {
@@ -1557,8 +1543,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     } else {
       this.bloquearBuscar = true;
       this.bloquearNombre = true;
-      let data = localStorage.getItem('Data');
-      const resultPerfil = JSON.parse(window.atob(data == null ? "" : data));
+      const resultPerfil = StorageSecurity.getData();   
       this.OpcionSeleccionada = '/Imprimir afiliación';
       const strNit = this.infoJuridicoComponent.infoJuridicoFrom.get('Nit')?.value;
       if (strNit === '' || strNit === null || strNit === undefined) {
@@ -2578,8 +2563,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     const valueState = this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.value;
     if (valueState !== null) {
       if (valueState.IdEstado != 42 && valueState.IdEstado != 47 && valueState.IdEstado != 55) {
-        let data = localStorage.getItem('Data');
-        const resultPerfil = JSON.parse(window.atob(data == null ? "" : data));
+        const resultPerfil = StorageSecurity.getData();   
         this.bloquearBuscar = true;
         this.bloquearNombre = true;
         this.OpcionSeleccionada = '/Cancelar solicitud de retiro';
@@ -2650,8 +2634,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     } else {
       this.bloquearBuscar = true;
       this.bloquearNombre = true;
-      let data = localStorage.getItem('Data');
-      const resultPerfil = JSON.parse(window.atob(data == null ? "" : data));
+      const resultPerfil = StorageSecurity.getData();   
       this.bloquearBuscar = true;
       this.bloquearNombre = true;
       this.OpcionSeleccionada = '/Cancelar solicitud de retiro';
@@ -6248,8 +6231,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           this.solicitudRetiroForm?.reset();
           this.mostarErrorMotivoDescripcion = false;
           // aqui realizar el registro
-          let data = localStorage.getItem('Data');
-          const resultPerfil = JSON.parse(window.atob(data == null ? "" : data));
+          const resultPerfil = StorageSecurity.getData();   
           let solucitudR = localStorage.getItem('solicituRetiroJson');
           const resulMotivoEnvio = JSON.parse(window.atob(solucitudR == null ? "" : solucitudR));
           this.objMotivo.Descripcion = this.solicitudRetiroForm.get('ObservacionMotivo')?.value;
@@ -6296,8 +6278,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         this.botonBasico.nativeElement.click();
         this.solicitudRetiroForm?.reset();
         this.mostarErrorMotivoDescripcion = false;
-        let data = localStorage.getItem('Data');
-        const resultPerfil = JSON.parse(window.atob(data == null ? "" : data));
+        const resultPerfil = StorageSecurity.getData();     
         let solucitudR = localStorage.getItem('solicituRetiroJson');
         const resulMotivoEnvio = JSON.parse(window.atob(solucitudR == null ? "" : solucitudR));
         // aqui realizar el registro
@@ -7682,8 +7663,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
   AbrirCorrespondenciaImpresion() {
     
     // aqui tengo que guardar la correspondencia y abrir el modal de servicios
-    let data = localStorage.getItem('Data')
-    const resultPerfil = JSON.parse(window.atob(data == null ? "" : data));
+    const resultPerfil = StorageSecurity.getData(); 
     const operacion = +this.juridicosFrom.get('operacion')?.value;
     // const tercero = localStorage.getItem('TerceroNatura');
    

@@ -13,6 +13,7 @@ import { map, count } from 'rxjs/operators';
 import { GeneralesService } from '../../../../../Services/Productos/generales.service';
 import moment from "moment";
 import { LoadingService } from '../../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../../utils/storage-security.util';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var Tiff: any;
@@ -101,6 +102,7 @@ export class DisponiblesComponent implements OnInit {
   public datoDigito : any;
   public datoNombreProducto : any;
   public datoMedioPago : any;
+  public accionSeleccionada = false;
 
   dataCanaleslist: any;
   dataTitulareslist: any;
@@ -286,6 +288,7 @@ export class DisponiblesComponent implements OnInit {
   BloquearCanalesInputs: boolean = false;
   // INICIO ENCABEZADO
   ValorSeleccionado() {
+    this.accionSeleccionada = true;
     this.ImagenTiff = [];
     this.BloquearCanales = false;
     this.BloquearCanalesInputs = false;
@@ -333,6 +336,7 @@ export class DisponiblesComponent implements OnInit {
       this.DisponibleOperacionFrom.get('Codigo')?.value !== '40')
       this.BuscarPorCuenta();
     if (this.DisponibleOperacionFrom.get('Codigo')?.value === '2') {          // Buscar
+      this.accionSeleccionada = false;
       this.clearFrom();
       this.MedioPago();
       this.resultDiaCortePago = undefined;
@@ -2284,6 +2288,7 @@ export class DisponiblesComponent implements OnInit {
         this.ModalLibretas.nativeElement.click();
         this.DisponibleOperacionFrom.get('Codigo')?.reset();
         this.notif.success('Exitoso', 'La activación de las libretas se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+        this.accionSeleccionada = false;
         this.fetchActiveLibretas();
       },
       error => {
@@ -4439,6 +4444,7 @@ export class DisponiblesComponent implements OnInit {
               this.DisponibleForm.get('IdEstado')?.setValue(0);
             } else {
               this.notif.success('Exitoso', 'El cambio estado se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+              this.accionSeleccionada = false;
               this.btnCambiarEstado = false;
               this.Guardarlog(estadoLog);
               if (this.cambioEstadoGenerarPdfBool) {
@@ -4512,6 +4518,7 @@ export class DisponiblesComponent implements OnInit {
               this.DisponibleForm.get('IdEstado')?.setValue(0);
             } else {
               this.notif.success('Exitoso', 'El cambio estado se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+              this.accionSeleccionada = false;
               this.btnCambiarEstado = false;
               this.Guardarlog(estadoLog);
               this.BuscarPorCuenta();
@@ -4553,6 +4560,7 @@ export class DisponiblesComponent implements OnInit {
               this.DisponibleForm.get('IdEstado')?.setValue(0);
             } else {
               this.notif.success('Exitoso', 'El cambio estado se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+              this.accionSeleccionada = false;
               this.btnCambiarEstado = false;
               this.Guardarlog(estadoLog);
               this.BuscarPorCuenta();
@@ -4638,6 +4646,7 @@ export class DisponiblesComponent implements OnInit {
               this.DisponibleForm.get('IdEstado')?.setValue(0);
             } else {
               this.notif.success('Exitoso', 'El cambio estado se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+              this.accionSeleccionada = false;
               this.btnCambiarEstado = false;
               this.Guardarlog(estadoLog);
               this.BuscarPorCuenta();
@@ -5211,6 +5220,7 @@ export class DisponiblesComponent implements OnInit {
               this.BloquearLinea = false;
               this.BloquearTimbrarMensaje = false;
               this.notif.success('Exitoso', 'La cuenta se guardó correctamente.', ConfiguracionNotificacion.configRightTop);
+              this.accionSeleccionada = false;
               this.isSaving = false;
               this.btnGuardar = true;
               this.BloquearAutorizadoTituloInput(1);
@@ -5306,6 +5316,7 @@ export class DisponiblesComponent implements OnInit {
                   this.BloquearLinea = false;
                   this.BloquearTimbrarMensaje = false;
                   this.notif.success('Exitoso', 'La cuenta se guardó correctamente.', ConfiguracionNotificacion.configRightTop);
+                  this.accionSeleccionada = false;
                   this.isSaving = false;
                   this.btnGuardar = true;
                   this.BloquearAutorizadoTituloInput(1);
@@ -5391,6 +5402,7 @@ export class DisponiblesComponent implements OnInit {
             this.BloquearLinea = false;
             this.BloquearTimbrarMensaje = false;
             this.notif.success('Exitoso', 'La cuenta se guardó correctamente.', ConfiguracionNotificacion.configRightTop);
+            this.accionSeleccionada = false;
             this.isSaving = false;
             this.btnGuardar = true;
             this.BloquearAutorizadoTituloInput(1);
@@ -5487,6 +5499,7 @@ export class DisponiblesComponent implements OnInit {
                 this.BloquearLinea = false;
                 this.BloquearTimbrarMensaje = false;
                 this.notif.success('Exitoso', 'La cuenta se guardó correctamente.', ConfiguracionNotificacion.configRightTop);
+                this.accionSeleccionada = false;
                 this.isSaving = false;
                 this.btnGuardar = true;
                 this.BloquearAutorizadoTituloInput(1);
@@ -5555,9 +5568,8 @@ export class DisponiblesComponent implements OnInit {
   TipoNovedad: string = "";
   AsignarCupo: boolean = false;
   ActualizarDisponible() {
-    let data: string | null = localStorage.getItem('Data');
-    const dataUser = JSON.parse(window.atob(data == null ? "" : data));
-    this.DisponibleForm.get('OficinaCambio')?.setValue(+dataUser.NumeroOficina);
+    this.dataUser = StorageSecurity.getData();
+    this.DisponibleForm.get('OficinaCambio')?.setValue(+this.dataUser.NumeroOficina);
 
     if (this.DisponibleForm.get('IdOficina')?.value !== null
       && this.DisponibleForm.get('IdOficina')?.value !== undefined
@@ -5588,10 +5600,10 @@ export class DisponiblesComponent implements OnInit {
                 this.BloquearDatoAutorizado = false;
                 this.DescriTipoFirma = true;
                 this.notif.success('Exitoso', 'Se adicionó y/o eliminó autorizado correctamente.', ConfiguracionNotificacion.configRightTop);
+                this.accionSeleccionada = false;
                 this.btnGuardar = true;
                 this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
-                this.btnActualizar = true;
-               
+                this.btnActualizar = true;               
                 this.bloquearbtnActalizar = false;
                 this.bloquearbtnCalcular = false;
                 this.selectEstado = true;
@@ -5651,6 +5663,7 @@ export class DisponiblesComponent implements OnInit {
               this.BloquearDatoAutorizado = false;
               this.DescriTipoFirma = true;
               this.notif.success('Exitoso', 'Se adicionó y/o eliminó autorizado correctamente.', ConfiguracionNotificacion.configRightTop);
+              this.accionSeleccionada = false;
               this.btnGuardar = true;
               this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
               this.btnActualizar = true;
@@ -5716,6 +5729,7 @@ export class DisponiblesComponent implements OnInit {
                 this.loading.hide();
                 this.BloquearAsociado = false;
                 this.notif.success('Exitoso', 'El cambio asesor externo se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+                this.accionSeleccionada = false;
                 this.btnGuardar = true;
                 let asesorExternoLog: any = {
                   IdAsesorExternoAnterior: this.datoAsesorExterno.IdAsesorExterno == null || this.datoAsesorExterno.IdAsesorExterno == 0 ? "" : this.datoAsesorExterno.IdAsesorExterno,
@@ -5754,6 +5768,7 @@ export class DisponiblesComponent implements OnInit {
                 this.loading.hide();
                 this.BloquearAsociado = false;
                 this.notif.success('Exitoso', 'El cambio asesor externo se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+                this.accionSeleccionada = false;
                 this.btnGuardar = true;
                 let asesorExternoLog: any = {
                   IdAsesorExternoAnterior: this.datoAsesorExterno.IdAsesorExterno == null ? "" : this.datoAsesorExterno.IdAsesorExterno,
@@ -5854,6 +5869,7 @@ export class DisponiblesComponent implements OnInit {
                 this.BloquearAsociado = false;
                 this.notif.success('Exitoso', 'El cambio de libreta o tarjeta se realizó correctamente.',
                   ConfiguracionNotificacion.configRightTop);
+                this.accionSeleccionada = false;
                 this.BloquearNumeroTarjeta = false;
                 this.btnGuardar = true;
                 this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
@@ -5894,8 +5910,7 @@ export class DisponiblesComponent implements OnInit {
             && this.DisponibleForm.get('NumeroTarjeta')?.value !== undefined
             && this.DisponibleForm.get('NumeroTarjeta')?.value !== '') {
             this.loading.show();
-            let data: string | null = localStorage.getItem('Data');
-            this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+            this.dataUser = StorageSecurity.getData();
             this.DisponibleForm.get('IdUsuarioERP')?.setValue(this.dataUser.IdUsuario);
             // Notificador
             var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
@@ -5916,6 +5931,7 @@ export class DisponiblesComponent implements OnInit {
                 this.loading.hide();
                 this.BloquearAsociado = false;
                 this.notif.success('Exitoso', 'El cambio de libreta o tarjeta se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+                this.accionSeleccionada = false;
                 this.BloquearNumeroTarjeta = false;
                 this.btnGuardar = true;
                 this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
@@ -5964,6 +5980,7 @@ export class DisponiblesComponent implements OnInit {
                 this.loading.hide();
                 this.BloquearAsociado = false;
                 this.notif.success('Exitoso', 'Cambio de libreta o tarjeta se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+                this.accionSeleccionada = false;
                 this.BloquearNumeroTarjeta = false;
                 this.btnGuardar = true;
                 this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
@@ -6002,8 +6019,7 @@ export class DisponiblesComponent implements OnInit {
             && this.DisponibleForm.get('NumeroTarjeta')?.value !== undefined
             && this.DisponibleForm.get('NumeroTarjeta')?.value !== '' || this.TipoNovedad != "") {              
             this.loading.show();
-            let data: string | null = localStorage.getItem('Data');
-            this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+            this.dataUser = StorageSecurity.getData();
             this.DisponibleForm.get('IdUsuarioERP')?.setValue(this.dataUser.IdUsuario);
             // Notificador
             var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
@@ -6024,6 +6040,7 @@ export class DisponiblesComponent implements OnInit {
                 this.loading.hide();
                 this.BloquearAsociado = false;
                 this.notif.success('Exitoso', 'Cambio de libreta o tarjeta se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+                this.accionSeleccionada = false;
                 this.BloquearNumeroTarjeta = false;
                 this.btnGuardar = true;
                 this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
@@ -6078,6 +6095,7 @@ export class DisponiblesComponent implements OnInit {
               this.loading.hide();
               this.BloquearAsociado = false;
               this.notif.success('Exitoso', 'El cambio de operacion permitida se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+              this.accionSeleccionada = false;
               this.btnGuardar = true;
               this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
               this.btnActualizar = true;
@@ -6142,6 +6160,7 @@ export class DisponiblesComponent implements OnInit {
             this.showBtnCanalesActualizar = false;
             this.BloquearAsociado = false;
             this.notif.success('Exitoso', 'La edición de canales se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+            this.accionSeleccionada = false;
             // Notificador
             var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
             var IdCuenta = +result.IdCuenta;
@@ -6317,6 +6336,7 @@ export class DisponiblesComponent implements OnInit {
                 this.BloquearDiaCortePlazo = false;
                 this.BloquearMedioPago = false;
                 this.notif.success('Exitoso', 'El medio de pago se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+                this.accionSeleccionada = false;
                 this.btnGuardar = true;
                 this.btnActualizar = true;
                 this.btnActualizarCanales = true;
@@ -6399,6 +6419,7 @@ export class DisponiblesComponent implements OnInit {
                 this.BloquearDiaCortePlazo = false;
                 this.BloquearMedioPago = false;
                 this.notif.success('Exitoso', 'El medio de pago se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+                this.accionSeleccionada = false;
                 this.btnGuardar = true;
                 this.btnActualizar = true;
                 this.btnActualizarCanales = true;
@@ -6534,6 +6555,7 @@ export class DisponiblesComponent implements OnInit {
             this.loading.hide();
             this.BloquearAsociado = false;
             this.notif.success('Exitoso', 'El asignar cupo se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+            this.accionSeleccionada = false;
             this.btnGuardar = true;
             this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
             this.DisponibleForm.get('IdCuentaCupo')?.setValue(result.IdCuentaCupo);
@@ -6572,6 +6594,7 @@ export class DisponiblesComponent implements OnInit {
             this.loading.hide();
             this.BloquearAsociado = false;
             this.notif.success('Exitoso', 'Activación cuenta se realizó correctamente', ConfiguracionNotificacion.configRightTop);
+            this.accionSeleccionada = false;
             this.btnGuardar = true;
             this.Guardarlog({});
             this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
@@ -6620,6 +6643,7 @@ export class DisponiblesComponent implements OnInit {
           this.loading.hide();
           this.BuscarPorCuenta();
           this.notif.success('Exitoso', 'Se marca/desmarca GMF correctamente.', ConfiguracionNotificacion.configRightTop);
+          this.accionSeleccionada = false;
           this.Guardarlog({ExoneradaGMFActualiza : this.DisponibleForm.get('ExoneradaGmf')?.value});
           setTimeout(() => {
             this.ObtenerHistorial();            
@@ -6645,6 +6669,7 @@ export class DisponiblesComponent implements OnInit {
         this.DisponiblesServices.TimbrarMensaje(payload).subscribe(( x: any) => {
           this.loading.hide();
           this.notif.success('Exitoso', 'Se editó timbrar mensaje correctamente.', ConfiguracionNotificacion.configRightTop);
+          this.accionSeleccionada = false;
           this.Guardarlog({TimbrarMensajeActualiza  : this.DisponibleForm.get('TibrarComentario')?.value});
           setTimeout(() => {
             this.ObtenerHistorial();
@@ -6680,6 +6705,7 @@ export class DisponiblesComponent implements OnInit {
              ExoneradoCuotaManejoActualiza  : this.DisponibleForm.get('ExoCobroHasta')?.value == null ? "" : this.DisponibleForm.get('ExoCobroHasta')?.value
            }
            this.notif.success('Exitoso', 'Se exonera cuota correctamente.', ConfiguracionNotificacion.configRightTop);
+           this.accionSeleccionada = false;
            this.Guardarlog(log);
            setTimeout(() => {
              this.ObtenerHistorial();
@@ -6715,6 +6741,7 @@ export class DisponiblesComponent implements OnInit {
         this.DisponiblesServices.MarcarODesmarcarExentoGMF(payload).subscribe(( x: any) => {
           this.loading.hide();
           this.notif.success('Exitoso', 'Se marca/desmarca exento GMF correctamente.', ConfiguracionNotificacion.configRightTop);
+          this.accionSeleccionada = false;
           this.Guardarlog({ExentoGMFActualiza : this.DisponibleForm.get('Exenta')?.value});
           setTimeout(() => {
             this.ObtenerHistorial();
@@ -6794,6 +6821,7 @@ export class DisponiblesComponent implements OnInit {
         this.loading.hide();
         this.BloquearAsociado = false;
         this.notif.success('Exitoso', 'Activación cuenta se realizó correctamente', ConfiguracionNotificacion.configRightTop);
+        this.accionSeleccionada = false;
         this.btnGuardar = true;
         this.Guardarlog({});
         this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
@@ -7579,6 +7607,7 @@ export class DisponiblesComponent implements OnInit {
       $('#libreta').removeClass('activar');
       $('#libreta').removeClass('active');
       this.notif.success('Exitoso', 'La cancelación de cupo se guardó correctamente.', ConfiguracionNotificacion.configRightTop);
+      this.accionSeleccionada = false;
       this.Guardarlog(log);
       // Notificador
       var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;

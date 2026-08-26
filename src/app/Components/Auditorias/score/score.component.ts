@@ -9,6 +9,7 @@ import { fromEvent } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { LoginService } from '../../../Services/Login/login.service';
+import { StorageSecurity } from '../../../utils/storage-security.util';
 @Component({
   selector: 'app-score',
   templateUrl: './score.component.html',
@@ -41,8 +42,7 @@ export class ScoreComponent implements OnInit {
     //DFRAMIREZ: Se comentan lienas DAILY 23/01/2026
     //this.ScoreForm.get('FechaInicial')?.setValue(moment(_fechaAyer).format('YYYY-MM-DD'));
     //this.ScoreForm.get('FechaFinal')?.setValue(moment(_fechaAhora).format('YYYY-MM-DD'));
-    let datas = localStorage.getItem('Data');
-    this.DatosUsuario = JSON.parse(window.atob(datas == null ? "" : datas));
+    this.DatosUsuario = StorageSecurity.getData();
 
     this.loginService.GetSesionXUsuario(this.DatosUsuario.IdUsuario).subscribe(
       result => {

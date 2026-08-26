@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { LoginService } from '../../../Services/Login/login.service';
 import { AlertService } from '../../../Services/Alert/alert.service';
+import { StorageSecurity } from '../../../utils/storage-security.util';
 
 
 @Component({
@@ -59,9 +60,7 @@ export class DebitosAutomaticosComponent implements OnInit {
     this.ValidarFormulario();
     this.IrArriba();
     $('#selectDocumento').focus().select();
-    let data = localStorage.getItem('Data');
-    this.DatosUsuario = JSON.parse(window.atob(data == null ? "" : data));
-
+    this.DatosUsuario = StorageSecurity.getData();
     this.loginService.GetSesionXUsuario(this.DatosUsuario.IdUsuario).subscribe(
       result => {
         if (!result.Estado) {

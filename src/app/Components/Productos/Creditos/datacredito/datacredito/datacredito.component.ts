@@ -8,6 +8,7 @@ import { AlertService } from '../../../../../Services/Alert/alert.service';
 import swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { LoadingService } from '../../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../../utils/storage-security.util';
 
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -66,9 +67,7 @@ export class DatacreditoComponent implements OnInit {
 
     const iframe: any = document.getElementById('iframeReporte');
     iframe.src = url;
-
-    let data = localStorage.getItem('Data');
-    this.DatosUsuario = JSON.parse(window.atob(data == null ? "" : data));
+    this.DatosUsuario = StorageSecurity.getData();
     this.loginService.GetSesionXUsuario(this.DatosUsuario.IdUsuario).subscribe(
       result => {
         if (!result.Estado) {
@@ -97,10 +96,8 @@ export class DatacreditoComponent implements OnInit {
   }
 
   ObtenerDatos() {
-    let data = localStorage.getItem('Data');
-    if (!data) return;
-
-    const DataUser = JSON.parse(window.atob(data == null ? "" : data));
+    const DataUser = StorageSecurity.getData();
+    if (!DataUser) return;     
     this.DataForm.patchValue({
       UsuarioConsulta: DataUser.Nombre,
       IdUsuario: + DataUser.IdUsuarioSGF,

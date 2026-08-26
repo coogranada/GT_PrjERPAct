@@ -8,6 +8,7 @@ import { fromEvent } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AlertService } from '../../../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../../utils/storage-security.util';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -56,15 +57,16 @@ export class TarjetaHabientesComponent implements OnInit {
     this.validateForm();
     this.IrArriba();
   }
-
-  ObtenerDatosUsuario() {
-    let data = localStorage.getItem('Data');
-    this.DatosUsuario = JSON.parse(window.atob(data == null ? "" : data));
+ObtenerDatosUsuario() {
+    this.DatosUsuario = StorageSecurity.getData();
     let permi = localStorage.getItem('Permisos');
-    this.PermisosUsuario = JSON.parse(CryptoJS.AES.decrypt((permi == null ? "" : permi), this.PassJs.pass).toString(CryptoJS.enc.Utf8));
-      // JSON.parse(window.atob(localStorage.getItem('Permisos')));
-  }
-
+    this.PermisosUsuario = JSON.parse(
+      CryptoJS.AES.decrypt(
+        (permi == null ? "" : permi),
+        this.PassJs.pass
+      ).toString(CryptoJS.enc.Utf8)
+    );
+}
   ConsultarAsociado() {
     this.loading.show();
     if (this.TarjetaHabientesForm.valid) {

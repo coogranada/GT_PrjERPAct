@@ -12,6 +12,7 @@ import { AlertService } from '../../../../../Services/Alert/alert.service';
 import { DisponiblesService } from '../../../../../Services/Productos/disponible.service';
 import { ConfiguracionNotificacion } from '../../../../../../environments/config.noticaciones';
 import { LoadingService } from '../../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../../utils/storage-security.util';
 declare var $: any;
 
 @Component({
@@ -105,6 +106,7 @@ export class TerminoComponent implements OnInit {
   ArrayCondiciones: any;
   dataTitulareslist: any;
   dataBeneficiarioslist: any;
+  public accionSeleccionada = false;
 
 
   MostrasAlertaAsociado = false;
@@ -247,8 +249,7 @@ export class TerminoComponent implements OnInit {
   // ENCABEZADO
 
   Operaciones() {
-    let data = localStorage.getItem('Data')
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+     this.dataUser = StorageSecurity.getData();
     const arrayExample = [{
       'IdModulo': this.CodModulo,
       'IdUsuario': this.dataUser.IdUsuario,
@@ -332,6 +333,7 @@ export class TerminoComponent implements OnInit {
   btnDeleteReciprocidad: boolean = false;
   bloquearCesionTitulo: boolean = false;
   ValorSeleccionado() {
+    this.accionSeleccionada = true;
     this.tab1.nativeElement.click();
     this.TabSeleccion("negociacion");
     this.btnActualizarCesionTitulo = false;
@@ -399,6 +401,7 @@ export class TerminoComponent implements OnInit {
           }
       }
     if (this.TerminoOperacionForm.get('Codigo')?.value === '2') {          //Buscar
+      this.accionSeleccionada = false;
       this.BenificiariosElminar = [];
       this.ClearFrom();
       this.operacionEscogida = '/Buscar';
@@ -1465,8 +1468,7 @@ export class TerminoComponent implements OnInit {
   }
   MapearDatosCuenta(result : any) {
     if (result !== null) {
-      let data = localStorage.getItem('Data')
-      this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+       this.dataUser = StorageSecurity.getData();
       if (result.length >= 1) {
         this.dataObjet = result;
         // Encabezado 
@@ -2057,8 +2059,7 @@ export class TerminoComponent implements OnInit {
       );
   }
   MapearDatosUsuario() {
-    let data = localStorage.getItem('Data')
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    const datauser = StorageSecurity.getData();
     this.TerminoForm.get('NombreOficina')?.setValue(this.dataUser.Oficina);
     this.TerminoForm.get('NumeroOficina')?.setValue(this.dataUser.NumeroOficina);
     this.TerminoForm.get('IdAsesor')?.setValue(this.dataUser.IdAsesor);
@@ -2674,8 +2675,7 @@ export class TerminoComponent implements OnInit {
       const oficina = this.TerminoForm.get('NumeroOficina')?.value;
       this.datoOficina = oficina;
     }
-    let data = localStorage.getItem('Data')
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.dataUser = StorageSecurity.getData();
     this.TerminoForm.get('NroTitulo')?.setValue(this.TerminoForm.get('NroTitulo')?.value.replace(/\s/g, ''));
     if (this.TerminoForm.get('NroTitulo')?.value !== null
       && this.TerminoForm.get('NroTitulo')?.value !== undefined
@@ -2945,6 +2945,7 @@ export class TerminoComponent implements OnInit {
                       this.btnAsesoria = true;
                       this.VolverArriba();
                       this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                      this.accionSeleccionada = false;
                       this.Guardarlog(itemsLogApertura);
                       this.bloquearCampos();
                       this.btnOpcionActualizarBeneficiario = true;
@@ -3033,6 +3034,7 @@ export class TerminoComponent implements OnInit {
                           this.btnAsesoria = true;
                           this.VolverArriba();
                           this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                          this.accionSeleccionada = false;
                           this.Guardarlog(itemsLogApertura);
                           this.bloquearCampos();
                           this.btnOpcionActualizarBeneficiario = true;
@@ -3116,6 +3118,7 @@ export class TerminoComponent implements OnInit {
                         this.btnAsesoria = true;
                         this.VolverArriba();
                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                        this.accionSeleccionada = false;
                         this.Guardarlog(itemsLogApertura);
                         this.bloquearCampos();
                         this.btnOpcionActualizarBeneficiario = true;
@@ -3206,6 +3209,7 @@ export class TerminoComponent implements OnInit {
                             this.btnAsesoria = true;
                             this.VolverArriba();
                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                            this.accionSeleccionada = false;
                             this.Guardarlog(itemsLogApertura);
                             this.bloquearCampos();
                             this.btnOpcionActualizarBeneficiario = true;
@@ -3290,6 +3294,7 @@ export class TerminoComponent implements OnInit {
                       this.btnAsesoria = true;
                       this.VolverArriba();
                       this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                      this.accionSeleccionada = false;
                       this.Guardarlog(itemsLogApertura);
                       this.bloquearCampos();
                       this.btnOpcionActualizarBeneficiario = true;
@@ -3380,6 +3385,7 @@ export class TerminoComponent implements OnInit {
                           this.btnAsesoria = true;
                           this.VolverArriba();
                           this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                          this.accionSeleccionada = false;
                           this.Guardarlog(itemsLogApertura);
                           this.bloquearCampos();
                           this.btnOpcionActualizarBeneficiario = true;
@@ -3555,6 +3561,7 @@ export class TerminoComponent implements OnInit {
                     this.btnAsesoria = true;
                     this.VolverArriba();
                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                    this.accionSeleccionada = false;
                     this.Guardarlog(itemsLogApertura);
                     this.bloquearCampos();
                     this.btnOpcionActualizarBeneficiario = true;
@@ -3643,6 +3650,7 @@ export class TerminoComponent implements OnInit {
                         this.btnAsesoria = true;
                         this.VolverArriba();
                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                        this.accionSeleccionada = false;
                         this.Guardarlog(itemsLogApertura);
                         this.bloquearCampos();
                         this.btnOpcionActualizarBeneficiario = true;
@@ -3726,6 +3734,7 @@ export class TerminoComponent implements OnInit {
                       this.btnAsesoria = true;
                       this.VolverArriba();
                       this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                      this.accionSeleccionada = false;
                       this.Guardarlog(itemsLogApertura);
                       this.bloquearCampos();
                       this.btnOpcionActualizarBeneficiario = true;
@@ -3814,6 +3823,7 @@ export class TerminoComponent implements OnInit {
                           this.btnAsesoria = true;
                           this.VolverArriba();
                           this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                          this.accionSeleccionada = false;
                           this.Guardarlog(itemsLogApertura);
                           this.bloquearCampos();
                           this.btnOpcionActualizarBeneficiario = true;
@@ -3896,6 +3906,7 @@ export class TerminoComponent implements OnInit {
                     this.btnAsesoria = true;
                     this.VolverArriba();
                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                    this.accionSeleccionada = false;
                     this.Guardarlog(itemsLogApertura);
                     this.bloquearCampos();
                     this.btnOpcionActualizarBeneficiario = true;
@@ -3984,6 +3995,7 @@ export class TerminoComponent implements OnInit {
                         this.btnAsesoria = true;
                         this.VolverArriba();
                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                        this.accionSeleccionada = false;
                         this.Guardarlog(itemsLogApertura);
                         this.bloquearCampos();
                         this.btnOpcionActualizarBeneficiario = true;
@@ -5029,6 +5041,7 @@ export class TerminoComponent implements OnInit {
       this.bloquearDocumentoBenf = false;
       this.btnActualizarBeneficiario = true;
       this.notif.onSuccess('Exitoso', 'Se adicionó y/o eliminó beneficiario correctamente.');
+      this.accionSeleccionada = false;
       this.btnOpcionActualizarBeneficiario = true;
       this.clearBeneficiario();
       let beneficiariosLog: any[] = [];
@@ -5899,6 +5912,7 @@ export class TerminoComponent implements OnInit {
     this.CesionTituloEliminar.forEach(( x: any) => this.dataObjetCesionTitulo.push(x));
     this.TerminoService.ActualizarCesionTituloTermino(this.dataObjetCesionTitulo).subscribe(( x: any) => {
       this.notif.onSuccess('Exitoso', 'Se adicionó y/o eliminó cesion de CDAT.');
+      this.accionSeleccionada = false;
       this.TerminoForm.controls["CesionTituloNombre"].setValue("");
       this.TerminoForm.controls["CesionTituloDocumento"].setValue("");
       this.TerminoForm.controls["CesionTituloDocumento"].disable();
@@ -5984,6 +5998,7 @@ export class TerminoComponent implements OnInit {
     this.TerminoService.ReciprocidadSetDateList(this.ListBajarAHistorial).subscribe(( x: any) => {
       this.loading.hide();
       this.notif.onSuccess('Exitoso', 'El corregir reciprocidad se realizó correctamente.');
+      this.accionSeleccionada = false;
       this.TerminoService.GuardarObservacion({
         "IdObseCambioEstado": 0,
         "lngCuenta": Number(this.TerminoForm.get('IdCuenta')?.value),
@@ -6062,6 +6077,7 @@ export class TerminoComponent implements OnInit {
     this.loading.show();
     this.TerminoService.EliminarCuentaReciprocidadTermino(this.ListEliminaReciprocidad).subscribe(( x: any) => {
       this.notif.onSuccess('Exitoso', 'El corregir reciprocidad se realizó correctamente.');
+      this.accionSeleccionada = false;
       this.TerminoService.GuardarObservacion({
         "IdObseCambioEstado": 0,
         "lngCuenta": Number(this.TerminoForm.get('IdCuenta')?.value),
@@ -6222,6 +6238,7 @@ export class TerminoComponent implements OnInit {
             this.TerminoForm.get('IdEstado')?.setValue(0);
           } else {
             this.notif.onSuccess('Exitoso', 'El cambio estado se realizó correctamente.');
+            this.accionSeleccionada = false;
             console.log("lista", this.ListCuentaAgregadasReciprocidad)
          
             this.GuardarCuentasReciprocidad();
@@ -6289,6 +6306,7 @@ export class TerminoComponent implements OnInit {
             if (this.TerminoForm.get('IdEstado')?.value === '5' && this.datoCambioEstado == 20)
               this.ReciprocidadSetDate();
             this.notif.onSuccess('Exitoso', 'El cambio estado se realizó correctamente.');
+            this.accionSeleccionada = false;
             this.Guardarlog(estadoLog);
             this.NovedadesAhorrosPDF('Desbloquear título','Desbloquear cuenta', false)
             this.BuscarPorCuenta();
@@ -6322,6 +6340,7 @@ export class TerminoComponent implements OnInit {
             this.TerminoForm.get('IdEstado')?.setValue(0);
           } else {            
             this.notif.onSuccess('Exitoso', 'El cambio estado se realizó correctamente.');
+            this.accionSeleccionada = false;
             this.Guardarlog(estadoLog);
             this.BuscarPorCuenta();  
             this.LiberarTitulo();
@@ -6355,6 +6374,7 @@ export class TerminoComponent implements OnInit {
             this.TerminoForm.get('IdEstado')?.setValue(0);
           } else {
             this.notif.onSuccess('Exitoso', 'El cambio estado se realizó correctamente.');
+            this.accionSeleccionada = false;
             this.Guardarlog(estadoLog);
             this.BuscarPorCuenta();
             this.CambioEstadoFrom.reset();
@@ -6845,6 +6865,7 @@ export class TerminoComponent implements OnInit {
                 this.bloquearPuntos = false;
                 // this.bloquearCuentaOrigen = false;
                 this.notif.onSuccess('Exitoso', 'El cambio de asesor externo se realizó correctamente.');
+                this.accionSeleccionada = false;
                 this.btnGuardar = true;
                 this.Guardarlog(tempAsesorLog);
                 this.ObtenerHistorial();
@@ -6888,6 +6909,7 @@ export class TerminoComponent implements OnInit {
                 this.bloquearPuntos = false;
                 // this.bloquearCuentaOrigen = false;
                 this.notif.onSuccess('Exitoso', 'El Cambio de asesor externo se realizó correctamente.');
+                this.accionSeleccionada = false;
                 this.btnGuardar = true;
                 this.Guardarlog(tempAsesorLog);
                 this.ObtenerHistorial();
@@ -6937,6 +6959,7 @@ export class TerminoComponent implements OnInit {
                 this.bloquearAsesorExterno = false;
                 this.bloquearPuntos = false;
                 this.notif.onSuccess('Exitoso', 'El cambio de número título se realizó correctamente.');
+                this.accionSeleccionada = false;
                 this.btnGuardar = true;
                 this.btnActualizar = true;
                 this.btnActualizarTitulares = true;
@@ -7006,6 +7029,7 @@ export class TerminoComponent implements OnInit {
                   this.bloquearAsesorExterno = false;
                   this.bloquearPuntos = false;
                   this.notif.onSuccess('Exitoso', 'El cambio de tipo cuenta destino se realizó correctamente.');
+                  this.accionSeleccionada = false;
                   this.btnGuardar = true;
                   this.TerminoForm.get('IdCuenta')?.setValue(result.IdCuenta);
                   this.btnActualizar = true;
@@ -7073,6 +7097,7 @@ export class TerminoComponent implements OnInit {
                 this.bloquearAsesorExterno = false;
                 this.bloquearPuntos = false;
                 this.notif.onSuccess('Exitoso', 'El cambio de tipo cuenta destino se realizó correctamente.');
+                this.accionSeleccionada = false;
                 this.btnGuardar = true;
                 this.TerminoForm.get('IdCuenta')?.setValue(result.IdCuenta);
                 this.btnActualizar = false;
@@ -7133,6 +7158,7 @@ export class TerminoComponent implements OnInit {
                 this.bloquearPuntos = false;
                 this.DescriTipoFirma = true;
                 this.notif.onSuccess('Exitoso', 'Se adicionó y/o eliminó autorizados correctamente.');
+                this.accionSeleccionada = false;
                 this.btnGuardar = true;
                 this.TerminoForm.get('IdCuenta')?.setValue(result.IdCuenta);
                 this.btnActualizar = true;
@@ -7206,6 +7232,7 @@ export class TerminoComponent implements OnInit {
                   this.bloquearPuntos = false;
                   this.DescriTipoFirma = true;
                   this.notif.onSuccess('Exitoso', 'Se adicionó y/o eliminó autorizados correctamente.');
+                  this.accionSeleccionada = false;
                   this.btnGuardar = true;
                   this.TerminoForm.get('IdCuenta')?.setValue(result.IdCuenta);
                   this.btnActualizar = true;
@@ -7278,6 +7305,7 @@ export class TerminoComponent implements OnInit {
                 this.bloquearPuntos = false;
                 this.DescriTipoFirma = true;
                 this.notif.onSuccess('Exitoso', 'Se adicionó y/o eliminó autorizados correctamente.');
+                this.accionSeleccionada = false;
                 this.btnGuardar = true;
                 this.TerminoForm.get('IdCuenta')?.setValue(result.IdCuenta);
                 this.btnActualizar = true;
@@ -7384,6 +7412,7 @@ export class TerminoComponent implements OnInit {
                 this.bloquearAsesorExterno = false;
                 this.bloquearPuntos = false;
                 this.notif.onSuccess('Exitoso', 'La adición de puntos se realizó correctamente.');
+                this.accionSeleccionada = false;
                 this.VolverArriba();
                 this.bloquearPuntos = false;
                 this.btnGuardar = true;

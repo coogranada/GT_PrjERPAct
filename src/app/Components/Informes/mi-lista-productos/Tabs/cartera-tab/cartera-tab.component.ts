@@ -12,6 +12,7 @@ import {
 import swal from "sweetalert2";
 import { AlertService } from '../../../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../../utils/storage-security.util';
 
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -4454,8 +4455,8 @@ export class CarteraTabComponent implements OnInit {
       this.validaMesInicial = false;
       this.validaMesFinal = false;
       this.SelectErroneo = false;
-      let data = localStorage.getItem("Data");
-      var dataLocalStorage = JSON.parse(window.atob(data == null ? "" : data));
+      const dataLocalStorage = StorageSecurity.getData();
+     
 
       var FechaInicio = yearInicial + "-" + MesInicial + "-1";
       var Oficina = dataLocalStorage.Oficina;
@@ -4516,9 +4517,7 @@ export class CarteraTabComponent implements OnInit {
 
           $("#ExtractosCarteraTD").show();
 
-          //#region Guarda log
-          let datas = localStorage.getItem("Data");
-          var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
+          //#region Guarda log        
           var LogMisProductosData = new LogMisProductos();
           var nuevoItem = new DatosProductos();
           LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
@@ -4550,8 +4549,7 @@ export class CarteraTabComponent implements OnInit {
   }
 
   sendTD() {
-    let data = localStorage.getItem("Data");
-    var dataLocalStorage = JSON.parse(window.atob(data == null ? "" : data));
+    const dataLocalStorage = StorageSecurity.getData();
 
     this.loading.show();
     //falta validar si existe la plantilla
@@ -4563,8 +4561,7 @@ export class CarteraTabComponent implements OnInit {
         var Tercero = Number($("#TerceroPrincipal").val());
 
         //#region Guarda log
-        let data = localStorage.getItem("Data");
-        var dataLocalStorage = JSON.parse(window.atob(data == null ? "" : data));
+        const dataLocalStorage = StorageSecurity.getData();
         var LogMisProductosData = new LogMisProductos();
         var nuevoItem = new DatosProductos();
         LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);

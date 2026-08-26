@@ -2,6 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MiListaProductosService } from '../../../../../Services/Informes/mi-lista-productos.service';
 import { LogMisProductos,DatosProductos } from '../../../../../Models/Informes/MisProductos/mis-producto.model';
 import { AlertService } from '../../../../../Services/Alert/alert.service';
+import { StorageSecurity } from '../../../../../utils/storage-security.util';
 
 
 @Component({
@@ -139,8 +140,7 @@ export class CoodeudorTabComponent implements OnInit {
               }
             }
             //#region Guarda log
-            let data = localStorage.getItem("Data");
-            var dataLocalStorage = JSON.parse(window.atob(data == null ? "" : data));
+            const dataLocalStorage = StorageSecurity.getData();
             var LogMisProductosData = new LogMisProductos();
             var nuevoItem = new DatosProductos();
             LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);

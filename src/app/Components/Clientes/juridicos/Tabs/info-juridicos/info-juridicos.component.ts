@@ -15,6 +15,7 @@ import { OperacionesService } from '../../../../../Services/Maestros/operaciones
 import { AlertService } from '../../../../../Services/Alert/alert.service';
 import { RegimenTributario } from '../../../../../Models/Clientes/Juridicos/RegimenTributario';
 import { LoadingService } from '../../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../../utils/storage-security.util';
 
 declare var $: any;
 const PrimaryWhite = 'rgb(13,165,80)';
@@ -165,8 +166,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
     private operacionesService: OperacionesService, private loading: LoadingService) { }
 
   ngOnInit() {
-    let data = localStorage.getItem('Data');
-    this.userConect = JSON.parse(window.atob(data == null ? "" : data));
+    this.userConect = StorageSecurity.getData();
     this.IrArriba();
     this.validarInfoJuridico();
     this.bloquearRelacion = true;
@@ -618,8 +618,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
   ValidarTipoCliente() {
     this.operacionesModel = new OperacionesModel();
     const tipoClienteSelect = Number(this.infoJuridicoFrom.get('Relacion')?.value);
-    let data = localStorage.getItem('Data');
-    const resultPerfil = JSON.parse(window.atob(data == null ? ""  : data));
+    const resultPerfil = StorageSecurity.getData();
     this.operacionesModel.idOperacion = this.OperacionActual;
     this.operacionesModel.idPerfil = resultPerfil.idPerfilUsuario;
     this.operacionesModel.idModulo = this.CodModulo;
@@ -633,8 +632,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
             this.infoJuridicoFrom.get('Estado')?.setValue(elementEsta);
           }
         });
-      let data = localStorage.getItem('Data');
-      const DataUserLog = JSON.parse(window.atob(data == null ? "" : data));
+      const DataUserlog = StorageSecurity.getData();
       // se quito restriccion de oficina de administracion
       this.PreguntaAsesorExt = false;
       let perfi = localStorage.getItem('profiles');
@@ -695,8 +693,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
             }
           }); 
       }
-      let data = localStorage.getItem('Data');
-      const DataUserLog = JSON.parse(window.atob(data == null ? "" : data));
+      const DataUserLog = StorageSecurity.getData();
       if (DataUserLog.NumeroOficina !== '3') {
       if (this.OperacionActual === 5) {
         this.clientesGetListService.GetEstado().subscribe(
@@ -826,8 +823,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
     const estado = this.infoJuridicoFrom.get('Estado')?.value;
     this.infoJuridicoFrom.reset();
     this.infoJuridicoFrom.get('Estado')?.setValue(estado);
-    let data = localStorage.getItem('Data');
-    const resultPerfil = JSON.parse(window.atob(data == null ? "" : data));
+    const resultPerfil = StorageSecurity.getData();
     this.infoJuridicoFrom.get('CodigoAsesor')?.setValue(resultPerfil.IdAsesor);
     this.infoJuridicoFrom.get('NombreAsesor')?.setValue(resultPerfil.Nombre);
     this.PreguntaAsesorExt = false;
@@ -1006,8 +1002,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
       this.basicosModel.OtroPor = this.infoJuridicoFrom.value.OtroPor;
       this.infoTabAll.JuridicoDto = this.juridicoModel;
       this.infoTabAll.BasicoDto = this.basicosModel;
-      let data = localStorage.getItem('Data');
-      const dataUser = JSON.parse(window.atob(data == null ? "" : data));
+      const dataUser = StorageSecurity.getData();
       this.infoTabAll.userWork = dataUser.Usuario;
       const AnimoLucro = this.basicosModel.AnimoLucro ? 'Si' : 'No';
       this.GuardarLog({...this.infoTabAll, BasicoDto: { ...this.infoTabAll.BasicoDto, AnimoLucro }}, this.OperacionActual, 0, this.juridicoModel.IdJuridico,12);
@@ -1405,8 +1400,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
 
   CambiarRelacion() {
     this.loading.show();
-    let data = localStorage.getItem('Data');
-    const resultPerfil = JSON.parse(window.atob(data == null ? ""  : data));
+    const resultPerfil = StorageSecurity.getData();
     if (this.cambioRelacionEdit) {
       if (this.relacionAnterior !== this.infoJuridicoFrom.value.Relacion ) {
         const juridico = this.infoJuridicoFrom.value.IdJuridico;

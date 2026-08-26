@@ -8,6 +8,7 @@ import { DatosProducto,LogMisProductos,DatosProductos,MesxYear }  from "../../..
 import swal from "sweetalert2";
 import { AlertService } from '../../../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../../utils/storage-security.util';
 
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -406,8 +407,7 @@ export class AportesTabComponent implements OnInit {
       this.validaMesFinal = false;
       this.SelectErroneo = false;
       this.loading.show();
-      let data = localStorage.getItem("Data");
-      var dataLocalStorage = JSON.parse(window.atob(data == null ? "" : data));
+      const dataLocalStorage = StorageSecurity.getData();
       this.ExtactoAportes.get("yearInit")?.setValue(yearInicial);
       this.ExtactoAportes.get("yearEnd")?.setValue(yearFinal);
       this.ExtactoAportes.get("MesInit")?.setValue(MesInicial);
@@ -422,8 +422,7 @@ export class AportesTabComponent implements OnInit {
         this.loading.hide();
         this.MapearEncabezadoTabla(result);
         // #region Guarda log
-        let data = localStorage.getItem("Data");
-        var dataLocalStorage = JSON.parse(window.atob(data == null ? "" : data));
+        const dataLocalStorage = StorageSecurity.getData();
         var LogMisProductosData = new LogMisProductos();
         var nuevoItem = new DatosProductos();
         LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
@@ -1145,8 +1144,7 @@ export class AportesTabComponent implements OnInit {
         FechaInicio != null &&
         FechaFin != null
       ) {
-        let data = localStorage.getItem("Data");
-        var dataLocalStorage = JSON.parse(window.atob(data == null ? "" : data));
+        const dataLocalStorage = StorageSecurity.getData();
         this.ExtactoAportes.get("FechaInicio")?.setValue(FechaInicio);
         this.ExtactoAportes.get("FechaFin")?.setValue(FechaFin);
         this.loading.show();
@@ -1193,9 +1191,7 @@ export class AportesTabComponent implements OnInit {
           (result) => {
             this.loading.hide();
             this.MapearEncabezadoTablaMov(result);
-
-            let data = localStorage.getItem("Data");
-            var dataLocalStorage = JSON.parse(window.atob(data == null ? "" : data));
+            const dataLocalStorage = StorageSecurity.getData();
             var LogMisProductosData = new LogMisProductos();
             var nuevoItem = new DatosProductos();
             LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);

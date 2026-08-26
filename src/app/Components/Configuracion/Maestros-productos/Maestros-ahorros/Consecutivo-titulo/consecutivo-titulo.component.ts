@@ -11,6 +11,7 @@ import { DatePipe } from '@angular/common';
 import Swal from 'sweetalert2';
 import { AlertService } from '../../../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../../utils/storage-security.util';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -143,8 +144,7 @@ export class ConsecutivoTituloComponent implements OnInit {
   public ColorAnterior4: any;
   public ColorAnterior5: any;
   Operaciones() {
-    let data : string | null = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.dataUser = StorageSecurity.getData();
     const arrayExample = [{
       'IdModulo': this.CodModulo,
       'IdUsuario': this.dataUser.IdUsuario,
@@ -574,8 +574,7 @@ export class ConsecutivoTituloComponent implements OnInit {
   FechasSeleccionadas() {
     const FechaInicial = this.consecutivoFrom.get('FechaInicial')?.value;
     const FechaFinal = this.consecutivoFrom.get('FechaFinal')?.value;
-    let data : string | null = localStorage.getItem('Data')
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.dataUser = StorageSecurity.getData();
     const idOficina = this.dataUser.NumeroOficina;
     const idProducto = this.consecutivoFrom.get('IdProducto')?.value;
     if (FechaInicial <= FechaFinal) {
@@ -657,8 +656,7 @@ export class ConsecutivoTituloComponent implements OnInit {
     }
   }
   ValidarOficina(mensaje : string) {
-    let data : string | null = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.dataUser = StorageSecurity.getData();
     if (this.dataUser.NumeroOficina == "3") {
       this.BloquearBoton = false;
       this.notif.onWarning('Advertencia', `No se puede ${mensaje} en la oficina administración.`);
@@ -803,8 +801,7 @@ export class ConsecutivoTituloComponent implements OnInit {
   }
   MapearDatosUsuarioRegistra() {
     const FechaActual = new Date();
-    let data : string | null = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.dataUser = StorageSecurity.getData();
     this.consecutivoFrom.get('Asigna')?.setValue(this.dataUser.IdUsuario);
     this.consecutivoFrom.get('IdOficina')?.setValue(this.dataUser.NumeroOficina);
     this.consecutivoFrom.get('IdUsuarioAsigna')?.setValue(this.dataUser.IdUsuario);
@@ -814,8 +811,7 @@ export class ConsecutivoTituloComponent implements OnInit {
   }
   MapearDatosUsuariosAnular() {
     const FechaActual = new Date();
-    let data : string | null = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.dataUser = StorageSecurity.getData();    
     this.consecutivoFrom.get('Asigna')?.setValue(this.dataUser.IdUsuario);
     this.consecutivoFrom.get('IdOficina')?.setValue(this.dataUser.NumeroOficina);
     this.consecutivoFrom.get('IdEstado')?.setValue(this.resultTitulo[0].IdEstado);
@@ -825,8 +821,7 @@ export class ConsecutivoTituloComponent implements OnInit {
   }
   MapearDatosUsuarioAsigna() {
     const FechaActual = new Date();
-    let data : string | null = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.dataUser = StorageSecurity.getData();
     this.consecutivoFrom.get('Asigna')?.setValue(this.dataUser.IdUsuario);
     this.consecutivoFrom.get('IdOficina')?.setValue(this.dataUser.NumeroOficina);
     this.consecutivoFrom.get('IdEstado')?.setValue('45');
@@ -835,8 +830,7 @@ export class ConsecutivoTituloComponent implements OnInit {
   }
   MapearDatosUsuarioReasigna() {
     const FechaActual = new Date();
-    let data : string | null = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.dataUser = StorageSecurity.getData();
     this.consecutivoFrom.get('IdOficina')?.setValue(this.dataUser.NumeroOficina);
     this.consecutivoFrom.get('Reasigna')?.setValue(this.dataUser.IdUsuario);
     this.consecutivoFrom.get('IdUsuarioReasigna')?.setValue(this.dataUser.IdUsuario);
@@ -846,8 +840,7 @@ export class ConsecutivoTituloComponent implements OnInit {
   }
   MapearDatosUsuarioConfirma() {
     const FechaActual = new Date();
-    let data : string | null = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.dataUser = StorageSecurity.getData();
     this.consecutivoFrom.get('IdOficina')?.setValue(this.dataUser.NumeroOficina);
     this.consecutivoFrom.get('IdEstado')?.setValue(this.resultTitulo[0].IdEstado);
     this.consecutivoFrom.get('Reasigna')?.setValue(this.dataUser.IdUsuario);
@@ -870,8 +863,7 @@ export class ConsecutivoTituloComponent implements OnInit {
   }
   ObtenerOficinasDestino() {
     this.resultOficinaDestino = [];
-    let data : string | null = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.dataUser = StorageSecurity.getData();
     let oficinaActual = parseInt(this.dataUser.NumeroOficina);
 
     for (let i = 0; i < this.resultOficina.length; i++) {
@@ -1808,8 +1800,7 @@ export class ConsecutivoTituloComponent implements OnInit {
     }
   }
   ActualizarConsecutivo() {
-    let data : string | null = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.dataUser = StorageSecurity.getData();
     let oficina = parseInt(this.dataUser.NumeroOficina);
     let titulosCorrectos = true;
     let estadoCorrecto = true;
@@ -1947,8 +1938,7 @@ export class ConsecutivoTituloComponent implements OnInit {
     }
   }
   AnularConsecutivo() {
-    let data : string | null = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.dataUser = StorageSecurity.getData();;
 
     if (this.resultTitulo[0].IdOficina.toString() === this.dataUser.NumeroOficina) {
       if (this.resultTitulo[0].IdEstado === 45) {
@@ -2198,8 +2188,7 @@ export class ConsecutivoTituloComponent implements OnInit {
     });
   }
   ConfirmarConsecutivo() {
-    let data : string | null = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.dataUser = StorageSecurity.getData();
 
     let oficina = parseInt(this.dataUser.NumeroOficina);
     let estadoCorrecto = true;
@@ -2237,8 +2226,7 @@ export class ConsecutivoTituloComponent implements OnInit {
       this.consecutivoFrom.get('FechaFinal')?.reset();
       this.generalesService.Autofocus('fechaInicial');
     } else {
-      let data : string | null = localStorage.getItem('Data');
-      this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+      this.dataUser = StorageSecurity.getData();
       const fechaI = this.consecutivoFrom.get('FechaInicial')?.value;
       const fechaF = this.consecutivoFrom.get('FechaFinal')?.value;
       const idOficina = parseInt(this.dataUser.NumeroOficina);

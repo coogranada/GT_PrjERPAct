@@ -12,6 +12,7 @@ import { AlertService } from '../../../../../Services/Alert/alert.service';
 import { ClientesGetListService } from '../../../../../Services/Clientes/clientesGetList.service';
 import { LogDataOnEditAsesorExterno, LogDataOnEditAsesoria } from '../../../../../Models/Productos/asesoria-contractual.model';
 import { LoadingService } from '../../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../../utils/storage-security.util';
 declare var $: any;
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -183,8 +184,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
   }
 
   Operaciones() {
-    let data = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.dataUser = StorageSecurity.getData();
     const arrayExample = [{
       'IdModulo': this.CodModulo,
       'IdUsuario': this.dataUser.IdUsuario,
@@ -516,8 +516,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
     );
   }
   MapearDatosUsuario() {
-    let data = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.dataUser = StorageSecurity.getData();
     this.asesoriacontractualFrom.get('NombreOficina')?.setValue(this.dataUser.Oficina);
     this.asesoriacontractualFrom.get('NumeroOficina')?.setValue(this.dataUser.NumeroOficina);
     this.asesoriacontractualFrom.get('IdAsesor')?.setValue(this.dataUser.IdAsesor);
@@ -1039,8 +1038,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
   }
   MapearAsesoria(result : any) {
     if (result !== null) {
-      let data = localStorage.getItem('Data');
-      this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+      this.dataUser = StorageSecurity.getData();
       this.showDecimals = true;
       if (result.length >= 1) {
         this.dataObjet = result;

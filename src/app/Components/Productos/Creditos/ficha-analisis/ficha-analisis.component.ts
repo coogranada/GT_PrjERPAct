@@ -16,6 +16,7 @@ import { parseXML } from 'jquery';
 import { CheckList, FADeudor, LogFichaAnalisis, ObligacionesExtinguidas, ObligacionesVigentes, DtosAttachFiles } from '../../../../Models/Productos/ficha-analisis.model';
 import { AlertService } from '../../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../utils/storage-security.util';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 @Component({
@@ -167,8 +168,7 @@ export class FichaAnalisisComponent implements OnInit {
 
 
   Operaciones() {
-    let data = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.dataUser = StorageSecurity.getData();
     const arrayExample = [{
       'idPerfil': this.dataUser.idPerfilUsuario,
       'idUsuario': this.dataUser.IdUsuario,
@@ -1188,8 +1188,7 @@ export class FichaAnalisisComponent implements OnInit {
     this.dataInsert.ConceptoFinal = this.FichaAnalisisDataForm.get("ConceptoFinal")?.value;
     this.dataInsert.ObsFirmantes = this.FichaAnalisisDataForm.get("ObsFirmantes")?.value;
     this.dataInsert.ObsPromcuentas = this.FichaAnalisisDataForm.get("ObsPromcuentas")?.value;
-    let data = localStorage.getItem('Data');
-    this.DataUserLogeado = JSON.parse(window.atob(data == null ? "" : data));
+    this.DataUserLogeado = StorageSecurity.getData();
     this.dataInsert.AnalistaEncargado = this.DataUserLogeado.Nombre;
 
     this.dataInsert.TipoFicha = this.tipoConsulta;
@@ -1246,8 +1245,7 @@ export class FichaAnalisisComponent implements OnInit {
 
   recolectarInfoCode() {
     this.dataInsertCode = [];
-    let data = localStorage.getItem('Data');
-    this.DataUserLogeado = JSON.parse(window.atob(data == null ? "" : data));
+    this.DataUserLogeado = StorageSecurity.getData();
     this.resultadoCodeudores.forEach(codeudor => {
       let Code = new FADeudor();
       Code.Nombre = codeudor.Nombre;
@@ -1371,8 +1369,7 @@ export class FichaAnalisisComponent implements OnInit {
   recolectarInfoLog() {
     this.dataInsertLog.IdOperacion = this.contenidoCodigo;
     this.dataInsertLog.Radicado = this.FichaAnalisisDataForm.get("noRadicado")?.value;
-    let data = localStorage.getItem('Data');
-    this.DataUserLogeado = JSON.parse(window.atob(data == null ? "" : data));
+    this.DataUserLogeado = StorageSecurity.getData();
     this.dataInsertLog.IdUsuarioERP = this.DataUserLogeado.IdUsuario;
     this.dataInsertLog.IdOficina = this.DataUserLogeado.NumeroOficina;
     this.dataInsertLog.JsonDto = "";
@@ -1959,8 +1956,7 @@ export class FichaAnalisisComponent implements OnInit {
         this.FichaAnalisisDataForm.get('vlrAvaluo')?.setValue("0");
         this.FichaAnalisisDataForm.get("promOtrasAso")?.setValue("0");
         this.FichaAnalisisDataForm.get("utilidadNetaAso")?.setValue("0");
-        let data = localStorage.getItem('Data');
-        this.DataUserLogeado = JSON.parse(window.atob(data == null ? "" : data));
+        this.DataUserLogeado = StorageSecurity.getData();
         this.FichaAnalisisDataForm.get("AnalistaEncargado")?.setValue(this.DataUserLogeado.Nombre);
 
       } else {
@@ -2201,8 +2197,7 @@ export class FichaAnalisisComponent implements OnInit {
 
   enviarFichaAlWorkManager() {
     this.loading.show();
-    let data = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.DataUserLogeado = StorageSecurity.getData();
     this.FichaAnalisisService.GenerarPDFFichaAnalisis(this.radicadoActual).subscribe(
       (result) => {
         this.loading.hide();

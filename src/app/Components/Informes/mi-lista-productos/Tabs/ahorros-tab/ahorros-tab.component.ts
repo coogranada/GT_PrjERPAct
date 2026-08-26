@@ -23,6 +23,7 @@ import swal from "sweetalert2";
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AlertService } from '../../../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../../utils/storage-security.util';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 @Component({
@@ -231,8 +232,7 @@ export class AhorrosTabComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    let data = localStorage.getItem("Data");
-    this.resultDataStore = JSON.parse(window.atob(data == null ? "" : data));
+    this.resultDataStore = StorageSecurity.getData();
     this.arrayExample = [
       {
         IdModulo: this.moduloLocal,
@@ -617,8 +617,7 @@ export class AhorrosTabComponent implements OnInit {
       this.SelectErroneo = false;
 
       this.loading.show();
-      let data = localStorage.getItem("Data");
-      var dataLocalStorage = JSON.parse(window.atob(data == null ? "" : data));
+      const dataLocalStorage = StorageSecurity.getData();
       this.ExtractoDisponible.get("yearInit")?.setValue(yearInicial);
       this.ExtractoDisponible.get("yearEnd")?.setValue(yearFinal);
       this.ExtractoDisponible.get("MesInit")?.setValue(MesInicial);
@@ -633,8 +632,7 @@ export class AhorrosTabComponent implements OnInit {
         this.loading.hide();
         this.MapearEncabezadoTabla(result, 1);
        //#region Guarda log
-       let data = localStorage.getItem("Data");
-       var dataLocalStorage = JSON.parse(window.atob(data == null ? "" : data));
+       const dataLocalStorage = StorageSecurity.getData();
         var LogMisProductosData = new LogMisProductos();
         var nuevoItem = new DatosProductos();
         LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
@@ -999,8 +997,7 @@ export class AhorrosTabComponent implements OnInit {
     this.EncabezadoAhoTermino.Asesor = datos.Asesor;
 
     //#region Guarda log
-    let data = localStorage.getItem("Data");
-    var dataLocalStorage = JSON.parse(window.atob(data == null ? "" : data));
+    const dataLocalStorage = StorageSecurity.getData();
     var LogMisProductosData = new LogMisProductos();
     var nuevoItem = new DatosProductos();
     LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
@@ -2587,8 +2584,7 @@ export class AhorrosTabComponent implements OnInit {
             this.loading.hide();
             this.MapearEncabezadoTabla(result, 2);
               //#region Guarda log
-              let data = localStorage.getItem("Data");
-              var dataLocalStorage = JSON.parse(window.atob(data == null ? "" : data));
+              const dataLocalStorage = StorageSecurity.getData();
               var LogMisProductosData = new LogMisProductos();
               var nuevoItem = new DatosProductos();
               LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
@@ -2625,8 +2621,7 @@ export class AhorrosTabComponent implements OnInit {
             this.loading.hide();
             this.MapearEncabezadoTablaMov(result, 2);
             //#region Guarda log
-            let data = localStorage.getItem("Data");
-            var dataLocalStorage = JSON.parse(window.atob(data == null ? "" : data));
+            const dataLocalStorage = StorageSecurity.getData();
             var LogMisProductosData = new LogMisProductos();
             var nuevoItem = new DatosProductos();
             LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
@@ -2696,8 +2691,7 @@ export class AhorrosTabComponent implements OnInit {
       this.validaMesFinal = false;
       this.SelectErroneo = false;
       this.loading.show();
-      let data = localStorage.getItem("Data");
-      var dataLocalStorage = JSON.parse(window.atob(data == null ? "" : data));
+      const dataLocalStorage = StorageSecurity.getData();
       this.ExtactoAportes.get("yearInit")?.setValue(yearInicial);
       this.ExtactoAportes.get("yearEnd")?.setValue(yearFinal);
       this.ExtactoAportes.get("MesInit")?.setValue(MesInicial);
@@ -2712,8 +2706,7 @@ export class AhorrosTabComponent implements OnInit {
         this.loading.hide();
         this.MapearEncabezadoTabla(result, 2);
           //#region Guarda log
-          let data = localStorage.getItem("Data");
-          var dataLocalStorage = JSON.parse(window.atob(data == null ? "" : data));
+          const dataLocalStorage = StorageSecurity.getData();
           var LogMisProductosData = new LogMisProductos();
           var nuevoItem = new DatosProductos();
           LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
@@ -3298,8 +3291,7 @@ export class AhorrosTabComponent implements OnInit {
             this.loading.hide();
             this.MapearEncabezadoTabla(result, 1);
             //#region Guarda log
-            let data = localStorage.getItem("Data");
-      var dataLocalStorage = JSON.parse(window.atob(data == null ? "" : data));
+            const dataLocalStorage = StorageSecurity.getData();
             var LogMisProductosData = new LogMisProductos();
             var nuevoItem = new DatosProductos();
             LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
@@ -3336,8 +3328,7 @@ export class AhorrosTabComponent implements OnInit {
             this.loading.hide();
             this.MapearEncabezadoTablaMov(result, 1);
             //#region Guarda log
-            let data = localStorage.getItem("Data");
-      var dataLocalStorage = JSON.parse(window.atob(data == null ? "" : data));
+            const dataLocalStorage = StorageSecurity.getData();
             var LogMisProductosData = new LogMisProductos();
             var nuevoItem = new DatosProductos();
             LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
@@ -3437,8 +3428,7 @@ export class AhorrosTabComponent implements OnInit {
             this.loading.hide();
             this.MapearEncabezadoTabla(result, 3);
             //#region Guarda log
-            let data = localStorage.getItem("Data");
-      var dataLocalStorage = JSON.parse(window.atob(data == null ? "" : data));
+            const dataLocalStorage = StorageSecurity.getData();
             var LogMisProductosData = new LogMisProductos();
             var nuevoItem = new DatosProductos();
             LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
@@ -3475,8 +3465,7 @@ export class AhorrosTabComponent implements OnInit {
             this.loading.hide();
             this.MapearEncabezadoTablaMov(result, 3);
             //#region Guarda log
-            let data = localStorage.getItem("Data");
-            var dataLocalStorage = JSON.parse(window.atob(data == null ? "" : data));
+            const dataLocalStorage = StorageSecurity.getData();
             var LogMisProductosData = new LogMisProductos();
             var nuevoItem = new DatosProductos();
             LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);

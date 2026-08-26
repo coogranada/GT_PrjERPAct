@@ -12,6 +12,7 @@ import { LoginService } from '../../../../Services/Login/login.service';
 import { Router } from '@angular/router';
 import { AlertService } from '../../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../utils/storage-security.util';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -58,8 +59,7 @@ export class EstadosOperacionesComponent implements OnInit {
     this.ObtenerOperaciones();
     this.ObtenerEstados();
     this.ObtenerPerfiles();
-    let data : string | null = localStorage.getItem('Data')
-    this.DatosUsuario = JSON.parse(window.atob(data == null ? "" : data));
+     this.DatosUsuario = StorageSecurity.getData();
 
     this.loginService.GetSesionXUsuario(this.DatosUsuario.IdUsuario).subscribe(result => {
         if (!result.Estado) {
