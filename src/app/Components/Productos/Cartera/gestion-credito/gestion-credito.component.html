@@ -912,9 +912,7 @@
                                                 <option
                                                     *ngFor="let item of tiposSeguimientoInsolvencia"
                                                     [value]="item.intTipoSeguimiento">
-                                    
-                                                    {{ item.intTipoSeguimiento + ' ' + item.strDescripcion }}
-                                        
+                                                    {{ obtenerNumeroVisualSeguimiento(item.intTipoSeguimiento) + ' ' + item.strDescripcion }}                                        
                                                 </option>
                                             
                                             </select>
@@ -1190,35 +1188,27 @@
                                     
                                         <thead>
                                             <tr class="encabezadoTablas">
-                                            
                                                 <th class="text-center">
                                                     <strong>Nro</strong>
                                                 </th>
-                                            
                                                 <th>
                                                     <strong>Instancia</strong>
                                                 </th>
-                                            
                                                 <th>
                                                     <strong>Causal</strong>
                                                 </th>
-                                            
                                                 <th>
                                                     <strong>Detalle</strong>
                                                 </th>
-                                            
                                                 <th class="text-center">
                                                     <strong>Fecha evento</strong>
                                                 </th>
-                                            
                                                 <th class="text-center">
                                                     <strong>Creación detalle</strong>
                                                 </th>
-                                            
                                                 <th class="text-center">
                                                     <strong>Creación insolvencia</strong>
                                                 </th>
-                                            
                                             </tr>
                                         </thead>
                                     
@@ -2140,7 +2130,7 @@
                                     </article>
 
                                     <article>
-                                        <h3 class="tab-title">Garantías Reales</h3>
+                                        <h3 class="tab-title">Garantías Asignadas</h3>
                                         <div class="alert alert-secondary" role="alert"
                                             *ngIf="garantiasReales.length === 0">
                                             No hay registros
@@ -2945,6 +2935,10 @@
                                     </div>
                                     <br>
                                     <!-- Inicio Insolvencia -->
+                                    <br>
+                                    <div>
+                                        <h3 class="tab-title">Proceso de Insolvencia</h3>
+                                    </div>
                                     <div class="table-responsive scrollTabla" *ngIf="historicoInsolvencia.length > 0">
                                     
                                         <table class="table table-hover">

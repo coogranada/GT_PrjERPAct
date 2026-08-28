@@ -934,6 +934,18 @@ export class GestionCreditoComponent {
   }
 
   //Inicio Proceso Insolvencia
+  obtenerNumeroVisualSeguimiento(tipo: number): number {
+
+    switch (tipo) {
+      case 8: return 4;
+      case 4: return 5;
+      case 5: return 6;
+      case 6: return 7;
+      case 7: return 8;
+      default: return tipo;
+    }
+
+  }
 
   async habilitarProcesoInsolvencia() {
     try {
@@ -956,7 +968,7 @@ export class GestionCreditoComponent {
       this.tiposSeguimientoInsolvencia = tipos;
       this.historicoInsolvencia = historico;
 
-      // this.filtrarDetallePermitido();
+      this.filtrarDetallePermitido();
       this.construirNumeracionInsolvencias();
 
       this.validarInsolvencia();
@@ -1087,67 +1099,152 @@ export class GestionCreditoComponent {
 
       const detallesActuales = this.obtenerDetallesInsolvenciaActual();
 
-      const ultimoTipo = detallesActuales.length
-        ? Math.max(
-            ...detallesActuales.map(x => Number(x.intTipoSeguimiento))
-          )
-        : 0;
+      const ultimoTipo =
+        detallesActuales.length > 0
+          ? Number(
+              detallesActuales
+                .sort((a, b) => a.lngIdSeguimiento - b.lngIdSeguimiento)
+                .at(-1)?.intTipoSeguimiento
+            )
+          : 0;
 
-      const esNuevaInsolvencia = ultimoTipo === 9;
+    const esNuevaInsolvencia = ultimoTipo === 9;
 
-      if (!esNuevaInsolvencia) {
+    const tiposRegistrados =
+      detallesActuales.map(x => Number(x.intTipoSeguimiento));
 
-        const tiposRegistrados =
-          detallesActuales.map(x => Number(x.intTipoSeguimiento));
+    // Si la insolvencia anterior terminó (tiene 9),
+    // solo se puede iniciar una nueva con el detalle 1
+    if (esNuevaInsolvencia) {
+    
+      if (tipoSeguimiento !== 1) {
+      
+        this.notif.warning(
+          'Advertencia',
+          'El primer detalle debe ser Fecha de admisión a insolvencia.',
+          ConfiguracionNotificacion.configRightTop
+        );
+      
+        this.insolvenciaForm.patchValue({
+          IdTipoSeguimiento: ''
+        });
+      
+        return;
+      }
+    
+      return;
+    }
 
-        if (tiposRegistrados.includes(tipoSeguimiento)) {
+    if (tiposRegistrados.includes(tipoSeguimiento)) {
+    
+      this.notif.warning(
+        'Advertencia',
+        'El detalle ya fue registrado para esta insolvencia.',
+        ConfiguracionNotificacion.configRightTop
+      );
+    
+      this.insolvenciaForm.patchValue({
+        IdTipoSeguimiento: ''
+      });
+    
+      return;
+    }
 
-          this.notif.warning(
-            'Advertencia',
-            'El detalle ya fue registrado para esta insolvencia.',
-            ConfiguracionNotificacion.configRightTop
-          );
-
-          this.insolvenciaForm.patchValue({
-            IdTipoSeguimiento: ''
-          });
-
-          return;
-        }
-
-        if (tiposRegistrados.length === 0) {
-
-          if (tipoSeguimiento !== 1) {
-
-            this.notif.warning(
-              'Advertencia',
-              'El primer detalle debe ser Fecha de admisión a insolvencia.',
-              ConfiguracionNotificacion.configRightTop
-            );
-
-            this.insolvenciaForm.patchValue({
-              IdTipoSeguimiento: ''
-            });
-
-            return;
-          }
-        } else {
-
-          if (tipoSeguimiento !== (ultimoTipo + 1)) {
-
-            this.notif.warning(
-              'Advertencia',
-              `El proceso de insolvencia se encuentra en el seguimiento ${ultimoTipo + 1}.`,
-              ConfiguracionNotificacion.configRightTop
-            );
-
-            this.insolvenciaForm.patchValue({
-              IdTipoSeguimiento: ''
-            });
-
-            return;
-          }
-        }
+    if (tiposRegistrados.length === 0) {
+    
+      if (tipoSeguimiento !== 1) {
+      
+        this.notif.warning(
+          'Advertencia',
+          'El primer detalle debe ser Fecha de admisión a insolvencia.',
+          ConfiguracionNotificacion.configRightTop
+        );
+      
+        this.insolvenciaForm.patchValue({
+          IdTipoSeguimiento: ''
+        });
+      
+        return;
+      }
+    }
+    else {
+    
+      if (tipoSeguimiento === 2 && !tiposRegistrados.includes(1)) {
+      
+        this.notif.warning(
+          'Advertencia',
+          'Primero debe registrar Fecha de admisión a insolvencia.',
+          ConfiguracionNotificacion.configRightTop
+        );
+      
+        this.insolvenciaForm.patchValue({
+          IdTipoSeguimiento: ''
+        });
+      
+        return;
+      }
+    
+      if (tipoSeguimiento === 3 && !tiposRegistrados.includes(2)) {
+      
+        this.notif.warning(
+          'Advertencia',
+          'Primero debe registrar Fecha de notificación.',
+          ConfiguracionNotificacion.configRightTop
+        );
+      
+        this.insolvenciaForm.patchValue({
+          IdTipoSeguimiento: ''
+        });
+      
+        return;
+      }
+    
+      if (tipoSeguimiento === 8 && !tiposRegistrados.includes(3)) {
+      
+        this.notif.warning(
+          'Advertencia',
+          'Primero debe registrar Fecha de inicio de negociación.',
+          ConfiguracionNotificacion.configRightTop
+        );
+      
+        this.insolvenciaForm.patchValue({
+          IdTipoSeguimiento: ''
+        });
+      
+        return;
+      }
+    
+      if (tipoSeguimiento === 4 && !tiposRegistrados.includes(8)) {
+      
+        this.notif.warning(
+          'Advertencia',
+          'Primero debe registrar Acuerdo de pago.',
+          ConfiguracionNotificacion.configRightTop
+        );
+      
+        this.insolvenciaForm.patchValue({
+          IdTipoSeguimiento: ''
+        });
+      
+        return;
+      }
+    
+      if (
+        [5, 6, 7, 9].includes(tipoSeguimiento) &&
+        !tiposRegistrados.includes(4)
+      ) {
+      
+        this.notif.warning(
+          'Advertencia',
+          'Primero debe registrar la aprobación del acuerdo.',
+          ConfiguracionNotificacion.configRightTop
+        );
+      
+        this.insolvenciaForm.patchValue({
+          IdTipoSeguimiento: ''
+        });
+      
+        return;
       }
     }
 
@@ -1170,7 +1267,7 @@ export class GestionCreditoComponent {
         }
       });
   }
-
+  }
   private obtenerFechaEvento(): string | undefined {
 
     const tipo = Number(
@@ -1479,10 +1576,17 @@ export class GestionCreditoComponent {
   }
 
   obtenerNumeroDetalle(item: InsolvenciaHistoricoDto): string {
-    const numeroInsolvencia =this.obtenerNumeroInsolvencia(item);
-    return `${numeroInsolvencia}.${item.intTipoSeguimiento}`;
-  }
 
+    const numeroInsolvencia =
+      this.obtenerNumeroInsolvencia(item);
+
+    const numeroDetalle =
+      this.obtenerNumeroVisualSeguimiento(
+        item.intTipoSeguimiento
+      );
+
+    return `${numeroInsolvencia}.${numeroDetalle}`;
+  }
   verDetalleAcuerdo(item: InsolvenciaHistoricoDto) {
 
       if (!item.TieneDetalle) {
@@ -1604,22 +1708,74 @@ export class GestionCreditoComponent {
   }
 
   private filtrarDetallePermitido(): void {
-
     const detallesActuales = this.obtenerDetallesInsolvenciaActual();
+    const tiposRegistrados = detallesActuales.map(x => Number(x.intTipoSeguimiento));
 
-    const ultimo =
-      detallesActuales.length
-        ? Math.max(...detallesActuales.map(x => x.intTipoSeguimiento))
-        : 0;
+    if (tiposRegistrados.includes(9)) {
 
-    const siguiente =
-      ultimo === 9
-        ? 1
-        : ultimo + 1;
+      this.tiposSeguimientoInsolvencia =
+        this.tiposSeguimientoInsolvencia.filter(
+          x => x.intTipoSeguimiento === 1
+        );
+
+      return;
+    }
+
+    if (!tiposRegistrados.includes(1)) {
+
+      this.tiposSeguimientoInsolvencia =
+        this.tiposSeguimientoInsolvencia.filter(
+          x => x.intTipoSeguimiento === 1
+        );
+
+      return;
+    }
+
+    if (!tiposRegistrados.includes(2)) {
+
+      this.tiposSeguimientoInsolvencia =
+        this.tiposSeguimientoInsolvencia.filter(
+          x => x.intTipoSeguimiento === 2
+        );
+
+      return;
+    }
+
+    if (!tiposRegistrados.includes(3)) {
+
+      this.tiposSeguimientoInsolvencia =
+        this.tiposSeguimientoInsolvencia.filter(
+          x => x.intTipoSeguimiento === 3
+        );
+
+      return;
+    }
+
+    if (!tiposRegistrados.includes(8)) {
+
+      this.tiposSeguimientoInsolvencia =
+        this.tiposSeguimientoInsolvencia.filter(
+          x => x.intTipoSeguimiento === 8
+        );
+
+      return;
+    }
+
+    if (!tiposRegistrados.includes(4)) {
+
+      this.tiposSeguimientoInsolvencia =
+        this.tiposSeguimientoInsolvencia.filter(
+          x => x.intTipoSeguimiento === 4
+        );
+
+      return;
+    }
 
     this.tiposSeguimientoInsolvencia =
       this.tiposSeguimientoInsolvencia.filter(
-        x => x.intTipoSeguimiento === siguiente
+        x =>
+          [5, 6, 7, 9].includes(x.intTipoSeguimiento) &&
+          !tiposRegistrados.includes(x.intTipoSeguimiento)
       );
   }
 
