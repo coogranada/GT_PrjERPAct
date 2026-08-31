@@ -80,6 +80,7 @@ export class GestionCreditoComponent {
   public EnableExoneradaGMF: boolean = false;
   public EnableExentaGMF: boolean = false;
   periodosPago: PeriodoPago[] = [];
+  public accionSeleccionada = false;
 
   //pagare
   public cambiarPagare: boolean = false;
@@ -825,6 +826,7 @@ export class GestionCreditoComponent {
   }
 
   async onChangeOperacion() {
+    this.accionSeleccionada = true;
     if (this.campoLineaHabilitado) this.restaurarLinea(false);
     if (this.campoPagareHabilitado) this.restaurarPagare(false);
     if (this.campoFormaPagoHabilitado) this.restaurarFormaPago(false);
@@ -833,6 +835,7 @@ export class GestionCreditoComponent {
     this.operacionActual = this.resultOperaciones.find((op: any) => op.IdOperaciones == operacionCodigo)?.ERP_tblOperacion?.Descripcion;
     
     if (operacionCodigo === '2') { // Buscar
+      this.accionSeleccionada = false;
       this.limpiarFormulario(true);
       this.cuotaTabBloqueado = false;
     } else{
@@ -1958,6 +1961,7 @@ export class GestionCreditoComponent {
         
         this.guardarLogGestionCredito(jsonLog);
         this.notif.success('Exitoso', 'El cambio de garantía se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+        this.accionSeleccionada = false;
         this.cerrarModalYRefrescarCambiarGarantia();
       },
       error: () => {
@@ -2188,6 +2192,7 @@ export class GestionCreditoComponent {
         resp.Mensaje ?? 'El cambio de calificación no se realizó correctamente.',
         ConfiguracionNotificacion.configRightTop
       );
+      this.accionSeleccionada = false;
       return;
     }
 
@@ -2198,6 +2203,7 @@ export class GestionCreditoComponent {
       resp.Mensaje ?? 'El cambio de calificación se realizó correctamente.',
       ConfiguracionNotificacion.configRightTop
     );
+    this.accionSeleccionada = false;
 
     this.cerrarModalYRefrescar();
   }
@@ -2792,6 +2798,7 @@ export class GestionCreditoComponent {
       ConfiguracionNotificacion.configRightTop
     );
     this.cuotaTabBloqueado = false;
+    this.accionSeleccionada = false;
   }
 
   onChangeCuentaDebito() {
@@ -2887,6 +2894,7 @@ export class GestionCreditoComponent {
             'El cambio de inclusión/exclusión de seguro se realizó correctamente.', 
             ConfiguracionNotificacion.configRightTop
           );
+          this.accionSeleccionada = false;
           this.getDeducibles();
           this.cuotaTabBloqueado = false;
           this.guardarLogGestionCredito(jsonLog);
@@ -3622,6 +3630,7 @@ export class GestionCreditoComponent {
       ConfiguracionNotificacion.configRightTop
     );
     this.cuotaTabBloqueado = false;
+    this.accionSeleccionada = false;
   } 
 
   private procesarRespuestaPagare(resp: ResultadoOperacionDto, nuevoPagare: number) {
@@ -3663,6 +3672,7 @@ export class GestionCreditoComponent {
       ConfiguracionNotificacion.configRightTop
     );
     this.cuotaTabBloqueado = false;
+    this.accionSeleccionada = false;
   } 
 
   private errorActualizarPagare(resp: ResultadoOperacionDto) {
@@ -4783,6 +4793,7 @@ CalcularSimularPago(){
             Anteriores: this.codeudoresAnteriores,
             Actuales: this.codeudoresDraft
           }
+          this.accionSeleccionada = false;
           this.guardarLogGestionCredito(logCambios);
           window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
           this.getGarantias();
@@ -5013,6 +5024,7 @@ CalcularSimularPago(){
     this.gestionCreditoOperacionForm.get('Codigo')?.reset();
     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     this.notif.success('Exitoso', `${novedad} se realizó correctamente.`, ConfiguracionNotificacion.configRightTop);
+    this.accionSeleccionada = false;
   }
 
   private buildCambiarInfoCreditoContext(): CambiarInfoCreditoContext {
