@@ -425,7 +425,7 @@ export class LogGestionCreditosComponent {
   }
 
   formatearValor = (valor: any, columna?: string): string => {
-
+  
     if (columna === 'JSON') {
       try {
         return JSON.stringify(JSON.parse(valor), null, 2);
@@ -433,14 +433,24 @@ export class LogGestionCreditosComponent {
         return valor;
       }
     }
-
-    if (typeof valor === 'string' && valor.includes('T')) {
+  
+    if (typeof valor === 'string' && this.esFechaISO(valor)) {
       const fecha = new Date(valor);
-      return fecha.toLocaleString();
+    
+      return `${fecha.getFullYear()}/${this.pad(fecha.getMonth() + 1)}/${this.pad(fecha.getDate())} ${this.pad(fecha.getHours())}:${this.pad(fecha.getMinutes())}:${this.pad(fecha.getSeconds())}`;
     }
-
-    return valor ?? '';
+  
+    return valor !== null && valor !== undefined ? String(valor) : '';
   }
+  
+  esFechaISO(valor: string): boolean {
+    return /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(valor);
+  }
+  
+  pad(numero: number): string {
+    return numero < 10 ? '0' + numero : numero.toString();
+  }
+
 
   EliminarFiltro(item: any) {
     this.filtrosAgregado =
