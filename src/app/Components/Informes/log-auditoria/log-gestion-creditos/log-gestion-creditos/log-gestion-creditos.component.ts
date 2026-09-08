@@ -217,7 +217,7 @@ export class LogGestionCreditosComponent {
     if (Cant === 0) {
       this.notif.onWarning(
         'Advertencia',
-        'No se encuentran registros'
+        'No se encuentran registros.'
       );
       return;
     }
@@ -281,7 +281,7 @@ export class LogGestionCreditosComponent {
           this.ListfilteredColumnasInf = [...this.ListColumnasInf];
         },
         error: () => {
-          this.notif.onWarning('Advertencia', 'Error al cargar columnas');
+          this.notif.onWarning('Advertencia', 'Error al cargar columnas.');
         }
       });
   }
