@@ -53,9 +53,15 @@
     font-weight: bold;
 }
 
+.txt-bold1 {
+    font-size: 15px;
+    font-weight: bold;
+}
+
 .txt-right{
     text-align: right;
 }
+
 .radioB {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -72,7 +78,30 @@
     border-radius: 50%;
 }
 
+.radioB1 {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    /* create custom radiobutton appearance */
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    padding: 6px;
+    /* background-color only for content */
+    background-clip: content-box;
+    border: 2px solid #bbbbbb;
+    background-color: #e7e6e7;
+    border-radius: 50%;
+    transform: scale(0.85);
+    margin-right: 3px;
+}
+
 .radioB:checked {
+    background-color: rgb(160, 0, 87);
+    border-color: rgb(160, 0, 87);
+}
+
+.radioB1:checked {
     background-color: rgb(160, 0, 87);
     border-color: rgb(160, 0, 87);
 }
@@ -82,6 +111,19 @@
     align-items: center;    
     gap: 8px;               
     cursor: pointer;
+}
+
+.radio-custom1 {
+    display: inline-block;
+    align-items: center;    
+    gap: 8px;               
+    cursor: pointer;
+    margin-right: 12px;
+    margin-bottom: 0;
+}
+
+.radio-custom1 span {
+    font-size: 12px;
 }
 
 
@@ -159,7 +201,7 @@
 }
 
 .table tbody tr {
-    height: 45px !important;
+    height: 40px !important;
 }
 
 .table td {
@@ -248,8 +290,16 @@ tr {
     padding-right: 0px;
 }
 
-.pad0L{
+.pad5L{
     padding-left: 5px;
+}
+
+.pad4L{
+    padding-left: 4px;
+}
+
+.pad0L{
+   padding-left: 0px;
 }
 
 .pad10L{
@@ -287,6 +337,14 @@ tr {
     margin-top: 5px !important;
 }
 
+.mar5L{
+    margin-left: 5px !important;
+}
+
+.mar5R{
+    margin-right: 5px !important;
+}
+
 .mar5B{
     margin-bottom: 5px !important;
 }
@@ -294,9 +352,16 @@ tr {
 .mar0B{
     margin-bottom: 0px !important;
 }
+.mar0R{
+    margin-right: 0px !important;
+}
 
 .mar1T{
     margin-top: 1px !important;
+}
+
+.mar0T{
+    margin-top: 0px !important;
 }
 
 .pad5R{    
@@ -387,7 +452,7 @@ tr {
 
 
 .table tbody tr {
-    height: 45px !important;
+    height: 40px !important;
 }
 
 .modal-overlay {
@@ -460,21 +525,31 @@ tr {
 
 .contorno-rutas {
     border: 1px solid #852662;
-    padding: 10px;
     border-radius: 10px;
-    padding-top: 20px;
-    /* Espacio para que el texto no se superponga al borde */
+    padding: 15px 8px 8px 8px;
     position: relative;
+    margin-right: 8px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: nowrap;
 }
 
 .titulo {
     position: absolute;
     top: -10px;
-    left: 18px;
+    left: 12px;
     font-weight: bold;
-    font-size: 14px;
-    background-color: white;
+    font-size: 13px;
+    background: #fff;
     padding: 0 5px;
+}
+.contenedor-radios {
+    display: flex;
+    gap: 2px;
+    align-items: flex-start;
 }
 
 .tabla-wrapper{
@@ -494,6 +569,7 @@ tr {
     top: 0;
     background-color: white; 
     z-index: 2;
+    text-align: center;
 }
 
 .operacionFija {
@@ -503,4 +579,66 @@ tr {
     z-index: 1; 
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
     min-width: 30px;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+.ac-label-sg {
+    font-weight: 700;
+    position: relative;
+    padding: .5em 1em;
+    margin-bottom: .5em;
+    display: block;
+    cursor: pointer;
+    background-color: #d8d8d8;
+    transition: background-color .15s ease-in-out;
+}
+
+.ac-input-sg:checked + label,
+.ac-label-sg:hover {
+    background: rgb(185 111 151);
+    color: rgb(63, 63, 63);
+}
+
+.ac-label-sg:after,
+.ac-input-sg:checked + .ac-label-sg:after {
+    content: "+";
+    position: absolute;
+    display: block;
+    right: 0;
+    top: 0;
+    width: 2em;
+    height: 100%;
+    line-height: 2.25em;
+    text-align: center;
+    background-color: #e5e5e5;
+    transition: background-color .15s ease-in-out;
+}
+
+.ac-label-sg:hover:after,
+.ac-input-sg:checked + .ac-label-sg:after {
+    background-color: #b5b5b5;
+}
+
+.ac-input-sg:checked + .ac-label-sg:after {
+    content: "-";
+}
+
+.ac-input-sg {
+    display: none;
+}
+
+.ac-text-sg {
+    opacity: 0;
+    height: 0;
+    margin-bottom: .5em;
+    transition: opacity .5s ease-in-out;
+    overflow: hidden;
+}
+
+.ac-input-sg:checked ~ .ac-text-sg {
+    opacity: 1;
+    height: auto;
 }

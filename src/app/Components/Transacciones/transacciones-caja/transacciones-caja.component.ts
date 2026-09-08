@@ -50,6 +50,7 @@ export class TransaccionesCajaComponent implements OnInit {
   @ViewChild('chequesTab', { static: true }) private chequesTab!: ElementRef;
   @ViewChild('convenioTab', { static: true }) private convenioTab!: ElementRef;
   @ViewChild('transaTab', { static: true }) private transaTab!: ElementRef;
+  @ViewChild('cupoPTab', { static: true }) private cupoPTab!: ElementRef;
 
 
 
@@ -61,6 +62,9 @@ export class TransaccionesCajaComponent implements OnInit {
   formSustituir !: FormGroup;
   formCambCheInt !: FormGroup;
   formCambCheExt !: FormGroup;
+  formCambEfeChe !: FormGroup;
+  formPagoCupoTD !: FormGroup;
+
 
 
   public UsuarioActual: string = "";
@@ -85,6 +89,7 @@ export class TransaccionesCajaComponent implements OnInit {
   public ListCuentasBFiltrados: any[] = [];
   public ListBancosFiltrados: any[] = [];
   public ListBancosPucFiltrados: any[] = [];
+  public ListRegistroPagoCupoTD: any[] = [];
   public ListCheques: ChequeDTO[] = [];
   public ListChequesRet: ChequeRetDTO[] = [];
   public ListChequesUltimo: ChequeDTO[] = [];
@@ -114,12 +119,14 @@ export class TransaccionesCajaComponent implements OnInit {
   public IdUsuarioAutoriza: number = 0;
   public OrigenSeleccionBN: number = 0;
   public IndicadorCodigo8: number = 0;
+  public IndicadorCodigo6: number = 0;
   public NaturalezaTransa: number | null = null;
   public TabPorDefecto: number | null = null;
   public ProductoSeleccionado: number | null = null;
   public CodigoTransa: number | null = null;
   public OtraTransaccionIdOficinaD: number = 0;
   public OtraTransaccionValorChequeSust: number = 0;
+  public CupoPagoTotal: number = 0;
 
 
   public TipoTransaccionStrSelected: string = "";
@@ -146,8 +153,7 @@ export class TransaccionesCajaComponent implements OnInit {
   public OtraTransaccionBeneficiarioSust: string = "";
   public converted_image: string = "";
   public ValidadoraStr: string = "";
-
-
+  public FechaRediferir: string = "";
 
   public pdfUrl!: SafeResourceUrl;
 
@@ -171,6 +177,7 @@ export class TransaccionesCajaComponent implements OnInit {
   activaSiplaft = false;
   activaCheque = false;
   activaTransa = false;
+  activaCupoP = false;
   activaConvenio = false;
 
   //#endregion
@@ -258,6 +265,20 @@ export class TransaccionesCajaComponent implements OnInit {
       valorGMF: { value: null, disabled: true }
     });
 
+    this.formCambEfeChe = this.fb.group({
+      tasaGMF: [{ value: '', disabled: true }],
+      valorEfectivo: { value: null, disabled: false },
+      valorGMF: { value: null, disabled: true }
+    });
+
+    this.formPagoCupoTD = this.fb.group({
+      corte: [1],
+      compra: [0],
+      valorRediferir: [{ value: 0, disabled: true }],
+      valorPagoTotal: [{ value: 0, disabled: true }],
+      valorPagoMinimo: [{ value: 0, disabled: true }]
+    });
+
     $('#ModalCondiciones').on('hidden.bs.modal', function () {
       $('body').css('padding-right', '0');
       $('body').removeClass('modal-open');
@@ -302,6 +323,7 @@ export class TransaccionesCajaComponent implements OnInit {
         next: (resultado: any[]) => {
           this.loading.hide();
           this.IndicadorCodigo8 = resultado.find(x => x.intCodigo === 8)?.sngTasa ?? null;
+          this.IndicadorCodigo6 = resultado.find(x => x.intCodigo === 6)?.sngTasa ?? null;
         },
         error: (err) => {
           this.loading.hide();
@@ -538,10 +560,20 @@ export class TransaccionesCajaComponent implements OnInit {
 
     this.ListOtrasTransaccionxPerfilBase = [... this.ListOtrasTransaccionxPerfilFiltrado];
 
+    this.cargarOperacion(this.TipoTransaccionSelected);
+
     //Optimizaren un solo metodo
     this.limpiarcamposOtraTransaDocNom(0); //Limpieza tab tesoreria
     this.limpiarcamposCheque(0); //Limpieza tab cheque consigna
     this.limpiarcamposChequeRet(0); //Limpieza tab cheque retira
+  }
+
+  cargarOperacion(idTransaccion: number) {
+    switch (idTransaccion) {
+      case 5:
+        this.obtenerPagoCuposTD();
+        break;
+    }
   }
 
   capturarDocumento(input: HTMLInputElement) {
@@ -590,6 +622,9 @@ export class TransaccionesCajaComponent implements OnInit {
       case 7:
         this.activarTransaTab();
         break;
+      case 8:
+        this.activarCupoPTab();
+        break;
     }
   }
 
@@ -602,6 +637,11 @@ export class TransaccionesCajaComponent implements OnInit {
   activarTransaTab() {
     this.devolverTab(7);
     this.transaTab.nativeElement.click();
+  }
+
+  activarCupoPTab() {
+    this.devolverTab(8);
+    this.cupoPTab.nativeElement.click();
   }
 
   activarChequesTab() {
@@ -650,6 +690,7 @@ export class TransaccionesCajaComponent implements OnInit {
         this.activaCheque = false;
         this.activaTransa = false;
         this.activaConvenio = false;
+        this.activaCupoP = false;
         break;
       case 1:
         this.activaTesoreria = true;
@@ -659,6 +700,7 @@ export class TransaccionesCajaComponent implements OnInit {
         this.activaCheque = false;
         this.activaTransa = false;
         this.activaConvenio = false;
+        this.activaCupoP = false;
         break;
       case 2:
         this.activaTesoreria = false;
@@ -668,6 +710,7 @@ export class TransaccionesCajaComponent implements OnInit {
         this.activaCheque = false;
         this.activaTransa = false;
         this.activaConvenio = false;
+        this.activaCupoP = false;
         break;
       case 3:
         this.activaTesoreria = false;
@@ -677,6 +720,7 @@ export class TransaccionesCajaComponent implements OnInit {
         this.activaCheque = false;
         this.activaTransa = false;
         this.activaConvenio = false;
+        this.activaCupoP = false;
         break;
       case 4:
         this.activaTesoreria = false;
@@ -686,6 +730,7 @@ export class TransaccionesCajaComponent implements OnInit {
         this.activaCheque = false;
         this.activaTransa = false;
         this.activaConvenio = false;
+        this.activaCupoP = false;
         break;
       case 5:
         this.activaTesoreria = false;
@@ -695,6 +740,7 @@ export class TransaccionesCajaComponent implements OnInit {
         this.activaCheque = true;
         this.activaTransa = false;
         this.activaConvenio = false;
+        this.activaCupoP = false;
         break;
       case 6:
         this.activaTesoreria = false;
@@ -704,6 +750,7 @@ export class TransaccionesCajaComponent implements OnInit {
         this.activaCheque = false;
         this.activaConvenio = true;
         this.activaTransa = false;
+        this.activaCupoP = false;
         break;
       case 7:
         this.activaTesoreria = false;
@@ -713,6 +760,17 @@ export class TransaccionesCajaComponent implements OnInit {
         this.activaCheque = false;
         this.activaConvenio = false;
         this.activaTransa = true;
+        this.activaCupoP = false;
+        break;
+      case 8:
+        this.activaTesoreria = false;
+        this.activaCuotas = false;
+        this.activaCartera = false;
+        this.activaSiplaft = false;
+        this.activaCheque = false;
+        this.activaConvenio = false;
+        this.activaTransa = false;
+        this.activaCupoP = true;
         break;
     }
   }
@@ -932,6 +990,8 @@ export class TransaccionesCajaComponent implements OnInit {
     this.OperacionPSelected = i.DescripcionOperacion;
     this.ActivaMovtoSelected = i.ActivaMovimiento;
     this.IdCuentaSelected = i.IdCuenta;
+    this.FechaRediferir = i.FechaRediferir.toString();
+
 
     //Cargue opciones para búsqueda por documento
     //Productos Olivos
@@ -1019,6 +1079,7 @@ export class TransaccionesCajaComponent implements OnInit {
         this.limpiarFormSustituir();
         this.limpiarFormCambCheInt();
         this.limpiarFormCambCheExt();
+        this.limpiarFormCambEfeChe();
 
         //arreglos
         this.ListProducto = [];
@@ -1070,6 +1131,7 @@ export class TransaccionesCajaComponent implements OnInit {
         this.limpiarFormSustituir();
         this.limpiarFormCambCheInt();
         this.limpiarFormCambCheExt();
+        this.limpiarFormCambEfeChe();
 
         //arreglos
         this.ListProducto = [];
@@ -1152,6 +1214,13 @@ export class TransaccionesCajaComponent implements OnInit {
     });
   }
 
+  limpiarFormCambEfeChe() {
+    this.formCambEfeChe.patchValue({
+      tasaGMF: null,
+      valorEfectivo: null,
+      valorGMF: null
+    });
+  }
   //#endregion
 
   //#region "Funciones especiales Olivos"
@@ -1641,15 +1710,17 @@ export class TransaccionesCajaComponent implements OnInit {
       allowEscapeKey: false,
 
       preConfirm: async () => {
+
         const usuario = (document.getElementById('usuarioAut') as HTMLInputElement).value;
         const clave = (document.getElementById('claveAut') as HTMLInputElement).value;
+        const claveEncriptada = btoa(btoa(clave)).toString();
 
         try {
           this.loading.show();
           const response: any = await lastValueFrom(
             this.loginService.userAuthentication({
               Usuario: usuario,
-              clave: clave
+              clave: claveEncriptada
             })
           );
 
@@ -2205,6 +2276,20 @@ export class TransaccionesCajaComponent implements OnInit {
             this.formCambCheExt.get('tasaGMF')?.setValue(this.IndicadorCodigo8);
           }, 500);
           break;
+        case "16287": // Cambio efectivo por cheque
+          this.habilitaChequeVacio();
+          this.limpiarFormCambEfeChe();
+          setTimeout(() => {
+            this.formCambEfeChe.get('tasaGMF')?.setValue(this.IndicadorCodigo6);
+          }, 500);
+          break;
+        case "16410": // Cambio efectivo por cheque SIN GMF
+          this.habilitaChequeVacio();
+          this.limpiarFormCambEfeChe();
+          setTimeout(() => {
+            this.formCambEfeChe.get('tasaGMF')?.setValue(0);
+          }, 500);
+          break;
       }
 
     }, 500);
@@ -2243,6 +2328,22 @@ export class TransaccionesCajaComponent implements OnInit {
           this.TotalEfectivo = this.OtraTransaccionTerceroData.SaldoGiros;
           this.recalcularSaldoTotal();
           break;
+        case "16287": // Cambio de efectivo por cheque
+          var valorGMF = 0;
+          var valorEfectivo = 0;
+          valorGMF = this.formCambEfeChe.get('valorGMF')?.value;
+          valorEfectivo = this.formCambEfeChe.get('valorEfectivo')?.value;
+
+          this.TotalEfectivo = valorEfectivo;
+          this.recalcularSaldoTotal();
+          break;
+        case "16410": // Cambio de efectivo por cheque Sin GMF
+          var valorEfectivo = 0;
+          valorEfectivo = this.formCambEfeChe.get('valorEfectivo')?.value;
+
+          this.TotalEfectivo = valorEfectivo;
+          this.recalcularSaldoTotal();
+          break;
       }
 
     }, 500);
@@ -2260,9 +2361,41 @@ export class TransaccionesCajaComponent implements OnInit {
       this.formCambCheExt.get('valorGMF')?.setValue(valorGMF);
       this.setearValorAutomatico();
       this.activarChequesTab();
+    } else {
+      this.formCambCheExt.get('valorGMF')?.setValue(0);
+      this.limpiarFormulario(2);
     }
   }
 
+  calcularGMFCamEfeChe() {
+    var valorEfectivo = 0;
+    var valorGMF = 0;
+
+    valorEfectivo = this.formCambEfeChe.get('valorEfectivo')?.value;
+
+    if (this.OtraTransaccionCodigo.toString() == '16287') {
+      if (valorEfectivo && valorEfectivo > 0) {
+        valorGMF = valorEfectivo * this.IndicadorCodigo6;
+        this.formCambEfeChe.get('valorGMF')?.setValue(valorGMF);
+        this.setearValorAutomatico();
+        this.activarChequesTab();
+      } else {
+        this.formCambEfeChe.get('valorGMF')?.setValue(0);
+        this.limpiarFormulario(2);
+      }
+    } else {
+      if (valorEfectivo && valorEfectivo > 0) {
+        this.formCambEfeChe.get('valorGMF')?.setValue(0);
+        this.setearValorAutomatico();
+        this.activarChequesTab();
+      } else {
+        this.formCambEfeChe.get('valorGMF')?.setValue(0);
+        this.limpiarFormulario(2);
+      }
+    }
+
+
+  }
 
   //#endregion
 
@@ -2839,6 +2972,63 @@ export class TransaccionesCajaComponent implements OnInit {
 
   //#endregion
 
+
+  //#region "Tab Cupo"
+
+  obtenerPagoCuposTD() {
+    this.loading.show();
+    try {
+      const idCuenta = this.IdCuentaSelected;
+      const desembolso = 1;
+      const corte = 1;
+      const compras = 0;
+      const cuenta = this.CuentaSelected
+      const [oficina, producto, consecutivo, digito] =
+      cuenta.split('-').map(x => Number(x));
+
+      this.transaccionesCajaService.ObtenerPagoCuposTD(idCuenta, desembolso, corte, compras, oficina, producto, consecutivo )
+        .subscribe({
+          next: (result: any) => {
+            this.loading.hide();
+            this.ListRegistroPagoCupoTD = result.Datos;
+            const PagoMinimo = result.Pago[0].Column3;
+            
+            if (this.ListRegistroPagoCupoTD.length > 0) {
+              const ultimoRegistro = this.ListRegistroPagoCupoTD[this.ListRegistroPagoCupoTD.length - 1];
+              this.CupoPagoTotal = ultimoRegistro.curEfectivo;
+
+              // Quitar fila totalizadora
+              this.ListRegistroPagoCupoTD.pop();
+
+              // Intereses vencidos + deducibles + mora
+              const valorRediferir = this.ListRegistroPagoCupoTD.reduce((total, item) => {
+                return total +
+                  (item.curIntVencidos || 0) +
+                  (item.Deducibles || 0) +
+                  (item.curIntMora || 0);
+              }, 0);
+
+              this.formPagoCupoTD.get('valorRediferir')?.setValue(valorRediferir);
+            }
+            this.formPagoCupoTD.get('valorPagoTotal')?.setValue(this.CupoPagoTotal);
+            this.formPagoCupoTD.get('valorPagoMinimo')?.setValue(PagoMinimo);
+
+          }, error: (err) => {
+            this.loading.hide();
+            this.notif.onDanger('Error', 'No se pudo obtener datos del pago.');
+          }
+        });
+
+    } catch (error) {
+      this.notif.onWarning('Error', 'No se pudo obtener datos del pago.');
+    } finally {
+      this.loading.hide();
+    }
+  }
+
+
+  //#endregion
+
   //#region "GUARDAR TRANSACCIONES"
   guardarTransaccion() {
 
@@ -3014,7 +3204,8 @@ export class TransaccionesCajaComponent implements OnInit {
       idUsuarioAutoriza: this.IdUsuarioAutoriza,
       naturaleza: this.NaturalezaTransa,
       idPuc: 0, // dejar en cero por defecto
-      valorChequeCambio: 0 // dejar en cero por defecto
+      valorChequeCambio: 0, // dejar en cero por defecto
+      valorEfectivoCambio: 0 // dejar en cero por defecto
     }
 
     this.ListChequesUltimo = this.ListCheques; // Se hace copia del objeto
@@ -3090,8 +3281,15 @@ export class TransaccionesCajaComponent implements OnInit {
           strObservacion: observacionCI
         });
         break;
-      case "16077": //CAMBIAR CHEQUE INTERNO
+      case "16077": //CAMBIAR CHEQUE EXTERNO
         transaccion.valorChequeCambio = Number(this.formCambCheExt.get('valorCheques')?.value);
+        transaccion.naturaleza = -1;
+        break;
+      case "16287": //CAMBIAR EFECTIVO POR CHEQUE
+        transaccion.naturaleza = 1;
+        break;
+      case "16410": //CAMBIAR EFECTIVO POR CHEQUE SIN GMF
+        transaccion.naturaleza = 1;
         break;
     }
 
@@ -3116,13 +3314,6 @@ export class TransaccionesCajaComponent implements OnInit {
       error => {
         this.loading.hide();
         let mensaje = error.Mensaje;
-        console.log(error);
-        console.log('JSON:', JSON.stringify(error));
-        console.log('keys:', Object.keys(error));
-        console.log('message:', error.message);
-        console.log('error:', error.error);
-        console.log('status:', error.status);
-        console.log('statusText:', error.statusText);
         this.notif.onWarning('Advertencia', mensaje);
       }
     );
@@ -3152,13 +3343,14 @@ export class TransaccionesCajaComponent implements OnInit {
       preConfirm: async () => {
         const usuario = (document.getElementById('usuarioAutMU') as HTMLInputElement).value;
         const clave = (document.getElementById('claveAutMU') as HTMLInputElement).value;
+        const claveEncriptada = btoa(btoa(clave)).toString();;
 
         try {
           this.loading.show();
           const response: any = await lastValueFrom(
             this.loginService.userAuthentication({
               Usuario: usuario,
-              clave: clave
+              clave: claveEncriptada
             })
           );
 
@@ -3286,7 +3478,7 @@ export class TransaccionesCajaComponent implements OnInit {
         }
 
         if (Number(valorGMF) <= 0) {
-          this.notif.onWarning('Advertencia', 'El valor del GMF es válido.');
+          this.notif.onWarning('Advertencia', 'El valor del GMF no es válido.');
           return false;
         }
 
@@ -3295,6 +3487,32 @@ export class TransaccionesCajaComponent implements OnInit {
         }
 
         break;
+
+      case "16287": // CAMBIO EFECTIVO POR CHEQUE
+        const valorEfectivoCambEfeChe = this.formCambEfeChe.get('valorEfectivo')?.value;
+        const valorGMFCambEfeChe = this.formCambEfeChe.get('valorGMF')?.value;
+        const valorRealCambEfeChe = Number(valorEfectivoCambEfeChe) - Number(valorGMFCambEfeChe)
+        if (Number(valorGMFCambEfeChe) <= 0) {
+          this.notif.onWarning('Advertencia', 'El valor del GMF no es válido.');
+          return false;
+        }
+
+        if (valorRealCambEfeChe !== this.TotalChequesRet) {
+          this.notif.onWarning('Advertencia', 'La suma de los cheques debe ser $ ' + valorRealCambEfeChe.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+          return false;
+        }
+
+        break;
+      case "16410": // CAMBIO EFECTIVO POR CHEQUE SIN GMF
+        const valorEfectivoCambEfeCheSG = this.formCambEfeChe.get('valorEfectivo')?.value;
+
+        if (Number(valorEfectivoCambEfeCheSG) !== this.TotalChequesRet) {
+          this.notif.onWarning('Advertencia', 'La suma de los cheques debe ser $ ' + Number(valorEfectivoCambEfeCheSG).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+          return false;
+        }
+
+        break;
+
     }
 
     return true;
@@ -3321,7 +3539,7 @@ export class TransaccionesCajaComponent implements OnInit {
     } else {
       const valorRelacionCh = this.formCambCheExt.get('valorCheques')?.value;
       if (Number(valorRelacionCh) !== Number(this.TotalCheques)) {
-        this.notif.onWarning('Advertencia', 'El valor total de cheques debe coincidir con el total de cheques agregados ($ ' + valorRelacionCh + ').');
+        this.notif.onWarning('Advertencia', 'La suma de los cheques debe ser $ ' + valorRelacionCh.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '.');
         return false;
       }
     }

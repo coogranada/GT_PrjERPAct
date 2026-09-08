@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { map } from 'rxjs/operators';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { forkJoin, fromEvent, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -16,6 +15,7 @@ import { ConciliaconCompensacionService } from '../../../Services/Utilidades/con
 import { ComContData } from '../../../Models/Utilidades/comcont.model';
 import { AutConData } from '../../../Models/Utilidades/autcon.model';
 import { DisData } from '../../../Models/Utilidades/dis.model';
+import { LoadingService } from '../../../Services/shared/loading.service';
 
 
 const ColorPrimario = 'rgb(13,165,80)';
@@ -32,7 +32,6 @@ const ColorSecundario = 'rgb(13,165,80,0.7)';
 export class ConciliacionCompensacionComponent implements OnInit {
 
 
-  @ViewChild('ngxLoading', { static: false }) ngxLoadingComponent!: NgxLoadingComponent;
   @ViewChild('InputComcont', { static: false }) inputComcont!: ElementRef;
   @ViewChild('InputAutcon', { static: false }) inputAutcon!: ElementRef;
   @ViewChild('InputDis', { static: false }) inputDis!: ElementRef;
@@ -46,8 +45,6 @@ export class ConciliacionCompensacionComponent implements OnInit {
   public resultOperaciones: any;
   public valueSelected: string = '';
   public cuentaSelected: string = '';
-  public loadingCons: boolean = false;
-  public ngxLoadingAnimationTypes = ngxLoadingAnimationTypes;
   public primaryColour = ColorPrimario;
   public secondaryColour = ColorSecundario;
   operacionEscogida = '';
@@ -76,7 +73,8 @@ export class ConciliacionCompensacionComponent implements OnInit {
     private el: ElementRef,
     private moduleValidationService: ModuleValidationService,
     private excelReportService: ExcelService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private loading: LoadingService
 
   ) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
@@ -260,7 +258,7 @@ export class ConciliacionCompensacionComponent implements OnInit {
   }
 
   async obtenerDatos() {
-    this.loadingCons = true;
+    this.loading.show();
     try {
       await this.obtenerSaldosGenerales();
       await this.obtenerNovedadesCredibanco();
@@ -273,13 +271,14 @@ export class ConciliacionCompensacionComponent implements OnInit {
         this.sdoOrdenTransferencia = Number((this.CapitalVisionamos + this.ComisionVisionamos) - this.Dispensado)
       }, 1000);
       this.vblePanelDatos = true;
+      this.loading.hide();
       this.toggleDisable();
       this.notif.success('Exitoso', 'Proceso realizado con éxito.', ConfiguracionNotificacion.configRightTop);
     } catch (error) {
       console.log("error obtener datos: " + error)
       this.notif.error('Error', 'Ha ocurrido un problema en la ejecución: ' + error, ConfiguracionNotificacion.configRightTop);
     } finally {
-      this.loadingCons = false;
+      this.loading.hide();
     }
   }
 
@@ -518,15 +517,15 @@ export class ConciliacionCompensacionComponent implements OnInit {
 
         //if ((this.fechaIdentificadaAutCon === this.fechaIdentificadaComCont) || (!this.fechaIdentificadaAutCon && (this.fechaIdentificadaAutCon !== ""))) {
         if (this.fechaIdentificadaAutCon === this.fechaIdentificadaComCont || this.fechaIdentificadaAutCon.trim() === "") {
-          this.loadingCons = true;
+          this.loading.show();
           this.conciliacionCompensacionService.GuardarComcont(JSON.stringify(arrayComCont)).subscribe(
             result => {
               if (result) {
                 this.notif.success('Exitoso', 'Archivo COMCONT almacenado correctamente.', ConfiguracionNotificacion.configRightTop);
-                this.loadingCons = false;
+                this.loading.hide();
                 this.comContD = arrayComCont;
               } else {
-                this.loadingCons = false;
+                this.loading.hide();
                 this.LimpiarArchivoComCont();
                 this.notif.warning('Advertencia', 'El archivo tiene problemas de estructura, valide el formato de los campos y cantidad de columnas [7].', ConfiguracionNotificacion.configRightTop);
               }
@@ -535,12 +534,12 @@ export class ConciliacionCompensacionComponent implements OnInit {
               if (error.status === 400) {
                 const errorMessage = error._body ? JSON.parse(error._body) : 'El archivo tiene problemas de estructura, valide el formato de los campos y cantidad de columnas [7].';
 
-                this.loadingCons = false;
+                this.loading.hide();
                 this.LimpiarArchivoComCont();
                 this.notif.warning('Advertencia', errorMessage, ConfiguracionNotificacion.configRightTop);
 
               } else {
-                this.loadingCons = false;
+                this.loading.hide();
                 this.LimpiarArchivoComCont();
                 const errorMessage = <any>error;
                 this.notif.error('Error', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
@@ -604,14 +603,14 @@ export class ConciliacionCompensacionComponent implements OnInit {
         }
 
         if ((this.fechaIdentificadaAutCon === this.fechaIdentificadaComCont) || (!this.fechaIdentificadaComCont && (this.fechaIdentificadaComCont !== ""))) {
-          this.loadingCons = true;
+          this.loading.show();
           this.conciliacionCompensacionService.GuardarAutCon(JSON.stringify(arrayAutCon)).subscribe(
             result => {
               if (result) {
                 this.notif.success('Exitoso', 'Archivo AUTCON almacenado correctamente.', ConfiguracionNotificacion.configRightTop);
-                this.loadingCons = false;
+                this.loading.hide();
               } else {
-                this.loadingCons = false;
+                this.loading.hide();
                 this.LimpiarArchivoAutCon();
                 this.notif.warning('Advertencia', 'El archivo tiene problemas de estructura, valide el formato de los campos y cantidad de columnas [43].', ConfiguracionNotificacion.configRightTop);
               }
@@ -620,12 +619,12 @@ export class ConciliacionCompensacionComponent implements OnInit {
               if (error.status === 400) {
                 const errorMessage = error._body ? JSON.parse(error._body) : 'El archivo tiene problemas de estructura, valide el formato de los campos y cantidad de columnas [43].';
 
-                this.loadingCons = false;
+                this.loading.hide();
                 this.LimpiarArchivoAutCon();
                 this.notif.warning('Advertencia', errorMessage, ConfiguracionNotificacion.configRightTop);
 
               } else {
-                this.loadingCons = false;
+                this.loading.hide();
                 this.LimpiarArchivoAutCon();
                 const errorMessage = <any>error;
                 this.notif.error('Error', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
@@ -743,7 +742,7 @@ export class ConciliacionCompensacionComponent implements OnInit {
 
   GuardarCompensacion() {
     try {
-      this.loadingCons = true;
+      this.loading.show();
       this.dataUser = JSON.parse(window.atob(localStorage.getItem('Data') ?? ''));
       this.compensacionForm.patchValue({ IdUsuarioProceso: this.dataUser.IdUsuario });
       this.compensacionForm.patchValue({ Fecha: this.fechaIdentificadaComCont });
@@ -754,14 +753,14 @@ export class ConciliacionCompensacionComponent implements OnInit {
 
 
       if (this.compensacionForm.get('CapitalCoogranada')?.value === 0 || this.compensacionForm.get('CapitalVisionamos')?.value === 0 || this.fechaIdentificadaComCont === '' ) {
-        this.loadingCons = false;
+        this.loading.hide();
         this.notif.warning('Advertencia', 'No se pudo guardar, no ha finalizado el cuadre diario.', ConfiguracionNotificacion.configRightTop);
       } else {
         if (
           (this.compensacionForm.get('Diferencia')?.value > 0.01 || this.compensacionForm.get('Diferencia')?.value < -0.01) &&
           (this.compensacionForm.get('ExplicacionDiferencia')?.value === '' || this.compensacionForm.get('ExplicacionDiferencia')?.value === undefined)) {
           
-          this.loadingCons = false;
+          this.loading.hide();
           console.log('Diferencia: ' + this.compensacionForm.get('Diferencia')?.value);
           this.notif.warning('Advertencia', 'Debe explicar la diferencia cuando es diferente de cero.', ConfiguracionNotificacion.configRightTop);
         } else {
@@ -769,35 +768,35 @@ export class ConciliacionCompensacionComponent implements OnInit {
             this.conciliacionCompensacionService.GuardarCompensacion(JSON.stringify(this.compensacionForm.value)).subscribe(
               result => {
                 if (result) {
-                  this.loadingCons = false;
+                  this.loading.hide();
                   this.notif.success('Exitoso', 'Compensación guardada correctamente.', ConfiguracionNotificacion.configRightTop);
                   this.generarImpresion(this.compensacionForm.value);
                   this.GuardarLogCompensacion();
                 } else {
-                  this.loadingCons = false;
+                  this.loading.hide();
                   this.notif.error('Advertencia', 'Ocurrió un error al almacenar la compensación.', ConfiguracionNotificacion.configRightTop);
                 }
               },
               error => {
-                this.loadingCons = false;
+                this.loading.hide();
                 const errorMessage = <any>error;
                 this.notif.error('Error', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
               }
             );
           } catch {
-            this.loadingCons = false;
+            this.loading.hide();
             this.notif.error('Error', 'Ocurrió un error al almacenar la compensación.', ConfiguracionNotificacion.configRightTop);
           }
         }
       }
     } catch {
-      this.loadingCons = false;
+      this.loading.hide();
       this.notif.error('Error', 'Ocurrió un error al almacenar la compensación.', ConfiguracionNotificacion.configRightTop);
     }
   }
 
   GuardarLogCompensacion() {
-    this.loadingCons = true;
+    this.loading.show();
     this.dataUser = JSON.parse(window.atob(localStorage.getItem('Data') ?? ''));
     const dataLog = {
       IdUsuarioERP: this.dataUser.IdUsuario,
@@ -811,21 +810,21 @@ export class ConciliacionCompensacionComponent implements OnInit {
       this.conciliacionCompensacionService.GuardarLogCompensacion(JSON.stringify(dataLog)).subscribe(
         result => {
           if (result) {
-            this.loadingCons = false;
+            this.loading.hide();
             console.log('Log guardado correctamente');
           } else {
-            this.loadingCons = false;
+            this.loading.hide();
             console.log('Log no se puedo guardar');
           }
         },
         error => {
-          this.loadingCons = false;
+          this.loading.hide();
           const errorMessage = <any>error;
           console.log('Log no se puedo guardar');
         }
       );
     } catch {
-      this.loadingCons = false;
+      this.loading.hide();
       console.log('Log no se puedo guardar C');
     }
 
@@ -1061,7 +1060,7 @@ export class ConciliacionCompensacionComponent implements OnInit {
     let byteArray = null;
     let newBolb = null;
     let url = null;
-    this.loadingCons = true;
+    this.loading.show();
     document.querySelector("object")!.data = "";
     document.querySelector("object")!.name = "";
     document.querySelector("object")!.type = "";
@@ -1080,10 +1079,10 @@ export class ConciliacionCompensacionComponent implements OnInit {
         document.querySelector("object")!.data = url;
         document.querySelector("object")!.name = "Impresion";
         document.querySelector("object")!.type = "application/pdf";
-        this.loadingCons = false;
+        this.loading.hide();
       },
       error => {
-        this.loadingCons = false
+        this.loading.hide();
         const errorMessage = <any>error;
         this.notif.error('Error', errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
         console.log(errorMessage);
