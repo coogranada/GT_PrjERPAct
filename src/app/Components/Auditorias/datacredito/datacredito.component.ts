@@ -11,6 +11,7 @@ import { DatacreditoAuditoriaService } from '../../../Services/Auditoria/Datacre
 import { ExceljsService } from '../../../Services/General/exceljs.service';
 import { TablaVirtualComponent } from '../../Tabla-virtual/tabla-virtual/tabla-virtual.component';
 import { LoadingService } from '../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../utils/storage-security.util';
 
 @Component({
   selector: 'app-datacredito',
@@ -55,9 +56,8 @@ export class DatacreditoComponent implements OnInit {
     //DFRAMIREZ: Se comentan lienas DAILY 23/01/2026
     //this.DataForm.get('FechaInicial')?.setValue(moment(_fechaAyer).format('YYYY-MM-DD'));
     //this.DataForm.get('FechaFinal')?.setValue(moment(_fechaAhora).format('YYYY-MM-DD'));
-    let datas = localStorage.getItem('Data');
-    this.DatosUsuario = JSON.parse(window.atob(datas == null ? "" : datas));
-
+    
+    this.DatosUsuario = StorageSecurity.getData();
     this.loginService.GetSesionXUsuario(this.DatosUsuario.IdUsuario).subscribe(
       result => {
         if (!result.Estado) {

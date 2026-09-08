@@ -6,6 +6,7 @@ import {
   ModelTD,  GestionEmailModelTD } from "../../../../Models/Maestros/email.model";
 import { GestionEmailService } from "../../../../Services/Maestros/email-gestion.service";
 import { AlertService } from '../../../../Services/Alert/alert.service';
+import { StorageSecurity } from "../../../../utils/storage-security.util";
 declare var $: any;
 @Component({
   selector: "app-gestion-email",
@@ -380,8 +381,7 @@ export class GestionEmail implements OnInit {
       $("#TituloEmailSaldos").hide();
     }
     this.EmailArrayList.forEach((element : any) => {
-      let data : string | null = localStorage.getItem("Data");
-      const dataUser = JSON.parse(window.atob(data == null ? "" : data));
+      const dataUser = StorageSecurity.getData();
       this.GestionEmailArrayModel = new GestionEmailArrayModel();
       this.GestionEmailArrayModel.IdBloque = element.IdBloque;
       this.GestionEmailArrayModel.Titulo = element.Titulo;
@@ -446,8 +446,7 @@ export class GestionEmail implements OnInit {
     } else {
       this.ValdiaLogoBs64 = false;
     }
-    let data : string | null = localStorage.getItem("Data");
-    const dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    const dataUser = StorageSecurity.getData();
     this.GestionEmailArrayLogo = new GestionEmailArrayModel();
     this.GestionEmailArrayLogo.IdBloque = 0;
     this.GestionEmailArrayLogo.Titulo = "Logo";
@@ -532,8 +531,7 @@ export class GestionEmail implements OnInit {
       $("#TituloEmailCertificado").hide();
     }
     this.EmailArrayListCertificado.forEach((element) => {
-      let data : string | null = localStorage.getItem("Data");
-      const dataUser = JSON.parse(window.atob(data == null ? "" : data));
+      const dataUser = StorageSecurity.getData();
       this.GestionEmailArrayModelCertiificado = new GestionEmailArrayModel();
       this.GestionEmailArrayModelCertiificado.IdBloque = element.IdBloque;
       this.GestionEmailArrayModelCertiificado.Titulo = element.Titulo;
@@ -710,8 +708,7 @@ export class GestionEmail implements OnInit {
     }
 
     this.EmailArrayListTD.forEach((element) => {
-      let data : string | null = localStorage.getItem("Data");
-      const dataUser = JSON.parse(window.atob(data == null ? "" : data));
+      const dataUser = StorageSecurity.getData();
       this.GestionEmailArrayModelTD = new GestionEmailArrayModel();
       this.GestionEmailArrayModelTD.IdBloque = element.IdBloque;
       this.GestionEmailArrayModelTD.Titulo = element.Titulo;
@@ -1428,8 +1425,7 @@ export class GestionEmail implements OnInit {
     $("#SeleccionGestionEditRetencions").val("-");
   }
   ActualizarSaldos() {
-    let data : string | null = localStorage.getItem("Data");
-    const dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    const dataUser = StorageSecurity.getData();
 
     this.EditarSaldos = new GestionEmailArrayModel();
 
@@ -1516,8 +1512,7 @@ export class GestionEmail implements OnInit {
       return;
   }
   ActualizarRetenciones() {
-    let data : string | null = localStorage.getItem("Data");
-    const dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    const dataUser = StorageSecurity.getData();
     
     this.EditarRetenciones = new GestionEmailArrayModel();
 
@@ -1612,8 +1607,7 @@ export class GestionEmail implements OnInit {
   }
 
   ActualizarTD() {
-    let data : string | null = localStorage.getItem("Data");
-    const dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    const dataUser = StorageSecurity.getData();
     this.EditarTD = new GestionEmailArrayModel();
 
     this.EditarTD.Titulo = $("#TituloMailTDEdit")

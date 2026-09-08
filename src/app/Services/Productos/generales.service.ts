@@ -4,6 +4,7 @@ import { EnvironmentService } from '../Enviroment/enviroment.service';
 import { Observable } from 'rxjs';
 import { formatDate } from '@angular/common';
 import { LogGestionCreditoRequest } from '../../Models/Productos/cartera/gestion-credito.model';
+import { StorageSecurity } from '../../utils/storage-security.util';
 declare var $: any;
 @Injectable()
 
@@ -12,8 +13,7 @@ export class GeneralesService {
   constructor(private _http: HttpClient,private environment: EnvironmentService) { }
 
     Guardarlog(formValue : any, idOperacion : number, lngCuenta : number | null = 0, tercero : number | null = 0 , modulo : number , numeroDoc: string | null = null): Observable<any> {
-        let data : string | null = localStorage.getItem('Data')
-        const dataUser = JSON.parse(window.atob(data == null ? "" : data));
+        const dataUser = StorageSecurity.getData();
         const FechaActual = formatDate(new Date(), 'yyyy-MM-dd HH:mm:ss', 'en');
         const parametersLOG : any = {
             IdLog: 0,
@@ -34,8 +34,7 @@ export class GeneralesService {
         return this._http.post<any>(this.url, parametersLOG);
     }
     GuardarlogContractual(formValue : any , idOperacion :number, lngCuenta: number, tercero : number, modulo : number, numeroDoc: string | null = null,IdObseCambioEstado : number) : Observable<any> {
-        let data : string | null = localStorage.getItem('Data')
-        const dataUser = JSON.parse(window.atob(data == null ? "" : data));
+        const dataUser = StorageSecurity.getData();
         const FechaActual = formatDate(new Date(), 'yyyy-MM-dd HH:mm:ss', 'en');
         const parametersLOG : any = {
             IdLog: 0,
@@ -114,8 +113,7 @@ export class GeneralesService {
         return this._http.post<any>(this.url, dataregistro);
     }
     GuardarlogProductos( formValue : any, idOperacion : number, lngCuenta : number, tercero : number, modulo : number, numeroDoc: string | null = null): Observable<any> {
-        let data : string | null = localStorage.getItem('Data');
-        const dataUser = JSON.parse(window.atob(data == null ? "" : data));
+        const dataUser = StorageSecurity.getData();
         const FechaActual = formatDate(new Date(), 'yyyy-MM-dd HH:mm:ss', 'en');;
         const parametersLOG = {
             IdLog: 0,
@@ -136,8 +134,7 @@ export class GeneralesService {
         return this._http.post<any>(this.url, parametersLOG);
     }
     GuardarlogAsesoria( formValue : any, idOperacion : number, FechaApertura : Date | null | string, modulo : number,NumeroAsesoria : number = 0 ) : Observable<any> {
-        let data : string | null = localStorage.getItem('Data');
-        const dataUser = JSON.parse(window.atob(data == null ? "" : data));
+        const dataUser = StorageSecurity.getData();
         const FechaActual = FechaApertura;
         const parametersLOG = {
             IdLogAsesoria: 0,

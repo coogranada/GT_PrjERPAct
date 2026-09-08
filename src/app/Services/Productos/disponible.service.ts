@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { EnvironmentService } from '../Enviroment/enviroment.service';
 import { Observable } from 'rxjs';
+import { GarantiaRealAsignada } from '../../Models/Productos/garantias.model';
 
 @Injectable()
 
@@ -353,6 +354,11 @@ export class DisponiblesService {
     CuentaAportes(IdTercero: number): Observable<any> {
         this.url = `${this.environment.Url}/CuentaAportesDisponibles/${IdTercero}`;
         return this._http.get<any>(this.url);
+    }
+
+    ObtenerGarantiasAsignadas(idCuenta: number): Observable<GarantiaRealAsignada[]> {
+        this.url = `${this.environment.Url}/ObtenerGarantiasAsignadasDeDisponibles?idCuenta=${idCuenta}`;
+        return this._http.get<GarantiaRealAsignada[]>(this.url);
     }
     
 }

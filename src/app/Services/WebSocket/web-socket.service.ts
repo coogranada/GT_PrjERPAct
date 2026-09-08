@@ -9,6 +9,7 @@ import {
   HubConnectionBuilder,
   HubConnectionState
 } from '@microsoft/signalr';
+import { StorageSecurity } from '../../utils/storage-security.util';
 
 @Injectable({
   providedIn: 'root'
@@ -123,13 +124,13 @@ export class WebSocketService {
   }
 
   // Unirse al grupo centralizado
-  private joinGroup() {
-    const data = localStorage.getItem('Data');
-    if (!data) return;
-
-    const user = JSON.parse(window.atob(data));
+ private joinGroup() {
+    const user = StorageSecurity.getData();
+    if (!user) {
+      return;
+    }
     this.Send("JoinGroup", user.IdUsuario);
-  }
+}
 
   // BACKGROUND CONTROLADO (sin fugas)
   BackGround() {
@@ -188,9 +189,7 @@ export class WebSocketService {
 
   ChangeOffice(messages: any) {
     const obj: any = JSON.parse(messages);
-
-    let data: string | null = localStorage.getItem('Data');
-    let user = JSON.parse(window.atob(data ?? ""));
+    const user = StorageSecurity.getData();
 
     detectIncognito().then((result: any) => {
 

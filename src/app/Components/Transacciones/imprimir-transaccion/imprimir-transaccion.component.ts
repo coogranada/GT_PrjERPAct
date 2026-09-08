@@ -6,6 +6,7 @@ import { Title } from '@angular/platform-browser';
 import { ShareComponentModule } from '../../../Modules/share-component.module';
 import { ModuleValidationService } from '../../../Services/Enviroment/moduleValidation.service';
 import { LoadingService } from '../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../utils/storage-security.util';
 
 @Component({
   selector: 'app-imprimir-transaccion',
@@ -41,9 +42,7 @@ export class ImprimirTransaccionComponent implements OnDestroy {
     this.moduleValidationService.ValidatePermissionsModule(this.Modulo);
     this.VolverArriba();
     this.title.setTitle(this.TituloOriginal)
-
-    let data = localStorage.getItem('Data');
-    let DataUser = JSON.parse(window.atob(data == null ? "" : data));
+    const DataUser = StorageSecurity.getData();
     if (DataUser != null) {
       this.UsuarioActual = DataUser.Usuario;
       this.OficinaActual = DataUser.Oficina;

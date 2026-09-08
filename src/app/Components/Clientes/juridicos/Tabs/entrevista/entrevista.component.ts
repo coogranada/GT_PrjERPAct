@@ -8,6 +8,7 @@ import { GeneralesService } from '../../../../../Services/Productos/generales.se
 import moment from 'moment';
 import { AlertService } from '../../../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../../utils/storage-security.util';
 
 declare var $: any;
 const PrimaryWhite = 'rgb(13,165,80)';
@@ -85,8 +86,7 @@ export class EntrevistaComponent implements OnInit {
     private generalesService: GeneralesService, private loading: LoadingService) { }
 
   ngOnInit() {
-    let data = localStorage.getItem('Data');
-    this.DataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.DataUser = StorageSecurity.getData();
     this.IrArriba();
     this.validarTratamiento();
     this.validarEntrevista();
@@ -409,9 +409,7 @@ export class EntrevistaComponent implements OnInit {
   this.loading.show();
 
   try {
-    const data = localStorage.getItem('Data');
-    const dataUser = data ? JSON.parse(window.atob(data)) : null;
-
+    const dataUser = StorageSecurity.getData();    
     console.log('Cantidad -', this.entrevistaModelLst.length);
     console.log('Cliente selec -', this.clienteSeleccionado);
 

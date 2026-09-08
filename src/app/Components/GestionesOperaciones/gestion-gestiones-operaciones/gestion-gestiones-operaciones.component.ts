@@ -11,6 +11,7 @@ import { GeneralesService } from '../../../Services/Productos/generales.service'
 import { moduloAGestionar } from '../../../../environments/config.modulos';
 import { AlertService } from '../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../utils/storage-security.util';
 
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -289,8 +290,7 @@ export class GestionGestionesOperacionesComponent implements OnInit {
   }
 
   ObtenerDatosUsuario() {
-    let data : string | null = localStorage.getItem('Data');
-    this.DatosUsuario = JSON.parse(window.atob(data == null ? "" : data));
+    this.DatosUsuario = StorageSecurity.getData();
     this.SolicitudGestionForm.get('UsuarioSolicita')?.setValue(this.DatosUsuario.Usuario);
     this.SolicitudGestionForm.get('IdUsuarioSolicita')?.setValue(this.DatosUsuario.IdUsuario);
     this.SolicitudGestionForm.get('NombreUsuarioSolicita')?.setValue(this.DatosUsuario.Nombre);

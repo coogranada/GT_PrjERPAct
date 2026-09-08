@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { EnvironmentService } from '../Enviroment/enviroment.service';
 import { catchError, Observable, throwError } from 'rxjs';
+import { StorageSecurity } from '../../utils/storage-security.util';
 
 @Injectable()
 export class LoginService {
@@ -25,14 +26,13 @@ export class LoginService {
         this.url = `${this.environment.Url}/ValidationCodeUser`;
         return this._http.post<any>(this.url, Datos);
     } 
-    CerrarSesionInactividad(resulStore?: any): Observable<any> {
-        let data : string | null = localStorage.getItem('Data');
-        if(data != null){
-            resulStore = JSON.parse(window.atob(data));
-            this.url = `${this.environment.Url}/CerrarSesion`;
-        }
-        return this._http.post<any>(this.url, resulStore);
-    }   
+    CerrarSesionInactividad(): Observable<any> {
+        const resulStore = StorageSecurity.getData();
+        this.url = `${this.environment.Url}/CerrarSesion`;
+        return this._http.post<any>(
+        this.url,
+        resulStore);
+    } 
     ObtenerPermisoUsuario(usuario: string): Observable<any> {
         this.url = `${this.environment.Url}/ObtenerPermisosPorUsuario?idUsuario=${usuario}`;
         return this._http.get<any>(this.url);

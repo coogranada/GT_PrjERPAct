@@ -36,6 +36,7 @@ import { NaturalesAllModel, NaturalesServicio } from '../../../Models/Clientes/n
 import { MiListaProductosService } from '../../../Services/Informes/mi-lista-productos.service';
 import { Estados } from '../../../../environments/Estados';
 import { LoadingService } from '../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../utils/storage-security.util';
 
 declare var $: any;
 const PrimaryWhite = 'rgb(13,165,80)';
@@ -840,8 +841,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     private loading: LoadingService
    ) {
     // OperacionesPermitidasNaturales
-    let data : string | null = localStorage.getItem('Data');
-    const resulStore = JSON.parse(window.atob(data == null ? "" : data));
+    const resulStore = StorageSecurity.getData();
     const arrayExample = [{
       'IdModulo': this.moduloLocal,
       'IdUsuario': resulStore.IdUsuario,
@@ -906,8 +906,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.GetTipoContacto(); // false
     this.GetOficinas(); // false
 
-    let data : string | null = localStorage.getItem('Data');
-    this.DatosUsuario = JSON.parse(window.atob(data == null ? "" : data));
     // console.log(this.appComponent);
     this.loading.show();
     // this.moduleValidationService.ValidatePermissionsModule(this.CodModulo);
@@ -1515,8 +1513,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.vetadosFrom.get('documeto')?.setValue(this.basicosFrom.get('DocumentoBusqueda')?.value);
     this.vetadosFrom.get('strNombreCompleto')?.setValue('');
     const results = this.basicosFrom.get('operacion')?.value;
-    let data : string | null = localStorage.getItem('Data');
-    const resultPerfil = JSON.parse(window.atob(data == null ? "" : data));
+     const resultPerfil = StorageSecurity.getData();
     this.operacionesModel.idOperacion = results;
     this.operacionesModel.idPerfil = resultPerfil.idPerfilUsuario;
     let IdModuloActivo : string | null = localStorage.getItem('IdModuloActivo')
@@ -1563,8 +1560,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       this.btnOcultoBuscar = true;
       this.mostrarBtnTercero = false;
       this.operacionEscogida = '/Creacion';
-      let data : string | null = localStorage.getItem('Data');
-      this.dataLocal = JSON.parse(window.atob(data == null ? "" : data));
+      this.dataLocal = StorageSecurity.getData();
       this.cleanAdrees();
       this.NombreAsesor = this.dataLocal.Nombre;
       this.CedulaAsesor = this.dataLocal.IdAsesor;
@@ -1894,8 +1890,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       }
       if (this.OperacionMarcada === undefined) {
         // entra a la operacion por primer vez
-        let data : string | null = localStorage.getItem('Data');
-        const resultPerfil = JSON.parse(window.atob(data == null ? "" : data));
+        const resultPerfil = StorageSecurity.getData();
         if (resultPerfil.NumeroOficina !== '3') {
           this.botonSiguiente.nativeElement.click();
           this.operacionEscogida = '/Editar';
@@ -2055,8 +2050,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       }
       if (this.OperacionMarcada === undefined) {
         // entra a la operacion normal
-        let data : string | null = localStorage.getItem('Data');
-        const resultPerfil = JSON.parse(window.atob(data == null ? "" :data));
+        const resultPerfil = StorageSecurity.getData();
         if (resultPerfil.NumeroOficina !== '3') {
           this.botonSiguiente.nativeElement.click();
           this.ProEstado = this.basicosFrom.get('estado')?.value;
@@ -2228,8 +2222,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       if (this.OperacionMarcada === undefined) {
         // continua la operacion normal
         this.blockBtnBasico = false;
-        let data : string | null = localStorage.getItem('Data');
-        const resultPerfil = JSON.parse(window.atob(data == null ? "" :data));
+        const resultPerfil = StorageSecurity.getData();
         if (resultPerfil.NumeroOficina !== '3') {
           // valida que no este ya marcada
         if (this.basicosFrom.get('publica')?.value !== true) {
@@ -2384,8 +2377,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       if (this.OperacionMarcada === undefined) {
         // continua la operacion normal
         this.blockBtnBasico = false;
-        let data : string | null = localStorage.getItem('Data');
-        const resultPerfil = JSON.parse(window.atob(data == null ? "": data));
+        const resultPerfil = StorageSecurity.getData();
         if (resultPerfil.NumeroOficina !== '3') {
           // valida que no este ya marcada
           if (this.basicosFrom.get('publica')?.value !== false) {
@@ -2532,8 +2524,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       }
       if (this.OperacionMarcada === undefined) {
         // continua la operacion normal
-        let data : string | null = localStorage.getItem('Data');
-        const resultPerfil = JSON.parse(window.atob(data == null ? "": data));
+        const resultPerfil = StorageSecurity.getData();
         if (resultPerfil.NumeroOficina !== '3') {
           this.botonSiguiente.nativeElement.click();
           this.OperacionMarcada = undefined;
@@ -2610,8 +2601,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                   localStorage.setItem('Credito', 'true');
                   localStorage.setItem('Vinculacion', 'false');
                   localStorage.setItem('Actualizacion', 'true');
-                  let dataobj : string | null = localStorage.getItem('Data');
-                  const data = JSON.parse(window.atob(dataobj == null ? "": dataobj));
+                  const data = StorageSecurity.getData();
                   this.serviciosFrom.get('servicioSolicitado')?.setValue(3);
                   this.serviciosFrom.get('operacionSeleccionada')?.setValue('imprimir');
                   this.serviciosFrom.get('Oficina')?.setValue(data.Oficina);
@@ -2727,8 +2717,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       if (this.OperacionMarcada === undefined) {
         // continua operacion normal
         this.blockBtnBasico = false;
-        let data : string | null = localStorage.getItem('Data');
-        const resultPerfil = JSON.parse(window.atob(data == null ? "": data));
+        const resultPerfil = StorageSecurity.getData();
         if (resultPerfil.NumeroOficina !== '3') {
           this.operacionEscogida = '/Marcar tratamiento de datos';
           this.btnBuscar = true;
@@ -2905,8 +2894,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       }
       if (this.OperacionMarcada === undefined) {
         // Continua la operacion normal
-        let data : string | null = localStorage.getItem('Data');
-        const resultPerfil = JSON.parse(window.atob(data == null ? "": data));
+        const resultPerfil = StorageSecurity.getData();
         if (resultPerfil.NumeroOficina !== '3') {
           this.operacionEscogida = '/Solicitud retiro';
           this.btnBuscar = true;
@@ -3039,8 +3027,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         this.ValidaCambioCampo();        
       }
       if (this.OperacionMarcada === undefined) {
-        let data : string | null = localStorage.getItem('Data');
-        const resultPerfil = JSON.parse(window.atob(data == null ? "": data));
+        const resultPerfil = StorageSecurity.getData();
         this.disableCampos();
         if (resultPerfil.NumeroOficina !== '3') {
           this.operacionEscogida = '/Reingreso';
@@ -3222,8 +3209,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       if (this.OperacionMarcada === undefined) {
         // continua proceso normal
         if (this.basicosFrom.get('estado')?.value !== 55) {
-          let data : string | null = localStorage.getItem('Data');
-          const resultPerfil = JSON.parse(window.atob(data == null ? "": data));
+          const resultPerfil = StorageSecurity.getData();
           if (resultPerfil.NumeroOficina !== '3') {
             this.btnBuscar = true;
             this.botonSiguiente.nativeElement.click();
@@ -3384,8 +3370,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       }
       if (this.OperacionMarcada === undefined) {
         // continua la operacion normal 
-        let data : string | null = localStorage.getItem('Data');
-        const resultPerfil = JSON.parse(window.atob(data == null ? "": data));
+        const resultPerfil = StorageSecurity.getData();
         if (resultPerfil.NumeroOficina !== '3') {
           this.ProTipoD = this.basicosFrom.get('tipoDocumento')?.value;
           this.ProDocumento = this.basicosFrom.get('numeroDocumento')?.value;
@@ -3553,8 +3538,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         this.ValidaCambioCampo();       
       }
       if (this.OperacionMarcada === undefined) {
-        let data : string | null = localStorage.getItem('Data');
-        const resultPerfil = JSON.parse(window.atob(data == null ? "": data));
+        const resultPerfil = StorageSecurity.getData();
         if (resultPerfil.NumeroOficina !== '3') {
           this.ProPrimerNombre = this.basicosFrom.get('primerNombre')?.value;
           this.ProSegundoNombre = this.basicosFrom.get('segundoNombre')?.value;
@@ -3704,8 +3688,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       }
       if (this.OperacionMarcada === undefined){
         // continua la operacion normal
-        let data : string | null = localStorage.getItem('Data');
-        const resultPerfil = JSON.parse(window.atob(data == null ? "": data));
+        const resultPerfil = StorageSecurity.getData();
         if (resultPerfil.NumeroOficina !== '3') {
           this.ProIdAsesorE = this.asesorForm.get('strCodigo')?.value;
           this.OperacionMarcada = '19';
@@ -3856,8 +3839,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       }
       if (this.OperacionMarcada === undefined) {
         // continua la operacion normal 
-        let data : string | null = localStorage.getItem('Data');
-        const resultPerfil = JSON.parse(window.atob(data == null ? "": data));
+        const resultPerfil = StorageSecurity.getData();
         if (resultPerfil.NumeroOficina !== '3') {
           this.operacionEscogida = '/Cambiar fecha de actualizacón';
           this.btnBuscar = true;
@@ -4002,8 +3984,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       }
       if (this.OperacionMarcada === undefined) {
         // continua el proceso normal 
-        let data : string | null = localStorage.getItem('Data');
-        const resultPerfil = JSON.parse(window.atob(data == null ? "": data));
+        const resultPerfil = StorageSecurity.getData();
         if (resultPerfil.NumeroOficina !== '3') {
           this.ProOficina = this.basicosFrom.get('oficina')?.value;
           this.OperacionMarcada = '20';
@@ -4153,8 +4134,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       if (this.OperacionMarcada === undefined) {
         // continua operacion normal
         this.blockBtnBasico = false;
-        let data : string | null = localStorage.getItem('Data');
-        const resultPerfil = JSON.parse(window.atob(data == null ? "": data));
+        const resultPerfil = StorageSecurity.getData();
         if (resultPerfil.NumeroOficina !== '3') {
           this.btnBuscar = true;
           this.operacionEscogida = '/Desmarcar tratamiento de datos';
@@ -4357,8 +4337,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       }
       if (this.OperacionMarcada === undefined) {
         // continua operacion normal
-        let data : string | null = localStorage.getItem('Data');
-        const resultPerfil = JSON.parse(window.atob(data == null ? "": data));
+        const resultPerfil = StorageSecurity.getData();
         if (resultPerfil.NumeroOficina !== '3') {
           this.btnBuscar = true;
           this.operacionEscogida = '/Cancelar solicitud de retiro';
@@ -4512,8 +4491,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       }
       if (this.OperacionMarcada === undefined) {
         // continua operacion normal
-        let data : string | null = localStorage.getItem('Data');
-        const resultPerfil = JSON.parse(window.atob(data == null ? "": data));
+        const resultPerfil = StorageSecurity.getData();
         if (resultPerfil.NumeroOficina !== '3') {
           this.ProAsesor = this.CedulaAsesor;
           this.OperacionMarcada = '26';
@@ -5287,8 +5265,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   }
   CancelarSolictudRetiro() {
     this.GuardarLog(localStorage.getItem('TerceroNatura'), 24, 0, Number(localStorage.getItem('TerceroNatura')),11);
-    let dataobj : string | null = localStorage.getItem('Data');
-    const data = JSON.parse(window.atob(dataobj == null ? "": dataobj));
+    const data = StorageSecurity.getData();
     this.clientesService.CancelarSolicitudRetiro(localStorage.getItem('TerceroNatura'), data.lngTercero,
       formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en')).subscribe(
         resultFecha => {
@@ -5775,8 +5752,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         setTimeout(() => {
           this.basicosFrom.controls["tipoDocumento"].setValue(idTipoDoc);
         }, 100);
-        let data : string | null = localStorage.getItem('Data');
-        const DataUserLog = JSON.parse(window.atob(data == null ? "": data));
+        const DataUserLog = StorageSecurity.getData();
         if (this.basicosFrom.value.tipoCliente === '10') { // Menor de edad
           this.segurosForm.get('tratamiento')?.setValue(true);
           this.segurosForm.get('debitoAuto')?.setValue(true);
@@ -9785,9 +9761,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                   this.AsessorNecesario = null;
                       $('#financieroTab').removeClass('disableTab');
                       $('#basicoTab').removeClass('disableTab');
-                      let data : string | null = localStorage.getItem('Data');
-                      const dataLocal = JSON.parse(window.atob(data == null ? "": data));
-                        // JSON.parse(localStorage.getItem('Data'));
+                      const dataLocal = StorageSecurity.getData();                      
                       this.basicoSave.get('MadreCabezaFamilia')?.setValue(this.basicosFrom.value.amaCasa);
                       this.basicoSave.get('IdTipoVivienda')?.setValue(this.basicosFrom.value.tipoVivienda);
                       this.viviendaSeleccionada = this.basicosFrom.value.tipoVivienda;
@@ -9931,8 +9905,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
               } else {
                     $('#financieroTab').removeClass('disableTab');
                     $('#basicoTab').removeClass('disableTab');
-                    let data : string | null = localStorage.getItem('Data');
-                    const dataLocal = JSON.parse(window.atob(data == null ? "": data));
+                    this.dataLocal = StorageSecurity.getData();
                     this.basicoSave.get('MadreCabezaFamilia')?.setValue(this.basicosFrom.value.amaCasa);
                     this.basicoSave.get('IdTipoVivienda')?.setValue(this.basicosFrom.value.tipoVivienda);
                     this.viviendaSeleccionada = this.basicosFrom.value.tipoVivienda;
@@ -9983,12 +9956,12 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                     this.basicoSave.get('IdMotivoIngreso')?.setValue(this.basicosFrom.value.motivoIngreso);
                     this.basicoSave.get('PersPEP')?.setValue(this.basicosFrom.value.publica);
                     this.basicoSave.get('FechaCreacion')?.setValue(formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss', 'en'));
-                    this.basicoSave.get('IdAsesorCrea')?.setValue(dataLocal.IdAsesor);
+                    this.basicoSave.get('IdAsesorCrea')?.setValue(this.dataLocal.IdAsesor);
                     this.basicoSave.get('FechaMod')?.setValue(null);
-                    this.basicoSave.get('IdAsesorMod')?.setValue(dataLocal.IdAsesor);
+                    this.basicoSave.get('IdAsesorMod')?.setValue(this.dataLocal.IdAsesor);
                     this.basicoSave.get('FechaRetiro')?.setValue(null);
                     this.basicoSave.get('IdAsesorRetira')?.setValue(0);
-                    this.basicoSave.get('IdOficina')?.setValue(+dataLocal.NumeroOficina);
+                    this.basicoSave.get('IdOficina')?.setValue(+this.dataLocal.NumeroOficina);
                     this.basicoSave.get('MetodoConocio')?.setValue(this.basicosFrom.value.metodo);
                     if (this.basicosFrom.value.otroPor !== null && this.basicosFrom.value.otroPor !== undefined &&
                       this.basicosFrom.value.otroPor !== '') {
@@ -10107,8 +10080,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                 this.AsessorNecesario = null;
                     $('#financieroTab').removeClass('disableTab');
                     $('#basicoTab').removeClass('disableTab');
-                    let data : string | null = localStorage.getItem('Data');
-                    const dataLocal = JSON.parse(window.atob(data == null ? "": data));
+                     this.dataLocal = StorageSecurity.getData();
                     this.basicoSave.get('MadreCabezaFamilia')?.setValue(this.basicosFrom.value.amaCasa);
                     this.basicoSave.get('IdTipoVivienda')?.setValue(this.basicosFrom.value.tipoVivienda);
                     this.viviendaSeleccionada = this.basicosFrom.value.tipoVivienda;
@@ -10159,12 +10131,12 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                     this.basicoSave.get('IdMotivoIngreso')?.setValue(this.basicosFrom.value.motivoIngreso);
                     this.basicoSave.get('PersPEP')?.setValue(this.basicosFrom.value.publica);
                     this.basicoSave.get('FechaCreacion')?.setValue(formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss', 'en'));
-                    this.basicoSave.get('IdAsesorCrea')?.setValue(dataLocal.IdAsesor);
+                    this.basicoSave.get('IdAsesorCrea')?.setValue(this.dataLocal.IdAsesor);
                     this.basicoSave.get('FechaMod')?.setValue(null);
-                    this.basicoSave.get('IdAsesorMod')?.setValue(dataLocal.IdAsesor);
+                    this.basicoSave.get('IdAsesorMod')?.setValue(this.dataLocal.IdAsesor);
                     this.basicoSave.get('FechaRetiro')?.setValue(null);
                     this.basicoSave.get('IdAsesorRetira')?.setValue(0);
-                    this.basicoSave.get('IdOficina')?.setValue(+dataLocal.NumeroOficina);
+                    this.basicoSave.get('IdOficina')?.setValue(+this.dataLocal.NumeroOficina);
                     this.basicoSave.get('MetodoConocio')?.setValue(this.basicosFrom.value.metodo);
                     if (this.basicosFrom.value.otroPor !== null && this.basicosFrom.value.otroPor !== undefined &&
                       this.basicosFrom.value.otroPor !== '') {
@@ -10251,8 +10223,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             } else {
                   $('#financieroTab').removeClass('disableTab');
                   $('#basicoTab').removeClass('disableTab');
-                  let data : string | null = localStorage.getItem('Data');
-                  const dataLocal = JSON.parse(window.atob(data == null ? "": data));
+                   this.dataLocal = StorageSecurity.getData();
                   this.basicoSave.get('MadreCabezaFamilia')?.setValue(this.basicosFrom.value.amaCasa);
                   this.basicoSave.get('IdTipoVivienda')?.setValue(this.basicosFrom.value.tipoVivienda);
                   this.viviendaSeleccionada = this.basicosFrom.value.tipoVivienda;
@@ -10303,12 +10274,12 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                   this.basicoSave.get('IdMotivoIngreso')?.setValue(this.basicosFrom.value.motivoIngreso);
                   this.basicoSave.get('PersPEP')?.setValue(this.basicosFrom.value.publica);
                   this.basicoSave.get('FechaCreacion')?.setValue(formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss', 'en'));
-                  this.basicoSave.get('IdAsesorCrea')?.setValue(dataLocal.IdAsesor);
+                  this.basicoSave.get('IdAsesorCrea')?.setValue(this.dataLocal.IdAsesor);
                   this.basicoSave.get('FechaMod')?.setValue(null);
-                  this.basicoSave.get('IdAsesorMod')?.setValue(dataLocal.IdAsesor);
+                  this.basicoSave.get('IdAsesorMod')?.setValue(this.dataLocal.IdAsesor);
                   this.basicoSave.get('FechaRetiro')?.setValue(null);
                   this.basicoSave.get('IdAsesorRetira')?.setValue(0);
-                  this.basicoSave.get('IdOficina')?.setValue(+dataLocal.NumeroOficina);
+                  this.basicoSave.get('IdOficina')?.setValue(+this.dataLocal.NumeroOficina);
                   this.basicoSave.get('MetodoConocio')?.setValue(this.basicosFrom.value.metodo);
                   if (this.basicosFrom.value.otroPor !== null && this.basicosFrom.value.otroPor !== undefined &&
                     this.basicosFrom.value.otroPor !== '') {
@@ -10414,8 +10385,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         if (results === '7' || results === '6') {
           if (this.basicosFrom.get('otroPor')?.value !== null && this.basicosFrom.get('otroPor')?.value !== undefined) {
             //#region  Metodo Editar
-            let data : string | null = localStorage.getItem('Data');
-            const dataLocal = JSON.parse(window.atob(data == null ? "": data));
+            const dataLocal = StorageSecurity.getData();
             this.basicoSave.get('IdNatural')?.setValue(this.basicosFrom.value.idNatural);
             this.basicoSave.get('IdTercero')?.setValue(tercerEdit);
             this.basicoSave.get('MadreCabezaFamilia')?.setValue(this.basicosFrom.value.amaCasa);
@@ -10572,8 +10542,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           }
         } else {
           //#region  Metodo Editar
-          let data : string | null = localStorage.getItem('Data');
-          const dataLocal = JSON.parse(window.atob(data == null ? "": data));
+          const dataLocal = StorageSecurity.getData();
           this.basicoSave.get('IdNatural')?.setValue(this.basicosFrom.value.idNatural);
           this.basicoSave.get('IdTercero')?.setValue(tercerEdit);
 
@@ -15889,8 +15858,7 @@ enviarWorkManager() {
           this.conyugueFormSet.get('TelEmpresa')?.setValue(elementCon.TelefonoEmpresa);
           this.conyugueFormSet.get('DetalleOcupacion')?.setValue(elementCon.DetalleOcupacionC);
         });
-        let data : string | null = localStorage.getItem('Data');
-        const Datos = JSON.parse(window.atob(data == null ? "": data));
+        const Datos = StorageSecurity.getData();
         this.conyugueFormSet.get('Oficina')?.setValue(+Datos.NumeroOficina);
         this.conyugueFormSet.get('Asesor')?.setValue(+Datos.IdAsesor);
         this.conyugueFormSet.get('UsuarioERP')?.setValue(+Datos.IdUsuario);
@@ -15951,8 +15919,7 @@ enviarWorkManager() {
           this.conyugueFormSet.get('TelEmpresa')?.setValue(elementcon.TelefonoEmpresa);
           this.conyugueFormSet.get('DetalleOcupacion')?.setValue(elementcon.DetalleOcupacionC);
         });
-        let data : string | null = localStorage.getItem('Data');
-        const Datos = JSON.parse(window.atob(data == null ? "": data));
+        const Datos = StorageSecurity.getData();
         this.conyugueFormSet.get('Oficina')?.setValue(+Datos.NumeroOficina);
         this.conyugueFormSet.get('Asesor')?.setValue(+Datos.IdAsesor);
         this.conyugueFormSet.get('UsuarioERP')?.setValue(+Datos.IdUsuario);
@@ -20691,15 +20658,15 @@ enviarWorkManager() {
               this.tratamientoForm.get('FechaAceptacion')?.setValue('');
               this.tratamientoForm.get('fechaNoAceptacion')?.setValue(formatDate(new Date(), 'yyyy-MM-dd HH:mm:ss', 'en'));
             }
-            let data : string | null = localStorage.getItem('Data');
-            const dataLocal = JSON.parse(window.atob(data == null ? "": data));
+            
+            this.dataLocal = StorageSecurity.getData();
             this.itemsSeguro.forEach(elementSav => {
               this.segurosFormSet.get('IdSeguro')?.setValue(elementSav.seguro.Clase);
               this.segurosFormSet.get('MontoAsegurado')?.setValue(elementSav.montoAsegurado);
               this.segurosFormSet.get('FechaCreacion')?.setValue(formatDate(new Date(), 'yyyy-MM-dd HH:mm:ss', 'en'));
               this.segurosFormSet.get('FechaRptaAseguradora')?.setValue(elementSav.fechaAsegurado);
-              this.segurosFormSet.get('IdAsesorCrea')?.setValue(dataLocal.lngTercero);
-              this.segurosFormSet.get('IdOficina')?.setValue(dataLocal.IdOficina);
+              this.segurosFormSet.get('IdAsesorCrea')?.setValue(this.dataLocal.lngTercero);
+              this.segurosFormSet.get('IdOficina')?.setValue(this.dataLocal.IdOficina);
               this.segurosFormSet.get('IdEstado')?.setValue(elementSav.estadoSeguro.Id);
               if (elementSav.tieneSeguro !== null && elementSav.tieneSeguro !== undefined && elementSav.tieneSeguro !== '') {
                 this.segurosFormSet.get('SinCobertura')?.setValue(elementSav.tieneSeguro);
@@ -20760,8 +20727,7 @@ enviarWorkManager() {
               );
           } else {
             this.Blockseguro = null;
-            let data : string | null = localStorage.getItem('Data');
-            const dataLocal = JSON.parse(window.atob(data == null ? "": data));
+            this.dataLocal = StorageSecurity.getData();
             this.itemsSeguroEdit.forEach(( elementSeg : any ) => {
               this.segurosFormSet.get('IdAsegurado')?.setValue(elementSeg.idAsegurado);
               this.segurosFormSet.get('IdSeguro')?.setValue(elementSeg.seguro.Clase);
@@ -20769,8 +20735,8 @@ enviarWorkManager() {
               this.segurosFormSet.get('MontoAsegurado')?.setValue(elementSeg.montoAsegurado);
               this.segurosFormSet.get('FechaCreacion')?.setValue(elementSeg.fechaCreacion);
               this.segurosFormSet.get('FechaRptaAseguradora')?.setValue(elementSeg.fechaAsegurado);
-              this.segurosFormSet.get('IdAsesorCrea')?.setValue(dataLocal.lngTercero);
-              this.segurosFormSet.get('IdOficina')?.setValue(dataLocal.IdOficina);
+              this.segurosFormSet.get('IdAsesorCrea')?.setValue(this.dataLocal.lngTercero);
+              this.segurosFormSet.get('IdOficina')?.setValue(this.dataLocal.IdOficina);
               this.segurosFormSet.get('IdAsegurado')?.setValue(elementSeg.idAsegurado);
               if (elementSeg.estadoSeguro !== 0) {
                 this.segurosFormSet.get('IdEstado')?.setValue(elementSeg.estadoSeguro.Id);
@@ -20805,8 +20771,7 @@ enviarWorkManager() {
       }
     } else if (operacion === '14') {
       const fechaManual = this.segurosForm.get('fechaTrataManual')?.value;
-      let data : string | null = localStorage.getItem('Data');
-      const dataStor = JSON.parse(window.atob(data == null ? "": data));
+       const dataStor = StorageSecurity.getData();
       if (fechaManual == null) {
         this.notif.onWarning('Advertencia', 'Debe ingresar una fecha de actualización válida.');
       } else {
@@ -20830,8 +20795,7 @@ enviarWorkManager() {
       }
     } else if (operacion === '22') {
       const fechaManual = this.segurosForm.get('fechaTrataManual')?.value;
-      let data : string | null = localStorage.getItem('Data');
-      const dataStor = JSON.parse(window.atob(data == null ? "": data));
+      const dataStor = StorageSecurity.getData();
       if (fechaManual == null) {
         this.notif.onWarning('Advertencia', 'Debe ingresar una fecha de actualización válida.');
       } else {

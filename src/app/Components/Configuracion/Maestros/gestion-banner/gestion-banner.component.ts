@@ -3,6 +3,7 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { ImagenesBannerServices } from '../../../../Services/Maestros/imagenes-banner.service';
 import { BannerArrayModel, BannerModel, LogBannerModel } from '../../../../Models/Maestros/banner.model';
 import { AlertService } from '../../../../Services/Alert/alert.service';
+import { StorageSecurity } from '../../../../utils/storage-security.util';
 declare var $: any;
 
 @Component({
@@ -105,8 +106,7 @@ export class GestionBannerComponent implements OnInit {
   GuardarImagenBanner() {
     if (this.bannerArrayList.length == 4) {
       this.bannerArrayList.forEach(element => {
-        let data : string | null = localStorage.getItem('Data');
-        const dataUser = JSON.parse(window.atob(data == null ? "" : data));
+        const dataUser = StorageSecurity.getData();
         this.bannerArrayModel = new BannerArrayModel();
         this.bannerArrayModel.IdImagenBanner = 0;
         this.bannerArrayModel.Base64String = element.Base64String;
@@ -136,8 +136,7 @@ export class GestionBannerComponent implements OnInit {
     }
   }
   GuardarLogBanner(fecha : any) {
-    let data : string | null = localStorage.getItem('Data');
-    this.DatosUsuario = JSON.parse(window.atob(data == null ? "" : data));
+    this.DatosUsuario = StorageSecurity.getData();
     this.logBannerModel.IdLogBanner = 0;
     this.logBannerModel.IdTercero = this.DatosUsuario.lngTercero;
     this.logBannerModel.FechaModificacion = fecha;

@@ -12,6 +12,7 @@ import { CuentaModel } from '../../../../../Models/Productos/cuenta.model';
 import { Replace } from '../../../../../Pipes/utilidades/replace.pipe';
 import { AlertService } from '../../../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../../utils/storage-security.util';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -46,6 +47,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
   public DocumentoSolicitud : any;
   public ColorAnterior1: any;
   public ColorAnterior2: any;
+  public accionSeleccionada = false;
 
 
   public contractualFrom!: FormGroup;
@@ -259,8 +261,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
     this.emitEventContractual.emit(true);
   }
   Operaciones() {
-    let data = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.dataUser = StorageSecurity.getData();
     const arrayExample = [{
       'IdModulo': this.CodModulo,
       'IdUsuario': this.dataUser.IdUsuario,
@@ -280,6 +281,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
     );
   }
     ValorSeleccionado() {
+      this.accionSeleccionada = true;
       this.log = {};
       this.listAutorizadoEliminar = [];
       this.btnActualizarTitulares = false;
@@ -309,6 +311,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
            
         
     if (this.contractualOperacionFrom.get('Codigo')?.value === '2') {          // Buscar
+      this.accionSeleccionada = false;
       this.generalesService.Autofocus('SelectBuscar');
       this.clearFrom();
       this.BloquearNroTitulo = false;
@@ -1262,8 +1265,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
 
   }
   MapearDatosUsuario() {
-    let data = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.dataUser = StorageSecurity.getData();
     this.contractualFrom.get('NombreOficina')?.setValue(this.dataUser.Oficina);
     this.contractualFrom.get('NumeroOficina')?.setValue(this.dataUser.NumeroOficina);
     this.contractualFrom.get('IdAsesor')?.setValue(this.dataUser.IdAsesor);
@@ -2045,8 +2047,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
   MapearDatosCuenta(result : any) {
     if (result !== null) {
       console.log("Cuenta",result);
-      let data = localStorage.getItem('Data');
-      this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+      this.dataUser = StorageSecurity.getData();
       this.showDecimals = true;
       if (result.length >= 1) {
         this.dataObjet = result;
@@ -2476,8 +2477,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
         );
   }
   ObtenerEstado() {
-    let data = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.dataUser = StorageSecurity.getData();
     const arrayExample = {
       'IdOperacion': 9,
       'IdPerfil': this.dataUser.idPerfilUsuario,
@@ -2637,9 +2637,8 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
       this.notif.onWarning('Advertencia', 'Debe ingresar al menos un autorizado cuando el titular es jurídico.');
       return;
     }
-    if (this.contractualFrom.get('TasaNominal')?.value !== '0.0000%'){    
-        let data = localStorage.getItem('Data');
-        this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    if (this.contractualFrom.get('TasaNominal')?.value !== '0.0000%'){
+        this.dataUser = StorageSecurity.getData();    
         this.contractualFrom.get('IdUsuarioSGF')?.setValue(this.dataUser.IdUsuarioSGF);
         this.contractualFrom.get('IdAsesor')?.setValue(this.dataUser.IdAsesor);
         this.contractualFrom.get('NumeroOficina')?.setValue(this.dataUser.NumeroOficina);
@@ -2712,8 +2711,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                     this.contractualFrom.get('ValorPlan')?.setValue(this.datoValorTotal);  
 
                 this.contractualFrom.get('FechaVencimiento')?.setValue(this.ArrayCondiciones.FechaVencimiento);
-                let data = localStorage.getItem('Data');
-                this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+                this.dataUser = StorageSecurity.getData();
                 this.contractualFrom.get('IdUsuarioSGF')?.setValue(this.dataUser.IdUsuarioSGF);
                 
                 if (this.contractualFrom.get('IdProducto')?.value === 208)
@@ -2782,6 +2780,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -2824,6 +2823,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -2876,6 +2876,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -2917,6 +2918,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -2975,6 +2977,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.BloquearCuentaOrigen = false;
                                                         this.BloquearNombreDebito = false;
                                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                        this.accionSeleccionada = false;
                                                         this.btnGuardar = true;
                                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                         this.Guardarlog(itemsLogApertura);
@@ -3017,6 +3020,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.BloquearCuentaOrigen = false;
                                                         this.BloquearNombreDebito = false;
                                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                        this.accionSeleccionada = false;
                                                         this.btnGuardar = true;
                                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                         this.Guardarlog(itemsLogApertura);
@@ -3068,6 +3072,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.BloquearCuentaOrigen = false;
                                                     this.BloquearNombreDebito = false;
                                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                    this.accionSeleccionada = false;
                                                     this.btnGuardar = true;
                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                     this.Guardarlog(itemsLogApertura);
@@ -3110,6 +3115,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.BloquearCuentaOrigen = false;
                                                     this.BloquearNombreDebito = false;
                                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                    this.accionSeleccionada = false;
                                                     this.btnGuardar = true;
                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                     this.Guardarlog(itemsLogApertura);
@@ -3173,8 +3179,8 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.BloquearBontonPuntos = false;
                                                     this.BloquearCuentaOrigen = false;
                                                     this.BloquearNombreDebito = false;
-                                                    this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',
-                                          );
+                                                    this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',);      
+                                                    this.accionSeleccionada = false;
                                                     this.btnGuardar = true;
                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                     this.Guardarlog(itemsLogApertura);
@@ -3217,8 +3223,8 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.BloquearBontonPuntos = false;
                                                     this.BloquearCuentaOrigen = false;
                                                     this.BloquearNombreDebito = false;
-                                                    this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',
-                                          );
+                                                    this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',);
+                                                    this.accionSeleccionada = false;
                                                     this.btnGuardar = true;
                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                     this.Guardarlog(itemsLogApertura);
@@ -3290,6 +3296,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.BloquearCuentaOrigen = false;
                                                 this.BloquearNombreDebito = false;
                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                this.accionSeleccionada = false;
                                                 this.btnGuardar = true;
                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                 this.Guardarlog(itemsLogApertura);
@@ -3333,6 +3340,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.BloquearCuentaOrigen = false;
                                                 this.BloquearNombreDebito = false;
                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                this.accionSeleccionada = false;
                                                 this.btnGuardar = true;
                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                 this.Guardarlog(itemsLogApertura);
@@ -3391,6 +3399,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.BloquearCuentaOrigen = false;
                                                 this.BloquearNombreDebito = false;
                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                this.accionSeleccionada = false;
                                                 this.btnGuardar = true;
                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                 this.Guardarlog(itemsLogApertura);
@@ -3433,6 +3442,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.BloquearCuentaOrigen = false;
                                                 this.BloquearNombreDebito = false;
                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                this.accionSeleccionada = false;
                                                 this.btnGuardar = true;
                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                 this.Guardarlog(itemsLogApertura);
@@ -3486,6 +3496,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.BloquearCuentaOrigen = false;
                                                 this.BloquearNombreDebito = false;
                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                this.accionSeleccionada = false;
                                                 this.btnGuardar = true;
                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                 this.Guardarlog(itemsLogApertura);
@@ -3528,6 +3539,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.BloquearCuentaOrigen = false;
                                                 this.BloquearNombreDebito = false;
                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                this.accionSeleccionada = false;
                                                 this.btnGuardar = true;
                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                 this.Guardarlog(itemsLogApertura);
@@ -3599,6 +3611,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.BloquearCuentaOrigen = false;
                                                 this.BloquearNombreDebito = false;
                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                this.accionSeleccionada = false;
                                                 this.btnGuardar = true;
                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                 this.Guardarlog(itemsLogApertura);
@@ -3641,6 +3654,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.BloquearCuentaOrigen = false;
                                                 this.BloquearNombreDebito = false;
                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                this.accionSeleccionada = false;
                                                 this.btnGuardar = true;
                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                 this.Guardarlog(itemsLogApertura);
@@ -3692,6 +3706,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -3734,6 +3749,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -3793,6 +3809,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -3835,6 +3852,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -3887,6 +3905,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -3928,6 +3947,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -3993,6 +4013,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.BloquearCuentaOrigen = false;
                                                 this.BloquearNombreDebito = false;
                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                this.accionSeleccionada = false;
                                                 this.btnGuardar = true;
                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                 this.Guardarlog(itemsLogApertura);
@@ -4036,6 +4057,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.BloquearCuentaOrigen = false;
                                                 this.BloquearNombreDebito = false;
                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                this.accionSeleccionada = false;
                                                 this.btnGuardar = true;
                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                 this.Guardarlog(itemsLogApertura);
@@ -4089,6 +4111,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.BloquearCuentaOrigen = false;
                                                 this.BloquearNombreDebito = false;
                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                this.accionSeleccionada = false;
                                                 this.btnGuardar = true;
                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                 this.Guardarlog(itemsLogApertura);
@@ -4122,6 +4145,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.BloquearSorteo = false;
                                                 this.BloquearPuntos = false;
                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                this.accionSeleccionada = false;
                                                 this.btnGuardar = true;
                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                 this.Guardarlog(itemsLogApertura);
@@ -4181,6 +4205,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.BloquearCuentaOrigen = false;
                                                 this.BloquearNombreDebito = false;
                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                this.accionSeleccionada = false;
                                                 this.btnGuardar = true;
                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                 this.Guardarlog(itemsLogApertura);
@@ -4222,6 +4247,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.BloquearCuentaOrigen = false;
                                                 this.BloquearNombreDebito = false;
                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                this.accionSeleccionada = false;
                                                 this.btnGuardar = true;
                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                 this.Guardarlog(itemsLogApertura);
@@ -4274,6 +4300,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.BloquearCuentaOrigen = false;
                                         this.BloquearNombreDebito = false;
                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                        this.accionSeleccionada = false;
                                         this.btnGuardar = true;
                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                         this.Guardarlog(itemsLogApertura);
@@ -4315,6 +4342,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.BloquearCuentaOrigen = false;
                                         this.BloquearNombreDebito = false;
                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                        this.accionSeleccionada = false;
                                         this.btnGuardar = true;
                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                         this.Guardarlog(itemsLogApertura);
@@ -4410,6 +4438,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                     this.BloquearCuentaOrigen = false;
                                                                     this.BloquearNombreDebito = false;
                                                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                                    this.accionSeleccionada = false;
                                                                     this.btnGuardar = true;
                                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                                     this.Guardarlog(itemsLogApertura);
@@ -4453,6 +4482,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                     this.BloquearCuentaOrigen = false;
                                                                     this.BloquearNombreDebito = false;
                                                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                                    this.accionSeleccionada = false;
                                                                     this.btnGuardar = true;
                                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                                     this.Guardarlog(itemsLogApertura);
@@ -4506,6 +4536,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                     this.BloquearCuentaOrigen = false;
                                                                     this.BloquearNombreDebito = false;
                                                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                                    this.accionSeleccionada = false;
                                                                     this.btnGuardar = true;
                                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                                     this.Guardarlog(itemsLogApertura);
@@ -4548,6 +4579,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                     this.BloquearCuentaOrigen = false;
                                                                     this.BloquearNombreDebito = false;
                                                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                                    this.accionSeleccionada = false;
                                                                     this.btnGuardar = true;
                                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                                     this.Guardarlog(itemsLogApertura);
@@ -4607,6 +4639,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.BloquearCuentaOrigen = false;
                                                                 this.BloquearNombreDebito = false;
                                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                                this.accionSeleccionada = false;
                                                                 this.btnGuardar = true;
                                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                                 this.Guardarlog(itemsLogApertura);
@@ -4649,6 +4682,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.BloquearCuentaOrigen = false;
                                                                 this.BloquearNombreDebito = false;
                                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                                this.accionSeleccionada = false;
                                                                 this.btnGuardar = true;
                                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                                 this.Guardarlog(itemsLogApertura);
@@ -4699,6 +4733,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.BloquearCuentaOrigen = false;
                                                                 this.BloquearNombreDebito = false;
                                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                                this.accionSeleccionada = false;
                                                                 this.btnGuardar = true;
                                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                                 this.Guardarlog(itemsLogApertura);
@@ -4741,6 +4776,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.BloquearCuentaOrigen = false;
                                                                 this.BloquearNombreDebito = false;
                                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                                this.accionSeleccionada = false;
                                                                 this.btnGuardar = true;
                                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                                 this.Guardarlog(itemsLogApertura);
@@ -4804,8 +4840,8 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                     this.BloquearBontonPuntos = false;
                                                                     this.BloquearCuentaOrigen = false;
                                                                     this.BloquearNombreDebito = false;
-                                                                    this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',
-                                                          );
+                                                                    this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',);
+                                                                    this.accionSeleccionada = false;
                                                                     this.btnGuardar = true;
                                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                                     this.Guardarlog(itemsLogApertura);
@@ -4848,6 +4884,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                     this.BloquearCuentaOrigen = false;
                                                                     this.BloquearNombreDebito = false;
                                                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                                    this.accionSeleccionada = false;
                                                                     this.btnGuardar = true;
                                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                                     this.Guardarlog(itemsLogApertura);
@@ -4902,6 +4939,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.BloquearCuentaOrigen = false;
                                                                 this.BloquearNombreDebito = false;
                                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                                this.accionSeleccionada = false;
                                                                 this.btnGuardar = true;
                                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                                 this.Guardarlog(itemsLogApertura);
@@ -4944,6 +4982,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.BloquearCuentaOrigen = false;
                                                                 this.BloquearNombreDebito = false;
                                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                                this.accionSeleccionada = false;
                                                                 this.btnGuardar = true;
                                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                                 this.Guardarlog(itemsLogApertura);
@@ -5003,6 +5042,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.BloquearCuentaOrigen = false;
                                                         this.BloquearNombreDebito = false;
                                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                        this.accionSeleccionada = false;
                                                         this.btnGuardar = true;
                                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                         this.Guardarlog(itemsLogApertura);
@@ -5044,6 +5084,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.BloquearCuentaOrigen = false;
                                                         this.BloquearNombreDebito = false;
                                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                        this.accionSeleccionada = false;
                                                         this.btnGuardar = true;
                                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                         this.Guardarlog();
@@ -5100,6 +5141,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -5141,6 +5183,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -5213,6 +5256,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.BloquearCuentaOrigen = false;
                                                                 this.BloquearNombreDebito = false;
                                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                                this.accionSeleccionada = false;
                                                                 this.btnGuardar = true;
                                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                                 this.Guardarlog(itemsLogApertura);
@@ -5255,6 +5299,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.BloquearCuentaOrigen = false;
                                                                 this.BloquearNombreDebito = false;
                                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                                this.accionSeleccionada = false;
                                                                 this.btnGuardar = true;
                                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                                 this.Guardarlog(itemsLogApertura);
@@ -5308,6 +5353,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -5350,6 +5396,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -5409,6 +5456,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -5450,6 +5498,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -5517,6 +5566,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.BloquearCuentaOrigen = false;
                                                         this.BloquearNombreDebito = false;
                                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                        this.accionSeleccionada = false;
                                                         this.btnGuardar = true;
                                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                         this.Guardarlog(itemsLogApertura);
@@ -5558,6 +5608,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.BloquearCuentaOrigen = false;
                                                         this.BloquearNombreDebito = false;
                                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                        this.accionSeleccionada = false;
                                                         this.btnGuardar = true;
                                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                         this.Guardarlog(itemsLogApertura);
@@ -5622,6 +5673,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.BloquearCuentaOrigen = false;
                                                                 this.BloquearNombreDebito = false;
                                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                                this.accionSeleccionada = false;
                                                                 this.btnGuardar = true;
                                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                                 this.Guardarlog(itemsLogApertura);
@@ -5665,6 +5717,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.BloquearCuentaOrigen = false;
                                                                 this.BloquearNombreDebito = false;
                                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                                this.accionSeleccionada = false;
                                                                 this.btnGuardar = true;
                                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                                 this.Guardarlog(itemsLogApertura);
@@ -5718,6 +5771,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -5761,6 +5815,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -5820,6 +5875,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -5861,6 +5917,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -5913,6 +5970,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.BloquearCuentaOrigen = false;
                                                         this.BloquearNombreDebito = false;
                                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                        this.accionSeleccionada = false;
                                                         this.btnGuardar = true;
                                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                         this.Guardarlog(itemsLogApertura);
@@ -5954,6 +6012,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.BloquearCuentaOrigen = false;
                                                         this.BloquearNombreDebito = false;
                                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                        this.accionSeleccionada = false;
                                                         this.btnGuardar = true;
                                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                         this.Guardarlog(itemsLogApertura);
@@ -6034,6 +6093,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.BloquearCuentaOrigen = false;
                                                         this.BloquearNombreDebito = false;
                                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                        this.accionSeleccionada = false;
                                                         this.btnGuardar = true;
                                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                         this.Guardarlog(itemsLogApertura);
@@ -6075,6 +6135,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.BloquearCuentaOrigen = false;
                                                         this.BloquearNombreDebito = false;
                                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                        this.accionSeleccionada = false;
                                                         this.btnGuardar = true;
                                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                         this.Guardarlog(itemsLogApertura);
@@ -6127,6 +6188,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.BloquearCuentaOrigen = false;
                                                         this.BloquearNombreDebito = false;
                                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                        this.accionSeleccionada = false;
                                                         this.btnGuardar = true;
                                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                         this.Guardarlog(itemsLogApertura);
@@ -6168,6 +6230,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.BloquearCuentaOrigen = false;
                                                         this.BloquearNombreDebito = false;
                                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                        this.accionSeleccionada = false;
                                                         this.btnGuardar = true;
                                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                         this.Guardarlog(itemsLogApertura);
@@ -6226,6 +6289,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.BloquearCuentaOrigen = false;
                                                         this.BloquearNombreDebito = false;
                                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                        this.accionSeleccionada = false;
                                                         this.btnGuardar = true;
                                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                         this.Guardarlog(itemsLogApertura);
@@ -6267,6 +6331,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.BloquearCuentaOrigen = false;
                                                         this.BloquearNombreDebito = false;
                                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                        this.accionSeleccionada = false;
                                                         this.btnGuardar = true;
                                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                         this.Guardarlog(itemsLogApertura);
@@ -6319,6 +6384,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.BloquearCuentaOrigen = false;
                                                     this.BloquearNombreDebito = false;
                                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                    this.accionSeleccionada = false;
                                                     this.btnGuardar = true;
                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                     this.Guardarlog(itemsLogApertura);
@@ -6361,6 +6427,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.BloquearCuentaOrigen = false;
                                                     this.BloquearNombreDebito = false;
                                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                    this.accionSeleccionada = false;
                                                     this.btnGuardar = true;
                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                     this.Guardarlog(itemsLogApertura);
@@ -6426,8 +6493,8 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.BloquearBontonPuntos = false;
                                                         this.BloquearCuentaOrigen = false;
                                                         this.BloquearNombreDebito = false;
-                                                        this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',
-                                              );
+                                                        this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',);
+                                                        this.accionSeleccionada = false;
                                                         this.btnGuardar = true;
                                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                         this.Guardarlog(itemsLogApertura);
@@ -6469,8 +6536,8 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.BloquearBontonPuntos = false;
                                                         this.BloquearCuentaOrigen = false;
                                                         this.BloquearNombreDebito = false;
-                                                        this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',
-                                              );
+                                                        this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',);
+                                                        this.accionSeleccionada = false;
                                                         this.btnGuardar = true;
                                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                         this.Guardarlog(itemsLogApertura);
@@ -6524,6 +6591,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.BloquearCuentaOrigen = false;
                                                     this.BloquearNombreDebito = false;
                                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                    this.accionSeleccionada = false;
                                                     this.btnGuardar = true;
                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                     this.Guardarlog(itemsLogApertura);
@@ -6566,6 +6634,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.BloquearCuentaOrigen = false;
                                                     this.BloquearNombreDebito = false;
                                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                    this.accionSeleccionada = false;
                                                     this.btnGuardar = true;
                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                     this.Guardarlog(itemsLogApertura);
@@ -6625,6 +6694,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.BloquearCuentaOrigen = false;
                                                     this.BloquearNombreDebito = false;
                                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                    this.accionSeleccionada = false;
                                                     this.btnGuardar = true;
                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                     this.Guardarlog(itemsLogApertura);
@@ -6666,6 +6736,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.BloquearCuentaOrigen = false;
                                                     this.BloquearNombreDebito = false;
                                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                    this.accionSeleccionada = false;
                                                     this.btnGuardar = true;
                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                     this.Guardarlog(itemsLogApertura);
@@ -6718,6 +6789,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.BloquearCuentaOrigen = false;
                                                     this.BloquearNombreDebito = false;
                                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                    this.accionSeleccionada = false;
                                                     this.btnGuardar = true;
                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                     this.Guardarlog(itemsLogApertura);
@@ -6759,6 +6831,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.BloquearCuentaOrigen = false;
                                                     this.BloquearNombreDebito = false;
                                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                    this.accionSeleccionada = false;
                                                     this.btnGuardar = true;
                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                     this.Guardarlog(itemsLogApertura);
@@ -6828,6 +6901,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.BloquearCuentaOrigen = false;
                                                         this.BloquearNombreDebito = false;
                                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                        this.accionSeleccionada = false;
                                                         this.btnGuardar = true;
                                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                         this.Guardarlog(itemsLogApertura);
@@ -6869,6 +6943,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.BloquearCuentaOrigen = false;
                                                         this.BloquearNombreDebito = false;
                                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                        this.accionSeleccionada = false;
                                                         this.btnGuardar = true;
                                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                         this.Guardarlog(itemsLogApertura);
@@ -6919,6 +6994,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.BloquearCuentaOrigen = false;
                                                 this.BloquearNombreDebito = false;
                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                this.accionSeleccionada = false;
                                                 this.btnGuardar = true;
                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                 this.Guardarlog(itemsLogApertura);
@@ -6960,6 +7036,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.BloquearCuentaOrigen = false;
                                                 this.BloquearNombreDebito = false;
                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                this.accionSeleccionada = false;
                                                 this.btnGuardar = true;
                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                 this.Guardarlog(itemsLogApertura);
@@ -7019,6 +7096,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.BloquearCuentaOrigen = false;
                                                 this.BloquearNombreDebito = false;
                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                this.accionSeleccionada = false;
                                                 this.btnGuardar = true;
                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                 this.Guardarlog(itemsLogApertura);
@@ -7060,6 +7138,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.BloquearCuentaOrigen = false;
                                                 this.BloquearNombreDebito = false;
                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                this.accionSeleccionada = false;
                                                 this.btnGuardar = true;
                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                 this.Guardarlog(itemsLogApertura);
@@ -7112,6 +7191,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.BloquearCuentaOrigen = false;
                                                 this.BloquearNombreDebito = false;
                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                this.accionSeleccionada = false;
                                                 this.btnGuardar = true;
                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                 this.Guardarlog(itemsLogApertura);
@@ -7168,6 +7248,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.BloquearCuentaOrigen = false;
                                                 this.BloquearNombreDebito = false;
                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                this.accionSeleccionada = false;
                                                 this.btnGuardar = true;
                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                 this.Guardarlog(itemsLogApertura);
@@ -7232,6 +7313,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.BloquearCuentaOrigen = false;
                                                     this.BloquearNombreDebito = false;
                                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                    this.accionSeleccionada = false;
                                                     this.btnGuardar = true;
                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                     this.Guardarlog(itemsLogApertura);
@@ -7274,6 +7356,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.BloquearCuentaOrigen = false;
                                                     this.BloquearNombreDebito = false;
                                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                    this.accionSeleccionada = false;
                                                     this.btnGuardar = true;
                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                     this.Guardarlog(itemsLogApertura);
@@ -7328,6 +7411,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.BloquearCuentaOrigen = false;
                                                     this.BloquearNombreDebito = false;
                                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                    this.accionSeleccionada = false;
                                                     this.btnGuardar = true;
                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                     this.Guardarlog(itemsLogApertura);
@@ -7361,6 +7445,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.BloquearSorteo = false;
                                                     this.BloquearPuntos = false;
                                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                    this.accionSeleccionada = false;
                                                     this.btnGuardar = true;
                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                     this.Guardarlog(itemsLogApertura);
@@ -7420,6 +7505,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.BloquearCuentaOrigen = false;
                                                     this.BloquearNombreDebito = false;
                                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                    this.accionSeleccionada = false;
                                                     this.btnGuardar = true;
                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                     this.Guardarlog(itemsLogApertura);
@@ -7461,6 +7547,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.BloquearCuentaOrigen = false;
                                                     this.BloquearNombreDebito = false;
                                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                    this.accionSeleccionada = false;
                                                     this.btnGuardar = true;
                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                     this.Guardarlog(itemsLogApertura);
@@ -7513,6 +7600,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -7554,6 +7642,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -7650,6 +7739,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.BloquearCuentaOrigen = false;
                                                                 this.BloquearNombreDebito = false;
                                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                                this.accionSeleccionada = false;
                                                                 this.btnGuardar = true;
                                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                                 this.Guardarlog(itemsLogApertura);
@@ -7692,6 +7782,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.BloquearCuentaOrigen = false;
                                                                 this.BloquearNombreDebito = false;
                                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                                this.accionSeleccionada = false;
                                                                 this.btnGuardar = true;
                                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                                 this.Guardarlog(itemsLogApertura);
@@ -7745,6 +7836,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.BloquearCuentaOrigen = false;
                                                                 this.BloquearNombreDebito = false;
                                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                                this.accionSeleccionada = false;
                                                                 this.btnGuardar = true;
                                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                                 this.Guardarlog();
@@ -7790,6 +7882,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                 this.BloquearCuentaOrigen = false;
                                                                 this.BloquearNombreDebito = false;
                                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                                this.accionSeleccionada = false;
                                                                 this.btnGuardar = true;
                                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                                 this.Guardarlog();
@@ -7853,6 +7946,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                     this.BloquearCuentaOrigen = false;
                                                                     this.BloquearNombreDebito = false;
                                                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                                    this.accionSeleccionada = false;
                                                                     this.btnGuardar = true;
                                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                                     this.Guardarlog(itemsLogApertura);
@@ -7894,6 +7988,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                     this.BloquearCuentaOrigen = false;
                                                                     this.BloquearNombreDebito = false;
                                                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                                    this.accionSeleccionada = false;
                                                                     this.btnGuardar = true;
                                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                                     this.Guardarlog(itemsLogApertura);
@@ -7946,6 +8041,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -7987,6 +8083,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -8050,8 +8147,8 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                     this.BloquearBontonPuntos = false;
                                                                     this.BloquearCuentaOrigen = false;
                                                                     this.BloquearNombreDebito = false;
-                                                                    this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',
-                                                          );
+                                                                    this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',);
+                                                                    this.accionSeleccionada = false;
                                                                     this.btnGuardar = true;
                                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                                     this.Guardarlog(itemsLogApertura);
@@ -8093,8 +8190,8 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                     this.BloquearBontonPuntos = false;
                                                                     this.BloquearCuentaOrigen = false;
                                                                     this.BloquearNombreDebito = false;
-                                                                    this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',
-                                                          );
+                                                                    this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',);
+                                                                    this.accionSeleccionada = false;
                                                                     this.btnGuardar = true;
                                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                                     this.Guardarlog(itemsLogApertura);
@@ -8148,6 +8245,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -8190,6 +8288,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -8249,6 +8348,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -8290,6 +8390,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -8342,6 +8443,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -8383,6 +8485,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -8454,6 +8557,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                     this.BloquearCuentaOrigen = false;
                                                                     this.BloquearNombreDebito = false;
                                                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                                    this.accionSeleccionada = false;
                                                                     this.btnGuardar = true;
                                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                                     this.Guardarlog(itemsLogApertura);
@@ -8496,6 +8600,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                                     this.BloquearCuentaOrigen = false;
                                                                     this.BloquearNombreDebito = false;
                                                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                                    this.accionSeleccionada = false;
                                                                     this.btnGuardar = true;
                                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                                     this.Guardarlog(itemsLogApertura);
@@ -8549,6 +8654,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -8591,6 +8697,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -8650,6 +8757,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -8691,6 +8799,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -8743,6 +8852,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -8783,6 +8893,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -8847,6 +8958,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -8889,6 +9001,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -8940,6 +9053,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -8982,6 +9096,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -9041,6 +9156,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -9082,6 +9198,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                             this.BloquearCuentaOrigen = false;
                                                             this.BloquearNombreDebito = false;
                                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                            this.accionSeleccionada = false;
                                                             this.btnGuardar = true;
                                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                             this.Guardarlog(itemsLogApertura);
@@ -9134,6 +9251,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.BloquearCuentaOrigen = false;
                                                     this.BloquearNombreDebito = false;
                                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                    this.accionSeleccionada = false;
                                                     this.btnGuardar = true;
                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                     this.Guardarlog(itemsLogApertura);
@@ -9175,6 +9293,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                     this.BloquearCuentaOrigen = false;
                                                     this.BloquearNombreDebito = false;
                                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                    this.accionSeleccionada = false;
                                                     this.btnGuardar = true;
                                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                     this.Guardarlog(itemsLogApertura);
@@ -9216,8 +9335,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                 }
             }
             this.contractualFrom.get('FechaVencimiento')?.setValue(this.ArrayCondiciones.FechaVencimiento);
-            let data = localStorage.getItem('Data');
-            this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+            this.dataUser = StorageSecurity.getData();
             this.contractualFrom.get('IdUsuarioSGF')?.setValue(this.dataUser.IdUsuarioSGF);
             if (this.contractualFrom.get('IdProducto')?.value === 208) {
                 this.contractualFrom.get('Sorteo')?.setValue('0');
@@ -9288,6 +9406,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.BloquearCuentaOrigen = false;
                                                         this.BloquearNombreDebito = false;
                                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                        this.accionSeleccionada = false;
                                                         this.btnGuardar = true;
                                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                         this.Guardarlog(itemsLogApertura);
@@ -9329,6 +9448,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.BloquearCuentaOrigen = false;
                                                         this.BloquearNombreDebito = false;
                                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                        this.accionSeleccionada = false;
                                                         this.btnGuardar = true;
                                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                         this.Guardarlog(itemsLogApertura);
@@ -9381,6 +9501,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.BloquearCuentaOrigen = false;
                                                 this.BloquearNombreDebito = false;
                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                this.accionSeleccionada = false;
                                                 this.btnGuardar = true;
                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                 this.Guardarlog(itemsLogApertura);
@@ -9422,6 +9543,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.BloquearCuentaOrigen = false;
                                                 this.BloquearNombreDebito = false;
                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                this.accionSeleccionada = false;
                                                 this.btnGuardar = true;
                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                 this.Guardarlog(itemsLogApertura);
@@ -9480,6 +9602,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.BloquearCuentaOrigen = false;
                                                 this.BloquearNombreDebito = false;
                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                this.accionSeleccionada = false;
                                                 this.btnGuardar = true;
                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                 this.Guardarlog(itemsLogApertura);
@@ -9521,6 +9644,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.BloquearCuentaOrigen = false;
                                                 this.BloquearNombreDebito = false;
                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                this.accionSeleccionada = false;
                                                 this.btnGuardar = true;
                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                 this.Guardarlog(itemsLogApertura);
@@ -9571,6 +9695,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.BloquearCuentaOrigen = false;
                                                 this.BloquearNombreDebito = false;
                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                this.accionSeleccionada = false;
                                                 this.btnGuardar = true;
                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                 this.Guardarlog(itemsLogApertura);
@@ -9612,6 +9737,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.BloquearCuentaOrigen = false;
                                                 this.BloquearNombreDebito = false;
                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                this.accionSeleccionada = false;
                                                 this.btnGuardar = true;
                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                 this.Guardarlog(itemsLogApertura);
@@ -9677,6 +9803,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.BloquearCuentaOrigen = false;
                                                 this.BloquearNombreDebito = false;
                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                this.accionSeleccionada = false;
                                                 this.btnGuardar = true;
                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                 this.Guardarlog(itemsLogApertura);
@@ -9720,6 +9847,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                 this.BloquearCuentaOrigen = false;
                                                 this.BloquearNombreDebito = false;
                                                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                this.accionSeleccionada = false;
                                                 this.btnGuardar = true;
                                                 this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                 this.Guardarlog(itemsLogApertura);
@@ -9788,6 +9916,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.BloquearCuentaOrigen = false;
                                               this.BloquearNombreDebito = false;
                                               this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                              this.accionSeleccionada = false;
                                               this.btnGuardar = true;
                                               this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                               this.Guardarlog(itemsLogApertura);
@@ -9830,6 +9959,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.BloquearCuentaOrigen = false;
                                               this.BloquearNombreDebito = false;
                                               this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                              this.accionSeleccionada = false;
                                               this.btnGuardar = true;
                                               this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                               this.Guardarlog(itemsLogApertura);
@@ -9887,6 +10017,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.BloquearCuentaOrigen = false;
                                         this.BloquearNombreDebito = false;
                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                        this.accionSeleccionada = false;
                                         this.btnGuardar = true;
                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                         this.Guardarlog();
@@ -9932,6 +10063,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.BloquearCuentaOrigen = false;
                                         this.BloquearNombreDebito = false;
                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                        this.accionSeleccionada = false;
                                         this.btnGuardar = true;
                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                         this.Guardarlog();
@@ -9988,6 +10120,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                     this.BloquearCuentaOrigen = false;
                                     this.BloquearNombreDebito = false;
                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                    this.accionSeleccionada = false;
                                     this.btnGuardar = true;
                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                     this.Guardarlog();
@@ -10034,6 +10167,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                     this.BloquearCuentaOrigen = false;
                                     this.BloquearNombreDebito = false;
                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                    this.accionSeleccionada = false;
                                     this.btnGuardar = true;
                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                     this.Guardarlog();
@@ -10109,6 +10243,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                           this.BloquearCuentaOrigen = false;
                                           this.BloquearNombreDebito = false;
                                           this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                          this.accionSeleccionada = false;
                                           this.btnGuardar = true;
                                           this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                           this.Guardarlog(itemsLogApertura);
@@ -10150,6 +10285,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                           this.BloquearCuentaOrigen = false;
                                           this.BloquearNombreDebito = false;
                                           this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                          this.accionSeleccionada = false;
                                           this.btnGuardar = true;
                                           this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                           this.Guardarlog(itemsLogApertura);
@@ -10200,6 +10336,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                           this.BloquearCuentaOrigen = false;
                                           this.BloquearNombreDebito = false;
                                           this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                          this.accionSeleccionada = false;
                                           this.btnGuardar = true;
                                           this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                           this.Guardarlog(itemsLogApertura);
@@ -10241,6 +10378,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                           this.BloquearCuentaOrigen = false;
                                           this.BloquearNombreDebito = false;
                                           this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                          this.accionSeleccionada = false;
                                           this.btnGuardar = true;
                                           this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                           this.Guardarlog(itemsLogApertura);
@@ -10300,6 +10438,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.BloquearCuentaOrigen = false;
                                         this.BloquearNombreDebito = false;
                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                        this.accionSeleccionada = false;
                                         this.btnGuardar = true;
                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                         this.Guardarlog(itemsLogApertura);
@@ -10341,6 +10480,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.BloquearCuentaOrigen = false;
                                         this.BloquearNombreDebito = false;
                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                        this.accionSeleccionada = false;
                                         this.btnGuardar = true;
                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                         this.Guardarlog(itemsLogApertura);
@@ -10393,6 +10533,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                   this.BloquearCuentaOrigen = false;
                                   this.BloquearNombreDebito = false;
                                   this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                  this.accionSeleccionada = false;
                                   this.btnGuardar = true;
                                   this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                   this.Guardarlog(itemsLogApertura);
@@ -10434,6 +10575,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                   this.BloquearCuentaOrigen = false;
                                   this.BloquearNombreDebito = false;
                                   this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                  this.accionSeleccionada = false;
                                   this.btnGuardar = true;
                                   this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                   this.Guardarlog(itemsLogApertura);
@@ -10499,8 +10641,8 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                       this.BloquearBontonPuntos = false;
                                       this.BloquearCuentaOrigen = false;
                                       this.BloquearNombreDebito = false;
-                                      this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',
-                            );
+                                      this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',);
+                                      this.accionSeleccionada = false;
                                       this.btnGuardar = true;
                                       this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                       this.Guardarlog();
@@ -10549,8 +10691,8 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                       this.BloquearBontonPuntos = false;
                                       this.BloquearCuentaOrigen = false;
                                       this.BloquearNombreDebito = false;
-                                      this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',
-                            );
+                                      this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',);
+                                      this.accionSeleccionada = false;
                                       this.btnGuardar = true;
                                       this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                       this.Guardarlog();
@@ -10609,6 +10751,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                   this.BloquearCuentaOrigen = false;
                                   this.BloquearNombreDebito = false;
                                   this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                  this.accionSeleccionada = false;
                                   this.btnGuardar = true;
                                   this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                   this.Guardarlog();
@@ -10648,6 +10791,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                   this.BloquearSorteo = false;
                                   this.BloquearPuntos = false;
                                   this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                  this.accionSeleccionada = false;
                                   this.btnGuardar = true;
                                   this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                   this.Guardarlog();
@@ -10711,6 +10855,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                   this.BloquearCuentaOrigen = false;
                                   this.BloquearNombreDebito = false;
                                   this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                  this.accionSeleccionada = false;
                                   this.btnGuardar = true;
                                   this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                   this.Guardarlog();
@@ -10758,6 +10903,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                   this.BloquearCuentaOrigen = false;
                                   this.BloquearNombreDebito = false;
                                   this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                  this.accionSeleccionada = false;
                                   this.btnGuardar = true;
                                   this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                   this.Guardarlog();
@@ -10816,6 +10962,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                   this.BloquearCuentaOrigen = false;
                                   this.BloquearNombreDebito = false;
                                   this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                  this.accionSeleccionada = false;
                                   this.btnGuardar = true;
                                   this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                   this.Guardarlog();
@@ -10858,6 +11005,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                   this.BloquearCuentaOrigen = false;
                                   this.BloquearNombreDebito = false;
                                   this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                  this.accionSeleccionada = false;
                                   this.btnGuardar = true;
                                   this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                   this.Guardarlog();
@@ -10956,8 +11104,8 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.BloquearBontonPuntos = false;
                                                   this.BloquearCuentaOrigen = false;
                                                   this.BloquearNombreDebito = false;
-                                                  this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',
-                                        );
+                                                  this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',);
+                                                  this.accionSeleccionada = false;
                                                   this.btnGuardar = true;
                                                   this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                   this.Guardarlog(itemsLogApertura);
@@ -11000,6 +11148,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.BloquearCuentaOrigen = false;
                                                   this.BloquearNombreDebito = false;
                                                   this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                  this.accionSeleccionada = false;
                                                   this.btnGuardar = true;
                                                   this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                   this.Guardarlog(itemsLogApertura);
@@ -11053,6 +11202,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -11095,6 +11245,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -11154,6 +11305,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -11195,6 +11347,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -11245,6 +11398,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -11286,6 +11440,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -11350,6 +11505,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.BloquearCuentaOrigen = false;
                                               this.BloquearNombreDebito = false;
                                               this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                              this.accionSeleccionada = false;
                                               this.btnGuardar = true;
                                               this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                               this.Guardarlog(itemsLogApertura);
@@ -11392,6 +11548,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.BloquearCuentaOrigen = false;
                                               this.BloquearNombreDebito = false;
                                               this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                              this.accionSeleccionada = false;
                                               this.btnGuardar = true;
                                               this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                               this.Guardarlog(itemsLogApertura);
@@ -11446,6 +11603,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.BloquearCuentaOrigen = false;
                                               this.BloquearNombreDebito = false;
                                               this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                              this.accionSeleccionada = false;
                                               this.btnGuardar = true;
                                               this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                               this.Guardarlog(itemsLogApertura);
@@ -11488,6 +11646,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.BloquearCuentaOrigen = false;
                                               this.BloquearNombreDebito = false;
                                               this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                              this.accionSeleccionada = false;
                                               this.btnGuardar = true;
                                               this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                               this.Guardarlog(itemsLogApertura);
@@ -11547,6 +11706,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.BloquearCuentaOrigen = false;
                                               this.BloquearNombreDebito = false;
                                               this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                              this.accionSeleccionada = false;
                                               this.btnGuardar = true;
                                               this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                               this.Guardarlog(itemsLogApertura);
@@ -11588,6 +11748,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.BloquearCuentaOrigen = false;
                                               this.BloquearNombreDebito = false;
                                               this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                              this.accionSeleccionada = false;
                                               this.btnGuardar = true;
                                               this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                               this.Guardarlog(itemsLogApertura);
@@ -11640,6 +11801,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.BloquearCuentaOrigen = false;
                                         this.BloquearNombreDebito = false;
                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                        this.accionSeleccionada = false;
                                         this.btnGuardar = true;
                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                         this.Guardarlog(itemsLogApertura);
@@ -11681,6 +11843,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.BloquearCuentaOrigen = false;
                                         this.BloquearNombreDebito = false;
                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                        this.accionSeleccionada = false;
                                         this.btnGuardar = true;
                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                         this.Guardarlog(itemsLogApertura);
@@ -11752,6 +11915,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -11794,6 +11958,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -11847,6 +12012,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.BloquearCuentaOrigen = false;
                                               this.BloquearNombreDebito = false;
                                               this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                              this.accionSeleccionada = false;
                                               this.btnGuardar = true;
                                               this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                               this.Guardarlog(itemsLogApertura);
@@ -11889,6 +12055,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.BloquearCuentaOrigen = false;
                                               this.BloquearNombreDebito = false;
                                               this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                              this.accionSeleccionada = false;
                                               this.btnGuardar = true;
                                               this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                               this.Guardarlog(itemsLogApertura);
@@ -11948,6 +12115,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.BloquearCuentaOrigen = false;
                                               this.BloquearNombreDebito = false;
                                               this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                              this.accionSeleccionada = false;
                                               this.btnGuardar = true;
                                               this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                               this.Guardarlog(itemsLogApertura);
@@ -11989,6 +12157,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.BloquearCuentaOrigen = false;
                                               this.BloquearNombreDebito = false;
                                               this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                              this.accionSeleccionada = false;
                                               this.btnGuardar = true;
                                               this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                               this.Guardarlog(itemsLogApertura);
@@ -12056,6 +12225,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.BloquearCuentaOrigen = false;
                                         this.BloquearNombreDebito = false;
                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                        this.accionSeleccionada = false;
                                         this.btnGuardar = true;
                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                         this.Guardarlog(itemsLogApertura);
@@ -12097,6 +12267,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.BloquearCuentaOrigen = false;
                                         this.BloquearNombreDebito = false;
                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                        this.accionSeleccionada = false;
                                         this.btnGuardar = true;
                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                         this.Guardarlog(itemsLogApertura);
@@ -12161,6 +12332,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                           this.BloquearCuentaOrigen = false;
                                           this.BloquearNombreDebito = false;
                                           this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                          this.accionSeleccionada = false;
                                           this.btnGuardar = true;
                                           this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                           this.Guardarlog();
@@ -12203,8 +12375,8 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                           this.BloquearBontonPuntos = false;
                                           this.BloquearCuentaOrigen = false;
                                           this.BloquearNombreDebito = false;
-                                          this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',
-                                );
+                                          this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',);
+                                          this.accionSeleccionada = false;
                                           this.btnGuardar = true;
                                           this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                           this.Guardarlog();
@@ -12261,6 +12433,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                       this.BloquearCuentaOrigen = false;
                                       this.BloquearNombreDebito = false;
                                       this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                      this.accionSeleccionada = false;
                                       this.btnGuardar = true;
                                       this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                       this.Guardarlog();
@@ -12308,6 +12481,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                       this.BloquearCuentaOrigen = false;
                                       this.BloquearNombreDebito = false;
                                       this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                      this.accionSeleccionada = false;
                                       this.btnGuardar = true;
                                       this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                       this.Guardarlog();
@@ -12370,6 +12544,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.BloquearCuentaOrigen = false;
                                         this.BloquearNombreDebito = false;
                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                        this.accionSeleccionada = false;
                                         this.btnGuardar = true;
                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                         this.Guardarlog(itemsLogApertura);
@@ -12411,6 +12586,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.BloquearCuentaOrigen = false;
                                         this.BloquearNombreDebito = false;
                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                        this.accionSeleccionada = false;
                                         this.btnGuardar = true;
                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                         this.Guardarlog(itemsLogApertura);
@@ -12463,6 +12639,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.BloquearCuentaOrigen = false;
                                         this.BloquearNombreDebito = false;
                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                        this.accionSeleccionada = false;
                                         this.btnGuardar = true;
                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                         this.Guardarlog(itemsLogApertura);
@@ -12504,6 +12681,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.BloquearCuentaOrigen = false;
                                         this.BloquearNombreDebito = false;
                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                        this.accionSeleccionada = false;
                                         this.btnGuardar = true;
                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                         this.Guardarlog(itemsLogApertura);
@@ -12581,6 +12759,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.BloquearCuentaOrigen = false;
                                                   this.BloquearNombreDebito = false;
                                                   this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                  this.accionSeleccionada = false;
                                                   this.btnGuardar = true;
                                                   this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                   this.Guardarlog(itemsLogApertura);
@@ -12622,6 +12801,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.BloquearCuentaOrigen = false;
                                                   this.BloquearNombreDebito = false;
                                                   this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                  this.accionSeleccionada = false;
                                                   this.btnGuardar = true;
                                                   this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                   this.Guardarlog(itemsLogApertura);
@@ -12674,6 +12854,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -12715,6 +12896,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -12773,6 +12955,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -12814,6 +12997,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -12866,6 +13050,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -12907,6 +13092,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -12971,8 +13157,8 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.BloquearBontonPuntos = false;
                                         this.BloquearCuentaOrigen = false;
                                         this.BloquearNombreDebito = false;
-                                        this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',
-                                  );
+                                        this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',);
+                                        this.accionSeleccionada = false;
                                         this.btnGuardar = true;
                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                         this.Guardarlog();
@@ -13018,8 +13204,8 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.BloquearBontonPuntos = false;
                                         this.BloquearCuentaOrigen = false;
                                         this.BloquearNombreDebito = false;
-                                        this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',
-                                  );
+                                        this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',);
+                                        this.accionSeleccionada = false;
                                         this.btnGuardar = true;
                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                         this.Guardarlog();
@@ -13077,6 +13263,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.BloquearCuentaOrigen = false;
                                         this.BloquearNombreDebito = false;
                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                        this.accionSeleccionada = false;
                                         this.btnGuardar = true;
                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                         this.Guardarlog();
@@ -13124,6 +13311,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.BloquearCuentaOrigen = false;
                                         this.BloquearNombreDebito = false;
                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                        this.accionSeleccionada = false;
                                         this.btnGuardar = true;
                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                         this.Guardarlog();
@@ -13186,6 +13374,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.BloquearCuentaOrigen = false;
                                         this.BloquearNombreDebito = false;
                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                        this.accionSeleccionada = false;
                                         this.btnGuardar = true;
                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                         this.Guardarlog();
@@ -13229,6 +13418,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                         this.BloquearCuentaOrigen = false;
                                         this.BloquearNombreDebito = false;
                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                        this.accionSeleccionada = false;
                                         this.btnGuardar = true;
                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                         this.Guardarlog();
@@ -13284,6 +13474,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                     this.BloquearCuentaOrigen = false;
                                     this.BloquearNombreDebito = false;
                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                    this.accionSeleccionada = false;
                                     this.btnGuardar = true;
                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                     this.Guardarlog();
@@ -13329,6 +13520,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                     this.BloquearCuentaOrigen = false;
                                     this.BloquearNombreDebito = false;
                                     this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                    this.accionSeleccionada = false;
                                     this.btnGuardar = true;
                                     this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                     this.Guardarlog();
@@ -13401,6 +13593,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -13442,6 +13635,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -13492,6 +13686,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -13533,6 +13728,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -13592,6 +13788,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -13633,6 +13830,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -13685,6 +13883,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                       this.BloquearCuentaOrigen = false;
                                       this.BloquearNombreDebito = false;
                                       this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                      this.accionSeleccionada = false;
                                       this.btnGuardar = true;
                                       this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                       this.Guardarlog(itemsLogApertura);
@@ -13741,6 +13940,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                       this.BloquearCuentaOrigen = false;
                                       this.BloquearNombreDebito = false;
                                       this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                      this.accionSeleccionada = false;
                                       this.btnGuardar = true;
                                       this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                       this.Guardarlog(itemsLogApertura);
@@ -13805,8 +14005,8 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearBontonPuntos = false;
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
-                                            this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',
-                                  );
+                                            this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',);
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -13850,6 +14050,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -13903,6 +14104,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                       this.BloquearCuentaOrigen = false;
                                       this.BloquearNombreDebito = false;
                                       this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                      this.accionSeleccionada = false;
                                       this.btnGuardar = true;
                                       this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                       this.Guardarlog(itemsLogApertura);
@@ -13936,6 +14138,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                       this.BloquearSorteo = false;
                                       this.BloquearPuntos = false;
                                       this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                      this.accionSeleccionada = false;
                                       this.btnGuardar = true;
                                       this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                       this.Guardarlog(itemsLogApertura);
@@ -13995,6 +14198,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                       this.BloquearCuentaOrigen = false;
                                       this.BloquearNombreDebito = false;
                                       this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                      this.accionSeleccionada = false;
                                       this.btnGuardar = true;
                                       this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                       this.Guardarlog(itemsLogApertura);
@@ -14036,6 +14240,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                       this.BloquearCuentaOrigen = false;
                                       this.BloquearNombreDebito = false;
                                       this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                      this.accionSeleccionada = false;
                                       this.btnGuardar = true;
                                       this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                       this.Guardarlog(itemsLogApertura);
@@ -14088,6 +14293,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                       this.BloquearCuentaOrigen = false;
                                       this.BloquearNombreDebito = false;
                                       this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                      this.accionSeleccionada = false;
                                       this.btnGuardar = true;
                                       this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                       this.Guardarlog(itemsLogApertura);
@@ -14129,6 +14335,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                       this.BloquearCuentaOrigen = false;
                                       this.BloquearNombreDebito = false;
                                       this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                      this.accionSeleccionada = false;
                                       this.btnGuardar = true;
                                       this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                       this.Guardarlog(itemsLogApertura);
@@ -14224,8 +14431,8 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.BloquearBontonPuntos = false;
                                                         this.BloquearCuentaOrigen = false;
                                                         this.BloquearNombreDebito = false;
-                                                        this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',
-                                              );
+                                                        this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',);
+                                                        this.accionSeleccionada = false;
                                                         this.btnGuardar = true;
                                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                         this.Guardarlog(itemsLogApertura);
@@ -14268,6 +14475,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                         this.BloquearCuentaOrigen = false;
                                                         this.BloquearNombreDebito = false;
                                                         this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                        this.accionSeleccionada = false;
                                                         this.btnGuardar = true;
                                                         this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                         this.Guardarlog(itemsLogApertura);
@@ -14321,6 +14529,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.BloquearCuentaOrigen = false;
                                                   this.BloquearNombreDebito = false;
                                                   this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                  this.accionSeleccionada = false;
                                                   this.btnGuardar = true;
                                                   this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                   this.Guardarlog(itemsLogApertura);
@@ -14363,6 +14572,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.BloquearCuentaOrigen = false;
                                                   this.BloquearNombreDebito = false;
                                                   this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                  this.accionSeleccionada = false;
                                                   this.btnGuardar = true;
                                                   this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                   this.Guardarlog(itemsLogApertura);
@@ -14422,6 +14632,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.BloquearCuentaOrigen = false;
                                                   this.BloquearNombreDebito = false;
                                                   this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                  this.accionSeleccionada = false;
                                                   this.btnGuardar = true;
                                                   this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                   this.Guardarlog(itemsLogApertura);
@@ -14463,6 +14674,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.BloquearCuentaOrigen = false;
                                                   this.BloquearNombreDebito = false;
                                                   this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                  this.accionSeleccionada = false;
                                                   this.btnGuardar = true;
                                                   this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                   this.Guardarlog(itemsLogApertura);
@@ -14515,6 +14727,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.BloquearCuentaOrigen = false;
                                                   this.BloquearNombreDebito = false;
                                                   this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                  this.accionSeleccionada = false;
                                                   this.btnGuardar = true;
                                                   this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                   this.Guardarlog(itemsLogApertura);
@@ -14556,6 +14769,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.BloquearCuentaOrigen = false;
                                                   this.BloquearNombreDebito = false;
                                                   this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                  this.accionSeleccionada = false;
                                                   this.btnGuardar = true;
                                                   this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                   this.Guardarlog(itemsLogApertura);
@@ -14619,8 +14833,8 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.BloquearBontonPuntos = false;
                                               this.BloquearCuentaOrigen = false;
                                               this.BloquearNombreDebito = false;
-                                              this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',
-                                        );
+                                              this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',);
+                                              this.accionSeleccionada = false;
                                               this.btnGuardar = true;
                                               this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                               this.Guardarlog();
@@ -14666,8 +14880,8 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.BloquearBontonPuntos = false;
                                               this.BloquearCuentaOrigen = false;
                                               this.BloquearNombreDebito = false;
-                                              this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',
-                                        );
+                                              this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',);
+                                              this.accionSeleccionada = false;
                                               this.btnGuardar = true;
                                               this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                               this.Guardarlog();
@@ -14725,6 +14939,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.BloquearCuentaOrigen = false;
                                               this.BloquearNombreDebito = false;
                                               this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                              this.accionSeleccionada = false;
                                               this.btnGuardar = true;
                                               this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                               this.Guardarlog();
@@ -14769,6 +14984,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.BloquearCuentaOrigen = false;
                                               this.BloquearNombreDebito = false;
                                               this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                              this.accionSeleccionada = false;
                                               this.btnGuardar = true;
                                               this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                               this.Guardarlog();
@@ -14829,6 +15045,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.BloquearCuentaOrigen = false;
                                               this.BloquearNombreDebito = false;
                                               this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                              this.accionSeleccionada = false;
                                               this.btnGuardar = true;
                                               this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                               this.Guardarlog();
@@ -14871,6 +15088,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                               this.BloquearCuentaOrigen = false;
                                               this.BloquearNombreDebito = false;
                                               this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                              this.accionSeleccionada = false;
                                               this.btnGuardar = true;
                                               this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                               this.Guardarlog();
@@ -14925,6 +15143,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                           this.BloquearCuentaOrigen = false;
                                           this.BloquearNombreDebito = false;
                                           this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                          this.accionSeleccionada = false;
                                           this.btnGuardar = true;
                                           this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                           this.Guardarlog();
@@ -14968,6 +15187,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                           this.BloquearCuentaOrigen = false;
                                           this.BloquearNombreDebito = false;
                                           this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                          this.accionSeleccionada = false;
                                           this.btnGuardar = true;
                                           this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                           this.Guardarlog();
@@ -15042,6 +15262,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.BloquearCuentaOrigen = false;
                                                   this.BloquearNombreDebito = false;
                                                   this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                  this.accionSeleccionada = false;
                                                   this.btnGuardar = true;
                                                   this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                   this.Guardarlog(itemsLogApertura);
@@ -15084,6 +15305,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.BloquearCuentaOrigen = false;
                                                   this.BloquearNombreDebito = false;
                                                   this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                  this.accionSeleccionada = false;
                                                   this.btnGuardar = true;
                                                   this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                   this.Guardarlog(itemsLogApertura);
@@ -15137,6 +15359,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.BloquearCuentaOrigen = false;
                                                   this.BloquearNombreDebito = false;
                                                   this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                  this.accionSeleccionada = false;
                                                   this.btnGuardar = true;
                                                   this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                   this.Guardarlog(itemsLogApertura);
@@ -15179,6 +15402,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.BloquearCuentaOrigen = false;
                                                   this.BloquearNombreDebito = false;
                                                   this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                  this.accionSeleccionada = false;
                                                   this.btnGuardar = true;
                                                   this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                   this.Guardarlog(itemsLogApertura);
@@ -15238,6 +15462,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.BloquearCuentaOrigen = false;
                                                   this.BloquearNombreDebito = false;
                                                   this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                  this.accionSeleccionada = false;
                                                   this.btnGuardar = true;
                                                   this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                   this.Guardarlog(itemsLogApertura);
@@ -15279,6 +15504,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.BloquearCuentaOrigen = false;
                                                   this.BloquearNombreDebito = false;
                                                   this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                  this.accionSeleccionada = false;
                                                   this.btnGuardar = true;
                                                   this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                   this.Guardarlog(itemsLogApertura);
@@ -15331,6 +15557,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -15372,6 +15599,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -15436,8 +15664,8 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.BloquearBontonPuntos = false;
                                                   this.BloquearCuentaOrigen = false;
                                                   this.BloquearNombreDebito = false;
-                                                  this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.',
-                                        );
+                                                  this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.', );
+                                                  this.accionSeleccionada = false;
                                                   this.btnGuardar = true;
                                                   this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                   this.Guardarlog(itemsLogApertura);
@@ -15480,6 +15708,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                                   this.BloquearCuentaOrigen = false;
                                                   this.BloquearNombreDebito = false;
                                                   this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                                  this.accionSeleccionada = false;
                                                   this.btnGuardar = true;
                                                   this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                                   this.Guardarlog(itemsLogApertura);
@@ -15531,6 +15760,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -15573,6 +15803,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -15632,6 +15863,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -15673,6 +15905,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -15725,6 +15958,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -15766,6 +16000,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                                             this.BloquearCuentaOrigen = false;
                                             this.BloquearNombreDebito = false;
                                             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                                            this.accionSeleccionada = false;
                                             this.btnGuardar = true;
                                             this.BuscarDatosCuenta(result.IdOficina, result.IdProducto, result.IdConsecutivo, result.IdDigito);
                                             this.Guardarlog(itemsLogApertura);
@@ -15877,8 +16112,8 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
               this.BloquearBontonPuntos = false;
               this.BloquearCuentaOrigen = false;
               this.BloquearNombreDebito = false;
-              this.notif.onSuccess('Exitoso', 'El cambio de forma de pago se realizó correctamente.',
-    );
+              this.notif.onSuccess('Exitoso', 'El cambio de forma de pago se realizó correctamente.',);
+              this.accionSeleccionada = false;
               this.btnGuardar = true;
               this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
               this.btnActualizar = true;
@@ -15961,7 +16196,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                   this.BloquearCuentaOrigen = false;
                   this.BloquearNombreDebito = false;
                   this.notif.onSuccess('Exitoso', 'El cambio de tipo cuenta destino se realizó correctamente.',
-        );
+        );        this.accionSeleccionada = false;           
                   this.btnGuardar = true;
                   this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                   this.btnActualizar = false;
@@ -16049,6 +16284,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                 this.BloquearCuentaOrigen = false;
                 this.BloquearNombreDebito = false;
                 this.notif.onSuccess('Exitoso', 'El cambio de tipo cuenta destino se realizó correctamente.');
+                this.accionSeleccionada = false;
                 this.btnGuardar = true;
                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                 this.btnActualizar = false;
@@ -16126,6 +16362,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                 this.BloquearNombreDebito = false;
                 this.DescriTipoFirma = true;
                 this.notif.onSuccess('Exitoso', 'Se adicionó y/o eliminó titular correctamente.');
+                this.accionSeleccionada = false;
                 this.btnGuardar = true;
                 this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                 this.btnActualizar = true;
@@ -16207,6 +16444,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
               this.BloquearDatoTitularOpcion = false;
               this.DescriTipoFirma = true;
               this.notif.onSuccess('Exitoso', 'Se adicionó y/o eliminó titular correctamente.');
+              this.accionSeleccionada = false;
               this.btnGuardar = true;
               this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
               this.btnActualizar = true;
@@ -16295,6 +16533,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                 this.BloquearCuentaOrigen = false;
                 this.BloquearNombreDebito = false;
                 this.notif.onSuccess('Exitoso', 'El cambio de asesor externo se realizó correctamente.' );
+                this.accionSeleccionada = false;
                 this.btnGuardar = true;
                 this.Guardarlog(this.log);
                 this.ObtenerHistorial();
@@ -16342,6 +16581,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                 this.BloquearCuentaOrigen = false;
                 this.BloquearNombreDebito = false;
                 this.notif.onSuccess('Exitoso', 'El Cambio de asesor externo se realizó correctamente.');
+                this.accionSeleccionada = false;
                 this.btnGuardar = true;
                 this.Guardarlog(this.log);
                 this.ObtenerHistorial();
@@ -16422,6 +16662,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                   this.BloquearCuentaOrigen = false;
                   this.BloquearNombreDebito = false;
                   this.notif.onSuccess('Exitoso', 'La adición de puntos se realizó correctamente.');
+                  this.accionSeleccionada = false;
                   this.btnGuardar = true;
                   this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
                   this.btnActualizar = true;
@@ -16489,6 +16730,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
               this.BloquearCuentaOrigen = false;
               this.BloquearNombreDebito = false;
               this.notif.onSuccess('Exitoso', 'El cambio de Nro. título se realizó correctamente.');
+              this.accionSeleccionada = false;
               this.btnGuardar = true;
               this.contractualFrom.get('IdCuenta')?.setValue(result.IdCuenta);
               this.btnActualizar = true;
@@ -16589,6 +16831,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
               this.contractualFrom.get('IdEstado')?.setValue(0);
             } else {
               this.notif.onSuccess('Exitoso', 'El cambio estado se realizó correctamente.');
+              this.accionSeleccionada = false;
               this.Guardarlog(this.log);
               this.BuscarPorCuenta();
               this.CambioEstadoFrom.reset();
@@ -16618,6 +16861,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
               this.contractualFrom.get('IdEstado')?.setValue(0);
             } else {
               this.notif.onSuccess('Exitoso', 'El cambio estado se realizó correctamente.');
+              this.accionSeleccionada = false;
               this.Guardarlog(this.log);
               this.BuscarPorCuenta();
               this.CambioEstadoFrom.reset();
@@ -16647,6 +16891,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
               this.contractualFrom.get('IdEstado')?.setValue(0);
             } else {
               this.notif.onSuccess('Exitoso', 'El cambio estado se realizó correctamente.');
+              this.accionSeleccionada = false;
               this.Guardarlog(this.log);
               this.BuscarPorCuenta();
               this.EliminarDebitoAutomatico();
@@ -16679,6 +16924,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
               this.contractualFrom.get('IdEstado')?.setValue(0);
             } else {
               this.notif.onSuccess('Exitoso', 'El cambio estado se realizó correctamente.');
+              this.accionSeleccionada = false;
               this.Guardarlog(this.log);
               this.BuscarPorCuenta();
               this.CambioEstadoFrom.reset();
@@ -16782,8 +17028,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
   }
   ValidarTitulo() {
     this.bloquearbtnActalizar = true;
-    let data = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.dataUser = StorageSecurity.getData();
     this.ContractualServices.ValidarTitulo(this.contractualFrom.get('NroTitulo')?.value).subscribe(
       result => {
         if (result !== null) {

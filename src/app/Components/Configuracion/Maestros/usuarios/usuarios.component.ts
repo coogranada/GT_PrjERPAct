@@ -13,6 +13,7 @@ import { ImagenesBannerServices } from '../../../../Services/Maestros/imagenes-b
 import { UsuariosImagenModel } from '../../../../Models/Maestros/banner.model';
 import { AlertService } from '../../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../utils/storage-security.util';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -80,8 +81,7 @@ export class UsuariosComponent implements OnInit {
     this.CargosActivos();
     this.PerfilesActivos();
     this.ObtenerOficinas();
-    let data : string | null = localStorage.getItem('Data');
-    this.DatosUsuario = JSON.parse(window.atob(data == null ? "" : data));
+    this.DatosUsuario = StorageSecurity.getData();
 
     this.loginService.GetSesionXUsuario(this.DatosUsuario.IdUsuario).subscribe(
       result => {
@@ -404,8 +404,7 @@ export class UsuariosComponent implements OnInit {
   ActualizarImagenUsuario() {
     if (this.base64textString !== null && this.base64textString !== undefined && this.base64textString !== '') {
       // aqui consumir los datos del usuario encontrado
-      let data : string | null = localStorage.getItem('Data');
-      const resultUserConect = JSON.parse(window.atob(data == null ? "" : data));
+      const resultUserConect = StorageSecurity.getData();
       this.bannerArrayModel = new UsuariosImagenModel();
       this.bannerArrayModel.IdImagenUsuario = 0;
       this.bannerArrayModel.Base64String = this.base64textString;

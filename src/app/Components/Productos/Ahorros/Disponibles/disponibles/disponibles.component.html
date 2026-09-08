@@ -79,7 +79,8 @@
                                    !DisponibleForm.get('IdOficina')?.value ||
                                    !DisponibleForm.get('IdProductoCuenta')?.value ||
                                    !DisponibleForm.get('IdConsecutivo')?.value ||
-                                   !DisponibleForm.get('IdDigito')?.value">
+                                   !DisponibleForm.get('IdDigito')?.value  || 
+                                   accionSeleccionada">
                                     <i class="icon-sync" style="font-size:22px;"></i>
                             </button>
                         </div>
@@ -867,12 +868,189 @@
                                     </div>
                                 </div>
 
+ <div class="col-xs-12 col-md-12 col-lg-12">
+    <label class="textNegrilla">Garantías Asignadas</label>
+</div>
 
+<div class="col-xs-12 col-md-12 col-lg-12" id="GarantiasAsignadas">
+
+    <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="garantiasReales.length === 0">
+        <br>
+        <div class="alert alert-secondary" role="alert">
+            No hay registros
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-md-12 col-lg-12">
+
+        <div class="table-responsive scrollTabla panel panel-default"
+             *ngIf="garantiasReales.length > 0">
+
+            <table class="table table-hover encabezado-fijo">
+
+                <thead>
+                    <tr>
+                        <th>Tipo garantía</th>
+                        <th>Garantía</th>
+                        <th>Clase</th>
+                        <th>Descripción</th>
+                        <th>Valor cobertura</th>
+                        <th>Valor respalda</th>
+                        <th class="text-center">Créditos</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <ng-container *ngFor="let item of garantiasReales; let i = index">
+
+                        <!-- FILA PRINCIPAL -->
+                        <tr
+                            [attr.id]="'asignadas-fila-' + item.Consecutivo"
+                            (click)="selectRowGarantias('asignadas', i, item.Consecutivo)"
+                            [class.tr-selected]="isRowSelected('asignadas', i, item.Consecutivo)"
+                            [class.fila-expandida]="
+                                mostrarDetalleGarantia &&
+                                filaSeleccionadaGarantia === item.Consecutivo &&
+                                tablaDetalleActiva === 'asignadas'
+                            ">
+
+                            <td>
+
+                                <span
+                                    *ngIf="item.CantidadCreditos > 0"
+                                    class="icono-acordeon"
+                                    tabindex="-1"
+                                    (click)="onClickDetalleGarantia(
+                                        item.Consecutivo,
+                                        item.Tipo,
+                                        'asignadas'
+                                    ); $event.stopPropagation()">
+
+                                    <i [ngClass]="
+                                        mostrarDetalleGarantia &&
+                                        filaSeleccionadaGarantia === item.Consecutivo &&
+                                        tablaDetalleActiva === 'asignadas'
+                                            ? 'icon-chevron-up'
+                                            : 'icon-chevron-down'
+                                    ">
+                                    </i>
+
+                                </span>
+
+                                {{ mapTipoGarantia(item.Tipo) }}
+
+                            </td>
+
+                            <td>{{ item.Matricula }}</td>
+
+                            <td>{{ item.Clase }}</td>
+
+                            <td>{{ item.Descripcion }}</td>
+
+                            <td>
+                                <div class="align-right-large">
+                                    {{ item.Cobertura | currency }}
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="align-right-large">
+                                    {{ item.TotalDeuda | currency }}
+                                </div>
+                            </td>
+
+                            <td class="text-center">
+                                {{ item.CantidadCreditos }}
+                            </td>
+
+                        </tr>
+
+                        <!-- DETALLE -->
+                        <tr
+                            *ngIf="
+                                mostrarDetalleGarantia &&
+                                filaSeleccionadaGarantia === item.Consecutivo &&
+                                tablaDetalleActiva === 'asignadas'
+                            "
+                            class="fila-detalle">
+
+                            <td colspan="7">
+
+                                <div class="detalle-acordeon">
+
+                                    <div class="table-responsive">
+
+                                        <table class="table table-sm table-border">
+
+                                            <thead>
+                                                <tr>
+                                                    <th>Garantía</th>
+                                                    <th>Cuenta</th>
+                                                    <th>Línea</th>
+                                                    <th>Nombre línea</th>
+                                                    <th>Documento deudor</th>
+                                                    <th>Nombre deudor</th>
+                                                    <th>Valor crédito</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+
+                                                <tr *ngFor="let d of detalleGarantiaCreditos">
+
+                                                    <td>{{ d.strMatricula }}</td>
+
+                                                    <td>{{ d.Cuenta }}</td>
+
+                                                    <td>{{ d.Linea }}</td>
+
+                                                    <td>
+                                                        {{ (d.NombreLinea || '').slice(0,50) }}
+                                                        {{ (d.NombreLinea || '').length > 50 ? '...' : '' }}
+                                                    </td>
+
+                                                    <td>{{ d.IdDeudor }}</td>
+
+                                                    <td>{{ d.NombreDeudor }}</td>
+
+                                                    <td>
+                                                        {{ d.ValorCredito | currency }}
+                                                    </td>
+
+                                                </tr>
+
+                                            </tbody>
+
+                                        </table>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    </ng-container>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>                               
+
+
+<!-- 
                                 <div class="col-xs-12 col-md-12 col-lg-12">
                                     <label class="textNegrilla">Real</label>
                                 </div>
-                                <div class="col-xs-12 col-md-12 col-lg-12" id="GarantiaReal">
-                                    <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="dataObjetR.length == 0">
+                                <div class="col-xs-12 col-md-12 col-lg-12" id="GarantiaReal"> -->
+                                    <!-- <div class="col-xs-12 col-md-12 col-lg-12" *ngIf="dataObjetR.length == 0">
                                         <br>
                                         <div class="alert alert-secondary" role="alert">
                                             No hay registros
@@ -918,7 +1096,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
 
 
                             </div>
@@ -1836,7 +2014,7 @@
 </div>
 <!--/ Fin formato de impresion nuevo -->
  <!--/ formato  de impresion nuevo-->
-<div id="ModalGarantiasReales" class="modal fade " data-backdrop="static">
+<!-- <div id="ModalGarantiasReales" class="modal fade " data-backdrop="static">
     <div  style="width: 88%; margin: 30px auto; height: 90%;">
         <div >
             <div class="modal-content modal-xl">
@@ -1937,7 +2115,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <!-- Activar multiples libretas -->
 <div id="ModalLibretas" class="modal fade" data-backdrop="static">
@@ -2047,3 +2225,25 @@
     </div>
 </div>
 <!-- Fin Reglamento Vivienda -->
+
+
+<!-- MODAL CAMBIAR GARANTIAS -->
+
+<app-cambiar-garantias-modal
+    *ngIf="mostrarModal"
+    #modalGarantias
+    [datosCuenta]="datosCuenta"
+    [garantiasForm]="garantiasForm"
+    [listGarantiasDisponiblesDeudor]="listGarantiasDisponiblesDeudor"
+    [listGarantiasDisponiblesCodeudor]="listGarantiasDisponiblesCodeudor"
+    [garantiasCompartidasBackendInput]="garantiasCompartidasBackend"
+    [garantiasRealesAsignadasInput]="garantiasRealesAsignadas"
+    [garantiasCompartidas]="garantiasCompartidas"
+    [codeudoresBasico]="codeudoresBasico"
+    [mostrarGarantiasCodeudor]="mostrarGarantiasCodeudor"
+    (cerrar)="onClickCerrarModalGarantias()"
+    (changeCodeudor)="onChangeCodeudor($event)"
+    (confirmar)="onClickConfirmarCambiosGarantia($event)">
+</app-cambiar-garantias-modal>
+
+<!-- FIN CAMBIAR GARANTIAS -->

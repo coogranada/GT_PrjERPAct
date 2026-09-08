@@ -4,6 +4,7 @@ import  moment from 'moment';
 import { NgxLoadingComponent, ngxLoadingAnimationTypes } from 'ngx-loading';
 import { Router } from '@angular/router';
 import { LoginService } from '../../../app/Services/Login/login.service';
+import { StorageSecurity } from '../../utils/storage-security.util';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -30,8 +31,7 @@ export class PerfilComponent implements OnInit {
     this.validateForm();
     this.GetAndSetDetallesPerfil();
     this.ObtenerDatosUsuario();
-    let data : string | null  = localStorage.getItem('Data')
-    this.DatosUsuario = JSON.parse(window.atob(data == null ? "" : data));
+    this.DatosUsuario = StorageSecurity.getData();
 
     this.loginService.GetSesionXUsuario(this.DatosUsuario.IdUsuario).subscribe(
       result => {
@@ -43,9 +43,8 @@ export class PerfilComponent implements OnInit {
     this.IrArriba();
   }
   GetAndSetDetallesPerfil() {
-    let data : string | null = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
-
+    this.dataUser = StorageSecurity.getData();
+    
     this.perfilFrom.get('nombre')?.setValue(this.dataUser.Nombre);
     this.perfilFrom.get('usuario')?.setValue(this.dataUser.Usuario);
     this.perfilFrom.get('tipoIdentificacion')?.setValue(this.dataUser.TipoDocumento);
@@ -62,8 +61,7 @@ export class PerfilComponent implements OnInit {
     this.perfilFrom.get('email')?.setValue(this.dataUser.Email);
   }
   ObtenerDatosUsuario() {
-    let data : string | null = localStorage.getItem('Data');
-    this.DatosUsuario = JSON.parse(window.atob(data == null ? "" : data));
+    this.DatosUsuario = StorageSecurity.getData();
   }
   validateForm() {
     const nombre = new FormControl('', []);

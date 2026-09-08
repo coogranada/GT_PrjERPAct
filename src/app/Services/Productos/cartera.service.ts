@@ -348,5 +348,13 @@ export class CarteraService {
         return this._http.get<GarantiaCompartida[]>(url, { params });
     }
 
-    
+    CreaNotificacion(IdTercero: number, IdCuenta: number, IdNotificacion: number,strTarjeta: string): Observable<any> {
+        this.url = `${this.environment.Url}/CreaNotificacion`;
+        const params = new HttpParams()
+            .set('PintIdTercero', IdTercero)
+            .set('PintIdCuenta', IdCuenta)
+            .set('PintNotificador', IdNotificacion)
+            .set('strEstadoTarjetas', strTarjeta);
+        return this._http.get<any>(this.url, { params: params });
+    }
 }

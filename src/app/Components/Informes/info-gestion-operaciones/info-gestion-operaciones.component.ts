@@ -10,6 +10,7 @@ import { LoginService } from '../../../Services/Login/login.service';
 import { ModulosService } from '../../../Services/Maestros/modulos.service';
 import { AlertService } from '../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../utils/storage-security.util';
 // import moment = require('moment');
 
 @Component({
@@ -48,8 +49,7 @@ export class InfoGestionOperacionesComponent implements OnInit {
     private excelService: ExcelService, private loginService: LoginService, private router: Router,
      private modulosService: ModulosService,
      private loading: LoadingService) {
-      let data = localStorage.getItem('Data');
-      this.DatosUsuario = JSON.parse(window.atob(data == null ? "" : data));
+      this.DatosUsuario = StorageSecurity.getData();
    }
 
   ngOnInit() {

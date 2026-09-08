@@ -15,6 +15,7 @@ import { ClientesService } from '../../../Services/Clientes/clientes.service';
 import { JuridicosService } from '../../../Services/Clientes/Juridicos.service';
 import { AlertService } from '../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../utils/storage-security.util';
 declare var $: any;
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -130,6 +131,7 @@ export class AportesComponent implements OnInit {
   public datoConsecutivo: any;
   public datoDigito: any;
   datoCambioEstado: any;
+  public accionSeleccionada = false;
 
 
   //estado para el detalle
@@ -177,8 +179,7 @@ export class AportesComponent implements OnInit {
     $('#select').focus().select();
     localStorage.removeItem('TerceroAportes');
     this.aportesFrom.get('DocumentoBeneficiario')?.disable();
-    let data = localStorage.getItem('Data');
-    this.DatosUsuario = JSON.parse(window.atob(data == null ? "" : data));
+     this.DatosUsuario = StorageSecurity.getData();
     this.loginService.GetSesionXUsuario(this.DatosUsuario.IdUsuario).subscribe(
       result => {
         if (!result.Estado) {
@@ -188,6 +189,7 @@ export class AportesComponent implements OnInit {
       });
   }
   ValorSeleccionado() {
+    this.accionSeleccionada = true;
     this.aportesFrom.get('Porcentaje')?.setValue("");
     this.aportesFrom.get('DatosParentesco')?.setValue("");
     this.aportesFrom.get('DocumentoBeneficiario')?.setValue("");
@@ -229,8 +231,7 @@ export class AportesComponent implements OnInit {
     }
       
     if (this.aportesOperacionFrom.get('Codigo')?.value  === '10') {         // Apertura Cuenta
-      let data = localStorage.getItem('Data');
-      this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+      this.dataUser = StorageSecurity.getData();
       localStorage.removeItem('TerceroAportes');
       
       if (this.dataUser.NumeroOficina === '3') {
@@ -331,6 +332,7 @@ export class AportesComponent implements OnInit {
         $('#historial').removeClass('active');
       }
     } else if (this.aportesOperacionFrom.get('Codigo')?.value  === '2') {   // Buscar
+      this.accionSeleccionada = false;
       this.generalesService.Autofocus('selectBuscar');
       this.aportesFrom.get('DocumentoBeneficiario')?.disable();
       this.clearFrom();
@@ -561,6 +563,7 @@ export class AportesComponent implements OnInit {
         } else {
           this.inputEstado = false;
             this.notif.onSuccess('Exitoso', 'El cambio estado se realizó correctamente.');
+            this.accionSeleccionada = false;
             let payload: any = {
               idRelacion : 15,
               idTercero : this.aportesFrom.get('LngTercero')?.value ,
@@ -626,8 +629,7 @@ export class AportesComponent implements OnInit {
     }
   }
   MapearDatosUsuario() {
-    let data = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.dataUser = StorageSecurity.getData();
     this.aportesFrom.get('NombreOficina')?.setValue(this.dataUser.Oficina);
     this.aportesFrom.get('NumeroOficina')?.setValue(this.dataUser.NumeroOficina);
     this.aportesFrom.get('IdAsesor')?.setValue(this.dataUser.IdAsesor);
@@ -647,8 +649,7 @@ export class AportesComponent implements OnInit {
     this.AsesorFrom.get('strNombre')?.setValue(datos.Nombre);
   }
   Operaciones() {
-    let data = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.dataUser = StorageSecurity.getData();
     const arrayExample = [{
       'IdModulo': this.CodModulo,
       'IdUsuario': this.dataUser.IdUsuario,
@@ -689,11 +690,7 @@ export class AportesComponent implements OnInit {
     );
   }
   ObtenerEstado() {
-    //DFRAMIREZ:  comenta codigo si usuario abre otro módulo carga estados incorrectos
-    //let data = localStorage.getItem('Data');
-    //this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
-    //let idmoduloActivo = localStorage.getItem('IdModuloActivo');
-    const arrayExample = {
+       const arrayExample = {
       'IdOperacion': +this.aportesOperacionFrom.get('Codigo')?.value ,
       'IdPerfil': this.dataUser.idPerfilUsuario,
       'IdModulo': this.codModulo  //JSON.parse(window.atob(idmoduloActivo == null ? "" : idmoduloActivo))
@@ -849,8 +846,7 @@ export class AportesComponent implements OnInit {
     console.log("usu",result)
     if (result !== null) {
       this.loading.hide();
-      let data = localStorage.getItem('Data');
-      this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+      this.dataUser = StorageSecurity.getData();
       if (result.length >= 1) {
         this.dataObjet = result[0];
         localStorage.setItem('TerceroAportes', this.dataObjet.LngTercero);
@@ -1025,8 +1021,7 @@ export class AportesComponent implements OnInit {
     this.aportesFrom.get('BuscarNombre')?.reset();
   }
   BuscarAsociado() {
-    let data = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.dataUser = StorageSecurity.getData();
     let Documento = '*';
     let Nombre = '*';
     let Oficina = this.dataUser.NumeroOficina;
@@ -2027,8 +2022,7 @@ export class AportesComponent implements OnInit {
       }
   }
   GuardarAportes() {
-    let data = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.dataUser = StorageSecurity.getData();
     this.aportesFrom.get('IdUsuarioSGF')?.setValue(this.dataUser.IdUsuarioSGF);
     this.aportesFrom.get('IdProducto')?.setValue(400); // PENDIENTE SI ACTIVA OTRO PRODUCTO DE APORTES SE DEBE QUITAR
     this.aportesFrom.get('IdAsesor')?.setValue(this.dataUser.IdAsesor);
@@ -2070,6 +2064,7 @@ export class AportesComponent implements OnInit {
               this.BloquearFormaPago = false;
               this.btnOpcionActualizarBeneficiario = true;
               this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+               this.accionSeleccionada = false;
               this.btnGuardar = true;
               this.Bloquear = false;
               this.Guardarlog(10);
@@ -2115,6 +2110,7 @@ export class AportesComponent implements OnInit {
             this.BloquearAsesorExterno = false;
             this.BloquearFormaPago = false;
             this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+             this.accionSeleccionada = false;
             this.btnOpcionActualizarBeneficiario = true;
             this.btnGuardar = true;
             this.Bloquear = false;
@@ -2187,6 +2183,7 @@ export class AportesComponent implements OnInit {
                   this.BloquearAsesorExterno = false;
                   this.BloquearFormaPago = false;
                   this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                   this.accionSeleccionada = false;
                   this.btnOpcionActualizarBeneficiario = true;
                   this.btnGuardar = true;
                   this.Bloquear = false;
@@ -2232,6 +2229,7 @@ export class AportesComponent implements OnInit {
                 this.BloquearAsesorExterno = false;
                 this.BloquearFormaPago = false;
                 this.notif.onSuccess('Exitoso', 'La cuenta se guardó correctamente.');
+                
                 this.btnOpcionActualizarBeneficiario = true;
                 this.btnGuardar = true;
                 this.Bloquear = false;
@@ -2278,6 +2276,7 @@ export class AportesComponent implements OnInit {
       this.bloquearDocumentoBenf = false;
       this.btnActualizarBeneficiario = true;
       this.notif.onSuccess('Exitoso', 'Se adicionó y/o eliminó beneficiario correctamente.');
+       this.accionSeleccionada = false;
       this.btnOpcionActualizarBeneficiario = true;
       this.clearBeneficiario();
       let beneficiariosLog: any[] = [];
@@ -2345,6 +2344,7 @@ export class AportesComponent implements OnInit {
               this.BloquearAsociado = false;
               this.BloquearbtnBenef = false;
               this.notif.onSuccess('Exitoso', 'El cambio de forma de pago se realizó correctamente.');
+               this.accionSeleccionada = false;
               this.btnGuardar = true;
               this.aportesFrom.get('IdCuenta')?.setValue(result.IdCuenta);
               this.btnActualizar = true;
@@ -2387,8 +2387,8 @@ export class AportesComponent implements OnInit {
                 this.BloquearNombreBenf = false;
                 this.BloquearAsociado = false;
                 this.BloquearbtnBenef = false;
-                this.notif.onSuccess('Exitoso', 'El cambio asesor externo se realizó correctamente.'
-                  );
+                this.notif.onSuccess('Exitoso', 'El cambio asesor externo se realizó correctamente.');
+                this.accionSeleccionada = false;
                 this.btnGuardar = true;
                 this.Guardarlog();
                 this.aportesFrom.get('IdCuenta')?.setValue(result.IdCuenta);                
@@ -2424,8 +2424,8 @@ export class AportesComponent implements OnInit {
                 this.BloquearNombreBenf = false;
                 this.BloquearAsociado = false;
                 this.BloquearbtnBenef = false;
-                this.notif.onSuccess('Exitoso', 'El Cambio asesor externo se realizó correctamente.'
-                  );
+                this.notif.onSuccess('Exitoso', 'El Cambio asesor externo se realizó correctamente.');
+                this.accionSeleccionada = false;
                 this.btnGuardar = true;
                 this.Guardarlog();
                 this.aportesFrom.get('IdCuenta')?.setValue(result.IdCuenta);
@@ -2458,8 +2458,7 @@ export class AportesComponent implements OnInit {
     }
   }
   getUser() {
-    let data = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.dataUser = StorageSecurity.getData();
     this.aportesFrom.get('IdUserLogin')?.setValue(this.dataUser.IdAsesor);
   }
   ObtenerHistorial() {

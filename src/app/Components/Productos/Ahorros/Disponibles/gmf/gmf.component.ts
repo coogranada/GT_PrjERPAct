@@ -8,6 +8,7 @@ import { fromEvent } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AlertService } from '../../../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../../utils/storage-security.util';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -74,8 +75,7 @@ export class GMFDisponibleComponent implements OnInit {
   // }
 
   ObtenerDatosUsuario() {
-    let data = localStorage.getItem('Data');
-    this.DatosUsuario = JSON.parse(window.atob(data == null ? "" : data));
+    this.DatosUsuario = StorageSecurity.getData();
   }
 
   ObtenerTipoIdentificacion() {
@@ -336,9 +336,7 @@ export class GMFDisponibleComponent implements OnInit {
   }
 
   EnviarGMF() {
-    let data = localStorage.getItem('Data');
-    const dataLocal = JSON.parse(window.atob(data == null ? "" : data));
-      // JSON.parse(localStorage.getItem('Data'));
+    const dataLocal = StorageSecurity.getData();
     dataLocal.Mensaje = '';
     dataLocal.Perfiles = '';
     dataLocal.SW = '';

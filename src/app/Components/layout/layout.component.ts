@@ -13,6 +13,7 @@ import { GeneralesService } from '../../../app/Services/Productos/generales.serv
 import { AlertService } from '../../Services/Alert/alert.service';
 import { detectIncognito } from 'detectincognitojs';
 import { DEFAULT_INTERRUPTSOURCES, Idle } from '@ng-idle/core';
+import { StorageSecurity } from '../../utils/storage-security.util';
 declare var $: any;
 @Component({
   selector: 'app-layout',
@@ -579,12 +580,8 @@ this.userIdle.onTimeout().subscribe(() => {
 });
 
     this.ocultarListaDirecciones = true;
-    let data: string | null = localStorage.getItem('Data')
-    if (data != null)
-      this.resulStore = JSON.parse(window.atob(data));
-
-    data = localStorage.getItem('Data');
-    const dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.resulStore = StorageSecurity.getData();
+    const dataUser = StorageSecurity.getData();
     if (dataUser !== '' && dataUser !== null) {
       this.loginService.ObtenerPermisoUsuario(dataUser.IdUsuario).subscribe(
         result => {
@@ -964,8 +961,7 @@ this.userIdle.onTimeout().subscribe(() => {
         });
     }
     this.FechaActual = new Date();
-    data = localStorage.getItem('Data');
-    this.DataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.DataUser = StorageSecurity.getData();
     if (this.DataUser != null) {
       this.nameUser = this.DataUser.Usuario;
       this.NombreOficinaActual = this.DataUser.Oficina;
@@ -1013,8 +1009,7 @@ this.userIdle.onTimeout().subscribe(() => {
       IdUsuario: this.resulStore.IdUsuario,
       Usuario: this.resulStore.Usuario
     };
-    let data: string | null = localStorage.getItem('Data');
-    this.resulStore = JSON.parse(window.atob(data == null ? "" : data));
+    const resulStore = StorageSecurity.getData();
     let numOficeAnterior: string = this.resulStore.NumeroOficina;
     let Oficina: string = this.resulStore.Oficina;
 
@@ -1031,9 +1026,7 @@ this.userIdle.onTimeout().subscribe(() => {
         };
         this.serviceGenerales.Guardarlog(logJson, 1, null, null, 81).subscribe(result => {
           setTimeout(() => {
-            data = localStorage.getItem('Data');
-            this.resulStore = JSON.parse(window.atob(data == null ? "" : data));
-            
+
             detectIncognito().then((result : any) =>{
               payload.browser =  {
                 browserName : result.browserName,
@@ -1117,8 +1110,7 @@ this.userIdle.onTimeout().subscribe(() => {
   }
   validacionUsuarios() {
     if (localStorage.getItem('Data') !== null && localStorage.getItem('Data') !== undefined) {
-      let data: string | null = localStorage.getItem('Data');
-      this.resulStore = JSON.parse(window.atob(data == null ? "" : data));
+      this.resulStore = StorageSecurity.getData();
       if (this.resulStore === null) {
         localStorage.removeItem('userName');
         this.router.navigateByUrl('/Login');

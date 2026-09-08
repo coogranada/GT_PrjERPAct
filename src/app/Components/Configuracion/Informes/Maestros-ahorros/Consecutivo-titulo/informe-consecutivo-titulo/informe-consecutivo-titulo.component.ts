@@ -6,6 +6,7 @@ import { GeneralesService } from '../../../../../../Services/Productos/generales
 import { DatePipe } from '@angular/common';
 import { AlertService } from '../../../../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../../../utils/storage-security.util';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -73,8 +74,7 @@ export class InformeConsecutivoTituloComponent implements OnInit {
   }
   dataUser : any = {};
   OperacionesFiltro() {
-    let data : string | null = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+    this.dataUser = StorageSecurity.getData();
     const arrayExample = [{
       'IdModulo': 66,
       'IdUsuario': this.dataUser.IdUsuario,
@@ -103,8 +103,7 @@ export class InformeConsecutivoTituloComponent implements OnInit {
       });
   }
   Operaciones() {
-    let data : string | null = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+     this.dataUser = StorageSecurity.getData();
     const arrayExample = [{
       'IdModulo': this.CodModulo,
       'IdUsuario': this.dataUser.IdUsuario,
@@ -290,8 +289,7 @@ export class InformeConsecutivoTituloComponent implements OnInit {
   }
 
   ValorOficina() {
-    let data : string | null = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+     this.dataUser = StorageSecurity.getData();
     if (this.dataUser.NumeroOficina != 3) {
       this.BloquearOficina = true;
       this.consecutivoOperacionFrom.get('IdOficina')?.setValue(this.dataUser.NumeroOficina);

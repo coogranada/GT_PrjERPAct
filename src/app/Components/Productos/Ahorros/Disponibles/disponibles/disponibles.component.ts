@@ -9,10 +9,14 @@ import { ConfiguracionNotificacion } from '../../../../../../environments/config
 import { OperacionesService } from '../../../../../Services/Maestros/operaciones.service';
 import { ModuleValidationService } from '../../../../..//Services/Enviroment/moduleValidation.service';
 import { fromEvent } from 'rxjs';
-import { map, count } from 'rxjs/operators';
+import { map, count, tap, finalize, concatMap } from 'rxjs/operators';
 import { GeneralesService } from '../../../../../Services/Productos/generales.service';
 import moment from "moment";
 import { LoadingService } from '../../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../../utils/storage-security.util';
+import { CambiarGarantiasRequestDto, DetalleGarantiaCreditoDto, GarantiaCompartida, GarantiaDisponible, GarantiaRealAsignada, ObtenerCodeudorBasicoModel } from '../../../../../Models/Productos/garantias.model';
+import { GarantiasService } from '../../../../../Services/Productos/garantias.service';
+import { CambiarGarantiasModalComponent } from '../../../../shared/cambiar-garantias-modal/cambiar-garantias-modal.component';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var Tiff: any;
@@ -66,6 +70,37 @@ export class DisponiblesComponent implements OnInit {
   public CambioEstadoFrom!: FormGroup;
   public CertificadoFrom!: FormGroup;
 
+  //Garantias
+    public datosCuenta: any;
+    public garantiasForm!: FormGroup;
+    public isDisabledConfirmarGarantiasButton: boolean = true;
+    public isDisabledLimpiarGarantiasButton: boolean = true;
+    public mostrarGarantiasCodeudor: boolean = false;
+    public isDisabledSaveGarantiasButton: boolean = true;
+    public garantiasEliminar: GarantiaRealAsignada[] = [];
+    public garantiasAgregar: GarantiaRealAsignada[] = [];
+    public garantiasCompartidas: GarantiaCompartida[] = [];
+    public garantiasRealesAsignadas: GarantiaRealAsignada[] = [];
+    public garantiasCompartidasBackend: GarantiaCompartida[] = [];
+    public listGarantiasDisponiblesCodeudor: GarantiaDisponible[] = [];
+    public listGarantiasDisponiblesDeudor: GarantiaDisponible[] = [];
+    public codeudoresBasico: ObtenerCodeudorBasicoModel [] = []
+    public garantiasReales: GarantiaRealAsignada[] = [];
+    public garantiasRealesAsignadasInicial: GarantiaRealAsignada[] = [];
+    public mostrarDetalleGarantia = false;
+    public valorCoberturaCompartidas: number = 0;
+    public mostrarModal = false;
+    public tablaDetalleActiva = '';
+    public filaSeleccionadaGarantia: number | null = null;
+    public selectedRowsGarantias: {
+      [key: string]: number | null;
+    } = {
+      asignadas: null
+    };
+    public detalleGarantiaCreditos: DetalleGarantiaCreditoDto[] = [];
+   @ViewChild('modalGarantias') modalGarantias!: CambiarGarantiasModalComponent;
+
+
   public resultOperaciones : any;
   public resultTitulares : any;
   public resultRelacion : any;
@@ -101,6 +136,7 @@ export class DisponiblesComponent implements OnInit {
   public datoDigito : any;
   public datoNombreProducto : any;
   public datoMedioPago : any;
+  public accionSeleccionada = false;
 
   dataCanaleslist: any;
   dataTitulareslist: any;
@@ -244,7 +280,8 @@ export class DisponiblesComponent implements OnInit {
     private operacionesService: OperacionesService,
     private generalesService: GeneralesService,
     private moduleValidationService: ModuleValidationService, private el: ElementRef,
-    private loading: LoadingService) {
+    private loading: LoadingService,
+    private garantiasService: GarantiasService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -286,6 +323,7 @@ export class DisponiblesComponent implements OnInit {
   BloquearCanalesInputs: boolean = false;
   // INICIO ENCABEZADO
   ValorSeleccionado() {
+    this.accionSeleccionada = true;
     this.ImagenTiff = [];
     this.BloquearCanales = false;
     this.BloquearCanalesInputs = false;
@@ -333,6 +371,7 @@ export class DisponiblesComponent implements OnInit {
       this.DisponibleOperacionFrom.get('Codigo')?.value !== '40')
       this.BuscarPorCuenta();
     if (this.DisponibleOperacionFrom.get('Codigo')?.value === '2') {          // Buscar
+      this.accionSeleccionada = false;
       this.clearFrom();
       this.MedioPago();
       this.resultDiaCortePago = undefined;
@@ -2284,6 +2323,7 @@ export class DisponiblesComponent implements OnInit {
         this.ModalLibretas.nativeElement.click();
         this.DisponibleOperacionFrom.get('Codigo')?.reset();
         this.notif.success('Exitoso', 'La activación de las libretas se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+        this.accionSeleccionada = false;
         this.fetchActiveLibretas();
       },
       error => {
@@ -2981,6 +3021,7 @@ export class DisponiblesComponent implements OnInit {
           this.dataObjetC = this.dataObjet[0];
           var CodeudorP = this.dataObjet[0].Codeudor;
           this.dataObjetCd = CodeudorP;
+
           var RealP = this.dataObjet[0].Real;
           if(RealP !== null){
             this.valorCoberturaTotalGar = 0;
@@ -3008,7 +3049,6 @@ export class DisponiblesComponent implements OnInit {
           } else {
             this.dataObjetR.length = 0;
           }
-          
         }
         else {
           this.DisponibleForm.get('IdConvenio')?.reset();
@@ -3284,7 +3324,15 @@ export class DisponiblesComponent implements OnInit {
 
           this.DisponibleForm.get('AliasCuenta')?.setValue(this.dataObjet.AliasCuenta);
          console.log("codeudor",this.dataObjet.Codeudor)
-
+          console.log('👌👌👌👌');
+          this.DisponiblesServices.ObtenerGarantiasAsignadas(this.DisponibleForm.get('IdCuenta')?.value).subscribe({
+            next: (resp) => {
+              this.garantiasReales = resp || [];
+            },
+            error: () => {
+              this.garantiasReales = [];
+            }
+          });
          this.valorCoberturaTotalGar = 0;
          this.valorRespaldadoTotalGar = 0;
          this.valorDisponibleTotalGar = 0;
@@ -4439,6 +4487,7 @@ export class DisponiblesComponent implements OnInit {
               this.DisponibleForm.get('IdEstado')?.setValue(0);
             } else {
               this.notif.success('Exitoso', 'El cambio estado se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+              this.accionSeleccionada = false;
               this.btnCambiarEstado = false;
               this.Guardarlog(estadoLog);
               if (this.cambioEstadoGenerarPdfBool) {
@@ -4512,6 +4561,7 @@ export class DisponiblesComponent implements OnInit {
               this.DisponibleForm.get('IdEstado')?.setValue(0);
             } else {
               this.notif.success('Exitoso', 'El cambio estado se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+              this.accionSeleccionada = false;
               this.btnCambiarEstado = false;
               this.Guardarlog(estadoLog);
               this.BuscarPorCuenta();
@@ -4553,6 +4603,7 @@ export class DisponiblesComponent implements OnInit {
               this.DisponibleForm.get('IdEstado')?.setValue(0);
             } else {
               this.notif.success('Exitoso', 'El cambio estado se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+              this.accionSeleccionada = false;
               this.btnCambiarEstado = false;
               this.Guardarlog(estadoLog);
               this.BuscarPorCuenta();
@@ -4638,6 +4689,7 @@ export class DisponiblesComponent implements OnInit {
               this.DisponibleForm.get('IdEstado')?.setValue(0);
             } else {
               this.notif.success('Exitoso', 'El cambio estado se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+              this.accionSeleccionada = false;
               this.btnCambiarEstado = false;
               this.Guardarlog(estadoLog);
               this.BuscarPorCuenta();
@@ -5211,6 +5263,7 @@ export class DisponiblesComponent implements OnInit {
               this.BloquearLinea = false;
               this.BloquearTimbrarMensaje = false;
               this.notif.success('Exitoso', 'La cuenta se guardó correctamente.', ConfiguracionNotificacion.configRightTop);
+              this.accionSeleccionada = false;
               this.isSaving = false;
               this.btnGuardar = true;
               this.BloquearAutorizadoTituloInput(1);
@@ -5306,6 +5359,7 @@ export class DisponiblesComponent implements OnInit {
                   this.BloquearLinea = false;
                   this.BloquearTimbrarMensaje = false;
                   this.notif.success('Exitoso', 'La cuenta se guardó correctamente.', ConfiguracionNotificacion.configRightTop);
+                  this.accionSeleccionada = false;
                   this.isSaving = false;
                   this.btnGuardar = true;
                   this.BloquearAutorizadoTituloInput(1);
@@ -5391,6 +5445,7 @@ export class DisponiblesComponent implements OnInit {
             this.BloquearLinea = false;
             this.BloquearTimbrarMensaje = false;
             this.notif.success('Exitoso', 'La cuenta se guardó correctamente.', ConfiguracionNotificacion.configRightTop);
+            this.accionSeleccionada = false;
             this.isSaving = false;
             this.btnGuardar = true;
             this.BloquearAutorizadoTituloInput(1);
@@ -5487,6 +5542,7 @@ export class DisponiblesComponent implements OnInit {
                 this.BloquearLinea = false;
                 this.BloquearTimbrarMensaje = false;
                 this.notif.success('Exitoso', 'La cuenta se guardó correctamente.', ConfiguracionNotificacion.configRightTop);
+                this.accionSeleccionada = false;
                 this.isSaving = false;
                 this.btnGuardar = true;
                 this.BloquearAutorizadoTituloInput(1);
@@ -5555,9 +5611,8 @@ export class DisponiblesComponent implements OnInit {
   TipoNovedad: string = "";
   AsignarCupo: boolean = false;
   ActualizarDisponible() {
-    let data: string | null = localStorage.getItem('Data');
-    const dataUser = JSON.parse(window.atob(data == null ? "" : data));
-    this.DisponibleForm.get('OficinaCambio')?.setValue(+dataUser.NumeroOficina);
+    this.dataUser = StorageSecurity.getData();
+    this.DisponibleForm.get('OficinaCambio')?.setValue(+this.dataUser.NumeroOficina);
 
     if (this.DisponibleForm.get('IdOficina')?.value !== null
       && this.DisponibleForm.get('IdOficina')?.value !== undefined
@@ -5588,10 +5643,10 @@ export class DisponiblesComponent implements OnInit {
                 this.BloquearDatoAutorizado = false;
                 this.DescriTipoFirma = true;
                 this.notif.success('Exitoso', 'Se adicionó y/o eliminó autorizado correctamente.', ConfiguracionNotificacion.configRightTop);
+                this.accionSeleccionada = false;
                 this.btnGuardar = true;
                 this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
-                this.btnActualizar = true;
-               
+                this.btnActualizar = true;               
                 this.bloquearbtnActalizar = false;
                 this.bloquearbtnCalcular = false;
                 this.selectEstado = true;
@@ -5651,6 +5706,7 @@ export class DisponiblesComponent implements OnInit {
               this.BloquearDatoAutorizado = false;
               this.DescriTipoFirma = true;
               this.notif.success('Exitoso', 'Se adicionó y/o eliminó autorizado correctamente.', ConfiguracionNotificacion.configRightTop);
+              this.accionSeleccionada = false;
               this.btnGuardar = true;
               this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
               this.btnActualizar = true;
@@ -5716,6 +5772,7 @@ export class DisponiblesComponent implements OnInit {
                 this.loading.hide();
                 this.BloquearAsociado = false;
                 this.notif.success('Exitoso', 'El cambio asesor externo se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+                this.accionSeleccionada = false;
                 this.btnGuardar = true;
                 let asesorExternoLog: any = {
                   IdAsesorExternoAnterior: this.datoAsesorExterno.IdAsesorExterno == null || this.datoAsesorExterno.IdAsesorExterno == 0 ? "" : this.datoAsesorExterno.IdAsesorExterno,
@@ -5754,6 +5811,7 @@ export class DisponiblesComponent implements OnInit {
                 this.loading.hide();
                 this.BloquearAsociado = false;
                 this.notif.success('Exitoso', 'El cambio asesor externo se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+                this.accionSeleccionada = false;
                 this.btnGuardar = true;
                 let asesorExternoLog: any = {
                   IdAsesorExternoAnterior: this.datoAsesorExterno.IdAsesorExterno == null ? "" : this.datoAsesorExterno.IdAsesorExterno,
@@ -5854,6 +5912,7 @@ export class DisponiblesComponent implements OnInit {
                 this.BloquearAsociado = false;
                 this.notif.success('Exitoso', 'El cambio de libreta o tarjeta se realizó correctamente.',
                   ConfiguracionNotificacion.configRightTop);
+                this.accionSeleccionada = false;
                 this.BloquearNumeroTarjeta = false;
                 this.btnGuardar = true;
                 this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
@@ -5894,8 +5953,7 @@ export class DisponiblesComponent implements OnInit {
             && this.DisponibleForm.get('NumeroTarjeta')?.value !== undefined
             && this.DisponibleForm.get('NumeroTarjeta')?.value !== '') {
             this.loading.show();
-            let data: string | null = localStorage.getItem('Data');
-            this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+            this.dataUser = StorageSecurity.getData();
             this.DisponibleForm.get('IdUsuarioERP')?.setValue(this.dataUser.IdUsuario);
             // Notificador
             var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
@@ -5916,6 +5974,7 @@ export class DisponiblesComponent implements OnInit {
                 this.loading.hide();
                 this.BloquearAsociado = false;
                 this.notif.success('Exitoso', 'El cambio de libreta o tarjeta se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+                this.accionSeleccionada = false;
                 this.BloquearNumeroTarjeta = false;
                 this.btnGuardar = true;
                 this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
@@ -5964,6 +6023,7 @@ export class DisponiblesComponent implements OnInit {
                 this.loading.hide();
                 this.BloquearAsociado = false;
                 this.notif.success('Exitoso', 'Cambio de libreta o tarjeta se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+                this.accionSeleccionada = false;
                 this.BloquearNumeroTarjeta = false;
                 this.btnGuardar = true;
                 this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
@@ -6002,8 +6062,7 @@ export class DisponiblesComponent implements OnInit {
             && this.DisponibleForm.get('NumeroTarjeta')?.value !== undefined
             && this.DisponibleForm.get('NumeroTarjeta')?.value !== '' || this.TipoNovedad != "") {              
             this.loading.show();
-            let data: string | null = localStorage.getItem('Data');
-            this.dataUser = JSON.parse(window.atob(data == null ? "" : data));
+            this.dataUser = StorageSecurity.getData();
             this.DisponibleForm.get('IdUsuarioERP')?.setValue(this.dataUser.IdUsuario);
             // Notificador
             var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
@@ -6024,6 +6083,7 @@ export class DisponiblesComponent implements OnInit {
                 this.loading.hide();
                 this.BloquearAsociado = false;
                 this.notif.success('Exitoso', 'Cambio de libreta o tarjeta se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+                this.accionSeleccionada = false;
                 this.BloquearNumeroTarjeta = false;
                 this.btnGuardar = true;
                 this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
@@ -6078,6 +6138,7 @@ export class DisponiblesComponent implements OnInit {
               this.loading.hide();
               this.BloquearAsociado = false;
               this.notif.success('Exitoso', 'El cambio de operacion permitida se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+              this.accionSeleccionada = false;
               this.btnGuardar = true;
               this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
               this.btnActualizar = true;
@@ -6142,6 +6203,7 @@ export class DisponiblesComponent implements OnInit {
             this.showBtnCanalesActualizar = false;
             this.BloquearAsociado = false;
             this.notif.success('Exitoso', 'La edición de canales se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+            this.accionSeleccionada = false;
             // Notificador
             var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
             var IdCuenta = +result.IdCuenta;
@@ -6317,6 +6379,7 @@ export class DisponiblesComponent implements OnInit {
                 this.BloquearDiaCortePlazo = false;
                 this.BloquearMedioPago = false;
                 this.notif.success('Exitoso', 'El medio de pago se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+                this.accionSeleccionada = false;
                 this.btnGuardar = true;
                 this.btnActualizar = true;
                 this.btnActualizarCanales = true;
@@ -6399,6 +6462,7 @@ export class DisponiblesComponent implements OnInit {
                 this.BloquearDiaCortePlazo = false;
                 this.BloquearMedioPago = false;
                 this.notif.success('Exitoso', 'El medio de pago se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+                this.accionSeleccionada = false;
                 this.btnGuardar = true;
                 this.btnActualizar = true;
                 this.btnActualizarCanales = true;
@@ -6534,6 +6598,7 @@ export class DisponiblesComponent implements OnInit {
             this.loading.hide();
             this.BloquearAsociado = false;
             this.notif.success('Exitoso', 'El asignar cupo se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+            this.accionSeleccionada = false;
             this.btnGuardar = true;
             this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
             this.DisponibleForm.get('IdCuentaCupo')?.setValue(result.IdCuentaCupo);
@@ -6572,6 +6637,7 @@ export class DisponiblesComponent implements OnInit {
             this.loading.hide();
             this.BloquearAsociado = false;
             this.notif.success('Exitoso', 'Activación cuenta se realizó correctamente', ConfiguracionNotificacion.configRightTop);
+            this.accionSeleccionada = false;
             this.btnGuardar = true;
             this.Guardarlog({});
             this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
@@ -6620,6 +6686,7 @@ export class DisponiblesComponent implements OnInit {
           this.loading.hide();
           this.BuscarPorCuenta();
           this.notif.success('Exitoso', 'Se marca/desmarca GMF correctamente.', ConfiguracionNotificacion.configRightTop);
+          this.accionSeleccionada = false;
           this.Guardarlog({ExoneradaGMFActualiza : this.DisponibleForm.get('ExoneradaGmf')?.value});
           setTimeout(() => {
             this.ObtenerHistorial();            
@@ -6645,6 +6712,7 @@ export class DisponiblesComponent implements OnInit {
         this.DisponiblesServices.TimbrarMensaje(payload).subscribe(( x: any) => {
           this.loading.hide();
           this.notif.success('Exitoso', 'Se editó timbrar mensaje correctamente.', ConfiguracionNotificacion.configRightTop);
+          this.accionSeleccionada = false;
           this.Guardarlog({TimbrarMensajeActualiza  : this.DisponibleForm.get('TibrarComentario')?.value});
           setTimeout(() => {
             this.ObtenerHistorial();
@@ -6680,6 +6748,7 @@ export class DisponiblesComponent implements OnInit {
              ExoneradoCuotaManejoActualiza  : this.DisponibleForm.get('ExoCobroHasta')?.value == null ? "" : this.DisponibleForm.get('ExoCobroHasta')?.value
            }
            this.notif.success('Exitoso', 'Se exonera cuota correctamente.', ConfiguracionNotificacion.configRightTop);
+           this.accionSeleccionada = false;
            this.Guardarlog(log);
            setTimeout(() => {
              this.ObtenerHistorial();
@@ -6715,6 +6784,7 @@ export class DisponiblesComponent implements OnInit {
         this.DisponiblesServices.MarcarODesmarcarExentoGMF(payload).subscribe(( x: any) => {
           this.loading.hide();
           this.notif.success('Exitoso', 'Se marca/desmarca exento GMF correctamente.', ConfiguracionNotificacion.configRightTop);
+          this.accionSeleccionada = false;
           this.Guardarlog({ExentoGMFActualiza : this.DisponibleForm.get('Exenta')?.value});
           setTimeout(() => {
             this.ObtenerHistorial();
@@ -6794,6 +6864,7 @@ export class DisponiblesComponent implements OnInit {
         this.loading.hide();
         this.BloquearAsociado = false;
         this.notif.success('Exitoso', 'Activación cuenta se realizó correctamente', ConfiguracionNotificacion.configRightTop);
+        this.accionSeleccionada = false;
         this.btnGuardar = true;
         this.Guardarlog({});
         this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
@@ -7579,6 +7650,7 @@ export class DisponiblesComponent implements OnInit {
       $('#libreta').removeClass('activar');
       $('#libreta').removeClass('active');
       this.notif.success('Exitoso', 'La cancelación de cupo se guardó correctamente.', ConfiguracionNotificacion.configRightTop);
+      this.accionSeleccionada = false;
       this.Guardarlog(log);
       // Notificador
       var IdTercero = +this.DisponibleForm.get('LngTercero')?.value;
@@ -7680,48 +7752,7 @@ export class DisponiblesComponent implements OnInit {
     this.valorRespaldadoTotalGar = this.valorRespaldadoTotal;
     this.valorDisponibleTotalGar = this.valorDisponibleTotal;
   }
-  CargarGarantias(idGarantia: number) {
-    this.limpiarvaloresGarantias();
-    const newLocal = this;
-    newLocal.DisponiblesServices.CargarGarantia(this.DisponibleForm.get('LngTercero')?.value, this.DisponibleForm.controls['Radicado'].value).subscribe(
-      result => {
-        this.ListGarantiasReales = result.reales;
-        this.resultGarantia = result.reales;
-        this.dataObjetCd = result.codeudores;
-        //dataObjetR
-        if (this.ListGarantiasReales.length > 0 && idGarantia == 5) {
-          this.ListGarantiasReales.forEach(( x: any) => {
-            x.ValorDisponible = Number(x.ValorCobertura) - Number(x.ValorRespaldado)
-          });
-          this.ListGarantiasRealesAgregadas.forEach(( x: any) => {
-            this.ListGarantiasReales = this.ListGarantiasReales.filter(( xx: any) => xx.NumeroMatricula != x.NumeroMatricula);
-          });
-          this.ModalGarantiasReales.nativeElement.click();
-        } else if (idGarantia == 10)
-          this.enableBtnActualizar = true;
-        else if (this.ListGarantiasReales.length == 0 && idGarantia == 5) {
-          let Text: string = "Radicado con garantía admisible y no se encontraron registros con el asociado.";
-          swal.fire({
-            title: '<strong>! Advertencia ¡</strong>',
-            text: '',
-            icon: 'error',
-            animation: false,
-            html: Text,
-            //customClass: 'animated tada',
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            confirmButtonText: 'Ok',
-            confirmButtonColor: 'rgb(160, 0, 87)'
-          });
-        }
 
-      },
-      error => {
-        const errorMessage = <any>error;
-        console.log(errorMessage);
-      }
-    );
-  }
   AsignarCupoLog: any = {};
   GuardarGarantiasAndLog(value: string) {
     if (value == "guardar") {
@@ -9118,5 +9149,444 @@ esMismoDia(fechaStr: string): boolean {
   );
 }
 
+
+//Inicio garantias 
+
+  habilitarCambiarGarantia() {
+    this.loading.show();
+    
+    // this.getDatosSimulacion();
+    // this.getCodeudorBasico(); 
+
+    const idTercero = this.DisponibleForm.get('LngTercero')?.value
+
+    this.getGarantiasAsignadas().pipe(
+      concatMap(() =>
+          this.getGarantiasDisponibles(idTercero, false)
+        ),
+      concatMap(() =>
+          this.getGAarantiasCompartidas()
+        )
+      ).subscribe({
+        next: () => {   
+          this.mostrarModal = true;   
+          setTimeout(() => {
+            this.modalGarantias.abrir();
+          });   
+          this.loading.hide();
+        },
+        error: () => {
+          this.loading.hide();
+        }
+      });
+  }
+
+  getGAarantiasCompartidas() {
+    const idTercero = this.DisponibleForm.get('LngTercero')?.value
+    const idCuenta = this.DisponibleForm.get('IdCuenta')?.value;
+    
+    return this.garantiasService.getGarantiasCompartidas(idCuenta, idTercero)
+      .pipe(
+        tap((data: any) => {
+          this.garantiasCompartidasBackend = data ?? [];
+        })
+      );
+  }
+
+  getGarantiasDisponibles(idTercero: number, codeudor: boolean) {
+    this.loading.show();
+    return this.garantiasService.getGarantiasDisponibles(idTercero).pipe(
+      tap((data: any) => {
+        if (codeudor) {
+          this.listGarantiasDisponiblesCodeudor = data ?? [];
+        } else {
+          this.listGarantiasDisponiblesDeudor = data ?? [];
+        }
+        this.loading.hide();
+      })
+    );
+  }
+
+  getGarantiasAsignadas() {
+    const idCuenta = this.DisponibleForm.get('IdCuenta')?.value;
+
+    this.loading.show();
+  
+    return this.DisponiblesServices.ObtenerGarantiasAsignadas(idCuenta).pipe(
+      tap((data: any) => {
+        this.garantiasRealesAsignadas = data ?? [];
+        this.garantiasRealesAsignadasInicial = JSON.parse(
+          JSON.stringify(this.garantiasRealesAsignadas)
+        );
+      }),
+      finalize(() => this.loading.hide())
+    );
+  }
+
+  cerrarDetalleGarantia(event?: Event) {
+    if (event) event.stopPropagation();
+
+    this.mostrarDetalleGarantia = false;
+    this.filaSeleccionadaGarantia = null;
+    this.tablaDetalleActiva = '';
+    this.detalleGarantiaCreditos = [];
+  }
+
+  onClickDetalleGarantia(garantiaId: number, tipo: string, tabla: string) {
+
+    if (
+      this.mostrarDetalleGarantia &&
+      this.filaSeleccionadaGarantia === garantiaId &&
+      this.tablaDetalleActiva === tabla
+    ) {
+
+      this.cerrarDetalleGarantia();
+      return;
+    }
+
+    this.filaSeleccionadaGarantia = garantiaId;
+    this.tablaDetalleActiva = tabla;
+
+    this.loading.show();
+
+    this.garantiasService.obtenerDetalleGarantiaCreditos(garantiaId, this.mapTipoGarantia(tipo))
+      .pipe( finalize(() => this.loading.hide())).subscribe({
+        next: (data) => {
+
+          this.detalleGarantiaCreditos = data ?? [];
+          this.mostrarDetalleGarantia = true;
+
+        },
+        error: () => {
+
+          this.notif.warning(
+            'Advertencia',
+            'No fue posible consultar los créditos asociados.',
+            ConfiguracionNotificacion.configRightTop
+          );
+
+          this.cerrarDetalleGarantia();
+        }
+      });
+  }
+
+  mapTipoGarantia(tipo: string): string {
+    if (!tipo) return '';
+    switch (tipo) {
+      case 'H': return 'Hipoteca';
+      case 'P': return 'Pignoración';
+      case 'T': return 'Títulos';
+      default: return tipo;
+    }
+  }
+
+  selectRowGarantias(tableName: string, index: number, garantiaId?: any): void {
+    if (this.mostrarDetalleGarantia && garantiaId &&
+      this.filaSeleccionadaGarantia === garantiaId &&
+      this.tablaDetalleActiva === tableName) {
+      return;
+    }
+
+    if (this.selectedRowsGarantias[tableName] === index) {
+      this.selectedRowsGarantias[tableName] = null;
+    } else {
+      Object.keys(this.selectedRowsGarantias).forEach(key => {
+        this.selectedRowsGarantias[key] = null;
+      });
+      this.selectedRowsGarantias[tableName] = index;
+    }
+  }
+
+  isRowSelected(tableName: string, index: number, garantiaId: any ): boolean {
+    if (
+      this.mostrarDetalleGarantia &&
+      this.filaSeleccionadaGarantia === garantiaId &&
+      this.tablaDetalleActiva === tableName
+    ) {
+      return true;
+    }
+    return this.selectedRowsGarantias[tableName] === index;
+  }
+
+  private cerrarModalYRefrescarCambiarGarantia() {
+    const idCuenta = this.DisponibleForm.get('IdCuenta')?.value;
+
+    this.onClickCerrarModalGarantias()
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    // this.BuscarDatosCartera(idCuenta);
+    // this.getGarantias();
+    // this.BuscarSaldosCartera();
+    // this.tabActivo = Tabs.Garantias;
+    // this.resetEstadoCargaTabs();
+    // this.cuotaTabBloqueado = false;
+  }
+
+  onClickCerrarModalGarantias() {
+    this.garantiasForm.reset();
+    this.garantiasAgregar = [];
+    this.garantiasEliminar = [];
+    this.garantiasRealesAsignadas = [];
+    this.isDisabledConfirmarGarantiasButton = true;
+    this.isDisabledLimpiarGarantiasButton = true;
+    this.isDisabledSaveGarantiasButton = true;
+    this. mostrarGarantiasCodeudor = false;
+    this.mostrarDetalleGarantia = false;
+    ($('#cambiarGarantias') as any).modal('hide');
+    this.mostrarModal = false;
+  }
+
+  onChangeCodeudor(id: number) {
+    if (!id) return;
+    
+    this.getGarantiasDisponibles(id, true).subscribe({
+        next: () => {
+          this.mostrarGarantiasCodeudor = true;
+        },
+        error: (err) => console.error(err)
+      });
+  }
+
+  validarSaldo(totales: any): boolean {
+    if ( this.garantiasCompartidas.length > 0) {
+      if ((totales.cobertura - totales.respalda) <= 0) {
+        this.notif.warning('Advertencia', 'Garantía no cubre el valor del crédito.', ConfiguracionNotificacion.configRightTop);
+        return false;
+      }
+    }
+    return true;
+  }
+
+  onClickConfirmarCambiosGarantia(data: any): void {
+    const { asignadas, agregar, eliminar, compartidas, totales } = data;
+
+    this.garantiasRealesAsignadas = asignadas;
+    this.garantiasAgregar = agregar;
+    this.garantiasEliminar = eliminar;
+    this.garantiasCompartidas = compartidas;
+
+    if (!this.validarSaldo(totales)) return;
+
+    const {
+      IdOficinaCuenta,
+      IdProductoCuenta,
+      IdConsecutivo,
+      IdDigito
+    } = this.DisponibleForm.value;
+
+    const usuario = this.dataUser?.IdUsuario;
+
+    const dto: CambiarGarantiasRequestDto = {
+      oficina: IdOficinaCuenta,
+      producto: IdProductoCuenta,
+      consecutivo: IdConsecutivo,
+      digito: IdDigito,
+      usuario: usuario,
+      agregar: this.garantiasAgregar.map(g => ({
+        oficina: IdOficinaCuenta,
+        producto: IdProductoCuenta,
+        clase: g.Clase,
+        consecutivo: IdConsecutivo,
+        digito: IdDigito,
+        garantia: g.Consecutivo,
+        tipo: g.Tipo,
+        valor: g.Cobertura,
+        usuario: usuario,
+        fecha: null
+      })),
+
+      eliminar: this.garantiasEliminar.map(g => ({
+        oficina: IdOficinaCuenta,
+        producto: IdProductoCuenta,
+        clase: g.Clase,
+        consecutivo: IdConsecutivo,
+        digito: IdDigito,
+        garantia: g.Consecutivo,
+        tipo: g.Tipo,
+        valor: g.Cobertura,
+        usuario: usuario,
+        fecha: new Date().toISOString().split('T')[0]
+      }))
+    };
+    
+    const jsonLog = this.construirLogCambioGarantia();
+    this.loading.show();
+
+    this.garantiasService.cambiarGarantias(dto)
+    .pipe(finalize(() => this.loading.hide()))
+    .subscribe({
+      next: (res) => {
+        if (!res?.Exitoso) {
+          this.notif.warning('Advertencia', res.Mensaje, ConfiguracionNotificacion.configRightTop);
+          return;
+        }
+        
+        // this.guardarLogGestionCredito(jsonLog);
+        this.notif.success('Exitoso', 'El cambio de garantía se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+        this.cerrarModalYRefrescarCambiarGarantia();
+      },
+      error: () => {
+        this.notif.error('Error', 'No se pudo guardar', ConfiguracionNotificacion.configRightTop);
+      }
+    });
+  }
+
+  private construirLogCambioGarantia() {
+    const formatear = (lista: GarantiaRealAsignada[]) =>
+      lista.map(g => ({
+        IdInterno: g.Consecutivo,
+        Id: g.Matricula,
+        Tipo: g.Tipo,
+        ValorCobertura: g.Cobertura
+      }));
+    
+    return {
+      Anterior: {
+        Garantias: formatear(this.garantiasRealesAsignadasInicial)
+      },
+      Actualiza: {
+        Garantias: formatear(this.garantiasRealesAsignadas),
+        Agregadas: formatear(this.garantiasAgregar),
+        Eliminadas: formatear(this.garantiasEliminar)
+      }
+    };
+  }
+
+getDatosSimulacionDisponibles() {
+
+  this.datosCuenta = {
+    idTercero: this.DisponibleForm.get('LngTercero')?.value,
+    idCuenta: this.DisponibleForm.get('IdCuenta')?.value,
+    idOficina: this.DisponibleForm.get('IdOficinaCuenta')?.value,
+    idProducto: this.DisponibleForm.get('IdProductoCuenta')?.value,
+    idConsecutivo: this.DisponibleForm.get('IdConsecutivo')?.value,
+    idDigito: this.DisponibleForm.get('IdDigito')?.value,
+    linea: this.DisponibleForm.get('Linea')?.value || '',
+    nombreLinea: this.DisponibleForm.get('NombreLinea')?.value || '',
+    documento:
+      this.DisponibleForm.get('NumeroDocumento')?.value ||
+      this.DisponibleForm.get('LngTercero')?.value,
+    nombre: this.DisponibleForm.get('Nombre')?.value || ''
+  };
+
+}
+
+CargarGarantias(idGarantia: number) {
+  this.limpiarvaloresGarantias();
+
+  this.DisponiblesServices.CargarGarantia(
+    this.DisponibleForm.get('LngTercero')?.value,
+    this.DisponibleForm.get('Radicado')?.value
+  ).subscribe({
+    next: (result) => {
+
+      this.ListGarantiasReales = result.reales ?? [];
+      this.resultGarantia = result.reales ?? [];
+      this.dataObjetCd = result.codeudores ?? [];
+
+      if (this.ListGarantiasReales.length > 0 && idGarantia == 5) {
+
+        const idTercero = this.DisponibleForm.get('LngTercero')?.value;
+
+        this.codeudoresBasico = this.dataObjetCd ?? [];
+
+        this.getDatosSimulacionDisponibles();
+
+        this.getGarantiasAsignadas().pipe(
+          concatMap(() =>
+            this.getGarantiasDisponibles(idTercero, false)
+          ),
+          concatMap(() =>
+            this.getGAarantiasCompartidas()
+          )
+        ).subscribe({
+          next: () => {
+
+            this.mostrarModal = true;
+
+            setTimeout(() => {
+              this.modalGarantias.abrir();
+            });
+
+            this.enableBtnActualizar = true;
+          },
+          error: (err) => {
+            console.error(err);
+
+            this.notif.error(
+              'Error',
+              'No fue posible cargar las garantías.',
+              ConfiguracionNotificacion.configRightTop
+            );
+          }
+        });
+
+      } else if (idGarantia == 10) {
+
+        this.enableBtnActualizar = true;
+
+      } else if (this.ListGarantiasReales.length == 0 && idGarantia == 5) {
+
+        swal.fire({
+          title: '<strong>! Advertencia ¡</strong>',
+          text: '',
+          icon: 'error',
+          animation: false,
+          html: 'Radicado con garantía admisible y no se encontraron registros con el asociado.',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          confirmButtonText: 'Ok',
+          confirmButtonColor: 'rgb(160, 0, 87)'
+        });
+
+      }
+    },
+    error: (error) => {
+      console.error(error);
+    }
+  });
+}
+
+  // CargarGarantias(idGarantia: number) {
+  //   this.limpiarvaloresGarantias();
+  //   const newLocal = this;
+  //   newLocal.DisponiblesServices.CargarGarantia(this.DisponibleForm.get('LngTercero')?.value, this.DisponibleForm.controls['Radicado'].value).subscribe(
+  //     result => {
+  //       this.ListGarantiasReales = result.reales;
+  //       this.resultGarantia = result.reales;
+  //       this.dataObjetCd = result.codeudores;
+  //       //dataObjetR
+  //       if (this.ListGarantiasReales.length > 0 && idGarantia == 5) {
+  //         this.ListGarantiasReales.forEach(( x: any) => {
+  //           x.ValorDisponible = Number(x.ValorCobertura) - Number(x.ValorRespaldado)
+  //         });
+  //         this.ListGarantiasRealesAgregadas.forEach(( x: any) => {
+  //           this.ListGarantiasReales = this.ListGarantiasReales.filter(( xx: any) => xx.NumeroMatricula != x.NumeroMatricula);
+  //         });
+  //         this.ModalGarantiasReales.nativeElement.click();
+  //       } else if (idGarantia == 10)
+  //         this.enableBtnActualizar = true;
+  //       else if (this.ListGarantiasReales.length == 0 && idGarantia == 5) {
+  //         let Text: string = "Radicado con garantía admisible y no se encontraron registros con el asociado.";
+  //         swal.fire({
+  //           title: '<strong>! Advertencia ¡</strong>',
+  //           text: '',
+  //           icon: 'error',
+  //           animation: false,
+  //           html: Text,
+  //           //customClass: 'animated tada',
+  //           allowOutsideClick: false,
+  //           allowEscapeKey: false,
+  //           confirmButtonText: 'Ok',
+  //           confirmButtonColor: 'rgb(160, 0, 87)'
+  //         });
+  //       }
+
+  //     },
+  //     error => {
+  //       const errorMessage = <any>error;
+  //       console.log(errorMessage);
+  //     }
+  //   );
+  // }
   
 }
