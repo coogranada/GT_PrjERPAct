@@ -156,6 +156,18 @@ export class TransaccionesCajaService {
         return this._http.post<any>(this.url, body);
     }
 
+    GuardarTransaccionPagoObligacion(IdCuenta: number, PagoTotal: number, Data: any): Observable<any> {
+        this.url = `${this.environment.Url}/GuardarTransaccionPagoObligacion`;
+
+        const body = {
+            IdCuenta: IdCuenta,
+            PagoTotal: PagoTotal,
+            Data: Data
+        };
+
+        return this._http.post<any>(this.url, body);
+    }
+
     ValidarAutorizaNovedad(Usuario: string, IdNovedad: number): Observable<any> {
         const params = {
             Usuario: Usuario,

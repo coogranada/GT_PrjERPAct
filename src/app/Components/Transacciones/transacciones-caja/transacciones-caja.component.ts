@@ -275,7 +275,8 @@ export class TransaccionesCajaComponent implements OnInit {
       compra: [0],
       valorRediferir: [{ value: 0, disabled: true }],
       valorPagoTotal: [{ value: 0, disabled: true }],
-      valorPagoMinimo: [{ value: 0, disabled: true }]
+      valorPagoMinimo: [{ value: 0, disabled: true }],
+      tipoPago: [{ value: '' }],
     });
 
     $('#ModalCondiciones').on('hidden.bs.modal', function () {
@@ -989,7 +990,7 @@ export class TransaccionesCajaComponent implements OnInit {
     this.OperacionPSelected = i.DescripcionOperacion;
     this.ActivaMovtoSelected = i.ActivaMovimiento;
     this.IdCuentaSelected = i.IdCuenta;
-    this.FechaRediferir = i.FechaRediferir.toString();
+    this.FechaRediferir = i?.FechaRediferir?.toString();
 
 
     //Cargue opciones para búsqueda por documento
@@ -2971,7 +2972,6 @@ export class TransaccionesCajaComponent implements OnInit {
 
   //#endregion
 
-
   //#region "Tab Cupo"
 
   obtenerPagoCuposTD() {
@@ -2983,15 +2983,15 @@ export class TransaccionesCajaComponent implements OnInit {
       const compras = 0;
       const cuenta = this.CuentaSelected
       const [oficina, producto, consecutivo, digito] =
-      cuenta.split('-').map(x => Number(x));
+        cuenta.split('-').map(x => Number(x));
 
-      this.transaccionesCajaService.ObtenerPagoCuposTD(idCuenta, desembolso, corte, compras, oficina, producto, consecutivo )
+      this.transaccionesCajaService.ObtenerPagoCuposTD(idCuenta, desembolso, corte, compras, oficina, producto, consecutivo)
         .subscribe({
           next: (result: any) => {
             this.loading.hide();
             this.ListRegistroPagoCupoTD = result.Datos;
             const PagoMinimo = result.Pago[0].Column3;
-            
+
             if (this.ListRegistroPagoCupoTD.length > 0) {
               const ultimoRegistro = this.ListRegistroPagoCupoTD[this.ListRegistroPagoCupoTD.length - 1];
               this.CupoPagoTotal = ultimoRegistro.curEfectivo;
@@ -3025,6 +3025,30 @@ export class TransaccionesCajaComponent implements OnInit {
     }
   }
 
+  setearValorAutomaticoCupos() {
+    const tipoPago = this.formPagoCupoTD.get('tipoPago')?.value;
+    const valorRediferir = this.formPagoCupoTD.get('valorRediferir')?.value;
+    const valorPagoMinimo = this.formPagoCupoTD.get('valorPagoMinimo')?.value;
+    const valorPagoTotal = this.formPagoCupoTD.get('valorPagoTotal')?.value;
+
+    setTimeout(() => {
+          switch (tipoPago) {
+      case "PagoRediferir":
+        this.TotalEfectivo = Number(valorRediferir) ?? 0;
+        break;
+      case "PagoMinimo":
+        this.TotalEfectivo = Number(valorPagoMinimo) ?? 0;
+        break;
+      case "PagoTotal":
+        this.TotalEfectivo = Number(valorPagoTotal) ?? 0;
+        break;
+    }
+    this.recalcularSaldoTotal();
+    }, 100);
+
+
+
+  }
 
   //#endregion
 
@@ -3054,6 +3078,8 @@ export class TransaccionesCajaComponent implements OnInit {
           this.guardarRecaudo();
         } else if (this.ProductoSeleccionado == 700) {
           this.guardarTesoreria();
+        } else if (this.ProductoSeleccionado == 101) { //CAMBIA
+          this.guardarPagoObligacion();
         }
       }
     });
@@ -3295,6 +3321,31 @@ export class TransaccionesCajaComponent implements OnInit {
 
 
     this.transaccionesCajaService.GuardarTransaccion(transaccion, cheque, chequeRet).subscribe(
+      result => {
+        this.loading.hide();
+
+        this.pdfTransBase64 = result.PdfTransaccion;
+        this.generarImpresion();
+
+        this.activarTransaTab(); //volver al tab
+        this.notif.onSuccess('Exitoso', 'La transacción ' + result.Transaccion + ' se guardó correctamente.');
+        this.limpiarFormulario(2); //Limpieza campos efectivo total
+        this.limpiarFormulario(1); //Limpieza general
+        this.limpiarcamposOtraTransaDocNom(0); //Limpieza tab tesoreria
+        this.limpiarcamposCheque(0); //Limpieza tab cheque
+        this.limpiarcamposChequeRet(0);//Limpieza tab cheque retiros
+        this.imprimirValidadoraTransa(result);
+      },
+      error => {
+        this.loading.hide();
+        let mensaje = error.Mensaje;
+        this.notif.onWarning('Advertencia', mensaje);
+      }
+    );
+  }
+
+  async guardarPagoObligacion() {
+    this.transaccionesCajaService.GuardarTransaccionPagoObligacion(this.IdCuentaSelected, this.TotalSaldo, this.ListRegistroPagoCupoTD).subscribe(
       result => {
         this.loading.hide();
 
