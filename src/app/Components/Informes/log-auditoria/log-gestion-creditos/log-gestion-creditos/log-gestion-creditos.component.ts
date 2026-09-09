@@ -460,6 +460,7 @@ export class LogGestionCreditosComponent {
   loadOperaciones() {
     let datas = localStorage.getItem('Data');
     this.dataUser = JSON.parse(window.atob(datas == null ? "" : datas));
+
     const arrayExample = [{
       'IdModulo': this.codModulo,
       'IdUsuario': this.dataUser.IdUsuario,
@@ -467,9 +468,14 @@ export class LogGestionCreditosComponent {
       'IdOperacionesPerfil': '',
       'IdPerfil': this.dataUser.idPerfilUsuario
     }];
+
     this.operacionesService.OperacionesPermitidas(arrayExample[0]).subscribe(
       result => {
-        this.resultOperaciones = result;
+
+        this.resultOperaciones = (result as any[]).filter(
+          (x: any) => x.ERP_tblOperacion?.IdOperacion !== 2
+        );
+
       },
       error => {
         const errorMessage = <any>error;
@@ -477,7 +483,7 @@ export class LogGestionCreditosComponent {
       }
     );
   }
-
+  
   mostrarBotones(): boolean {
     if (
       this.filtroSelect == 1 &&
