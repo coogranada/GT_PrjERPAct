@@ -3,7 +3,7 @@ import { ControlContainer, FormControl, FormGroup, Validators } from '@angular/f
 import { OperacionesService } from '../../../../Services/Maestros/operaciones.service';
 import { FormaPagoEnum, Tabs, TipoBusquedaResumen, TipoSistemas } from '../../../../Models/Productos/cartera/gestion-credito.enum';
 import { CarteraService } from '../../../../Services/Productos/cartera.service';
-import { ActualizarPagareDto, CalcularCuota, CambiarCalificacionDto, CambiarFormaPagoDto, CambiarLineaCreditoDto, CodeudorDraft, CuentaCarteraDetalle, CuentaCarteraResumen, CuentaFormateada, DebitoAutomaticoCreditoDto, Diferido, FechasCredito, GarantiaDisponible, GarantiaPersonalCod, GarantiaReal, HistorialOperacion, LineaCambioListDto, LogCambiarCodeudores, ManejarSeguroCreditoDto, ObservacionRadicado, Provision, Referencia, ResultadoOperacionDto, CambiarInfoCreditoLog, CambiarGarantiaDto, CambiarGarantiasRequestDto, DetalleGarantiaCreditoDto, GarantiaRealAsignada, ObtenerCodeudorBasicoModel, PeriodoPago, GarantiaCompartida, CrearInsolvencia, DevolverReest, TipoSeguimientoInsolvencia, InsolvenciaHistoricoDto, InsolvenciaAcuerdoPagoDto, InstanciaInsolvencia } from '../../../../Models/Productos/cartera/gestion-credito.model';
+import { ActualizarPagareDto, CalcularCuota, CambiarCalificacionDto, CambiarFormaPagoDto, CambiarLineaCreditoDto, CodeudorDraft, CuentaCarteraDetalle, CuentaCarteraResumen, CuentaFormateada, DebitoAutomaticoCreditoDto, Diferido, FechasCredito, GarantiaDisponible, GarantiaPersonalCod, GarantiaReal, HistorialOperacion, LineaCambioListDto, LogCambiarCodeudores, ManejarSeguroCreditoDto, ObservacionRadicado, Provision, Referencia, ResultadoOperacionDto, CambiarInfoCreditoLog, CambiarGarantiaDto, CambiarGarantiasRequestDto, DetalleGarantiaCreditoDto, GarantiaRealAsignada, ObtenerCodeudorBasicoModel, PeriodoPago, GarantiaCompartida, CrearInsolvencia, DevolverReest, TipoSeguimientoInsolvencia, InsolvenciaHistoricoDto, InsolvenciaAcuerdoPagoDto, InstanciaInsolvencia, LogInsolvenciaHijosCTD } from '../../../../Models/Productos/cartera/gestion-credito.model';
 import { catchError, concatMap, finalize, firstValueFrom, forkJoin, Observable, of, switchMap, tap } from 'rxjs';
 import { MiListaProductosService } from '../../../../Services/Informes/mi-lista-productos.service';
 import { ToastrService } from 'ngx-toastr';
@@ -1034,6 +1034,7 @@ export class GestionCarteraComponent {
       this.insolvenciaForm.get('IdInstancia')?.enable();
     }
   }
+
   getCausalInsolvencia(): Observable<any[]> {
     return this.carteraService.getCausalInsolvencia().pipe(
       catchError(error => {
@@ -1289,6 +1290,7 @@ export class GestionCarteraComponent {
       });
   }
   }
+
   private obtenerFechaEvento(): string | undefined {
 
     const tipo = Number(
@@ -1516,11 +1518,32 @@ export class GestionCarteraComponent {
 
     const dto = this.construirDtoInsolvencia();
 
+    let logDto: LogInsolvenciaHijosCTD | null = null;
+    const data = localStorage.getItem('Data');
+    const dataUser = JSON.parse(window.atob(data ?? ''));
+
+    if (dto.tipoSeguimiento === 1 || dto.tipoSeguimiento === 9) {
+      const formValue = this.gestionCreditoForm.getRawValue();
+      const operacion = this.gestionCreditoOperacionForm.get('Codigo')?.value;
+      if (!operacion) return;
+      logDto = {
+      idCuentaPadre: dto.idCuenta,
+      idOficina: +dataUser.NumeroOficina,
+      idUsuarioERP: +dataUser.IdUsuario,
+      idModulo: this.codModulo,
+      idOperacion: operacion,
+      jsonDto: JSON.stringify({}),
+      idAsesor: +dataUser.lngTercero,
+      idTercero: formValue.IdTercero,
+      aplicativo: 0,
+      idObseCambioEstado: formValue.IdObseCambioEstado ?? null
+      };
+    }
+
     this.isSavingInsolvencia = true;
     this.loading.show();
 
-    this.carteraService.crearInsolvencia(dto).subscribe({
-
+    this.carteraService.crearInsolvencia(dto, logDto).subscribe({
       next: (resp) => {
 
         if (resp.Exitoso) {
@@ -1541,7 +1564,9 @@ export class GestionCarteraComponent {
 
           this.onClickCancelarInsolvencia();
 
-          document.getElementById('btnCerrarProcesoInsolvencia')?.click();
+          document
+            .getElementById('btnCerrarProcesoInsolvencia')
+            ?.click();
 
           this.onCambiosTabClick();
 
@@ -1558,28 +1583,26 @@ export class GestionCarteraComponent {
             this.gestionCreditoForm.get('IdTercero')?.value
           );
 
-          // Ingreso a insolvencia = Bloquear
           if (tipoSeguimiento === 1) {
-          
+
             this.carteraService
               .CreaNotificacion(idTercero, idCuenta, 7, '16')
               .subscribe({
                 next: () => {},
-                error: (error) => console.error(error)
+                error: error => console.error(error)
               });
-            
+
           }
 
-          // Fin de insolvencia = Desbloquear
           if (tipoSeguimiento === 9) {
-          
+
             this.carteraService
               .CreaNotificacion(idTercero, idCuenta, 7, '00')
               .subscribe({
                 next: () => {},
-                error: (error) => console.error(error)
+                error: error => console.error(error)
               });
-            
+
           }
 
         } else {
@@ -1640,6 +1663,7 @@ export class GestionCarteraComponent {
 
     return `${numeroInsolvencia}.${numeroDetalle}`;
   }
+
   verDetalleAcuerdo(item: InsolvenciaHistoricoDto) {
 
       if (!item.TieneDetalle) {
@@ -1929,8 +1953,6 @@ export class GestionCarteraComponent {
     this.insolvenciaForm.get('NuevasCondicionesPago')?.updateValueAndValidity();
     this.insolvenciaForm.get('NumeroCuotasPactadas')?.updateValueAndValidity();
   }
-
-  
 
   //Fin Proceso Insolvencia
 
@@ -3899,11 +3921,9 @@ export class GestionCarteraComponent {
     this.generalesService.LogGestionCredito({
       idOperacion: operacion,
       idModulo: this.codModulo,
-      jsonDto: jsonDto,
-    
       idCuenta: formValue.IdCuenta,
       idTercero: formValue.IdTercero,
-    
+      jsonDto: jsonDto,
       idObsCambioEstado: formValue.IdObseCambioEstado?.toString() ?? null,
     }).pipe(finalize( () => this.loading.hide() )).subscribe({
       next: (resp) => {
