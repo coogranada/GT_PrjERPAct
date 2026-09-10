@@ -583,12 +583,44 @@ export class ConveniosComponent implements OnInit {
 
   //DFRAMIREZ 05-02-2026: NUEVA IMPLEMENTACIÓN OLIVOS
 
-  getProductosOlivos(Documento: string) {
-    this.MiListaProductosService.ObtenerResumenContrato(Documento).subscribe(
-      result => {
-        this.ListProducto = result.Result;
+getProductosOlivos(Documento: string) {
+  this.MiListaProductosService.ObtenerResumenContrato(Documento).subscribe(
+    result => {
+
+      this.ListProducto = result.Result;
+
+      this.ListProducto.forEach((producto: any) => {
+
+        if (!producto.Saldos || producto.Saldos.length === 0) {
+          return;
+        }
+
+        const primerSaldo = producto.Saldos[0];
+
+        const fechaPeriodo = new Date(primerSaldo.FechaInicio);
+
+        const mes = fechaPeriodo.getMonth();
+        const anio = fechaPeriodo.getFullYear();
+
+        producto.ValorCuota = producto.Saldos
+          .filter((saldo: any) => {
+
+            const fecha = new Date(saldo.FechaInicio);
+
+            return (
+              fecha.getMonth() === mes &&
+              fecha.getFullYear() === anio
+            );
+          })
+          .reduce((total: number, saldo: any) => {
+            return total + (Number(saldo.Cuota) || 0);
+          }, 0);
+
       });
-  }
+
+    });
+}
+
 
 
 
