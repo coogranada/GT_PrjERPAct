@@ -159,22 +159,37 @@ ngOnInit(): void {
 
   // TOKEN
   private setupTokenRefresh(): void {
-    setInterval(() => this.refreshToken(), 3600000);
+    console.log('Configurando timer de refresh');
+  setInterval(() => this.refreshToken(), 50 * 60 * 1000);
+}
+
+private refreshToken(): void {
+
+  console.log('ENTRO A REFRESH TOKEN');
+
+  console.log('Token:', localStorage.getItem('token'));
+  console.log('RefreshToken:', localStorage.getItem('refreshToken'));
+
+  const refreshToken = this.Security.GetRefreshToken();
+
+  if (!refreshToken || !this.resulStore?.intlngTercero) {
+    console.warn('No existe refreshToken');
+    return;
   }
 
-  private refreshToken(): void {    
-    const refreshToken = this.Security.GetRefreshToken();
-    if (!refreshToken || !this.resulStore?.intlngTercero) return;
+  this.loginService.RefreshToken(refreshToken)
+    .subscribe({
+      next: (x: any) => {
+        console.log('Token renovado');
+        console.log(x);
 
-    this.loginService
-      .RefreshToken(refreshToken)
-      .subscribe({
-        next: (x: any) => {
-          localStorage.setItem('token', x.token);
-        },
-        error: (err) => console.error('Error refrescando token', err)
-      });
-  }
+        localStorage.setItem('token', x.token);
+      },
+      error: (err) => {
+        console.error('Error refrescando token', err);
+      }
+    });
+}
 
 
   // NAVEGACION
