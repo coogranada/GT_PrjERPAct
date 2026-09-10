@@ -422,7 +422,7 @@ export class LayoutComponent implements OnInit,OnDestroy {
     this.isProductosAhorrosTerminoMenuOpen = !this.isProductosAhorrosTerminoMenuOpen;
     this.toggleCloseMenu(4, 4);
   }
-  toggleProductosCreditoMenu(){
+  toggleCreditoMenu(){
     this.isProductosCreditoMenuOpen = !this.isProductosCreditoMenuOpen;
     this.toggleCloseMenu(4,5);
   }

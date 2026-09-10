@@ -1,18 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { GestionCarteraComponent } from './gestion-cartera.component';
 
-import { GestionCreditoComponent } from './gestion-credito.component';
 
-describe('GestionCreditoComponent', () => {
-  let component: GestionCreditoComponent;
-  let fixture: ComponentFixture<GestionCreditoComponent>;
+
+describe('GestionCarteraComponent', () => {
+  let component: GestionCarteraComponent;
+  let fixture: ComponentFixture<GestionCarteraComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GestionCreditoComponent]
+      imports: [GestionCarteraComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(GestionCreditoComponent);
+    fixture = TestBed.createComponent(GestionCarteraComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

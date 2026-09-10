@@ -8,18 +8,15 @@ import { CurrencyMaskModule } from "ng2-currency-mask";
 import { AsesoriaContractualComponent } from '../Components/Productos/Ahorros/Contractual/asesoria/asesoria-contractual.component';
 import { AportesComponent } from '../Components/Productos/Aportes/aportes.component';
 import { TerminoComponent } from '../Components/Productos/Ahorros/Termino/termino/termino.component';
-import { ScoreCreditosComponent } from '../Components/Productos/Creditos/score-creditos/score-creditos.component';
 import { TarjetaHabientesComponent } from '../Components/Productos/Ahorros/Disponibles/tarjeta-habientes/tarjeta-habientes.component';
 import { GMFDisponibleComponent } from '../Components/Productos/Ahorros/Disponibles/gmf/gmf.component';
-import { FichaAnalisisComponent } from '../Components/Productos/Creditos/ficha-analisis/ficha-analisis.component';
 import { ShareComponentModule } from './share-component.module';
 import { DisponiblesComponent } from '../Components/Productos/Ahorros/Disponibles/disponibles/disponibles.component';
 import { AsesoriaTerminoComponent } from '../Components/Productos/Ahorros/Termino/asesoria-termino/asesoria-termino.component';
-import { GestionCreditoComponent } from '../Components/Productos/Cartera/gestion-credito/gestion-credito.component';
+import { GestionCarteraComponent} from '../Components/Productos/Cartera/gestion-credito/gestion-cartera.component';
 import { ConcatWithSpacePipe } from '../Pipes/utilidades/concatWithSpace.pipe';
 import { InformesModule } from './informes.module';
 import { TipoDocumentoPipe } from '../Pipes/utilidades/tipo-documento.pipe';
-import { DatacreditoComponent } from '../Components/Productos/Creditos/datacredito/datacredito/datacredito.component';
 import { CambiarInfoCreditoForm } from "../Components/Productos/Cartera/gestion-credito/cambiar-infocredito-form/cambiar-infocredito-form.component";
 import { ModalComponent } from '../Components/shared/modal/modal.component';
 import { CambiarGarantiasModalComponent } from '../Components/shared/cambiar-garantias-modal/cambiar-garantias-modal.component';
@@ -30,14 +27,11 @@ import { CambiarGarantiasModalComponent } from '../Components/shared/cambiar-gar
     AsesoriaContractualComponent,
     AportesComponent,
     TerminoComponent,
-    ScoreCreditosComponent,
     TarjetaHabientesComponent,
     GMFDisponibleComponent,
-    FichaAnalisisComponent,
     DisponiblesComponent,
-    GestionCreditoComponent,
-    AsesoriaTerminoComponent,
-    DatacreditoComponent
+    GestionCarteraComponent,
+    AsesoriaTerminoComponent
   ],
   imports: [
     CommonModule,

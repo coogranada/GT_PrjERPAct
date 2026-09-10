@@ -1,27 +1,27 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DatacreditoService } from '../../../../../Services/Productos/datacredito.service';
-import { EnvironmentService } from '../../../../../Services/Enviroment/enviroment.service';
-import { ModuleValidationService } from '../../../../../Services/Enviroment/moduleValidation.service';
-import { LoginService } from '../../../../../Services/Login/login.service';
-import { AlertService } from '../../../../../Services/Alert/alert.service';
+import { DatacreditoService } from '../../../../Services/Productos/datacredito.service';
+import { EnvironmentService } from '../../../../Services/Enviroment/enviroment.service';
+import { ModuleValidationService } from '../../../../Services/Enviroment/moduleValidation.service';
+import { LoginService } from '../../../../Services/Login/login.service';
+import { AlertService } from '../../../../Services/Alert/alert.service';
 import swal from 'sweetalert2';
 import { Router } from '@angular/router';
-import { LoadingService } from '../../../../../Services/shared/loading.service';
-import { StorageSecurity } from '../../../../../utils/storage-security.util';
+import { LoadingService } from '../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../utils/storage-security.util';
 
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 
 @Component({
-  selector: 'app-datacredito',
+  selector: 'app-datacredito-creditos',
   templateUrl: './datacredito.component.html',
   styleUrl: './datacredito.component.css',
   providers: [DatacreditoService, EnvironmentService, ModuleValidationService, LoginService],
   standalone: false,
 
 })
-export class DatacreditoComponent implements OnInit {
+export class DatacreditoCreditosComponent implements OnInit {
 
   @ViewChild('ModalImpresion', { static: true }) private ModalImpresion!: ElementRef;
 

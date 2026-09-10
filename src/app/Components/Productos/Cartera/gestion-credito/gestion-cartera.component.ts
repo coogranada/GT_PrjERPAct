@@ -29,13 +29,13 @@ import { CambiarGarantiasModalComponent } from '../../../shared/cambiar-garantia
 import { TooltipService } from '../../../../Services/Tooltip/tooltip.service';
 
 @Component({
-  selector: 'app-gestion-credito',
-  templateUrl: './gestion-credito.component.html',
-  styleUrl: './gestion-credito.component.css',
+  selector: 'app-gestion-cartera',
+  templateUrl: './gestion-cartera.component.html',
+  styleUrl: './gestion-cartera.component.css',
   providers: [ContractualService],
   standalone: false
 })
-export class GestionCreditoComponent {
+export class GestionCarteraComponent {
   @ViewChild('ModalBuscarAsociados', { static: true }) private ModalBuscarAsociados!: ElementRef;
    @ViewChild('ModalDebitoAutomatico', { static: true }) private ModalDebitoAutomatico!: ElementRef;
   @ViewChild('cerrarModal', { static: true }) private cerrarModal!: ElementRef;

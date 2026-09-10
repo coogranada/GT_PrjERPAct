@@ -461,35 +461,7 @@
                                                 </li>
 
                                             </ul>
-                                        </li>
-                                        <li id="creditos" *ngIf="Creditos">
-                                            <a [routerLink]="" (click)="toggleProductosCreditoMenu()"> Créditos</a>
-                                            <i class="icon-arrow-right13"
-                                                style="left: 225px; margin-top: 15px; position: absolute;"
-                                                *ngIf="!isProductosCreditoMenuOpen"></i>
-                                            <i class="icon-arrow-down12"
-                                                style="left: 225px; margin-top: 15px; position: absolute;"
-                                                *ngIf="isProductosCreditoMenuOpen"></i>
-                                            <ul *ngIf="isProductosCreditoMenuOpen">
-                                                <li id="simuladorCredito" *ngIf="SimuladorCredito">
-                                                    <a [routerLink]="['/Productos/Creditos/Simulador']"
-                                                        (click)="setModuloLocalStorage(SimuladorCreditoModel.IdModuloPermiso)">Simulador</a>
-                                                </li>
-                                                <li id="fichaAnalisis" *ngIf="FichaAnalisis">
-                                                    <a [routerLink]="['/Productos/Creditos/FichaAnalisis']"
-                                                        (click)="setModuloLocalStorage(FichaAnalisisModel.IdModuloPermiso)">Ficha
-                                                        de análisis</a>
-                                                </li>
-                                                <li id="score" *ngIf="Score">
-                                                    <a [routerLink]="['/Productos/Creditos/Score']"
-                                                        (click)="setModuloLocalStorage(ScoreModel.IdModuloPermiso)">Score</a>
-                                                </li>
-                                                <li id="datacredito" *ngIf="Datacredito">
-                                                    <a [routerLink]="['/Productos/Creditos/Datacredito']"
-                                                        (click)="setModuloLocalStorage(DatacreditoModel.IdModuloPermiso)">Datacrédito</a>
-                                                </li>
-                                            </ul>
-                                        </li>
+                                        </li>                                        
 
                                         <li id="cartera" *ngIf="Cartera">
                                             <a [routerLink]="" (click)="toggleProductosCarteraMenu()">Cartera</a>
@@ -530,6 +502,35 @@
                                                         (click)="setModuloLocalStorage(CancelacionModel.IdModuloPermiso)">Cancelación</a>
                                                 </li>
                                             </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li id="creditos" *ngIf="Creditos">
+                                    <a (click)="toggleCreditoMenu()">
+                                        <i class="icon-credit-card"></i>
+                                        <span>Créditos</span>
+                                        <i class="icon-arrow-right13" style="left: 225px; margin-top: 15px; position: absolute;"
+                                            *ngIf="!isProductosCreditoMenuOpen"></i>
+                                        <i class="icon-arrow-down12" style="left: 225px; margin-top: 15px; position: absolute;"
+                                            *ngIf="isProductosCreditoMenuOpen"></i>
+                                    </a>                                
+                                    <ul *ngIf="isProductosCreditoMenuOpen">
+                                        <!-- <li id="simuladorCredito" *ngIf="SimuladorCredito">
+                                            <a [routerLink]="['/Creditos/Simulador']"
+                                                (click)="setModuloLocalStorage(SimuladorCreditoModel.IdModuloPermiso)">Simulador</a>
+                                        </li> -->
+                                        <li id="fichaAnalisis" *ngIf="FichaAnalisis">
+                                            <a [routerLink]="['/Creditos/FichaAnalisis']"
+                                                (click)="setModuloLocalStorage(FichaAnalisisModel.IdModuloPermiso)">Ficha
+                                                de análisis</a>
+                                        </li>
+                                        <li id="score" *ngIf="Score">
+                                            <a [routerLink]="['/Creditos/Score']"
+                                                (click)="setModuloLocalStorage(ScoreModel.IdModuloPermiso)">Score</a>
+                                        </li>
+                                        <li id="datacredito" *ngIf="Datacredito">
+                                            <a [routerLink]="['Creditos/Datacredito']"
+                                                (click)="setModuloLocalStorage(DatacreditoModel.IdModuloPermiso)">Datacrédito</a>
                                         </li>
                                     </ul>
                                 </li>

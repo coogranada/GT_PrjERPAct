@@ -22,7 +22,9 @@ export const routes: Routes = [
             { path: "Informes", data : { breadcrub : "Informes"}, loadChildren : () => import("../app/Modules/informes.module").then( x => x.InformesModule) },   
             { path: "Utilidades", data : { breadcrub : "Utilidades"}, loadChildren : () => import("../app/Modules/utilidades.module").then( x => x.UtilidadesModule) },   
             { path: "Auditorias", data : { breadcrub : "Auditorias"}, loadChildren : () => import("../app/Modules/auditorias.module").then( x => x.AuditoriasModule) },     
-            { path: "Transacciones", data : { breadcrub : "Transacciones"}, loadChildren : () => import("../app/Modules/transacciones.module").then( x => x.TransaccionesModule) },                                                                                                                                               
+            { path: "Transacciones", data : { breadcrub : "Transacciones"}, loadChildren : () => import("../app/Modules/transacciones.module").then( x => x.TransaccionesModule) },  
+            { path: "Creditos", data : { breadcrub : "Creditos"}, loadChildren : () => import("../app/Modules/creditos.module").then( x => x.CreditosModule) },    
+                                                                                                                                                       
         ]
     }  
 ];
