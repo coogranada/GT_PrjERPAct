@@ -19,7 +19,7 @@ const routesProductos: Routes = [
   { path: "Ahorros/Disponible/GMF", component: GMFDisponibleComponent }, 
   { path: "Ahorros/Disponibles/Disponibles", component: DisponiblesComponent },
   { path: "Ahorros/Termino/AsesoriaTermino", component: AsesoriaTerminoComponent },
-  { path: "Cartera/GestionCredito", component: GestionCarteraComponent }
+  { path: "Cartera/GestionCartera", component: GestionCarteraComponent }
 ];
 
 @NgModule({

@@ -476,10 +476,10 @@
                                                     <a [routerLink]="['/Productos/Carteras/Simulador']"
                                                         (click)="setModuloLocalStorage(SimuladorCarteraModel.IdModuloPermiso)">Simulador</a>
                                                 </li> -->
-                                                <li id="gestionCredito" *ngIf="GestionCredito">
-                                                    <a [routerLink]="['/Productos/Cartera/GestionCredito']"
+                                                <li id="gestionCartera" *ngIf="GestionCredito">
+                                                    <a [routerLink]="['/Productos/Cartera/GestionCartera']"
                                                         (click)="setModuloLocalStorage(GestionCreditoModel.IdModuloPermiso)">Gestión
-                                                        de crédito</a>
+                                                        de cartera</a>
                                                 </li>
                                             </ul>
                                         </li>
