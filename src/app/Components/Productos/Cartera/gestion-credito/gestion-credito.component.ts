@@ -141,6 +141,7 @@ export class GestionCreditoComponent {
   public isSavingInsolvencia = false;
   public instanciasInsolvencia: InstanciaInsolvencia[] = [];
   public fechaMaxima = new Date().toISOString().split('T')[0];
+  
 
 //Garantias
   public datosCuenta: any;
@@ -163,13 +164,11 @@ export class GestionCreditoComponent {
   public mostrarModal = false;
   public tablaDetalleActiva = '';
   public filaSeleccionadaGarantia: number | null = null;
-
   public selectedRowsGarantias: {
     [key: string]: number | null;
   } = {
     asignadas: null
   };
-
   public detalleGarantiaCreditos: DetalleGarantiaCreditoDto[] = [];
 
 
@@ -951,6 +950,9 @@ export class GestionCreditoComponent {
   }
 
   async habilitarProcesoInsolvencia() {
+    if (this.gestionCreditoForm.get('Sigla')?.value === 'CTD') 
+    if (!this.validarCreditoPadre()) return; 
+
     try {
       this.loading.show();
 
@@ -974,7 +976,7 @@ export class GestionCreditoComponent {
       this.filtrarDetallePermitido();
       this.construirNumeracionInsolvencias();
 
-      this.validarInsolvencia();
+      await this.validarInsolvencia();
 
       this.openProcesoInsolvenciaModal.nativeElement.click();
     }
@@ -983,39 +985,55 @@ export class GestionCreditoComponent {
     }
   }
 
-  validarInsolvencia() {
-    const idCuenta = Number(this.gestionCreditoForm.get('IdCuenta')?.value);
+  async validarInsolvencia(): Promise<void> {
 
-    this.carteraService.validarInsolvencia(idCuenta).subscribe(esInsolvente => {
-        if (esInsolvente) {
-          this.carteraService.getMotivoInsolvencia(idCuenta).subscribe(motivo => {
-              if (motivo) {
-                this.insolvenciaForm.patchValue({
-                  IdCausal: motivo.intMotivo
-                });
-                this.insolvenciaForm.get('IdCausal')?.disable();
-              }
-            });
+    const idCuenta = Number(
+      this.gestionCreditoForm.get('IdCuenta')?.value
+    );
 
-          this.carteraService.getInstanciaInsolvencia(idCuenta).subscribe(instancia => {
-              if (instancia) {
-                this.insolvenciaForm.patchValue({
-                  IdInstancia: instancia.intTipoInstancia
-                  
-                });
-                console.log(instancia);
-                this.insolvenciaForm.get('IdInstancia')?.disable();
-              }
-            });
-        }
-        else {
-          this.insolvenciaForm.patchValue({IdCausal: '', IdInstancia: ''});
-          this.insolvenciaForm.get('IdCausal')?.enable();
-          this.insolvenciaForm.get('IdInstancia')?.enable();
-        }
+    const esInsolvente = await firstValueFrom(
+      this.carteraService.validarInsolvencia(idCuenta)
+    );
+
+    if (esInsolvente) {
+
+      const [motivo, instancia] = await Promise.all([
+        firstValueFrom(
+          this.carteraService.getMotivoInsolvencia(idCuenta)
+        ),
+        firstValueFrom(
+          this.carteraService.getInstanciaInsolvencia(idCuenta)
+        )
+      ]);
+
+      if (motivo) {
+        this.insolvenciaForm.patchValue({
+          IdCausal: motivo.intMotivo
+        });
+
+        this.insolvenciaForm.get('IdCausal')?.disable();
+      }
+
+      if (instancia) {
+
+        this.insolvenciaForm.patchValue({
+          IdInstancia: instancia.intTipoInstancia
+        });
+
+        this.insolvenciaForm.get('IdInstancia')?.disable();
+      }
+
+    } else {
+
+      this.insolvenciaForm.patchValue({
+        IdCausal: '',
+        IdInstancia: ''
       });
+
+      this.insolvenciaForm.get('IdCausal')?.enable();
+      this.insolvenciaForm.get('IdInstancia')?.enable();
+    }
   }
-  
   getCausalInsolvencia(): Observable<any[]> {
     return this.carteraService.getCausalInsolvencia().pipe(
       catchError(error => {
@@ -1532,6 +1550,38 @@ export class GestionCreditoComponent {
             behavior: 'smooth'
           });
 
+          const tipoSeguimiento = Number(
+            this.insolvenciaForm.get('IdTipoSeguimiento')?.value
+          );
+
+          const idTercero = Number(
+            this.gestionCreditoForm.get('IdTercero')?.value
+          );
+
+          // Ingreso a insolvencia = Bloquear
+          if (tipoSeguimiento === 1) {
+          
+            this.carteraService
+              .CreaNotificacion(idTercero, idCuenta, 7, '16')
+              .subscribe({
+                next: () => {},
+                error: (error) => console.error(error)
+              });
+            
+          }
+
+          // Fin de insolvencia = Desbloquear
+          if (tipoSeguimiento === 9) {
+          
+            this.carteraService
+              .CreaNotificacion(idTercero, idCuenta, 7, '00')
+              .subscribe({
+                next: () => {},
+                error: (error) => console.error(error)
+              });
+            
+          }
+
         } else {
 
           this.notif.warning(
@@ -1880,6 +1930,8 @@ export class GestionCreditoComponent {
     this.insolvenciaForm.get('NumeroCuotasPactadas')?.updateValueAndValidity();
   }
 
+  
+
   //Fin Proceso Insolvencia
 
 
@@ -2176,13 +2228,7 @@ export class GestionCreditoComponent {
     this.detalleGarantiaCreditos = [];
   }
 
-
-  onClickDetalleGarantia(
-    garantiaId: number,
-    tipo: string,
-    tabla: string,
-    matricula: string
-  ) {
+  onClickDetalleGarantia(garantiaId: number, tipo: string, tabla: string) {
 
     if (
       this.mostrarDetalleGarantia &&
@@ -2199,15 +2245,8 @@ export class GestionCreditoComponent {
 
     this.loading.show();
 
-    this.carteraService
-      .obtenerDetalleGarantiaCreditos(
-        garantiaId,
-        this.mapTipoGarantia(tipo)
-      )
-      .pipe(
-        finalize(() => this.loading.hide())
-      )
-      .subscribe({
+    this.carteraService.obtenerDetalleGarantiaCreditos(garantiaId, this.mapTipoGarantia(tipo))
+      .pipe( finalize(() => this.loading.hide())).subscribe({
         next: (data) => {
 
           this.detalleGarantiaCreditos = data ?? [];

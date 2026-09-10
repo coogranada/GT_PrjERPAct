@@ -272,11 +272,11 @@
                     <div class="row">
 
 
-                        <div class="col-md-8 col-lg-8 col-sm-8 espacioCol1 pad0L pad5R">
+                        <div class="col-md-8 col-lg-8 col-sm-8 espacioCol1  pad5R pad0L">
                             <div class="panel panel-default" id="PanelTab">
-                                <div class="panel-body pad0T pad0B">
-                                    <div class="col-xs-12 col-md-12 col-lg-12">
-                                        <div class="tabbable">
+                                <div class="panel-body pad0T pad0B pad0L pad5R">
+                                    <div class="col-xs-12 col-md-12 col-lg-12 pad0L pad0R">
+                                        <div class="tabbable pad4L">
                                             <ul class="nav nav-tabs">
                                                 <li id="tesoreria" (click)="esTabHabilitado(1) && devolverTab(1)"
                                                     [ngClass]="{'activar': activaTesoreria === true, 'disabled': !esTabHabilitado(1) }">
@@ -301,6 +301,10 @@
                                                 <li id="convenio" (click)="esTabHabilitado(6) && devolverTab(6)"
                                                     [ngClass]="{'activar': activaConvenio === true, 'disabled': !esTabHabilitado(6) }">
                                                     <a href="#tab6" data-toggle="tab" #convenioTab>Convenio</a>
+                                                </li>
+                                                <li id="cupoP" (click)="esTabHabilitado(8) && devolverTab(8)"
+                                                    [ngClass]="{'activar': activaCupoP === true, 'disabled': !esTabHabilitado(8) }">
+                                                    <a href="#tab8" data-toggle="tab" #cupoPTab>Cupo</a>
                                                 </li>
                                                 <li id="transa" (click)="esTabHabilitado(7) && devolverTab(7)"
                                                     (click)="generarImpresion()"
@@ -687,8 +691,56 @@
                                                                         <label><strong>Valor total
                                                                                 Cheque(s):</strong></label>
                                                                         <input type="text" class="form-control"
-                                                                            placeholder="" formControlName="valorCheques"
-                                                                            appMonedaDirectiva maxlength="12" (blur)="calcularGMFCamCheExt()">
+                                                                            placeholder=""
+                                                                            formControlName="valorCheques"
+                                                                            appMonedaDirectiva maxlength="12"
+                                                                            (blur)="calcularGMFCamCheExt()">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-2 col-m-2 col-sm-2">
+                                                                </div>
+                                                                <div class="col-lg-3 col-m-3 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label><strong>Tasa GMF:</strong></label>
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder="" formControlName="tasaGMF"
+                                                                            maxlength="40">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-lg-3 col-m-3 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label><strong>Valor GMF:</strong></label>
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder="" formControlName="valorGMF"
+                                                                            appMonedaDirectiva maxlength="40">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+
+
+                                                        </form>
+
+                                                    </div>
+
+                                                    <!-- CAMBIO DE EFECTIVO POR CHEQUE-->
+                                                    <div *ngIf="OtraTransaccionCodigo == 16287 || OtraTransaccionCodigo == '16287' || OtraTransaccionCodigo == 16410 || OtraTransaccionCodigo == '16410' "
+                                                        class="col-xs-12 col-md-12 col-lg-12 contorno-rutas div-espacio1">
+                                                        <span class="titulo">Cambio de efectivo por cheque</span>
+
+
+                                                        <form autocomplete="off" id="form" [formGroup]="formCambEfeChe">
+
+                                                            <div class="row">
+                                                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                                                    <div class="form-group">
+                                                                        <label><strong>Valor Efectivo:</strong></label>
+                                                                        <input type="text" class="form-control"
+                                                                            placeholder=""
+                                                                            formControlName="valorEfectivo"
+                                                                            appMonedaDirectiva maxlength="12"
+                                                                            (blur)="calcularGMFCamEfeChe()">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-lg-2 col-m-2 col-sm-2">
@@ -923,7 +975,8 @@
                                                 <!-- Inicio tab5 -->
                                                 <div class="tab-pane" id="tab5">
 
-                                                    <div *ngIf="NaturalezaTransa == -1 || (NaturalezaTransa == 1 && OtraTransaccionCodigo == 16077)" class="row">
+                                                    <div *ngIf="NaturalezaTransa == -1 || (NaturalezaTransa == 1 && OtraTransaccionCodigo == 16077)"
+                                                        class="row">
                                                         <div class="col-lg-12 col-md-12 col-sm-12">
                                                             <form autocomplete="off" id="form" [formGroup]="formCheque">
                                                                 <div class="row">
@@ -1032,7 +1085,8 @@
                                                                 <div class="row">
                                                                     <hr>
                                                                     <div class="tabla-wrapper">
-                                                                        <table id="TablaCheques" class="table table-sm">
+                                                                        <table id="TablaCheques"
+                                                                            class="table table-sm mar5L">
                                                                             <thead>
                                                                                 <tr>
                                                                                     <th>Banco</th>
@@ -1051,17 +1105,17 @@
                                                                                         {{item.idBanco}} -
                                                                                         {{item.nombreBanco}}
                                                                                     </td>
-                                                                                    <td style="text-align: right;">
+                                                                                    <td style="text-align: center;">
                                                                                         {{item.cuentaCorriente}}
                                                                                     </td>
-                                                                                    <td style="text-align: right">
+                                                                                    <td style="text-align: center">
                                                                                         {{item.numeroCheque}}
                                                                                     </td>
                                                                                     <td style="text-align: right">
                                                                                         {{item.valorCheque |
                                                                                         currency}}
                                                                                     </td>
-                                                                                    <td>
+                                                                                    <td style="text-align: center">
                                                                                         {{item.descripcionRemesa}}
                                                                                     </td>
                                                                                     <td class="operacionFija">
@@ -1110,7 +1164,8 @@
                                                     </div>
 
 
-                                                    <div *ngIf="NaturalezaTransa == 1 && OtraTransaccionCodigo != 16077" class="row">
+                                                    <div *ngIf="NaturalezaTransa == 1 && OtraTransaccionCodigo != 16077"
+                                                        class="row">
                                                         <div class="col-lg-12 col-md-12 col-sm-12">
                                                             <form autocomplete="off" id="form"
                                                                 [formGroup]="formChequeRet">
@@ -1209,7 +1264,8 @@
                                                                 <div class="row">
                                                                     <hr>
                                                                     <div class="tabla-wrapper">
-                                                                        <table id="TablaCheques" class="table table-sm">
+                                                                        <table id="TablaCheques"
+                                                                            class="table table-sm mar5L">
                                                                             <thead>
                                                                                 <tr>
                                                                                     <th>Banco</th>
@@ -1347,6 +1403,202 @@
                                                             style="border: none;">
                                                         </iframe>
                                                     </div>
+
+                                                </div>
+
+                                                <!-- Inicio tab8 -->
+                                                <div class="tab-pane" id="tab8">
+                                                    <div class="row">
+                                                        <form autocomplete="off" id="form" [formGroup]="formPagoCupoTD">
+                                                            <div class="col-lg-12 col-md-12 col-sm-12 pad0R">
+                                                                <div
+                                                                    class="col-lg-5 col-md-5 col-sm-5 pad0L pad0R contenedor-radios">
+                                                                    <div
+                                                                        class="col-xs-6 col-md-6 col-lg-6 contorno-rutas div-espacio1 mar0R">
+                                                                        <span class="titulo">Con Corte</span>
+                                                                        <label class="radio-custom1">
+                                                                            <input type="radio" class="radioB1"
+                                                                                [value]="1" formControlName="corte">
+                                                                            <span>Si</span>
+                                                                        </label>
+                                                                        <label class="radio-custom1">
+                                                                            <input type="radio" class="radioB1"
+                                                                                [value]="0" formControlName="corte">
+                                                                            <span>No</span>
+                                                                        </label>
+                                                                    </div>
+                                                                    <div
+                                                                        class="col-xs-6 col-md-6 col-lg-6 contorno-rutas div-espacio1 mar0R">
+                                                                        <span class="titulo">Compras</span>
+
+                                                                        <label class="radio-custom1">
+                                                                            <input type="radio" class="radioB1"
+                                                                                [value]="1" formControlName="compra">
+                                                                            <span>Si</span>
+                                                                        </label>
+                                                                        <label class="radio-custom1">
+                                                                            <input type="radio" class="radioB1"
+                                                                                [value]="0" formControlName="compra">
+                                                                            <span>No</span>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-7 col-md-7 col-sm-7 row pad0T pad0R">
+
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4 pad0R">
+                                                                        <div class="form-group ">
+                                                                            <label class="radio-custom espacioCarinf" (click)="setearValorAutomaticoCupos()">
+                                                                                <input type="radio"
+                                                                                    class="radioB1 mar0R"
+                                                                                    value="PagoRediferir"
+                                                                                    formControlName="tipoPago">
+                                                                                <span><strong>Pago
+                                                                                        rediferir:</strong></span>
+                                                                            </label>
+                                                                            <input type="text"
+                                                                                class="form-control espacioCarsup txt-bold1 txt-right ng-untouched ng-pristine txt-totalR"
+                                                                                placeholder=""
+                                                                                formControlName="valorRediferir"
+                                                                                appMonedaDirectiva>
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4 pad0R">
+                                                                        <div class="form-group ">
+                                                                            <label class="radio-custom espacioCarinf" (click)="setearValorAutomaticoCupos()">
+                                                                                <input type="radio"
+                                                                                    class="radioB1 mar0R"
+                                                                                    value="PagoMinimo"
+                                                                                    formControlName="tipoPago">
+                                                                                <span><strong>Pago
+                                                                                        mínimo:</strong></span>
+                                                                            </label>
+                                                                            <input type="text"
+                                                                                class="form-control espacioCarsup txt-bold1 txt-right ng-untouched ng-pristine txt-totalR"
+                                                                                placeholder=""
+                                                                                formControlName="valorPagoMinimo"
+                                                                                appMonedaDirectiva>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-lg-4 col-md-4 col-sm-4 pad0R">
+                                                                        <div class="form-group ">
+                                                                            <label class="radio-custom espacioCarinf" (click)="setearValorAutomaticoCupos()">
+                                                                                <input type="radio"
+                                                                                    class="radioB1 mar0R"
+                                                                                    value="PagoTotal"
+                                                                                    formControlName="tipoPago">
+                                                                                <span><strong>Pago
+                                                                                        total:</strong></span>
+                                                                            </label>
+                                                                            <input type="text"
+                                                                                class="form-control espacioCarsup txt-bold1 txt-right ng-untouched ng-pristine txt-totalR"
+                                                                                placeholder=""
+                                                                                formControlName="valorPagoTotal"
+                                                                                appMonedaDirectiva>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                                                        <div class="form-group">
+                                                                            <label class="espacioCarinf"><strong>Fecha
+                                                                                    rediferir:</strong> {{FechaRediferir
+                                                                                | date : "yyyy/MM/dd"}}</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                                                        <div class="form-group">
+                                                                            <label class="espacioCarinf"><strong>Cuota
+                                                                                    manejo:</strong> 0.00</label>
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="ac-sgg">
+                                                        <input class="ac-input-sg" id="ac-sg-5" name="ac-sg-5"
+                                                            type="checkbox" />
+                                                        <label class="ac-label-sg" for="ac-sg-5">Detalle avances</label>
+                                                        <article class="ac-text-sg">
+
+
+                                                            <div class="row">
+                                                                <div class="tabla-wrapper">
+                                                                    <table id="TablaCheques"
+                                                                        class="table table-sm mar5L mar5R">
+                                                                        <thead>
+                                                                            <tr class="nowrap">
+                                                                                <th>Cuenta</th>
+                                                                                <th>Saldo efectivo</th>
+                                                                                <th>Saldo canje</th>
+                                                                                <th>Interés anticipado</th>
+                                                                                <th>Interés vencido</th>
+                                                                                <th>Interés contingente</th>
+                                                                                <th>Interés mora</th>
+                                                                                <th>Otros</th>
+                                                                                <th>Desembolso</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <tr
+                                                                                *ngFor="let item of ListRegistroPagoCupoTD">
+                                                                                <td>
+                                                                                    {{
+                                                                                    item.intOficina.toString().padStart(3,'0')
+                                                                                    }}-
+                                                                                    {{
+                                                                                    item.intProducto.toString().padStart(3,'0')
+                                                                                    }}-
+                                                                                    {{
+                                                                                    item.lngConsecutivo.toString().padStart(7,'0')
+                                                                                    }}-
+                                                                                    {{ item.intDigito }}
+                                                                                </td>
+                                                                                <td style="text-align: right;">
+                                                                                    {{ item.curEfectivo | currency:
+                                                                                    '$'}}
+                                                                                </td>
+                                                                                <td style="text-align: right;">
+                                                                                    {{ item.curCanje | currency:
+                                                                                    '$'}}
+                                                                                </td>
+                                                                                <td style="text-align: right;">
+                                                                                    {{ item.curIntAnticipado |
+                                                                                    currency: '$'}}
+                                                                                </td>
+                                                                                <td style="text-align: right;">
+                                                                                    {{ item.curIntCalVen | currency:
+                                                                                    '$'}}
+                                                                                </td>
+                                                                                <td style="text-align: right;">
+                                                                                    {{ item.curIntContigencia |
+                                                                                    currency: '$'}}
+                                                                                </td>
+                                                                                <td style="text-align: right;">
+                                                                                    {{ item.curIntMora | currency:
+                                                                                    '$'}}
+                                                                                </td>
+                                                                                <td style="text-align: right;">
+                                                                                    {{ item.Deducibles | currency:
+                                                                                    '$'}}
+                                                                                </td>
+                                                                                <td>
+                                                                                    {{ item.Matricula | date :
+                                                                                    "yyyy/MM/dd
+                                                                                    hh:mm:ss"}}
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </article>
+                                                    </div>
+
 
                                                 </div>
 

@@ -70,7 +70,7 @@ export class TransaccionesCajaService {
         );
     }
 
-    ObtenerEncabezadoNombreTransa(Nombre: string,  IdOficina: number): Observable<any> {
+    ObtenerEncabezadoNombreTransa(Nombre: string, IdOficina: number): Observable<any> {
         const params = {
             Nombre: Nombre,
             IdOficina: IdOficina
@@ -156,6 +156,18 @@ export class TransaccionesCajaService {
         return this._http.post<any>(this.url, body);
     }
 
+    GuardarTransaccionPagoObligacion(IdCuenta: number, PagoTotal: number, Data: any): Observable<any> {
+        this.url = `${this.environment.Url}/GuardarTransaccionPagoObligacion`;
+
+        const body = {
+            IdCuenta: IdCuenta,
+            PagoTotal: PagoTotal,
+            Data: Data
+        };
+
+        return this._http.post<any>(this.url, body);
+    }
+
     ValidarAutorizaNovedad(Usuario: string, IdNovedad: number): Observable<any> {
         const params = {
             Usuario: Usuario,
@@ -229,7 +241,7 @@ export class TransaccionesCajaService {
 
         return this._http.get<any[]>(url, { params });
     }
-    
+
     ObtenerChequeEmitido(IdPuc: number, Cheque: number): Observable<any[]> {
         const url = `${this.environment.Url}/ObtenerChequeEmitido`;
 
@@ -243,5 +255,18 @@ export class TransaccionesCajaService {
     ObtenerReembolso(IdOficina: number): Observable<any> {
         this.url = `${this.environment.Url}/ObtenerReembolso?IdOficina=` + IdOficina;
         return this._http.get<any>(this.url);
+    }
+
+    ObtenerPagoCuposTD(IdCuenta: number, Desembolso: number, Corte: number, Compra: number, IdOficina: number, IdProducto: number, Consecutivo: number): Observable<any> {
+        const url = `${this.environment.Url}/ObtenerPagoCuposTD`;
+        const params = new HttpParams()
+            .set('IdCuenta', IdCuenta)
+            .set('Desembolso', Desembolso)
+            .set('Corte', Corte)
+            .set('Compra', Compra)
+            .set('IdOficina', IdOficina)
+            .set('IdProducto', IdProducto)
+            .set('Consecutivo', Consecutivo);
+        return this._http.get<any[]>(url, { params });
     }
 }
