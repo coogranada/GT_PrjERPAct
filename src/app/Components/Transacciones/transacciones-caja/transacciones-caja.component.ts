@@ -907,6 +907,7 @@ export class TransaccionesCajaComponent implements OnInit {
               this.TerceroSelected = response.IdTercero;
               this.OficinaCliselected = response.IdOficina;
               this.NombOficinaCliselected = response.NombreOficina;
+              console.log(response);
             }
           }, error: (err) => {
             console.log(err);
@@ -3025,30 +3026,24 @@ export class TransaccionesCajaComponent implements OnInit {
     }
   }
 
-  setearValorAutomaticoCupos() {
-    const tipoPago = this.formPagoCupoTD.get('tipoPago')?.value;
-    const valorRediferir = this.formPagoCupoTD.get('valorRediferir')?.value;
-    const valorPagoMinimo = this.formPagoCupoTD.get('valorPagoMinimo')?.value;
-    const valorPagoTotal = this.formPagoCupoTD.get('valorPagoTotal')?.value;
+setearValorAutomaticoCupos() {
+  const tipoPago = this.formPagoCupoTD.get('tipoPago')?.value;
 
-    setTimeout(() => {
-          switch (tipoPago) {
-      case "PagoRediferir":
-        this.TotalEfectivo = Number(valorRediferir) ?? 0;
-        break;
-      case "PagoMinimo":
-        this.TotalEfectivo = Number(valorPagoMinimo) ?? 0;
-        break;
-      case "PagoTotal":
-        this.TotalEfectivo = Number(valorPagoTotal) ?? 0;
-        break;
-    }
-    this.recalcularSaldoTotal();
-    }, 100);
+  switch (tipoPago) {
+    case 'PagoRediferir':
+      this.TotalEfectivo = Number(this.formPagoCupoTD.get('valorRediferir')?.value || 0);
+      break;
 
+    case 'PagoMinimo':
+      this.TotalEfectivo = Number(this.formPagoCupoTD.get('valorPagoMinimo')?.value || 0);
+      break;
 
-
+    case 'PagoTotal':
+      this.TotalEfectivo = Number(this.formPagoCupoTD.get('valorPagoTotal')?.value || 0);
+      break;
   }
+  this.recalcularSaldoTotal();
+}
 
   //#endregion
 
@@ -3177,6 +3172,7 @@ export class TransaccionesCajaComponent implements OnInit {
           this.loading.hide();
           console.log('error guardar transacción recaudo: ' + err);
           this.notif.onDanger('Error', 'No se pudo realizar el proceso.');
+          this.limpiarFormulario(1);
         }
       });
   }

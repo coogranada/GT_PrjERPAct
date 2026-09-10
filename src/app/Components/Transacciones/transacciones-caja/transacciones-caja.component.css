@@ -368,6 +368,10 @@ tr {
     padding-right: 5px;
 }
 
+.pad20L{
+    padding-left: 20px;
+}
+
 .espacioCarsup{
     padding-top: 1px;
     padding-bottom: 0px;
