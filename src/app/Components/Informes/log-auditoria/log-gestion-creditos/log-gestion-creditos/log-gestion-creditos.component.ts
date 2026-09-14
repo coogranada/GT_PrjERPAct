@@ -386,15 +386,27 @@ export class LogGestionCreditosComponent {
 
     // CUENTA
     if (this.filtroSelect == 5) {
-      const cuenta = this.formulario.get('@Cuenta')?.value;
-      if (!cuenta) return;
-      const partes = cuenta.split('-');
-
-      if (partes.length !== 4) {
-        this.notif.onWarning('Advertencia', 'Debe ingresar la cuenta en su formato.');
+    
+      let cuenta = this.formulario.get('@Cuenta')?.value ?? '';
+      cuenta = cuenta.replace(/[\r\n\t]/g, '').trim();
+      this.formulario.get('@Cuenta')?.setValue(cuenta);
+    
+      if (!cuenta) {
+        this.notif.onWarning('Advertencia','Debe ingresar una cuenta.'
+        );
         return;
       }
-
+    
+      const partes = cuenta.split('-');
+    
+      if (partes.length !== 4) {
+        this.notif.onWarning(
+          'Advertencia',
+          'Debe ingresar la cuenta en su formato.'
+        );
+        return;
+      }
+    
       this.AddFiltro(
         5,
         cuenta,
@@ -404,7 +416,7 @@ export class LogGestionCreditosComponent {
         'Es Igual',
         '@Cuenta'
       );
-
+    
       this.limpiarSelected();
     }
   }
@@ -507,13 +519,24 @@ export class LogGestionCreditosComponent {
   }
 
   validarUsuario() {
+    let usuario = this.formulario.get('@Usuario')?.value ?? '';
+    usuario = usuario.replace(/[\r\n\t]/g, '').trim();
+    this.formulario.get('@Usuario')?.setValue(usuario);
+  
+    if (!usuario) {
+      this.notif.onWarning('Advertencia','Debe ingresar un usuario.');
+      return;
+    }
+  
     this.loading.show();
-    const usuario = this.formulario.get('@Usuario')?.value;
+  
     this.informeClientesService.ValidatUsuario(usuario)
       .subscribe(
         x => {
+        
           if (x.dataBool) {
             this.SelectedNombre = x.data;
+          
             this.AddFiltro(
               4,
               this.SelectedNombre,
@@ -523,16 +546,19 @@ export class LogGestionCreditosComponent {
               'Es Igual',
               '@Usuario'
             );
+          
             this.limpiarSelected();
           } else {
-            this.notif.onWarning( 'Advertencia', 'El usuario no existe en el sistema, valide el valor ingresado.');
+            this.notif.onWarning(
+              'Advertencia',
+              'El usuario no existe en el sistema, valide el valor ingresado.'
+            );
           }
           this.loading.hide();
-
         },
         err => {
           this.loading.hide();
-          this.notif.onWarning('Advertencia', 'Error al validar el usuario.');
+          this.notif.onWarning('Advertencia','Error al validar el usuario.');
         }
       );
   }
