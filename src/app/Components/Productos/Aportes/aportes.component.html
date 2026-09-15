@@ -683,15 +683,15 @@
                             </tr>
                         </thead>
                         <tbody *ngFor="let resultAsociados of dataAsociados">
-                            <tr (click)="BuscarDatosCuenta(resultAsociados.IdOficina,resultAsociados.IdProducto,resultAsociados.IdConsecutivo, resultAsociados.IdDigito)">
+                            <tr (click)="BuscarDatosCuenta(resultAsociados.intOficina,resultAsociados.intProducto,resultAsociados.LngConsecutivo, resultAsociados.intDigito)">
                                 <td data-dismiss="modal">
                                     {{resultAsociados.Cuenta}}
                                 </td>
                                 <td data-dismiss="modal">
-                                    {{resultAsociados.PrimerApellido}} {{resultAsociados.SegundoApellido}} {{resultAsociados.PrimerNombre}} {{resultAsociados.SegundoNombre}}
+                                    {{resultAsociados.Nombre}}
                                 </td>
                                 <td data-dismiss="modal">
-                                    {{resultAsociados.DescripcionEstado}}
+                                    {{resultAsociados.strDescripcion}}
                                 </td>
                             </tr>
                         </tbody>

@@ -1227,53 +1227,84 @@ export class AportesComponent implements OnInit {
       this.BuscarCuentaPorNombre();
     }
   }
-  BuscarCuentaPorDocumento() {
-      this.loading.show();
-      this.aportesServices.getBuscarPorDocumento(this.aportesFrom.value).subscribe(
-        result => {
-          this.loading.hide();
-          if (this.aportesOperacionFrom.get('Codigo')?.value  === '2') {            
-            this.aportesOperacionFrom.get('Codigo')?.reset();
-          }          
-          if (result.length === 0) {
-            this.notif.onWarning('Advertencia', 'No se encontró registro.');
-            this.clearFrom();
-            this.generalesService.Autofocus('selectBuscar');
-          } else if (result.length <= 1) {
-            this.aportesFrom.get('BuscarDocumento')?.reset();
-            if (result.length > 0) {
-              this.clearFrom();
-              if (result[0].Beneficiarios !== null && result[0].Beneficiarios !== undefined) {
-                result[0].Beneficiarios.forEach(( elementBeneficiarios :  any) => {
-                  this.resultParentesco.forEach(( elementParentesco :  any) => {
-                    if (elementBeneficiarios.IdParentesco === elementParentesco.Clase) {
-                      elementBeneficiarios.DatosParentesco = elementParentesco;
-                    }
-                  });
-                  elementBeneficiarios.Accion = 'DB';
-                });
-              }
-              this.MapearDatosCuenta(result);
-              this.btnActualizar = true;
-              this.btnActualizarBeneficiario = true;
-              this.btnGuardar = true;
-               this.aportesOperacionFrom.get('Codigo')?.reset();
-            }
-          } else if (result.length > 1) {
-            this.dataAsociados = result;
-            this.BuscarAsociados.nativeElement.click();
-            this.aportesFrom.get('BuscarDocumento')?.reset();
-          } else if (result.Mensaje !== undefined || result.Mensaje !== null) {
-            this.notif.onWarning('Advertencia', result.Mensaje);
-          }
-        },
-        error => {
-          this.loading.hide();
-          const errorMessage = <any>error;
-          console.log(errorMessage);
+  BuscarCuentaPorDocumento(): void {
+  this.loading.show();
+
+  this.aportesServices.getBuscarPorDocumento(this.aportesFrom.value).subscribe({
+      next: (result: any) => {
+        this.loading.hide();
+        console.log('Resultado servicio:', result);
+        // Reinicia operación cuando el código es 2
+        if (this.aportesOperacionFrom.get('Codigo')?.value === '2') {
+          this.aportesOperacionFrom.get('Codigo')?.reset();
         }
-      );
-  }
+        // Validar que realmente llegue un arreglo
+        if (!Array.isArray(result)) {
+          if (result?.Mensaje) {
+            this.notif.onWarning('Advertencia', result.Mensaje);
+          } else {
+            this.notif.onWarning('Advertencia','La respuesta del servicio no tiene el formato esperado.'
+            );
+          }
+          return;
+        }
+        // No encontró registros
+        if (result.length === 0) {
+          this.notif.onWarning('Advertencia','No se encontró registro.');
+
+          this.clearFrom();
+          this.generalesService.Autofocus('selectBuscar');
+          return;
+        }
+        //un solo registro
+        if (result.length === 1) {
+          this.aportesFrom.get('BuscarDocumento')?.reset();
+          this.clearFrom();
+          if (result[0]?.Beneficiarios) {
+            result[0].Beneficiarios.forEach(
+              (elementBeneficiarios: any) => {
+                const parentescoEncontrado =
+                  this.resultParentesco.find(
+                    (elementParentesco: any) =>
+                      elementParentesco.Clase ===
+                      elementBeneficiarios.IdParentesco
+                  );
+                if (parentescoEncontrado) {
+                  elementBeneficiarios.DatosParentesco =
+                    parentescoEncontrado;
+                }
+                elementBeneficiarios.Accion = 'DB';
+              }
+            );
+          }
+          this.MapearDatosCuenta(result);
+          this.btnActualizar = true;
+          this.btnActualizarBeneficiario = true;
+          this.btnGuardar = true;
+          this.aportesOperacionFrom.get('Codigo')?.reset();
+          return;
+        }
+        // varios registros
+        if (result.length > 1) {
+          console.log('Asociados encontrados:', result);
+          this.dataAsociados = [...result];       
+          setTimeout(() => {
+            this.BuscarAsociados?.nativeElement?.click();
+          }, 100);
+          this.aportesFrom.get('BuscarDocumento')?.reset();
+          return;
+        }
+      },
+      error: (error: any) => {
+           this.loading.hide();
+
+        this.notif.onWarning('Error','Ocurrió un error al consultar la información.'
+        );
+      }
+    });
+}
+  
+ 
   BuscarCuentaPorNombre() {
       if (this.aportesFrom.get('BuscarNombre')?.value  !== undefined) {
         this.loading.show();
