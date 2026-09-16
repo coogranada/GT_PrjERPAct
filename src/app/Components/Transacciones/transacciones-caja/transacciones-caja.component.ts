@@ -1678,8 +1678,8 @@ export class TransaccionesCajaComponent implements OnInit {
 
         if (!autorizado) {
           continuar = false;
-
-          this.imprimirValidadoraRelCheque(); //Validar que solo muestre para consignación
+          //SE COMENTA PROVISIONALMENTE 
+          //this.imprimirValidadoraRelCheque(); //Validar que solo muestre para consignación
 
 
           break;
