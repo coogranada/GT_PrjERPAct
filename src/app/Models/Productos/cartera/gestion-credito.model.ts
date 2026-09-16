@@ -669,4 +669,5 @@ export interface LogInsolvenciaHijosCTD {
   idTercero: number;
   aplicativo?: number;
   idObseCambioEstado?: number;
+  fechaModificacion: string;
 }

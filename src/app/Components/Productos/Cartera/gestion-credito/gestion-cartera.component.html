@@ -1061,8 +1061,6 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Valor reconocido:</label>
-                                                <span class="grande">*</span>
-                                            
                                                 <input
                                                     type="text"
                                                     class="form-control"
@@ -1075,8 +1073,6 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Capital reconocido:</label>
-                                                <span class="grande">*</span>
-                                            
                                                 <input
                                                     type="text"
                                                     class="form-control"
@@ -1119,13 +1115,11 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label>Nuevas condiciones de pago:</label>
-                                                <span class="grande">*</span>
-                                            
                                                 <input
                                                     type="text"
                                                     class="form-control"
                                                     formControlName="NuevasCondicionesPago"
-                                                    maxlength="200">
+                                                    maxlength="250">
                                             </div>
                                         </div>
                                     
@@ -1138,8 +1132,35 @@
                                                     type="text"
                                                     class="form-control"
                                                     formControlName="NumeroCuotasPactadas"
-                                                    maxlength="4"
+                                                    maxlength="3"
                                                     appSoloNumero>
+
+                                                <span
+                                                    class="help-block validationSpan"
+                                                    *ngIf="
+                                                      insolvenciaForm.get('NumeroCuotasPactadas')?.touched &&
+                                                      insolvenciaForm.get('NumeroCuotasPactadas')?.errors?.['required']
+                                                    ">
+                                                    Debe ingresar el número de cuotas pactadas.
+                                                </span>
+
+                                                <span
+                                                    class="help-block validationSpan"
+                                                    *ngIf="
+                                                      insolvenciaForm.get('NumeroCuotasPactadas')?.touched &&
+                                                      insolvenciaForm.get('NumeroCuotasPactadas')?.errors?.['min']
+                                                    ">
+                                                    El número de cuotas pactadas debe ser mayor a 0.
+                                                </span>
+
+                                                <span
+                                                    class="help-block validationSpan"
+                                                    *ngIf="
+                                                      insolvenciaForm.get('NumeroCuotasPactadas')?.touched &&
+                                                      insolvenciaForm.get('NumeroCuotasPactadas')?.errors?.['max']
+                                                    ">
+                                                    El número máximo de cuotas pactadas es 300.
+                                                </span>
                                             </div>
                                         </div>
                                     

@@ -608,34 +608,27 @@ export class GestionCarteraComponent {
       FechaIncumplimientoAcuerdo: new FormControl(''),
       FechaLiquidacion: new FormControl(''),
     
-    ValorReconocido: new FormControl('', [
-      Validators.required,
-      Validators.maxLength(12)
-    ]),
-    
-    CapitalReconocido: new FormControl('', [
-      Validators.required,
-      Validators.maxLength(12)
-    ]),
-    
-    InteresesReconocidos: new FormControl('', [
-      Validators.maxLength(12)
-    ]),
-    
-    CondonacionesAprobadas: new FormControl('', [
-      Validators.maxLength(12)
-    ]),
-    
-    NuevasCondicionesPago: new FormControl('', [
-      Validators.required,
-      Validators.maxLength(200)
-    ]),
-    
-    NumeroCuotasPactadas: new FormControl('', [
-      Validators.required,
-      Validators.pattern('^[0-9]+$'),
-      Validators.maxLength(4)
-    ])
+      ValorReconocido: new FormControl('', [
+        Validators.maxLength(12)
+      ]),
+
+      CapitalReconocido: new FormControl('', [
+        Validators.maxLength(12)
+      ]),
+
+      InteresesReconocidos: new FormControl('', [
+        Validators.maxLength(12)
+      ]),
+
+      CondonacionesAprobadas: new FormControl('', [
+        Validators.maxLength(12)
+      ]),
+
+      NuevasCondicionesPago: new FormControl('', [
+        Validators.maxLength(250)
+      ]),
+
+      NumeroCuotasPactadas: new FormControl('')
     });
 
     this.insolvenciaForm.valueChanges.subscribe(() => {
@@ -1429,38 +1422,6 @@ export class GestionCarteraComponent {
         break;
 
       case 8:
-
-        if (!this.insolvenciaForm.get('ValorReconocido')?.value) {
-          this.notif.warning(
-            'Advertencia',
-            'Debe ingresar el valor reconocido.',
-            ConfiguracionNotificacion.configRightTop
-          );
-          return false;
-        }
-
-        if (!this.insolvenciaForm.get('CapitalReconocido')?.value) {
-          this.notif.warning(
-            'Advertencia',
-            'Debe ingresar el capital reconocido.',
-            ConfiguracionNotificacion.configRightTop
-          );
-          return false;
-        }
-
-        if (
-          !this.insolvenciaForm.get('NuevasCondicionesPago')
-            ?.value
-            ?.trim()
-        ) {
-          this.notif.warning(
-            'Advertencia',
-            'Debe ingresar las nuevas condiciones de pago.',
-            ConfiguracionNotificacion.configRightTop
-          );
-          return false;
-        }
-
         if (!this.insolvenciaForm.get('NumeroCuotasPactadas')?.value) {
           this.notif.warning(
             'Advertencia',
@@ -1522,7 +1483,14 @@ export class GestionCarteraComponent {
     const data = localStorage.getItem('Data');
     const dataUser = JSON.parse(window.atob(data ?? ''));
 
-    if (dto.tipoSeguimiento === 1 || dto.tipoSeguimiento === 9) {
+    const jsonLog =
+      dto.tipoSeguimiento === 1
+        ? 'Inicia el proceso de insolvencia'
+        : 'Finaliza el proceso de insolvencia';
+      
+    const esCTD = this.gestionCreditoForm.get('Sigla')?.value === 'CTD';
+
+    if (esCTD && (dto.tipoSeguimiento === 1 || dto.tipoSeguimiento === 9)) {
       const formValue = this.gestionCreditoForm.getRawValue();
       const operacion = this.gestionCreditoOperacionForm.get('Codigo')?.value;
       if (!operacion) return;
@@ -1532,11 +1500,12 @@ export class GestionCarteraComponent {
       idUsuarioERP: +dataUser.IdUsuario,
       idModulo: this.codModulo,
       idOperacion: operacion,
-      jsonDto: JSON.stringify({}),
+      jsonDto: JSON.stringify(jsonLog),
       idAsesor: +dataUser.lngTercero,
       idTercero: formValue.IdTercero,
       aplicativo: 0,
-      idObseCambioEstado: formValue.IdObseCambioEstado ?? null
+      idObseCambioEstado: formValue.IdObseCambioEstado ?? null,
+      fechaModificacion: formatDate(new Date(), 'yyyy-MM-dd HH:mm:ss', 'en'),
       };
     }
 
@@ -1554,11 +1523,34 @@ export class GestionCarteraComponent {
             ConfiguracionNotificacion.configRightTop
           );
 
-          this.guardarLogGestionCredito({});
+          const detalleSeleccionado =
+            this.tiposSeguimientoInsolvencia.find(
+              x => x.intTipoSeguimiento === dto.tipoSeguimiento
+            )?.strDescripcion ?? '';
+          
+          this.guardarLogGestionCredito(detalleSeleccionado);
 
-          const idCuenta = Number(
-            this.gestionCreditoForm.get('IdCuenta')?.value
-          );
+          const idTercero = Number(this.gestionCreditoForm.get('IdTercero')?.value);
+
+          const idCuenta = Number(this.gestionCreditoForm.get('IdCuenta')?.value);
+          
+          if (esCTD && dto.tipoSeguimiento === 1) {
+            this.carteraService
+              .CreaNotificacion(idTercero, idCuenta, 7, '16')
+              .subscribe({
+                next: () => {},
+                error: error => console.error(error)
+              });
+          }
+
+          if (esCTD && dto.tipoSeguimiento === 9) {
+            this.carteraService
+              .CreaNotificacion(idTercero, idCuenta, 7, '00')
+              .subscribe({
+                next: () => {},
+                error: error => console.error(error)
+              });
+          }
 
           this.buscarCuentaDetalle(idCuenta);
 
@@ -1574,36 +1566,6 @@ export class GestionCarteraComponent {
             top: document.body.scrollHeight,
             behavior: 'smooth'
           });
-
-          const tipoSeguimiento = Number(
-            this.insolvenciaForm.get('IdTipoSeguimiento')?.value
-          );
-
-          const idTercero = Number(
-            this.gestionCreditoForm.get('IdTercero')?.value
-          );
-
-          if (tipoSeguimiento === 1) {
-
-            this.carteraService
-              .CreaNotificacion(idTercero, idCuenta, 7, '16')
-              .subscribe({
-                next: () => {},
-                error: error => console.error(error)
-              });
-
-          }
-
-          if (tipoSeguimiento === 9) {
-
-            this.carteraService
-              .CreaNotificacion(idTercero, idCuenta, 7, '00')
-              .subscribe({
-                next: () => {},
-                error: error => console.error(error)
-              });
-
-          }
 
         } else {
 
@@ -1689,9 +1651,11 @@ export class GestionCarteraComponent {
 
   private validarBotonesInsolvencia(): void {
     this.isDisabledLimpiarInsolvenciaButton = !this.insolvenciaForm.dirty;
+
     const tipo = Number(this.insolvenciaForm.get('IdTipoSeguimiento')?.value);
     const causal = this.insolvenciaForm.get('IdCausal')?.value;
     const instancia = this.insolvenciaForm.get('IdInstancia')?.value;
+
     let formularioCompleto = !!causal && !!instancia && !!tipo;
 
     switch (tipo) {
@@ -1740,10 +1704,7 @@ export class GestionCarteraComponent {
       case 8:
         formularioCompleto =
           formularioCompleto &&
-          !!this.insolvenciaForm.get('ValorReconocido')?.value &&
-          !!this.insolvenciaForm.get('CapitalReconocido')?.value &&
-          !!this.insolvenciaForm.get('NumeroCuotasPactadas')?.value &&
-          !!this.insolvenciaForm.get('NuevasCondicionesPago')?.value?.trim();
+          !!this.insolvenciaForm.get('NumeroCuotasPactadas')?.value;
         break;
 
       case 9:
@@ -1900,60 +1861,53 @@ export class GestionCarteraComponent {
   }
 
   private configurarValidadoresAcuerdoPago(tipoSeguimiento: number): void {
-  
+
     if (tipoSeguimiento === 8) {
-    
+
       this.insolvenciaForm.get('ValorReconocido')
         ?.setValidators([
-          Validators.required,
           Validators.maxLength(12)
         ]);
+
       this.insolvenciaForm.get('CapitalReconocido')
         ?.setValidators([
-          Validators.required,
           Validators.maxLength(12)
         ]);
-      
+
       this.insolvenciaForm.get('InteresesReconocidos')
         ?.setValidators([
           Validators.maxLength(12)
         ]);
-      
+
       this.insolvenciaForm.get('CondonacionesAprobadas')
         ?.setValidators([
           Validators.maxLength(12)
         ]);
-      
+
       this.insolvenciaForm.get('NuevasCondicionesPago')
         ?.setValidators([
-          Validators.required,
-          Validators.maxLength(200)
+          Validators.maxLength(250)
         ]);
-      
+
       this.insolvenciaForm.get('NumeroCuotasPactadas')
         ?.setValidators([
           Validators.required,
-          Validators.pattern('^[0-9]+$'),
-          Validators.maxLength(4)
+          Validators.min(1),
+          Validators.max(300)
         ]);
-      
     } else {
-      this.insolvenciaForm.get('ValorReconocido') ?.clearValidators();
-      this.insolvenciaForm.get('CapitalReconocido') ?.clearValidators();
-      this.insolvenciaForm.get('InteresesReconocidos') ?.clearValidators();
-      this.insolvenciaForm.get('CondonacionesAprobadas') ?.clearValidators();
-      this.insolvenciaForm.get('NuevasCondicionesPago') ?.clearValidators();
-      this.insolvenciaForm.get('NumeroCuotasPactadas') ?.clearValidators();
-    }
-  
-    this.insolvenciaForm.get('ValorReconocido')?.updateValueAndValidity();
-    this.insolvenciaForm.get('CapitalReconocido')?.updateValueAndValidity();
-    this.insolvenciaForm.get('InteresesReconocidos')?.updateValueAndValidity();
-    this.insolvenciaForm.get('CondonacionesAprobadas')?.updateValueAndValidity();
-    this.insolvenciaForm.get('NuevasCondicionesPago')?.updateValueAndValidity();
-    this.insolvenciaForm.get('NumeroCuotasPactadas')?.updateValueAndValidity();
-  }
 
+      this.insolvenciaForm.get('ValorReconocido')?.clearValidators();
+      this.insolvenciaForm.get('CapitalReconocido')?.clearValidators();
+      this.insolvenciaForm.get('InteresesReconocidos')?.clearValidators();
+      this.insolvenciaForm.get('CondonacionesAprobadas')?.clearValidators();
+      this.insolvenciaForm.get('NuevasCondicionesPago')?.clearValidators();
+      this.insolvenciaForm.get('NumeroCuotasPactadas')?.clearValidators();
+    }
+
+    Object.values(this.insolvenciaForm.controls)
+      .forEach(control => control.updateValueAndValidity());
+  }
   //Fin Proceso Insolvencia
 
 
