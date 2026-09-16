@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { EnvironmentService } from '../Enviroment/enviroment.service';
 import { Observable, retry } from 'rxjs';
 import { TipoBusquedaResumen } from '../../Models/Productos/cartera/gestion-credito.enum';
-import { ActualizarPagareCupoDto, ActualizarPagareDto, BaseRequestAlCalcular, CalcularDatosRequest, CambiarCalificacionDto, CambiarFormaPagoDto, CambiarGarantiaDto, CambiarGarantiasRequestDto, CambiarLineaCreditoDto, CuentaCarteraDetalle, CuentaCarteraResumen, CuentaFormateada, CupoInfo, DebitoAutomaticoCreditoDto, DetalleGarantiaCreditoDto, Diferido, GarantiaCompartida, GarantiaDisponible, GarantiaRealAsignada, GarantiasResponse, HistorialOperacion, LineaCambioListDto, ManejarSeguroCreditoDto, ObservacionRadicado, ObtenerCodeudorBasicoModel, PeriodoPago, PersonaNaturalBusquedaDto, Provision, ReesRelResponse, ResultadoOperacionDto, ResultCalcularCambioDatos, UltimaCalificacionDto, CrearInsolvencia, DevolverReest, TipoSeguimientoInsolvencia, InsolvenciaHistoricoDto, InsolvenciaAcuerdoPagoDto, MotivoInsolvencia, InstanciaInsolvencia, ValorRespaldarCTD, GarantiaPersonalCod } from '../../Models/Productos/cartera/gestion-credito.model';
+import { ActualizarPagareCupoDto, ActualizarPagareDto, BaseRequestAlCalcular, CalcularDatosRequest, CambiarCalificacionDto, CambiarFormaPagoDto, CambiarGarantiaDto, CambiarGarantiasRequestDto, CambiarLineaCreditoDto, CuentaCarteraDetalle, CuentaCarteraResumen, CuentaFormateada, CupoInfo, DebitoAutomaticoCreditoDto, DetalleGarantiaCreditoDto, Diferido, GarantiaCompartida, GarantiaDisponible, GarantiaRealAsignada, GarantiasResponse, HistorialOperacion, LineaCambioListDto, ManejarSeguroCreditoDto, ObservacionRadicado, ObtenerCodeudorBasicoModel, PeriodoPago, PersonaNaturalBusquedaDto, Provision, ReesRelResponse, ResultadoOperacionDto, ResultCalcularCambioDatos, UltimaCalificacionDto, CrearInsolvencia, DevolverReest, TipoSeguimientoInsolvencia, InsolvenciaHistoricoDto, InsolvenciaAcuerdoPagoDto, MotivoInsolvencia, InstanciaInsolvencia, ValorRespaldarCTD, GarantiaPersonalCod, LogInsolvenciaHijosCTD } from '../../Models/Productos/cartera/gestion-credito.model';
 import { buildParams } from '../../utils/helpers';
 
 @Injectable({
@@ -287,11 +287,14 @@ export class CarteraService {
         return this._http.get<GarantiaCompartida[]>(url, { params });
     }
 
-    crearInsolvencia(insovencia: CrearInsolvencia): Observable<ResultadoOperacionDto> {
+    crearInsolvencia(insovencia: CrearInsolvencia, logDto: LogInsolvenciaHijosCTD | null): Observable<ResultadoOperacionDto> {
       const url = `${this.environment.Url}/CrearInsolvencia`;
       return this._http.post<ResultadoOperacionDto>(
         url,
-        insovencia
+        {
+            insolvenciaDto: insovencia,
+            logDto: logDto
+        }
       );
     }
 

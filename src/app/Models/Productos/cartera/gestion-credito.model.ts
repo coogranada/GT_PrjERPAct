@@ -657,3 +657,16 @@ export interface InstanciaInsolvencia {
 export interface ValorRespaldarCTD {
   ValorRespaldar: number;
 }
+
+export interface LogInsolvenciaHijosCTD {
+  idCuentaPadre: number;
+  idOficina: number;
+  idUsuarioERP: number;
+  idModulo: number;
+  idOperacion: number;
+  jsonDto: string;
+  idAsesor: number;
+  idTercero: number;
+  aplicativo?: number;
+  idObseCambioEstado?: number;
+}

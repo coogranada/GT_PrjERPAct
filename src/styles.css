@@ -14,6 +14,45 @@
   --col-wider-2-4: calc((var(--width-base) * 2) + 4%);
   --col-smaller-3-4: calc((var(--width-base) * 3) - 4%);
   --col-wider-3-4: calc((var(--width-base) * 3) + 4%);
+
+  --green: #269051;
+  --wine-900:#3E0E28;
+  --wine-800:#5A1638;
+  /* --wine-700:#7A1E4D; */
+  /* --wine-700:#269051; */
+  --wine-700:#852662;
+  --wine-600:#8F2A5B;
+  --wine-500:#A83E74;
+  --wine-200:#EBD3DE;
+  --wine-100:#F5E9EF;
+  --bg:#F6F2F4;
+  --paper:#FFFFFF;
+  --ink:#2B1B25;
+  --ink-muted:#7C6A73;
+  --ink-faint:#A99AA1;
+  --gold:#B9812E;
+  --gold-soft:#F1E3C8;
+  --line:#E7DBE1;
+  --radius-sm:6px;
+  --radius-md:10px;
+}
+
+.mb-0 {
+  margin-bottom: 0;
+}
+
+.row-margin {
+  margin-bottom: 21px;
+}
+
+.textNegrilla {
+  color: #565656;
+  font-weight: bold;
+}
+
+.historial-container {
+  display: flex;
+  gap: 20px;
 }
 
 .form-group-flex {

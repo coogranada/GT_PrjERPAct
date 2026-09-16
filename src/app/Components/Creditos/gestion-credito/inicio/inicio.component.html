@@ -1,0 +1,111 @@
+<div class="panel">
+    <div class="panel-body">
+        <section class="metas">
+            <div class="metas-head">
+                <div>
+                    <h2>Metas del mes</h2>
+                    <p class="sub">Cartera de crédito · septiembre 2026</p>
+                </div>
+                <div class="office-field">
+                    <label for="office">Oficina</label>
+                    <select id="office" class="office-select">
+                        <option value="cali-centro">Cali Centro</option>
+                        <option value="cali-norte">Cali Norte</option>
+                        <option value="medellin-poblado">Medellín Poblado</option>
+                        <option value="bogota-chapinero">Bogotá Chapinero</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="cards">
+                <div class="card goal">
+                    <div class="label">Meta del mes</div>
+                    <div class="num" id="c-goal">$800.000.000</div>
+                    <div class="foot">Monto objetivo a desembolsar</div>
+                </div>
+                <div class="card">
+                    <div class="label"><span class="dot d1"></span>Asesorías</div>
+                    <div class="num" id="c-asesorias">210</div>
+                    <div class="foot">clientes asesorados</div>
+                </div>
+                <div class="card">
+                    <div class="label"><span class="dot d2"></span>Radicados</div>
+                    <div class="num" id="c-radicados">142</div>
+                    <div class="foot" id="c-radicados-monto">$950.000.000 radicados</div>
+                </div>
+                <div class="card">
+                    <div class="label"><span class="dot d3"></span>Aprobados</div>
+                    <div class="num" id="c-aprobados">101</div>
+                    <div class="foot" id="c-aprobados-monto">$700.000.000 aprobados</div>
+                </div>
+                <div class="card">
+                    <div class="label"><span class="dot d4"></span>Desembolsados</div>
+                    <div class="num" id="c-desembolsados">76</div>
+                    <div class="foot" id="c-desembolsados-monto">$512.000.000 desembolsados</div>
+                </div>
+            </div>
+
+            <div class="panels-cards">
+                <div class="panel-card">
+                    <h3>Embudo de créditos</h3>
+                    <p class="p-sub">Número de créditos por etapa en el mes</p>
+
+                    <div class="funnel-row">
+                        <div class="fname">Asesorías</div>
+                        <div class="funnel-track">
+                            <div class="funnel-fill fill1" id="f-asesorias" style="width:100%"></div>
+                        </div>
+                        <div class="funnel-val" id="fv-asesorias">210</div>
+                    </div>
+                    <div class="funnel-row">
+                        <div class="fname">Radicados</div>
+                        <div class="funnel-track">
+                            <div class="funnel-fill fill2" id="f-radicados" style="width:68%"></div>
+                        </div>
+                        <div class="funnel-val" id="fv-radicados">142</div>
+                    </div>
+                    <div class="funnel-row">
+                        <div class="fname">Aprobados</div>
+                        <div class="funnel-track">
+                            <div class="funnel-fill fill3" id="f-aprobados" style="width:48%"></div>
+                        </div>
+                        <div class="funnel-val" id="fv-aprobados">101</div>
+                    </div>
+                    <div class="funnel-row">
+                        <div class="fname">Desembolsados</div>
+                        <div class="funnel-track">
+                            <div class="funnel-fill fill4" id="f-desembolsados" style="width:36%"></div>
+                        </div>
+                        <div class="funnel-val" id="fv-desembolsados">76</div>
+                    </div>
+
+                    <div class="conv">
+                        <span>Asesoría → Radicado: <b id="conv1">68%</b></span>
+                        <span>Radicado → Aprobado: <b id="conv2">71%</b></span>
+                        <span>Aprobado → Desembolsado: <b id="conv3">75%</b></span>
+                    </div>
+                </div>
+
+                <div class="panel-card">
+                    <h3>Cumplimiento de meta</h3>
+                    <p class="p-sub">Monto desembolsado vs. meta del mes</p>
+                    <div class="gauge-wrap">
+                        <div class="gauge">
+                            <svg width="172" height="172" viewBox="0 0 172 172">
+                                <circle cx="86" cy="86" r="74" fill="none" stroke="#EBD3DE" stroke-width="16" />
+                                <circle id="gauge-arc" cx="86" cy="86" r="74" fill="none" stroke="#7A1E4D"
+                                    stroke-width="16" stroke-linecap="round" stroke-dasharray="464.9"
+                                    stroke-dashoffset="167.4" />
+                            </svg>
+                            <div class="gauge-center">
+                                <div class="gauge-pct" id="gauge-pct">64%</div>
+                                <div class="gauge-lbl">cumplido</div>
+                            </div>
+                        </div>
+                        <p class="gauge-note">Faltan <b id="gauge-falta">$288.000.000</b> para alcanzar la meta.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

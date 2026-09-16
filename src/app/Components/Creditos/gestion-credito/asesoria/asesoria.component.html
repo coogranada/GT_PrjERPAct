@@ -1,0 +1,571 @@
+<div class="panel">
+    <div class="panel-body">
+        <div class="col-xs-12 col-md-12 col-lg-12">
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <form method="get">
+                    <div class="col-xs-12 col-md-3 col-lg-1 align-items-center">
+                        <br>
+                        <label class="textNegrilla">Operación:</label>
+                        <span class="grande"> *</span>
+                    </div>
+                    <div class="col-xs-10 col-md-8 col-lg-4">
+                        <select class="form-control" id="select">
+                            <option value="">Buscar asesoría</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-md-12 col-sm-12 col-lg-12">
+            <br>
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <div class="col-lg-1">
+                    <label for="" class="textNegrilla">Asesoria:</label>
+                </div>
+                <div class="col-lg-4">
+                    <input type="text" class="form-control">
+                </div>
+                <div class="col-lg-2"></div>
+
+                <div class="col-lg-1">
+                    <label for="" class="textNegrilla">Buscar:</label>
+                </div>
+
+                <div class="col-lg-3">
+                    <input type="text" class="form-control">
+                </div>
+                <button type="button" class="btn Gt-btn-verde btn-icon">
+                    <i class="icon-search4"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="col-md-12 col-sm-12 col-lg-12">
+            <br>
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <div class="col-lg-1">
+                    <label for="" class="textNegrilla">Nombre:</label>
+                    <span class="grande"> *</span>
+                </div>
+                <div class="col-lg-4">
+                    <input type="text" class="form-control">
+                </div>
+
+                <div class="col-lg-1">
+                    <button type="button" class="btn Gt-btn-verde btn-icon"><i class="icon-search4"></i></button>
+                </div>
+
+                <div class="col-lg-1"></div>
+
+                <div class="col-lg-1">
+                    <label for="" class="textNegrilla">Relación:</label>
+                    <span class="grande"> *</span>
+                </div>
+
+                <div class="col-lg-3">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 col-sm-12 col-lg-12">
+            <br>
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <div class="col-lg-1">
+                    <label for="" class="textNegrilla">Asesor:</label>
+                    <span class="grande"> *</span>
+                </div>
+                <div class="col-lg-4">
+                    <input type="text" class="form-control">
+                </div>
+
+                <div class="col-lg-1">
+                    <button type="button" class="btn Gt-btn-verde btn-icon"><i class="icon-search4"></i></button>
+                </div>
+
+                <div class="col-lg-1"></div>
+
+                <div class="col-lg-1">
+                    <label for="" class="textNegrilla">Oficina:</label>
+                    <span class="grande"> *</span>
+                </div>
+
+                <div class="col-lg-3">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 col-sm-12 col-lg-12">
+            <br>
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <div class="col-lg-1">
+                    <label for="" class="textNegrilla">Asesor externo:</label>
+                </div>
+                <div class="col-lg-4">
+                    <input type="text" class="form-control">
+                </div>
+
+                <div class="col-lg-1">
+                    <button type="button" class="btn Gt-btn-verde btn-icon"><i class="icon-search4"></i></button>
+                </div>
+
+
+                <div class="col-lg-1"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- TABS -->
+<div class="col-md-12 col-lg-12 col-sm-12 panel panel-default">
+    <div class="panel-body">
+        <div class="col-xs-12 col-md-12 col-lg-12">
+            <div class="tabbable">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item" [class.active]="activeTab === 'negociacion'"
+                        (click)="changeTab('negociacion')">
+                        <a>Negociación</a>
+                    </li>
+
+                    <li class="nav-item" [class.active]="activeTab === 'deducibles'" (click)="changeTab('deducibles')">
+                        <a>Deducibles</a>
+                    </li>
+
+                    <li class="nav-item" [class.active]="activeTab === 'saldosVigentes'"
+                        (click)="changeTab('saldosVigentes')">
+                        <a>Saldos vigentes</a>
+                    </li>
+
+                    <li class="nav-item" [class.active]="activeTab === 'historial'" (click)="changeTab('historial')">
+                        <a>Historial</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+
+                    @switch(activeTab) {
+                    @case ('negociacion') {
+                    <form method="get">
+
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <label for="producto" class="textNegrilla">Producto:</label>
+                                <span class="text-danger"> *</span>
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="linea" class="textNegrilla">Linea:</label>
+                                <span class="text-danger"> *</span>
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="sistema" class="textNegrilla">Sistema:</label>
+                                <span class="text-danger"> *</span>
+                            </div>
+                        </div>
+
+                        <div class="row row-margin">
+                            <div class="col-lg-1">
+                                <input type="text" id="producto" class="form-control">
+                            </div>
+                            <div class="col-lg-2">
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="col-lg-1">
+                                <button type="button" class="btn Gt-btn-verde btn-icon">
+                                    <i class="icon-search4"></i>
+                                </button>
+                            </div>
+                            <div class="col-lg-1">
+                                <input type="text" id="linea" class="form-control">
+                            </div>
+                            <div class="col-lg-2">
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="col-lg-1">
+                                <button type="button" class="btn Gt-btn-verde btn-icon">
+                                    <i class="icon-search4"></i>
+                                </button>
+                            </div>
+                            <div class="col-lg-1">
+                                <input type="text" id="sistema" class="form-control">
+                            </div>
+                            <div class="col-lg-2">
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="col-lg-1">
+                                <button type="button" class="btn Gt-btn-verde btn-icon">
+                                    <i class="icon-search4"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <label for="formaPago" class="textNegrilla">Forma de pago:</label>
+                                <span class="text-danger"> *</span>
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="periodoCapital" class="textNegrilla">Periodo de pago capital:</label>
+                                <span class="text-danger"> *</span>
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="periodoInteres" class="textNegrilla">Periodo de pago interes:</label>
+                                <span class="text-danger"> *</span>
+                            </div>
+                        </div>
+
+                        <div class="row row-margin">
+                            <div class="col-lg-1">
+                                <input type="text" id="formaPago" class="form-control">
+                            </div>
+                            <div class="col-lg-2">
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="col-lg-1">
+                                <button type="button" class="btn Gt-btn-verde btn-icon">
+                                    <i class="icon-search4"></i>
+                                </button>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <input type="text" id="periodoCapital" class="form-control">
+                            </div>
+                            <div class="col-lg-1"></div>
+
+                            <div class="col-lg-3">
+                                <input type="text" id="periodoInteres" class="form-control">
+                            </div>
+                            <div class="col-lg-1"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <label for="monto" class="textNegrilla">Monto:</label>
+                                <span class="text-danger"> *</span>
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="plazo" class="textNegrilla">Plazo:</label>
+                                <span class="text-danger"> *</span>
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="diasGracia" class="textNegrilla">Días de gracia:</label>
+                                <span class="text-danger"> *</span>
+                            </div>
+                        </div>
+
+                        <div class="row row-margin">
+                            <div class="col-lg-3">
+                                <input type="text" id="monto" class="form-control">
+                            </div>
+                            <div class="col-lg-1"></div>
+
+                            <div class="col-lg-3">
+                                <input type="text" id="plazo" class="form-control">
+                            </div>
+                            <div class="col-lg-1"></div>
+
+                            <div class="col-lg-3">
+                                <input type="text" id="diasGracia" class="form-control">
+                            </div>
+                            <div class="col-lg-1"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <label for="garantia" class="textNegrilla">Garantía:</label>
+                                <span class="text-danger"> *</span>
+                            </div>
+                            <div class="col-lg-4">
+                                <label for="tipoGarantia" class="textNegrilla">Tipo de garantía:</label>
+                                <span class="text-danger"> *</span>
+                            </div>
+                        </div>
+
+                        <div class="row row-margin">
+                            <div class="col-lg-1">
+                                <input type="text" id="garantia" class="form-control">
+                            </div>
+                            <div class="col-lg-2">
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="col-lg-1">
+                                <button type="button" class="btn Gt-btn-verde btn-icon">
+                                    <i class="icon-search4"></i>
+                                </button>
+                            </div>
+
+                            <div class="col-lg-1">
+                                <input type="text" id="tipoGarantia" class="form-control">
+                            </div>
+                            <div class="col-lg-2">
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="col-lg-1">
+                                <button type="button" class="btn Gt-btn-verde btn-icon">
+                                    <i class="icon-search4"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                    </form>
+
+                    }
+
+                    @case ('deducibles') {
+                    <div>
+                        <section>
+                            <article>
+                                <!-- <div class="alert alert-secondary" role="alert" *ngIf="deducibles.length === 0">
+                                    No hay registros
+                                </div> -->
+                                <div class="table-responsive scrollTabla">
+                                    <table class="table table-hover horizontal-scroll encabezado-fijo">
+                                        <thead>
+                                            <tr>
+                                                <th class="table-header">Código</th>
+                                                <th class="table-header">Nombre</th>
+                                                <th class="table-header">Plazo</th>
+                                                <th class="table-header">Valor</th>
+                                                <th class="table-header">Valor cuota</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-center">1</td>
+                                                <td>Capitalización Por Crédito</td>
+                                                <td>
+                                                    <div class="align-right">36</div>
+                                                </td>
+                                                <td>
+                                                    <div class="align-right">$1,714,440.00</div>
+                                                </td>
+                                                <td>
+                                                    <div class="align-right">$28,574.00</div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <!-- <tfoot class="total-tfoot">
+                                            <tr>
+                                                <td colspan="2" class="text-center"><strong>Total</strong></td>
+                                                <td>
+                                                    <div class="align-right">{{ saldoDeducibleTotal | currency
+                                                        }}</div>
+                                                </td>
+                                                <td>
+                                                    <div class="align-right">{{ valorCuotaTotal | currency }}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="align-right">{{ saldoInicialDeducibleTotal |
+                                                        currency }}</div>
+                                                </td>
+                                                <td>
+                                                    <div class="text-center">—</div>
+                                                </td>
+                                                <td>
+                                                    <div class="align-right">{{ cuotaPactadaTotal | currency }}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="align-right">{{ valorPagadoTotal | currency }}
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tfoot> -->
+                                    </table>
+                                </div>
+                            </article>
+                        </section>
+                    </div>
+                    }
+
+                    @case ('saldosVigentes') {
+                    <article class="ac-text-ap">
+                        <div class="table-responsive scrollTabla">
+                            <!-- <div class="col-xs-12 col-md-12 col-lg-12"
+                                *ngIf="radicadoData.saldoVigenteRadicado.length <= 0">
+                                <br>
+                                <div class="alert alert-secondary" role="alert">
+                                    No hay registros
+                                </div>
+                            </div> -->
+                            <div class="col-xs-12 col-md-12 col-lg-12 panel-flat">
+                                <table id="tablaIngresos" class="table table-hover">
+                                    <thead class="encabezadoTablasRadicados">
+                                        <tr>
+                                            <th class="CuentaFija">
+                                                <strong>Cuenta</strong>
+                                            </th>
+                                            <th>
+                                                <strong>Saldo préstamo</strong>
+                                            </th>
+                                            <th>
+                                                <strong>Interés corriente</strong>
+                                            </th>
+                                            <th>
+                                                <strong>Interés de mora</strong>
+                                            </th>
+                                            <th>
+                                                <strong>Abono en canje</strong>
+                                            </th>
+                                            <th>
+                                                <strong>Saldo total</strong>
+                                            </th>
+                                            <th>
+                                                <strong>Radicado</strong>
+                                            </th>
+                                            <th>
+                                                <strong>Valor cuota</strong>
+                                            </th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="min-width: 164px;" class="CuentaFija">$ 000</td>
+                                            <td style="min-width: 150px;">$ 000</td>
+                                            <td style="min-width: 150px;">$ 000</td>
+                                            <td style="min-width: 150px;">$ 000</td>
+                                            <td style="min-width: 145px;">$ 000</td>
+                                            <td style="min-width: 155px;">$ 000</td>
+                                            <td style="min-width: 110px;">$ 000</td>
+                                            <td style="min-width: 150px;">$ 000</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </article>
+                    }
+
+                    @case ('historial') {
+                    <div class="historial-container">
+                        <!-- Fechas -->
+                        <div class="fechas">
+                            <div>
+                                <div class="form-group">
+                                    <label class="textNegrilla">Apertura:</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label class="textNegrilla">Última transacción:</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label class="textNegrilla">Cancelación:</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label class="textNegrilla">Vencimiento:</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label class="textNegrilla">Cambio fecha de pago:</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div>
+                                <div class="form-group">
+                                    <label class="textNegrilla">Próximo pago:</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label class="textNegrilla">Entró a contingencia:</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label class="textNegrilla">Inicio período gracia:</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label class="textNegrilla">Cambio de tasa:</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Historial -->
+                        <!-- <div class="col-xs-12 col-md-9 col-lg-9">
+                            <br>
+                            <div class="alert alert-secondary" role="alert">
+                                No hay registros
+                            </div>
+                        </div> -->
+
+                        <div class="historial-table-wrapper">
+                            <div class="table-responsive scrollTabla panel panel-default">
+
+                                <table class="table table-hover scrollTablaHistorial">
+                                    <thead>
+                                        <tr>
+                                            <th class="celda-fija-arriba">
+                                                <strong>Fecha</strong>
+                                            </th>
+                                            <th class="celda-fija-arriba">
+                                                <strong>Oficina</strong>
+                                            </th>
+                                            <th class="celda-fija-arriba">
+                                                <strong>Usuario responsable</strong>
+                                            </th>
+                                            <th class="celda-fija-izquierda celda-fija-arriba">
+                                                <strong>Operación</strong>
+                                            </th>
+                                            <th class="celda-fija-arriba">
+                                                <strong>Detalles</strong>
+                                            </th>
+                                            <th class="operacionFija celda-fija-arriba">
+                                                <strong>Opciones</strong>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>2026/08/20 10:16:04</td>
+                                            <td>Cali Centro</td>
+                                            <td>Alvarez Suarez Luis Felipe</td>
+                                            <td class="celda-fija-izquierda">Cambiar
+                                                codeudores</td>
+                                            <td><strong>Anterior:</strong> 32791639 Giraldo
+                                                Leiva Angela Maria | <strong>Actualiza:</strong> 32791639 Giraldo Leiva
+                                                Angela Maria - 43644453 Zora Gomez Thatiana Nayibis</td>
+                                            <td class="operacionFija"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>2026/08/20 10:18:20</td>
+                                            <td>Cali Centro</td>
+                                            <td>Alvarez Suarez Luis Felipe</td>
+                                            <td class="celda-fija-izquierda">Cambiar
+                                                codeudores</td>
+                                            <td><strong>Anterior:</strong> 43644453 Zora
+                                                Gomez Thatiana Nayibis - 32791639 Giraldo Leiva Angela Maria |
+                                                <strong>Actualiza:</strong> 32791639 Giraldo Leiva Angela Maria
+                                            </td>
+                                            <td class="operacionFija"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>2017/09/22 15:29:46</td>
+                                            <td></td>
+                                            <td>Aristizabal Hoyos Maria Norbeli</td>
+                                            <td class="celda-fija-izquierda">Cambio de
+                                                Plazo</td>
+                                            <td></td>
+                                            <td class="operacionFija"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- Fin Historial -->
+                    </div>
+                    }
+                    }
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
