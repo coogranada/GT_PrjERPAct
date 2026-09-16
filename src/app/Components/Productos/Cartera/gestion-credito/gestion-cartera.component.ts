@@ -3394,6 +3394,23 @@ export class GestionCarteraComponent {
     }
   }
 
+  BotonRefresh() {
+    const valoresCamposNumeroCuenta = this.NOMBRES_CAMPOS_NUMERO_CUENTA.map(
+      nombre => String(this.gestionCreditoForm.get(nombre)?.value ?? '').trim()
+    );
+
+    if (valoresCamposNumeroCuenta.every(valor => /^\d+$/.test(valor))) {
+      const [oficina, producto, consecutivo, digito] = valoresCamposNumeroCuenta;
+
+      this.buscarCuentaResumen(TipoBusquedaResumen.NumeroCuenta, {
+        oficina,
+        producto,
+        consecutivo,
+        digito
+      });
+    }
+  }
+
   onClickBuscarCuentaPorCliente() {
     const documento = this.gestionCreditoForm.get('BuscarDocumento')?.value?.trim();
     const nombre = this.gestionCreditoForm.get('BuscarNombre')?.value?.trim();
