@@ -3459,7 +3459,7 @@ export class GestionCarteraComponent {
             { encabezado: 'Pagaré', campos: ['Pagare'] },
             { encabezado: 'Pagare', campos: ['Pagare'] },
             { encabezado: 'Estado', campos: ['Estado'] },
-            { encabezado: 'Fecha', campos: ['FechaMatricula'], obtenerValor: i => formatDate(i.FechaMatricula, 'yyyy/MM/dd', 'es-CO') },
+            { encabezado: 'Desembolso', campos: ['FechaMatricula'], obtenerValor: i => formatDate(i.FechaMatricula, 'yyyy/MM/dd', 'es-CO') },
             { encabezado: 'Linea', campos: ['IdLinea'] },
             { encabezado: 'IdLinea', campos: ['IdLinea'] },
             { encabezado: 'IdCuenta', campos: ['IdCuenta'] },
@@ -3475,7 +3475,7 @@ export class GestionCarteraComponent {
 
           ];
           this.datosTransformados = transformarDatosParaTabla(result, columnasConfiguradas);
-          this.encabezadosTablaModalAlBuscar = ['Cuenta', 'Nombre Asociado', 'Pagaré', 'Estado', 'Fecha', 'Linea'];
+          this.encabezadosTablaModalAlBuscar = ['Cuenta', 'Nombre Asociado', 'Pagaré', 'Estado', 'Desembolso', 'Linea'];
           this.ModalBuscarAsociados.nativeElement.click();
         }
       }
@@ -4207,6 +4207,7 @@ onCuotaTabClick() {
     // Esto siempre se ejecuta al entrar al tab
     this.BuscarSaldosCartera();
     this.ActivarCalcularCuota();
+    this.getHistorial();
   });
 }
 puedeCalcular(): boolean { 
