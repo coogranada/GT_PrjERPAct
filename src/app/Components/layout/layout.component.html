@@ -476,9 +476,9 @@
                                                     <a [routerLink]="['/Productos/Carteras/Simulador']"
                                                         (click)="setModuloLocalStorage(SimuladorCarteraModel.IdModuloPermiso)">Simulador</a>
                                                 </li> -->
-                                                <li id="gestionCartera" *ngIf="GestionCredito">
+                                                <li id="gestionCartera" *ngIf="GestionCartera">
                                                     <a [routerLink]="['/Productos/Cartera/GestionCartera']"
-                                                        (click)="setModuloLocalStorage(GestionCreditoModel.IdModuloPermiso)">Gestión
+                                                        (click)="setModuloLocalStorage(GestionCarteraModel.IdModuloPermiso)">Gestión
                                                         de cartera</a>
                                                 </li>
                                             </ul>
@@ -532,9 +532,9 @@
                                             <a [routerLink]="['Creditos/Datacredito']"
                                                 (click)="setModuloLocalStorage(DatacreditoModel.IdModuloPermiso)">Datacrédito</a>
                                         </li>
-                                        <li>
+                                        <li id="gestioncredito" *ngIf="GestionCredito">
                                             <a [routerLink]="['Creditos/GestionCredito']"
-                                                (click)="setModuloLocalStorage(DatacreditoModel.IdModuloPermiso)">Gestión de crédito</a>
+                                                (click)="setModuloLocalStorage(GestionCreditoModel.IdModuloPermiso)">Gestión de crédito</a>
                                         </li>
                                     </ul>
                                 </li>

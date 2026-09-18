@@ -123,14 +123,22 @@ export class LayoutComponent implements OnInit,OnDestroy {
   public Gmf = false;
   public CuentasCorriente = false;
   public Creditos = false;
-  public SimuladorCredito = false;
-  public Score = false;
-  public Datacredito = false;
-  public FichaAnalisis = false;
+  public SimuladorCredito = false;  
   public Seguros = false;
   public Generales = false;
   public Cancelacion = false;
   /*Fin Productos */
+
+   /*Creditos */
+  public Score = false;
+  public Datacredito = false;
+  public FichaAnalisis = false;
+   public GestionCredito = false;
+
+    /*Fin Creditos */
+
+
+
 
   /*  Transacciones Financieras */
   public transaccionesC = false;
@@ -142,7 +150,7 @@ export class LayoutComponent implements OnInit,OnDestroy {
 
   /* Cartera */
   public Cartera = false;
-  public GestionCredito = false;
+  public GestionCartera = false;
   /* Fin cartera */
 
   /* Informes */
@@ -248,13 +256,19 @@ export class LayoutComponent implements OnInit,OnDestroy {
   public CuentasCorrienteModel: any;
   public CreditosModel: any;
   public SimuladorCreditoModel: any;
-  public ScoreModel: any;
-  public DatacreditoModel: any;
-  public FichaAnalisisModel: any;
   public SegurosModel: any;
   public GeneralesModel: any;
   public CancelacionModel: any;
   /*Fin Productos */
+
+  /* Creditos */
+  public ScoreModel: any;
+  public DatacreditoModel: any;
+  public FichaAnalisisModel: any;
+  public GestionCreditoModel: any;
+  /*Fin Creditos */
+
+
 
   /*  Transacciones Financieras */
   public TransaccionesFinancierasModel: any;
@@ -266,7 +280,7 @@ export class LayoutComponent implements OnInit,OnDestroy {
 
   /* Cartera */
   public CarteraModel: any;
-  public GestionCreditoModel: any;
+  public GestionCarteraModel: any;
   /* Fin cartera */
 
   /* Informes */
@@ -800,19 +814,7 @@ this.userIdle.onTimeout().subscribe(() => {
             else if (element.IdModulo === 26) {
               this.SimuladorCredito = true;
               this.SimuladorCreditoModel = element;
-            }
-            else if (element.IdModulo === 27) {
-              this.Score = true;
-              this.ScoreModel = element;
-            }
-            else if (element.IdModulo === 84) {
-              this.Datacredito = true;
-              this.DatacreditoModel = element;
-            }
-            else if (element.IdModulo === 75) {
-              this.FichaAnalisis = true;
-              this.FichaAnalisisModel = element;
-            }
+            }           
             else if (element.IdModulo === 28) {
               this.Seguros = true;
               this.SegurosModel = element;
@@ -834,6 +836,26 @@ this.userIdle.onTimeout().subscribe(() => {
               this.AsesoriaTerminoModel = element;
             }
             /* Fin Productos */
+
+              /* Creditos */
+            else if (element.IdModulo === 27) {
+              this.Score = true;
+              this.ScoreModel = element;
+            }
+            else if (element.IdModulo === 84) {
+              this.Datacredito = true;
+              this.DatacreditoModel = element;
+            }
+            else if (element.IdModulo === 75) {
+              this.FichaAnalisis = true;
+              this.FichaAnalisisModel = element;
+            }
+            else if (element.IdModulo === 90) {
+              this.GestionCredito = true;
+              this.GestionCreditoModel = element;
+            }
+               /* Fin Creditos */
+
 
             /*  Transacciones Financieras */
             else if (element.IdModulo === 86) { 
@@ -863,8 +885,8 @@ this.userIdle.onTimeout().subscribe(() => {
               this.Cartera = true;
               this.CarteraModel = element;
             } else if (element.IdModulo === 45) {
-              this.GestionCredito = true;
-              this.GestionCreditoModel = element;
+              this.GestionCartera = true;
+              this.GestionCarteraModel = element;
             }
             /* Fin cartera */
 

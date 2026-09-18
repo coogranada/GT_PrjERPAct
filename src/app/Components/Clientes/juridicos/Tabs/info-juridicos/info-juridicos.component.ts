@@ -1123,174 +1123,171 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
     }
   }
 
-  CambiarNit() {
-    this.loading.show();
+  CambiarNit(): void {
     const info = this.infoJuridicoFrom.get('Nit')?.value;
     if (info === this.NitConsultado) {
       this.notif.onWarning('Advertencia', 'Debe ingresar un nit diferente.');
-      this.loading.hide();
-    } else {
-      const juridico = this.infoJuridicoFrom.value.IdJuridico;
-      if (info !== null && info !== undefined && info !== '') {
-        if (info.trim() !== "") {
-          this.GuardarLog('Cambio de Nit: ' + info + ' juridico : ' + juridico, this.OperacionActual, 0, juridico,12);
-          this.loading.show();
-          this.juridicoService.CambiarNit(juridico, info, this.userConect.Usuario).subscribe(
-            result => {
-              if (result) {
-                this.loading.show();
-                this.mostrarSiguiente = false;
-                this.mostrarActualizar = false;
-                this.mostrarCambiar = false;
-                this.mostrarNuevoInfo = false;
-                this.bloquearNit = true;
-                this.loading.show();
-                this.emitEventResetOperacion.emit(true);
-                this.notif.onSuccess('Exitoso', 'El cambio de nit se realizó correctamente.');
-                this.IrArriba();
-                this.loading.hide();
-                $('#OperacionMarcada').val(1);
-                $('#ProDescripcionOpe').val(1);
-
-              }else{
-                this.loading.hide();
-                console.error('Error al realizar la actualizacion - juridicos: ' + result);
-                this.notif.onDanger('Error', 'No se pudo realizar la actualización - Error ');
-              }
-              this.desbloquearTabs();
-            },
-            error => {
-              this.loading.hide();
-              console.error('Error al realizar la actualizacion - juridicos: ' + error);
-              this.notif.onDanger('Error', 'No se pudo realizar la actualización - Error ');
-            });
-        } else {
-          this.loading.hide();
-          this.IrArriba();
-          this.infoJuridicoFrom.get('Nit')?.reset();
-          this.notif.onWarning('Advertencia', 'Debe ingresar un valor valido.');
-        }
-      } else {
-        this.loading.hide();
-        this.IrArriba();
-        this.notif.onWarning('Advertencia', 'El campo Nit es obligatorio.');
-      }
+      return;
     }
-  }
-
-  CambiarRazonSocial() {
-    this.loading.show();
-    const juridico = this.infoJuridicoFrom.value.IdJuridico;
-    var info = this.infoJuridicoFrom.get('RazonSocial')?.value;
-    var docu = this.infoJuridicoFrom.get('Nit')?.value;
-
-    if (info !== null && info !== undefined && info.trim() !== '') {
-      info = info.substr(0, 1).toUpperCase() + info.substr(1).toLowerCase();
-      if (info.trim() !== "") {
-        if (info != this.RazonSocialMapper ) {
-          // if (this.infoJuridicoFrom.valid) {
-            this.GuardarLog('Cambio de razon social: ' + info + ' juridico : ' + juridico,
-              this.OperacionActual, 0, juridico,12);
-          this.loading.show();
-          this.juridicoService.CambiarRazonSocial(juridico, info, docu, this.userConect.Usuario).subscribe(
-            result => {
-                if (result) {
-                  this.mostrarSiguiente = false;
-                  this.mostrarActualizar = false;
-                  this.mostrarCambiar = false;
-                  this.mostrarNuevoInfo = false;
-                  this.bloquearRazonSocial = true;
-                  this.emitEventResetOperacion.emit(true);
-                  this.notif.onSuccess('Exitoso', 'El registro se actualizó correctamente.');
-                  this.IrArriba();
-                  $('#OperacionMarcada').val(1);
-                  $('#ProDescripcionOpe').val(1);
-                  this.loading.hide();
-                  this.desbloquearTabs();
-                }
-              },
-            error => {
-                this.loading.hide();
-                console.error('Error al realizar la actualizacion - juridicos: ' + error);
-                this.notif.onDanger('Error', 'No se pudo realizar la actualización - Error ');
-              });         
-        } else {
-          this.loading.hide();
-          this.IrArriba();
-          this.infoJuridicoFrom.get('RazonSocial')?.reset();
-          this.notif.onWarning('Advertencia', 'Debe ingresar una razón social diferente.');
-        }
-      } else {
-        this.loading.hide();
-        this.IrArriba();
-        this.infoJuridicoFrom.get('RazonSocial')?.reset();
-        this.notif.onWarning('Advertencia', 'Debe ingresar un valor valido.');
-      }
-    } else {
-      this.loading.hide();
+    if (!info?.trim()) {
       this.IrArriba();
-      this.notif.onWarning('Advertencia', 'Debe ingresar la razón social.');
+      this.notif.onWarning('Advertencia', 'El campo Nit es obligatorio.');
+      return;
     }
+    const juridico = this.infoJuridicoFrom.value.IdJuridico;
+    this.loading.show();
+    this.GuardarLog('Cambio de Nit: ' + info + ' juridico : ' + juridico,
+      this.OperacionActual,
+      0,
+      juridico,
+      12
+    );
+    this.juridicoService.CambiarNit(juridico, info, this.userConect.Usuario)
+      .subscribe({
+        next: (result) => {
+          this.loading.hide();
+          if (result) {
+            this.mostrarSiguiente = false;
+            this.mostrarActualizar = false;
+            this.mostrarCambiar = false;
+            this.mostrarNuevoInfo = false;
+            this.bloquearNit = true;
+            this.emitEventResetOperacion.emit(true);
+            this.notif.onSuccess('Exitoso', 'El cambio de nit se realizó correctamente.');
+            this.IrArriba();
+            $('#OperacionMarcada').val(1);
+            $('#ProDescripcionOpe').val(1);
+            this.desbloquearTabs();
+          } else {
+            console.error('Error al realizar la actualización - jurídicos:', result);
+            this.notif.onDanger('Error', 'No se pudo realizar la actualización.');
+          }
+        },
+        error: (error) => {
+          this.loading.hide();
+          console.error('Error al realizar la actualización - jurídicos:', error);
+          this.notif.onDanger('Error', 'No se pudo realizar la actualización.'
+          );
+        }
+      });
   }
 
-  CambiarEstado() {
-    this.loading.show();
+ CambiarRazonSocial(): void {
+  const juridico = this.infoJuridicoFrom.value.IdJuridico;
+  let info = this.infoJuridicoFrom.get('RazonSocial')?.value;
+  const docu = this.infoJuridicoFrom.get('Nit')?.value;
+  if (!info?.trim()) {
+    this.IrArriba();
+    this.notif.onWarning('Advertencia', 'Debe ingresar la razón social.' );
+    return;
+  }
+
+  info =
+    info.charAt(0).toUpperCase() +
+    info.slice(1).toLowerCase();
+
+  if (info === this.RazonSocialMapper) {
+    this.IrArriba();
+    this.infoJuridicoFrom.get('RazonSocial')?.reset();
+
+    this.notif.onWarning('Advertencia','Debe ingresar una razón social diferente.');
+    return;
+  }
+  this.loading.show();
+  this.GuardarLog(
+    'Cambio de razon social: ' + info + ' juridico : ' + juridico,
+    this.OperacionActual,
+    0,
+    juridico,
+    12
+  );
+  this.juridicoService.CambiarRazonSocial(juridico,info,docu,this.userConect.Usuario)
+  .subscribe({
+    next: (result) => {
+      this.loading.hide();
+      if (result) {
+        this.mostrarSiguiente = false;
+        this.mostrarActualizar = false;
+        this.mostrarCambiar = false;
+        this.mostrarNuevoInfo = false;
+        this.bloquearRazonSocial = true;
+        this.emitEventResetOperacion.emit(true);
+        this.notif.onSuccess('Exitoso','El registro se actualizó correctamente.');
+        this.IrArriba();
+        $('#OperacionMarcada').val(1);
+        $('#ProDescripcionOpe').val(1);
+
+        this.desbloquearTabs();
+      }
+    },
+    error: (error) => {
+      this.loading.hide();
+      console.error('Error al realizar la actualización - jurídicos:',
+        error
+      );
+
+      this.notif.onDanger('Error', 'No se pudo realizar la actualización.'
+      );
+    }
+  });
+}
+
+  CambiarEstado(): void {
     const juridico = this.infoJuridicoFrom.value.IdJuridico;
     this.estadoSeleccion = this.infoJuridicoFrom.get('Estado')?.value;
-    if (this.estadoSeleccion !== null && this.estadoSeleccion !== undefined) {
-        if (this.AnteriorEstadoSeleccion.IdEstado !== this.estadoSeleccion.IdEstado) {
-          this.GuardarLog('Cambio de estado: ' + this.estadoSeleccion.IdEstado + ' juridico : ' + juridico, this.OperacionActual, 0, juridico,12);
-          this.loading.show();
-          this.juridicoService.CambiarEstado(juridico, this.estadoSeleccion.IdEstado, this.userConect.lngTercero, '').subscribe(
-            result => {
-              if (result) {
-                this.bloquearEstado = true;
-                  if (this.estadoSeleccion.IdEstado !== 42) {
-                      this.mostrarSiguiente = false;
-                      this.mostrarActualizar = false;
-                      this.mostrarCambiar = false;
-                      this.mostrarNuevoInfo = false;
-                      this.bloquearEstado = true;           
-                      this.emitEventResetOperacion.emit(true);
-                      this.notif.onSuccess('Exitoso', 'El cambio de estado se realizó correctamente.');
-                      this.IrArriba();
-                      this.loading.hide();
-                    this.generalesService.AgregarDisabled('estadoJur');
-                    $('#OperacionMarcada').val(1);
-                    $('#ProDescripcionOpe').val(1);
-                    
-                  } else {
-                    this.mostrarSiguiente = false;
-                    this.mostrarActualizar = false;
-                    this.mostrarCambiar = false;
-                    this.mostrarNuevoInfo = false;
-                    this.bloquearEstado = true;
-                    this.emitEventResetOperacion.emit(true);
-                    this.notif.onSuccess('Exitoso', 'El cambio de estado se realizó correctamente.');
-                    this.IrArriba();
-                    this.AbrirDescripcion.nativeElement.click();
-                    this.generalesService.AgregarDisabled('estadoJur');
-                    this.loading.hide();
-                    $('#OperacionMarcada').val(1);
-                    $('#ProDescripcionOpe').val(1);
-                  }
-                }
-                this.desbloquearTabs();
-              },
-            error => {
-              this.loading.hide();
-                console.error('Error al realizar la actualización - juridicos: ' + error);
-                this.notif.onDanger('Error', 'No se pudo realizar la actualización - Error ');
-              });
-        } else {
-          this.loading.hide();
-        this.notif.onWarning('Advertencia', 'Debe seleccionar un estado para esta operación.');
-        }
-    } else {
-      this.loading.hide();
-      this.notif.onWarning('Advertencia', 'Debe seleccionar un estado valido.');
+    if (!this.estadoSeleccion) {
+      this.notif.onWarning('Advertencia', 'Debe seleccionar un estado válido.'
+      );
+      return;
     }
+    if (
+      this.AnteriorEstadoSeleccion.IdEstado ===
+      this.estadoSeleccion.IdEstado
+    ) {
+      this.notif.onWarning('Advertencia', 'Debe seleccionar un estado para esta operación.');
+      return;
+    }
+    this.loading.show();
+    this.GuardarLog('Cambio de estado: ' + this.estadoSeleccion.IdEstado + ' juridico : ' +
+      juridico, this.OperacionActual, 0, juridico, 12);
+
+    this.juridicoService.CambiarEstado(juridico, this.estadoSeleccion.IdEstado, this.userConect.lngTercero,
+      ''
+    )
+      .subscribe({
+        next: (result) => {
+          this.loading.hide();
+          if (!result) {
+            this.notif.onDanger('Error', 'No se pudo realizar la actualización.');
+            return;
+          }
+          this.bloquearEstado = true;
+          this.mostrarSiguiente = false;
+          this.mostrarActualizar = false;
+          this.mostrarCambiar = false;
+          this.mostrarNuevoInfo = false;
+          this.emitEventResetOperacion.emit(true);
+
+          this.notif.onSuccess('Exitoso', 'El cambio de estado se realizó correctamente.');
+          this.IrArriba();
+          if (this.estadoSeleccion.IdEstado === 42) {
+            this.AbrirDescripcion.nativeElement.click();
+          }
+          this.generalesService.AgregarDisabled('estadoJur');
+          $('#OperacionMarcada').val(1);
+          $('#ProDescripcionOpe').val(1);
+          this.desbloquearTabs();
+        },
+        error: (error) => {
+          this.loading.hide();
+          console.error('Error al realizar la actualización - jurídicos:',
+            error
+          );
+          this.notif.onDanger('Error', 'No se pudo realizar la actualización.');
+        }
+      });
   }
+ 
 
   CambiarAsesor() {
     this.loading.show();
@@ -1398,47 +1395,62 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
       });
   }
 
-  CambiarRelacion() {
-    this.loading.show();
+  CambiarRelacion(): void {
     const resultPerfil = StorageSecurity.getData();
-    if (this.cambioRelacionEdit) {
-      if (this.relacionAnterior !== this.infoJuridicoFrom.value.Relacion ) {
-        const juridico = this.infoJuridicoFrom.value.IdJuridico;
-        const relacion = this.infoJuridicoFrom.value.Relacion;
-        const docum = this.infoJuridicoFrom.value.Nit;
-        const asesor = this.userConect.Usuario;
-        const objeto = this.infoJuridicoFrom.get('ObjetoSocial')?.value;
-        const IdOficina = resultPerfil.NumeroOficina;
-        this.GuardarLog('Cambio de relacion: ' + relacion + ' juridico : ' + juridico, this.OperacionActual, 0, juridico,12);
-        this.juridicoService.CambiarRelacion(juridico, relacion, docum, asesor, objeto, IdOficina).subscribe(
-          result => {
-            if (result) {
-              this.mostrarSiguiente = false;
-              this.mostrarActualizar = false;
-              this.mostrarCambiar = false;
-              this.mostrarNuevoInfo = false;
-              this.bloquearRelacion = true;
-              this.emitEventResetOperacion.emit(true);
-              this.notif.onSuccess('Exitoso', 'El cambio de relación se realizó correctamente.');
-              this.loading.hide();
-              this.IrArriba();
-              $('#OperacionMarcada').val(1);
-              $('#ProDescripcionOpe').val(1);
-              this.desbloquearTabs();
-            }
-          },
-          error => {
-            console.error('Error al realizar la actualizacion - juridicos: ' + error);
-            this.notif.onDanger('Error', 'No se pudo realizar la actualizacion - Error: ' + error);
-          });
-      } else {
-        this.notif.onWarning('Advertencia', 'Debe seleccionar una relación diferente.');
-        this.loading.hide();
-      }
-    } else {
+
+    if (!this.cambioRelacionEdit) {
       this.notif.onWarning('Advertencia', 'Debe seleccionar una relación diferente.');
-      this.loading.hide();
+      return;
     }
+
+    if (this.relacionAnterior === this.infoJuridicoFrom.value.Relacion) {
+      this.notif.onWarning('Advertencia', 'Debe seleccionar una relación diferente.');
+      return;
+    }
+    const juridico = this.infoJuridicoFrom.value.IdJuridico;
+    const relacion = this.infoJuridicoFrom.value.Relacion;
+    const docum = this.infoJuridicoFrom.value.Nit;
+    const asesor = this.userConect.Usuario;
+    const objeto = this.infoJuridicoFrom.get('ObjetoSocial')?.value;
+    const IdOficina = resultPerfil.NumeroOficina;
+
+    this.loading.show();
+
+    this.GuardarLog('Cambio de relacion: ' + relacion + ' juridico : ' + juridico,
+      this.OperacionActual,
+      0,
+      juridico,
+      12
+    );
+
+    this.juridicoService.CambiarRelacion(juridico, relacion, docum, asesor, objeto, IdOficina)
+      .subscribe({
+        next: (result) => {
+          this.loading.hide();
+          if (result) {
+            this.mostrarSiguiente = false;
+            this.mostrarActualizar = false;
+            this.mostrarCambiar = false;
+            this.mostrarNuevoInfo = false;
+            this.bloquearRelacion = true;
+            this.emitEventResetOperacion.emit(true);
+            this.notif.onSuccess('Exitoso', 'El cambio de relación se realizó correctamente.');
+            this.IrArriba();
+            $('#OperacionMarcada').val(1);
+            $('#ProDescripcionOpe').val(1);
+            this.desbloquearTabs();
+          } else {
+            this.notif.onDanger('Error', 'No se pudo realizar la actualización.');
+          }
+        },
+        error: (error) => {
+          this.loading.hide();
+          console.error('Error al realizar la actualización - jurídicos:', error
+          );
+          this.notif.onDanger('Error', 'No se pudo realizar la actualización - Error: ' + error
+          );
+        }
+      });
   }
 
   ValidarFechaConstitucion() {

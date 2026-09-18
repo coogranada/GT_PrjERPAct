@@ -60,43 +60,37 @@ export class AuthHttpClientInterceptorService implements HttpInterceptor {
         });
       }),
 
-      catchError((err: any) => {
-
+        catchError((err: any) => {
         if (skipError) {
           return throwError(() => err.error);
         }
-
         if (rawError) {
           return throwError(() => err);
         }
-
-        if (err.status === 401) {
-
+        if (err.status == 401) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('refreshToken');
           Swal.fire({
             title: 'Advertencia',
-            text: 'No fue posible completar la operación.',
+            text: '',
+            html: 'Su session ha caducado ',
             icon: 'warning',
+            showCancelButton: false,
             confirmButtonText: 'Aceptar',
-            confirmButtonColor: 'rgb(13,165,80)'
+            confirmButtonColor: 'rgb(13,165,80)',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
           });
-
+          this.router.navigate(['/login']);
           return throwError(() => err.error);
-        }
-
-        if (err.status === 400) {
-
+        } else if (err.status == 400) {
           if (err.error?.payload) {
             const body = this.encryption.decrypt(err.error.payload);
             return throwError(() => body);
-          }
-
+          }          
           return throwError(() => err.error);
         }
-
-        return throwError(() => err.error);
-
+        return throwError(() => new Error('Error en la solicitud HTTP', err.error));
       }));
   }
 }
-  
-
