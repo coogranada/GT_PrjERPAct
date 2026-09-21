@@ -331,4 +331,15 @@ export class InformeLogService {
 
     return this.GetOrderAlf(Filtros);
   }
+
+  validarCuentaGestionCredito(oficina: number, producto: number, consecutivo: number, digito: number
+  ): Observable<boolean> {
+      return this.http.get<boolean>(
+          `${this.envirment.Url}/InformeAuditoria/ValidarCuentaGestionCredito` +
+          `?oficina=${oficina}` +
+          `&producto=${producto}` +
+          `&consecutivo=${consecutivo}` +
+          `&digito=${digito}`
+      );
+  }
 }
