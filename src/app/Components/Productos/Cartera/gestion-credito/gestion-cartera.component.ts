@@ -1422,6 +1422,7 @@ export class GestionCarteraComponent {
         break;
 
       case 8:
+
         if (!this.insolvenciaForm.get('NumeroCuotasPactadas')?.value) {
           this.notif.warning(
             'Advertencia',
@@ -1430,16 +1431,32 @@ export class GestionCarteraComponent {
           );
           return false;
         }
-
+      
+        const tieneDetalleAcuerdo =
+          !!this.insolvenciaForm.get('ValorReconocido')?.value ||
+          !!this.insolvenciaForm.get('CapitalReconocido')?.value ||
+          !!this.insolvenciaForm.get('InteresesReconocidos')?.value ||
+          !!this.insolvenciaForm.get('CondonacionesAprobadas')?.value ||
+          !!this.insolvenciaForm.get('NuevasCondicionesPago')?.value;
+      
+        if (!tieneDetalleAcuerdo) {
+          this.notif.warning(
+            'Advertencia',
+            'Debe diligenciar al menos un campo del acuerdo de pago.',
+            ConfiguracionNotificacion.configRightTop
+          );
+          return false;
+        }
+      
         break;
-    }
+          }
 
     const fechaEvento = this.obtenerFechaEvento();
 
-    if (!this.validarFechaNoFutura(fechaEvento)) {
-      this.notif.warning(
-        'Advertencia',
-        'La fecha no puede ser mayor a la fecha actual.',
+    const mensajeFecha = this.validarFecha(fechaEvento);
+
+    if (mensajeFecha) {
+      this.notif.warning('Advertencia', mensajeFecha,
         ConfiguracionNotificacion.configRightTop
       );
       return false;
@@ -1835,10 +1852,10 @@ export class GestionCarteraComponent {
     });
   }
 
-  private validarFechaNoFutura(fecha?: string): boolean {
+  private validarFecha(fecha?: string): string | null {
   
     if (!fecha) {
-      return true;
+      return null;
     }
   
     const partes = fecha.split('-');
@@ -1849,6 +1866,8 @@ export class GestionCarteraComponent {
       Number(partes[2])
     );
   
+    const fechaMinima = new Date(2000, 0, 1);
+  
     const hoy = new Date();
   
     const fechaActual = new Date(
@@ -1857,7 +1876,15 @@ export class GestionCarteraComponent {
       hoy.getDate()
     );
   
-    return fechaIngresada.getTime() <= fechaActual.getTime();
+    if (fechaIngresada > fechaActual) {
+      return 'La fecha no puede ser mayor a la fecha actual.';
+    }
+  
+    if (fechaIngresada < fechaMinima) {
+      return 'La fecha no puede ser menor al 01/01/2000.';
+    }
+  
+    return null;
   }
 
   private configurarValidadoresAcuerdoPago(tipoSeguimiento: number): void {

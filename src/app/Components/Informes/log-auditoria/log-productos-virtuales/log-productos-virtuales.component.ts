@@ -130,7 +130,7 @@ export class LogProductosVirtualesComponent implements OnInit {
         this.limpiarSelected();
       }
       else {
-        this.notif.warning("Advertencia", "No se encontro el usuario.", ConfiguracionNotificacion.configRightTopNoClose);
+        this.notif.warning("Advertencia", "No se encontró el usuario.", ConfiguracionNotificacion.configRightTopNoClose);
         this.usuario = "";
         this.btnMore = false;
       }

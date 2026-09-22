@@ -12,13 +12,13 @@ import Swal from 'sweetalert2';
 import { OperacionesService } from '../../../../../Services/Maestros/operaciones.service';
 
 @Component({
-  selector: 'app-log-gestion-creditos',
+  selector: 'app-log-gestion-cartera',
   standalone: false,
   providers: [InformeClientesService],
-  templateUrl: './log-gestion-creditos.component.html',
-  styleUrl: './log-gestion-creditos.component.css'
+  templateUrl: './log-gestion-cartera.component.html',
+  styleUrl: './log-gestion-cartera.component.css'
 })
-export class LogGestionCreditosComponent {
+export class LogGestionCarteraComponent {
 
   @ViewChild(TablaVirtualComponent) tablaVirtual!: TablaVirtualComponent;
   @ViewChild('ShowModalList', { static: true }) private ShowModalList!: ElementRef;
@@ -389,11 +389,11 @@ export class LogGestionCreditosComponent {
     
       let cuenta = this.formulario.get('@Cuenta')?.value ?? '';
       cuenta = cuenta.replace(/[\r\n\t]/g, '').trim();
+    
       this.formulario.get('@Cuenta')?.setValue(cuenta);
     
       if (!cuenta) {
-        this.notif.onWarning('Advertencia','Debe ingresar una cuenta.'
-        );
+        this.notif.onWarning('Advertencia', 'Debe ingresar una cuenta.');
         return;
       }
     
@@ -402,22 +402,64 @@ export class LogGestionCreditosComponent {
       if (partes.length !== 4) {
         this.notif.onWarning(
           'Advertencia',
-          'Debe ingresar la cuenta en su formato.'
+          'Debe ingresar la cuenta en su formato formato.'
         );
         return;
       }
     
-      this.AddFiltro(
-        5,
-        cuenta,
-        'Cuenta:',
-        cuenta,
-        '',
-        'Es Igual',
-        '@Cuenta'
-      );
+      const formatoCuenta = /^\d+-\d+-\d+-\d+$/;
     
-      this.limpiarSelected();
+      if (!formatoCuenta.test(cuenta)) {
+        this.notif.onWarning(
+          'Advertencia',
+          'Debe ingresar la cuenta en su formato formato.'
+        );
+        return;
+      }
+    
+      const oficina = Number(partes[0]);
+      const producto = Number(partes[1]);
+      const consecutivo = Number(partes[2]);
+      const digito = Number(partes[3]);
+    
+      this.loading.show();
+    
+      this.serviceLogs
+        .validarCuentaGestionCredito(
+          oficina,
+          producto,
+          consecutivo,
+          digito
+        )
+        .subscribe({
+          next: (existe) => {
+          
+            this.loading.hide();
+          
+            if (!existe) {
+              this.notif.onWarning('Advertencia','No se encontró registro.');
+              return;
+            }
+          
+            this.AddFiltro(
+              5,
+              cuenta,
+              'Cuenta:',
+              cuenta,
+              '',
+              'Es Igual',
+              '@Cuenta'
+            );
+          
+            this.limpiarSelected();
+          },
+          error: () => {
+            this.loading.hide();
+            this.notif.onWarning('Advertencia','Error al validar la cuenta.');
+          }
+        });
+      
+      return;
     }
   }
 
@@ -524,16 +566,19 @@ export class LogGestionCreditosComponent {
     this.formulario.get('@Usuario')?.setValue(usuario);
   
     if (!usuario) {
-      this.notif.onWarning('Advertencia','Debe ingresar un usuario.');
+      this.notif.onWarning('Advertencia', 'Debe ingresar un usuario.');
       return;
     }
-  
+
+    if (!/^[A-Za-z]+$/.test(usuario)) {
+      this.notif.onWarning('Advertencia', 'El usuario solo acepta letras.');
+      return;
+    }
+
     this.loading.show();
   
-    this.informeClientesService.ValidatUsuario(usuario)
-      .subscribe(
+    this.informeClientesService.ValidatUsuario(usuario).subscribe(
         x => {
-        
           if (x.dataBool) {
             this.SelectedNombre = x.data;
           
@@ -562,4 +607,6 @@ export class LogGestionCreditosComponent {
         }
       );
   }
+
+
 }

@@ -43,7 +43,7 @@ import { RadicadoDetalleComponent } from '../Components/Informes/mi-lista-produc
 import { InformePersonasNaturalesComponent } from '../Components/Informes/informe-clientes/informe-personas-naturales/informe-personas-naturales/informe-personas-naturales.component';
 import { InformePersonasJuridicasComponent } from '../Components/Informes/informe-clientes/informe-personas-juridicas/informe-personas-juridicas/informe-personas-juridicas.component';
 import { LogRecaudoOlivosComponent } from '../Components/Informes/log-auditoria/log-recaudo-olivos/log-recaudo-olivos.component';
-import { LogGestionCreditosComponent } from '../Components/Informes/log-auditoria/log-gestion-creditos/log-gestion-creditos/log-gestion-creditos.component';
+import { LogGestionCarteraComponent } from '../Components/Informes/log-auditoria/log-gestion-creditos/log-gestion-creditos/log-gestion-cartera.component';
 
 @NgModule({
   declarations: [
@@ -84,7 +84,7 @@ import { LogGestionCreditosComponent } from '../Components/Informes/log-auditori
     LogProductosVirtualesComponent,
     LogRecaudoOlivosComponent,
     RadicadoDetalleComponent,
-    LogGestionCreditosComponent,
+    LogGestionCarteraComponent,
   ],
   imports: [
     CommonModule,
