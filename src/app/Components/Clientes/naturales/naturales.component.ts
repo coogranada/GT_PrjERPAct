@@ -636,7 +636,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   MILISENGUNDOS_POR_DIA = 1000 * 60 * 60 * 24;
   DigitosContacto = 0;
   moduloLocal = 11;
-  private operacionesModel: OperacionesModel;
+  private operacionesModel!: OperacionesModel;
   private LogSeguroModel: any;
   public BasicoBlock = true;
   public FinancieroBlock = true;
@@ -824,14 +824,15 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
 
   
   //#region Constructor
-  constructor(private clientesGetListService: ClientesGetListService,
+  constructor(
+    private clientesGetListService: ClientesGetListService,
     private _sanitizer: DomSanitizer,
     private notif: AlertService,
     private clientesService: ClientesService,
     private operacionesService: OperacionesService,
     private observacionesService: ObservacionesService,
     private generalesService: GeneralesService,
-     private recursosGeneralesService: RecursosGeneralesService,
+    private recursosGeneralesService: RecursosGeneralesService,
     private moduleValidationService: ModuleValidationService,
     private loginService: LoginService,
     private router: Router,
@@ -839,29 +840,47 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     private oficinasService: OficinasService,
     private MiListaProductosService: MiListaProductosService,
     private loading: LoadingService
-   ) {
-    // OperacionesPermitidasNaturales
+  ) {
+
+    // Fecha máxima
+    this.fechaMax = moment().format('YYYY-MM-DD');
+
+    // Información del usuario
     const resulStore = StorageSecurity.getData();
-    const arrayExample = [{
-      'IdModulo': this.moduloLocal,
-      'IdUsuario': resulStore.IdUsuario,
-      'IdPerfil': resulStore.UsuarioPerfil
-    }];
-    if(this.dataOperaciones === null || this.dataOperaciones === undefined || this.dataOperaciones.length === 0){
-      this.operacionesService.OperacionesPermitidasNaturales(arrayExample[0]).subscribe(
-        result => {
-          this.dataOperaciones = result;
-          this.loading.hide();
-        },
-        error => {
-          this.loading.hide();
-          const errorMessage = <any>error;
-          console.log(errorMessage);
-        });
-        this.fechaMax = moment(new Date()).format('YYYY-MM-DD');
+
+    if (!resulStore) {
+      console.error('No se encontró información de usuario en StorageSecurity');
+      return;
     }
+
+    const request = {
+      IdModulo: this.moduloLocal,
+      IdUsuario: resulStore.IdUsuario,
+      IdPerfil: resulStore.UsuarioPerfil
+    };
+
+    // Operaciones permitidas
+    if (!this.dataOperaciones?.length) {
+
+      this.operacionesService
+        .OperacionesPermitidasNaturales(request)
+        .subscribe(
+          result => {
+            this.dataOperaciones = result;
+            this.loading.hide();
+          },
+          error => {
+            this.loading.hide();
+            console.error('Error consultando operaciones permitidas:', error);
+          }
+        );
+    }
+
+    // Modelos
     this.operacionesModel = new OperacionesModel();
     this.LogSeguroModel = new LogSegurosModel();
+
+    // Catálogos
     this.dataGeneros = this.DataRequired.GeneroData;
     this.dataEstadoCivil = this.DataRequired.EstadoCivilData;
     this.dataNivelEstudio = this.DataRequired.NivelEstudioData;
@@ -870,6 +889,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.dataTipoCliente = this.DataRequired.RelacionData;
     this.dataReferencias = this.DataRequired.ReferenciaData;
     this.dataCategoria = this.DataRequired.CategoriasData;
+
     this.dataTipoActivos = TipoActivos;
     this.dataContratos = TipoContratos;
     this.dataActivosAll = ActivosAll;
@@ -884,47 +904,41 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
  
 
   ngOnInit() {
+    this.loading.show();
     this._compiler.clearCache();
-
     this.NoPermitirTab();
-
     this.GetPaisesList();
-    // this.GetImuebles();
-
     this.GetMarcar();//false
     this.GetConceptosaAll();// false
-
     this.GetMotivoIngreso();
     this.GetProfesion();// false
-
     this.GetPeriodosPago() ;
     this.GetParentescos(); //false
-
     this.GetParentescosChange(); //false
     this.GetParentescosPeps(); //false
-
     this.GetTipoContacto(); // false
     this.GetOficinas(); // false
 
-    // console.log(this.appComponent);
-    this.loading.show();
-    // this.moduleValidationService.ValidatePermissionsModule(this.CodModulo);
-
     $('html, body').animate({ scrollTop: 0 }, 'slow');
-
     localStorage.removeItem('estadoSeleccionado');
     localStorage.removeItem('tipoEmpleoSeleccionado');
     this.blockTratamiento = true;
     this.blockTratamientoFecha = true;
-
     $('#operaJquery').focus().select();
+
+    // Evita eventos duplicados al volver a entrar al componente
+    $(document).off('click', '#Crear');
+    $(document).off('click', '#agregar_nombres');
+    $(document).off('click', '#agregar_nombres_edit');
+
     $(document).on('click', '#Crear', function () {
       $('#ModalDatosLaborales').modal('show');
     });
 
     $(document).on('click', '#agregar_nombres', function () {
-        $('#ModalAgregarNombre').modal('show');
+      $('#ModalAgregarNombre').modal('show');
     });
+
     $(document).on('click', '#agregar_nombres_edit', function () {
       $('#ModalAgregarNombreEdit').modal('show');
     });
@@ -947,7 +961,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.validateContactos();
     this.validateActivos();
     this.validateConyugue();
-
     this.validateReferencia();
     this.validateEntrevista();
     this.validateSeguros();
@@ -966,7 +979,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.GetNacionalidad();
  
     /* Motodos */
-
     this.segurosForm.get('tratamiento')?.setValue(true);
     this.segurosForm.get('debitoAuto')?.setValue(true);
     this.basicosFrom.get('numHijos')?.setValue(0);
@@ -974,20 +986,25 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.laboralForm.get('NumPersonasCargo')?.setValue(0);
     this.patrimonioForm.get('tlPasivo')?.setValue(0);
     //#endregion
-    // this.loading.hide();
     this.selectAutomaticoDropEntrevista();
 
-    this.loginService.GetSesionXUsuario(this.DatosUsuario.IdUsuario).subscribe(
-      result => {
-        if (!result.Estado) {
-          this.router.navigateByUrl('/Login');
-          localStorage.clear();
-        }
-      }
-    );
+    if (this.DatosUsuario?.IdUsuario) {
+      this.loginService.GetSesionXUsuario(this.DatosUsuario.IdUsuario)
+        .subscribe(
+          result => {
+            if (!result.Estado) {
+              localStorage.clear();
+              this.router.navigateByUrl('/Login');
+            }
+          },
+          error => {
+            console.error('Error validando sesión:', error);
+          }
+        );
+    }    
   }
-  ngOnDestroy() {
 
+  ngOnDestroy() {
   }
   
   recieveNatural(natural: NaturalesAllModel) {
@@ -995,52 +1012,40 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   }
  
   //#region Carga de Maestros
-   GetSeguros() {
-    // const dataSeguros = [];
-    // this.clientesGetListService.GetSeguros().subscribe(
-    //   result => {
-    //     result.forEach(element => {
-    //       if (element.Clase !== 20) {
-    //         dataSeguros.push(element);
-    //       }
-    //     });
-        let seguro : string | null = localStorage.getItem('seguros');
-        this.dataSeguros = JSON.parse(window.atob(seguro == null ? "" : seguro));
-    //   },
-    //   error => {
-    //     const errorMessage = <any>error;
-    //     this.notif.onDanger('Error', errorMessage);
-    //     console.error(errorMessage);
-    //   }
-    // );
+  GetSeguros() {
+    const seguro = localStorage.getItem('seguros');
+    if (!seguro) {
+      return;
+    }
+    try {
+      this.dataSeguros = JSON.parse(window.atob(seguro));
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   GetEstadosSeguro() {
-    // this.clientesGetListService.GetEstadosSeguro().subscribe(
-    //   result => {
-      let seguro : string | null = localStorage.getItem('estadoSeguro');
-      this.dataEstadosSeguro = JSON.parse(window.atob(seguro == null ? "" : seguro));
-    //   },
-    //   error => {
-    //     const errorMessage = <any>error;
-    //     this.notif.onDanger('Error', errorMessage);
-    //     console.error(errorMessage);
-    //   }
-    // );
+    const seguro = localStorage.getItem('estadoSeguro');
+    if (!seguro) {
+      return;
+    }
+    try {
+      this.dataEstadosSeguro = JSON.parse(window.atob(seguro));
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   GetCargos() {
-    // this.clientesGetListService.GetCargos().subscribe(
-    //   result => {
-        let cargo : string | null = localStorage.getItem('cargos');
-        this.dataCargos = JSON.parse(window.atob(cargo == null ? "" : cargo));
-    //   },
-    //   error => {
-    //     const errorMessage = <any>error;
-    //     this.notif.onDanger('Error', errorMessage);
-    //     console.error(errorMessage);
-    //   }
-    // );
+    const cargo = localStorage.getItem('cargos');
+    if (!cargo) {
+      return;
+    }
+    try {
+      this.dataCargos = JSON.parse(window.atob(cargo));
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   GetTipoDocumentoConyugue() {
@@ -1063,17 +1068,15 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   }
 
   GetTipoEmpleo() {
-    // this.clientesGetListService.GetTipoEmpleo().subscribe(
-    //   result => {
-        let empleo : string | null = localStorage.getItem('empleo');
-        this.dataTipoEmpleo = JSON.parse(window.atob(empleo == null ? "" : empleo));
-    //   },
-    //   error => {
-    //     const errorMessage = <any>error;
-    //     this.notif.onDanger('Error', errorMessage);
-    //     console.error(errorMessage);
-    //   }
-    // );
+    const empleo = localStorage.getItem('empleo');
+    if (!empleo) {
+      return;
+    }
+    try {
+      this.dataTipoEmpleo = JSON.parse(window.atob(empleo));
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   EjecutarMetodosMaestros() {
@@ -1103,178 +1106,160 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
 
   //#region Validaciones y reglas
    GetVias() {
-    // this.clientesGetListService.GetVias().subscribe(
-    //   result => {
-        // this.viasEmit.emit(result);
-     this.dataVias = Vias;
-      // JSON.parse(window.atob(localStorage.getItem('via')));
-        
-    //   },
-    //   error => {
-    //     const errorMessage = <any>error;
-    //     this.notif.onDanger('Error', errorMessage);
-    //     console.error(errorMessage);
-    //   }
-    // );
-  }
-   GetLetra() {
-    // this.clientesGetListService.GetLetras().subscribe(
-    //   result => {
-        // this.letraEmit.emit(result);
-        let letras : string | null = localStorage.getItem('letras');
-        this.dataLetras = JSON.parse(window.atob(letras == null ? "" : letras));
-    //   },
-    //   error => {
-    //     const errorMessage = <any>error;
-    //     this.notif.onDanger('Error', errorMessage);
-    //     console.error(errorMessage);
-    //   }
-    // );
+     this.dataVias = Vias;  
   }
 
+  GetLetra() {
+    const letras = localStorage.getItem('letras');
+    if (!letras) {
+      return;
+    }
+    try {
+      this.dataLetras = JSON.parse(window.atob(letras));
+    } catch (error) {
+      console.error(error);
+    }
+  }
+   
   GetMarcar() {
-  //   this.clientesGetListService.GetMarcas().subscribe(
-  //     result => {
-        // this.marcaEmit.emit(result);
-        let marca : string | null = localStorage.getItem('marca');
-        this.dataMarcas = JSON.parse(window.atob(marca == null ? "" : marca));
-    //   },
-    //   error => {
-    //     const errorMessage = <any>error;
-    //     this.notif.onDanger('Error', errorMessage);
-    //     console.error(errorMessage);
-    //   }
-    // );
+    const marca = localStorage.getItem('marca');
+    if (!marca) {
+      this.dataMarcas = [];
+      return;
+    }
+    try {
+      this.dataMarcas = JSON.parse(window.atob(marca));
+    } catch (error) {
+      console.error(error);
+      this.dataMarcas = [];
+    }
   }
   
   GetConceptosaAll() {
-    // this.clientesGetListService.GetConceptosAll().subscribe(
-    //   result => {
-        // this.ConceptosAllEmit.emit(result);
-        let conceptos : string | null = localStorage.getItem('conceptos');
-        this.dataConceptoAll = JSON.parse(window.atob(conceptos == null ? "" : conceptos));
-       
-    //   },
-    //   error => {
-    //     const errorMessage = <any>error;
-    //     this.notif.onDanger('Error', errorMessage);
-    //     console.error(errorMessage);
-    //   }
-    // );
+    const conceptos = localStorage.getItem('conceptos');
+    if (!conceptos) {
+      return;
+    }
+    try {
+      this.dataConceptoAll = JSON.parse(window.atob(conceptos));
+    } catch (error) {
+      console.error(error);
+    }  
   }
 
   GetMotivoIngreso() {
     this.clientesGetListService.GetMotivoIngreso().subscribe(
       result => {
-        // this.MotivosIngresoEmit.emit(result);
-        this.dataMotivoIngreso  = result;
+        this.dataMotivoIngreso = result;
       },
       error => {
         const errorMessage = <any>error;
         this.notif.onDanger('Error', errorMessage);
-        console.error(errorMessage);
+        console.error(error);
       }
     );
   }
 
-   GetProfesion() {
-    // this.clientesGetListService.GetProfesion().subscribe(
-    //   result => {
-        // this.profesionesEmit.emit(result);
-         let profesion : string | null = localStorage.getItem('profesion');
-         this.dataProfesion = JSON.parse(window.atob(profesion == null ? "" : profesion));
-    //   },
-    //   error => {
-    //     const errorMessage = <any>error;
-    //     this.notif.onDanger('Error', errorMessage);
-    //     console.error(errorMessage);
-    //   }
-    // );
-  }
+  GetProfesion() {
+    const profesion = localStorage.getItem('profesion');
+    if (!profesion) {
+      return;
+    }
+    try {
+      this.dataProfesion = JSON.parse(window.atob(profesion));
+    } catch (error) {
+      console.error(error);
+    }
 
+  }
+  
   GetPeriodosPago() {
-    // this.clientesGetListService.GetPeriodosPago().subscribe(
-    //   result => {
-        // this.periodosPagoEmit.emit(result);
-        let periodo : string | null = localStorage.getItem('periodo');
-        this.dataPeriodos = JSON.parse(window.atob(periodo == null ? "" : periodo));
-    //   },
-    //   error => {
-    //     const errorMessage = <any>error;
-    //     this.notif.onDanger('Error', errorMessage);
-    //     console.error(errorMessage);
-    //   }
-    // );
-  }
+    const periodo = localStorage.getItem('periodo');
+    if (!periodo) {
+      return;
+    }
+    try {
+      this.dataPeriodos = JSON.parse(window.atob(periodo));
+    } catch (error) {
+      console.error(error);
+    }
 
+  }
+  
   GetParentescos() {
-    // this.clientesGetListService.GetParentescos().subscribe(
-    //   result => {
-        // this.parentescosEmit.emit(result);
-        let parentesco : string | null = localStorage.getItem('parentesco');
-        this.dataParentescos = JSON.parse(window.atob(parentesco == null ? "" : parentesco));
+    const parentesco = localStorage.getItem('parentesco');
+    if (!parentesco) {
+      return;
+    }
+    try {
+      this.dataParentescos = JSON.parse(window.atob(parentesco));
+      if (this.dataParentescos?.length > 10) {
         this.dataParentescos.splice(10, 1);
+      }
+      if (this.dataParentescos?.length > 16) {
         this.dataParentescos.splice(16, 1);
+      }
+      if (this.dataParentescos?.length > 16) {
         this.dataParentescos.splice(16, 1);
+      }
+      if (this.dataParentescos?.length > 17) {
         this.dataParentescos.splice(17, 1);
-    //   },
-    //   error => {
-    //     const errorMessage = <any>error;
-    //     this.notif.onDanger('Error', errorMessage);
-    //     console.error(errorMessage);
-    //   }
-    // );
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   GetParentescosChange() {
-    // this.clientesGetListService.GetParentescos().subscribe(
-    //   result => {
-        // this.parentescosChangeEmit.emit(result);
-        let parentescoChange : string | null = localStorage.getItem('parentescoChange');
-        this.dataParentescosChange = JSON.parse(window.atob(parentescoChange == null ? "" : parentescoChange));
-        this.dataParentescosChange.splice(0, 10)
+    const parentescoChange = localStorage.getItem('parentescoChange');
+    if (!parentescoChange) {
+      return;
+    }
+    try {
+      this.dataParentescosChange = JSON.parse(
+        window.atob(parentescoChange)
+      );
+      if (this.dataParentescosChange?.length) {
+        this.dataParentescosChange.splice(0, 10);
         this.dataParentescosChange.splice(1, 7);
         this.dataParentescosChange.splice(2, 1);
         this.dataParentescosChange.splice(3, 1);
-    //   },
-    //   error => {
-    //     const errorMessage = <any>error;
-    //     this.notif.onDanger('Error', errorMessage);
-    //     console.error(errorMessage);
-    //   }
-    // );
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 
-   GetParentescosPeps() {
-    // this.clientesGetListService.GetParentescosPeps().subscribe(
-    //   result => {
-        // this.parentescosPepsEmit.emit(result);
-        let parentescoPeps : string | null = localStorage.getItem('parentescoPeps');
-        this.dataParentescosPeps = JSON.parse(window.atob(parentescoPeps == null ? "" : parentescoPeps));
-    //   },
-    //   error => {
-    //     const errorMessage = <any>error;
-    //     this.notif.onDanger('Error', errorMessage);
-    //     console.error(errorMessage);
-    //   }
-    // );
+  GetParentescosPeps() {
+    const parentescoPeps = localStorage.getItem('parentescoPeps');
+    if (!parentescoPeps) {
+      return;
+    }
+    try {
+      this.dataParentescosPeps = JSON.parse(
+        window.atob(parentescoPeps)
+      );
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   GetTipoContacto() {
-    // this.clientesGetListService.GetTipoContacto().subscribe(
-    //   result => {
-        // this.tipoContactoEmit.emit(result);
-        let contacto : string | null = localStorage.getItem('contacto');
-        this.dataContacto = JSON.parse(window.atob(contacto == null ? "" : contacto));
+    const contacto = localStorage.getItem('contacto');
+    if (!contacto) {
+      return;
+    }
+    try {
+      this.dataContacto = JSON.parse(
+        window.atob(contacto)
+      );
+      if (this.dataContacto?.length) {
         this.dataContacto.splice(6, 1);
         this.dataContacto.splice(6, 1);
-    //   },
-    //   error => {
-    //     const errorMessage = <any>error;
-    //     this.notif.onDanger('Error', errorMessage);
-    //     console.error(errorMessage);
-    //   }
-    // );
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
   
   GetNacionalidad() {
@@ -1283,23 +1268,21 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         this.resultNacionalidad = result;
       },
       error => {
-        const errorMessage = <any>error;
-        console.log(errorMessage);
+        console.error(error);
       }
     );
   }
 
-   GetOficinas() {
-    // this.oficinasService.getOficinas().subscribe(
-    //   result => {
-        // this.oficinasEmit.emit(result);
-        let oficinas : string | null = localStorage.getItem('oficinas');
-        this.dataOficinas = JSON.parse(window.atob(oficinas == null ? "" : oficinas));
-      // },
-      // error => {
-      //   this.notif.onDanger('Error', error);
-      //   console.error(error);
-      // });
+  GetOficinas() {
+    const oficinas = localStorage.getItem('oficinas');
+    if (!oficinas) {
+      return;
+    }
+    try {
+      this.dataOficinas = JSON.parse(window.atob(oficinas));
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   CargarTrasabilidad() {
@@ -1311,16 +1294,21 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.condicion = false;
   }
 
-  validarSeleccion(campo : any) {
-    if (campo.value === null || campo.value == undefined) {
-        this.notif.onWarning('Advertencia', 'Debe seleccionar una actividad economica válida.');
-        this.basicosFrom.get('actividad')?.reset();
-    } else if (campo.value.idActividad === null || campo.value.idActividad == undefined) { 
-        this.notif.onWarning('Advertencia', 'Debe seleccionar una actividad economica válida.');
-        this.basicosFrom.get('actividad')?.reset();
+  validarSeleccion(campo: any) {
+    if (!campo || campo.value === null || campo.value === undefined) {
+      this.notif.onWarning('Advertencia', 'Debe seleccionar una actividad economica válida.'
+      );
+      this.basicosFrom.get('actividad')?.reset();
+    } else if (
+      campo.value.idActividad === null ||
+      campo.value.idActividad === undefined
+    ) {
+      this.notif.onWarning('Advertencia', 'Debe seleccionar una actividad economica válida.'
+      );
+      this.basicosFrom.get('actividad')?.reset();
     }
     console.log(this.basicosFrom.get('actividad')?.value);
-    console.log('campo: ' + campo);
+    console.log(campo);
   }
 
   validarSelectsTipoDocumento() {
@@ -1359,6 +1347,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       }
     }
   }
+
   validarSelectsBasico(nombreCampo : string) {
     const select = this.basicosFrom.get('' + nombreCampo + '')?.value;
     if (select === '') {
@@ -1366,6 +1355,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       this.basicosFrom.get('' + nombreCampo + '')?.reset();
     }
   }
+
   devolverTab(tab : number) {
     switch (tab) {
       case 1:
@@ -1490,6 +1480,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         break;
     }
   }
+
   VolverArriba() {
     $('html, body').animate({ scrollTop: 0 }, 'slow');
     return false;
@@ -1513,14 +1504,21 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.vetadosFrom.get('documeto')?.setValue(this.basicosFrom.get('DocumentoBusqueda')?.value);
     this.vetadosFrom.get('strNombreCompleto')?.setValue('');
     const results = this.basicosFrom.get('operacion')?.value;
-     const resultPerfil = StorageSecurity.getData();
+    const resultPerfil = StorageSecurity.getData();
     this.operacionesModel.idOperacion = results;
     this.operacionesModel.idPerfil = resultPerfil.idPerfilUsuario;
-    let IdModuloActivo : string | null = localStorage.getItem('IdModuloActivo')
-    this.operacionesModel.idModulo = +JSON.parse(window.atob(IdModuloActivo == null ? "" : IdModuloActivo));
+    const idModuloActivo = localStorage.getItem('IdModuloActivo');
+    if (idModuloActivo) {
+      try {
+        this.operacionesModel.idModulo = +JSON.parse(window.atob(idModuloActivo));
+      } catch (error) {
+         console.error('Error obteniendo IdModuloActivo:', error);
+      }
+    }
     this.mostrarPorQueCobertura = false;
     this.solicitudRetiroForm.reset();
-    if (results === '5') { // Creacion           
+ 
+   if (results === '5') { // Creacion           
       this.ResetAllForm();
       this.LimpiaVariablesAlerta();
       this.EjecutarMetodosMaestros();
@@ -1742,7 +1740,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       this.basicosFrom.controls['nivelEstudio'].setErrors({ 'incorrect': true });
       this.basicosFrom.controls['nivelEstudio'].updateValueAndValidity();
 
-    } else if (results === '2') { // Buscar
+     } else if (results === '2') { // Buscar
       this.EjecutarMetodosMaestros();
       this.LimpiaVariablesAlerta();
       this.condicion = false;
@@ -5033,25 +5031,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
      this.resetSolicitudServiciosForm();
      this.abrirServicios.nativeElement.click();
     });
- 
-    // this.recursosGeneralesService.GetProcesosWorkManager().subscribe(
-    //   result => {
-    //     if(this.basicosFrom.get('tipoCliente')?.value == 5) {
-    //       this.procesosWorkManager = result.filter((proceso: any) => proceso.AsociadoHabilita);
-    //       if(this.basicosFrom.get('estado')?.value != 5) this.procesosWorkManager = result.filter((proceso: any) => proceso.TerceroHabilita);
-
-    //     } else if(this.basicosFrom.get('tipoCliente')?.value == 15) {  
-    //       this.procesosWorkManager = result.filter((proceso: any) => proceso.TerceroHabilita);
-          
-    //     } else if(this.basicosFrom.get('tipoCliente')?.value == 10) {
-    //       this.procesosWorkManager = result.filter((proceso: any) => proceso.MenorHabilita);
-    //       if(this.basicosFrom.get('estado')?.value != 5) this.procesosWorkManager = result.filter((proceso: any) => proceso.IdProcesoworkmanager === 2);
-    //     }
-    //     this.serviciosFrom.get('proceso')?.setValue('');
-    //     this.resetSolicitudServiciosForm();
-    //     this.abrirServicios.nativeElement.click();
-    //   }
-    // );
   }
 
   LimpiaVariablesAlerta() {
@@ -5071,6 +5050,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.ProDescripcionOpe = ' ';
     this.OperacionMarcada = undefined;
   }
+  
   ValidaCambioCampo() {
     if(this.basicosFrom.controls['IdTerceroPrincipal'].value == null || this.basicosFrom.controls['IdTerceroPrincipal'].value == "")
       this.OperacionMarcada = undefined;
@@ -5520,46 +5500,110 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   }
 
   ResetAllForm() {
-    this.basicosFrom.reset();
-    this.financieroFrom.reset();
-    this.contactoForm.reset();
-    this.activoForm.reset();
-    this.conyugueForm.reset();
-    this.laboralForm.reset();
-    this.entrevistaForm.reset();
-    this.segurosForm.reset();
-    this.referenciaForm.reset();
-    this.coberturaForm.reset();
-    this.fechasForm.reset();
-    this.solicitudRetiroForm.reset();
-    this.relacionPepsForm.reset();
-    this.FormCambioEstado.reset();
-    this.asesorForm.reset();
-    this.patrimonioForm.reset();
-    this.tratamientoForm.reset();
-    this.terceroSave.reset();    
+    //#region Formularios principales
+    this.basicosFrom?.reset();
+    this.financieroFrom?.reset();
+    this.contactoForm?.reset();
+    this.activoForm?.reset();
+    this.conyugueForm?.reset();
+    this.laboralForm?.reset();
+    this.entrevistaForm?.reset();
+    this.segurosForm?.reset();
+    this.referenciaForm?.reset();
+    this.coberturaForm?.reset();
+    this.fechasForm?.reset();
+    this.solicitudRetiroForm?.reset();
+    this.relacionPepsForm?.reset();
+    this.FormCambioEstado?.reset();
+    this.asesorForm?.reset();
+    this.patrimonioForm?.reset();
+    this.tratamientoForm?.reset();
+    this.terceroSave?.reset();
+    //#endregion
+
+    //#region Formularios auxiliares
+    this.basicoSave?.reset();
+
+    this.financieroSetForm?.reset();
+    this.financieroSave?.reset();
+
+    this.contactoSave?.reset();
+    this.ContactoFormSet?.reset();
+
+    this.activoSave?.reset();
+    this.ActivoFormSet?.reset();
+
+    this.conyugueFormSet?.reset();
+    this.conyugueSave?.reset();
+
+    this.laboralFormSet?.reset();
+    this.laboralSave?.reset();
+
+    this.referenciaFormSet?.reset();
+    this.referenciaSave?.reset();
+
+    this.entrevistaFormSet?.reset();
+    this.entrevistaSave?.reset();
+
+    this.segurosFormSet?.reset();
+    this.segurosSave?.reset();
+    this.segurosEdit?.reset();
+
+    this.aseguradosForm?.reset();
+
+    this.relacionPepsSave?.reset();
+
+    this.tratamientoSave?.reset();
+
+    this.coberturaSave?.reset();
+
+    this.basicosFormSet?.reset();
+
+    this.logSegurosForm?.reset();
+    this.logSegurosSave?.reset();
+
+    this.BasicosEdit?.reset();
+
+    this.serviciosFrom?.reset();
+
+    this.Correspondenciasform?.reset();
+    //#endregion
+
+    //#region Colecciones
     this.itemsLogSeguro = [];
     this.dataActivos = [];
+
     this.itemsEgresos = [];
     this.itemsIngresos = [];
+
     this.itemsContacto = [];
     this.dataConyuge = [];
+
     this.itemsAsegurado = [];
     this.itemsConyugue = [];
+
     this.itemsFamiliaPersonal = [];
     this.itemsFinancieraComercial = [];
+
     this.itemsPropiedad = [];
     this.itemsVehiculo = [];
+
     this.itemRelacionPeps = [];
     this.itemsSeguro = [];
+
     this.dataPepsLog = [];
     this.dataRetiroLog = [];
     this.dataReingresoLog = [];
     this.datatratamientoLog = [];
+
     this.allItemEntrevista = [];
     this.allItemFormEntrevista = [];
+
     this.allItemsFormFinanciero = [];
     this.allItemsForm = [];
+    //#endregion
+
+    //#region Objetos auxiliares
     this.allItemsFormSaves = {
       asociadosNaturalesDto: {},
       tercerosDto: {},
@@ -5577,6 +5621,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       logSegurosDto: {},
       userWork: ''
     };
+    //#endregion
   }
 
   ResetAllFormBusqueda() {
@@ -5695,7 +5740,78 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.ObservacionRetiro = false;
     this.mostarErrorMotivoDescripcion = false;
   }
+
   ResetItemForm() {
+    // Índices
+    this.indexSeguro = null;
+    this.indexFinanciero = null;
+    this.indexContacto = null;
+    this.indexActivo = null;
+    this.indexLaboral = null;
+    this.indexReferencia = null;
+    this.indexConyugue = null;
+
+    // Datos anteriores
+    this.conyugueViejo = null;
+
+    this.relacionAnterior = null;
+    this.estadoAnterior = null;
+    this.clienteAnterior = null;
+    this.tipoDocumentoAnterior = null;
+    this.documentoAnterior = null;
+
+    this.empleoAnterior = null;
+    this.estadoCivilAnterior = null;
+    this.viviendaAnterior = null;
+
+    this.estadoCivilSeleccionado = null;
+    this.viviendaSeleccionada = null;
+
+    // Fechas
+    this.fechaCreacion = null;
+    this.fechaModificacion = null;
+    this.fechaRetiro = null;
+    this.fechaCreacionNatural = null;
+
+    // Consulta actual
+    this.tratamientoConsulta = null;
+    this.dataTercero = null;
+
+    // Operación
+    this.operacion = null;
+    this.operacionEscogida = '';
+
+    // Datos temporales
+    this.selectedItem = '';
+    this.inputChanged = '';
+
+    // Variables de control
+    this.tipoCliente = null;
+    this.RetiradoBloqueado = null;
+
+    // Dirección temporal
+    this.DireccionSeleccionada = null;
+    this.DireccionsSeleccionada = null;
+
+    this.DescripcionDireccion = null;
+    this.DescripcionDireccionIds = null;
+
+    this.direccionEdit = null;
+    this.direccionEditActivo = null;
+
+    // Modelos temporales
+    this.CuentaSolicitud = new CuentaModel();
+
+    this.cambioRelacionModel =
+      new CambioRelacionModel();
+
+    this.cambioTipoDocumentoModel =
+      new CambioTipoDocumentoModel();
+
+    this.cambioNombresApellidosModel =
+      new CambioNombresApellidosModel();
+
+    // Listas auxiliares
     this.itemsIngresos = [];
     this.itemsEgresos = [];
     this.itemsContacto = [];
@@ -8373,34 +8489,48 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       this.serviciosFrom.get('plazoDeseado')?.reset();
     }
   }
-   GetPaisesList() {
+  
+  GetPaisesList() {
     this.condicion = true;
     this.recursosGeneralesService.GetPaisesList().subscribe(
       result => {
-        this.dataPaises = result;
-        this.dataPaisesAll = result;
-        this.dataPaisesNaci = result;
-        this.dataPaisesExp = result;
+        this.dataPaises = result || [];
+        this.dataPaisesAll = result || [];
+        this.dataPaisesNaci = result || [];
+        this.dataPaisesExp = result || [];
         this.recursosGeneralesService.GetCiudadList(0).subscribe(
           resultCiu => {
-            this.dataCiudadesAll = resultCiu;
+            this.dataCiudadesAll = resultCiu || [];
             this.recursosGeneralesService.GetDepartamentosList(0).subscribe(
               resultDepart => {
-                this.dataDepartamentosAll = resultDepart;
+                this.dataDepartamentosAll = resultDepart || [];
                 this.recursosGeneralesService.GetBarrioList(0).subscribe(
                   resultBarrios => {
-                    this.dataBarriosAll = resultBarrios;
-                  });
-              });
-          });
+                    this.dataBarriosAll = resultBarrios || [];
+                  },
+                  error => {
+                    console.error(error);
+                  }
+                );
+              },
+              error => {
+                console.error(error);
+              }
+            );
+          },
+          error => {
+            console.error(error);
+          }
+        );
       },
       error => {
-        const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
-        console.error(errorMessage);
+        this.notif.onDanger('Error', error);
+        console.error(error);
       }
     );
+
   }
+
    desbloquearDepart(nameInput : any) {
     this.bloqDeparta = null;
   }
@@ -25820,9 +25950,15 @@ enviarWorkManager() {
   }
 
   VeredaCapitaliceContac() {
-    const self = this;
-    $('#NumeroUnoDescrip').keyup(function () {
-      $(self).val($(self).val().substr(0, 1).toUpperCase() + $(self).val().substr(1).toLowerCase());
+    $('#NumeroUnoDescrip').off('keyup');
+    $('#NumeroUnoDescrip').keyup(function (this: HTMLElement) {
+      const valor = $(this).val() as string;
+      if (valor) {
+        $(this).val(
+          valor.substr(0, 1).toUpperCase() +
+          valor.substr(1).toLowerCase()
+        );
+      }
     });
   }
 
@@ -26095,42 +26231,42 @@ PreCargarPais(val: number) {
 
 
   NoPermitirTab() {
-     $('#CiuRefe').on('keydown', function (e : any) {
-    //  $('#').addEventListener('keydown', function (e) {
-        if (e.which == 9) {
-            e.preventDefault();
-        }
+
+    // Evita registrar múltiples veces los mismos eventos
+    $('#CiuRefe').off('keydown');
+    $('#CiuCont').off('keydown');
+    $('#CiuPatri').off('keydown');
+
+    $('#CiuRefe').on('keydown', function (e: any) {
+      if (e.which === 9) {
+        e.preventDefault();
+      }
     });
 
-    $('#CiuCont').on('keydown', function (e : any) {
-    //  $('#').addEventListener('keydown', function (e) {
-        if (e.which == 9) {
-            e.preventDefault();
-        }
+    $('#CiuCont').on('keydown', function (e: any) {
+      if (e.which === 9) {
+        e.preventDefault();
+      }
     });
 
-    $('#CiuPatri').on('keydown', function (e : any) {
-    //  $('#').addEventListener('keydown', function (e) {
-        if (e.which == 9) {
-            e.preventDefault();
-        }
+    $('#CiuPatri').on('keydown', function (e: any) {
+      if (e.which === 9) {
+        e.preventDefault();
+      }
     });
 
-    $('#CiuRefe').on('keydown', function (e : any) {
-    //  $('#').addEventListener('keydown', function (e) {
-        if (e.which == 9) {
-            e.preventDefault();
-        }
-    });
+    function capLock(e: any) {
+      const kc = e.keyCode ? e.keyCode : e.which;
+      const sk = e.shiftKey ? e.shiftKey : kc === 16;
 
-    function capLock(e : any){
-      var kc = e.keyCode ? e.keyCode : e.which;
-      var sk = e.shiftKey ? e.shiftKey : kc === 16;
-       ((kc >= 65 && kc <= 90) && !sk) || 
-          ((kc >= 97 && kc <= 122) && sk) ? 'visible' : 'hidden';
-     
+      ((kc >= 65 && kc <= 90) && !sk) ||
+        ((kc >= 97 && kc <= 122) && sk)
+        ? 'visible'
+        : 'hidden';
     }
   }
+
+
 
   limpiarDatosImpresion() {
     this.documentoConsultar = [];
