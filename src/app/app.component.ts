@@ -1,5 +1,5 @@
 import { LoginService } from './Services/Login/login.service';
-import {  Component, OnInit, ElementRef, Output, EventEmitter, ViewChild, HostListener} from '@angular/core';
+import {  Component, OnInit, OnDestroy, ElementRef, Output, EventEmitter, ViewChild, HostListener} from '@angular/core';
 import { Router } from '@angular/router';
 import { PlatformLocation } from '@angular/common';
 import { ClientesGetListService } from './Services/Clientes/clientesGetList.service';
@@ -21,7 +21,7 @@ declare var $: any;
     GestionesService, RecursosGeneralesService, OficinasService,
     ClientesGetListService,SecurityService]
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
 
   public resulStore: any = null;
 
@@ -57,6 +57,12 @@ ngOnInit(): void {
   });
 }
 
+ngOnDestroy(): void {
+  if (this.tokenRefreshInterval) {
+    clearInterval(this.tokenRefreshInterval);
+  }
+}
+
   // STORAGE
   private loadUserFromStorage(): void {
 
@@ -72,8 +78,6 @@ ngOnInit(): void {
 
     const decodedData = atob(data);
     this.resulStore = JSON.parse(decodedData);
-
-    console.log('Usuario cargado correctamente', this.resulStore);
 
   } catch (error) {
 
@@ -158,38 +162,44 @@ ngOnInit(): void {
   }
 
   // TOKEN
+  private tokenRefreshInterval: any;
   private setupTokenRefresh(): void {
-    console.log('Configurando timer de refresh');
-  setInterval(() => this.refreshToken(), 50 * 60 * 1000);
-}
-
-private refreshToken(): void {
-
-  console.log('ENTRO A REFRESH TOKEN');
-
-  console.log('Token:', localStorage.getItem('token'));
-  console.log('RefreshToken:', localStorage.getItem('refreshToken'));
-
-  const refreshToken = this.Security.GetRefreshToken();
-
-  if (!refreshToken || !this.resulStore?.intlngTercero) {
-    console.warn('No existe refreshToken');
-    return;
+    this.tokenRefreshInterval = setInterval(() => {
+      this.refreshToken();
+    }, 50 * 60 * 1000);
   }
 
-  this.loginService.RefreshToken(refreshToken)
-    .subscribe({
-      next: (x: any) => {
-        console.log('Token renovado');
-        console.log(x);
+  private refreshingToken = false;
+  private refreshToken(): void {
 
-        localStorage.setItem('token', x.token);
-      },
-      error: (err) => {
-        console.error('Error refrescando token', err);
-      }
-    });
-}
+    if (this.refreshingToken) {
+      return;
+    }
+
+    const refreshToken = this.Security.GetRefreshToken();
+
+    if (!refreshToken || !this.resulStore?.intlngTercero) {
+      return;
+    }
+
+    this.refreshingToken = true;
+
+    this.loginService.RefreshToken(refreshToken)
+      .subscribe({
+        next: (x: any) => {
+
+          localStorage.setItem('token', x.token);
+
+          this.refreshingToken = false;
+        },
+        error: (err) => {
+
+          this.refreshingToken = false;
+
+          console.error('Error refrescando token', err);
+        }
+      });
+  }
 
 
   // NAVEGACION
