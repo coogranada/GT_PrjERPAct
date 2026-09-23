@@ -103,16 +103,43 @@
                               <div class="form-group">
                                 <label class="textNegrilla">Fecha Inicial:</label>
                                 <span class="grande"> *</span>
-                                <input type="date" class="form-control" formControlName="@FechaInicial" [max]="fechaMaxima"/>
+                                <input
+                                  type="date"
+                                  class="form-control"
+                                  formControlName="@FechaInicial"
+                                  [max]="obtenerMaxFechaInicial()" />
                               </div>
+                              <span
+                                class="help-block validationSpan"
+                                *ngIf="
+                                  formulario.errors?.['rangoFechas'] &&
+                                  formulario.get('@FechaInicial')?.value &&
+                                  formulario.get('@FechaFinal')?.value
+                                ">
+                                La fecha inicial debe ser menor o igual a la fecha final.
+                              </span>
                             </div>
 
                             <div class="col-md-4 col-lg-4 col-sm-4">
                               <div class="form-group">
                                 <label class="textNegrilla">Fecha Final:</label>
                                 <span class="grande"> *</span>
-                                <input type="date" class="form-control" formControlName="@FechaFinal" [max]="fechaMaxima"/>
+                                <input
+                                  type="date"
+                                  class="form-control"
+                                  formControlName="@FechaFinal"
+                                  [min]="obtenerMinFechaFinal()"
+                                  [max]="fechaMaxima" />
                               </div>
+                              <span
+                                class="help-block validationSpan"
+                                *ngIf="
+                                  formulario.errors?.['rangoFechas'] &&
+                                  formulario.get('@FechaInicial')?.value &&
+                                  formulario.get('@FechaFinal')?.value
+                                ">
+                                La fecha final debe ser mayor o igual a la fecha inicial.
+                              </span>                              
                             </div>
                           </div>
                         </div>
@@ -141,15 +168,20 @@
                         @if (mostrarBotones()) {
                         <div class="col-md-12 col-lg-12 col-sm-12 text-right">
                           <br>
-
-                          <button type="button" class="btn Gt-btn-verde btn-icon legitRipple"
-                            (click)="ejecutarSP(false)">
+                          <button
+                            type="button"
+                            class="btn Gt-btn-verde btn-icon legitRipple"
+                            (click)="ejecutarSP(false)"
+                            [disabled]="formulario.invalid">
                             Ver informe
                           </button>
 
                           &nbsp;&nbsp;&nbsp;
-
-                          <button type="submit" class="btn Gt-btn-verde" (click)="ejecutarSP(true)">
+                          <button
+                            type="submit"
+                            class="btn Gt-btn-verde"
+                            (click)="ejecutarSP(true)"
+                            [disabled]="formulario.invalid">
                             Generar informe
                           </button>
                         </div>
