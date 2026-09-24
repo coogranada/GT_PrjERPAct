@@ -48,7 +48,6 @@ export class CambiarGarantiasModalComponent {
   @Input() mostrarDetalleGarantia: boolean = false;
   @Input() isDisabledConfirmarGarantiasButton: boolean = true;
   @Input() isDisabledLimpiarGarantiasButton: boolean = true;
-
   @Input() garantiasEliminar: any[] = [];
   @Input() garantiasAgregar: any[] = [];
   @Input() listGarantiasDisponiblesDeudor: any[] = [];
@@ -58,6 +57,8 @@ export class CambiarGarantiasModalComponent {
   @Input() garantiasCompartidas: any[] = [];
   @Input() detalleGarantiaCreditos: any[] = [];
   @Input() codeudoresBasico: any[] = [];
+  
+  @Input() textoBotonConfirmar: string = 'Actualizar';
 
   @Input() valorCoberturaDisponibleDeudor: number = 0;
   @Input() valorRespaldadoDisponibleDeudor: number = 0;

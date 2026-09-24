@@ -2231,9 +2231,11 @@
 
 <app-cambiar-garantias-modal
     *ngIf="mostrarModal"
+    [textoBotonConfirmar]="'Guardar'"
     #modalGarantias
     [datosCuenta]="datosCuenta"
     [garantiasForm]="garantiasForm"
+    [SaldoCapital]="DisponibleForm.get('CupoAprobado')?.value"
     [listGarantiasDisponiblesDeudor]="listGarantiasDisponiblesDeudor"
     [listGarantiasDisponiblesCodeudor]="listGarantiasDisponiblesCodeudor"
     [garantiasCompartidasBackendInput]="garantiasCompartidasBackend"
@@ -2245,5 +2247,3 @@
     (changeCodeudor)="onChangeCodeudor($event)"
     (confirmar)="onClickConfirmarCambiosGarantia($event)">
 </app-cambiar-garantias-modal>
-
-<!-- FIN CAMBIAR GARANTIAS -->

@@ -1,7 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { InformeClientesService } from '../../../../../Services/Informes/informe-clientes.service';
 import { TablaVirtualComponent } from '../../../../Tabla-virtual/tabla-virtual/tabla-virtual.component';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Filtro } from '../../../../../Models/Informes/informe-clientes/informe-clientes.model';
 import { AlertService } from '../../../../../Services/Alert/alert.service';
 import { ConfiguracionInformesService } from '../../../../../Services/Informes/configuracion-informes.service';
@@ -80,6 +80,9 @@ export class LogGestionCarteraComponent {
       '@Usuario': [''],
       '@Cuenta': [''],
       '@Operacion': ['']
+    },
+    {
+      validators: this.validarRangoFechas()
     });
 
     this.Filtros = this.serviceLogs.GetFiltrosGestionCreditos();
@@ -608,5 +611,30 @@ export class LogGestionCarteraComponent {
       );
   }
 
+  obtenerMinFechaFinal(): string {
+    return this.formulario?.get('@FechaInicial')?.value || '';
+  }
+
+  obtenerMaxFechaInicial(): string {
+    const fechaFinal = this.formulario?.get('@FechaFinal')?.value;
+
+    return fechaFinal || this.fechaMaxima;
+  }
+
+validarRangoFechas(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+
+    const fechaInicial = control.get('@FechaInicial')?.value;
+    const fechaFinal = control.get('@FechaFinal')?.value;
+
+    if (!fechaInicial || !fechaFinal) {
+      return null;
+    }
+
+    return new Date(fechaInicial) <= new Date(fechaFinal)
+      ? null
+      : { rangoFechas: true };
+  };
+}
 
 }

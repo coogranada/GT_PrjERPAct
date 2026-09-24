@@ -6588,47 +6588,53 @@ export class DisponiblesComponent implements OnInit {
       } else if (this.DisponibleOperacionFrom.get('Codigo')?.value === '34') {  // Asignar cupo 
         this.loading.show();
         let payload: any = this.DisponibleForm.value;
-        payload.Real = this.ListGarantiasRealesAgregadas;
+        // payload.Real = this.ListGarantiasRealesAgregadas;
+        payload.Real = this.garantiasRealesAsignadas;
         payload.Codeudor = this.dataObjetCd;
         payload.TipoPagare = this.DisponibleForm.get('TipoPagare')?.value;
         payload.NumeroPagare = this.DisponibleForm.get('NumeroPagare')?.value;
-        this.DisponiblesServices.AsignarCupo(payload).subscribe(
-          result => {
-            this.AsignarCupo = true;
-            this.loading.hide();
-            this.BloquearAsociado = false;
-            this.notif.success('Exitoso', 'El asignar cupo se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
-            this.accionSeleccionada = false;
-            this.btnGuardar = true;
-            this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
-            this.DisponibleForm.get('IdCuentaCupo')?.setValue(result.IdCuentaCupo);
-            this.btnActualizar = true;
-            this.btnActualizarCanales = true;
-            this.BloquearCanales = false;
-            this.selectEstado = true;
-            this.inputEstado = false;
-            this.bloquearbtnActalizar = false;
-            this.enableBtnActualizar = false;
+        console.log('❤️🤠😒👌', payload);
             this.GuardarGarantiasAndLog("guardar");
-              setTimeout(() => {
-              this.ObtenerHistorial();
-              this.itemsDataObejct = [];
-              this.BuscarPorCuenta();
-            }, 200);
+
+                this.loading.hide();
+
+        // this.DisponiblesServices.AsignarCupo(payload).subscribe(
+        //   result => {
+        //     this.AsignarCupo = true;
+        //     this.loading.hide();
+        //     this.BloquearAsociado = false;
+        //     this.notif.success('Exitoso', 'El asignar cupo se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+        //     this.accionSeleccionada = false;
+        //     this.btnGuardar = true;
+        //     this.DisponibleForm.get('IdCuenta')?.setValue(result.IdCuenta);
+        //     this.DisponibleForm.get('IdCuentaCupo')?.setValue(result.IdCuentaCupo);
+        //     this.btnActualizar = true;
+        //     this.btnActualizarCanales = true;
+        //     this.BloquearCanales = false;
+        //     this.selectEstado = true;
+        //     this.inputEstado = false;
+        //     this.bloquearbtnActalizar = false;
+        //     this.enableBtnActualizar = false;
+        //     this.GuardarGarantiasAndLog("guardar");
+        //       setTimeout(() => {
+        //       this.ObtenerHistorial();
+        //       this.itemsDataObejct = [];
+        //       this.BuscarPorCuenta();
+        //     }, 200);
               
-            this.BloquearCuponInicial = false;
-            this.BloquearMedioPago = false;
-            this.BloquearOperacionPermitida = false;
-            this.BloquearPagare = false;
-            this.BloquearRadicado = false;
-            this.BloquearPagare = false;
-          },
-          error => {
-            this.loading.hide();
-            const errorMessage = <any>error;
-            console.log(errorMessage);
-          }
-        );
+        //     this.BloquearCuponInicial = false;
+        //     this.BloquearMedioPago = false;
+        //     this.BloquearOperacionPermitida = false;
+        //     this.BloquearPagare = false;
+        //     this.BloquearRadicado = false;
+        //     this.BloquearPagare = false;
+        //   },
+        //   error => {
+        //     this.loading.hide();
+        //     const errorMessage = <any>error;
+        //     console.log(errorMessage);
+        //   }
+        // );
         
       } else if (this.DisponibleOperacionFrom.get('Codigo')?.value === '75') {  // Activar cuenta
         this.loading.show();
@@ -7735,23 +7741,23 @@ export class DisponiblesComponent implements OnInit {
     this.ListGarantiasReales = [];
     this.ListGarantiasRealesAgregadas = [];
   }
-  GuardarGarantiasList() {
-    //let suma: number = 0;
-    //this.ListGarantiasRealesAgregadas.forEach(( x: any) => {
-    //  suma = suma + Number(x.ValorDisponible);
-    //});
-    if (this.valorDisponibleTotal >= Number(this.DisponibleForm.get('CupoAprobado')?.value)) {
-      this.dataObjetR = this.ListGarantiasRealesAgregadas;
-      $("#ModalGarantiasReales").modal("hide");
-      this.enableBtnActualizar = true;
-    }else {
-      this.enableBtnActualizar = true;
-      this.notif.warning('Advertencia', 'Garantía no cubre el valor del cupo aprobado.', ConfiguracionNotificacion.configRightTop);
-    }
-    this.valorCoberturaTotalGar = this.valorCoberturaTotal;
-    this.valorRespaldadoTotalGar = this.valorRespaldadoTotal;
-    this.valorDisponibleTotalGar = this.valorDisponibleTotal;
-  }
+  // GuardarGarantiasList() {
+  //   //let suma: number = 0;
+  //   //this.ListGarantiasRealesAgregadas.forEach(( x: any) => {
+  //   //  suma = suma + Number(x.ValorDisponible);
+  //   //});
+  //   if (this.valorDisponibleTotal >= Number(this.DisponibleForm.get('CupoAprobado')?.value)) {
+  //     this.dataObjetR = this.ListGarantiasRealesAgregadas;
+  //     $("#ModalGarantiasReales").modal("hide");
+  //     this.enableBtnActualizar = true;
+  //   }else {
+  //     this.enableBtnActualizar = true;
+  //     this.notif.warning('Advertencia', 'Garantía no cubre el valor del cupo aprobado.', ConfiguracionNotificacion.configRightTop);
+  //   }
+  //   this.valorCoberturaTotalGar = this.valorCoberturaTotal;
+  //   this.valorRespaldadoTotalGar = this.valorRespaldadoTotal;
+  //   this.valorDisponibleTotalGar = this.valorDisponibleTotal;
+  // }
 
   AsignarCupoLog: any = {};
   GuardarGarantiasAndLog(value: string) {
@@ -7766,31 +7772,31 @@ export class DisponiblesComponent implements OnInit {
         this.AsignarCupoLog.Garantia = this.ListGarantiasRealesAgregadas;
       else
         this.AsignarCupoLog.Garantia = "No se cargaron garantias";
+      console.log('👌👌',this.AsignarCupoLog);
+      // this.NovedadesAhorrosPDF('Asignar Cupo');
+      // this.Guardarlog(this.AsignarCupoLog);
+      // setTimeout(() => {
+      //   this.AsignarCupo = false;
+      //   this.DisponibleOperacionFrom.get('Codigo')?.reset();
 
-      this.NovedadesAhorrosPDF('Asignar Cupo');
-      this.Guardarlog(this.AsignarCupoLog);
-      setTimeout(() => {
-        this.AsignarCupo = false;
-        this.DisponibleOperacionFrom.get('Codigo')?.reset();
+      //   if (this.ListGarantiasRealesAgregadas.length > 0) {
+      //     let payload: any = this.DisponibleForm.value;
+      //     payload.Real = this.ListGarantiasRealesAgregadas;
+      //     this.DisponiblesServices.GuardarGarantia(payload).subscribe(( x: any) => {
+      //     });
 
-        if (this.ListGarantiasRealesAgregadas.length > 0) {
-          let payload: any = this.DisponibleForm.value;
-          payload.Real = this.ListGarantiasRealesAgregadas;
-          this.DisponiblesServices.GuardarGarantia(payload).subscribe(( x: any) => {
-          });
-
-          this.BuscarPorCuenta();
-        }
-      }, 400);
+      //     this.BuscarPorCuenta();
+      //   }
+      // }, 400);
     }
 
-    if (value == "log" && this.RadicadoOld != null && this.RadicadoOld != "0") {
-      this.AsignarCupoLog.CupoAprobadoAnterior = this.cupoAprobadoAnterior;
-      this.AsignarCupoLog.RadicadoAnterior = this.RadicadoOld;
-      this.AsignarCupoLog.CuentaPadreAnterior = this.cuentaPadreAnterior;
-      this.AsignarCupoLog.LineaAnterior = this.lineaAnterior;
-      this.AsignarCupoLog.PlazoAnterior = this.descripcionLineaAnterior;
-    }
+    // if (value == "log" && this.RadicadoOld != null && this.RadicadoOld != "0") {
+    //   this.AsignarCupoLog.CupoAprobadoAnterior = this.cupoAprobadoAnterior;
+    //   this.AsignarCupoLog.RadicadoAnterior = this.RadicadoOld;
+    //   this.AsignarCupoLog.CuentaPadreAnterior = this.cuentaPadreAnterior;
+    //   this.AsignarCupoLog.LineaAnterior = this.lineaAnterior;
+    //   this.AsignarCupoLog.PlazoAnterior = this.descripcionLineaAnterior;
+    // }
 
   }
 
@@ -8888,6 +8894,10 @@ export class DisponiblesComponent implements OnInit {
     const ExoCobroHasta = new FormControl('', []);
     const Edad = new FormControl('', []);
 
+    this.garantiasForm = new FormGroup({
+      codeudorSeleccionado: new FormControl('', Validators.required)
+    });
+    
     this.DisponibleForm = new FormGroup({
       OficinaCambio: OficinaCambio,
       IdAsesor: IdAsesor,
@@ -9152,34 +9162,34 @@ esMismoDia(fechaStr: string): boolean {
 
 //Inicio garantias 
 
-  habilitarCambiarGarantia() {
-    this.loading.show();
+  // habilitarCambiarGarantia() {
+  //   this.loading.show();
     
-    // this.getDatosSimulacion();
-    // this.getCodeudorBasico(); 
+  //   // this.getDatosSimulacion();
+  //   // this.getCodeudorBasico(); 
 
-    const idTercero = this.DisponibleForm.get('LngTercero')?.value
+  //   const idTercero = this.DisponibleForm.get('LngTercero')?.value
 
-    this.getGarantiasAsignadas().pipe(
-      concatMap(() =>
-          this.getGarantiasDisponibles(idTercero, false)
-        ),
-      concatMap(() =>
-          this.getGAarantiasCompartidas()
-        )
-      ).subscribe({
-        next: () => {   
-          this.mostrarModal = true;   
-          setTimeout(() => {
-            this.modalGarantias.abrir();
-          });   
-          this.loading.hide();
-        },
-        error: () => {
-          this.loading.hide();
-        }
-      });
-  }
+  //   this.getGarantiasAsignadas().pipe(
+  //     concatMap(() =>
+  //         this.getGarantiasDisponibles(idTercero, false)
+  //       ),
+  //     concatMap(() =>
+  //         this.getGAarantiasCompartidas()
+  //       )
+  //     ).subscribe({
+  //       next: () => {   
+  //         this.mostrarModal = true;   
+  //         setTimeout(() => {
+  //           this.modalGarantias.abrir();
+  //         });   
+  //         this.loading.hide();
+  //       },
+  //       error: () => {
+  //         this.loading.hide();
+  //       }
+  //     });
+  // }
 
   getGAarantiasCompartidas() {
     const idTercero = this.DisponibleForm.get('LngTercero')?.value
@@ -9356,79 +9366,114 @@ esMismoDia(fechaStr: string): boolean {
     return true;
   }
 
-  onClickConfirmarCambiosGarantia(data: any): void {
-    const { asignadas, agregar, eliminar, compartidas, totales } = data;
 
-    this.garantiasRealesAsignadas = asignadas;
-    this.garantiasAgregar = agregar;
-    this.garantiasEliminar = eliminar;
-    this.garantiasCompartidas = compartidas;
+  // GuardarGarantiasList() {
+  //   //let suma: number = 0;
+  //   //this.ListGarantiasRealesAgregadas.forEach(( x: any) => {
+  //   //  suma = suma + Number(x.ValorDisponible);
+  //   //});
+  //   if (this.valorDisponibleTotal >= Number(this.DisponibleForm.get('CupoAprobado')?.value)) {
+  //     this.dataObjetR = this.ListGarantiasRealesAgregadas;
+  //     $("#ModalGarantiasReales").modal("hide");
+  //     this.enableBtnActualizar = true;
+  //   }else {
+  //     this.enableBtnActualizar = true;
+  //     this.notif.warning('Advertencia', 'Garantía no cubre el valor del cupo aprobado.', ConfiguracionNotificacion.configRightTop);
+  //   }
+  //   this.valorCoberturaTotalGar = this.valorCoberturaTotal;
+  //   this.valorRespaldadoTotalGar = this.valorRespaldadoTotal;
+  //   this.valorDisponibleTotalGar = this.valorDisponibleTotal;
+  // }
 
-    if (!this.validarSaldo(totales)) return;
+  onClickConfirmarCambiosGarantia(event: any): void {
+    console.log('Garantías asignadas:', event.asignadas);
+    console.log('Garantías a agregar:', event.agregar);
+    console.log('Garantías a eliminar:', event.eliminar);
+    console.log('Garantías compartidas:', event.compartidas);
+    console.log('Evento completo:', event);
 
-    const {
-      IdOficinaCuenta,
-      IdProductoCuenta,
-      IdConsecutivo,
-      IdDigito
-    } = this.DisponibleForm.value;
+    this.garantiasRealesAsignadas = event.asignadas;
+    this.garantiasAgregar = event.agregar;
+    this.garantiasEliminar = event.eliminar;
+    this.garantiasCompartidas = event.compartidas;
 
-    const usuario = this.dataUser?.IdUsuario;
-
-    const dto: CambiarGarantiasRequestDto = {
-      oficina: IdOficinaCuenta,
-      producto: IdProductoCuenta,
-      consecutivo: IdConsecutivo,
-      digito: IdDigito,
-      usuario: usuario,
-      agregar: this.garantiasAgregar.map(g => ({
-        oficina: IdOficinaCuenta,
-        producto: IdProductoCuenta,
-        clase: g.Clase,
-        consecutivo: IdConsecutivo,
-        digito: IdDigito,
-        garantia: g.Consecutivo,
-        tipo: g.Tipo,
-        valor: g.Cobertura,
-        usuario: usuario,
-        fecha: null
-      })),
-
-      eliminar: this.garantiasEliminar.map(g => ({
-        oficina: IdOficinaCuenta,
-        producto: IdProductoCuenta,
-        clase: g.Clase,
-        consecutivo: IdConsecutivo,
-        digito: IdDigito,
-        garantia: g.Consecutivo,
-        tipo: g.Tipo,
-        valor: g.Cobertura,
-        usuario: usuario,
-        fecha: new Date().toISOString().split('T')[0]
-      }))
-    };
-    
-    const jsonLog = this.construirLogCambioGarantia();
-    this.loading.show();
-
-    this.garantiasService.cambiarGarantias(dto)
-    .pipe(finalize(() => this.loading.hide()))
-    .subscribe({
-      next: (res) => {
-        if (!res?.Exitoso) {
-          this.notif.warning('Advertencia', res.Mensaje, ConfiguracionNotificacion.configRightTop);
-          return;
-        }
-        
-        // this.guardarLogGestionCredito(jsonLog);
-        this.notif.success('Exitoso', 'El cambio de garantía se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
-        this.cerrarModalYRefrescarCambiarGarantia();
-      },
-      error: () => {
-        this.notif.error('Error', 'No se pudo guardar', ConfiguracionNotificacion.configRightTop);
-      }
-    });
+    $('#cambiarGarantias').modal('hide');
+    this.enableBtnActualizar = true;
   }
+  
+  // onClickConfirmarCambiosGarantia(data: any): void {
+  //   const { asignadas, agregar, eliminar, compartidas, totales } = data;
+
+  //   this.garantiasRealesAsignadas = asignadas;
+  //   this.garantiasAgregar = agregar;
+  //   this.garantiasEliminar = eliminar;
+  //   this.garantiasCompartidas = compartidas;
+
+  //   if (!this.validarSaldo(totales)) return;
+
+  //   const {
+  //     IdOficinaCuenta,
+  //     IdProductoCuenta,
+  //     IdConsecutivo,
+  //     IdDigito
+  //   } = this.DisponibleForm.value;
+
+  //   const usuario = this.dataUser?.IdUsuario;
+
+  //   const dto: CambiarGarantiasRequestDto = {
+  //     oficina: IdOficinaCuenta,
+  //     producto: IdProductoCuenta,
+  //     consecutivo: IdConsecutivo,
+  //     digito: IdDigito,
+  //     usuario: usuario,
+  //     agregar: this.garantiasAgregar.map(g => ({
+  //       oficina: IdOficinaCuenta,
+  //       producto: IdProductoCuenta,
+  //       clase: g.Clase,
+  //       consecutivo: IdConsecutivo,
+  //       digito: IdDigito,
+  //       garantia: g.Consecutivo,
+  //       tipo: g.Tipo,
+  //       valor: g.Cobertura,
+  //       usuario: usuario,
+  //       fecha: null
+  //     })),
+
+  //     eliminar: this.garantiasEliminar.map(g => ({
+  //       oficina: IdOficinaCuenta,
+  //       producto: IdProductoCuenta,
+  //       clase: g.Clase,
+  //       consecutivo: IdConsecutivo,
+  //       digito: IdDigito,
+  //       garantia: g.Consecutivo,
+  //       tipo: g.Tipo,
+  //       valor: g.Cobertura,
+  //       usuario: usuario,
+  //       fecha: new Date().toISOString().split('T')[0]
+  //     }))
+  //   };
+    
+  //   const jsonLog = this.construirLogCambioGarantia();
+  //   this.loading.show();
+
+  //   this.garantiasService.cambiarGarantias(dto)
+  //   .pipe(finalize(() => this.loading.hide()))
+  //   .subscribe({
+  //     next: (res) => {
+  //       if (!res?.Exitoso) {
+  //         this.notif.warning('Advertencia', res.Mensaje, ConfiguracionNotificacion.configRightTop);
+  //         return;
+  //       }
+        
+  //       // this.guardarLogGestionCredito(jsonLog);
+  //       this.notif.success('Exitoso', 'El cambio de garantía se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+  //       this.cerrarModalYRefrescarCambiarGarantia();
+  //     },
+  //     error: () => {
+  //       this.notif.error('Error', 'No se pudo guardar', ConfiguracionNotificacion.configRightTop);
+  //     }
+  //   });
+  // }
 
   private construirLogCambioGarantia() {
     const formatear = (lista: GarantiaRealAsignada[]) =>
@@ -9499,16 +9544,21 @@ CargarGarantias(idGarantia: number) {
             this.getGAarantiasCompartidas()
           )
         ).subscribe({
-          next: () => {
+next: () => {
 
-            this.mostrarModal = true;
+  console.log('garantiasForm =>', this.garantiasForm);
+  console.log('modalGarantias =>', this.modalGarantias);
+  console.log('mostrarModal =>', this.mostrarModal);
 
-            setTimeout(() => {
-              this.modalGarantias.abrir();
-            });
+  this.mostrarModal = true;
 
-            this.enableBtnActualizar = true;
-          },
+  setTimeout(() => {
+    console.log('modalGarantias DESPUES =>', this.modalGarantias);
+    this.modalGarantias?.abrir();
+  });
+
+  this.enableBtnActualizar = true;
+},
           error: (err) => {
             console.error(err);
 
@@ -9588,5 +9638,5 @@ CargarGarantias(idGarantia: number) {
   //     }
   //   );
   // }
-  
+
 }
