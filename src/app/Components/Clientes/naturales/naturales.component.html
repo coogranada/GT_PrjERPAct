@@ -2106,8 +2106,8 @@
                                                             </thead>
                                                             <tbody *ngFor="let variable of itemsPropiedad; let i = index;">
                                                                 <tr class="filProp_{{i}}" (click)="CambiarColor(i,4)">
-                                                                    <td class=" column_activo columnactivo : variable.activo.Descripcion.length = 30">
-                                                                        {{variable.activo.Descripcion}}
+                                                                    <td class=" column_activo columnactivo : variable.activo?.Descripcion.length = 30">
+                                                                        {{variable.activo?.Descripcion}}
                                                                     </td>
                                                                     <td class="Capitalice column_direccion columnDireccion : variable.DireccionCompleta.length = 25">
                                                                         <p>{{variable.DireccionCompleta}}</p>
@@ -2140,7 +2140,7 @@
                                                                     <td *ngIf="variable.aFavor === '' || variable.aFavor === null" class=" column_afavor columnafavor : variable.aFavor.length = 25">
                                                                         N/A
                                                                     </td>
-                                                                    <td class="column_opciones columnOpciones :variable.activo.Descripcion.length = 30">
+                                                                    <td class="column_opciones columnOpciones :variable.activo?.Descripcion.length = 30">
                                                                         <!-- [attr.disabled]="!formBuscarLocked" -->
                                                                         <button class="btn Gt-btn-verde btn-icon legitRipple" (click)="MappearActivos(i,variable)" *ngIf="!formBuscarLocked">
                                                                             <i class="icon-pencil"></i>
@@ -2209,7 +2209,7 @@
                                                             <tbody *ngFor="let variableVeh of itemsVehiculo; let i = index;">
                                                                 <tr class="filVeh_{{i}}" (click)="CambiarColor(i,5)">
                                                                     <td>
-                                                                        {{variableVeh.activo.Descripcion}}
+                                                                        {{variableVeh.activo?.Descripcion}}
                                                                     </td>
                                                                     <td *ngIf="(variableVeh.Ciudad === null || variableVeh.Ciudad === undefined) && (variableVeh.Pais === null ||
                                                                                 variableVeh.Pais === undefined)">
@@ -2257,7 +2257,7 @@
                                                                     <td *ngIf="variableVeh.aFavor === '' || variableVeh.aFavor === null" class=" column_afavor columnafavor : variableVeh.aFavor.length = 25">
                                                                         N/A
                                                                     </td>
-                                                                    <td class="column_opciones columnOpciones : variableVeh.activo.Descripcion.length = 30">
+                                                                    <td class="column_opciones columnOpciones : variableVeh.activo?.Descripcion.length = 30">
                                                                         <button class="btn Gt-btn-verde btn-icon legitRipple" (click)="MappearActivos(i, variableVeh)" *ngIf="!formBuscarLocked">
                                                                             <i class="icon-pencil"></i>
                                                                         </button> &nbsp;
@@ -2310,7 +2310,7 @@
                                                             <tbody *ngFor="let variableOtro of itemsOtros; let i = index;">
                                                                 <tr class="filotros_{{i}}" (click)="CambiarColor(i,6)">
                                                                     <td>
-                                                                        {{variableOtro.activo.Descripcion}}
+                                                                        {{variableOtro.activo?.Descripcion}}
                                                                     </td>
                                                                     <td *ngIf="variableOtro.ciudadActivos !== '' && variableOtro.ciudadActivos !== null">
                                                                         {{variableOtro.ciudadActivos.Nombre}}

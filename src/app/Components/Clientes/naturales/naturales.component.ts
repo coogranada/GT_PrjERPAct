@@ -21987,8 +21987,9 @@ enviarWorkManager() {
             if (result.asociadosNaturalesDto !== null) {
               this.basicosFrom.get('tipoCliente')?.setValue(result.asociadosNaturalesDto.IdRelacion);
               this.basicosFrom.get('RegimenTributario')?.setValue(result.asociadosNaturalesDto.RegimenTributario);
-            } 
-            this.relacionAnterior = result.asociadosNaturalesDto.IdRelacion;
+            }
+
+            this.relacionAnterior = result.asociadosNaturalesDto?.IdRelacion ?? 0;
             if (result.asociadosNaturalesDto.IdRelacion === 15) {
               this.BlockDeudor = null;
               this.BlockInputService = null;
@@ -22278,7 +22279,7 @@ enviarWorkManager() {
             } else {
               this.basicosFrom.get('estadoCivil')?.setValue(null);
             }
-            this.estadoCivilAnterior = result.asociadosNaturalesDto.IdEstadoCivil;
+            this.estadoCivilAnterior =  result.asociadosNaturalesDto?.IdEstadoCivil ?? 0;
             this.estadoCivilSeleccionado = +result.asociadosNaturalesDto.IdEstadoCivil;
 
             if (this.dataEmpresas !== null && this.dataEmpresas !== undefined) {
