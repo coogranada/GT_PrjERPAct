@@ -55,7 +55,8 @@ export class LogGestionCarteraComponent {
   public SelectedNombre: string = "";
   
   public fechaMaxima = new Date().toISOString().split('T')[0];
-
+  public fechaMinima = '2000-01-01';
+  
   constructor(
     private notif: AlertService,
     private configuracionInformesS: ConfiguracionInformesService,
@@ -74,8 +75,21 @@ export class LogGestionCarteraComponent {
     this.loadOperaciones();
 
     this.formulario = this.fb.group({
-      '@FechaInicial': [null, Validators.required],
-      '@FechaFinal': [null, Validators.required],
+      '@FechaInicial': [
+        null,
+        [
+          Validators.required,
+          this.validarFecha.bind(this)
+        ]
+      ],
+      
+      '@FechaFinal': [
+        null,
+        [
+          Validators.required,
+          this.validarFecha.bind(this)
+        ]
+      ],
       '@IdOficina': [0],
       '@Usuario': [''],
       '@Cuenta': [''],
@@ -542,13 +556,11 @@ export class LogGestionCarteraComponent {
   }
   
   mostrarBotones(): boolean {
-    if (
-      this.filtroSelect == 1 &&
-      this.formulario.controls['@FechaInicial'].valid &&
-      this.formulario.controls['@FechaFinal'].valid
-    ) {
+
+    if (this.filtroSelect == 1) {
       return true;
     }
+
     return this.filtrosAgregado.length > 0;
   }
 
@@ -621,20 +633,57 @@ export class LogGestionCarteraComponent {
     return fechaFinal || this.fechaMaxima;
   }
 
-validarRangoFechas(): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
+  validarRangoFechas(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
 
-    const fechaInicial = control.get('@FechaInicial')?.value;
-    const fechaFinal = control.get('@FechaFinal')?.value;
+      const fechaInicial = control.get('@FechaInicial')?.value;
+      const fechaFinal = control.get('@FechaFinal')?.value;
 
-    if (!fechaInicial || !fechaFinal) {
+      if (!fechaInicial || !fechaFinal) {
+        return null;
+      }
+
+      return new Date(fechaInicial) <= new Date(fechaFinal)
+        ? null
+        : { rangoFechas: true };
+    };
+  }
+
+  private validarFecha(control: AbstractControl): ValidationErrors | null {
+
+    const fecha = control.value;
+
+    if (!fecha) {
       return null;
     }
 
-    return new Date(fechaInicial) <= new Date(fechaFinal)
-      ? null
-      : { rangoFechas: true };
-  };
-}
+    const partes = fecha.split('-');
+
+    const fechaIngresada = new Date(
+      Number(partes[0]),
+      Number(partes[1]) - 1,
+      Number(partes[2])
+    );
+
+    const fechaMinima = new Date(2000, 0, 1);
+
+    const hoy = new Date();
+
+    const fechaActual = new Date(
+      hoy.getFullYear(),
+      hoy.getMonth(),
+      hoy.getDate()
+    );
+
+    if (fechaIngresada > fechaActual) {
+      return { fechaMayorActual: true };
+    }
+
+    if (fechaIngresada < fechaMinima) {
+      return { fechaMenorPermitida: true };
+    }
+
+    return null;
+  }
 
 }

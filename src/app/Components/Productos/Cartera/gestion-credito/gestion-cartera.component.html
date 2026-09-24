@@ -922,63 +922,122 @@
                                     
                                 </div>
 
-                                <!-- ADMISION -->
                                 <div class="row"
                                      *ngIf="insolvenciaForm.get('IdTipoSeguimiento')?.value == 1">
                                 
                                     <div class="col-md-4">
                                         <div class="form-group">
+                                        
                                             <label>Fecha admisión:</label>
-                                            <span class="grande"> *</span>
+                                            <span class="grande">*</span>
                                         
                                             <input
                                                 type="date"
                                                 class="form-control"
                                                 formControlName="FechaAdmision"
-                                                [max]="fechaMaxima">
+                                                [max]="fechaMaxima"
+                                                [min]="fechaMinima">
+                                
+                                            <span
+                                                class="help-block validationSpan"
+                                                *ngIf="
+                                                    insolvenciaForm.get('FechaAdmision')?.touched &&
+                                                    insolvenciaForm.get('FechaAdmision')?.errors?.['fechaMayorActual']
+                                                ">
+                                                La fecha no puede ser mayor a la fecha actual.
+                                            </span>
+                                        
+                                            <span
+                                                class="help-block validationSpan"
+                                                *ngIf="
+                                                    insolvenciaForm.get('FechaAdmision')?.touched &&
+                                                    insolvenciaForm.get('FechaAdmision')?.errors?.['fechaMenorPermitida']
+                                                ">
+                                                La fecha no puede ser menor al 01/01/2000.
+                                            </span>
+                                        
                                         </div>
                                     </div>
                                 
-                                </div>
-                                
+                                </div>                                
                                 <!-- NOTIFICACION -->
                                 <div class="row"
                                      *ngIf="insolvenciaForm.get('IdTipoSeguimiento')?.value == 2">
                                 
                                     <div class="col-md-4">
                                         <div class="form-group">
+                                        
                                             <label>Fecha notificación:</label>
-                                            <span class="grande"> *</span>
+                                            <span class="grande">*</span>
                                         
                                             <input
                                                 type="date"
                                                 class="form-control"
                                                 formControlName="FechaNotificacion"
-                                                [max]="fechaMaxima">
+                                                [max]="fechaMaxima"
+                                                [min]="fechaMinima">
+                                
+                                            <span
+                                                class="help-block validationSpan"
+                                                *ngIf="
+                                                    insolvenciaForm.get('FechaNotificacion')?.touched &&
+                                                    insolvenciaForm.get('FechaNotificacion')?.errors?.['fechaMayorActual']
+                                                ">
+                                                La fecha no puede ser mayor a la fecha actual.
+                                            </span>
+                                        
+                                            <span
+                                                class="help-block validationSpan"
+                                                *ngIf="
+                                                    insolvenciaForm.get('FechaNotificacion')?.touched &&
+                                                    insolvenciaForm.get('FechaNotificacion')?.errors?.['fechaMenorPermitida']
+                                                ">
+                                                La fecha no puede ser menor al 01/01/2000.
+                                            </span>
+                                        
                                         </div>
                                     </div>
                                 
-                                </div>
-                                
+                                </div>                               
                                 <!-- INICIO NEGOCIACION -->
                                 <div class="row"
                                      *ngIf="insolvenciaForm.get('IdTipoSeguimiento')?.value == 3">
-                                
+
                                     <div class="col-md-4">
                                         <div class="form-group">
+                                        
                                             <label>Fecha inicio negociación:</label>
-                                            <span class="grande"> *</span>
+                                            <span class="grande">*</span>
                                         
                                             <input
                                                 type="date"
                                                 class="form-control"
                                                 formControlName="FechaInicioNegociacion"
-                                                [max]="fechaMaxima">
+                                                [max]="fechaMaxima"
+                                                [min]="fechaMinima">
+
+                                            <span
+                                                class="help-block validationSpan"
+                                                *ngIf="
+                                                    insolvenciaForm.get('FechaInicioNegociacion')?.touched &&
+                                                    insolvenciaForm.get('FechaInicioNegociacion')?.errors?.['fechaMayorActual']
+                                                ">
+                                                La fecha no puede ser mayor a la fecha actual.
+                                            </span>
+                                        
+                                            <span
+                                                class="help-block validationSpan"
+                                                *ngIf="
+                                                    insolvenciaForm.get('FechaInicioNegociacion')?.touched &&
+                                                    insolvenciaForm.get('FechaInicioNegociacion')?.errors?.['fechaMenorPermitida']
+                                                ">
+                                                La fecha no puede ser menor al 01/01/2000.
+                                            </span>
+                                        
                                         </div>
                                     </div>
                                 
-                                </div>
-                                
+                                </div>                                
                                 <!-- APROBACION ACUERDO -->
                                 <div class="row"
                                      *ngIf="insolvenciaForm.get('IdTipoSeguimiento')?.value == 4">
@@ -992,7 +1051,25 @@
                                                 type="date"
                                                 class="form-control"
                                                 formControlName="FechaAprobacionAcuerdo"
-                                                [max]="fechaMaxima">
+                                                [max]="fechaMaxima"
+                                                [min]="fechaMinima">
+                                            <span
+                                                class="help-block validationSpan"
+                                                *ngIf="
+                                                    insolvenciaForm.get('FechaAprobacionAcuerdo')?.touched &&
+                                                    insolvenciaForm.get('FechaAprobacionAcuerdo')?.errors?.['fechaMayorActual']
+                                                ">
+                                                La fecha no puede ser mayor a la fecha actual.
+                                            </span>
+                                            
+                                            <span
+                                                class="help-block validationSpan"
+                                                *ngIf="
+                                                    insolvenciaForm.get('FechaAprobacionAcuerdo')?.touched &&
+                                                    insolvenciaForm.get('FechaAprobacionAcuerdo')?.errors?.['fechaMenorPermitida']
+                                                ">
+                                                La fecha no puede ser menor al 01/01/2000.
+                                            </span>                                                
                                         </div>
                                     </div>
                                 
@@ -1009,7 +1086,25 @@
                                             type="date"
                                             class="form-control"
                                             formControlName="FechaTerminacionAcuerdo"
-                                            [max]="fechaMaxima">
+                                            [max]="fechaMaxima"
+                                            [min]="fechaMinima">
+                                        <span
+                                            class="help-block validationSpan"
+                                            *ngIf="
+                                                insolvenciaForm.get('FechaTerminacionAcuerdo')?.touched &&
+                                                insolvenciaForm.get('FechaTerminacionAcuerdo')?.errors?.['fechaMayorActual']
+                                            ">
+                                            La fecha no puede ser mayor a la fecha actual.
+                                        </span>
+
+                                        <span
+                                            class="help-block validationSpan"
+                                            *ngIf="
+                                                insolvenciaForm.get('FechaTerminacionAcuerdo')?.touched &&
+                                                insolvenciaForm.get('FechaTerminacionAcuerdo')?.errors?.['fechaMenorPermitida']
+                                            ">
+                                            La fecha no puede ser menor al 01/01/2000.
+                                        </span>                                            
                                     </div>
                                 </div>
 
@@ -1028,7 +1123,25 @@
                                                 type="date"
                                                 class="form-control"
                                                 formControlName="FechaIncumplimientoAcuerdo"
-                                                [max]="fechaMaxima">
+                                                [max]="fechaMaxima"
+                                                [min]="fechaMinima">
+                                            <span
+                                                class="help-block validationSpan"
+                                                *ngIf="
+                                                    insolvenciaForm.get('FechaIncumplimientoAcuerdo')?.touched &&
+                                                    insolvenciaForm.get('FechaIncumplimientoAcuerdo')?.errors?.['fechaMayorActual']
+                                                ">
+                                                La fecha no puede ser mayor a la fecha actual.
+                                            </span>
+
+                                            <span
+                                                class="help-block validationSpan"
+                                                *ngIf="
+                                                    insolvenciaForm.get('FechaIncumplimientoAcuerdo')?.touched &&
+                                                    insolvenciaForm.get('FechaIncumplimientoAcuerdo')?.errors?.['fechaMenorPermitida']
+                                                ">
+                                                La fecha no puede ser menor al 01/01/2000.
+                                            </span>                                                
                                         </div>
                                     </div>
                                 
@@ -1047,7 +1160,25 @@
                                                 type="date"
                                                 class="form-control"
                                                 formControlName="FechaLiquidacion"
-                                                [max]="fechaMaxima">
+                                                [max]="fechaMaxima"
+                                                [min]="fechaMinima">
+                                            <span
+                                                class="help-block validationSpan"
+                                                *ngIf="
+                                                    insolvenciaForm.get('FechaLiquidacion')?.touched &&
+                                                    insolvenciaForm.get('FechaLiquidacion')?.errors?.['fechaMayorActual']
+                                                ">
+                                                La fecha no puede ser mayor a la fecha actual.
+                                            </span>
+                                            
+                                            <span
+                                                class="help-block validationSpan"
+                                                *ngIf="
+                                                    insolvenciaForm.get('FechaLiquidacion')?.touched &&
+                                                    insolvenciaForm.get('FechaLiquidacion')?.errors?.['fechaMenorPermitida']
+                                                ">
+                                                La fecha no puede ser menor al 01/01/2000.
+                                            </span>                                                
                                         </div>
                                     </div>
                                 

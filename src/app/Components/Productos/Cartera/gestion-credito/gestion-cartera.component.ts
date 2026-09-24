@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, Output, signal, viewChild, ViewChild } from '@angular/core';
-import { ControlContainer, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, ControlContainer, FormControl, FormGroup, Validators } from '@angular/forms';
 import { OperacionesService } from '../../../../Services/Maestros/operaciones.service';
 import { FormaPagoEnum, Tabs, TipoBusquedaResumen, TipoSistemas } from '../../../../Models/Productos/cartera/gestion-credito.enum';
 import { CarteraService } from '../../../../Services/Productos/cartera.service';
@@ -141,7 +141,7 @@ export class GestionCarteraComponent {
   public isSavingInsolvencia = false;
   public instanciasInsolvencia: InstanciaInsolvencia[] = [];
   public fechaMaxima = new Date().toISOString().split('T')[0];
-  
+  public fechaMinima = '2000-01-01';
 
 //Garantias
   public datosCuenta: any;
@@ -600,13 +600,55 @@ export class GestionCarteraComponent {
       IdCausal: new FormControl(''),
       IdTipoSeguimiento: new FormControl(''),
       IdInstancia: new FormControl(''),
-      FechaAdmision: new FormControl(''),
-      FechaNotificacion: new FormControl(''),
-      FechaInicioNegociacion: new FormControl(''),
-      FechaAprobacionAcuerdo: new FormControl(''),
-      FechaTerminacionAcuerdo: new FormControl(''),
-      FechaIncumplimientoAcuerdo: new FormControl(''),
-      FechaLiquidacion: new FormControl(''),
+      
+      FechaAdmision: new FormControl(
+        '',
+        [
+          this.validarFechaInsolvencia.bind(this)
+        ]
+      ),
+      
+      FechaNotificacion: new FormControl(
+        '',
+        [
+          this.validarFechaInsolvencia.bind(this)
+        ]
+      ),
+      
+      FechaInicioNegociacion: new FormControl(
+        '',
+        [
+          this.validarFechaInsolvencia.bind(this)
+        ]
+      ),
+      
+      FechaAprobacionAcuerdo: new FormControl(
+        '',
+        [
+          this.validarFechaInsolvencia.bind(this)
+        ]
+      ),
+      
+      FechaTerminacionAcuerdo: new FormControl(
+        '',
+        [
+          this.validarFechaInsolvencia.bind(this)
+        ]
+      ),
+      
+      FechaIncumplimientoAcuerdo: new FormControl(
+        '',
+        [
+          this.validarFechaInsolvencia.bind(this)
+        ]
+      ),
+      
+      FechaLiquidacion: new FormControl(
+        '',
+        [
+          this.validarFechaInsolvencia.bind(this)
+        ]
+      ),
     
       ValorReconocido: new FormControl('', [
         Validators.maxLength(12)
@@ -1935,6 +1977,44 @@ export class GestionCarteraComponent {
     Object.values(this.insolvenciaForm.controls)
       .forEach(control => control.updateValueAndValidity());
   }
+
+  private validarFechaInsolvencia(control: AbstractControl) {
+  
+    const fecha = control.value;
+  
+    if (!fecha) {
+      return null;
+    }
+  
+    const partes = fecha.split('-');
+  
+    const fechaIngresada = new Date(
+      Number(partes[0]),
+      Number(partes[1]) - 1,
+      Number(partes[2])
+    );
+  
+    const fechaMinima = new Date(2000, 0, 1);
+  
+    const hoy = new Date();
+  
+    const fechaActual = new Date(
+      hoy.getFullYear(),
+      hoy.getMonth(),
+      hoy.getDate()
+    );
+  
+    if (fechaIngresada > fechaActual) {
+      return { fechaMayorActual: true };
+    }
+  
+    if (fechaIngresada < fechaMinima) {
+      return { fechaMenorPermitida: true };
+    }
+  
+    return null;
+  }
+
   //Fin Proceso Insolvencia
 
 

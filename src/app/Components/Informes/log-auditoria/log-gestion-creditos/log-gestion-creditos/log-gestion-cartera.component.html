@@ -103,12 +103,16 @@
                               <div class="form-group">
                                 <label class="textNegrilla">Fecha Inicial:</label>
                                 <span class="grande"> *</span>
+                                                          
                                 <input
                                   type="date"
                                   class="form-control"
                                   formControlName="@FechaInicial"
+                                  [min]="fechaMinima"
                                   [max]="obtenerMaxFechaInicial()" />
-                              </div>
+                              </div>                            
+
+                              <!-- Menor o igual a fecha final -->
                               <span
                                 class="help-block validationSpan"
                                 *ngIf="
@@ -117,20 +121,44 @@
                                   formulario.get('@FechaFinal')?.value
                                 ">
                                 La fecha inicial debe ser menor o igual a la fecha final.
-                              </span>
+                              </span>                           
+
+                              <!-- Mayor a hoy -->
+                              <span
+                                class="help-block validationSpan"
+                                *ngIf="
+                                  formulario.get('@FechaInicial')?.touched &&
+                                  formulario.get('@FechaInicial')?.errors?.['fechaMayorActual']
+                                ">
+                                La fecha inicial no puede ser mayor a la fecha actual.
+                              </span>                           
+
+                              <!-- Menor al 2000 -->
+                              <span
+                                class="help-block validationSpan"
+                                *ngIf="
+                                  formulario.get('@FechaInicial')?.touched &&
+                                  formulario.get('@FechaInicial')?.errors?.['fechaMenorPermitida']
+                                ">
+                                La fecha inicial no puede ser menor al 01/01/2000.
+                              </span>                           
+
                             </div>
 
                             <div class="col-md-4 col-lg-4 col-sm-4">
                               <div class="form-group">
                                 <label class="textNegrilla">Fecha Final:</label>
                                 <span class="grande"> *</span>
+
                                 <input
                                   type="date"
                                   class="form-control"
                                   formControlName="@FechaFinal"
-                                  [min]="obtenerMinFechaFinal()"
+                                  [min]="obtenerMinFechaFinal() || fechaMinima"
                                   [max]="fechaMaxima" />
                               </div>
+                            
+                              <!-- Mayor o igual a fecha inicial -->
                               <span
                                 class="help-block validationSpan"
                                 *ngIf="
@@ -139,8 +167,30 @@
                                   formulario.get('@FechaFinal')?.value
                                 ">
                                 La fecha final debe ser mayor o igual a la fecha inicial.
-                              </span>                              
+                              </span>
+                            
+                              <!-- Mayor a hoy -->
+                              <span
+                                class="help-block validationSpan"
+                                *ngIf="
+                                  formulario.get('@FechaFinal')?.touched &&
+                                  formulario.get('@FechaFinal')?.errors?.['fechaMayorActual']
+                                ">
+                                La fecha final no puede ser mayor a la fecha actual.
+                              </span>
+                            
+                              <!-- Menor al 2000 -->
+                              <span
+                                class="help-block validationSpan"
+                                *ngIf="
+                                  formulario.get('@FechaFinal')?.touched &&
+                                  formulario.get('@FechaFinal')?.errors?.['fechaMenorPermitida']
+                                ">
+                                La fecha final no puede ser menor al 01/01/2000.
+                              </span>
+                            
                             </div>
+
                           </div>
                         </div>
 
