@@ -335,7 +335,7 @@ export class InformeLogService {
   validarCuentaGestionCredito(oficina: number, producto: number, consecutivo: number, digito: number
   ): Observable<boolean> {
       return this.http.get<boolean>(
-          `${this.envirment.Url}/InformeAuditoria/ValidarCuentaGestionCredito` +
+          `${this.envirment.Url}/InformeAuditoria/ValidarCuentaGestionCartera` +
           `?oficina=${oficina}` +
           `&producto=${producto}` +
           `&consecutivo=${consecutivo}` +

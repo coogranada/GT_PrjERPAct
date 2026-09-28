@@ -158,7 +158,7 @@ export class GeneralesService {
         $('#' + nameInput + '').prop('disabled', 'disabled');
     }
 
-    LogGestionCredito(request: LogGestionCreditoRequest): Observable<any> {
+     LogGestionCredito(request: LogGestionCreditoRequest): Observable<any> {
 
       const data = localStorage.getItem('Data');
       const dataUser = JSON.parse(window.atob(data ?? ''));
