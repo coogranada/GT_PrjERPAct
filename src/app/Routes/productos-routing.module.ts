@@ -8,7 +8,7 @@ import { TarjetaHabientesComponent } from '../Components/Productos/Ahorros/Dispo
 import { GMFDisponibleComponent } from '../Components/Productos/Ahorros/Disponibles/gmf/gmf.component';
 import { DisponiblesComponent } from '../Components/Productos/Ahorros/Disponibles/disponibles/disponibles.component';
 import { AsesoriaTerminoComponent } from '../Components/Productos/Ahorros/Termino/asesoria-termino/asesoria-termino.component';
-import { GestionCarteraComponent } from '../Components/Productos/Cartera/gestion-credito/gestion-cartera.component';
+import { GestionCarteraComponent } from '../Components/Productos/Cartera/gestion-cartera/gestion-cartera.component';
 
 const routesProductos: Routes = [
   { path: "Aportes", component: AportesComponent },

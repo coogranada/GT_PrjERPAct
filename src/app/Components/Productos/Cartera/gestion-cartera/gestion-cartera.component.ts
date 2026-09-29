@@ -348,6 +348,8 @@ export class GestionCarteraComponent {
     const fechaProximoPago = new FormControl({ value: '', disabled: true }, []);
     const fechaContingencia = new FormControl({ value: '', disabled: true }, []);
     const fechaInicioPeriodoGracia = new FormControl({ value: '', disabled: true }, []);
+    const fechaCartaprejuridico = new FormControl({ value: '', disabled: true }, []);
+    const fechaEntroPrejuridico = new FormControl({ value: '', disabled: true }, []);
     const fechaCambioTasa = new FormControl({ value: '', disabled: true }, []);
     const TipoPagare = new FormControl({ value: '', disabled: true }, []);
     const ValorCobertura = new FormControl({ value: '', disabled: true }, []);
@@ -420,6 +422,8 @@ export class GestionCarteraComponent {
       fechaProximoPago,
       fechaContingencia,
       fechaInicioPeriodoGracia,
+      fechaCartaprejuridico,
+      fechaEntroPrejuridico,
       fechaCambioTasa,
       TipoPagare,
       ValorCobertura: ValorCobertura,
@@ -4808,6 +4812,8 @@ CalcularSimularPago(){
           fechaProximoPago: fechas.ProximoPago,
           fechaContingencia: fechas.Contingencia,
           fechaInicioPeriodoGracia: fechas.InicioPeriodoGracia,
+          fechaCartaprejuridico: fechas.CartaPrejuridico,
+          fechaEntroPrejuridico: fechas.EntradaPrejuridico,
           fechaCambioTasa: fechas.CambioTasa
         });
       }
@@ -4838,6 +4844,8 @@ CalcularSimularPago(){
     this.gestionCreditoForm.get('fechaProximoPago')?.reset();
     this.gestionCreditoForm.get('fechaContingencia')?.reset();
     this.gestionCreditoForm.get('fechaInicioPeriodoGracia')?.reset();
+    this.gestionCreditoForm.get('fechaCartaprejuridico')?.reset();
+    this.gestionCreditoForm.get('fechaEntroPrejuridico')?.reset();
     this.gestionCreditoForm.get('fechaCambioTasa')?.reset();
   }
   //FIN HISTORIAL
