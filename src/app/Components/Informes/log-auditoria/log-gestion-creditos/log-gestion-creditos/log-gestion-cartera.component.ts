@@ -127,9 +127,7 @@ export class LogGestionCarteraComponent {
       return;
     }
 
-
-    const columnasSeleccionadas =
-      this.ListfilteredColumnasInf.filter(x => x.selected);
+    const columnasSeleccionadas = this.ListfilteredColumnasInf.filter(x => x.selected);
 
     if (columnasSeleccionadas.length === 0) {
       this.notif.onWarning('Advertencia', 'Debe seleccionar al menos un campo para generar el informe.'
@@ -234,7 +232,7 @@ export class LogGestionCarteraComponent {
     if (Cant === 0) {
       this.notif.onWarning(
         'Advertencia',
-        'No se encuentran registros.'
+        'No se encontró registro.'
       );
       return;
     }
@@ -419,7 +417,7 @@ export class LogGestionCarteraComponent {
       if (partes.length !== 4) {
         this.notif.onWarning(
           'Advertencia',
-          'Debe ingresar la cuenta en su formato formato.'
+          'Debe ingresar la cuenta en su formato.'
         );
         return;
       }
@@ -429,7 +427,7 @@ export class LogGestionCarteraComponent {
       if (!formatoCuenta.test(cuenta)) {
         this.notif.onWarning(
           'Advertencia',
-          'Debe ingresar la cuenta en su formato formato.'
+          'Debe ingresar la cuenta en su formato.'
         );
         return;
       }

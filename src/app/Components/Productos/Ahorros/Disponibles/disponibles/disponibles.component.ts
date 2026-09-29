@@ -3323,16 +3323,7 @@ export class DisponiblesComponent implements OnInit {
           }
 
           this.DisponibleForm.get('AliasCuenta')?.setValue(this.dataObjet.AliasCuenta);
-         console.log("codeudor",this.dataObjet.Codeudor)
-          console.log('👌👌👌👌');
-          this.DisponiblesServices.ObtenerGarantiasAsignadas(this.DisponibleForm.get('IdCuenta')?.value).subscribe({
-            next: (resp) => {
-              this.garantiasReales = resp || [];
-            },
-            error: () => {
-              this.garantiasReales = [];
-            }
-          });
+
          this.valorCoberturaTotalGar = 0;
          this.valorRespaldadoTotalGar = 0;
          this.valorDisponibleTotalGar = 0;
@@ -9322,24 +9313,6 @@ esMismoDia(fechaStr: string): boolean {
     }
     return true;
   }
-
-  // GuardarGarantiasList() {
-  //   //let suma: number = 0;
-  //   //this.ListGarantiasRealesAgregadas.forEach(( x: any) => {
-  //   //  suma = suma + Number(x.ValorDisponible);
-  //   //});
-  //   if (this.valorDisponibleTotal >= Number(this.DisponibleForm.get('CupoAprobado')?.value)) {
-  //     this.dataObjetR = this.ListGarantiasRealesAgregadas;
-  //     $("#ModalGarantiasReales").modal("hide");
-  //     this.enableBtnActualizar = true;
-  //   }else {
-  //     this.enableBtnActualizar = true;
-  //     this.notif.warning('Advertencia', 'Garantía no cubre el valor del cupo aprobado.', ConfiguracionNotificacion.configRightTop);
-  //   }
-  //   this.valorCoberturaTotalGar = this.valorCoberturaTotal;
-  //   this.valorRespaldadoTotalGar = this.valorRespaldadoTotal;
-  //   this.valorDisponibleTotalGar = this.valorDisponibleTotal;
-  // }
 
   onClickConfirmarCambiosGarantia(event: any): void {
     console.log('Garantías asignadas:', event.asignadas);
