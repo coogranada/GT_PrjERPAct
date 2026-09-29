@@ -6606,6 +6606,12 @@ export class DisponiblesComponent implements OnInit {
             this.bloquearbtnActalizar = false;
             this.enableBtnActualizar = false;
             // this.GuardarGarantiasAndLog("guardar");
+            this.NovedadesAhorrosPDF('Asignar Cupo');
+            this.Guardarlog(this.AsignarCupoLog);
+            setTimeout(() => {
+              this.AsignarCupo = false;
+              this.DisponibleOperacionFrom.get('Codigo')?.reset();
+            }, 400);
               setTimeout(() => {
               this.ObtenerHistorial();
               this.itemsDataObejct = [];
