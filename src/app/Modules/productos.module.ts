@@ -13,11 +13,11 @@ import { GMFDisponibleComponent } from '../Components/Productos/Ahorros/Disponib
 import { ShareComponentModule } from './share-component.module';
 import { DisponiblesComponent } from '../Components/Productos/Ahorros/Disponibles/disponibles/disponibles.component';
 import { AsesoriaTerminoComponent } from '../Components/Productos/Ahorros/Termino/asesoria-termino/asesoria-termino.component';
-import { GestionCarteraComponent} from '../Components/Productos/Cartera/gestion-credito/gestion-cartera.component';
+import { GestionCarteraComponent} from '../Components/Productos/Cartera/gestion-cartera/gestion-cartera.component';
 import { ConcatWithSpacePipe } from '../Pipes/utilidades/concatWithSpace.pipe';
 import { InformesModule } from './informes.module';
 import { TipoDocumentoPipe } from '../Pipes/utilidades/tipo-documento.pipe';
-import { CambiarInfoCreditoForm } from "../Components/Productos/Cartera/gestion-credito/cambiar-infocredito-form/cambiar-infocredito-form.component";
+import { CambiarInfoCreditoForm } from "../Components/Productos/Cartera/gestion-cartera/cambiar-infocredito-form/cambiar-infocredito-form.component";
 import { ModalComponent } from '../Components/shared/modal/modal.component';
 import { CambiarGarantiasModalComponent } from '../Components/shared/cambiar-garantias-modal/cambiar-garantias-modal.component';
 

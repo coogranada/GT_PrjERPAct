@@ -151,6 +151,7 @@ export interface Referencia {
   NombreEmpresa: string;
   TelefonoEmpresa: string;
   TelefonoResidencia: string;
+  Parentesco: string;
   TipoReferencia: number;
 }
 

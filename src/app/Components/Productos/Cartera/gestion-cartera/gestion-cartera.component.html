@@ -3489,20 +3489,20 @@
                                                 </colgroup>
                                                 <thead>
                                                     <tr>
-                                                        <th>Nombre completo</th>
-                                                        <th>Celular</th>
-                                                        <th>Teléfono</th>
+                                                        <th>Nombre completo</th>                                                       
                                                         <th>Tipo referencia</th>
+                                                        <th>Parentesco</th>
+                                                         <th>Celular</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr *ngFor="let refPersonal of refPersonales; let i = index"
                                                         (click)="selectRow('refPersonales', i)"
                                                         [class.tr-selected]="selectedRows['refPersonales'] === i">
-                                                        <td class="capitalize">{{ refPersonal.NombreCompleto }}</td>
-                                                        <td>{{ refPersonal.Celular }}</td>
-                                                        <td>{{ refPersonal.TelefonoResidencia }}</td>
+                                                        <td class="capitalize">{{ refPersonal.NombreCompleto }}</td>                                                       
                                                         <td>{{ refPersonal.DescripcionReferencia }}</td>
+                                                        <td>{{ refPersonal.Parentesco}}</td>
+                                                        <td>{{ refPersonal.Celular }}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -3586,6 +3586,12 @@
                                                 <input type="text" class="form-control" [attr.disabled]="true"
                                                     formControlName="cambioFechaPago" />
                                             </div>
+                                            <div class="form-group">
+                                                <label class="textNegrilla">Inicio período gracia:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true"
+                                                    formControlName="fechaInicioPeriodoGracia" />
+                                            </div>
                                         </div>
                                         <div>
                                             <div class="form-group">
@@ -3601,10 +3607,16 @@
                                                     formControlName="fechaContingencia" />
                                             </div>
                                             <div class="form-group">
-                                                <label class="textNegrilla">Inicio período gracia:</label>
+                                                <label class="textNegrilla">Carta de prejurídico:</label>
                                                 <span class="text-danger"></span>
                                                 <input type="text" class="form-control" [attr.disabled]="true"
-                                                    formControlName="fechaInicioPeriodoGracia" />
+                                                    formControlName="fechaCartaprejuridico" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="textNegrilla">Entra a prejurídico:</label>
+                                                <span class="text-danger"></span>
+                                                <input type="text" class="form-control" [attr.disabled]="true"
+                                                    formControlName="fechaEntroPrejuridico" />
                                             </div>
                                             <div class="form-group">
                                                 <label class="textNegrilla">Cambio de tasa:</label>
