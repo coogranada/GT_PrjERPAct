@@ -361,12 +361,6 @@ export class LogRecaudoOlivosComponent {
   }
 
   MostrarPanel() {
-    let temp: any = this.filtrosAgregado.filter(x => x.idFiltro == this.filtroSelect)[0];
-    if (temp) {
-      this.notif.onWarning('Advertencia', 'Filtro seleccionado ya existe');
-      this.limpiarSelected();
-      return;
-    }
     let s: number = this.filtroSelect;
     if (s == 4) {
       this.validar();
@@ -377,6 +371,20 @@ export class LogRecaudoOlivosComponent {
       this.AddFiltro(this.filtroSelect, idOficina, this.tituloGenerico, this.getDescripcionOficina(idOficina), "", "Es Igual", "@IdOficina");
       this.limpiarSelected();
     }
+  }
+
+  seleccionarFiltro() {
+    const existe = this.filtrosAgregado.some(
+      x => x.idFiltro == this.filtroSelect
+    );
+
+    if (existe) {
+      this.notif.onWarning('Advertencia', 'Filtro seleccionado ya existe.');
+      this.limpiarSelected();
+      return;
+    }
+
+    this.obtenerFiltro();
   }
 
   private getDescripcionOficina(id: number): string {

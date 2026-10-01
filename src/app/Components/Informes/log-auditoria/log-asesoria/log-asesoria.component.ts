@@ -208,6 +208,21 @@ export class LogAsesoriaComponent implements OnInit {
        this.validBlur = true;
   }
   opcionSelectedFilter(value : number) {
+    const existe = this.filtrosAgregado.some(
+      x => x.idFiltro == this.filtroSelect
+    );
+
+    if (existe) {
+      this.notif.warning(
+        'Advertencia',
+        'Filtro seleccionado ya existe',
+        ConfiguracionNotificacion.configRightTop
+      );
+
+      this.limpiarSelected();
+      return;
+    }
+
     this.ListGenerico = [];
     this.validBlur = false;
     switch (this.filtroSelect.toString()) {
@@ -284,12 +299,6 @@ export class LogAsesoriaComponent implements OnInit {
     this.dateEnd = this.valueFechaFinal.toString().replace("-", "/").replace("-", "/").replace("-", "/");
   }
   MostrarPanel() {
-    let temp: any = this.filtrosAgregado.filter(x => x.idFiltro == this.filtroSelect)[0];
-    if (temp) {
-      this.notif.warning('Advertencia', 'Filtro seleccionado ya existe', ConfiguracionNotificacion.configRightTop);
-      this.limpiarSelected();
-      return;
-    }
     let s: number = this.filtroSelect;
     if (s == -2) {
       this.DateBeginAndEnd();

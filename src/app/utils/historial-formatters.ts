@@ -98,30 +98,35 @@ export const formateadoresPorOperacion: Record<number, FormateadorOperacion> = {
   },
   131: (registro) => {
     if (!registro?.Detalles) return registro;
-
+  
     let detalles: any;
     try {
       detalles = JSON.parse(registro.Detalles);
     } catch {
-    return registro;
+      return registro;
     }
-
-    const anterior = detalles.Anterior;
-    const actualiza = detalles.Actualiza;
-
-    const mapManejaSeguro = (v?: number): string =>
-      v === 0
-        ? 'Con cobertura de seguro'
-        : 'Sin cobertura de seguro';
-
+  
+    const mapSeguro = (valor: any): string => {
+      if (typeof valor === 'string') return valor;
+    
+      if (valor?.manejaSeguro === 0)
+        return 'Con cobertura de seguro';
+    
+      if (valor?.manejaSeguro === 1)
+        return 'Sin cobertura de seguro';
+    
+      return '';
+    };
+  
     return {
       ...registro,
       Detalles: `
-        <strong>Anterior:</strong> ${mapManejaSeguro(anterior?.manejaSeguro)}
-        | <strong>Actualiza:</strong> ${mapManejaSeguro(actualiza?.manejaSeguro)}
+        <strong>Anterior:</strong> ${mapSeguro(detalles.Anterior)}
+        | <strong>Actualiza:</strong> ${mapSeguro(detalles.Actualiza)}
       `
     };
   },
+
   132: (registro) => {
     const detalles: DetallesLogCredito = JSON.parse(registro.Detalles);
 
@@ -186,37 +191,57 @@ export const formateadoresPorOperacion: Record<number, FormateadorOperacion> = {
   },
   21: (registro) => {
     if (!registro?.Detalles) return registro;
-      
+
     let detalles: any;
     try {
       detalles = JSON.parse(registro.Detalles);
     } catch {
       return registro;
     }
-    
-    const mapFormaPago = (v?: number): string => {
-      switch (v) {
-        case 0: return 'Caja';
-        case 1: return 'Débito';
-        case 2: return 'Nómina';
-        default: return '';
-      }
-    };
-    
+
     const anterior = detalles.Anterior;
     const actualiza = detalles.Actualiza;
-    
-    const textoAnterior = anterior?.FormaPago === 1 && anterior?.Debito
-      ? `Débito (${anterior.Debito.DocumentoDebito} - ${anterior.Debito.NombreDebito} - ${anterior.Debito.Cuenta})`
-      : mapFormaPago(anterior?.FormaPago);
-    
-    const textoActualiza = actualiza?.FormaPago === 1 && actualiza?.Debito
-      ? `Débito (${actualiza.Debito.DocumentoDebito} - ${actualiza.Debito.NombreDebito} - ${actualiza.Debito.Cuenta})`
-      : mapFormaPago(actualiza?.FormaPago);
-    
+
+    const mapFormaPago = (valor: any): string => {
+      if (valor === 0) return 'Caja';
+      if (valor === 1) return 'Débito';
+      if (valor === 2) return 'Nómina';
+      return valor ?? '';
+    };
+
+    const textoAnterior =
+      mapFormaPago(anterior?.FormaPago) === 'Débito' &&
+      (anterior?.CuentaOrigen || anterior?.Debito)
+        ? `Débito (${
+            (anterior.CuentaOrigen || anterior.Debito).Documento ??
+            (anterior.CuentaOrigen || anterior.Debito).DocumentoDebito
+          } - ${
+            (anterior.CuentaOrigen || anterior.Debito).Nombre ??
+            (anterior.CuentaOrigen || anterior.Debito).NombreDebito
+          } - ${
+            (anterior.CuentaOrigen || anterior.Debito).Cuenta
+          })`
+        : mapFormaPago(anterior?.FormaPago);
+
+    const textoActualiza =
+      mapFormaPago(actualiza?.FormaPago) === 'Débito' &&
+      (actualiza?.CuentaOrigen || actualiza?.Debito)
+        ? `Débito (${
+            (actualiza.CuentaOrigen || actualiza.Debito).Documento ??
+            (actualiza.CuentaOrigen || actualiza.Debito).DocumentoDebito
+          } - ${
+            (actualiza.CuentaOrigen || actualiza.Debito).Nombre ??
+            (actualiza.CuentaOrigen || actualiza.Debito).NombreDebito
+          } - ${
+            (actualiza.CuentaOrigen || actualiza.Debito).Cuenta
+          })`
+        : mapFormaPago(actualiza?.FormaPago);
+
     return {
       ...registro,
-      Detalles: `<strong>Anterior:</strong> ${textoAnterior} | <strong>Actualiza:</strong> ${textoActualiza}`
+      Detalles:
+        `<strong>Anterior:</strong> ${textoAnterior}` +
+        ` | <strong>Actualiza:</strong> ${textoActualiza}`
     };
   },
   133: (registro) => {
@@ -243,7 +268,7 @@ export const formateadoresPorOperacion: Record<number, FormateadorOperacion> = {
     };
 
     const textoCausal = actualiza?.Causal
-      ? `Causal: ${actualiza.Causal.Descripcion}`
+      ? `Causal: ${actualiza.Causal}`
       : '';
 
     const textoFecha = actualiza?.Fecha

@@ -5,3 +5,8 @@
     margin-left: 6px;
     position: absolute;
 }
+.icon-limpiar {
+    font-size: 18px;
+    transform: scale(1.2);
+    display: inline-block;
+}
