@@ -150,7 +150,7 @@ export class LogGestionCarteraComponent {
     this.mostrarModalProgreso();
 
     this.configuracionInformesS
-      .EjecutarInforme('ERP_SPInfGestionCreditos', '', data)
+      .EjecutarInforme('ERP_SPInfGestionCartera', '', data)
       .subscribe({
         next: (respuesta) => {
 
