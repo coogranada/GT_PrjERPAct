@@ -478,7 +478,7 @@
                                         <label class="textNegrilla">Convenio:</label>
                                         <span class="grande" *ngIf="ConvenioObligatorio"> *</span>
                                         <select class="form-control" id="selectIdConvenio" formControlName="IdConvenio" (change)="SeleccionConvenio()" [attr.disabled]="BloquearConvenio">
-                                            <option value="0">-- Seleccione --</option>
+                                            <!-- <option value="0">-- Seleccione --</option> -->
                                             <option *ngFor="let convenio of resultConvenioTarjetas" [value]="convenio.IdConvenio"> {{convenio.DescripcionConvenio}}</option>
                                         </select>
                                     </div>

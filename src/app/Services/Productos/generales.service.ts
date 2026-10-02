@@ -177,7 +177,7 @@ export class GeneralesService {
         IdObsCambioEstado: request.idObsCambioEstado ?? null,
       };
 
-      this.url = this.environment.Url + '/LogGestionCredito';
+      this.url = this.environment.Url + '/LogGestionCartera';
       return this._http.post<any>(this.url, payload);
     }
 
