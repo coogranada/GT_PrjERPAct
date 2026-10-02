@@ -47,7 +47,7 @@
                             <label class="textNegrilla">Cuenta:</label>
                         </div>
                         <div class="col-xs-4 col-md-3 col-lg-1">
-                            <input type="text" class="form-control" formControlName="IdOficinaCuenta" maxlength="3">
+                            <input type="text" class="form-control" formControlName="IdOficinaCuenta" maxlength="3" (paste)="pegarCuenta($event)">
                             <span class="help-block validationSpan"
                                 *ngIf="gestionCreditoForm.controls['IdOficinaCuenta']?.errors?.['pattern']">
                                 La cuenta solo acepta números.

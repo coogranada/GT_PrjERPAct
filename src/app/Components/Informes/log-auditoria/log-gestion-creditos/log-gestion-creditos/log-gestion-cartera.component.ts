@@ -10,6 +10,7 @@ import { LoadingService } from '../../../../../Services/shared/loading.service';
 import { InformeLogService } from '../../../../../Services/Informes/informe-log.service';
 import Swal from 'sweetalert2';
 import { OperacionesService } from '../../../../../Services/Maestros/operaciones.service';
+import { CuentaService } from '../../../../../Services/Generics/resultado-cuenta.service';
 
 @Component({
   selector: 'app-log-gestion-cartera',
@@ -66,6 +67,7 @@ export class LogGestionCarteraComponent {
     private serviceLogs: InformeLogService,
     private informeClientesService: InformeClientesService,
     private operacionesService: OperacionesService,
+    private cuentaService: CuentaService,
   ) { }
 
   ngOnInit(): void {
@@ -92,8 +94,11 @@ export class LogGestionCarteraComponent {
       ],
       '@IdOficina': [0],
       '@Usuario': [''],
-      '@Cuenta': [''],
-      '@Operacion': ['']
+      // '@Cuenta': [''],
+      '@IdOficinaCuenta': ['', Validators.pattern(/^[0-9]*$/)],
+      '@IdProductoCuenta': ['', Validators.pattern(/^[0-9]*$/)],
+      '@IdConsecutivo': ['', Validators.pattern(/^[0-9]*$/)],
+      '@IdDigito': ['', Validators.pattern(/^[0-9]*$/)],      '@Operacion': ['']
     },
     {
       validators: this.validarRangoFechas()
@@ -336,17 +341,22 @@ export class LogGestionCarteraComponent {
     }
   }
 
-  MostrarPanel() {
-
-    let temp = this.filtrosAgregado.find(
+  seleccionarFiltro() {
+    const existe = this.filtrosAgregado.some(
       x => x.idFiltro == this.filtroSelect
     );
 
-    if (temp) {
-      this.notif.onWarning('Advertencia', 'Filtro ya existe.');
-      this.limpiarSelected();
+    if (existe) {
+      this.notif.onWarning('Advertencia', 'Filtro seleccionado ya existe.');
+      this.filtroSelect = 0;
+      this.tituloGenerico = '';
       return;
     }
+
+    this.obtenerFiltro();
+  }
+
+  MostrarPanel() {
 
     // OPERACIÓN
     if (this.filtroSelect == 2) {
@@ -378,11 +388,14 @@ export class LogGestionCarteraComponent {
       const idOficina = this.formulario.get('@IdOficina')?.value;
       if (!idOficina) return;
 
+      const nombreOficina =
+        this.ListOficina.find(x => x.id == idOficina)?.descri ?? '';
+          
       this.AddFiltro(
         3,
         idOficina,
         'Oficina:',
-        idOficina,
+        nombreOficina,
         '',
         'Es Igual',
         '@IdOficina'
@@ -402,10 +415,13 @@ export class LogGestionCarteraComponent {
     // CUENTA
     if (this.filtroSelect == 5) {
     
-      let cuenta = this.formulario.get('@Cuenta')?.value ?? '';
-      cuenta = cuenta.replace(/[\r\n\t]/g, '').trim();
-    
-      this.formulario.get('@Cuenta')?.setValue(cuenta);
+      const oficinaCuenta = this.formulario.get('@IdOficinaCuenta')?.value ?? '';
+      const productoCuenta = this.formulario.get('@IdProductoCuenta')?.value ?? '';
+      const consecutivoCuenta = this.formulario.get('@IdConsecutivo')?.value ?? '';
+      const digitoCuenta = this.formulario.get('@IdDigito')?.value ?? '';
+          
+      const cuenta = `${oficinaCuenta}-${productoCuenta}-${consecutivoCuenta}-${digitoCuenta}`
+        .replace(/[\r\n\t]/g, '').trim();
     
       if (!cuenta) {
         this.notif.onWarning('Advertencia', 'Debe ingresar una cuenta.');
@@ -417,7 +433,7 @@ export class LogGestionCarteraComponent {
       if (partes.length !== 4) {
         this.notif.onWarning(
           'Advertencia',
-          'Debe ingresar la cuenta en su formato.'
+          'La cuenta debe tener el formato 000-000-0000000-0.'
         );
         return;
       }
@@ -427,7 +443,7 @@ export class LogGestionCarteraComponent {
       if (!formatoCuenta.test(cuenta)) {
         this.notif.onWarning(
           'Advertencia',
-          'Debe ingresar la cuenta en su formato.'
+          'La cuenta debe tener el formato 000-000-0000000-0.'
         );
         return;
       }
@@ -456,11 +472,17 @@ export class LogGestionCarteraComponent {
               return;
             }
           
+            const cuentaVisual =
+              oficinaCuenta.toString().padStart(3, '0') + '-' +
+              productoCuenta.toString().padStart(3, '0') + '-' +
+              consecutivoCuenta.toString().padStart(7, '0') + '-' +
+              digitoCuenta.toString();
+
             this.AddFiltro(
               5,
               cuenta,
               'Cuenta:',
-              cuenta,
+              cuentaVisual,
               '',
               'Es Igual',
               '@Cuenta'
@@ -567,10 +589,10 @@ export class LogGestionCarteraComponent {
     this.tituloGenerico = "";
     this.alertGenerico = "";
 
-    this.formulario.get('@IdOficina')?.setValue(0);
-    this.formulario.get('@Usuario')?.reset();
-    this.formulario.get('@Cuenta')?.reset();
-    this.formulario.get('@Operacion')?.reset();
+    this.formulario.reset({
+      '@IdOficina': 0,
+      '@Operacion': ''
+    });
   }
 
   validarUsuario() {
@@ -682,6 +704,81 @@ export class LogGestionCarteraComponent {
     }
 
     return null;
+  }
+
+  onBlurCampoNumeroCuenta() {
+    const oficina = this.formulario.get('@IdOficinaCuenta')?.value?.trim();
+    const producto = this.formulario.get('@IdProductoCuenta')?.value?.trim();
+    const consecutivo = this.formulario.get('@IdConsecutivo')?.value?.trim();
+    const digito = this.formulario.get('@IdDigito')?.value?.trim();
+
+    if (
+      /^\d+$/.test(oficina) &&
+      /^\d+$/.test(producto) &&
+      /^\d+$/.test(consecutivo) &&
+      /^\d+$/.test(digito)
+    ) {
+
+      this.serviceLogs.validarCuentaGestionCredito(
+        Number(oficina),
+        Number(producto),
+        Number(consecutivo),
+        Number(digito)
+      ).subscribe({
+        next: (existe) => {
+          if (!existe) {
+            this.notif.onWarning('Advertencia', 'No se encontró registro.');
+          }
+        }
+      });
+
+    }
+  }
+
+  pegarCuenta(event: ClipboardEvent) {
+    const texto = (event.clipboardData?.getData('text') ?? '').trim();
+
+    if (!texto.includes('-')) return;
+
+    const cuenta = this.cuentaService.parsearCuenta(texto);
+
+    if (!cuenta) {
+      event.preventDefault();
+      this.notif.onWarning(
+        'Advertencia',
+        'La cuenta debe tener el formato 000-000-0000000-0.'
+      );
+      return;
+    }
+
+    event.preventDefault();
+    this.formulario.patchValue({
+      '@IdOficinaCuenta': cuenta.oficina,
+      '@IdProductoCuenta': cuenta.producto,
+      '@IdConsecutivo': cuenta.consecutivo,
+      '@IdDigito': cuenta.digito
+    });
+
+    setTimeout(() => { this.onBlurCampoNumeroCuenta(); });
+  }
+
+  limpiarCuenta() {
+    this.formulario.patchValue({
+      '@IdOficinaCuenta': '',
+      '@IdProductoCuenta': '',
+      '@IdConsecutivo': '',
+      '@IdDigito': ''
+    });
+  
+  }
+  
+  soloNumeros(event: KeyboardEvent): boolean {
+    const tecla = event.key;
+    if (!/^\d$/.test(tecla)) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
   }
 
 }

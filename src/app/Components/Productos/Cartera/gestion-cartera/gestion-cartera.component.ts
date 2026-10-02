@@ -27,6 +27,7 @@ import { LoadingService } from '../../../../Services/shared/loading.service';
 import { diferenciaEnDias, diferenciaEnMeses, omit } from '../../../../utils/helpers';
 import { CambiarGarantiasModalComponent } from '../../../shared/cambiar-garantias-modal/cambiar-garantias-modal.component';
 import { TooltipService } from '../../../../Services/Tooltip/tooltip.service';
+import { CuentaService } from '../../../../Services/Generics/resultado-cuenta.service';
 
 @Component({
   selector: 'app-gestion-cartera',
@@ -268,6 +269,7 @@ export class GestionCarteraComponent {
     private busquedaService: BusquedaGenericaService,
     private loading: LoadingService,
     private tooltipService: TooltipService,
+    private cuentaService: CuentaService,
   ) { }
 
   ngOnInit() {
@@ -2439,10 +2441,7 @@ export class GestionCarteraComponent {
         Cualitativa: form.Cualitativa,
         Modelo: form.Modelo,
         Fecha: form.DtmFecha,
-        Causal: {
-          Id: Number(form.IdCausal),
-          Descripcion: causalSeleccionado?.DescripcionFormaPago ?? ''
-        }
+        Causal:  causalSeleccionado?.DescripcionFormaPago ?? ''
       }
     };
   }
@@ -3029,16 +3028,25 @@ export class GestionCarteraComponent {
     const formaPagoActual = Number(this.formaPagoActual);
     let jsonLog: any;
 
+    const formaPagoActualDescripcion = this.resultFormasPago.find(
+        (x: any) => x.IdFormaPago === formaPagoActual
+      )?.DescripcionFormaPago ?? '';
+    
+    const formaPagoNuevaDescripcion = this.resultFormasPago.find(
+        (x: any) => x.IdFormaPago === nuevaFormaPago
+      )?.DescripcionFormaPago ?? '';
+
     if (nuevaFormaPago === FormaPagoEnum.Debito) {
       const cuentaSeleccionada = this.debitoAutomaticoFrom.get('IdCuentaOrigen')?.value;
-
       jsonLog = {
-        Anterior: { FormaPago: formaPagoActual },
+        Anterior: {
+          FormaPago: formaPagoActualDescripcion
+        },
         Actualiza: {
-          FormaPago: nuevaFormaPago,
-          Debito: {
-            DocumentoDebito: this.debitoAutomaticoFrom.get('DocumentoDebito')?.value,
-            NombreDebito: this.debitoAutomaticoFrom.get('NombreDebito')?.value,
+          FormaPago: formaPagoNuevaDescripcion,
+          CuentaOrigen: {
+            Documento: this.debitoAutomaticoFrom.get('DocumentoDebito')?.value,
+            Nombre: this.debitoAutomaticoFrom.get('NombreDebito')?.value,
             Cuenta: cuentaSeleccionada?.CuentaD,
           }
         }
@@ -3047,20 +3055,22 @@ export class GestionCarteraComponent {
     else if (formaPagoActual === FormaPagoEnum.Debito && this.debitoAnterior) {
       jsonLog = {
         Anterior: {
-          FormaPago: formaPagoActual,
-          Debito: {
-            DocumentoDebito: this.debitoAnterior.NumeroDocumento,
-            NombreDebito: this.debitoAnterior.Nombre,
+          FormaPago: formaPagoActualDescripcion,
+          CuentaOrigen: {
+            Documento: this.debitoAnterior.NumeroDocumento,
+            Nombre: this.debitoAnterior.Nombre,
             Cuenta: this.debitoAnterior.NumeroCuenta,
           }
         },
-        Actualiza: { FormaPago: nuevaFormaPago }
+        Actualiza: {
+          FormaPago: formaPagoNuevaDescripcion
+        }
       };
     }
     else {
       jsonLog = {
-        Anterior: { FormaPago: formaPagoActual },
-        Actualiza: { FormaPago: nuevaFormaPago }
+        Anterior: { FormaPago: formaPagoActualDescripcion },
+        Actualiza: { FormaPago: formaPagoNuevaDescripcion }
       };
     }
 
@@ -3163,8 +3173,15 @@ export class GestionCarteraComponent {
     };
 
     const jsonLog = {
-      Anterior: { manejaSeguro: valorAnterior },
-      Actualiza: { manejaSeguro: valorActual }
+      Anterior:
+        valorAnterior === 0
+          ? 'Con cobertura de seguro'
+          : 'Sin cobertura de seguro',
+    
+      Actualiza:
+        valorActual === 0
+          ? 'Con cobertura de seguro'
+          : 'Sin cobertura de seguro'
     };
 
     this.loading.show();
@@ -3942,7 +3959,7 @@ export class GestionCarteraComponent {
     const jsonLog = {
         Anterior: {
           pagare: this.pagareActual,
-          tipo: this.tipoPagareActual,
+          tipo: this.tipoPagareDescripcionActual,
         },
         Actualiza: {
           pagare: this.gestionCreditoForm.get('pagare')?.value,
@@ -4818,16 +4835,56 @@ CalcularSimularPago(){
         });
       }
 
-      if (historialOperaciones) {
-        const DEFAULT_OPERACION = 0;
-        this.historial = historialOperaciones.map(registroHist => {
-          const formateador =
-            formateadoresPorOperacion[registroHist.Operacion] ??
-            formateadoresPorOperacion[DEFAULT_OPERACION];
+if (historialOperaciones) {
+  const DEFAULT_OPERACION = 0;
 
-          return formateador(registroHist);
-        });
-      }
+  this.historial = historialOperaciones.map(registroHist => {
+
+    console.log(
+      'Operacion:',
+      registroHist.Operacion,
+      'Detalles:',
+      registroHist.Detalles
+    );
+
+    const formateador =
+      formateadoresPorOperacion[registroHist.Operacion] ??
+      formateadoresPorOperacion[DEFAULT_OPERACION];
+
+    try {
+
+      const resultado = formateador(registroHist);
+
+      console.log('Resultado:', resultado);
+
+      return resultado;
+
+    } catch (error) {
+
+      console.error(
+        'ERROR FORMATTER',
+        registroHist.Operacion,
+        registroHist.Detalles,
+        error
+      );
+
+      return {
+        ...registroHist,
+        Detalles: 'ERROR'
+      };
+    }
+  });
+}
+// if (historialOperaciones) {
+      //   const DEFAULT_OPERACION = 0;
+      //   this.historial = historialOperaciones.map(registroHist => {
+      //     const formateador =
+      //       formateadoresPorOperacion[registroHist.Operacion] ??
+      //       formateadoresPorOperacion[DEFAULT_OPERACION];
+
+      //     return formateador(registroHist);
+      //   });
+      // }
 
     } finally {
       this.loading.hide();
@@ -5344,4 +5401,32 @@ CalcularSimularPago(){
   }
   // Fin Cambiar tasa
  
+  pegarCuenta(event: ClipboardEvent) {
+    const texto = (event.clipboardData?.getData('text') ?? '').trim();
+
+    if (!texto.includes('-')) return;
+
+    const cuenta = this.cuentaService.parsearCuenta(texto);
+
+    if (!cuenta) {
+      event.preventDefault();
+      this.notif.warning(
+        'Advertencia',
+        'La cuenta debe tener el formato 000-000-0000000-0.',
+        ConfiguracionNotificacion.configRightTop
+      );
+      return;
+    }
+
+    event.preventDefault();
+    this.gestionCreditoForm.patchValue({
+      IdOficinaCuenta: cuenta.oficina,
+      IdProductoCuenta: cuenta.producto,
+      IdConsecutivo: cuenta.consecutivo,
+      IdDigito: cuenta.digito
+    });
+
+    setTimeout(() => { this.onBlurCampoNumeroCuenta(); });
+  }
+
 }

@@ -20,7 +20,7 @@
                           <label class="textNegrilla">Filtro:</label>
                           <span class="grande"> *</span>
                           <select class="form-control form-control-lg" id="select" name="select"
-                            [(ngModel)]="filtroSelect" (change)="obtenerFiltro()">
+                            [(ngModel)]="filtroSelect" (change)="seleccionarFiltro()">
                             <option value="0" selected="true">
                               --Seleccione--
                             </option>
@@ -74,27 +74,127 @@
                         </div>
 
                         <!-- ✅ CUENTA NUEVO -->
-                        <div class="col-xs-12 col-md-4 col-lg-4" *ngIf="filtroSelect == 5">
-                          <div class="form-group">
+                        <div class="col-xs-12 col-md-6 col-lg-6" *ngIf="filtroSelect == 5">
+                        
                             <label class="textNegrilla">{{tituloGenerico}}</label>
                             <span class="grande"> *</span>
-                            <input type="text" class="form-control" formControlName="@Cuenta" />
-                          </div>
+                        
+                            <div class="row">
+                            
+                                <div class="col-md-3">
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        formControlName="@IdOficinaCuenta"
+                                        maxlength="3"
+                                        (keypress)="soloNumeros($event)"
+                                        (paste)="pegarCuenta($event)">
+
+                                    <span
+                                        class="help-block validationSpan"
+                                        *ngIf="
+                                            formulario.get('@IdOficinaCuenta')?.dirty &&
+                                            formulario.get('@IdOficinaCuenta')?.hasError('pattern')
+                                        ">
+                                        La cuenta solo acepta números.
+                                    </span>
+                                </div>
+                              
+                                <div class="col-md-3">
+                                    <input type="text"
+                                           class="form-control"
+                                           formControlName="@IdProductoCuenta"
+                                           maxlength="3"
+                                           (keypress)="soloNumeros($event)">
+                                                                           
+                                    <span
+                                        class="help-block validationSpan"
+                                        *ngIf="
+                                            formulario.get('@IdProductoCuenta')?.dirty &&
+                                            formulario.get('@IdProductoCuenta')?.hasError('pattern')
+                                        ">
+                                        La cuenta solo acepta números.
+                                    </span>
+                                </div>
+                              
+                                <div class="col-md-3">
+                                    <input type="text"
+                                           class="form-control"
+                                           formControlName="@IdConsecutivo"
+                                           maxlength="7"
+                                           (keypress)="soloNumeros($event)">
+                                                                           
+                                    <span
+                                        class="help-block validationSpan"
+                                        *ngIf="
+                                            formulario.get('@IdConsecutivo')?.dirty &&
+                                            formulario.get('@IdConsecutivo')?.hasError('pattern')
+                                        ">
+                                        La cuenta solo acepta números.
+                                    </span>
+                                </div>
+                              
+                                <div class="col-md-3">
+                                    <input type="text"
+                                           class="form-control"
+                                           formControlName="@IdDigito"
+                                           maxlength="1"
+                                           (keypress)="soloNumeros($event)"
+                                           (blur)="onBlurCampoNumeroCuenta()">
+                                                                           
+                                    <span
+                                        class="help-block validationSpan"
+                                        *ngIf="
+                                            formulario.get('@IdDigito')?.dirty &&
+                                            formulario.get('@IdDigito')?.hasError('pattern')
+                                        ">
+                                        La cuenta solo acepta números.
+                                    </span>
+                                </div>
+                              
+                            </div>
+                          
                         </div>
 
-                        <!-- BOTON + -->
-                        <button
-                          class="btn Gt-btn-verde btn-icon legitRipple"
-                          style="top: 20px"
-                          (click)="MostrarPanel()"
-                          *ngIf="
-                            (filtroSelect == 2 && formulario.controls['@Operacion']?.value != '') ||
-                            (filtroSelect == 3 && formulario.controls['@IdOficina']?.value != 0) ||
-                            (filtroSelect == 4 && (formulario.controls['@Usuario']?.value?.length || 0) >= 3) ||
-                            (filtroSelect == 5 && (formulario.controls['@Cuenta']?.value?.length || 0) > 0)
-                          ">
-                          <i class="icon-plus3" aria-hidden="true"></i>
-                        </button>
+
+                        <div class="col-xs-12 col-md-2 col-lg-2 text-left">
+                        
+                            <br>
+                        
+                            <div style="display: flex; gap: 5px; align-items: center;">
+                            
+                                <button
+                                  class="btn Gt-btn-verde btn-icon legitRipple"
+                                  (click)="MostrarPanel()"
+                                  *ngIf="
+                                    (filtroSelect == 2 && formulario.controls['@Operacion']?.value != '') ||
+                                    (filtroSelect == 3 && formulario.controls['@IdOficina']?.value != 0) ||
+                                    (filtroSelect == 4 && (formulario.controls['@Usuario']?.value?.length || 0) >= 3) ||
+                                    (filtroSelect == 5 &&
+                                      formulario.controls['@IdOficinaCuenta']?.value &&
+                                      formulario.controls['@IdProductoCuenta']?.value &&
+                                      formulario.controls['@IdConsecutivo']?.value &&
+                                      formulario.controls['@IdDigito']?.value)
+                                  ">
+                                    <i class="icon-plus3"></i>
+                                </button>
+                              
+                                <button
+                                  class="btn Gt-btn-morado btn-icon legitRipple btn-limpiar"
+                                  type="button"
+                                  (click)="limpiarCuenta()"
+                                  *ngIf="
+                                    formulario.controls['@IdOficinaCuenta']?.value ||
+                                    formulario.controls['@IdProductoCuenta']?.value ||
+                                    formulario.controls['@IdConsecutivo']?.value ||
+                                    formulario.controls['@IdDigito']?.value
+                                  ">
+                                    <i class="icon-cross3 icon-limpiar"></i>
+                                </button>
+
+                            </div>
+                          
+                        </div>
 
                         <!-- FECHAS -->
                         <div class="row">

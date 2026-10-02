@@ -147,20 +147,39 @@ export class LogAutenticacionErpComponent implements OnInit {
     if(this.SelectedCombo == 0)
        this.validBlur = true;
   }
-  opcionSelectedFilter(value : number) {
+  opcionSelectedFilter(value: number) {
+  
+    const existe = this.filtrosAgregado.some(
+      x => x.idFiltro == this.filtroSelect
+    );
+  
+    if (existe) {
+      this.notif.warning(
+        'Advertencia',
+        'Filtro seleccionado ya existe.',
+        ConfiguracionNotificacion.configRightTop
+      );
+    
+      this.limpiarSelected();
+      return;
+    }
+  
     this.ListGenerico = [];
     this.validBlur = false;
+  
     switch (this.filtroSelect.toString()) {
-      case "4":  
+      case "4":
         this.TituloGenerico = "Usuario: ";
-        this.alertGenerico = "El usuario es obligatorio."
+        this.alertGenerico = "El usuario es obligatorio.";
         break;
+    
       case "3":
         this.getOficinas();
         this.TituloGenerico = "Oficina: ";
-        this.alertGenerico = "La oficina es obligatoria."
+        this.alertGenerico = "La oficina es obligatoria.";
         break;
     }
+  
     this.btnMore = false;
   }
   opcionSelectedCombo(value : number) {
@@ -223,12 +242,6 @@ export class LogAutenticacionErpComponent implements OnInit {
     this.dateEnd = this.valueFechaFinal.toString().replace("-", "/").replace("-", "/").replace("-", "/");
   }
   MostrarPanel() {
-    let temp: any = this.filtrosAgregado.filter(x => x.idFiltro == this.filtroSelect)[0];
-    if (temp) {
-      this.notif.warning('Advertencia', 'Filtro seleccionado ya existe', ConfiguracionNotificacion.configRightTop);
-      this.limpiarSelected();
-      return;
-    }
     let s: number = this.filtroSelect;
     if (s == -4) {
       this.DateBeginAndEnd();
