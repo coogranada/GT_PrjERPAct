@@ -7,12 +7,13 @@ import { Router } from '@angular/router';
 export class SecurityService {
 
   constructor(private router: Router) { }
+
   GetToken() {
-    return localStorage.getItem('token');
+    return sessionStorage.getItem('token');
   }
 
   GetRefreshToken() {
-    return localStorage.getItem('refreshToken');
+    return sessionStorage.getItem('refreshToken');
   }
 
   GoLogin() {

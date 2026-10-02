@@ -223,8 +223,8 @@ export class LoginComponent implements OnInit {
               this.isLoginError = false;
               this.clientesGetListService.GetParentescos().subscribe(
                 async (result: any) => {
-                  localStorage.setItem('token', this.dataUser.token);
-                  localStorage.setItem('refreshToken', this.dataUser.refreshToken);
+                  sessionStorage.setItem('token', this.dataUser.token);
+                  sessionStorage.setItem('refreshToken', this.dataUser.refreshToken);
                   // this.ValidarMetodosCarga(); 
                     this.catalogosService.cargarCatalogosSiNoExisten(); // ysalazar ajuste
                   localStorage.setItem('parentescoChange', window.btoa(JSON.stringify(result)));
