@@ -456,9 +456,8 @@ export class GestionGestionesOperacionesComponent implements OnInit {
   GestionarReasignacion(data : any, opera : any) {
       if (this.SolicitudGestionDetalleForm.get('IdUsuarioRecibe')?.value !== undefined &&
         this.SolicitudGestionDetalleForm.get('IdUsuarioRecibe')?.value !== null &&
-        this.SolicitudGestionDetalleForm.get('IdUsuarioRecibe')?.value !== '') {
-          let datao : string | null = localStorage.getItem('Data');
-        this.DatosUsuario = JSON.parse(window.atob(datao == null ? "" : datao));
+        this.SolicitudGestionDetalleForm.get('IdUsuarioRecibe')?.value !== '') {          
+         const DatosUsuario = StorageSecurity.getData();
         const UsuarioRecibe = this.SolicitudGestionDetalleForm.get('IdUsuarioRecibe')?.value.IdUsuario;
         if (this.DatosUsuario.IdUsuario !== UsuarioRecibe) {
           if (this.SolicitudGestionDetalleForm.get('Observacion')?.value !== undefined &&

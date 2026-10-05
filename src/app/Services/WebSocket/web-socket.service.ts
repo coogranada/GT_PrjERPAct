@@ -204,7 +204,7 @@ export class WebSocketService {
 
         this.usuariosServices.ActualizarOficinaUsuario(obj.payload)
           .subscribe(x => {
-            localStorage.setItem('Data', window.btoa(JSON.stringify(x)));
+            StorageSecurity.saveData(x);
             this.Stop();
             window.location.reload();
           });

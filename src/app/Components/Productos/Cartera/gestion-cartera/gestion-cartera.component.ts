@@ -28,6 +28,7 @@ import { diferenciaEnDias, diferenciaEnMeses, omit } from '../../../../utils/hel
 import { CambiarGarantiasModalComponent } from '../../../shared/cambiar-garantias-modal/cambiar-garantias-modal.component';
 import { TooltipService } from '../../../../Services/Tooltip/tooltip.service';
 import { CuentaService } from '../../../../Services/Generics/resultado-cuenta.service';
+import { StorageSecurity } from '../../../../utils/storage-security.util';
 
 @Component({
   selector: 'app-gestion-cartera',
@@ -717,8 +718,7 @@ export class GestionCarteraComponent {
   }
 
   loadOperaciones() {
-    let datas = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(datas == null ? "" : datas));
+    const dataUser = StorageSecurity.getData() || {};
     const arrayExample = [{
       'IdModulo': this.codModulo,
       'IdUsuario': this.dataUser.IdUsuario,
@@ -1545,8 +1545,7 @@ export class GestionCarteraComponent {
     const dto = this.construirDtoInsolvencia();
 
     let logDto: LogInsolvenciaHijosCTD | null = null;
-    const data = localStorage.getItem('Data');
-    const dataUser = JSON.parse(window.atob(data ?? ''));
+    const dataUser = StorageSecurity.getData() || {};
 
     const jsonLog =
       dto.tipoSeguimiento === 1
@@ -2621,8 +2620,7 @@ export class GestionCarteraComponent {
       return;
     }
 
-    let data: string | null = localStorage.getItem('Data');
-    const datosUsuario = JSON.parse(window.atob(data ?? ""));
+    const datosUsuario = StorageSecurity.getData() || {};
     if (datosUsuario?.NumeroOficina != this.gestionCreditoForm.get('NumeroOficina')?.value) {
       this.notif.warning('Advertencia', ERROR_MESSAGES.OTRA_OFICINA, ConfiguracionNotificacion.configRightTop);
       this.gestionCreditoOperacionForm.get('Codigo')?.reset();
@@ -2644,12 +2642,7 @@ export class GestionCarteraComponent {
     }).then((results) => {
       if (results.value) {
 
-        const dataStr = localStorage.getItem('Data');
-        let infoUsuario;
-        if (dataStr) {
-          infoUsuario = JSON.parse(window.atob(dataStr));
-
-        }
+        const infoUsuario = StorageSecurity.getData() || {};
         const IdCuenta = this.gestionCreditoForm.get('IdCuenta')?.value;
         const NombreUsuario: string = infoUsuario.Usuario;
 
@@ -5225,8 +5218,7 @@ if (historialOperaciones) {
 
 
   private validarEdicionCredito(operacionId: Operacion): string | null {
-    let data: string | null = localStorage.getItem('Data');
-    const datosUsuario = JSON.parse(window.atob(data ?? ""));
+    const datosUsuario = StorageSecurity.getData() || {};
 
     if (datosUsuario?.NumeroOficina != this.gestionCreditoForm.get('NumeroOficina')?.value) {
       return ERROR_MESSAGES.OTRA_OFICINA;

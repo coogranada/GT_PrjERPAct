@@ -294,10 +294,7 @@ export class TerminoComponent implements OnInit {
     );
   }
   ObtenerEstado(): void {
-  const data = localStorage.getItem('Data');
-  this.dataUser = JSON.parse(
-    window.atob(data == null ? "" : data)
-  );
+  this.dataUser = StorageSecurity.getData();
   const arrayExample = {
     IdOperacion: 9,
     IdPerfil: this.dataUser.idPerfilUsuario,

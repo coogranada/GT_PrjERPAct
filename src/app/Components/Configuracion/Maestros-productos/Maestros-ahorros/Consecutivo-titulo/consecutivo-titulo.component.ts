@@ -2308,8 +2308,6 @@ export class ConsecutivoTituloComponent implements OnInit {
   }
 
   OrganizarDatosLog() {
-    let datas : string | null = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(datas == null ? "" : datas));
     let datosForm = this.consecutivoFrom.value;
     let datalog = new ConsecutivosLog();
     datalog.IdOficinaDestino = parseInt(datosForm.IdOficinaDestino);

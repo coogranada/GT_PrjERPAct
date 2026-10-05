@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
 import { GestioOperacionesService } from '../../..//Services/Gestiones/gestioOperaciones.service';
 import { AlertService } from '../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../utils/storage-security.util';
+
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 
@@ -44,8 +46,7 @@ export class GestionesOperacionesComponent implements OnInit {
 
   ngOnInit() {
     this.loading.show();
-    let dataobj : string | null = localStorage.getItem('Data');
-    this.DatosUsuario = JSON.parse(window.atob(dataobj == null ? "" : dataobj));
+    this.DatosUsuario = StorageSecurity.getData();
     this.ValidarFormulario();
     this.Obtener();
   }

@@ -11,6 +11,7 @@ import { LoginService } from '../../../Services/Login/login.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { LoadingService } from '../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../utils/storage-security.util';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 
@@ -72,8 +73,7 @@ export class CrearNotificacionesComponent implements OnInit {
     this.ObtenerDatosUsuario();
     this.validarFormulario();
     this.Operaciones();
-    let datas = localStorage.getItem('Data');
-    this.DatosUsuario = JSON.parse(window.atob(datas == null ? "" : datas));
+    const DatosUsuario = StorageSecurity.getData() || {};
 
     this.loginService.GetSesionXUsuario(this.DatosUsuario.IdUsuario).subscribe(
       result => {
@@ -87,8 +87,7 @@ export class CrearNotificacionesComponent implements OnInit {
     this.IrArriba();
   }
   Operaciones() {
-    let datas = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(datas == null ? "" : datas));
+    const dataUser = StorageSecurity.getData() || {};
     const arrayExample = [{
       'IdModulo': this.CodModulo,
       'IdUsuario': this.dataUser.IdUsuario,
@@ -112,8 +111,7 @@ export class CrearNotificacionesComponent implements OnInit {
   }
 
   ObtenerDatosUsuario() {
-    let datas = localStorage.getItem('Data');
-    this.DatosUsuario = JSON.parse(window.atob(datas == null ? "" : datas));
+     const DatosUsuario = StorageSecurity.getData() || {};
   }
 
   ObtenerCuentas() {

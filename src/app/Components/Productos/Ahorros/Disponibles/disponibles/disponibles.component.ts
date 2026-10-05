@@ -2409,8 +2409,7 @@ export class DisponiblesComponent implements OnInit {
      
   }
   Operaciones() {
-    let datas = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(datas == null ? "" : datas));
+    this.dataUser = StorageSecurity.getData();
     const arrayExample = [{
       'IdModulo': this.CodModulo,
       'IdUsuario': this.dataUser.IdUsuario,
@@ -2832,8 +2831,7 @@ export class DisponiblesComponent implements OnInit {
     this.bloquearConsultaCuenta = false;
     this.BloquearBuscar = false;
     if (result !== null) {
-      let datas = localStorage.getItem('Data');
-       this.dataUser = JSON.parse(window.atob(datas == null ? "" : datas));
+      this.dataUser = StorageSecurity.getData();
       if (result.length >= 1) {
         this.dataObjet = result;
         this.dataObjetTitulares = [];
@@ -4042,10 +4040,7 @@ export class DisponiblesComponent implements OnInit {
   }
   ObtenerEstado() {
   this.loading.show();
-  const datas = localStorage.getItem('Data');
-  this.dataUser = JSON.parse(
-    window.atob(datas == null ? "" : datas)
-  );
+  this.dataUser = StorageSecurity.getData();
   const arrayExample = {
     IdOperacion: 9,
     IdPerfil: this.dataUser.idPerfilUsuario,
@@ -4752,8 +4747,7 @@ export class DisponiblesComponent implements OnInit {
     );
   }
   MapearDatosUsuario() {
-    let datas = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(datas == null ? "" : datas));
+    this.dataUser = StorageSecurity.getData();
     this.DisponibleForm.get('NombreOficina')?.setValue(this.dataUser.Oficina);
     this.DisponibleForm.get('NumeroOficina')?.setValue(this.dataUser.NumeroOficina);
     this.DisponibleForm.get('IdAsesor')?.setValue(this.dataUser.IdAsesor);

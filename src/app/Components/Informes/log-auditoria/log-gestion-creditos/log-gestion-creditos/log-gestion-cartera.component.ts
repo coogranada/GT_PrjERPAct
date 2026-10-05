@@ -11,6 +11,7 @@ import { InformeLogService } from '../../../../../Services/Informes/informe-log.
 import Swal from 'sweetalert2';
 import { OperacionesService } from '../../../../../Services/Maestros/operaciones.service';
 import { CuentaService } from '../../../../../Services/Generics/resultado-cuenta.service';
+import { StorageSecurity } from '../../../../../utils/storage-security.util';
 
 @Component({
   selector: 'app-log-gestion-cartera',
@@ -549,8 +550,7 @@ export class LogGestionCarteraComponent {
   }
 
   loadOperaciones() {
-    let datas = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(datas == null ? "" : datas));
+   this.dataUser = StorageSecurity.getData();
 
     const arrayExample = [{
       'IdModulo': this.codModulo,

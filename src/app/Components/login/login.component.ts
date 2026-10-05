@@ -18,6 +18,7 @@ import { detectIncognito } from "detectincognitojs";
 import { Router } from '@angular/router';
 import { LoadingService } from '../../Services/shared/loading.service';
 import { CatalogosService } from '../../Services/Clientes/CatalogosService';
+import { StorageSecurity } from '../../utils/storage-security.util';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -167,7 +168,7 @@ export class LoginComponent implements OnInit {
     this.loginService.userAuthentication(this.loginFrom.value).subscribe(
       (data: any) => {
         this.loading.hide();
-        localStorage.setItem('Data', window.btoa(JSON.stringify(data)));
+        StorageSecurity.saveData(data);
         this.dataUser = data;
         this.SessionUser.Estado = true;
         this.SessionUser.IdUsuario = this.dataUser.IdUsuario;

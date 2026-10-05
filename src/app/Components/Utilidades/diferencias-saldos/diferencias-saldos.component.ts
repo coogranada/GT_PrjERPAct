@@ -10,6 +10,7 @@ import { fromEvent } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LoginService } from '../../../Services/Login/login.service';
 import { LoadingService } from '../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../utils/storage-security.util';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 @Component({
@@ -50,8 +51,7 @@ export class DiferenciasSaldosComponent implements OnInit {
     this.bPanelDatos = false;
     this.validarFormulario();
     this.ObtenerDatosUsuario();
-    let datas = localStorage.getItem('Data')
-    this.DatosUsuario = JSON.parse(window.atob(datas == null ? "" : datas));
+    const DatosUsuario = StorageSecurity.getData() || {};
 
     this.loginService.GetSesionXUsuario(this.DatosUsuario.IdUsuario).subscribe(
       result => {
@@ -65,8 +65,7 @@ export class DiferenciasSaldosComponent implements OnInit {
   }
 
   ObtenerDatosUsuario() {
-    let datas = localStorage.getItem('Data')
-    this.DatosUsuario = JSON.parse(window.atob(datas == null ? "" : datas));
+   const DatosUsuario = StorageSecurity.getData() || {};
   }
 
   OnChange(event : any) {

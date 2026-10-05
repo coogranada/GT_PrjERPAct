@@ -55,8 +55,7 @@ export class GeneralesService {
         return this._http.post<any>(this.url, parametersLOG, );
     }
     GuardarlogTerminoDisponibles( formValue : any, idOperacion : number, lngCuenta: number, tercero : number, modulo : number,IdObseCambioEstado : number) : Observable<any> {
-        let data : string | null = localStorage.getItem('Data')
-        const dataUser = JSON.parse(window.atob(data == null ? ""  : data));
+        const dataUser = StorageSecurity.getData() || {};
         const FechaActual = formatDate(new Date(), 'yyyy-MM-dd HH:mm:ss', 'en');
         const parametersLOG : any = {
             IdLog: 0,
@@ -159,11 +158,8 @@ export class GeneralesService {
     }
 
      LogGestionCredito(request: LogGestionCreditoRequest): Observable<any> {
-
-      const data = localStorage.getItem('Data');
-      const dataUser = JSON.parse(window.atob(data ?? ''));
-
-      const payload = {
+       const dataUser = StorageSecurity.getData() || {};
+        const payload = {
         IdOficina: +dataUser.NumeroOficina,
         IdUsuarioERP: +dataUser.IdUsuario,
         IdModulo: request.idModulo,

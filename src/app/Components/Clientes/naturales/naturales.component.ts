@@ -11030,8 +11030,8 @@ confirmarEnvio() {
 enviarWorkManager() {
 
   this.showLoader = true;
-
-  const globalData = JSON.parse(window.atob(localStorage.getItem('Data') ?? ''));
+  
+  const globalData = StorageSecurity.getData();
 
   const formInsertData = {
     base64: this.currentHdvBase64,
@@ -21179,9 +21179,7 @@ enviarWorkManager() {
         this.allItemsFormSaves.contactoDto != null &&
         this.allItemsFormSaves.referenciaDto != null &&
         this.allItemsFormSaves.segurosDto != null) {
-          let data : string | null = localStorage.getItem('Data');
-        const resultPerfil = JSON.parse(window.atob(data == null ? "": data));
-       
+        const resultPerfil = StorageSecurity.getData();      
 
         this.allItemsFormSaves.userWork = resultPerfil.Usuario;
         // Guardar el asociado natural
@@ -21271,8 +21269,7 @@ enviarWorkManager() {
                 this.acomuladorOperacional = 0;
                 this.cambioEmpleo = false;
               }
-              let dataobj : string | null = localStorage.getItem('Data');
-              const data = JSON.parse(window.atob(dataobj == null ? "": dataobj));
+              const data = StorageSecurity.getData();
               this.serviciosFrom.get('Oficina')?.setValue(data.Oficina);
               this.serviciosFrom.get('Asesor')?.setValue(data.Nombre);
               $('#bodyGeneral').addClass('quietarPadding');
@@ -23547,8 +23544,7 @@ enviarWorkManager() {
   }
 
   validarTipoOperacionEditar() {
-    let data : string | null = localStorage.getItem('Data');
-    const dataUser = JSON.parse(window.atob(data == null ? "": data));
+    const dataUser = StorageSecurity.getData();
     const results = this.basicosFrom.get('operacion')?.value;
     this.operacionesModel.idOperacion = results.ERP_tblOperacion.IdOperacion;
     this.operacionesModel.idPerfil = dataUser.UsuarioPerfil;
@@ -23639,8 +23635,7 @@ enviarWorkManager() {
 
   cambiarEstadoNatural() {
     this.blockBtnBasico = true;
-    let data : string | null = localStorage.getItem('Data');
-    const resultPerfil = JSON.parse(window.atob(data == null ? "": data));
+    const resultPerfil = StorageSecurity.getData();
     const cambio = new CambioEstadoModel();
     cambio.IdEstado = this.basicosFrom.get('estado')?.value;
     cambio.IdTercero = Number(localStorage.getItem('TerceroNatura'));
@@ -23699,8 +23694,7 @@ enviarWorkManager() {
 
    ActivarDocumento() {
     this.blockBtnBasico = true;
-    let data : string | null = localStorage.getItem('Data');
-    const resultPerfil = JSON.parse(window.atob(data == null ? "": data));
+    const resultPerfil = StorageSecurity.getData();
     const cambio = new CambioEstadoModel();
     cambio.IdEstado = this.basicosFrom.get('estado')?.value;
     cambio.IdTercero = Number(localStorage.getItem('TerceroNatura'));
@@ -23773,8 +23767,7 @@ enviarWorkManager() {
   cambiarRelacion() {
     this.loading.show();
     this.blockBtnBasico = true;
-    let data : string | null = localStorage.getItem('Data');
-    const resultPerfil = JSON.parse(window.atob(data == null ? "": data));
+    const resultPerfil = StorageSecurity.getData();
     const relacion = +this.basicosFrom.get('tipoCliente')?.value;
     if (relacion !== this.relacionAnterior) {
       if (relacion === 15 && this.relacionAnterior === 5) { // relacion anterior asociado a Tercero
@@ -24054,8 +24047,7 @@ enviarWorkManager() {
 
   cambiarTipoDocumento() {
     this.blockBtnBasico = true;
-    let data : string | null = localStorage.getItem('Data');
-    const resultPerfil = JSON.parse(window.atob(data == null ? "": data));
+    const resultPerfil = StorageSecurity.getData();
     this.cambioTipoDocumentoModel.idTercero = Number(localStorage.getItem('TerceroNatura'));
     this.cambioTipoDocumentoModel.idtipoDocumento = this.basicosFrom.get('tipoDocumento')?.value;
     this.cambioTipoDocumentoModel.Documento = this.basicosFrom.get('numeroDocumento')?.value;
@@ -24107,8 +24099,7 @@ enviarWorkManager() {
   cambiarNombresApellidos() {
     this.loading.show();
     this.blockBtnBasico = true;
-    let data : string | null = localStorage.getItem('Data');
-    const resultPerfil = JSON.parse(window.atob(data == null ? "": data));
+    const resultPerfil = StorageSecurity.getData();
     if ($('#priNom').val().trim() === '' || $('#priApe').val().trim() === '') {
       this.notif.onWarning('Advertencia', 'Debe ingresar primer apellido y primer nombre. ',
         );
@@ -24175,8 +24166,7 @@ enviarWorkManager() {
   //#region Marcacion PPES
   DesmacarPPES() {
     const ppes = new MarcarDesmarcarPPESModel();
-    let data : string | null = localStorage.getItem('Data');
-    const dataUser = JSON.parse(window.atob(data == null ? "": data));
+    const dataUser = StorageSecurity.getData();
     ppes.IdAsesorMarca = dataUser.lngTercero;
     ppes.IdTerceroMarca = Number(localStorage.getItem('TerceroNatura'));
 
@@ -24248,8 +24238,7 @@ enviarWorkManager() {
   }
   MarcarPPESEntrevista() {
     const ppes = new MarcarDesmarcarPPESModel();
-    let data : string | null = localStorage.getItem('Data');
-    const dataUser = JSON.parse(window.atob(data == null ? "": data));
+    const dataUser = StorageSecurity.getData();
     ppes.IdAsesorMarca = dataUser.lngTercero;
     ppes.IdTerceroMarca = Number(localStorage.getItem('TerceroNatura'));
     this.disableCampos()
@@ -24371,8 +24360,7 @@ enviarWorkManager() {
   }
 
   setDataSolicitudReingreso() {
-    let dataobj : string | null = localStorage.getItem('Data');
-    const data = JSON.parse(window.atob(dataobj == null ? "": dataobj));
+    const data = StorageSecurity.getData();
     const opera = this.basicosFrom.get('operacion')?.value;
     const objReingreso = new SolicitudReingresoModel();
     objReingreso.FechaReingreso = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
@@ -24443,8 +24431,7 @@ enviarWorkManager() {
         } else {
           this.mostarErrorMotivoDescripcion = false;
           // aqui realizar el registro
-          let data : string | null = localStorage.getItem('Data');
-          const resultPerfil = JSON.parse(window.atob(data == null ? "": data));
+          const resultPerfil = StorageSecurity.getData();
           let motivo : string | null = localStorage.getItem('solicituRetiroJson')
           const resulMotivoEnvio = JSON.parse(window.atob(motivo == null ? "" : motivo));
           this.objMotivo.DescripcionOtro = this.solicitudRetiroForm.get('ObservacionMotivo')?.value;
@@ -24489,8 +24476,7 @@ enviarWorkManager() {
       } else {
         this.mostarErrorMotivoDescripcion = false;
         // aqui realizar el registro
-        let data : string | null = localStorage.getItem('Data');
-        const resultPerfil = JSON.parse(window.atob(data == null ? "": data));
+        const resultPerfil = StorageSecurity.getData();
         let motivo : string | null = localStorage.getItem('solicituRetiroJson');
         const resulMotivoEnvio = JSON.parse(window.atob(motivo == null ? "" : motivo));
         this.objMotivo.DescripcionOtro = this.solicitudRetiroForm.get('ObservacionMotivo')?.value;
@@ -26274,8 +26260,7 @@ PreCargarPais(val: number) {
     this.infoMenor = [];
   }
   AsesorModifica(tercero : string) {
-    let data : string | null = localStorage.getItem('Data');
-    const Datos = JSON.parse(window.atob(data == null ? "": data));
+    const Datos = StorageSecurity.getData();
     this.clientesService.ActualizaAsesorMod(Datos.IdAsesor, tercero).subscribe(
       result => {
       },

@@ -522,37 +522,45 @@ export class LayoutComponent implements OnInit,OnDestroy {
     }
   }
   public timeout() {
-    let datauser: string | null = localStorage.getItem('Data');
-    if (datauser == null)
+    this.DataUser = StorageSecurity.getData();
+    if (!this.DataUser) {
       return;
-    
-    this.DataUser = JSON.parse(window.atob(datauser));
-    this.loginService.CerrarSesionUser(this.DataUser.IdUsuario).subscribe(result => { 
-      this.webSocket.Send("ClosedSesion",this.DataUser.IdUsuario);
-      Swal.fire({
-        title: 'Advertencia',
-        text: '',
-        html: 'Su session ha caducado ',
-        icon: 'warning',
-        showCancelButton: false,
-        confirmButtonText: 'Aceptar',       
-        confirmButtonColor: 'rgb(13,165,80)',
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-    }).then((result) => {
-        localStorage.clear();
-        if (result.value) {
-          $("#popupBusquedaParroquia").modal('hide');//ocultamos el modal
-          $('body').removeClass('modal-open');//eliminamos la clase del body para poder hacer scroll
-          $('.modal-backdrop').remove();//eliminamos el backdrop del modal
-          window.location.reload();
-          this.router.navigate(['Login']);
-        }
-    });
-      
-    },error => {
-      console.log(error);
-    });
+    }
+    this.loginService.CerrarSesionUser(this.DataUser.IdUsuario)
+      .subscribe(result => {
+
+        this.webSocket.Send("ClosedSesion", this.DataUser.IdUsuario);
+
+        Swal.fire({
+          title: 'Advertencia',
+          text: '',
+          html: 'Su session ha caducado ',
+          icon: 'warning',
+          showCancelButton: false,
+          confirmButtonText: 'Aceptar',
+          confirmButtonColor: 'rgb(13,165,80)',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+        }).then((result) => {
+
+          localStorage.clear();
+          sessionStorage.clear();
+
+          if (result.value) {
+
+            $("#popupBusquedaParroquia").modal('hide');
+            $('body').removeClass('modal-open');
+            $('.modal-backdrop').remove();
+
+            window.location.reload();
+
+            this.router.navigate(['Login']);
+          }
+        });
+
+      }, error => {
+        console.log(error);
+      });
   }
   ngOnInit() {
 
@@ -1037,7 +1045,7 @@ this.userIdle.onTimeout().subscribe(() => {
 
     this.usuariosServices.ActualizarOficinaUsuario(payload).subscribe(x => {
       this.oficinaSeleccionada = { Descripcion: "", IdLista: 0 };
-      localStorage.setItem('Data', window.btoa(JSON.stringify(x)));
+      StorageSecurity.saveData(x);
       this.notif.onSuccess('Exitoso', "El cambio de la oficina se realizó correctamente.");
       setTimeout(() => {
         let logJson: any = {
@@ -1131,17 +1139,18 @@ this.userIdle.onTimeout().subscribe(() => {
     this.userIdle.startWatching();
   }
   validacionUsuarios() {
-    if (localStorage.getItem('Data') !== null && localStorage.getItem('Data') !== undefined) {
-      this.resulStore = StorageSecurity.getData();
-      if (this.resulStore === null) {
-        localStorage.removeItem('userName');
-        this.router.navigateByUrl('/Login');
-        localStorage.removeItem('userName');
-        localStorage.removeItem('dataUserConect');
-        localStorage.removeItem('TerceroNatura');
-        localStorage.removeItem('IdModuloActivo');
-        localStorage.removeItem('Permisos');
-      }
+
+    this.resulStore = StorageSecurity.getData();
+
+    if (!this.resulStore) {
+
+      localStorage.removeItem('userName');
+      localStorage.removeItem('dataUserConect');
+      localStorage.removeItem('TerceroNatura');
+      localStorage.removeItem('IdModuloActivo');
+      localStorage.removeItem('Permisos');
+
+      this.router.navigateByUrl('/Login');
     }
   }
 

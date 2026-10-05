@@ -13,6 +13,7 @@ import Swal from 'sweetalert2';
 import { ClientesService } from '../../../Services/Clientes/clientes.service';
 import { GeneralesService } from '../../../Services/Productos/generales.service';
 import { LoadingService } from '../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../utils/storage-security.util';
 
 @Component({
   selector: 'app-solicitud-servicios-juridicos',
@@ -647,7 +648,7 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
     }).then(result => {
       if(result.value) {
         this.showLoader = true;
-        const globalData = JSON.parse(window.atob( localStorage.getItem('Data') ?? '' ));
+        const globalData = StorageSecurity.getData();
         
         const formInsertData = {
           base64: this.currentHdvBase64,

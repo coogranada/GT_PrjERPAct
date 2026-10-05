@@ -10,6 +10,7 @@ import { SecurityService } from './Services/Auth/security.service';
 import { GestionesService  } from './Services/Gestiones/gestiones.service';
 import { AlertService } from './Services/Alert/alert.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { StorageSecurity } from './utils/storage-security.util';
 declare var $: any;
   
 @Component({
@@ -66,25 +67,14 @@ ngOnDestroy(): void {
   // STORAGE
   private loadUserFromStorage(): void {
 
-  const data = localStorage.getItem('Data');
+    this.resulStore = StorageSecurity.getData();
 
-  if (!data) {
-    console.warn('No existe información del usuario en LocalStorage');
-    this.logout();
-    return;
-  }
+    if (!this.resulStore) {
+      console.warn('No existe información del usuario');
+      this.logout();
+      return;
+    }
 
-  try {
-
-    const decodedData = atob(data);
-    this.resulStore = JSON.parse(decodedData);
-
-  } catch (error) {
-
-    console.error('Error leyendo Data del LocalStorage:', error);
-
-    this.logout();
-  }
   }
 
   private saveToStorage(key: string, data: any): void {

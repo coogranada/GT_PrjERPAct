@@ -14,6 +14,7 @@ import { LogDataOnEditAsesoria } from '../../../../../Models/Productos/termino/a
 import { TerminoAhorrosService } from '../../../../../Services/Productos/terminoAhorros.service';
 import { ClientesGetListService } from '../../../../../Services/Clientes/clientesGetList.service';
 import { LoadingService } from '../../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../../utils/storage-security.util';
 declare var $: any;
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -324,8 +325,7 @@ export class AsesoriaTerminoComponent implements OnInit {
   }
 
   Operaciones() {
-    let datas = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(datas == null ? "" : datas));
+    this.dataUser = StorageSecurity.getData();
     const arrayExample = [{
       'IdModulo': this.CodModulo,
       'IdUsuario': this.dataUser.IdUsuario,
@@ -1190,8 +1190,8 @@ export class AsesoriaTerminoComponent implements OnInit {
   form.get('FechaCreacion')?.setValue(fechaActual);
 
   // ✅ Usuario
-  const dataEncoded = localStorage.getItem('Data') ?? '';
-  const dataDecoded = dataEncoded ? JSON.parse(window.atob(dataEncoded)) : {};
+   const dataDecoded = StorageSecurity.getData() || {};
+
 
   // ✅ Payload base
   let payload: any = {
@@ -2137,8 +2137,7 @@ capitalize(str: any): any {
     this.asesoriaterminoForm.get('TasaNominal')?.reset();
   }
   MapearDatosUsuario() {
-    let datas = localStorage.getItem('Data');
-    this.dataUser = JSON.parse(window.atob(datas == null ? "" : datas));
+    const dataUser = StorageSecurity.getData() || {};``
     this.asesoriaterminoForm.get('NombreOficina')?.setValue(this.dataUser.Oficina);
     this.asesoriaterminoForm.get('NumeroOficina')?.setValue(this.dataUser.NumeroOficina);
     this.asesoriaterminoForm.get('IdAsesor')?.setValue(this.dataUser.IdAsesor);

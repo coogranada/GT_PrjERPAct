@@ -160,8 +160,6 @@ export class FichaAnalisisComponent implements OnInit {
     this.IrArriba();
     this.ObtenerListaChequeo();
     this.formListaChequeo();
-    /*this.DataUserLogeado = JSON.parse(JSON.parse(window.atob(localStorage.getItem('Data'))));
-    console.log(this.DataUserLogeado) */
     this.generalesService.Autofocus('opcionOperacion');
   }
 
@@ -1459,8 +1457,7 @@ export class FichaAnalisisComponent implements OnInit {
     data.ConceptoFinal = this.FichaAnalisisDataForm.get("ConceptoFinal")?.value;
     data.ObsFirmantes = this.FichaAnalisisDataForm.get("ObsFirmantes")?.value;
     data.ObsPromcuentas = this.FichaAnalisisDataForm.get("ObsPromcuentas")?.value;
-    let dataU = localStorage.getItem('Data');
-    this.DataUserLogeado = JSON.parse(window.atob(dataU == null ? "" : dataU));
+    const DataUserLogeado = StorageSecurity.getData();
     data.AnalistaEncargado = this.DataUserLogeado.Nombre;
     data.ExtinguidasCode = this.retornarStr(this.resultadoInfoRadicado[0]["ExtinguidasCode"])
     data.ExtinguidasPrin = this.retornarStr(this.resultadoInfoRadicado[0]["ExtinguidasPrin"])
