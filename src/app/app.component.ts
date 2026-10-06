@@ -78,7 +78,7 @@ ngOnDestroy(): void {
   }
 
   private saveToStorage(key: string, data: any): void {
-    localStorage.setItem(key, btoa(JSON.stringify(data)));
+    StorageSecurity.saveItem(key, data);
   }
 
   private logout(): void {

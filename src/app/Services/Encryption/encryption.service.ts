@@ -20,13 +20,35 @@ export class EncryptionService {
   }
 
   decrypt(cipherText: string): any {
-    const bytes = CryptoJS.AES.decrypt(cipherText, this.KEY, {
-      iv: this.IV,
-      mode: CryptoJS.mode.CBC,
-      padding: CryptoJS.pad.Pkcs7
-    });
 
-    return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+    if (!cipherText) {
+      return null;
+    }
+
+    try {
+
+      const bytes = CryptoJS.AES.decrypt(
+        cipherText,
+        this.KEY,
+        {
+          iv: this.IV,
+          mode: CryptoJS.mode.CBC,
+          padding: CryptoJS.pad.Pkcs7
+        }
+      );
+
+      const decrypted = bytes.toString(
+        CryptoJS.enc.Utf8
+      );
+
+      return decrypted
+        ? JSON.parse(decrypted)
+        : null;
+
+    } catch {
+      return null;
+    }
+
   }
 
 }

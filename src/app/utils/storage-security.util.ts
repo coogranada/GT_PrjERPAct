@@ -63,4 +63,16 @@ export class StorageSecurity {
     return this.decrypt(value || '');
 
   }
+
+  static saveItem(key: string, data: any): void {
+    localStorage.setItem(
+      key,
+      this.encrypt(data)
+    );
+  }
+
+  static getItem(key: string): any {
+    const value = localStorage.getItem(key);
+    return this.decrypt(value || '');
+  }
 }

@@ -116,13 +116,12 @@ export class GestionesOperacionesComponent implements OnInit {
     this.gestionOperacionesComponent.AbrirGestionarGestion();
   }
 
-  Procesar(data : any) {
+  Procesar(data: any): void {
     this.loading.show();
     const urlModulo = moduloGestionOperacion.validarGestionOpera(data.IdModulo);
     localStorage.setItem('EsGestion', '1');
-    localStorage.setItem('DataGest', JSON.stringify(data));
+    StorageSecurity.saveItem('DataGest', data);
     this.router.navigate([urlModulo]);
-    console.log(data);
   }
 
   Rechazar(data : any) {

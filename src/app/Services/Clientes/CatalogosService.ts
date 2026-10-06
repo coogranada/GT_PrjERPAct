@@ -4,6 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ClientesGetListService } from './clientesGetList.service';
 import { OficinasService } from '../Maestros/oficinas.service';
 import { AlertService } from '../Alert/alert.service';
+import { StorageSecurity } from '../../utils/storage-security.util';
 
 @Injectable({
   providedIn: 'root'
@@ -17,10 +18,7 @@ export class CatalogosService {
   ) { }
 
   private saveToStorage(key: string, data: any): void {
-    localStorage.setItem(
-      key,
-      btoa(JSON.stringify(data))
-    );
+    StorageSecurity.saveItem(key, data);
   }
 
   private fetchAndStore(

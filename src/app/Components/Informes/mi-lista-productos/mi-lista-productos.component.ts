@@ -1265,35 +1265,44 @@ export class MiListaProductosComponent implements OnInit {
     }
   }
 
-  ObtenerTotales(tercero : string) {
-    let datas = localStorage.getItem("Data");
-    var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
-    console.log("-------------------------LocalStorage-------------------------------")
-    console.log(dataLocalStorage)
-    console.log("--------------------------------------------------------")
-    var idUsuario = dataLocalStorage.IdUsuario;
-    var idOficina = dataLocalStorage.NumeroOficina;
+  ObtenerTotales(tercero: string): void {
 
-    this.MiListaProductosService.GetTotales(
-      tercero,
-      this.validarActivo,
-      this.numDocumento,
-      idUsuario,
-      idOficina
-    ).subscribe(
-      (result) => {
-        this.Totales.TotalAhorros = result.TotalAhorros;
-        this.Totales.TotalAportes = result.TotalAportes;
-        this.Totales.TotalCartera = result.TotalCreditos;
-        this.Totales.TotalCoodeudor = result.TotalCoodeudor;
-        this.Totales.TotalSeguro = result.TotalSeguros;
-        this.Totales.TotalTarjeta = result.TotalTarjetaDebito;
-      },
-      (error) => {
+  const dataLocalStorage = StorageSecurity.getData();
 
-      }
-    );
+  if (!dataLocalStorage) {
+    console.error('No se encontró información del usuario en Storage.');
+    return;
   }
+
+  const { IdUsuario, NumeroOficina } = dataLocalStorage;
+
+  if (!IdUsuario || !NumeroOficina) {
+    console.error('Información de usuario incompleta.', dataLocalStorage);
+    return;
+  }
+
+  this.MiListaProductosService.GetTotales(
+    tercero,
+    this.validarActivo,
+    this.numDocumento,
+    IdUsuario,
+    NumeroOficina
+  ).subscribe({
+    next: (result) => {
+      this.Totales.TotalAhorros = result.TotalAhorros;
+      this.Totales.TotalAportes = result.TotalAportes;
+      this.Totales.TotalCartera = result.TotalCreditos;
+      this.Totales.TotalCoodeudor = result.TotalCoodeudor;
+      this.Totales.TotalSeguro = result.TotalSeguros;
+      this.Totales.TotalTarjeta = result.TotalTarjetaDebito;
+    },
+    error: (error) => {
+      console.error('Error obteniendo totales:', error);
+    }
+  });
+
+}
+
 
   cerrarModal(){
     this.infoTrue = false;
