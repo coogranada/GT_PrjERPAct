@@ -721,10 +721,10 @@ export class GestionCarteraComponent {
     const dataUser = StorageSecurity.getData() || {};
     const arrayExample = [{
       'IdModulo': this.codModulo,
-      'IdUsuario': this.dataUser.IdUsuario,
+      'IdUsuario': dataUser.IdUsuario,
       'IdOperaciones': '',
       'IdOperacionesPerfil': '',
-      'IdPerfil': this.dataUser.idPerfilUsuario
+      'IdPerfil': dataUser.idPerfilUsuario
     }];
     this.operacionesService.OperacionesPermitidas(arrayExample[0]).subscribe(
       result => {

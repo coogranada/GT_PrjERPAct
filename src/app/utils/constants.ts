@@ -1,4 +1,4 @@
-import { TipoSistemas } from "../Models/Productos/cartera/gestion-credito.enum";
+import { CriterioBusquedaAsesoria, TipoSistemas } from "../Models/Productos/cartera/gestion-credito.enum";
 
 export enum ErrorCode {
     PERSONA_VETADA = 'PERSONA_VETADA',
@@ -47,5 +47,14 @@ export const PERIODOS_MESES = {
 
 export const SISTEMAS = [
     { id: TipoSistemas.CuotaFija, descripcion: 'Cuota Fija' },
-    { id: TipoSistemas.CuotaVariable, descripcion: 'Cuota Variable' }
+    { id: TipoSistemas.CuotaFijaTasaVariable, descripcion: 'Cuota Fija Tasa Variable' },
+    { id: TipoSistemas.CuotaVariable, descripcion: 'Cuota Variable' },
+    { id: TipoSistemas.CuotaVariableTasaVariable, descripcion: 'Cuota Variable Tasa Variable' },
 ]
+
+export const CRITERIOS_BUSQUEDA_ASESORIA = {
+    [CriterioBusquedaAsesoria.PorAsesoria]: 'asesoria',
+    [CriterioBusquedaAsesoria.PorRadicado]: 'radicado',
+    [CriterioBusquedaAsesoria.PorDocumento]: 'documento',
+    [CriterioBusquedaAsesoria.PorNombre]: 'nombre',
+}

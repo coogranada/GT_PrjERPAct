@@ -1,0 +1,37 @@
+.align-items-end {
+    display: flex;
+    align-items: end;
+}
+
+.recuadro {
+    background-color: #eeeded;
+    padding: 1rem;
+    border-radius: 5px;
+    /* margin-right: 10px; */
+}
+
+.recuadro-text {
+    font-size: 16px;
+}
+
+.text-red {
+    color: #ff2222;
+}
+
+.border-margin {
+    height: 1px;
+    background-color: #eeeded;
+
+}
+
+.justify-end {
+    display: flex;
+    justify-content: end;
+}
+
+.border-dash {
+    border: 3px rgb(227, 227, 227);
+    border-style: dashed;
+    border-radius: 22px;
+    padding: 9px;
+}

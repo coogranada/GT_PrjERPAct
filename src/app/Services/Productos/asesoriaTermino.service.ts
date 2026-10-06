@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { EnvironmentService } from '../Enviroment/enviroment.service';
-import { Observable } from 'rxjs';
+import { Observable, shareReplay } from 'rxjs';
+import { Asesor, BuscarAsesorRequest } from '../../Models/Creditos/GestionCredito/gestion-credito.model';
 
 @Injectable()
 export class AsesoriaTerminoService {
   
  
     private url: string = "";
+    private cache = new Map<string, Observable<Asesor[]>>();
+
     constructor(private _http: HttpClient,private environment: EnvironmentService) { }
     BuscarAsesoria(documento: string, nombre: string, numeroAsesoria: string) : Observable<any> {
         this.url = this.environment.Url + "/BuscarAsesoriaTermino/" + documento + "/" + nombre + "/" + numeroAsesoria;
@@ -56,6 +59,25 @@ export class AsesoriaTerminoService {
         this.url = `${this.environment.Url}/AsesorExternoTerminoAsesoria`;
         return this._http.post<any>(this.url, Datos);
     } 
+
+    BuscarAsesorExternoCacheable(request: BuscarAsesorRequest) {
+        this.url = `${this.environment.Url}/AsesorExternoTerminoAsesoria`;
+        const key = request.strCodigo
+            ? `codigo:${request.strCodigo}`
+            : `nombre:${request.strNombre}`;
+
+        if (!this.cache.has(key)) {
+            this.cache.set(
+                key,
+                this._http.post<Asesor[]>(this.url, request).pipe(
+                    shareReplay(1)
+                )
+            );
+        }
+
+        return this.cache.get(key)!;
+    }
+
     EditarAsesorExterno(Datos: any): Observable<any> {
         this.url = this.environment.Url + '/EditarAsesorExternoAsesoriaTermino';
         return this._http.post<any>(this.url, Datos);

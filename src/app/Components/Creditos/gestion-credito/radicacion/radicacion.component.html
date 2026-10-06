@@ -1,47 +1,282 @@
 <div class="panel">
-    <div class="panel-body">
-        <div class="col-xs-12 col-md-12 col-lg-12">
-            <div class="col-xs-12 col-md-12 col-lg-12">
-                <form method="get">
-                    <div class="col-xs-12 col-md-3 col-lg-1 align-items-center">
-                        <br>
-                        <label class="textNegrilla">Operación:</label>
-                        <span class="grande"> *</span>
-                    </div>
-                    <div class="col-xs-10 col-md-8 col-lg-4">
-                        <select class="form-control" formControlName="Codigo" id="select">
-                            <option value="">Buscar radicación</option>
-                        </select>
-                    </div>
-                </form>
+    <form class="panel-body pl-40">
+        <div class="row">
+            <div class="col-sm-3 col-md-2 col-lg-1 align-items-center">
+                <!-- <br> -->
+                <!-- <label class="textNegrilla">Operación:</label>
+                <span class="grande"> *</span> -->
+            </div>
+            <div class="col-sm-7 col-md-9 col-lg-4">
+                <!-- <select class="form-control" id="select">
+                    <option value="">Buscar radicación</option>
+                </select> -->
             </div>
 
+            <div class="col-lg-1"></div>
+
+            <div class="col-sm-3 col-md-2 col-lg-1">
+                <label for="buscar" class="textNegrilla txtNoWrap">Buscar por:</label>
+            </div>
+
+            <div class="col-sm-7 col-md-9 col-lg-4">
+                <div class="form-check-group">
+                    <label class="radio-custom">
+                        <input type="radio" class="radioB" name="criterioBusqueda">
+                        <span>Radicado</span>
+                    </label>
+
+                    <label class="radio-custom">
+                        <input type="radio" class="radioB" name="criterioBusqueda">
+                        <span>Documento</span>
+                    </label>
+
+                    <label class="radio-custom">
+                        <input type="radio" class="radioB" name="criterioBusqueda">
+                        <span>Nombre</span>
+                    </label>
+                </div>
+
+                <!-- <div class="input-button">
+                    <input type="text" class="form-control">
+                    <button type="button" class="btn Gt-btn-verde btn-icon">
+                        <i class="icon-search4"></i>
+                    </button>
+                </div> -->
+            </div>
         </div>
 
-        <div class="col-md-12 col-sm-12 col-lg-12">
-            <br>
-            <div class="col-xs-12 col-md-12 col-lg-12">
-                <div class="col-lg-1">
-                    <label for="" class="textNegrilla">Radicación</label>
-                </div>
+        <div class="row">
+            <!-- <br> -->
+            <div class="col-sm-3 col-md-2 col-lg-1 align-items-center">
+                <!-- <br> -->
+                <label class="textNegrilla">Operación:</label>
+                <span class="grande"> *</span>
+            </div>
+            <div class="col-sm-7 col-md-9 col-lg-4">
+                <select class="form-control" id="select">
+                    <option value="">Buscar radicación</option>
+                </select>
+            </div>
 
-                <div class="col-lg-4">
-                    <input type="text" class="form-control" disabled>
-                </div>
+            <!-- <div class="col-lg-1 col-lg-0-5"></div> -->
 
-                <div class="col-lg-2">
-                </div>
+            <div class="col-lg-1"></div>
+            <div class="col-lg-5">
+                <input type="text" class="form-control">
+            </div>
+            <button type="button" class="btn Gt-btn-verde btn-icon">
+                <i class="icon-search4"></i>
+            </button>
+        </div>
+    </form>
 
-                <div class="col-lg-1">
-                    <label for="" class="textNegrilla">Buscar:</label>
-                </div>
 
-                <div class="col-lg-3">
-                    <input type="text" class="form-control">
+    <div class="info-card-wrapper box-form">
+        <div class="info-card custom-scroll">
+            <div class="info-card-item">
+                <span class="info-card-item-title">Documento</span>
+                <span class="info-card-item-text truncate">C.C 10100448764101</span>
+            </div>
+
+            <div class="border"></div>
+
+            <div class="info-card-item info-card-item--nombre">
+                <span class="info-card-item-title">Nombre</span>
+                <span class="info-card-item-text truncate">Luisa Fernanda Gómez Ramirez</span>
+            </div>
+            <div class="border"></div>
+            <div class="info-card-item">
+                <span class="info-card-item-title">Relación</span>
+                <span class="info-card-item-text truncate">Titular</span>
+            </div>
+            <div class="border"></div>
+            <div class="info-card-item">
+                <span class="info-card-item-title">Oficina radicado</span>
+                <span class="info-card-item-text truncate">Medellín Centro</span>
+            </div>
+            <div class="border"></div>
+            <div class="info-card-item">
+                <span class="info-card-item-title">Fecha radicación</span>
+                <span class="info-card-item-text truncate">2026/08/20</span>
+            </div>
+            <div class="border"></div>
+            <div class="info-card-item">
+                <span class="info-card-item-title">Número radicado</span>
+                <span class="info-card-item-text truncate">2026-00481</span>
+            </div>
+            <div class="border"></div>
+            <div class="info-card-item">
+                <span class="info-card-item-title">Estado</span>
+                <span class="info-card-item-text truncate bg-yellow">Pendiente</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- TABS -->
+<div class="panel">
+    <div class="panel-body pl-40 pt-0">
+        <div class="tabbable">
+            <ul class="nav nav-tabs">
+                <li class="nav-item" [class.active]="activeTab === 'negociacion'" (click)="changeTab('negociacion')">
+                    <a>Negociación</a>
+                </li>
+
+                <li class="nav-item" [class.active]="activeTab === 'deducibles'" (click)="changeTab('deducibles')">
+                    <a>Deducibles</a>
+                </li>
+
+                <li class="nav-item" [class.active]="activeTab === 'saldosVigentes'"
+                    (click)="changeTab('saldosVigentes')">
+                    <a>Saldos vigentes</a>
+                </li>
+
+                <li class="nav-item" [class.active]="activeTab === 'historial'" (click)="changeTab('historial')">
+                    <a>Historial</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+
+                @switch(activeTab) {
+                @case ('negociacion') {
+                    <app-tab-negociacion />
+
+                }
+
+                @case ('deducibles') {
+                <div>
+                    <section>
+                        <article>
+                            <!-- <div class="alert alert-secondary" role="alert" *ngIf="deducibles.length === 0">
+                                    No hay registros
+                                </div> -->
+                            <div class="table-responsive scrollTabla">
+                                <table class="table table-hover horizontal-scroll encabezado-fijo">
+                                    <thead>
+                                        <tr>
+                                            <th class="table-header">Código</th>
+                                            <th class="table-header">Nombre</th>
+                                            <th class="table-header">Plazo</th>
+                                            <th class="table-header">Valor</th>
+                                            <th class="table-header">Valor cuota</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-center">1</td>
+                                            <td>Capitalización Por Crédito</td>
+                                            <td>
+                                                <div class="align-right">36</div>
+                                            </td>
+                                            <td>
+                                                <div class="align-right">$1,714,440.00</div>
+                                            </td>
+                                            <td>
+                                                <div class="align-right">$28,574.00</div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <!-- <tfoot class="total-tfoot">
+                                            <tr>
+                                                <td colspan="2" class="text-center"><strong>Total</strong></td>
+                                                <td>
+                                                    <div class="align-right">{{ saldoDeducibleTotal | currency
+                                                        }}</div>
+                                                </td>
+                                                <td>
+                                                    <div class="align-right">{{ valorCuotaTotal | currency }}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="align-right">{{ saldoInicialDeducibleTotal |
+                                                        currency }}</div>
+                                                </td>
+                                                <td>
+                                                    <div class="text-center">—</div>
+                                                </td>
+                                                <td>
+                                                    <div class="align-right">{{ cuotaPactadaTotal | currency }}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="align-right">{{ valorPagadoTotal | currency }}
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tfoot> -->
+                                </table>
+                            </div>
+                        </article>
+                    </section>
                 </div>
-                <button type="button" class="btn Gt-btn-verde btn-icon">
-                    <i class="icon-search4"></i>
-                </button>
+                }
+
+                @case ('saldosVigentes') {
+                <article class="ac-text-ap">
+                    <div class="table-responsive scrollTabla">
+                        <!-- <div class="col-xs-12 col-md-12 col-lg-12"
+                                *ngIf="radicadoData.saldoVigenteRadicado.length <= 0">
+                                <br>
+                                <div class="alert alert-secondary" role="alert">
+                                    No hay registros
+                                </div>
+                            </div> -->
+                        <div class="col-xs-12 col-md-12 col-lg-12 panel-flat">
+                            <table id="tablaIngresos" class="table table-hover">
+                                <thead class="encabezadoTablasRadicados">
+                                    <tr>
+                                        <th class="CuentaFija">
+                                            <strong>Cuenta</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Saldo préstamo</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Interés corriente</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Interés de mora</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Abono en canje</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Saldo total</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Radicado</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Valor cuota</strong>
+                                        </th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="min-width: 164px;" class="CuentaFija">$ 000</td>
+                                        <td style="min-width: 150px;">$ 000</td>
+                                        <td style="min-width: 150px;">$ 000</td>
+                                        <td style="min-width: 150px;">$ 000</td>
+                                        <td style="min-width: 145px;">$ 000</td>
+                                        <td style="min-width: 155px;">$ 000</td>
+                                        <td style="min-width: 110px;">$ 000</td>
+                                        <td style="min-width: 150px;">$ 000</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </article>
+                }
+
+                @case ('historial') {
+                <app-tabla-historial />
+                }
+                }
+
+
             </div>
         </div>
     </div>

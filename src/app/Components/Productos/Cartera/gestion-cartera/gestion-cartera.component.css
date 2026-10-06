@@ -332,17 +332,6 @@ th.celda-fija-izquierda {
     font-weight: bold;
 }
 
-@media (max-width: 1550px) {
-
-    .numero-doc {
-        width: var(--col-wider-1-4);
-    }
-
-    .nombre-asociado {
-        width: var(--col-smaller-3-4);
-    }
-}
-
 @media (min-width: 1600px) {
     .label-pagare,
     .label-relacion {
