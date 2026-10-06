@@ -394,6 +394,11 @@ export interface PeriodoPago {
   DescripcionFrecuenciaPago: string;
 }
 
+export interface FormaPago {
+  IdFormaPago: number;
+  DescripcionFormaPago: string;
+}
+
 export interface LogGestionCreditoRequest {
   idOperacion: number;
   idModulo: number;

@@ -1,0 +1,40 @@
+.radio-custom {
+    margin-bottom: 0;
+    gap: 2px;
+}
+
+
+.form-check-group {
+    display: flex;
+    column-gap: 15px;
+    /* padding-left: 10px; */
+}
+
+.form-check > input {
+
+    margin-right: 5px;
+}
+
+.input-button {
+    position: relative;
+
+    button {
+        position: absolute;
+        right: calc(-38px - 20px);
+        top: 0;
+    }
+}
+
+.box-form {
+    box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid #ddd;
+    transition: all 0.3s ease;
+}
+
+.box-form:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    border-color: #b39ddb;
+}
+
+
+

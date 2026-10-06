@@ -33,6 +33,11 @@ export enum FormaPagoEnum {
   Nomina = 2
 }
 
+export enum GarantiaEnum {
+  Admisible = 5,
+  NoAdmisible = 10,
+}
+
 export enum PeriodoPagoEnum {
     Dia = 5,
     Semana = 10,
@@ -46,4 +51,11 @@ export enum PeriodoPagoEnum {
     Semestre = 50,
     Anio = 55,
     AlVencimiento = 60
+}
+
+export enum CriterioBusquedaAsesoria {
+    PorAsesoria = 1,
+    PorRadicado = 2,
+    PorDocumento = 3,
+    PorNombre = 4,
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { EnvironmentService } from '../Enviroment/enviroment.service';
-import { Observable, retry } from 'rxjs';
+import { Observable, retry, shareReplay } from 'rxjs';
 import { TipoBusquedaResumen } from '../../Models/Productos/cartera/gestion-credito.enum';
 import { ActualizarPagareCupoDto, ActualizarPagareDto, BaseRequestAlCalcular, CalcularDatosRequest, CambiarCalificacionDto, CambiarFormaPagoDto, CambiarGarantiaDto, CambiarGarantiasRequestDto, CambiarLineaCreditoDto, CuentaCarteraDetalle, CuentaCarteraResumen, CuentaFormateada, CupoInfo, DebitoAutomaticoCreditoDto, DetalleGarantiaCreditoDto, Diferido, GarantiaCompartida, GarantiaDisponible, GarantiaRealAsignada, GarantiasResponse, HistorialOperacion, LineaCambioListDto, ManejarSeguroCreditoDto, ObservacionRadicado, ObtenerCodeudorBasicoModel, PeriodoPago, PersonaNaturalBusquedaDto, Provision, ReesRelResponse, ResultadoOperacionDto, ResultCalcularCambioDatos, UltimaCalificacionDto, CrearInsolvencia, DevolverReest, TipoSeguimientoInsolvencia, InsolvenciaHistoricoDto, InsolvenciaAcuerdoPagoDto, MotivoInsolvencia, InstanciaInsolvencia, ValorRespaldarCTD, GarantiaPersonalCod, LogInsolvenciaHijosCTD } from '../../Models/Productos/cartera/gestion-credito.model';
 import { buildParams } from '../../utils/helpers';
@@ -11,6 +11,8 @@ import { buildParams } from '../../utils/helpers';
 })
 export class CarteraService {
     private url: string = "";
+
+    private frecuenciasPago$?: Observable<PeriodoPago[]>;
 
     constructor(private _http: HttpClient, private environment: EnvironmentService) { }
 
@@ -151,6 +153,21 @@ export class CarteraService {
         this.url = `${this.environment.Url}/ObtenerFrecuenciaPagoTermino?intPlazo=720`;
         return this._http.get<PeriodoPago[]>(this.url);
     }
+
+    getPeriodosPagoCacheable(): Observable<PeriodoPago[]> {
+        this.url = `${this.environment.Url}/ObtenerFrecuenciaPagoTermino?intPlazo=720`;
+
+        if (!this.frecuenciasPago$) {
+            this.frecuenciasPago$ = this._http
+                .get<PeriodoPago[]>(this.url)
+                .pipe(
+                    shareReplay(1)
+                );
+        }
+
+        return this.frecuenciasPago$;
+    }
+
 
     calcularCambioDatos(dto: CalcularDatosRequest) {
         const params = buildParams({

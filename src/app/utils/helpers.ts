@@ -33,3 +33,7 @@ export function omit<T extends object, K extends keyof T>(
     Object.entries(obj).filter(([key]) => !keys.includes(key as K))
   ) as Omit<T, K>;
 }
+
+export function concatWithSpace(...args: string[]): string {
+  return args.filter(Boolean).map(s => String(s).trim().replace(/\s{2,}/g, ' ')).join(' ');
+}

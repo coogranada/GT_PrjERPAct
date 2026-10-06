@@ -4,16 +4,21 @@
             <div class="metas-head">
                 <div>
                     <h2>Metas del mes</h2>
-                    <p class="sub">Cartera de crédito · septiembre 2026</p>
+                    <p class="sub">Gestión de crédito</p>
                 </div>
                 <div class="office-field">
                     <label for="office">Oficina</label>
-                    <select id="office" class="office-select">
-                        <option value="cali-centro">Cali Centro</option>
-                        <option value="cali-norte">Cali Norte</option>
-                        <option value="medellin-poblado">Medellín Poblado</option>
-                        <option value="bogota-chapinero">Bogotá Chapinero</option>
+                    <select class="form-control input__border">
+                        @if (oficinas$ | async; as oficinas) {
+                            @for (oficina of oficinas; track oficina.IdLista) {
+                            <option [value]="oficina.IdLista">
+                                {{ oficina.Descripcion }}
+                            </option>
+                            }
+                        }
                     </select>
+
+
                 </div>
             </div>
 

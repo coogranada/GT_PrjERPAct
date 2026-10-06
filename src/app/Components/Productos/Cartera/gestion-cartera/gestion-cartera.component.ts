@@ -889,7 +889,7 @@ export class GestionCarteraComponent {
 
       if (this.advertenciaOperacionSinCuenta()) return;
 
-      await this.getHistorial();
+      // await this.getHistorial();
       if (operacionCodigo !== '124' && !this.validarEstadoCuenta()) return;
 
       if (operacionCodigo === '124') {

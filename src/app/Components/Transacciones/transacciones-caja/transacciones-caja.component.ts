@@ -204,7 +204,7 @@ export class TransaccionesCajaComponent implements OnInit {
       this.DocumentoUsActual = "";
     }
 
-    this.validarEstadoTaquilla();
+    // this.validarEstadoTaquilla();
     this.obtenerIndicadores();
     this.VolverArriba();
     this.vbleDocCuenta = false;

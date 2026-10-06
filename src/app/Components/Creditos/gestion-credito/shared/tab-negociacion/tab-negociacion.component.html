@@ -1,0 +1,402 @@
+<form method="get" [formGroup]="formNegociacion">
+
+
+    <div class="row row-margin">
+        <div class="col-lg-4">
+            <div>
+                <label for="producto" class="textNegrilla">Producto:</label>
+                <span class="text-danger"> *</span>
+            </div>
+            <div class="row">
+                <div class="col-lg-2">
+                    <input type="text" id="producto" class="form-control" formControlName="idProducto" appSoloNumero>
+                </div>
+                <div class="col-lg-7">
+                    <input type="text" class="form-control" formControlName="producto">
+                </div>
+                <div class="col-lg-1">
+                    <button type="button" class="btn Gt-btn-verde btn-icon" [disabled]="productoBtnFlag">
+                        <i class="icon-search4"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div>
+                <label for="linea" class="textNegrilla">Linea:</label>
+                <span class="text-danger"> *</span>
+            </div>
+            <div class="row">
+                <div class="col-lg-2">
+                    <input type="text" id="linea" class="form-control" formControlName="idLinea" appSoloNumero>
+                </div>
+                <div class="col-lg-7">
+                    <input type="text" class="form-control" formControlName="linea">
+                </div>
+                <div class="col-lg-1">
+                    <button type="button" class="btn Gt-btn-verde btn-icon" [disabled]="lineaBtnFlag">
+                        <i class="icon-search4"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            <div>
+                <label for="sistema" class="textNegrilla">Sistema:</label>
+                <span class="text-danger"> *</span>
+            </div>
+            <div>
+                <!-- <select id="sistema" formControlName="sistema" class="form-control">
+                    @for (sis of sistemas; track sis.id) {
+                    <option [ngValue]="sis.id">
+                        {{ sis.descripcion }}
+                    </option>
+                    }
+                </select> -->
+
+                <input type="text" id="sistema" class="form-control" formControlName="sistema">
+            </div>
+        </div>
+    </div>
+
+    <div class="row row-margin">
+        <div class="col-lg-3">
+            <div>
+                <label for="formaPago" class="textNegrilla">Forma de pago:</label>
+                <span class="text-danger"> *</span>
+            </div>
+            <div>
+                <!-- <select class="form-control" id="formaPago" formControlName="formaPago">
+                    @for (forma of formasPago; track forma.IdFormaPago) {
+                    <option [ngValue]="forma.IdFormaPago">
+                        {{ forma.DescripcionFormaPago }}
+                    </option>
+                    }
+                </select> -->
+                <input type="text" id="formaPago" class="form-control" formControlName="formaPago">
+
+            </div>
+        </div>
+        <div class="col-lg-1"></div>
+
+        <div class="col-lg-3">
+            <div>
+                <label for="periodoCapital" class="textNegrilla">Periodo de pago capital:</label>
+                <span class="text-danger"> *</span>
+            </div>
+            <div>
+                <!-- <select id="periodoCapital" formControlName="periodoCapital" class="form-control">
+
+                    @for (periodo of periodosPagoCapital; track periodo.IdFrecuenciaPago) {
+                    <option [ngValue]="periodo.IdFrecuenciaPago">
+                        {{ periodo.DescripcionFrecuenciaPago }}
+                    </option>
+                    }
+                </select> -->
+                <input type="text" id="periodoCapital" class="form-control" formControlName="periodoCapital">
+
+            </div>
+        </div>
+        <div class="col-lg-1"></div>
+
+        <div class="col-lg-3">
+            <div>
+                <label for="periodoInteres" class="textNegrilla">Periodo de pago interes:</label>
+                <span class="text-danger"> *</span>
+            </div>
+            <div>
+                <!-- <select id="periodoInteres" formControlName="periodoInteres" class="form-control">
+
+                    @for (periodo of periodosPagoInteres; track periodo.IdFrecuenciaPago) {
+                    <option [ngValue]="periodo.IdFrecuenciaPago">
+                        {{ periodo.DescripcionFrecuenciaPago }}
+                    </option>
+                    }
+                </select> -->
+                <input type="text" id="periodoInteres" class="form-control" formControlName="periodoInteres">
+            </div>
+        </div>
+    </div>
+
+    <div class="row row-margin">
+        <div class="col-lg-3">
+            <div>
+                <label for="monto" class="textNegrilla">Monto:</label>
+                <span class="text-danger"> *</span>
+            </div>
+            <input type="text" id="monto" class="form-control text-right" formControlName="monto" appMonedaDirectiva>
+        </div>
+
+        <div class="col-lg-1"></div>
+
+        <div class="col-lg-1 col-lg-1-5">
+            <div>
+                <label for="plazo" class="textNegrilla">Plazo:</label>
+                <span class="text-danger"> *</span>
+            </div>
+            <input type="text" id="plazo" class="form-control" formControlName="plazo" appSoloNumero maxlength="4">
+
+        </div>
+
+        <div class="col-lg-1 col-lg-1-5">
+            <div>
+                <label for="diasGracia" class="textNegrilla">Días de gracia:</label>
+                <span class="text-danger"> *</span>
+            </div>
+            <input type="text" id="diasGracia" class="form-control" formControlName="periodoGracia" appSoloNumero
+                maxlength="4">
+        </div>
+
+        <div class="col-lg-1"></div>
+
+        <div class="col-lg-3">
+            <div>
+                <label for="garantia" class="textNegrilla">Garantía:</label>
+                <span class="text-danger"> *</span>
+            </div>
+            <!-- <select id="garantia" class="form-control" formControlName="garantia">
+                <option value="">Admisible</option>
+            </select> -->
+            <input type="text" id="garantia" class="form-control" formControlName="garantia">
+        </div>
+    </div>
+
+    <div class="row row-margin">
+        <div class="col-lg-4">
+            <div>
+                <label for="tipoGarantia" class="textNegrilla">Tipo de garantía:</label>
+                <span class="text-danger"> *</span>
+            </div>
+            <div class="row">
+                <div class="col-lg-2">
+                    <input type="text" id="tipoGarantia" class="form-control" formControlName="idTipoGarantia"
+                        appSoloNumero>
+                </div>
+                <div class="col-lg-7">
+                    <input type="text" class="form-control" formControlName="tipoGarantia">
+                </div>
+                <div class="col-lg-1">
+                    <button type="button" class="btn Gt-btn-verde btn-icon" [disabled]="tipoGarantiaBtnFlag">
+                        <i class="icon-search4"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div>
+                <label for="asesor" class="textNegrilla">Asesor:</label>
+                <span class="text-danger"> *</span>
+            </div>
+            <div class="row">
+                <div class="col-lg-2">
+                    <input type="text" id="asesor" class="form-control" formControlName="idAsesor" appSoloNumero>
+                </div>
+                <div class="col-lg-7">
+                    <input type="text" class="form-control" formControlName="nombreAsesor">
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-1"></div>
+
+        <div class="col-lg-4">
+            <div>
+                <label for="asesorExterno" class="textNegrilla">Asesor externo:</label>
+            </div>
+            <div class="row">
+                <div class="col-lg-2">
+                    <input type="text" id="asesorExterno" class="form-control" formControlName="idAsesorExterno"
+                        (blur)="buscarAsesorExternoCodigo($event)" (input)="onIdAsesorInput()" appSoloNumero>
+                </div>
+                <div class="col-lg-7">
+                    <input type="text" class="form-control" formControlName="nombreAsesorExterno"
+                        (input)="onNombreAsesorInput()">
+                </div>
+                <div class="col-lg-1">
+                    <button #searchButton type="button" class="btn Gt-btn-verde btn-icon"
+                        (click)="buscarAsesorExternoNombre()" [disabled]="asesorExtBtnFlag">
+                        <i class="icon-search4"></i>
+                    </button>
+                </div>
+
+                <div id="modalAsesoresExterno" class="modal fade">
+                    <div class="modal-dialog">
+                        <div class="modal-content modal-lg">
+                            <div class="modal-header bg-morado">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h6 class="modal-title">Asesor Externo</h6>
+                            </div>
+                            <div class="modal-body">
+                                <div class="table-responsive scrollTabla">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th><strong>Codigo</strong></th>
+                                                <th><strong>Nombre asesor externo</strong></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @for (asesor of asesoresExternos; track asesor.intIdAsesor) {
+                                            <tr (click)="mapearAsesorExterno(asesor)">
+                                                <td> {{ asesor.intIdAsesor }} </td>
+                                                <td> {{ asesor.Nombre }} </td>
+                                            </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" #modalAsesoresExterno data-toggle="modal" data-target="#modalAsesoresExterno"
+                    data-popup="tooltip" data-trigger="hover" data-placement="top">
+            </div>
+        </div>
+    </div>
+
+    <!--  -->
+
+    <div class="row row-margin"></div>
+
+    <div class="row row-margin align-items-end">
+
+        <div class="col-xs-1">
+            <div>
+                <label class="textNegrilla">Periódica:</label>
+            </div>
+            <div>
+                <input type="text" class="form-control text-right" formControlName="tasaPeriodica" appPorcentajeDirectiva>
+            </div>
+        </div>
+
+        <div class="col-xs-1">
+            <div>
+                <label class="textNegrilla">Nominal:</label>
+            </div>
+            <div>
+                <input type="text" class="form-control text-right" formControlName="tasaNominal" appPorcentajeDirectiva>
+            </div>
+        </div>
+
+        <div class="col-xs-1">
+            <div>
+                <label class="textNegrilla">Efectiva:</label>
+            </div>
+            <div>
+                <input type="text" class="form-control text-right" formControlName="tasaEfectiva" appPorcentajeDirectiva>
+            </div>
+        </div>
+
+        <div class="col-lg-6"></div>
+        <div class="col-lg-1 col-lg-1-5"></div>
+
+        <div class="col-lg-1">
+            <button class="btn Gt-btn-morado" [disabled]="calculatBtnDisabled">Calcular</button>
+        </div>
+
+    </div>
+
+    <div class="row row-margin">
+
+                <div class="col-xs-1 col-xs-1-5">
+            <div>
+                <label class="textNegrilla">Indicador:</label>
+            </div>
+            <div>
+                <input type="text" class="form-control" formControlName="indicador">
+            </div>
+        </div>
+
+        <div class="col-xs-1 col-xs-1-5">
+            <div>
+                <label class="textNegrilla">Puntos:</label>
+            </div>
+            <div>
+                <input type="text" class="form-control text-right" formControlName="puntos" appPorcentajeDirectiva>
+            </div>
+        </div>
+
+        <!-- cards -->
+        <div class="col-lg-1"></div>
+        <div class="col-xs-1 col-lg-1-5">
+            <div class="recuadro">
+                <div class="">Valor préstamo</div>
+                <div class="textNegrilla recuadro-text">
+                    @if(idAsesoria()) {
+                        {{ formNegociacion.controls.monto.value | number:'1.2-2' }}
+                    } @else {
+                        0.00
+                    }
+                    
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-1 col-lg-1-5">
+            <div class="recuadro">
+                <div class="">Deducciones</div>
+                <div class="textNegrilla recuadro-text">
+                    @if(idAsesoria()) {
+                        {{ deducciones() | number:'1.2-2' }}
+                    } @else {
+                        0.00
+                    }
+                    
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-xs-1 col-lg-1-5">
+            <div class="recuadro">
+                <div class="">Saldo a cancelar</div>
+                <div class="textNegrilla recuadro-text">
+                    @if(idAsesoria() && saldoCancelar()) {
+                        {{ saldoCancelar() | number:'1.2-2' }}
+                    } @else {
+                        0.00
+                    }
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-xs-1 col-lg-1-5">
+            <div class="recuadro">
+                <div class="">Desembolso</div>
+                <div class="textNegrilla recuadro-text text-red">
+                    @if(idAsesoria() && deducciones()) {
+                        -{{ desembolso | number:'1.2-2' }}
+                    } @else {
+                        0.00
+                    }
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-1 col-lg-1-5">
+            <div class="recuadro">
+                <div class="">Total cuota</div>
+                <div class="textNegrilla recuadro-text">
+                    @if(idAsesoria()) {
+                        {{ totalCuota | number:'1.2-2' }}
+                    } @else {
+                        0.00
+                    }
+                    
+                </div>
+            </div>
+        </div>
+        <!-- cards -->
+
+
+    </div>
+
+</form>

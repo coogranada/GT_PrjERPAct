@@ -1,0 +1,111 @@
+@import '../styles/shared.css';
+
+
+.info-card-wrapper {
+
+
+}
+
+.info-card {
+    /* margin-top: 1rem; */
+    padding: 2rem ;
+    display: flex;
+    /* width: 93%; */
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: space-around;
+    /* max-width: 940px; */
+
+    column-gap: 2rem;
+    /* column-gap: 6rem;  */
+    /* border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03); */
+    overflow-x: auto;
+}
+
+.info-card-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-card-item {
+    max-width: 250px;
+    /* min-width: 120px; */
+}
+
+.info-card-item--nombre {
+    max-width: 350px;
+}
+
+
+/* .info-card-value {
+    display: flex;
+    flex-direction: column;
+} */
+
+.info-card-item-title {
+    font-weight: bold;
+    text-wrap: nowrap;
+    /* color: #00000075; */
+    /* font-size: 14px; */
+}
+
+.info-card-item-text {
+    /* font-size: 16px; */
+    /* font-weight: bold; */
+    /* font-size: 20px; */
+    /* font-size: 16px; */
+    /* line-height: 0.8; */
+
+}
+
+.border {
+    min-width: 2px;
+    background-color: #e5e7eb;
+}
+
+/* .form-check>input {
+
+    margin-right: 5px;
+} */
+
+
+/* .box-form {
+    box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    transition: all 0.3s ease;
+}
+
+.box-form:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    border-color: #b39ddb;
+} */
+
+
+.bg-yellow {
+    padding: 2px;
+    border-radius: 7px;
+    background-color: yellow;
+}
+
+@media (min-width: 1440px) {
+    .info-card-item--nombre {
+        /* min-width: 300px; */
+    }
+
+
+}
+
+@media (min-width: 1920px) {
+
+    .info-card-item-text {
+        font-size: 16px;
+    }
+
+    .container {
+        padding: 2rem;
+    }
+
+}

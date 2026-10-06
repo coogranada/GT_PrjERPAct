@@ -59,7 +59,7 @@ export class CambiarInfoCreditoForm {
   datosCalculados: ResultCalcularCambioDatos | null = null;
   idNovedad: Novedad | undefined = undefined;
   plazos: number[] = [];
-  sistemas = SISTEMAS;
+  sistemas = SISTEMAS.filter(e => e.id == TipoSistemas.CuotaFija || e.id == TipoSistemas.CuotaVariable);
   periodosPago: PeriodoPago[] = [];
   periodosPagoCapital: PeriodoPago[] = [];
   plazoCalculado: number | null = null;
