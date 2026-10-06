@@ -16,6 +16,7 @@ import { ComContData } from '../../../Models/Utilidades/comcont.model';
 import { AutConData } from '../../../Models/Utilidades/autcon.model';
 import { DisData } from '../../../Models/Utilidades/dis.model';
 import { LoadingService } from '../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../utils/storage-security.util';
 
 
 const ColorPrimario = 'rgb(13,165,80)';
@@ -136,10 +137,10 @@ export class ConciliacionCompensacionComponent implements OnInit {
   ngOnInit() {
     this.moduleValidationService.ValidatePermissionsModule(this.CodModulo);
     this.Operaciones();
-    this.DatosUsuario = JSON.parse(window.atob(localStorage.getItem('Data') ?? '')) || '{}';
+    const DatosUsuario = StorageSecurity.getData() || {};
     this.cuentaSelected = '11100548';
 
-    this.loginService.GetSesionXUsuario(this.DatosUsuario.IdUsuario).subscribe(
+    this.loginService.GetSesionXUsuario(DatosUsuario.IdUsuario).subscribe(
       result => {
         if (!result.Estado) {
           this.router.navigateByUrl('/Login');
@@ -190,13 +191,13 @@ export class ConciliacionCompensacionComponent implements OnInit {
 
 
   Operaciones() {
-    this.DatosUsuario = JSON.parse(window.atob(localStorage.getItem('Data')?? ''));
+    const DatosUsuario = StorageSecurity.getData() || {};
     const arrayExample = [{
       'IdModulo': this.CodModulo,
-      'IdUsuario': this.DatosUsuario.IdUsuario,
+      'IdUsuario': DatosUsuario.IdUsuario,
       'IdOperaciones': '',
       'IdOperacionesPerfil': '',
-      'IdPerfil': this.DatosUsuario.idPerfilUsuario
+      'IdPerfil': DatosUsuario.idPerfilUsuario
     }];
     this.operacionesService.OperacionesPermitidas(JSON.stringify(arrayExample[0])).subscribe(
       result => {
@@ -743,7 +744,7 @@ export class ConciliacionCompensacionComponent implements OnInit {
   GuardarCompensacion() {
     try {
       this.loading.show();
-      this.dataUser = JSON.parse(window.atob(localStorage.getItem('Data') ?? ''));
+      this.dataUser = StorageSecurity.getData() || {};
       this.compensacionForm.patchValue({ IdUsuarioProceso: this.dataUser.IdUsuario });
       this.compensacionForm.patchValue({ Fecha: this.fechaIdentificadaComCont });
       this.compensacionForm.patchValue({ ValorOrden: this.sdoOrdenTransferencia });
@@ -797,10 +798,10 @@ export class ConciliacionCompensacionComponent implements OnInit {
 
   GuardarLogCompensacion() {
     this.loading.show();
-    this.dataUser = JSON.parse(window.atob(localStorage.getItem('Data') ?? ''));
+    const dataUser = StorageSecurity.getData() || {};
     const dataLog = {
-      IdUsuarioERP: this.dataUser.IdUsuario,
-      IdTercero: this.dataUser.intlngTercero,
+      IdUsuarioERP: dataUser.IdUsuario,
+      IdTercero: dataUser.intlngTercero,
       IdModulo: this.CodModulo,
       IdOperacion: this.valueSelected,
       FechaCompensacion: this.fechaIdentificadaAutCon,

@@ -29,6 +29,7 @@ import {
 } from "../../../Models/Informes/MisProductos/mis-producto.model";
 import { AlertService } from '../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../utils/storage-security.util';
 
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -140,8 +141,7 @@ export class MiListaProductosComponent implements OnInit {
 
   ngOnInit() {
     this.IrArriba();
-    let datas = localStorage.getItem("Data");
-    this.resultDataStore = JSON.parse(window.atob(datas == null ? "" : datas));
+    this.resultDataStore = StorageSecurity.getData();
     this.arrayExample = [
         {
           IdModulo: this.moduloLocal,

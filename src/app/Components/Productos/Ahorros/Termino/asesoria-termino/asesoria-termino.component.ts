@@ -2138,10 +2138,10 @@ capitalize(str: any): any {
   }
   MapearDatosUsuario() {
     const dataUser = StorageSecurity.getData() || {};``
-    this.asesoriaterminoForm.get('NombreOficina')?.setValue(this.dataUser.Oficina);
-    this.asesoriaterminoForm.get('NumeroOficina')?.setValue(this.dataUser.NumeroOficina);
-    this.asesoriaterminoForm.get('IdAsesor')?.setValue(this.dataUser.IdAsesor);
-    this.asesoriaterminoForm.get('NombreAsesor')?.setValue(this.dataUser.Nombre);
+    this.asesoriaterminoForm.get('NombreOficina')?.setValue(dataUser.Oficina);
+    this.asesoriaterminoForm.get('NumeroOficina')?.setValue(dataUser.NumeroOficina);
+    this.asesoriaterminoForm.get('IdAsesor')?.setValue(dataUser.IdAsesor);
+    this.asesoriaterminoForm.get('NombreAsesor')?.setValue(dataUser.Nombre);
   }
   ValidarPlazo() {
     if (this.asesoriaterminoForm.get('Plazo')?.value === this.logDataOnEditAsesoria.PlazoAnterior) return;

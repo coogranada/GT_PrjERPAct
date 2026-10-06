@@ -1458,7 +1458,7 @@ export class FichaAnalisisComponent implements OnInit {
     data.ObsFirmantes = this.FichaAnalisisDataForm.get("ObsFirmantes")?.value;
     data.ObsPromcuentas = this.FichaAnalisisDataForm.get("ObsPromcuentas")?.value;
     const DataUserLogeado = StorageSecurity.getData();
-    data.AnalistaEncargado = this.DataUserLogeado.Nombre;
+    data.AnalistaEncargado = DataUserLogeado.Nombre;
     data.ExtinguidasCode = this.retornarStr(this.resultadoInfoRadicado[0]["ExtinguidasCode"])
     data.ExtinguidasPrin = this.retornarStr(this.resultadoInfoRadicado[0]["ExtinguidasPrin"])
     data.VigentesCode = this.retornarStr(this.resultadoInfoRadicado[0]["VigentesCode"])

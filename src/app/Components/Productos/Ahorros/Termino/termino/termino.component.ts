@@ -2056,11 +2056,11 @@ export class TerminoComponent implements OnInit {
       );
   }
   MapearDatosUsuario() {
-    const datauser = StorageSecurity.getData();
-    this.TerminoForm.get('NombreOficina')?.setValue(this.dataUser.Oficina);
-    this.TerminoForm.get('NumeroOficina')?.setValue(this.dataUser.NumeroOficina);
-    this.TerminoForm.get('IdAsesor')?.setValue(this.dataUser.IdAsesor);
-    this.TerminoForm.get('NombreAsesor')?.setValue(this.dataUser.Nombre);
+    const dataUser = StorageSecurity.getData();
+    this.TerminoForm.get('NombreOficina')?.setValue(dataUser.Oficina);
+    this.TerminoForm.get('NumeroOficina')?.setValue(dataUser.NumeroOficina);
+    this.TerminoForm.get('IdAsesor')?.setValue(dataUser.IdAsesor);
+    this.TerminoForm.get('NombreAsesor')?.setValue(dataUser.Nombre);
 
   }
   Encabezado() {

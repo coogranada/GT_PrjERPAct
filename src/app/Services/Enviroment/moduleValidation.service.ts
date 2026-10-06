@@ -15,7 +15,7 @@ export class ModuleValidationService {
 
     public ValidatePermissionsModule(modulo : number) {
         const resulStore = StorageSecurity.getData() || {};
-        if (this.resulStore !== null && this.resulStore !== undefined) {
+        if (resulStore !== null && resulStore !== undefined) {
             if (localStorage.getItem('Permisos') !== null && localStorage.getItem('Permisos') !== undefined) {
                 let data : string | null = localStorage.getItem('Permisos')
                 const permisosUsuario = JSON.parse(CryptoJS.AES.decrypt(

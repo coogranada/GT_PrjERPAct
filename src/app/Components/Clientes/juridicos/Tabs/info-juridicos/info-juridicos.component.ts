@@ -616,107 +616,162 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
   //#region Metodos funcionales
 
   ValidarTipoCliente() {
-    this.operacionesModel = new OperacionesModel();
-    const tipoClienteSelect = Number(this.infoJuridicoFrom.get('Relacion')?.value);
-    const resultPerfil = StorageSecurity.getData();
-    this.operacionesModel.idOperacion = this.OperacionActual;
-    this.operacionesModel.idPerfil = resultPerfil.idPerfilUsuario;
-    this.operacionesModel.idModulo = this.CodModulo;
-    if (tipoClienteSelect === 15) { // Tercero
-      this.AsignarObligatoriosTercero();
-      this.AgregarValidacionesTercero();
-      let state = localStorage.getItem('state');
-      this.dataEstados = JSON.parse(window.atob(state == null ? "" : state));;
-      this.dataEstados.forEach((elementEsta : any) => {
-          if (elementEsta.IdEstado === 5) {
-            this.infoJuridicoFrom.get('Estado')?.setValue(elementEsta);
-          }
-        });
-      const DataUserlog = StorageSecurity.getData();
-      // se quito restriccion de oficina de administracion
-      this.PreguntaAsesorExt = false;
-      let perfi = localStorage.getItem('profiles');
-      const resultProfiles = JSON.parse(window.atob(perfi == null ? "" : perfi));
-      resultProfiles.forEach((element : any) => {
-          if (element.IdPerfil === 68) {
-             swal.fire({
-              title: 'Advertencia',
-              text: '',
-              html: '¿ El tercero a crear es para convenios ? ',
-              icon: 'warning',
-              showCancelButton: true,
-              confirmButtonText: 'Si',
-              cancelButtonText: 'No',
-              confirmButtonColor: 'rgb(13,165,80)',
-              cancelButtonColor: 'rgb(160,0,87)',
-              allowOutsideClick: false,
-              allowEscapeKey: false,
-            }).then((results) => {
+  this.operacionesModel = new OperacionesModel();
+  const tipoClienteSelect = Number(
+    this.infoJuridicoFrom.get('Relacion')?.value
+  );
+  const resultPerfil = StorageSecurity.getData();
+  if (!resultPerfil) {
+    return;
+  }
+  this.operacionesModel.idOperacion = this.OperacionActual;
+  this.operacionesModel.idPerfil = resultPerfil.idPerfilUsuario;
+  this.operacionesModel.idModulo = this.CodModulo;
 
-              if (results.value) {
-                this.infoJuridicoFrom.get('Proveedor')?.setValue('1')
-                this.ocultarObligatoriosTerceroProvedor();
-                this.clienteSeleccionado.emit({ 'tipoClienteSelect': tipoClienteSelect, 'isProveedor': true });
-                
+  if (tipoClienteSelect === 15) {
+    // Tercero
+    this.AsignarObligatoriosTercero();
+    this.AgregarValidacionesTercero();
 
-              } else {
-                this.PreguntaAsesorExt = false;
-                this.infoJuridicoFrom.get('Proveedor')?.setValue('0')
-                this.AsignarObligatoriosTercero();
-                this.AgregarValidacionesTercero();
-                this.clienteSeleccionado.emit({ 'tipoClienteSelect': tipoClienteSelect, 'isProveedor': false });
+    let state = localStorage.getItem('state');
 
-              }
+    this.dataEstados = JSON.parse(
+      window.atob(state == null ? '' : state)
+    );
+    const estado = this.dataEstados.find(
+      (x: any) => x.IdEstado === 5
+    );
+    if (estado) {
+      this.infoJuridicoFrom.get('Estado')?.setValue(estado);
+    }
+    // Se quitó restricción de oficina administración
+    this.PreguntaAsesorExt = false;
+    let perfi = localStorage.getItem('profiles');
+    const resultProfiles = JSON.parse(
+      window.atob(perfi == null ? '' : perfi)
+    );
+    resultProfiles.forEach((element: any) => {
+      if (element.IdPerfil === 68) {
+        swal.fire({
+          title: 'Advertencia',
+          text: '',
+          html: '¿ El tercero a crear es para convenios ? ',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Si',
+          cancelButtonText: 'No',
+          confirmButtonColor: 'rgb(13,165,80)',
+          cancelButtonColor: 'rgb(160,0,87)',
+          allowOutsideClick: false,
+          allowEscapeKey: false
+        }).then((results) => {
+          if (results.value) {
+            this.infoJuridicoFrom.get('Proveedor')?.setValue('1');
+            this.ocultarObligatoriosTerceroProvedor();
+
+            this.clienteSeleccionado.emit({
+              tipoClienteSelect,
+              isProveedor: true
             });
+
           } else {
-            //la oficina adiministracion puede crear terceros
+
+            this.PreguntaAsesorExt = false;
+
+            this.infoJuridicoFrom.get('Proveedor')?.setValue('0');
+
+            this.AsignarObligatoriosTercero();
+
+            this.AgregarValidacionesTercero();
+
+            this.clienteSeleccionado.emit({
+              tipoClienteSelect,
+              isProveedor: false
+            });
           }
-      });
-      
-      
-    } else if (tipoClienteSelect === 5) { // Asociado
-      this.AgregarValidacionesAsociado();
-      if (this.infoJuridicoFrom.get('ObjetoSocial')?.value === 2 || this.infoJuridicoFrom.get('ObjetoSocial')?.value === '2') {
-        let state = localStorage.getItem('state');
-        this.dataEstados = JSON.parse(window.atob(state == null ? "" : state));
-        this.dataEstados.forEach((elementEsta : any ) =>  {
-            if (elementEsta.IdEstado === 5) {
-              this.infoJuridicoFrom.get('Estado')?.setValue(elementEsta);
-            }
-          }); 
-      } else {
-        let state = localStorage.getItem('state');
-        this.dataEstados = JSON.parse(window.atob(state == null ? "" : state));
-        this.dataEstados.forEach((elementEsta : any ) =>  {
-            if (elementEsta.IdEstado === 47) {
-              this.infoJuridicoFrom.get('Estado')?.setValue(elementEsta);
-            }
-          }); 
+
+        });
+
       }
-      const DataUserLog = StorageSecurity.getData();
-      if (DataUserLog.NumeroOficina !== '3') {
+
+    });
+
+  }
+  else if (tipoClienteSelect === 5) {
+
+    // Asociado
+    this.AgregarValidacionesAsociado();
+
+    let state = localStorage.getItem('state');
+
+    this.dataEstados = JSON.parse(
+      window.atob(state == null ? '' : state)
+    );
+
+    const idEstado =
+      this.infoJuridicoFrom.get('ObjetoSocial')?.value === 2 ||
+      this.infoJuridicoFrom.get('ObjetoSocial')?.value === '2'
+        ? 5
+        : 47;
+
+    const estado = this.dataEstados.find(
+      (x: any) => x.IdEstado === idEstado
+    );
+
+    if (estado) {
+      this.infoJuridicoFrom.get('Estado')?.setValue(estado);
+    }
+
+    const DataUserLog = StorageSecurity.getData();
+
+    if (!DataUserLog) {
+      return;
+    }
+
+    if (DataUserLog.NumeroOficina !== '3') {
+
       if (this.OperacionActual === 5) {
+
         this.clientesGetListService.GetEstado().subscribe(
           result => {
+
             this.dataEstados = result;
-          
-            result.forEach((elementEsta : any ) =>  {
-              if (elementEsta.IdEstado === 47) {
-                this.infoJuridicoFrom.get('Estado')?.setValue(elementEsta);
-              }
-            });
-          
-          });
+
+            const estado47 = result.find(
+              (x: any) => x.IdEstado === 47
+            );
+
+            if (estado47) {
+              this.infoJuridicoFrom.get('Estado')?.setValue(estado47);
+            }
+
+          }
+        );
+
       }
-        this.MostrarObligatorios();
-      this.clienteSeleccionado.emit({ 'tipoClienteSelect': tipoClienteSelect, 'isProveedor': false });
-      } else {
-        this.notif.onWarning('Advertencia', 'No se puede crear asociados en la oficina administración.');
-        this.infoJuridicoFrom.get('Relacion')?.reset();
-        // validar si es necesario bloquear
-      }
-    } 
+
+      this.MostrarObligatorios();
+
+      this.clienteSeleccionado.emit({
+        tipoClienteSelect,
+        isProveedor: false
+      });
+
+    } else {
+
+      this.notif.onWarning(
+        'Advertencia',
+        'No se puede crear asociados en la oficina administración.'
+      );
+
+      this.infoJuridicoFrom.get('Relacion')?.reset();
+
+      // validar si es necesario bloquear
+    }
+
   }
+
+}
 
   validarCiudadList(form : any) {
     if (this.CiudadMapperUpda !== undefined && this.CiudadMapperUpda != null) {

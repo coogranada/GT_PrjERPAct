@@ -75,7 +75,7 @@ export class CrearNotificacionesComponent implements OnInit {
     this.Operaciones();
     const DatosUsuario = StorageSecurity.getData() || {};
 
-    this.loginService.GetSesionXUsuario(this.DatosUsuario.IdUsuario).subscribe(
+    this.loginService.GetSesionXUsuario(DatosUsuario.IdUsuario).subscribe(
       result => {
         if (!result.Estado) {
           this.router.navigateByUrl('/Login');
@@ -90,10 +90,10 @@ export class CrearNotificacionesComponent implements OnInit {
     const dataUser = StorageSecurity.getData() || {};
     const arrayExample = [{
       'IdModulo': this.CodModulo,
-      'IdUsuario': this.dataUser.IdUsuario,
+      'IdUsuario': dataUser.IdUsuario,
       'IdOperaciones': '',
       'IdOperacionesPerfil': '',
-      'IdPerfil': this.dataUser.idPerfilUsuario
+      'IdPerfil': dataUser.idPerfilUsuario
     }];
     this.operacionesService.OperacionesPermitidas(arrayExample[0]).subscribe(
       result => {

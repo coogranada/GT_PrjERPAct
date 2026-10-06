@@ -7802,8 +7802,7 @@ export class DisponiblesComponent implements OnInit {
     //   },
     //   error => {
     //     const errorMessage = <any>error;
-    //     console.log(errorMessage);
-    //   }
+    //     console.log(errorMessage);//   }
     // );
   }
   SumaPuntos() {

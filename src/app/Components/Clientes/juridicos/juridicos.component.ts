@@ -2634,9 +2634,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     } else {
       this.bloquearBuscar = true;
       this.bloquearNombre = true;
-      const resultPerfil = StorageSecurity.getData();   
-      this.bloquearBuscar = true;
-      this.bloquearNombre = true;
+      const resultPerfil = StorageSecurity.getData();       
       this.OpcionSeleccionada = '/Cancelar solicitud de retiro';
       const strNit = this.infoJuridicoComponent.infoJuridicoFrom.get('Nit')?.value;
       if (strNit === '' || strNit === null || strNit === undefined) {
