@@ -7,6 +7,7 @@ import { ConfiguracionNotificacion } from '../../../../../environments/config.no
 import Swal from "sweetalert2";
 import moment from 'moment';
 import { LoadingService } from '../../../../Services/shared/loading.service';
+import { ERP_MENSAJES, ERP_TOAST } from '../../../../Services/Generics/Validaciones.service';
 
 @Component({
   selector: 'app-log-autenticacion-erp',
@@ -16,6 +17,7 @@ import { LoadingService } from '../../../../Services/shared/loading.service';
   standalone : false
 })
 export class LogAutenticacionErpComponent implements OnInit {
+  ListUsuarios: any[] = [];
   Campos: Campo[] = [];
   Filtros: Filtro[] = [];
   filtrosAgregado: Filtro[] = [];
@@ -88,30 +90,6 @@ export class LogAutenticacionErpComponent implements OnInit {
       console.log(err)
     })
   }
-  validar(TituloGenerico : string) {
-    this.loading.show();
-    let temp: any = null;
-     this.informeClientesService.ValidatUsuario(this.strInput).subscribe(x => {
-      temp = x;
-       if (x.dataBool) {
-         this.SelectedNombre = x.data; 
-         this.AddFiltro(4, this.SelectedCombo, TituloGenerico, this.SelectedNombre, "", "Es Igual");
-         this.limpiarSelected();
-       }
-        else 
-       {
-         this.notif.warning("Advertencia","El usuario no existe en el sistema, por favor intenta nueva mente ", ConfiguracionNotificacion.configRightTopNoClose );
-         this.strInput = "";
-         this.btnMore = false;
-       }
-       this.loading.hide();
-     }, err => {
-       this.loading.hide();
-       const errorMessage = <any>err;
-       this.notif.error("Error al consultar", errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
-       console.log(err)
-     })
-  }
   InitFiltros() {
       this.Filtros = this.serviceLogs.GetFiltrosAutenticacionErp();
       if (this.IdOficina != 3)
@@ -155,12 +133,18 @@ export class LogAutenticacionErpComponent implements OnInit {
   
     if (existe) {
       this.notif.warning(
-        'Advertencia',
-        'Filtro seleccionado ya existe.',
+        ERP_TOAST.TITULO_ADVERTENCIA,
+        ERP_MENSAJES.FILTRO_DUPLICADO,
         ConfiguracionNotificacion.configRightTop
       );
     
-      this.limpiarSelected();
+      setTimeout(() => {
+        this.filtroSelect = 0;
+        this.ListGenerico = [];
+        this.TituloGenerico = '';
+        this.alertGenerico = '';
+      });
+    
       return;
     }
   
@@ -171,6 +155,7 @@ export class LogAutenticacionErpComponent implements OnInit {
       case "4":
         this.TituloGenerico = "Usuario: ";
         this.alertGenerico = "El usuario es obligatorio.";
+        this.getUsuarios();
         break;
     
       case "3":
@@ -194,7 +179,16 @@ export class LogAutenticacionErpComponent implements OnInit {
     }
   }
   GetSelectedNombre() {
-    this.SelectedNombre = this.ListGenerico.filter(x => x.id == this.SelectedCombo)[0].descri;
+  
+    if (this.filtroSelect == 4) {
+    
+      this.SelectedNombre = this.ListUsuarios.find(
+          x => x.id == this.SelectedCombo )?.descri ?? '';
+      
+      return;
+    }
+  
+    this.SelectedNombre = this.ListGenerico.find( x => x.id == this.SelectedCombo )?.descri ?? '';
   }
   InitVariables() {
     this.fechaMax = moment(new Date()).format('YYYY-MM-DD');
@@ -247,8 +241,23 @@ export class LogAutenticacionErpComponent implements OnInit {
       this.DateBeginAndEnd();
       this.AddFiltro(this.filtroSelect, 0, "Fecha", this.dateBegin, this.dateEnd, "Entre");
     }
-    else if (s == 4)
-      this.validar(this.TituloGenerico);
+    else if (s == 4) {
+    
+      if (this.SelectedCombo == 0) {
+        return;
+      }
+    
+      const usuario = String(this.SelectedCombo);
+    
+      this.AddFiltro(
+        4,
+        this.SelectedCombo,
+        this.TituloGenerico,
+        usuario,
+        "",
+        "Es Igual"
+      );
+    }
     else if (s == 3)
       this.AddFiltro(this.filtroSelect, this.SelectedCombo, this.TituloGenerico, this.SelectedNombre, "", "Es Igual");
     this.limpiarSelected();
@@ -287,16 +296,11 @@ export class LogAutenticacionErpComponent implements OnInit {
   }
   GetCantInforme(isDowload: boolean) {
     this.InformesLog = [];
-    // if (this.btnGenerate) {
-    //   this.filtroSelect = -4;
-    //   this.MostrarPanel();
-      // }  
       this.InformesLog = [];
       this.filtroSelect = -4;
       this.MostrarPanel();
       this.setFiltroOficina();
       this.loading.show();
-    this.loading.show();
     let payload : any = {
       Filtros: this.filtrosAgregado,
       TipoInforme: 14,
@@ -391,5 +395,31 @@ export class LogAutenticacionErpComponent implements OnInit {
     $(".FilRecip" + this.ColorAnterior5).css("background", "#FFFFFF");
     $(".FilRecip" + fil).css("background", "#e5e5e5");
       this.ColorAnterior5 = fil;
+  }
+
+  getUsuarios() {
+    this.loading.show();
+
+    this.serviceLogs.GetUsuarios().subscribe(
+      response => {
+
+        this.ListUsuarios = response.map(x => ({
+          id: x.Usuario,
+          descri: x.Descripcion
+        }));
+
+        this.loading.hide();
+      },
+      err => {
+
+        this.loading.hide();
+
+        this.notif.error(
+          "Error al consultar",
+          err,
+          ConfiguracionNotificacion.configRightTopNoClose
+        );
+      }
+    );
   }
 }

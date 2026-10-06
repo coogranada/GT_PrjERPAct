@@ -342,4 +342,10 @@ export class InformeLogService {
           `&digito=${digito}`
       );
   }
+  
+  GetUsuarios(): Observable<any[]> {
+    return this.http.get<any[]>(
+      this.envirment.Url + "/InformeAuditoria/GetUsuarios"
+    );
+  }
 }

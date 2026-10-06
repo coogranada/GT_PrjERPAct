@@ -11,6 +11,7 @@ import { LoadingService } from '../../../../Services/shared/loading.service';
 import { AlertService } from '../../../../Services/Alert/alert.service';
 import { Filtro } from '../../../../Models/Informes/informe-clientes/informe-clientes.model';
 import { InformeLogService } from '../../../../Services/Informes/informe-log.service';
+import { ERP_MENSAJES, ERP_TOAST } from '../../../../Services/Generics/Validaciones.service';
 
 @Component({
   selector: 'app-log-recaudo-olivos',
@@ -43,6 +44,7 @@ export class LogRecaudoOlivosComponent {
   public encabezados: any[] = [];
   public filtrosAgregado: any[] = [];
   Filtros: Filtro[] = [];
+  public ListUsuarios: any[] = [];
   public btnMore: boolean = false;
   public selectedAll: boolean = false;
 
@@ -340,6 +342,7 @@ export class LogRecaudoOlivosComponent {
       case "4":
         this.tituloGenerico = "Usuario: ";
         this.alertGenerico = "El usuario es obligatorio."
+        this.getUsuarios();
         break;
     }
   }
@@ -373,19 +376,31 @@ export class LogRecaudoOlivosComponent {
     }
   }
 
-  seleccionarFiltro() {
-    const existe = this.filtrosAgregado.some(
-      x => x.idFiltro == this.filtroSelect
-    );
-
-    if (existe) {
-      this.notif.onWarning('Advertencia', 'Filtro seleccionado ya existe.');
-      this.limpiarSelected();
-      return;
+    seleccionarFiltro() {
+      const existe = this.filtrosAgregado.some(
+        x => x.idFiltro == this.filtroSelect
+      );
+      console.log(this.filtroSelect, typeof this.filtroSelect); 
+      if (existe) {
+      
+        this.notif.onWarning(
+          ERP_TOAST.TITULO_ADVERTENCIA,
+          ERP_MENSAJES.FILTRO_DUPLICADO
+        );
+      
+        setTimeout(() => {
+          this.filtroSelect = 0;
+        });
+      
+        this.tituloGenerico = '';
+        this.alertGenerico = '';
+      
+        return;
+      }
+    
+      this.obtenerFiltro();
     }
 
-    this.obtenerFiltro();
-  }
 
   private getDescripcionOficina(id: number): string {
     return this.ListOficina.find(x => x.id == id)?.descri ?? '';
@@ -456,7 +471,29 @@ export class LogRecaudoOlivosComponent {
     })
   }
 
+  getUsuarios() {
+    this.loading.show();
 
+    this.serviceLogs.GetUsuarios().subscribe(
+      response => {
 
+        this.ListUsuarios = response.map(x => ({
+          id: x.Usuario,
+          descri: x.Descripcion
+        }));
+
+        this.loading.hide();
+      },
+      err => {
+
+        this.loading.hide();
+
+        this.notif.onWarning(
+          'Advertencia',
+          'Error al cargar usuarios.'
+        );
+      }
+    );
+  }
 
 }

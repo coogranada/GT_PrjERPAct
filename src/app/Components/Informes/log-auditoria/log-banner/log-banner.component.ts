@@ -7,6 +7,7 @@ import { ConfiguracionNotificacion } from '../../../../../environments/config.no
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import moment from 'moment';
 import { LoadingService } from '../../../../Services/shared/loading.service';
+import { ERP_MENSAJES, ERP_TOAST } from '../../../../Services/Generics/Validaciones.service';
 
 @Component({
   selector: 'app-log-banner',
@@ -16,7 +17,7 @@ import { LoadingService } from '../../../../Services/shared/loading.service';
   standalone : false
 })
 export class LogBannerComponent implements OnInit {
-
+  ListUsuarios: any[] = [];
   Campos: Campo[] = [];
   Filtros: Filtro[] = [];
   filtrosAgregado: Filtro[] = [];
@@ -82,30 +83,6 @@ export class LogBannerComponent implements OnInit {
       console.log(err)
     })
   }
-  validar(TituloGenerico : string) {
-    this.loading.show();
-    let temp: any = null;
-     this.informeClientesService.ValidatUsuario(this.strInput).subscribe(x => {
-      temp = x;
-       if (x.dataBool) {
-         this.SelectedNombre = x.data; 
-         this.AddFiltro(22, this.SelectedCombo, TituloGenerico, this.SelectedNombre, "", "Es Igual");
-         this.limpiarSelected();
-       }
-        else 
-       {
-         this.notif.warning("Advertencia","El usuario no existe en el sistema, por favor intenta nueva mente ", ConfiguracionNotificacion.configRightTopNoClose );
-         this.strInput = "";
-         this.btnMore = false;
-       }
-       this.loading.hide();
-     }, err => {
-       this.loading.hide();
-       const errorMessage = <any>err;
-       this.notif.error("Error al consultar", errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
-       console.log(err)
-     })
-  }
   InitFiltros() {
     this.Filtros = this.serviceLogs.GetFiltrosBanners();
   }
@@ -130,12 +107,18 @@ export class LogBannerComponent implements OnInit {
 
     if (existe) {
       this.notif.warning(
-        'Advertencia',
-        'Filtro seleccionado ya existe.',
+        ERP_TOAST.TITULO_ADVERTENCIA,
+        ERP_MENSAJES.FILTRO_DUPLICADO,
         ConfiguracionNotificacion.configRightTop
       );
-
-      this.limpiarSelected();
+    
+      setTimeout(() => {
+        this.filtroSelect = 0;
+        this.ListGenerico = [];
+        this.TituloGenerico = '';
+        this.alertGenerico = '';
+      });
+    
       return;
     }
 
@@ -146,6 +129,7 @@ export class LogBannerComponent implements OnInit {
       case "22":
         this.TituloGenerico = "Usuario: ";
         this.alertGenerico = "El usuario es obligatorio.";
+        this.getUsuarios();
         break;
     }
 
@@ -187,8 +171,24 @@ export class LogBannerComponent implements OnInit {
       this.DateBeginAndEnd();
       this.AddFiltro(this.filtroSelect, 0, "Fecha", this.dateBegin, this.dateEnd, "Entre");
     }
-    else if (s == 22)
-     this.validar(this.TituloGenerico );
+    else if (s == 22) {
+    
+      if (this.SelectedCombo == 0) {
+        return;
+      }
+    
+      const usuario = String(this.SelectedCombo);
+    
+      this.AddFiltro(
+        22,
+        this.SelectedCombo,
+        this.TituloGenerico,
+        usuario,
+        "",
+        "Es Igual"
+      );
+    
+    }
     this.limpiarSelected();
   }
   limpiarSelected() {
@@ -316,5 +316,59 @@ export class LogBannerComponent implements OnInit {
     $(".FilRecip" + this.ColorAnterior5).css("background", "#FFFFFF");
     $(".FilRecip" + fil).css("background", "#e5e5e5");
       this.ColorAnterior5 = fil;
+  }
+
+  getUsuarios() {
+    this.loading.show();
+
+    this.serviceLogs.GetUsuarios().subscribe(
+      response => {
+
+        this.ListUsuarios = response.map(x => ({
+          id: x.Usuario,
+          descri: x.Descripcion
+        }));
+
+        this.loading.hide();
+      },
+      err => {
+
+        this.loading.hide();
+
+        this.notif.error(
+          "Error al consultar",
+          err,
+          ConfiguracionNotificacion.configRightTopNoClose
+        );
+      }
+    );
+  }
+
+  GetSelectedNombre() {
+
+    if (this.filtroSelect == 22) {
+
+      this.SelectedNombre =
+        this.ListUsuarios.find(
+        x => x.id == this.SelectedCombo
+        )?.descri ?? '';
+
+      return;
+    }
+  }
+
+  opcionSelectedCombo(value: number) {
+    if (this.SelectedCombo != 0 &&
+        this.SelectedCombo != undefined) {
+        
+      this.valida1 = true;
+      this.btnMore = true;
+      this.GetSelectedNombre();
+        
+    } else {
+    
+      this.valida1 = false;
+      this.btnMore = false;
+    }
   }
 }

@@ -11,6 +11,7 @@ import { InformeLogService } from '../../../../../Services/Informes/informe-log.
 import Swal from 'sweetalert2';
 import { OperacionesService } from '../../../../../Services/Maestros/operaciones.service';
 import { CuentaService } from '../../../../../Services/Generics/resultado-cuenta.service';
+import { ERP_MENSAJES, ERP_TOAST } from '../../../../../Services/Generics/Validaciones.service';
 import { StorageSecurity } from '../../../../../utils/storage-security.util';
 
 @Component({
@@ -29,7 +30,7 @@ export class LogGestionCarteraComponent {
   public ListfilteredColumnasInf: any[] = [];
   public selectedAll: boolean = false;
   public btnMore: boolean = false;
-
+  public ListUsuarios: any[] = [];
   public resultOperaciones: any[] = [];
   private dataUser: any;
   public codModulo: number = 45;
@@ -50,7 +51,7 @@ export class LogGestionCarteraComponent {
   public nombreOficina: string = "";
   public idOficina: number = 0;
 
-  public filtroSelect: number = 0;
+  public filtroSelect: any = 0;
 
   public tituloGenerico: string = "";
   public alertGenerico: string = "";
@@ -291,7 +292,7 @@ export class LogGestionCarteraComponent {
   }
 
   getListaColumnas() {
-    this.configuracionInformesS.ListarColumnas('ERP_SPInfGestionCreditos')
+    this.configuracionInformesS.ListarColumnas('ERP_SPInfGestionCartera')
       .subscribe({
         next: (respuesta) => {
           this.ListColumnasInf = respuesta.map((item: any) => ({
@@ -335,6 +336,7 @@ export class LogGestionCarteraComponent {
         break;
       case "4":
         this.tituloGenerico = "Usuario:";
+        this.getUsuarios();
         break;
       case "5":
         this.tituloGenerico = "Cuenta:";
@@ -346,11 +348,21 @@ export class LogGestionCarteraComponent {
     const existe = this.filtrosAgregado.some(
       x => x.idFiltro == this.filtroSelect
     );
-
+    console.log(this.filtroSelect, typeof this.filtroSelect); 
     if (existe) {
-      this.notif.onWarning('Advertencia', 'Filtro seleccionado ya existe.');
-      this.filtroSelect = 0;
+    
+      this.notif.onWarning(
+        ERP_TOAST.TITULO_ADVERTENCIA,
+        ERP_MENSAJES.FILTRO_DUPLICADO
+      );
+    
+      setTimeout(() => {
+        this.filtroSelect = 0;
+      });
+    
       this.tituloGenerico = '';
+      this.alertGenerico = '';
+    
       return;
     }
 
@@ -576,10 +588,7 @@ export class LogGestionCarteraComponent {
   }
   
   mostrarBotones(): boolean {
-
-    if (this.filtroSelect == 1) {
-      return true;
-    }
+    if (this.filtroSelect == 1) return true;
 
     return this.filtrosAgregado.length > 0;
   }
@@ -588,10 +597,15 @@ export class LogGestionCarteraComponent {
     this.filtroSelect = 0;
     this.tituloGenerico = "";
     this.alertGenerico = "";
-
-    this.formulario.reset({
+  
+    this.formulario.patchValue({
       '@IdOficina': 0,
-      '@Operacion': ''
+      '@Operacion': '',
+      '@Usuario': '',
+      '@IdOficinaCuenta': '',
+      '@IdProductoCuenta': '',
+      '@IdConsecutivo': '',
+      '@IdDigito': ''
     });
   }
 
@@ -781,4 +795,20 @@ export class LogGestionCarteraComponent {
     return true;
   }
 
+  getUsuarios() {
+    this.loading.show();
+    this.serviceLogs.GetUsuarios().subscribe(
+      response => {
+        this.ListUsuarios = response.map(x => ({
+          id: x.Usuario,
+          descri: x.Descripcion
+        }));
+        this.loading.hide();
+      },
+      err => {
+        this.loading.hide();
+        this.notif.onWarning('Advertencia', 'Error al cargar usuarios.');
+      }
+    );
+  }
 }

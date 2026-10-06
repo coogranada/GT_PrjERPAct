@@ -54,8 +54,14 @@
                                                     <div class="form-group">
                                                         <label class="textNegrilla">{{tituloGenerico}}</label>
                                                         <span class="grande"> *</span>
-                                                        <input type="text" class="form-control"
-                                                            formControlName="@Usuario" />
+                                                    
+                                                        <select class="form-control" formControlName="@Usuario">
+                                                            <option value="">--Seleccione--</option>
+                                                        
+                                                            <option *ngFor="let item of ListUsuarios" [value]="item.id">
+                                                                {{item.descri}}
+                                                            </option>
+                                                        </select>
                                                     </div>
                                                 </div>
 

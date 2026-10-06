@@ -7,6 +7,7 @@ import { ConfiguracionNotificacion } from '../../../../../environments/config.no
 import Swal from "sweetalert2";
 import moment from 'moment';
 import { LoadingService } from '../../../../Services/shared/loading.service';
+import { ERP_MENSAJES, ERP_TOAST } from '../../../../Services/Generics/Validaciones.service';
 declare var $: any;
 @Component({
   selector: 'app-log-asesoria',
@@ -16,6 +17,7 @@ declare var $: any;
   standalone : false
 })
 export class LogAsesoriaComponent implements OnInit {
+  ListUsuarios: any[] = [];
   ColorAnterior5: any;
   Campos: Campo[] = [];
   Filtros: Filtro[] = [];
@@ -105,30 +107,6 @@ export class LogAsesoriaComponent implements OnInit {
         console.log(err)
      })
   }
-  validar(TituloGenerico : string) {
-    this.loading.show();
-    let temp: any = null;
-     this.informeClientesService.ValidatUsuario(this.strInput).subscribe(x => {
-      temp = x;
-       if (x.dataBool) {
-         this.SelectedNombre = x.data; 
-         this.AddFiltro(19, this.SelectedCombo, TituloGenerico, this.SelectedNombre, "", "Es Igual");
-         this.limpiarSelected();
-       }
-        else 
-       {
-         this.notif.warning("Advertencia","El usuario no existe en el sistema, por favor intenta nueva mente ", ConfiguracionNotificacion.configRightTopNoClose );
-         this.strInput = "";
-         this.btnMore = false;
-       }
-       this.loading.hide();
-     }, err => {
-       this.loading.hide();
-       const errorMessage = <any>err;
-       this.notif.error("Error al consultar", errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
-       console.log(err)
-     })
-  }
   getModulos() {
       this.loading.show();
       this.serviceLogs.GetModulos(3).subscribe(x => {
@@ -214,15 +192,21 @@ export class LogAsesoriaComponent implements OnInit {
 
     if (existe) {
       this.notif.warning(
-        'Advertencia',
-        'Filtro seleccionado ya existe',
+        ERP_TOAST.TITULO_ADVERTENCIA,
+        ERP_MENSAJES.FILTRO_DUPLICADO,
         ConfiguracionNotificacion.configRightTop
       );
-
-      this.limpiarSelected();
+    
+      setTimeout(() => {
+        this.filtroSelect = 0;
+        this.ListGenerico = [];
+        this.TituloGenerico = '';
+        this.alertGenerico = '';
+      });
+    
       return;
     }
-
+    
     this.ListGenerico = [];
     this.validBlur = false;
     switch (this.filtroSelect.toString()) {
@@ -231,9 +215,10 @@ export class LogAsesoriaComponent implements OnInit {
         this.alertGenerico = "La oficina es obligatoria.";
         this.getOficinas();
         break;
-      case "19":  
+      case "19":
         this.TituloGenerico = "Usuario: ";
         this.alertGenerico = "El usuario es obligatorio.";
+        this.getUsuarios();
         break;
       case "20":
         this.TituloGenerico = "Modulo: ";
@@ -270,7 +255,21 @@ export class LogAsesoriaComponent implements OnInit {
     }
   }
   GetSelectedNombre() {
-    this.SelectedNombre = this.ListGenerico.filter(x => x.id == this.SelectedCombo)[0].descri;
+
+    if (this.filtroSelect == 19) {
+
+      this.SelectedNombre =
+        this.ListUsuarios.find(
+          x => x.id == this.SelectedCombo
+        )?.descri ?? '';
+
+      return;
+    }
+
+    this.SelectedNombre =
+      this.ListGenerico.find(
+        x => x.id == this.SelectedCombo
+      )?.descri ?? '';
   }
   opcionSelectedFechas(value : number) {
     if (value == 1) {
@@ -306,9 +305,20 @@ export class LogAsesoriaComponent implements OnInit {
     }
     else if (s == 18 || s == 20 || s == 21) 
       this.AddFiltro(this.filtroSelect, this.SelectedCombo, this.TituloGenerico, this.SelectedNombre, "", "Es Igual");
-    else if (s == 19)
-     this.validar(this.TituloGenerico );
-   
+    else if (s == 19) {
+      if (this.SelectedCombo == 0) {
+        return;
+      }
+      const usuario = String(this.SelectedCombo);
+      this.AddFiltro(
+        19,
+        this.SelectedCombo,
+        this.TituloGenerico,
+        usuario,
+        "",
+        "Es Igual"
+      );
+    }
     this.limpiarSelected();
   }
   limpiarSelected() {
@@ -446,4 +456,31 @@ export class LogAsesoriaComponent implements OnInit {
     $(".FilRecip" + fil).css("background", "#e5e5e5");
       this.ColorAnterior5 = fil;
   }
+
+  getUsuarios() {
+    this.loading.show();
+
+    this.serviceLogs.GetUsuarios().subscribe(
+      response => {
+
+        this.ListUsuarios = response.map(x => ({
+          id: x.Usuario,
+          descri: x.Descripcion
+        }));
+
+        this.loading.hide();
+      },
+      err => {
+
+        this.loading.hide();
+
+        this.notif.error(
+          "Error al consultar",
+          err,
+          ConfiguracionNotificacion.configRightTopNoClose
+        );
+      }
+    );
+  }
+
 }

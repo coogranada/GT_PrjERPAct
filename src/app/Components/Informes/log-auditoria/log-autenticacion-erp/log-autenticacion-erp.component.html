@@ -51,7 +51,23 @@
                                                 <div class="form-group">
                                                     <label class="textNegrilla">{{TituloGenerico}}</label>
                                                     <span class="grande"> *</span>
-                                                    <input type="text" class="form-control" [(ngModel)]="strInput"  (blur)="SelectBlur()"/>
+                                                    <select
+                                                      class="form-control"
+                                                      [(ngModel)]="SelectedCombo"
+                                                      (change)="opcionSelectedCombo(SelectedCombo)"
+                                                      (blur)="SelectBlur()">
+                                                    
+                                                      <option value="0">--Seleccione--</option>
+                                                                                                    
+                                                      <option
+                                                        *ngFor="let item of ListUsuarios"
+                                                        [value]="item.id">
+                                                    
+                                                        {{item.descri}}
+                                                                                                    
+                                                      </option>
+                                                  
+                                                    </select>                                                    
                                                     <span class="help-block validationSpan" *ngIf="!(strInput.length >= 4) && validBlur" >
                                                     {{alertGenerico}}
                                                     </span>
