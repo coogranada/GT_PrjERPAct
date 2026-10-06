@@ -19,14 +19,22 @@
                         <div class="form-group">
                           <label class="textNegrilla">Filtro:</label>
                           <span class="grande"> *</span>
-                          <select class="form-control form-control-lg" id="select" name="select"
-                            [(ngModel)]="filtroSelect" (change)="seleccionarFiltro()">
-                            <option value="0" selected="true">
+                          <select class="form-control form-control-lg" id="select" 
+                            name="select" [(ngModel)]="filtroSelect"
+                            (change)="seleccionarFiltro()">
+
+                            <option [ngValue]="0">
                               --Seleccione--
                             </option>
-                            <option *ngFor="let item of Filtros" [value]="item.idFiltro">
+                          
+                            <option
+                              *ngFor="let item of Filtros"
+                              [ngValue]="item.idFiltro">
+
                               {{item.NombreFiltro}}
+                          
                             </option>
+                          
                           </select>
                         </div>
                       </div>
@@ -67,9 +75,15 @@
                         <!-- USUARIO -->
                         <div class="col-xs-12 col-md-4 col-lg-4" *ngIf="filtroSelect == 4">
                           <div class="form-group">
-                            <label class="textNegrilla">{{tituloGenerico}}</label>
-                            <span class="grande"> *</span>
-                            <input type="text" class="form-control" formControlName="@Usuario" />
+                            <label class="textNegrilla">{{ tituloGenerico }}</label>
+                            <span class="grande">*</span>
+                          
+                            <select class="form-control" formControlName="@Usuario">
+                              <option value="">--Seleccione--</option>
+                              <option *ngFor="let item of ListUsuarios" [value]="item.id">
+                                {{ item.descri }}
+                              </option>
+                            </select>
                           </div>
                         </div>
 

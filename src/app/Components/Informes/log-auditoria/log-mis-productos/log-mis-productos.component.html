@@ -50,7 +50,20 @@
                                                 <div class="form-group">
                                                     <label class="textNegrilla">{{TituloGenerico}}</label>
                                                     <span class="grande"> *</span>
-                                                    <input type="text" class="form-control" [(ngModel)]="strInput" (blur)="SelectBlur()"  *ngIf="filtroSelect == 12"/>
+                                                    <select
+                                                        class="form-control"
+                                                        [(ngModel)]="SelectedCombo"
+                                                        (change)="opcionSelectedCombo(SelectedCombo)"
+                                                        *ngIf="filtroSelect == 12">
+                                                        <option value="0">--Seleccione--</option>
+                                                        <option
+                                                            *ngFor="let item of ListUsuarios"
+                                                            [value]="item.id">
+
+                                                            {{item.descri}}
+
+                                                        </option>
+                                                    </select>                                                    
                                                     <span class="help-block validationSpan" *ngIf="!(strInput.length >= 4) && filtroSelect == 12 && validBlur" >
                                                     {{alertGenerico}}
                                                     </span>
@@ -61,7 +74,9 @@
                                                 </div>
                                             </div>
                                            
-                                            <button class="btn Gt-btn-verde btn-icon legitRipple" style="top: 20px" *ngIf="filtroSelect != 0 && (btnMore || strInput.length >= 4)" (click)="MostrarPanel()">
+                                            <button class="btn Gt-btn-verde btn-icon legitRipple" style="top: 20px" *ngIf="
+                                                filtroSelect != 0 &&( btnMore || strInput.length >= 4 ||
+                                                  (filtroSelect == 12 && SelectedCombo != 1000) )"(click)="MostrarPanel()">
                                                 <i class="icon-plus3" aria-hidden="true"></i>
                                             </button>
                                            

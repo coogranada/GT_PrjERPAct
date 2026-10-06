@@ -157,7 +157,7 @@ export class GeneralesService {
         $('#' + nameInput + '').prop('disabled', 'disabled');
     }
 
-     LogGestionCredito(request: LogGestionCreditoRequest): Observable<any> {
+     LogGestionCartera(request: LogGestionCreditoRequest): Observable<any> {
        const dataUser = StorageSecurity.getData() || {};
         const payload = {
         IdOficina: +dataUser.NumeroOficina,

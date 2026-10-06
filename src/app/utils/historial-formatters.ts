@@ -7,7 +7,8 @@ export const formateadoresPorOperacion: Record<number, FormateadorOperacion> = {
   0: (registro) => {
     return {
       ...registro,
-      Detalles: registro.Detalles.replace(/[{}"]+/gi, '')?.replace(/,/g, ' ') 
+      Detalles: (registro.Detalles ?? '')
+        .replace(/[{}"]+/gi, '')
     };
   },
   125: (registro) => {
@@ -23,33 +24,40 @@ export const formateadoresPorOperacion: Record<number, FormateadorOperacion> = {
   },
   126: (registro) => {
     if (!registro?.Detalles) return registro;
-
-    const mapTipoPagare = (tipo?: number): string => {
-    switch (tipo) {
-      case 1: return 'Desmaterializado';
-      case 2: return 'Físico';
-      default: return '';
-    }
-
-    };
-
+  
     let detalles: any;
     try {
       detalles = JSON.parse(registro.Detalles);
     } catch {
       return registro;
     }
-
+  
+    const mapTipoPagare = (tipo: any): string => {
+    
+      if (typeof tipo === 'string') {
+        return tipo;
+      }
+    
+      switch (Number(tipo)) {
+        case 1:
+          return 'Desmaterializado';
+        case 2:
+          return 'Fisico';
+        default:
+          return '';
+      }
+    };
+  
     const anterior = detalles.Anterior;
     const actualiza = detalles.Actualiza;
-
+  
     return {
       ...registro,
       Detalles: `
         <strong>Anterior:</strong>
         Pagaré: ${anterior?.pagare ?? ''} -
         Tipo: ${mapTipoPagare(anterior?.tipo)}
-
+    
         | <strong>Actualiza:</strong>
         Pagaré: ${actualiza?.pagare ?? ''} -
         Tipo: ${mapTipoPagare(actualiza?.tipo)}
@@ -126,7 +134,6 @@ export const formateadoresPorOperacion: Record<number, FormateadorOperacion> = {
       `
     };
   },
-
   132: (registro) => {
     const detalles: DetallesLogCredito = JSON.parse(registro.Detalles);
 

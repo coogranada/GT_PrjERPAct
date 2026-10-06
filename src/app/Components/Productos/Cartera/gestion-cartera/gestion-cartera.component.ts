@@ -1592,7 +1592,7 @@ export class GestionCarteraComponent {
               x => x.intTipoSeguimiento === dto.tipoSeguimiento
             )?.strDescripcion ?? '';
           
-          this.guardarLogGestionCredito(detalleSeleccionado);
+          this.guardarLogGestionCartera(detalleSeleccionado);
 
           const idTercero = Number(this.gestionCreditoForm.get('IdTercero')?.value);
 
@@ -2255,7 +2255,7 @@ export class GestionCarteraComponent {
           return;
         }
         
-        this.guardarLogGestionCredito(jsonLog);
+        this.guardarLogGestionCartera(jsonLog);
         this.notif.success('Exitoso', 'El cambio de garantía se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
         this.accionSeleccionada = false;
         this.cerrarModalYRefrescarCambiarGarantia();
@@ -2476,7 +2476,7 @@ export class GestionCarteraComponent {
       return;
     }
 
-    this.guardarLogGestionCredito(jsonLog);
+    this.guardarLogGestionCartera(jsonLog);
 
     this.notif.success(
       'Exito',
@@ -3067,7 +3067,7 @@ export class GestionCarteraComponent {
       };
     }
 
-    this.guardarLogGestionCredito(jsonLog);
+    this.guardarLogGestionCartera(jsonLog);
     this.BuscarDatosCartera(idCuenta);
 
     this.formaPagoActual = nuevaFormaPago;
@@ -3189,7 +3189,7 @@ export class GestionCarteraComponent {
           this.accionSeleccionada = false;
           this.getDeducibles();
           this.cuotaTabBloqueado = false;
-          this.guardarLogGestionCredito(jsonLog);
+          this.guardarLogGestionCartera(jsonLog);
           this.gestionCreditoForm.get('estaSinCobertura')?.setValue(valorActual === 1);
           this.gestionCreditoOperacionForm.get('Codigo')?.reset();          
         }
@@ -3917,7 +3917,7 @@ export class GestionCarteraComponent {
       } 
     }
 
-    this.guardarLogGestionCredito(jsonLog);
+    this.guardarLogGestionCartera(jsonLog);
     this.cargarLineasParaCambio();
     
     const controlLinea = this.gestionCreditoForm.get('IdLinea');
@@ -3949,6 +3949,10 @@ export class GestionCarteraComponent {
       return;
     }
 
+    const tipoDescripcion = this.tiposPagare.find(
+        x => x.id === Number(this.gestionCreditoForm.get('TipoPagare')?.value)
+      )?.descripcion ?? '';
+
     const jsonLog = {
         Anterior: {
           pagare: this.pagareActual,
@@ -3956,11 +3960,11 @@ export class GestionCarteraComponent {
         },
         Actualiza: {
           pagare: this.gestionCreditoForm.get('pagare')?.value,
-          tipo: this.gestionCreditoForm.get('TipoPagare')?.value
+          tipo: tipoDescripcion
         } 
     }
 
-    this.guardarLogGestionCredito(jsonLog);
+    this.guardarLogGestionCartera(jsonLog);
 
     this.pagareActual = nuevoPagare;
     const nuevoTipoId = Number(this.gestionCreditoForm.get('TipoPagare')?.value);
@@ -4002,7 +4006,7 @@ export class GestionCarteraComponent {
     this.cuotaTabBloqueado = false;
   }
 
-  guardarLogGestionCredito(jsonDto: any, codigoOperacion?: string) {
+  guardarLogGestionCartera(jsonDto: any, codigoOperacion?: string) {
     const formValue = this.gestionCreditoForm.getRawValue();
     const operacion = codigoOperacion ?? this.gestionCreditoOperacionForm.get('Codigo')?.value;
     if (!operacion) {
@@ -4010,7 +4014,7 @@ export class GestionCarteraComponent {
     }
     
     this.loading.show();
-    this.generalesService.LogGestionCredito({
+    this.generalesService.LogGestionCartera({
       idOperacion: operacion,
       idModulo: this.codModulo,
       idCuenta: formValue.IdCuenta,
@@ -5146,7 +5150,7 @@ if (historialOperaciones) {
             Actuales: this.codeudoresDraft
           }
           this.accionSeleccionada = false;
-          this.guardarLogGestionCredito(logCambios);
+          this.guardarLogGestionCartera(logCambios);
           window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
           this.getGarantias();
           this.tabActivo = Tabs.Garantias;
@@ -5335,11 +5339,11 @@ if (historialOperaciones) {
         Anterior: omit(Anterior, TASAS_KEYS),
         Actualiza: omit(Actualiza, TASAS_KEYS)
       };
-      this.guardarLogGestionCredito(logCambiarPlazo, Operacion.ReestructurarCambioPlazo);
+      this.guardarLogGestionCartera(logCambiarPlazo, Operacion.ReestructurarCambioPlazo);
       novedad = 'La reestructuración';
     } else if (idNovedad === Novedad.CambiarTasa) {
       const logCambiarTasa = { Anterior: omit(Anterior, SISTEMA_KEYS), Actualiza: omit(Actualiza, SISTEMA_KEYS) };
-      this.guardarLogGestionCredito(logCambiarTasa, Operacion.CambiarTasa);
+      this.guardarLogGestionCartera(logCambiarTasa, Operacion.CambiarTasa);
       novedad = 'El cambio de tasa';
 
     } else if (idNovedad === Novedad.CambiarCuota) {
@@ -5347,28 +5351,28 @@ if (historialOperaciones) {
         Anterior: omit(Anterior, TASAS_KEYS.concat(SISTEMA_KEYS)),
         Actualiza: omit(Actualiza, TASAS_KEYS.concat(SISTEMA_KEYS))
       };
-      this.guardarLogGestionCredito(logCambiarCuota, Operacion.CambiarCuota);
+      this.guardarLogGestionCartera(logCambiarCuota, Operacion.CambiarCuota);
       novedad = 'El cambio de la cuota';
     } else if (idNovedad === Novedad.CambiarPlazo) {
       const logCambiarPlazo = {
         Anterior: omit(Anterior, TASAS_KEYS),
         Actualiza: omit(Actualiza, TASAS_KEYS)
       };
-      this.guardarLogGestionCredito(logCambiarPlazo, Operacion.CambiarPlazo);
+      this.guardarLogGestionCartera(logCambiarPlazo, Operacion.CambiarPlazo);
       novedad = 'El cambio de plazo';
     } else if(idNovedad === Novedad.CambiarSistema) {
       const logCambiarSistema = {
         Anterior: omit(Anterior, TASAS_KEYS),
         Actualiza: omit(Actualiza, TASAS_KEYS)
       };
-      this.guardarLogGestionCredito(logCambiarSistema, Operacion.CambiarSistema);
+      this.guardarLogGestionCartera(logCambiarSistema, Operacion.CambiarSistema);
       novedad = 'El cambio de sistema';
     } else if (idNovedad === Novedad.DevolverReestructuracion) {
       const logDevolverReest = {
         Anterior: omit(Anterior, TASAS_KEYS),
         Actualiza: omit(Actualiza, TASAS_KEYS)
       };
-      this.guardarLogGestionCredito(logDevolverReest, Operacion.DevolverReestructuracion);
+      this.guardarLogGestionCartera(logDevolverReest, Operacion.DevolverReestructuracion);
       novedad = 'La devolución';
     }
 

@@ -7,6 +7,7 @@ import { ConfiguracionNotificacion } from '../../../../../environments/config.no
 import Swal from "sweetalert2";
 import moment from 'moment';
 import { LoadingService } from '../../../../Services/shared/loading.service';
+import { ERP_MENSAJES, ERP_TOAST } from '../../../../Services/Generics/Validaciones.service';
 
 @Component({
   selector: 'app-log-mis-productos',
@@ -36,6 +37,7 @@ export class LogMisProductosComponent implements OnInit {
   //ListModulos: any[] = [];
   ListOperaciones: any[] = [];
   ListOpciones: any[] = [];
+  ListUsuarios: any[] = [];
   SelectedCombo: number = 1000;
   SelectedNombre: string = "";
   dateBegin: string = "";
@@ -101,6 +103,7 @@ export class LogMisProductosComponent implements OnInit {
         console.log(err)
      })
   }
+
   validar(TituloGenerico : string) {
     this.loading.show();
     let temp: any = null;
@@ -195,12 +198,17 @@ export class LogMisProductosComponent implements OnInit {
 
     if (existe) {
       this.notif.warning(
-        'Advertencia',
-        'Filtro seleccionado ya existe.',
+        ERP_TOAST.TITULO_ADVERTENCIA,
+        ERP_MENSAJES.FILTRO_DUPLICADO,
         ConfiguracionNotificacion.configRightTop
       );
     
-      this.limpiarSelected();
+      setTimeout(() => {
+        this.filtroSelect = 0;
+        this.ListGenerico = [];
+        this.TituloGenerico = '';
+        this.alertGenerico = '';
+      });
     
       return;
     }
@@ -216,6 +224,7 @@ export class LogMisProductosComponent implements OnInit {
       case "12":  
         this.TituloGenerico = "Usuario: ";
         this.alertGenerico = "El usuario es obligatorio."
+        this.getUsuarios();
         break;
       case "13":  
         this.TituloGenerico = "Cuenta: ";
@@ -258,9 +267,23 @@ export class LogMisProductosComponent implements OnInit {
       this.btnMore = false;
     }
   }
-  GetSelectedNombre() {
-    this.SelectedNombre = this.ListGenerico.filter(x => x.id == this.SelectedCombo)[0].descri;
+ GetSelectedNombre() {
+
+  if (this.filtroSelect == 12) {
+
+    this.SelectedNombre =
+      this.ListUsuarios.find(
+        x => x.id == this.SelectedCombo
+      )?.descri ?? '';
+
+    return;
   }
+
+  this.SelectedNombre =
+    this.ListGenerico.find(
+      x => x.id == this.SelectedCombo
+    )?.descri ?? '';
+}
   opcionSelectedFechas(value : number) {
     if (value == 1) {
       if ((this.valueFechaInicial.toString() >= this.fechaMinima && this.valueFechaInicial <= this.fechaMax) || this.valueFechaInicial == this.valueFechaFinal) 
@@ -296,8 +319,22 @@ export class LogMisProductosComponent implements OnInit {
     else if (s == 11 || s == 15 || s == 16 || s == 17) {
       this.AddFiltro(this.filtroSelect, this.SelectedCombo, this.TituloGenerico, this.SelectedNombre, "", "Es Igual");
     }
-    else if (s == 12)
-     this.validar(this.TituloGenerico );
+    else if (s == 12) {
+    
+      if (this.SelectedCombo == 1000) {
+        return;
+      }
+    
+      this.AddFiltro(
+        12,
+        this.SelectedCombo,
+        this.TituloGenerico,
+        String(this.SelectedCombo),
+        "",
+        "Es Igual"
+      );
+    
+    }
     else if (s == 13)
       this.validarSplit(this.TituloGenerico);
     else if (s == 14)
@@ -448,5 +485,25 @@ export class LogMisProductosComponent implements OnInit {
     $(".FilRecip" + this.ColorAnterior5).css("background", "#FFFFFF");
     $(".FilRecip" + fil).css("background", "#e5e5e5");
       this.ColorAnterior5 = fil;
+  }
+
+  getUsuarios() {
+    this.loading.show();
+    this.serviceLogs.GetUsuarios().subscribe(
+      response => {
+        this.ListUsuarios = response.map(x => ({
+          id: x.Usuario,
+          descri: x.Descripcion
+        }));
+
+        this.loading.hide();
+      },
+      err => {
+        this.loading.hide();
+        this.notif.error("Error al consultar", err,
+          ConfiguracionNotificacion.configRightTopNoClose
+        );
+      }
+    );
   }
 }
