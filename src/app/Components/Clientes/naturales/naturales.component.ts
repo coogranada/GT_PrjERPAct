@@ -1216,9 +1216,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       return;
     }
     try {
-      this.dataParentescosChange = JSON.parse(
-        window.atob(parentescoChange)
-      );
+      this.dataParentescosChange = StorageSecurity.getItem('parentescoChange') || [];      
       if (this.dataParentescosChange?.length) {
         this.dataParentescosChange.splice(0, 10);
         this.dataParentescosChange.splice(1, 7);
@@ -1236,9 +1234,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       return;
     }
     try {
-      this.dataParentescosPeps = JSON.parse(
-        window.atob(parentescoPeps)
-      );
+      this.dataParentescosPeps = StorageSecurity.getItem('parentescoPeps') || [];      
     } catch (error) {
       console.error(error);
     }
@@ -1250,9 +1246,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       return;
     }
     try {
-      this.dataContacto = JSON.parse(
-        window.atob(contacto)
-      );
+      this.dataContacto = StorageSecurity.getItem('contacto') || []; 
       if (this.dataContacto?.length) {
         this.dataContacto.splice(6, 1);
         this.dataContacto.splice(6, 1);

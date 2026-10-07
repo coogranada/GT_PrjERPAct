@@ -4974,12 +4974,11 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     this.GetCardinalidad(this.dataCardinal);
     const operaSeleccionada = +this.juridicosFrom.get('operacion')?.value;
     this.operacionSeleccion = operaSeleccionada;
-    const state = StorageSecurity.getData();
-    const resultPerfil = JSON.parse(JSON.parse(window.atob(state == null ? "" : state)));
+    const resultPerfil = StorageSecurity.getData();
     this.operacionesModel.idOperacion = operaSeleccionada;
     this.operacionesModel.idPerfil = resultPerfil.idPerfilUsuario;
-    this.operacionesModel.idModulo = this.CodModulo;
-
+    this.operacionesModel.idModulo = this.CodModulo;  
+  
     this.EnviarOperacionFormularios(operaSeleccionada);
     if (operaSeleccionada !== 2 && operaSeleccionada !== 5) {
       const valueState = this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.value;
