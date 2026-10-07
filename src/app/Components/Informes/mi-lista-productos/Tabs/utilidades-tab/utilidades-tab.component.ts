@@ -13,6 +13,7 @@ import {
 import swal from "sweetalert2";
 import { AlertService } from '../../../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../../utils/storage-security.util';
 
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -139,10 +140,7 @@ Consultar() {
   this.selectOpt = opcionSel;
   this.YearSel = yearSel;
 
-  const datas = localStorage.getItem("Data");
-  const dataUsuario = datas
-    ? JSON.parse(window.atob(datas))
-    : null;
+  const dataUsuario = StorageSecurity.getData();
 
   this.TerceroUsuario = dataUsuario?.lngTercero;
   this.UsuarioModifica = dataUsuario?.Usuario;
@@ -225,6 +223,7 @@ Consultar() {
       dataUsuario
     );
   }
+
 }
 
 private consultarSaldos(
@@ -564,74 +563,122 @@ private mostrarPdf(base64: string): void {
 }
 
   GenerarCertificadoSaldosPdf() {
-    var opcionSel = this.selectOpt;
-    var yearSel = this.YearSel;
-    let datas = localStorage.getItem("Data")
-    var dataUser = JSON.parse(window.atob(datas == null ? "" : datas));
-    var idTerceroUsuario = dataUser.lngTercero;
-    var Oficina = dataUser.Oficina;
-    if (Number(opcionSel) == 0) {
+
+    const opcionSel = this.selectOpt;
+    const yearSel = this.YearSel;
+
+    const dataUser = StorageSecurity.getData();
+
+    if (!dataUser) {
+      return;
+    }
+
+    const idTerceroUsuario = dataUser.lngTercero;
+    const oficina = dataUser.Oficina;
+
+    if (Number(opcionSel) === 0) {
+
       this.loadingPdfSaldos = true;
+
       this.MiListaProductosService.getCertificadoSaldosPdf(
         yearSel,
         this.idTerceroCertificate,
         idTerceroUsuario,
-        Oficina
+        oficina
       ).subscribe(
         (result) => {
-          var baseg4 = result.FileStream;
-          const linkSource = `data:application/pdf;base64,${baseg4._buffer}`;
-          const downloadLink = document.createElement("a");
-          const fileName ="CertificadoSaldos_" +this.certificadoSaldos.NumeroDocumento +".pdf";
+
+          const baseg4 = result.FileStream;
+
+          const linkSource =
+            `data:application/pdf;base64,${baseg4._buffer}`;
+
+          const downloadLink =
+            document.createElement("a");
+
+          const fileName =
+            "CertificadoSaldos_" +
+            this.certificadoSaldos.NumeroDocumento +
+            ".pdf";
+
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
+
           this.loadingPdfSaldos = false;
+
           downloadLink.click();
+
         },
         (error) => {
+
           this.loadingPdfSaldos = false;
+
           this.notif.onDanger(
             "Error",
-            error);
+            error
+          );
+
         }
       );
+
     }
-    if (opcionSel == "1") {
+
+    if (opcionSel === "1") {
+
       this.loadingPdfCertificate = true;
+
       if (
-        this.codigoAnexo == undefined ||
-        this.codigoAnexo == null ||
-        this.codigoAnexo == ""
+        this.codigoAnexo === undefined ||
+        this.codigoAnexo === null ||
+        this.codigoAnexo === ""
       ) {
         this.codigoAnexo = "";
       }
 
-      var Oficina = dataUser.Oficina;
       this.MiListaProductosService.getCertificadoRetencionPdf(
         yearSel,
         this.idTerceroCertificate,
         this.anexoPdf,
         idTerceroUsuario,
-        Oficina
+        oficina
       ).subscribe(
         (result) => {
-          var baseg4 = result.FileStream;
-          const linkSource = `data:application/pdf;base64,${baseg4._buffer}`;
-          const downloadLink = document.createElement("a");
-          const fileName = "CertificadoRetencion_" + this.titularRetiene.NumeroDocumento +".pdf";
+
+          const baseg4 = result.FileStream;
+
+          const linkSource =
+            `data:application/pdf;base64,${baseg4._buffer}`;
+
+          const downloadLink =
+            document.createElement("a");
+
+          const fileName =
+            "CertificadoRetencion_" +
+            this.titularRetiene.NumeroDocumento +
+            ".pdf";
+
           downloadLink.href = linkSource;
           downloadLink.download = fileName;
+
           this.loadingPdfCertificate = false;
+
           downloadLink.click();
+
         },
         (error) => {
+
           this.loadingPdfCertificate = false;
+
           this.notif.onDanger(
             "Error",
-            error);
+            error
+          );
+
         }
       );
+
     }
+
   }
 
   ValidaPlantillaMail() {
@@ -666,143 +713,72 @@ private mostrarPdf(base64: string): void {
 
   MailSaldos() {
     this.loading.show();
-    if (this.validaCertificadoSaldos == true) {
-      let datas = localStorage.getItem("Data");
-      var dataLocal = JSON.parse(window.atob(datas == null? "" : datas));
-          this.DataEmailSaldos = new DataEmailSaldos();
-          this.DataEmailSaldos.yearGravable = this.yearGravable;
-          this.DataEmailSaldos.idTerceroCertificate = this.idTerceroCertificate;
-          this.DataEmailSaldos.TerceroUsuario = this.TerceroUsuario;
-          this.DataEmailSaldos.UsuarioModifica = this.UsuarioModifica;
-          this.DataEmailSaldos.base64MailSaldos = this.base64MailSaldos;
-          this.DataEmailSaldos.Oficina = dataLocal.Oficina;
-          this.MiListaProductosService.sendMailCertificadoSaldos(
-            this.DataEmailSaldos
-          ).subscribe(
-            (result) => {
-              this.loading.hide();
-              this.Response(result);
+    if (this.validaCertificadoSaldos === true) {
+      const dataLocal = StorageSecurity.getData();
+      if (!dataLocal) {
+        this.loading.hide();
+        return;
+      }
+      this.DataEmailSaldos = new DataEmailSaldos();
+      this.DataEmailSaldos.yearGravable = this.yearGravable;
+      this.DataEmailSaldos.idTerceroCertificate = this.idTerceroCertificate;
+      this.DataEmailSaldos.TerceroUsuario = this.TerceroUsuario;
+      this.DataEmailSaldos.UsuarioModifica = this.UsuarioModifica;
+      this.DataEmailSaldos.base64MailSaldos = this.base64MailSaldos;
+      this.DataEmailSaldos.Oficina = dataLocal.Oficina;
+      this.MiListaProductosService
+        .sendMailCertificadoSaldos(this.DataEmailSaldos)
+        .subscribe(
+          (result) => {
+            this.loading.hide();
+            this.Response(result);
+            const tercero = Number(
+              $("#TerceroPrincipal").val()
+            );
+            //#region Guarda log
+            const logMisProductosData =
+              new LogMisProductos();
+            const nuevoItem =
+              new DatosProductos();
+            logMisProductosData.IdOficina =
+              parseInt(dataLocal.NumeroOficina);
+            logMisProductosData.IdModulo = 69;
+            logMisProductosData.IdOperacion = 85;
+            logMisProductosData.IdOpcion = 12;
+            logMisProductosData.IdTercero = tercero;
+            logMisProductosData.IdUsuarioERP =
+              dataLocal.IdUsuario;
+            nuevoItem.FechaInicial = "";
+            nuevoItem.FechaFinal = "";
+            logMisProductosData.DatosProductos =
+              nuevoItem;
+            this.setLogMisProductos(
+              logMisProductosData
+            );
+            //#endregion
+          },
+          (error) => {
+            this.loading.hide();
+            swal.fire({
+              title: "Error",
+              text: "",
+              html: "Ha ocurrido un error enviando el email.",
+              icon: "error",
+              showCancelButton: false,
+              confirmButtonColor: "rgb(13,165,80)",
+              cancelButtonColor: "rgb(160,0,87)",
+              allowOutsideClick: false,
+              allowEscapeKey: false,
+            });
+          }
+        );
 
-              var Tercero = Number($("#TerceroPrincipal").val());
-              //#region Guarda log
-              let datas = localStorage.getItem("Data");
-              var dataLocalStorage = JSON.parse(window.atob(datas == null ?"": datas));
-              var LogMisProductosData = new LogMisProductos();
-              var nuevoItem = new DatosProductos();
-              LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
-              LogMisProductosData.IdModulo = 69;
-              LogMisProductosData.IdOperacion = 85;
-              LogMisProductosData.IdOpcion = 12; // Envio correo 
-              LogMisProductosData.IdTercero = Tercero;
-              LogMisProductosData.IdUsuarioERP = dataLocalStorage.IdUsuario;
-              nuevoItem.FechaInicial = "";
-              nuevoItem.FechaFinal = "";
-              LogMisProductosData.DatosProductos = nuevoItem;
-              this.setLogMisProductos(LogMisProductosData);
-          // #endregion
-            },
-            (error) => {
-              this.loading.hide();
-              swal.fire({
-                title: "Error",
-                text: "",
-                html: "Ha ocurrido un error enviando el email.",
-                icon: "error",
-                showCancelButton: false,
-                confirmButtonColor: "rgb(13,165,80)",
-                cancelButtonColor: "rgb(160,0,87)",
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-              });
-            }
-          );
-        } else {
-          this.loading.hide();
-          swal.fire({
-            title: "Exitoso",
-            text: "",
-            html: "El email se envió correctamente.",
-            icon: "info",
-            showCancelButton: false,
-            confirmButtonColor: "rgb(13,165,80)",
-            cancelButtonColor: "rgb(160,0,87)",
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-          });
-        }
-  }
-  SendEmailCertificateRetenciones() {
-    this.loading.show();
-    this.ValidaPlantillaMail();
-    setTimeout(() => {
-      this.MailRetenciones();
-    }, 7000);
-  }
-
-  MailRetenciones() {
-    if (this.validaCertificadoRetenciones == true) {
-      let datas = localStorage.getItem("Data");
-      var dataLocal = JSON.parse(window.atob(datas == null? "" : datas));
-          this.DataEmailCertificado = new DataEmailCertificado();
-          this.DataEmailCertificado.TerceroUsuario = this.TerceroUsuario;
-          this.DataEmailCertificado.UsuarioModifica = this.UsuarioModifica;
-          this.DataEmailCertificado.yearGravable = this.yearGravable;
-          this.DataEmailCertificado.idTerceroCertificate =this.idTerceroCertificate;
-          this.DataEmailCertificado.Anexo = this.anexoPdf;
-          this.DataEmailCertificado.base64MailSaldos = this.base64MailRetenciones;
-          this.DataEmailCertificado.Oficina = dataLocal.Oficina;
-
-          this.MiListaProductosService.SendEmailCertificateRetenciones(
-            this.DataEmailCertificado
-          ).subscribe(
-            (result) => {
-              this.loading.hide();
-              this.Response(result);
-
-
-              var Tercero = Number($("#TerceroPrincipal").val());
-              //#region Guarda log
-              let datas = localStorage.getItem("Data");
-              var dataLocalStorage = JSON.parse(window.atob(datas == null ?"": datas));
-              var LogMisProductosData = new LogMisProductos();
-              var nuevoItem = new DatosProductos();
-              LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
-              LogMisProductosData.IdModulo = 69;
-              LogMisProductosData.IdOperacion = 86;
-              LogMisProductosData.IdOpcion = 12; // Envio correo 
-              LogMisProductosData.IdTercero = Tercero;
-              LogMisProductosData.IdUsuarioERP = dataLocalStorage.IdUsuario;
-              nuevoItem.FechaInicial = "";
-              nuevoItem.FechaFinal = "";
-              LogMisProductosData.DatosProductos = nuevoItem;
-              this.setLogMisProductos(LogMisProductosData);
-          // #endregion
-
-
-
-            },
-            (error) => {
-              this.loading.hide();
-              console.log(error);
-              swal.fire({
-                title: "Error",
-                text: "",
-                html: "Ha ocurrido un error enviando el email.",
-                icon: "error",
-                showCancelButton: false,
-                confirmButtonColor: "rgb(13,165,80)",
-                cancelButtonColor: "rgb(160,0,87)",
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-              });
-            }
-          );
     } else {
-      this.loadingPdfCertificate = false;
+      this.loading.hide();
       swal.fire({
         title: "Exitoso",
         text: "",
-        html: "El email se envió correctamente..",
+        html: "El email se envió correctamente.",
         icon: "info",
         showCancelButton: false,
         confirmButtonColor: "rgb(13,165,80)",
@@ -813,6 +789,111 @@ private mostrarPdf(base64: string): void {
     }
   }
 
+  SendEmailCertificateRetenciones() {
+    this.loading.show();
+    this.ValidaPlantillaMail();
+    setTimeout(() => {
+      this.MailRetenciones();
+    }, 7000);
+  }
+
+ MailRetenciones() {
+  if (this.validaCertificadoRetenciones === true) {
+    const dataLocal = StorageSecurity.getData();
+    if (!dataLocal) {
+      this.loading.hide();
+      return;
+    }
+    this.DataEmailCertificado =
+      new DataEmailCertificado();
+    this.DataEmailCertificado.TerceroUsuario =
+      this.TerceroUsuario;
+    this.DataEmailCertificado.UsuarioModifica =
+      this.UsuarioModifica;
+    this.DataEmailCertificado.yearGravable =
+      this.yearGravable;
+    this.DataEmailCertificado.idTerceroCertificate =
+      this.idTerceroCertificate;
+    this.DataEmailCertificado.Anexo =
+      this.anexoPdf;
+    this.DataEmailCertificado.base64MailSaldos =
+      this.base64MailRetenciones;
+    this.DataEmailCertificado.Oficina =
+      dataLocal.Oficina;
+    this.MiListaProductosService
+      .SendEmailCertificateRetenciones(
+        this.DataEmailCertificado
+      )     
+       .subscribe(
+        (result) => {
+          this.loading.hide();
+          this.Response(result);
+          const tercero = Number(
+            $("#TerceroPrincipal").val()
+          );
+          //#region Guarda log
+          const logMisProductosData =
+            new LogMisProductos();
+          const nuevoItem =
+            new DatosProductos();
+          logMisProductosData.IdOficina =
+            parseInt(dataLocal.NumeroOficina);
+          logMisProductosData.IdModulo = 69;
+          logMisProductosData.IdOperacion = 86;
+          logMisProductosData.IdOpcion = 12;
+          logMisProductosData.IdTercero = tercero;
+          logMisProductosData.IdUsuarioERP =
+            dataLocal.IdUsuario;
+          nuevoItem.FechaInicial = "";
+          nuevoItem.FechaFinal = "";
+          logMisProductosData.DatosProductos =
+            nuevoItem;
+          this.setLogMisProductos(
+            logMisProductosData
+          );
+          //#endregion
+        },
+        (error) => {
+          this.loading.hide();
+          console.log(error);
+          swal.fire({
+            title: "Error",
+            text: "",
+            html:
+              "Ha ocurrido un error enviando el email.",
+            icon: "error",
+            showCancelButton: false,
+            confirmButtonColor:
+              "rgb(13,165,80)",
+            cancelButtonColor:
+              "rgb(160,0,87)",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+          });
+
+        }
+      );
+
+  } else {
+    this.loadingPdfCertificate = false;
+    swal.fire({
+      title: "Exitoso",
+      text: "",
+      html:
+        "El email se envió correctamente.",
+      icon: "info",
+      showCancelButton: false,
+      confirmButtonColor:
+        "rgb(13,165,80)",
+      cancelButtonColor:
+        "rgb(160,0,87)",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+    });
+
+  }
+
+}
   Response(value : any) {
     this.loading.hide();
     if (value == "0" ||  value == 0) {

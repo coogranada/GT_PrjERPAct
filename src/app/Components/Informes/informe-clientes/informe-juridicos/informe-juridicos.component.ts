@@ -10,6 +10,7 @@ import { metodosComoConocio } from '../../../../../environments/Maestros.Natural
 import Swal from "sweetalert2";
 import { ToastrService } from 'ngx-toastr';
 import { LoadingService } from '../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../utils/storage-security.util';
 declare var $: any;
 @Component({
   selector: 'app-informe-juridicos',
@@ -195,10 +196,11 @@ export class InformeJuridicosComponent implements OnInit {
     this.Campos = this.servicesInforme.GetCampos();
     this.ShowCampos = this.Campos;
   }
-  getOficinaOrAdmin()
-  {
-    let datas = localStorage.getItem("Data");
-    var resultDataStore =JSON.parse(window.atob(datas == null ? "" : datas));
+  getOficinaOrAdmin() {
+    const resultDataStore = StorageSecurity.getData();
+    if (!resultDataStore) {
+      return;
+    }
     this.IdOficina = Number(resultDataStore.NumeroOficina);
     this.NombreOficina = resultDataStore.Oficina;
   }

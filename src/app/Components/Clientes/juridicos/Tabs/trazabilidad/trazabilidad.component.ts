@@ -2,6 +2,7 @@ import { Component, OnInit, EventEmitter, Output, ViewChild } from '@angular/cor
 import { ClientesGetListService } from '../../../../../Services/Clientes/clientesGetList.service';
 import { JuridicosComponent } from '../../juridicos.component';
 import { LoadingService } from '../../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../../utils/storage-security.util';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -23,9 +24,17 @@ export class TrazabilidadComponent implements OnInit {
   ngOnInit() {
     this.dataTrasabilidad = [];
     this.dataTrasabilidad.length = 0;
-    let traza = localStorage.getItem('trasabilidad-juridico');
-    const documentoConsulta = JSON.parse(JSON.parse(window.atob(traza == null ? "" : traza)));
-    this.ConsultarTrasabilidad(documentoConsulta);
+    const documentoConsulta =
+      StorageSecurity.getTrasabilidadJuridico();
+
+    if (!documentoConsulta) {
+      return;
+    }
+
+    this.ConsultarTrasabilidad(
+      documentoConsulta
+    );
+
   }
  
   ConsultarTrasabilidad(documento : string) {

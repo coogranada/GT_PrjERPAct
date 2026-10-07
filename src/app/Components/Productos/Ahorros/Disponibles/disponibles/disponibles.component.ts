@@ -5074,8 +5074,10 @@ export class DisponiblesComponent implements OnInit {
     itemsSendCertificado.SaldoTotal = this.DisponibleForm.get('Efectivo')?.value;
     itemsSendCertificado.TerceroId = Number(this.DisponibleForm.get('LngTercero')?.value);
     itemsSendCertificado.FileName = this.NombreArchivoCertificadoCuenta("", "");
-    let datas = localStorage.getItem("Data")
-    let dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
+    const dataLocalStorage = StorageSecurity.getData();
+    if (!dataLocalStorage) {
+      return;
+    }
     itemsSendCertificado.UsuarioERP = dataLocalStorage.IdUsuario;
     this.DisponiblesServices.SendMailPDFCertificado(itemsSendCertificado).subscribe(
       result => { 

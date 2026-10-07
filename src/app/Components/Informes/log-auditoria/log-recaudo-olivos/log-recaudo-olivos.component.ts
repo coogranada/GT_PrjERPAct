@@ -11,6 +11,7 @@ import { LoadingService } from '../../../../Services/shared/loading.service';
 import { AlertService } from '../../../../Services/Alert/alert.service';
 import { Filtro } from '../../../../Models/Informes/informe-clientes/informe-clientes.model';
 import { InformeLogService } from '../../../../Services/Informes/informe-log.service';
+import { StorageSecurity } from '../../../../utils/storage-security.util';
 
 @Component({
   selector: 'app-log-recaudo-olivos',
@@ -66,8 +67,10 @@ export class LogRecaudoOlivosComponent {
   }
 
   getOficina() {
-    let datas = localStorage.getItem("Data");
-    var resultDataStore = JSON.parse(window.atob(datas == null ? "" : datas));
+    const resultDataStore = StorageSecurity.getData();
+    if (!resultDataStore) {
+      return;
+    }
     this.idOficina = Number(resultDataStore.NumeroOficina);
     this.nombreOficina = resultDataStore.Oficina;
   }

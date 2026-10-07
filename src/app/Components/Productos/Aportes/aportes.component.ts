@@ -693,7 +693,7 @@ export class AportesComponent implements OnInit {
        const arrayExample = {
       'IdOperacion': +this.aportesOperacionFrom.get('Codigo')?.value ,
       'IdPerfil': this.dataUser.idPerfilUsuario,
-      'IdModulo': this.codModulo  //JSON.parse(window.atob(idmoduloActivo == null ? "" : idmoduloActivo))
+      'IdModulo': this.codModulo
     };
     this.loading.show();
     this.operacionesService.ObtenerEstadosXOperacionesData(arrayExample).subscribe(

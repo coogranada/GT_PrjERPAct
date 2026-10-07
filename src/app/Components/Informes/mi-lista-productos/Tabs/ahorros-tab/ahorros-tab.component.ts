@@ -1752,8 +1752,10 @@ export class AhorrosTabComponent implements OnInit {
     this.DetalleDispoModel.Asesor = data.Asesor;
 
     //#region Guarda log
-    let datas = localStorage.getItem("Data");
-      var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
+    const dataLocalStorage = StorageSecurity.getData();
+    if (!dataLocalStorage) {
+      return;
+    }
     var LogMisProductosData = new LogMisProductos();
     var nuevoItem = new DatosProductos();
     LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
@@ -2096,8 +2098,10 @@ export class AhorrosTabComponent implements OnInit {
 
 
     //#region Guarda log
-    let datas = localStorage.getItem("Data");
-      var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
+    const dataLocalStorage = StorageSecurity.getData();
+    if (!dataLocalStorage) {
+      return;
+    }
     var LogMisProductosData = new LogMisProductos();
     var nuevoItem = new DatosProductos();
     LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
@@ -2749,88 +2753,82 @@ export class AhorrosTabComponent implements OnInit {
   }
 
   SendMailAhorros(): void {
-  if (this.validaMail === true) {
-    this.loading.show();
-    this.MiListaProductosService
-      .sendMailProductos(this.ExtractoDisponible.value)
-      .subscribe(
-        result => {
-          try {
-            this.Response(result);
-            const tercero = Number(
-              $("#TerceroPrincipal").val()
-            );
-            const data = localStorage.getItem("Data");
-            const dataLocalStorage = JSON.parse(
-              window.atob(data == null ? "" : data)
-            );
-            //#region Guarda log
-            const logMisProductosData =
-              new LogMisProductos();
-
-            const nuevoItem =
-              new DatosProductos();
-
-            logMisProductosData.IdOficina =
-              parseInt(
-                dataLocalStorage.NumeroOficina
+    if (this.validaMail === true) {
+      this.loading.show();
+      this.MiListaProductosService
+        .sendMailProductos(this.ExtractoDisponible.value)
+        .subscribe(
+          result => {
+            try {
+              this.Response(result);
+              const tercero = Number(
+                $("#TerceroPrincipal").val()
               );
-
-            logMisProductosData.IdModulo = 69;
-            logMisProductosData.IdOperacion = 49;
-            logMisProductosData.IdOpcion = 12;
-            logMisProductosData.IdTercero = tercero;
-            logMisProductosData.IdCuenta =
-              this.idCuenta;
-            logMisProductosData.IdUsuarioERP =
-              dataLocalStorage.IdUsuario;
-
-            nuevoItem.FechaInicial = "";
-            nuevoItem.FechaFinal = "";
-
-            logMisProductosData.DatosProductos =
-              nuevoItem;
-
-            this.setLogMisProductos(
-              logMisProductosData
-            );
-
-            //#endregion
-
-          } finally {
+              const dataLocalStorage = StorageSecurity.getData();
+              if (!dataLocalStorage) {
+                return;
+              }
+              //#region Guarda log
+              const logMisProductosData =
+                new LogMisProductos();
+              const nuevoItem =
+                new DatosProductos();
+              logMisProductosData.IdOficina =
+                parseInt(
+                  dataLocalStorage.NumeroOficina
+                );
+              logMisProductosData.IdModulo = 69;
+              logMisProductosData.IdOperacion = 49;
+              logMisProductosData.IdOpcion = 12;
+              logMisProductosData.IdTercero = tercero;
+              logMisProductosData.IdCuenta =
+                this.idCuenta;
+              logMisProductosData.IdUsuarioERP =
+                dataLocalStorage.IdUsuario;
+              nuevoItem.FechaInicial = "";
+              nuevoItem.FechaFinal = "";
+              logMisProductosData.DatosProductos =
+                nuevoItem;
+              this.setLogMisProductos(
+                logMisProductosData
+              );
+              //#endregion
+            } finally {
+              this.loading.hide();
+            }
+          },
+          error => {
             this.loading.hide();
+            swal.fire({
+              title: "Error",
+              text: "",
+              html:
+                "Ha ocurrido un error enviando el email.",
+              icon: "error",
+              showCancelButton: false,
+              confirmButtonColor: "rgb(13,165,80)",
+              cancelButtonColor: "rgb(160,0,87)",
+              allowOutsideClick: false,
+              allowEscapeKey: false,
+            });
           }
-        },
-        error => {
-          this.loading.hide();
-          swal.fire({
-            title: "Error",
-            text: "",
-            html: "Ha ocurrido un error enviando el email.",
-            icon: "error",
-            showCancelButton: false,
-            confirmButtonColor: "rgb(13,165,80)",
-            cancelButtonColor: "rgb(160,0,87)",
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-          });
-        }
-      );
+        );
+    } else {
+      swal.fire({
+        title: "Info",
+        text: "",
+        html:
+          "Por favor comunicarse con el administrador para gestionar la plantilla del email.",
+        icon: "info",
+        showCancelButton: false,
+        confirmButtonColor: "rgb(13,165,80)",
+        cancelButtonColor: "rgb(160,0,87)",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+      });
 
-  } else {
+    }
 
-    swal.fire({
-      title: "Info",
-      text: "",
-      html: "Por favor comunicarse con el administrador para gestionar la plantilla del email.",
-      icon: "info",
-      showCancelButton: false,
-      confirmButtonColor: "rgb(13,165,80)",
-      cancelButtonColor: "rgb(160,0,87)",
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-    });
-  }
   }
 
   SendMailContractual(): void {
@@ -2845,10 +2843,10 @@ export class AhorrosTabComponent implements OnInit {
             const tercero = Number(
               $("#TerceroPrincipal").val()
             );
-            const data = localStorage.getItem("Data");
-            const dataLocalStorage = JSON.parse(
-              window.atob(data == null ? "" : data)
-            );
+            const dataLocalStorage = StorageSecurity.getData();
+              if (!dataLocalStorage) {
+                return;
+              }
 
             //#region Guarda log
 
@@ -2931,11 +2929,10 @@ export class AhorrosTabComponent implements OnInit {
             const tercero = Number(
               $("#TerceroPrincipal").val()
             );
-            const data = localStorage.getItem("Data");
-            const dataLocalStorage = JSON.parse(
-              window.atob(data == null ? "" : data)
-            );
-
+            const dataLocalStorage = StorageSecurity.getData();
+              if (!dataLocalStorage) {
+                return;
+              }
             //#region Guarda log
 
             const logMisProductosData =
@@ -3129,11 +3126,10 @@ export class AhorrosTabComponent implements OnInit {
 
     this.loading.show();
 
-    const data = localStorage.getItem("Data");
-
-    const dataLocalStorage = JSON.parse(
-      window.atob(data == null ? "" : data)
-    );
+    const dataLocalStorage = StorageSecurity.getData();
+    if (!dataLocalStorage) {
+      return;
+    }
 
     this.ExtractoAtermino.get("yearInit")
       ?.setValue(yearInicial);

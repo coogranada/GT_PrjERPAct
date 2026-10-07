@@ -7,6 +7,7 @@ import moment from 'moment';
 import { Campo, Filtro } from '../../../../Models/Informes/informe-clientes/informe-clientes.model';
 import { ConfiguracionNotificacion } from '../../../../../environments/config.noticaciones';
 import { LoadingService } from '../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../utils/storage-security.util';
 declare var $: any;
 @Component({
   selector: 'app-log-productos-virtuales',
@@ -70,8 +71,10 @@ export class LogProductosVirtualesComponent implements OnInit {
     this.Campos = this.serviceLogs.GetCamposProductosVirtuales();
   }
   getOficinaOrAdmin() {
-    let datas = localStorage.getItem("Data");
-    var resultDataStore = JSON.parse(window.atob(datas == null ? "" : datas));
+    const resultDataStore = StorageSecurity.getData();
+    if (!resultDataStore) {
+      return;
+    }
     this.IdOficina = Number(resultDataStore.NumeroOficina);
     this.NombreOficina = resultDataStore.Oficina;
   }

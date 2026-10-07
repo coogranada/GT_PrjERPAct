@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { OperacionesService } from '../../../Services/Maestros/operaciones.service';
 import { ConfiguracionNotificacion } from '../../../../environments/config.noticaciones';
 import { ToastrService } from 'ngx-toastr';
+import { StorageSecurity } from '../../../utils/storage-security.util';
 declare var $: any;
 @Component({
   selector: 'app-log-auditoria',
@@ -40,48 +41,52 @@ export class LogAuditoriaComponent implements OnInit {
     );
     obs.subscribe((resulr) => console.log(resulr));
   }
-  GetOperaciones() {
-    let datas = localStorage.getItem("Data");
-    var resultDataStore = JSON.parse(window.atob(datas == null ? "" : datas));
 
-    var arrayExample = [
-      {
-        IdModulo: this.CodModulo,
-        IdUsuario: resultDataStore.IdUsuario,
-        IdPerfil: resultDataStore.UsuarioPerfil
-      },
-    ];
-    this.operacionesService.OperacionesPermitidas(JSON.stringify(arrayExample[0])).subscribe(
-      (result: any[]) => {
-        result.forEach((element) => {
-          if (element.IdOperaciones == 91) // log Generales
-            this.Operaciones.push(element);
-          else if (element.IdOperaciones == 92) // Log Gestion de clientes
-            this.Operaciones.push(element);
-          else if (element.IdOperaciones == 93) // Log mis productos
-            this.Operaciones.push(element);
-          else if (element.IdOperaciones == 94) // Log Asesorias
-            this.Operaciones.push(element);
-          else if (element.IdOperaciones == 95) // Log banner
-            this.Operaciones.push(element);
-          else if (element.IdOperaciones == 108) // Log ficha analisis
-            this.Operaciones.push(element);
-          else if (element.IdOperaciones == 113) // Log Productos virtuales
-            this.Operaciones.push(element);
-          else if (element.IdOperaciones == 114) // Log Autenticacion ERP
-            this.Operaciones.push(element);
-          else if (element.IdOperaciones == 141) // Log Recaudo Olivos
-            this.Operaciones.push(element);
-          else if (element.IdOperaciones == 144) // Log Gestion de Cartera
-            this.Operaciones.push(element);
-        });
-      },
-      (err) => {
-        const errorMessage = <any>err;
-        this.notif.error("Error al consultar", errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
-        console.log(err)
-      });
+  GetOperaciones() {
+    const resultDataStore = StorageSecurity.getData();
+    if (!resultDataStore) {
+      return;
+    }
+    const payload = {
+      IdModulo: this.CodModulo,
+      IdUsuario: resultDataStore.IdUsuario,
+      IdPerfil: resultDataStore.UsuarioPerfil
+    };
+    this.operacionesService
+      .OperacionesPermitidas(JSON.stringify(payload))
+      .subscribe(
+        (result: any[]) => {
+
+          result.forEach((element) => {
+
+            if (
+              element.IdOperaciones === 91 ||   // Log Generales
+              element.IdOperaciones === 92 ||   // Log Gestión de Clientes
+              element.IdOperaciones === 93 ||   // Log Mis Productos
+              element.IdOperaciones === 94 ||   // Log Asesorías
+              element.IdOperaciones === 95 ||   // Log Banner
+              element.IdOperaciones === 108 ||  // Log Ficha Análisis
+              element.IdOperaciones === 113 ||  // Log Productos Virtuales
+              element.IdOperaciones === 114 ||  // Log Autenticación ERP
+              element.IdOperaciones === 141 ||  // Log Recaudo Olivos
+              element.IdOperaciones === 144     // Log Gestión de Cartera
+            ) {
+              this.Operaciones.push(element);
+            }
+          });
+        },
+        (err) => {
+          const errorMessage = <any>err;
+          this.notif.error(
+            "Error al consultar",
+            errorMessage,
+            ConfiguracionNotificacion.configRightTopNoClose
+          );
+          console.log(err);
+        }
+      );
   }
+
   opcionSelected()
   {
     if (this.valueSlectOperacion != 0) {

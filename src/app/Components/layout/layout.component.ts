@@ -1013,17 +1013,19 @@ this.userIdle.onTimeout().subscribe(() => {
     });
   }
   GetModuloOfice() {
-    let pefi: string | null = localStorage.getItem('profiles');
-    const resultProfiles = JSON.parse(window.atob(pefi == null ? "" : pefi));
-    if (resultProfiles.length > 0) {
-      resultProfiles.forEach((element: any) => {
-        if (element.IdPerfil == 78) {
-          this.ObtenerOficinas();
-          this.isChangeOfice = true;
-        }
-      });
+    const resultProfiles = StorageSecurity.getProfiles();
+    if (!resultProfiles?.length) {
+      return;
+    }
+    const tienePerfil78 = resultProfiles.some(
+      (x: any) => x.IdPerfil === 78
+    );
+    if (tienePerfil78) {
+      this.ObtenerOficinas();
+      this.isChangeOfice = true;
     }
   }
+  
   ObtenerOficinas() {
     this.usuariosServices.getOficinas().subscribe(result => {
       this.resultOficina = result;

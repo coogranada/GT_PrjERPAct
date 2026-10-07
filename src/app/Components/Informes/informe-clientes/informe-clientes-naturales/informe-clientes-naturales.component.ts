@@ -17,6 +17,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ExcelService } from '../../../../Services/General/excel.service';
 import { TablaVirtualComponent } from '../../../Tabla-virtual/tabla-virtual/tabla-virtual.component';
 import { LoadingService } from '../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../utils/storage-security.util';
 declare var $: any;
 @Component({
   selector: 'app-informe-clientes-naturales',
@@ -102,13 +103,15 @@ export class InformeClientesNaturalesComponent implements OnInit {
     this.Campos = this.informeClientesService.GetCampos();
     this.ShowCampos = this.Campos;
   }
-  getOficinaOrAdmin()
-  {
-    let datas = localStorage.getItem("Data");
-    var resultDataStore = JSON.parse(window.atob(datas == null ? "" : datas));
+  getOficinaOrAdmin() {
+    const resultDataStore = StorageSecurity.getData();
+    if (!resultDataStore) {
+      return;
+    }
     this.IdOficina = Number(resultDataStore.NumeroOficina);
     this.NombreOficina = resultDataStore.Oficina;
   }
+
   InitFiltros(oficinaOrAdmin : number) {
     this.Filtros = this.informeClientesService.GetFiltros(oficinaOrAdmin, false);
     this.Filtros.sort((a, b) => a.NombreFiltro.localeCompare(b.NombreFiltro))
@@ -397,8 +400,7 @@ export class InformeClientesNaturalesComponent implements OnInit {
     this.dateEnd = this.valueFechaFinal.toString().replace("-", "/").replace("-", "/").replace("-", "/");
   }
   GetProfesion() {
-    let pro = localStorage.getItem('profesion');
-    this.ListProfesion = JSON.parse(window.atob(pro == null ? "" : pro));
+    this.ListProfesion =  StorageSecurity.getItem('profesion') || [];
     this.ListProfesion.forEach(x => x.descri = x.Descripcion);
     this.ListProfesion.forEach(x => x.id = x.Clase);
     this.ListGenerico = this.ListProfesion;
@@ -428,8 +430,7 @@ export class InformeClientesNaturalesComponent implements OnInit {
     }
   }
   GetTipoEmpleo() {
-    let em = localStorage.getItem('empleo');
-    let temp: any[] = JSON.parse(window.atob(em == null ? "" : em));
+    let temp: any[]=  StorageSecurity.getItem('empleo') || [];
     this.ListTipoEmpleo = temp;
     this.ListTipoEmpleo.forEach(x => x.descri = x.Nombre);
     this.ListTipoEmpleo.forEach(x => x.id = x.IdTipoEmpleo);

@@ -14,6 +14,7 @@ import { GeneralesService } from '../../../Services/Productos/generales.service'
 import { ModuleValidationService } from '../../../Services/Enviroment/moduleValidation.service';
 import { AlertService } from '../../../Services/Alert/alert.service';
 import { PrintService } from '../../../Services/General/print.service';
+import { StorageSecurity } from '../../../utils/storage-security.util';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -285,8 +286,7 @@ export class SolicitudServiciosComponent implements OnInit {
   }
 
   GetParentescos() {
-        let parentesco : string | null = localStorage.getItem('parentesco');
-        this.dataParentescosSol1 = JSON.parse(window.atob(parentesco == null ? "" : parentesco));
+     this.dataParentescosSol1 = StorageSecurity.getItem('parentesco') || [];
   }
 
 

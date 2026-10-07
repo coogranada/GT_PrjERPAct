@@ -17,6 +17,7 @@ import { GeneralesService } from '../../../../Services/Productos/generales.servi
 import { ExceljsService } from '../../../../Services/General/exceljs.service';
 import { ShareComponentModule } from '../../../../Modules/share-component.module';
 import { LoadingService } from '../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../utils/storage-security.util';
 
 
 @Component({
@@ -132,22 +133,34 @@ export class InformeAhorrosComponent implements OnInit {
 
 
   getOperaciones() {
-    let datas = localStorage.getItem("Data")
-    var resultDataStore = JSON.parse(window.atob(datas == null ? "" : datas));
-    var arrayExample = [{
+    const resultDataStore = StorageSecurity.getData();
+    if (!resultDataStore) {
+      return;
+    }
+    const arrayExample = [{
       IdModulo: this.CodModulo,
       IdUsuario: resultDataStore.IdUsuario,
       IdPerfil: resultDataStore.UsuarioPerfil
     }];
 
-    this.operacionesService.OperacionesPermitidas(JSON.stringify(arrayExample[0])).subscribe((result) => {
-      result.forEach((element: any) => {
-        this.Operaciones.push(element);
-      });
-      this.OpcionSelected = true;
-    }, (error) => {
-      this.notif.error("Error", error, ConfiguracionNotificacion.configRightTopNoClose);
-    });
+    this.operacionesService
+      .OperacionesPermitidas(JSON.stringify(arrayExample[0]))
+      .subscribe(
+        (result) => {
+          result.forEach((element: any) => {
+            this.Operaciones.push(element);
+          });
+          this.OpcionSelected = true;
+        },
+        (error) => {
+          this.notif.error(
+            "Error",
+            error,
+            ConfiguracionNotificacion.configRightTopNoClose
+          );
+        }
+      );
+
   }
 
   obtenerConfiguracionInformes() {
@@ -167,14 +180,17 @@ export class InformeAhorrosComponent implements OnInit {
   }
 
   getOficina() {
-    let datas = localStorage.getItem("Data");
-    var resultDataStore = JSON.parse(window.atob(datas == null ? "" : datas));
+    const resultDataStore = StorageSecurity.getData();1
+    if (!resultDataStore) {
+      return;
+    }
     this.idOficina = Number(resultDataStore.NumeroOficina);
     this.nombreOficina = resultDataStore.Oficina;
     this.idTercero = Number(resultDataStore.intlngTercero);
-    let profiles = localStorage.getItem("profiles");
-    var resultDataStoreP = JSON.parse(window.atob(profiles == null ? "" : profiles));
-    this.perfilesUsuario = resultDataStoreP;
+    const resultDataStoreP = StorageSecurity.getProfiles();
+    if (resultDataStoreP) {
+      this.perfilesUsuario = resultDataStoreP;
+    }
   }
 
   operacionBlur() {

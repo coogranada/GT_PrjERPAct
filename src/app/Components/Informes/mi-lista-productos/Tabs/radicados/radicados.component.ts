@@ -15,6 +15,7 @@ import {
   ReferenciaRadicado
 } from "../../../../../Models/Informes/MisProductos/mis-producto.model";
 import { AlertService } from '../../../../../Services/Alert/alert.service';
+import { StorageSecurity } from '../../../../../utils/storage-security.util';
 
 @Component({
   selector: "app-radicados",
@@ -331,8 +332,10 @@ export class RadicadosComponent implements OnInit {
 
     
     //#region Guarda log
-    let datas = localStorage.getItem("Data");
-    var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
+    const dataLocalStorage = StorageSecurity.getData();
+    if (!dataLocalStorage) {
+      return;
+    }
     var LogMisProductosData = new LogMisProductos();
     var nuevoItem = new DatosProductos();
     LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
@@ -443,8 +446,10 @@ export class RadicadosComponent implements OnInit {
           ;
 
           //#region Guarda log
-          let datas = localStorage.getItem("Data");
-          var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
+          const dataLocalStorage = StorageSecurity.getData();
+          if (!dataLocalStorage) {
+            return;
+          }
           var LogMisProductosData = new LogMisProductos();
           var nuevoItem = new DatosProductos();
           LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);

@@ -444,9 +444,13 @@ export class TransaccionesCajaComponent implements OnInit {
 
   obtenerTransaccionxPerfil() {
     this.ListTransaccionxPerfil = [];
-    let perfiles: string | null = localStorage.getItem('profiles');
-    const resultProfiles = JSON.parse(window.atob(perfiles == null ? "" : perfiles));
-    const idresultProfiles = resultProfiles.map((x: any) => x.IdPerfil);
+    const resultProfiles = StorageSecurity.getProfiles();
+    if (!resultProfiles?.length) {
+      return;
+    }
+    const idresultProfiles = resultProfiles.map(
+      (x: any) => x.IdPerfil
+    );
     this.transaccionesCajaService.ObtenerTransaccionxPerfil(idresultProfiles)
       .subscribe({
         next: (result: any) => {
@@ -460,10 +464,13 @@ export class TransaccionesCajaComponent implements OnInit {
   }
 
   ObtenerOtrasTransaccionesxPerfil() {
-    let perfiles: string | null = localStorage.getItem('profiles');
-    const resultProfiles = JSON.parse(window.atob(perfiles == null ? "" : perfiles));
-    const idresultProfiles = resultProfiles.map((x: any) => x.IdPerfil);
-
+    const resultProfiles = StorageSecurity.getProfiles();
+    if (!resultProfiles?.length) {
+      return;
+    }
+    const idresultProfiles = resultProfiles.map(
+      (x: any) => x.IdPerfil
+    );
     this.transaccionesCajaService.ObtenerOtrasTransacciones(idresultProfiles)
       .subscribe({
         next: (resultado: any) => {

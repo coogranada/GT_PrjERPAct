@@ -1018,7 +1018,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       return;
     }
     try {
-      this.dataSeguros = JSON.parse(window.atob(seguro));
+      this.dataSeguros = StorageSecurity.getItem('seguro') || [];
     } catch (error) {
       console.error(error);
     }
@@ -1030,7 +1030,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       return;
     }
     try {
-      this.dataEstadosSeguro = JSON.parse(window.atob(seguro));
+      this.dataEstadosSeguro = StorageSecurity.getItem('seguro') || [];
     } catch (error) {
       console.error(error);
     }
@@ -1042,7 +1042,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       return;
     }
     try {
-      this.dataCargos = JSON.parse(window.atob(cargo));
+      this.dataCargos = StorageSecurity.getItem('cargo') || [];
     } catch (error) {
       console.error(error);
     }
@@ -1073,7 +1073,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       return;
     }
     try {
-      this.dataTipoEmpleo = JSON.parse(window.atob(empleo));
+      this.dataTipoEmpleo = StorageSecurity.getItem('empleo') || [];
     } catch (error) {
       console.error(error);
     }
@@ -1115,7 +1115,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       return;
     }
     try {
-      this.dataLetras = JSON.parse(window.atob(letras));
+      this.dataLetras = StorageSecurity.getItem('letras') || [];
     } catch (error) {
       console.error(error);
     }
@@ -1128,7 +1128,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       return;
     }
     try {
-      this.dataMarcas = JSON.parse(window.atob(marca));
+      this.dataMarcas = StorageSecurity.getItem('marca') || [];       
     } catch (error) {
       console.error(error);
       this.dataMarcas = [];
@@ -1141,7 +1141,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       return;
     }
     try {
-      this.dataConceptoAll = JSON.parse(window.atob(conceptos));
+      this.dataConceptoAll = StorageSecurity.getItem('conceptos') || []; 
     } catch (error) {
       console.error(error);
     }  
@@ -1166,7 +1166,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       return;
     }
     try {
-      this.dataProfesion = JSON.parse(window.atob(profesion));
+      this.dataProfesion = StorageSecurity.getItem('profesion') || []; 
     } catch (error) {
       console.error(error);
     }
@@ -1179,7 +1179,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       return;
     }
     try {
-      this.dataPeriodos = JSON.parse(window.atob(periodo));
+      this.dataPeriodos = StorageSecurity.getItem('periodo') || []; 
     } catch (error) {
       console.error(error);
     }
@@ -1192,7 +1192,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       return;
     }
     try {
-      this.dataParentescos = JSON.parse(window.atob(parentesco));
+      this.dataParentescos = StorageSecurity.getItem('parentesco') || [];
       if (this.dataParentescos?.length > 10) {
         this.dataParentescos.splice(10, 1);
       }
@@ -1279,7 +1279,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       return;
     }
     try {
-      this.dataOficinas = JSON.parse(window.atob(oficinas));
+      this.dataOficinas = StorageSecurity.getItem('oficinas') || [];
     } catch (error) {
       console.error(error);
     }
@@ -1510,7 +1510,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     const idModuloActivo = localStorage.getItem('IdModuloActivo');
     if (idModuloActivo) {
       try {
-        this.operacionesModel.idModulo = +JSON.parse(window.atob(idModuloActivo));
+        this.operacionesModel.idModulo = StorageSecurity.getItem('idModuloActivo') || [];
       } catch (error) {
          console.error('Error obteniendo IdModuloActivo:', error);
       }
@@ -2925,8 +2925,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           this.mostrarFemiliaresPeps = false;
           this.operacionesModel.idOperacion = results;
           this.operacionesModel.idPerfil = resultPerfil.idPerfilUsuario;
-          let IdModuloActivo : string | null = localStorage.getItem('IdModuloActivo');
-          this.operacionesModel.idModulo = +JSON.parse(window.atob(IdModuloActivo == null ? "" : IdModuloActivo));
+          this.operacionesModel.idModulo = StorageSecurity.getItem('IdModuloActivo') || [];  
           this.bloquearTodo();
           const strNumeroDocumento = this.basicosFrom.get('DocumentoBusqueda')?.value;
           if (strNumeroDocumento === '' || strNumeroDocumento === null || strNumeroDocumento === undefined) {
@@ -6311,8 +6310,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           this.basicosFrom.get('IdentificacionTutor')?.reset();
           this.basicosFrom.get('NombreTutor')?.reset();
           this.desbloquearFormBuscar();
-          let perfiles : string | null = localStorage.getItem('profiles');
-          const resultProfiles = JSON.parse(window.atob(perfiles == null ? "" : perfiles));
+          const resultProfiles = StorageSecurity.getItem('profiles');
           // se quito restriccion de oficina de administracion
             resultProfiles.forEach((element : any) => {
               if (element.IdPerfil === 68) {
@@ -9550,8 +9548,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     }
   }
   GetObservacionAll() {
-    let IdModuloActivo : string | null = localStorage.getItem('IdModuloActivo');
-    const modulo = JSON.parse(window.atob(IdModuloActivo == null ? "" : IdModuloActivo));
+    const modulo = StorageSecurity.getItem('IdModuloActivo') || [];
     this.clientesGetListService.GetObservacionAll(modulo).subscribe(
       result => {
         this.dataObservacion = result;
@@ -13209,9 +13206,10 @@ enviarWorkManager() {
           this.contactoModel.IdTercero = this.JuridicoEdit;
 
           this.contactoModelList.push(this.contactoModel);
-          let data : string | null = localStorage.getItem("Data");
-          var dataLocalStorage = JSON.parse(window.atob(data == null ? "" : data ))
-
+          const dataLocalStorage = StorageSecurity.getData();
+          if (!dataLocalStorage) {
+            return;
+          }
           const Usuario = dataLocalStorage.Usuario;
           const Oficina = dataLocalStorage.NumeroOficina;
           this.contactoModel.Usuario = Usuario;

@@ -424,13 +424,10 @@ export class CarteraTabComponent implements OnInit {
   const selec = Number($(".SelectedExtracto_Cartera").val());
 
   if (selec === 2) {
-
-    const data = localStorage.getItem("Data");
-
-    const dataLocalStorage = JSON.parse(
-      window.atob(data != null ? data : "")
-    );
-
+    const dataLocalStorage = StorageSecurity.getData();
+    if (!dataLocalStorage) {
+      return;
+    }
     const yearInicial =
       Number($(".yearInit_Cartera").val());
 
@@ -681,11 +678,10 @@ export class CarteraTabComponent implements OnInit {
 
     this.loading.show();
 
-    const data = localStorage.getItem("Data");
-
-    const dataLocalStorage = JSON.parse(
-      window.atob(data != null ? data : "")
-    );
+    const dataLocalStorage = StorageSecurity.getData();
+    if (!dataLocalStorage) {
+      return;
+    }
 
     const FechaInicio =
       yearInicial + "-" + MesInicial + "-1";
@@ -795,11 +791,10 @@ export class CarteraTabComponent implements OnInit {
 
         //#region Guarda log
 
-        const dataLog = localStorage.getItem("Data");
-
-        const dataLocalStorageLog = JSON.parse(
-          window.atob(dataLog != null ? dataLog : "")
-        );
+        const dataLocalStorageLog = StorageSecurity.getData();
+        if (!dataLocalStorageLog) {
+          return;
+        }
 
         const LogMisProductosData =
           new LogMisProductos();
@@ -870,8 +865,10 @@ export class CarteraTabComponent implements OnInit {
       var yearFinal = Number($(".yearEnd_Cartera").val());
       var MesInicial = Number($(".MesInit_Cartera").val());
       var MesFinal = Number($(".MesEnd_Cartera").val());
-      let data = localStorage.getItem("Data");
-      var dataLocalStorage = JSON.parse(window.atob(data != null ? data : ""));
+      const dataLocalStorage = StorageSecurity.getData();
+        if (!dataLocalStorage) {
+          return;
+        }      
       var Oficina = dataLocalStorage.Oficina;
       var FechaInicio = yearInicial + "-" + MesInicial + "-1";
 
@@ -882,8 +879,10 @@ export class CarteraTabComponent implements OnInit {
           this.Response(result);
 
           //#region Guarda log
-          let data = localStorage.getItem("Data");
-          var dataLocalStorage = JSON.parse(window.atob(data != null ? data : ""));
+          const dataLocalStorage = StorageSecurity.getData();
+          if (!dataLocalStorage) {
+            return;
+          }
           var LogMisProductosData = new LogMisProductos();
           var nuevoItem = new DatosProductos();
           LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
@@ -945,10 +944,10 @@ export class CarteraTabComponent implements OnInit {
     const mesFinal = Number(
       $(".MesEnd_Cartera").val()
     );
-    const data = localStorage.getItem("Data");
-    const dataLocalStorage = JSON.parse(
-      window.atob(data != null ? data : "")
-    );
+    const dataLocalStorage = StorageSecurity.getData();
+    if (!dataLocalStorage) {
+      return;
+    }
     const oficina = dataLocalStorage.Oficina;
     const fechaInicio =
       yearInicial + "-" + mesInicial + "-1";
@@ -1502,13 +1501,10 @@ export class CarteraTabComponent implements OnInit {
   );
 
   if (selecExtracto === 2) {
-
-    const data = localStorage.getItem("Data");
-
-    const dataLocalStorage = JSON.parse(
-      window.atob(data != null ? data : "")
-    );
-
+    const dataLocalStorage = StorageSecurity.getData();
+    if (!dataLocalStorage) {
+      return;
+    }
     const yearInicial =
       Number($(".yearInit_Cartera").val());
 
@@ -2137,8 +2133,10 @@ export class CarteraTabComponent implements OnInit {
 
 
     //#region Guarda log
-    let datas = localStorage.getItem("Data");
-    var dataLocalStorage = JSON.parse(window.atob(datas != null ? datas : ""));
+    const dataLocalStorage = StorageSecurity.getData();
+    if (!dataLocalStorage) {
+      return;
+    }
     var LogMisProductosData = new LogMisProductos();
     var nuevoItem = new DatosProductos();
     if (cuentahija == 1) {
@@ -3362,11 +3360,10 @@ export class CarteraTabComponent implements OnInit {
   this.inicioNoValida = false;
   this.finNoValida = false;
 
-  const data = localStorage.getItem("Data");
-
-  const dataLocalStorage = JSON.parse(
-    window.atob(data != null ? data : "")
-  );
+    const dataLocalStorage = StorageSecurity.getData();
+    if (!dataLocalStorage) {
+      return;
+    }
 
   //#region EXTRACTOS
 
@@ -3830,8 +3827,10 @@ export class CarteraTabComponent implements OnInit {
     )
 
         //#region Guarda log
-        let datas = localStorage.getItem("Data");
-        var dataLocalStorage = JSON.parse(window.atob(datas != null ? datas : ""));
+    const dataLocalStorage = StorageSecurity.getData();
+    if (!dataLocalStorage) {
+      return;
+    }
         var LogMisProductosData = new LogMisProductos();
         var nuevoItem = new DatosProductos();
         LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
@@ -3960,8 +3959,10 @@ export class CarteraTabComponent implements OnInit {
           ;
 
           //#region Guarda log
-          let data = localStorage.getItem("Data");
-          var dataLocalStorage = JSON.parse(window.atob(data != null ? data : ""));
+          const dataLocalStorage = StorageSecurity.getData();
+          if (!dataLocalStorage) {
+            return;
+          }
           var LogMisProductosData = new LogMisProductos();
           var nuevoItem = new DatosProductos();
           LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
@@ -4163,8 +4164,13 @@ export class CarteraTabComponent implements OnInit {
         this.ExtactoCarteraTD.get('FechaIniciocartera')?.setValue(FechaInicio);
         this.ExtactoCarteraTD.get('FechaFincartera')?.setValue(FechaFin);
         this.loading.show();
-        let datas = localStorage.getItem("Data");
-        var dataLocalStorage = JSON.parse(window.atob(datas != null ? datas : ""));
+
+        const dataLocalStorage = StorageSecurity.getData();
+
+        if (!dataLocalStorage) {
+          this.loading.hide();
+          return;
+        }
         var yearInicial = Number($(".yearInit_Cartera").val());
         var yearFinal = Number($(".yearEnd_Cartera").val());
         var MesInicial = Number($(".MesInit_Cartera").val());
@@ -4227,9 +4233,7 @@ export class CarteraTabComponent implements OnInit {
 
         $("#ExtractosCarteraTD").show();
 
-        //#region Guarda log
-        let data = localStorage.getItem("Data");
-        var dataLocalStorage = JSON.parse(window.atob(data != null ? data : ""));
+        //#region Guarda log        
         var LogMisProductosData = new LogMisProductos();
         var nuevoItem = new DatosProductos();
         LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
@@ -4306,8 +4310,10 @@ export class CarteraTabComponent implements OnInit {
 
 
         //#region Guarda log
-        let data = localStorage.getItem("Data");
-        var dataLocalStorage = JSON.parse(window.atob(data != null ? data : ""));
+        const dataLocalStorage = StorageSecurity.getData();
+        if (!dataLocalStorage) {
+          return;
+        }
         var LogMisProductosData = new LogMisProductos();
         var nuevoItem = new DatosProductos();
         LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
@@ -4328,8 +4334,10 @@ export class CarteraTabComponent implements OnInit {
         // #endregion
 
       } else if (Number(this.SelectionExtOrMov) == 3) {
-        let data = localStorage.getItem("Data");
-        var dataLocalStorage = JSON.parse(window.atob(data != null ? data : ""));
+        const dataLocalStorage = StorageSecurity.getData();
+        if (!dataLocalStorage) {
+          return;
+        }
         this.loading.show();
         this.MiListaProductosService.getDetalleTarjetaDebito(this.lngCuenta).subscribe(
           result => {

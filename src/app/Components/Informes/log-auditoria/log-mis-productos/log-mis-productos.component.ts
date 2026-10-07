@@ -7,6 +7,7 @@ import { ConfiguracionNotificacion } from '../../../../../environments/config.no
 import Swal from "sweetalert2";
 import moment from 'moment';
 import { LoadingService } from '../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../utils/storage-security.util';
 
 @Component({
   selector: 'app-log-mis-productos',
@@ -170,10 +171,11 @@ export class LogMisProductosComponent implements OnInit {
   InitCampos() {
     this.Campos = this.serviceLogs.GetCamposMisProductos();
   }
-  getOficinaOrAdmin()
-  {
-    let datas = localStorage.getItem("Data");
-    var resultDataStore = JSON.parse(window.atob(datas == null ? "" : datas));
+  getOficinaOrAdmin()  {
+    const resultDataStore = StorageSecurity.getData();
+    if (!resultDataStore) {
+      return;
+    }
     this.IdOficina = Number(resultDataStore.NumeroOficina);
     this.NombreOficina = resultDataStore.Oficina;
   }
