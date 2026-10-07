@@ -15,6 +15,7 @@ import { forkJoin, fromEvent, map } from 'rxjs';
 import { ConfiguracionNotificacion } from '../../../../../../environments/config.noticaciones';
 import Swal from 'sweetalert2';
 import { LoadingService } from '../../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../../utils/storage-security.util';
 
 @Component({
   selector: 'app-informe-personas-juridicas',
@@ -133,22 +134,32 @@ export class InformePersonasJuridicasComponent {
 
 
   getOperaciones() {
-    let datas = localStorage.getItem("Data")
-    var resultDataStore = JSON.parse(window.atob(datas == null ? "" : datas));
-    var arrayExample = [{
+    const resultDataStore = StorageSecurity.getData();
+    if (!resultDataStore) {
+      return;
+    }
+    const payload = {
       IdModulo: this.CodModulo,
       IdUsuario: resultDataStore.IdUsuario,
       IdPerfil: resultDataStore.UsuarioPerfil
-    }];
-
-    this.operacionesService.OperacionesPermitidas(JSON.stringify(arrayExample[0])).subscribe((result) => {
-      result.forEach((element: any) => {
-        this.Operaciones.push(element);
-      });
-      this.OpcionSelected = true;
-    }, (error) => {
-      this.notif.error("Error", error, ConfiguracionNotificacion.configRightTopNoClose);
-    });
+    };
+    this.operacionesService
+      .OperacionesPermitidas(JSON.stringify(payload))
+      .subscribe(
+        (result) => {
+          result.forEach((element: any) => {
+            this.Operaciones.push(element);
+          });
+          this.OpcionSelected = true;
+        },
+        (error) => {
+          this.notif.error(
+            "Error",
+            error,
+            ConfiguracionNotificacion.configRightTopNoClose
+          );
+        }
+      );
   }
 
   obtenerConfiguracionInformes() {
@@ -168,13 +179,16 @@ export class InformePersonasJuridicasComponent {
   }
 
   getOficina() {
-    let datas = localStorage.getItem("Data");
-    var resultDataStore = JSON.parse(window.atob(datas == null ? "" : datas));
+    const resultDataStore = StorageSecurity.getData();
+    if (!resultDataStore) {
+      return;
+    }
     this.idOficina = Number(resultDataStore.NumeroOficina);
     this.nombreOficina = resultDataStore.Oficina;
-    let profiles = localStorage.getItem("profiles");
-    var resultDataStoreP = JSON.parse(window.atob(profiles == null ? "" : profiles));
-    this.perfilesUsuario = resultDataStoreP;
+    const resultDataStoreP = StorageSecurity.getProfiles();
+    if (resultDataStoreP) {
+      this.perfilesUsuario = resultDataStoreP;
+    }
   }
 
   operacionBlur() {

@@ -1419,48 +1419,61 @@ export class MiListaProductosComponent implements OnInit {
 
   }
 
-  EstadoCuenta(Tercero : string) {
+  EstadoCuenta(Tercero: string) {
     this.loading.show();
-    let datas = localStorage.getItem("Data");
-    var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
-
-        this.MiListaProductosService.GetEstadoCuenta(this.validaEstadoCuenta,Tercero).subscribe(
-          result => {
-            if (result.EstadoCuenta.length !== 0) {
-              this.loading.hide();
-              this.infoTrue = result.validaInformacion;
-              if (this.infoTrue) {
-                // muestra modal
-                this.loading.show(); 
-                $("#BotonEstadoCuenta").click();
-                this.MiListaProductosService.GenerarPDFEstadoCuenta(
-                  this.validaEstadoCuenta, Tercero, dataLocalStorage.Oficina
-                ).subscribe(
+    const resultDataStore = StorageSecurity.getData();
+    if (!resultDataStore) {
+      this.loading.hide();
+      return;
+    }
+    this.MiListaProductosService
+      .GetEstadoCuenta(this.validaEstadoCuenta, Tercero)
+      .subscribe(
+        result => {
+          if (result.EstadoCuenta.length !== 0) {
+            this.loading.hide();
+            this.infoTrue = result.validaInformacion;
+            if (this.infoTrue) {
+              this.loading.show();
+              $("#BotonEstadoCuenta").click();
+              this.MiListaProductosService
+                .GenerarPDFEstadoCuenta(this.validaEstadoCuenta, Tercero, resultDataStore.Oficina)
+                .subscribe(
                   (result) => {
                     this.loading.hide();
                     const pdfinBase64 = result.FileStream._buffer;
                     this.linkPdf = pdfinBase64;
-                    const byteArray = new Uint8Array(atob(pdfinBase64).split("").map((char) => char.charCodeAt(0)));
-                    const newBolb = new Blob([byteArray], { type: "application/pdf" });
+                    const byteArray = new Uint8Array(
+                      atob(pdfinBase64)
+                        .split("")
+                        .map((char) => char.charCodeAt(0))
+                    );
+                    const newBolb = new Blob(
+                      [byteArray],
+                      { type: "application/pdf" }
+                    );
                     const url = window.URL.createObjectURL(newBolb);
-                    document.getElementById("EsatadoCuenta")?.setAttribute("data", url);
-                    document.getElementById("EsatadoCuenta")?.setAttribute("name", "movimiento");
+                    document.getElementById("EsatadoCuenta")
+                      ?.setAttribute("data", url);
+                    document.getElementById("EsatadoCuenta")
+                      ?.setAttribute("name", "movimiento");
                     //#region Guarda log
-                    let datas = localStorage.getItem("Data");
-                    var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
-                    var LogMisProductosData = new LogMisProductos();
-                    var nuevoItem = new DatosProductos();
-                    LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
-                    LogMisProductosData.IdModulo = 69;
-                    LogMisProductosData.IdOperacion = 87;
-                    LogMisProductosData.IdOpcion = 10; // Estado cuenta 
-                    LogMisProductosData.IdTercero = Tercero;
-                    LogMisProductosData.IdUsuarioERP = dataLocalStorage.IdUsuario;
+                    const logMisProductosData = new LogMisProductos();
+                    const nuevoItem = new DatosProductos();
+                    logMisProductosData.IdOficina =
+                      parseInt(resultDataStore.NumeroOficina);
+                    logMisProductosData.IdModulo = 69;
+                    logMisProductosData.IdOperacion = 87;
+                    logMisProductosData.IdOpcion = 10;
+                    logMisProductosData.IdTercero = Tercero;
+                    logMisProductosData.IdUsuarioERP =
+                      resultDataStore.IdUsuario;
                     nuevoItem.FechaInicial = "";
                     nuevoItem.FechaFinal = "";
-                    LogMisProductosData.DatosProductos = nuevoItem;
-                    this.setLogMisProductos(LogMisProductosData);
-                    // #endregion
+                    logMisProductosData.DatosProductos = nuevoItem;
+                    this.setLogMisProductos(logMisProductosData);
+
+                    //#endregion
 
                   },
                   (error) => {
@@ -1469,23 +1482,35 @@ export class MiListaProductosComponent implements OnInit {
                   }
                 );
 
-              } else {
-                this.loading.hide();
-                this.notif.onWarning('Advertencia', 'No se encontraron productos y/o saldos contables');
-              }
             } else {
+
               this.loading.hide();
-              this.notif.onWarning('Advertencia', 'No se encontraron productos y/o saldos contables');
+
+              this.notif.onWarning(
+                'Advertencia',
+                'No se encontraron productos y/o saldos contables'
+              );
             }
-          
-          },  
+
+          } else {
+            this.loading.hide();
+            this.notif.onWarning(
+              'Advertencia',
+              'No se encontraron productos y/o saldos contables'
+            );
+          }
+
+        },
         error => {
           this.loading.hide();
           const errorMessage = <any>error;
-          this.notif.onDanger("Error", errorMessage);
-        }
-    )   
+          this.notif.onDanger(
+            "Error",
+            errorMessage
+          );
 
+        }
+      );
   }
 
   setLogMisProductos(LogMisProductos_: LogMisProductos) {
@@ -1499,73 +1524,94 @@ export class MiListaProductosComponent implements OnInit {
     )
   }
 
-  AnalisisCuenta(Tercero : string) {
+  AnalisisCuenta(Tercero: string) {
     this.loading.show();
-    let datas = localStorage.getItem("Data");
-    var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
-
-          this.MiListaProductosService.GetAnalisisCuenta(this.validaEstadoCuenta,Tercero).subscribe(
-            result => {
-              if (result.AnalisisCuentaCartera.length !== 0) {
-                this.loading.hide();
-                this.infoTrue = result.validaInformacion;
-                if (this.infoTrue) {
-                  // muestra modal
-                  this.loading.show();
-                  $("#BotonEstadoCuenta").click();
-                  this.MiListaProductosService.GenerarPDFAnalisisCuenta(
-                    this.validaEstadoCuenta, Tercero, dataLocalStorage.Oficina
-                  ).subscribe(
-                    (result) => {
-                      this.loading.hide();
-                      const pdfinBase64 = result.FileStream._buffer;
-                      this.linkPdf = pdfinBase64;
-                      const byteArray = new Uint8Array(atob(pdfinBase64).split("").map((char) => char.charCodeAt(0)));
-                      const newBolb = new Blob([byteArray], { type: "application/pdf" });
-                      const url = window.URL.createObjectURL(newBolb);
-                      document.getElementById("EsatadoCuenta")?.setAttribute("data", url);
-                      document.getElementById("EsatadoCuenta")?.setAttribute("name", "movimiento");
-
-                      //#region Guarda log
-                      let datas = localStorage.getItem("Data");
-                     var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
-                      var LogMisProductosData = new LogMisProductos();
-                      var nuevoItem = new DatosProductos();
-                      LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
-                      LogMisProductosData.IdModulo = 69;
-                      LogMisProductosData.IdOperacion = 72;
-                      LogMisProductosData.IdOpcion = 11; // Analisis cuenta 
-                      LogMisProductosData.IdTercero = Tercero;
-                      LogMisProductosData.IdUsuarioERP = dataLocalStorage.IdUsuario;
-                      nuevoItem.FechaInicial = "";
-                      nuevoItem.FechaFinal = "";
-                      LogMisProductosData.DatosProductos = nuevoItem;
-                      this.setLogMisProductos(LogMisProductosData);
-                      // #endregion
-                    },
-                    (error) => {
-                      this.loading.hide();
-                      console.log(error);
-                    }
-                  );
-                } else {
-                  this.loading.hide();
-                  this.notif.onWarning('Advertencia', 'No se encontraron productos y/o saldos contables');
-                }  
-              } else {
-                this.loading.hide();
-                this.notif.onWarning('Advertencia', 'No se encontraron productos y/o saldos contables');
-
-              }
-                     
+    const dataLocalStorage = StorageSecurity.getData();
+    if (!dataLocalStorage) {
+      this.loading.hide();
+      return;
+    }
+    this.MiListaProductosService
+      .GetAnalisisCuenta(this.validaEstadoCuenta, Tercero)
+      .subscribe(
+        result => {
+          if (result.AnalisisCuentaCartera.length !== 0) {
+            this.loading.hide();
+            this.infoTrue = result.validaInformacion;
+            if (this.infoTrue) {
+              this.loading.show();
+              $("#BotonEstadoCuenta").click();
+              this.MiListaProductosService
+                .GenerarPDFAnalisisCuenta(
+                  this.validaEstadoCuenta,
+                  Tercero,
+                  dataLocalStorage.Oficina
+                )
+                .subscribe(
+                  (result) => {
+                    this.loading.hide();
+                    const pdfinBase64 = result.FileStream._buffer;
+                    this.linkPdf = pdfinBase64;
+                    const byteArray = new Uint8Array(
+                      atob(pdfinBase64)
+                        .split("")
+                        .map((char) => char.charCodeAt(0))
+                    );
+                    const newBlob = new Blob(
+                      [byteArray],
+                      { type: "application/pdf" }
+                    );
+                    const url = window.URL.createObjectURL(newBlob);
+                    document.getElementById("EsatadoCuenta")
+                      ?.setAttribute("data", url);
+                    document.getElementById("EsatadoCuenta")
+                      ?.setAttribute("name", "movimiento");
+                    //#region Guarda log
+                    const logMisProductosData = new LogMisProductos();
+                    const nuevoItem = new DatosProductos();
+                    logMisProductosData.IdOficina =
+                      parseInt(dataLocalStorage.NumeroOficina);
+                    logMisProductosData.IdModulo = 69;
+                    logMisProductosData.IdOperacion = 72;
+                    logMisProductosData.IdOpcion = 11;
+                    logMisProductosData.IdTercero = Tercero;
+                    logMisProductosData.IdUsuarioERP =
+                    dataLocalStorage.IdUsuario;
+                    nuevoItem.FechaInicial = "";
+                    nuevoItem.FechaFinal = "";
+                    logMisProductosData.DatosProductos = nuevoItem;
+                    this.setLogMisProductos(logMisProductosData);
+                    //#endregion
+                  },
+                  (error) => {
+                    this.loading.hide();
+                    console.log(error);
+                  }
+                );
+            } else {
+              this.loading.hide();
+              this.notif.onWarning(
+                'Advertencia',
+                'No se encontraron productos y/o saldos contables'
+              );
+            }
+          } else {
+            this.loading.hide();
+            this.notif.onWarning(
+              'Advertencia',
+              'No se encontraron productos y/o saldos contables'
+            );
+          }
         },
         error => {
           this.loading.hide();
           const errorMessage = <any>error;
-          this.notif.onDanger("Error", errorMessage);
+          this.notif.onDanger(
+            "Error",
+            errorMessage
+          );
         }
-    ) 
-
+      );
   }
 
   Response(value : any) {
@@ -1598,106 +1644,100 @@ export class MiListaProductosComponent implements OnInit {
   }
 
   SendEmail(): void {
-  this.loading.show();
-  const datas = localStorage.getItem("Data");
-  const dataLocalStorage = JSON.parse(
-    window.atob(datas == null ? "" : datas)  );
+    this.loading.show();
+    const dataLocalStorage = StorageSecurity.getData();
+    if (!dataLocalStorage) {
+      this.loading.hide();
+      return;
+    }
+    const tercero = Number(
+      $("#TerceroPrincipal").val()
+    );
+    let nombreEstadoCuenta = "";
+    let tipoReporte = "";
+    if (this.OpcionEstadoCuenta) {
+      nombreEstadoCuenta =
+        this.validaEstadoCuenta
+          ? "ESTADO GENERAL DE CUENTAS ACTIVAS"
+          : "ESTADO GENERAL DE CUENTAS CANCELADAS";
+      tipoReporte = "EC";
+    } else {
+      nombreEstadoCuenta =
+        this.validaEstadoCuenta
+          ? "ANÁLISIS DE CUENTAS ACTIVAS"
+          : "ANÁLISIS DE CUENTAS CANCELADAS";
+      tipoReporte = "AC";
+    }
+    this.MiListaProductosService
+      .sendMailCartera(
+        tercero,
+        "Coogranada",
+        dataLocalStorage.Oficina,
+        nombreEstadoCuenta,
+        tipoReporte,
+        null,
+        null,
+        null,
+        this.validaEstadoCuenta
+      )
+      .subscribe(
+        result => {
+          try {
+            this.Response(result);
+            //#region Guarda log
 
-  const tercero = Number(
-    $("#TerceroPrincipal").val()
-  );
-  let nombreEstadoCuenta = "";
-  let tipoReporte = "";
+            const logMisProductosData =
+              new LogMisProductos();
 
-  if (this.OpcionEstadoCuenta) {
+            const nuevoItem =
+              new DatosProductos();
 
-    nombreEstadoCuenta =
-      this.validaEstadoCuenta
-        ? "ESTADO GENERAL DE CUENTAS ACTIVAS"
-        : "ESTADO GENERAL DE CUENTAS CANCELADAS";
+            logMisProductosData.IdOficina =
+              parseInt(
+                dataLocalStorage.NumeroOficina
+              );
 
-    tipoReporte = "EC";
-
-  } else {
-
-    nombreEstadoCuenta =
-      this.validaEstadoCuenta
-        ? "ANÁLISIS DE CUENTAS ACTIVAS"
-        : "ANÁLISIS DE CUENTAS CANCELADAS";
-
-    tipoReporte = "AC";
-  }
-
-  this.MiListaProductosService
-    .sendMailCartera(
-      tercero,
-      "Coogranada",
-      dataLocalStorage.Oficina,
-      nombreEstadoCuenta,
-      tipoReporte,
-      null,
-      null,
-      null,
-      this.validaEstadoCuenta
-    )
-    .subscribe(
-      result => {
-        try {
-          this.Response(result);
-          //#region Guarda log
-          const logMisProductosData =
-            new LogMisProductos();
-
-          const nuevoItem =
-            new DatosProductos();
-
-          logMisProductosData.IdOficina =
-            parseInt(
-              dataLocalStorage.NumeroOficina
+            logMisProductosData.IdModulo = 69;
+            logMisProductosData.IdOperacion = 87;
+            logMisProductosData.IdOpcion = 12;
+            logMisProductosData.IdTercero = tercero;
+            logMisProductosData.IdUsuarioERP =
+              dataLocalStorage.IdUsuario;
+            nuevoItem.FechaInicial = "";
+            nuevoItem.FechaFinal = "";
+            logMisProductosData.DatosProductos =
+              nuevoItem;
+            this.setLogMisProductos(
+              logMisProductosData
             );
 
-          logMisProductosData.IdModulo = 69;
-          logMisProductosData.IdOperacion = 87;
-          logMisProductosData.IdOpcion = 12;
-          logMisProductosData.IdTercero = tercero;
-          logMisProductosData.IdUsuarioERP =
-            dataLocalStorage.IdUsuario;
+            //#endregion
 
-          nuevoItem.FechaInicial = "";
-          nuevoItem.FechaFinal = "";
+          } finally {
+            this.loading.hide();
+          }
 
-          logMisProductosData.DatosProductos =
-            nuevoItem;
-
-          this.setLogMisProductos(
-            logMisProductosData
-          );
-
-          //#endregion
-
-        } finally {
+        },
+        error => {
           this.loading.hide();
+          swal.fire({
+            title: "Error",
+            text: "",
+            html:
+              "Ha ocurrido un error enviando el email.",
+            icon: "error",
+            showCancelButton: false,
+            confirmButtonColor:
+              "rgb(13,165,80)",
+            cancelButtonColor:
+              "rgb(160,0,87)",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+          });
         }
-      },
-      error => {
-        this.loading.hide();
-        swal.fire({
-          title: "Error",
-          text: "",
-          html:
-            "Ha ocurrido un error enviando el email.",
-          icon: "error",
-          showCancelButton: false,
-          confirmButtonColor:
-            "rgb(13,165,80)",
-          cancelButtonColor:
-            "rgb(160,0,87)",
-          allowOutsideClick: false,
-          allowEscapeKey: false,
-        });
-      }
-    );
-}
+      );
+
+  }
 
 
   generarEXCEL(): void {

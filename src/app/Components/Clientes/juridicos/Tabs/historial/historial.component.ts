@@ -3,6 +3,7 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { JuridicosService } from '../../../../../Services/Clientes/Juridicos.service';
 import { DatePipe } from '@angular/common';
 import { AlertService } from '../../../../../Services/Alert/alert.service';
+import { StorageSecurity } from '../../../../../utils/storage-security.util';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -117,10 +118,10 @@ export class HistorialComponent implements OnInit {
   //#endregion
 
   //#region Metodos funcionales
-  CargarTrasabilidad() {
-    this.condicion = true;
-    localStorage.setItem('trasabilidad-juridico', window.btoa(JSON.stringify(this.nitConsultado)));
-  }
+ CargarTrasabilidad() {
+  this.condicion = true;
+  StorageSecurity.saveTrasabilidadJuridico(this.nitConsultado);
+}
   ResetTrasabilidad() {
     this.condicion = false;
   }

@@ -568,8 +568,11 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       } else {
         this.esReimpresion = false;
         if (operaSeleccionada === 2) { // Buscar
-          let state = localStorage.getItem('state');
-          this.infoJuridicoComponent.dataEstados = JSON.parse(window.atob(state == null ? "" : state));
+          const estados = StorageSecurity.getState();
+
+          if (estados) {
+            this.infoJuridicoComponent.dataEstados = estados;
+          }
           this.OpcionSeleccionada = '/Buscar';
 
           this.ProAprobacion = '0';
@@ -794,15 +797,27 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         if (results.value) {
           //Deja la operacion  como  estaba
           if (this.OperacionMarcada === '31') {
-            let state = localStorage.getItem('state');
-            this.infoJuridicoComponent.dataEstados = JSON.parse(window.atob(state == null ? "" : state));
-            this.infoJuridicoComponent.dataEstados.forEach((elementEstado : any) => {
-              if (elementEstado.IdEstado === this.ProAprobacion) {
-                this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.reset();
-                this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.setValue(elementEstado);
-                this.infoJuridicoComponent.AnteriorEstadoSeleccion = elementEstado;
+            const estados = StorageSecurity.getState();
+            if (!estados?.length) {
+              return;
+            }
+            this.infoJuridicoComponent.dataEstados = estados;
+            this.infoJuridicoComponent.dataEstados.forEach(
+              (elementEstado: any) => {
+                if (elementEstado.IdEstado === this.ProAprobacion) {
+                  this.infoJuridicoComponent.infoJuridicoFrom
+                    .get('Estado')
+                    ?.reset();
+                  this.infoJuridicoComponent.infoJuridicoFrom
+                    .get('Estado')
+                    ?.setValue(elementEstado);
+
+                  this.infoJuridicoComponent.AnteriorEstadoSeleccion =
+                    elementEstado;
+                }
+
               }
-            });
+            );
 
           } else if (this.OperacionMarcada === '20') {
             this.juridicosFrom.get('oficina')?.setValue(this.ProOficina);
@@ -927,16 +942,22 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         if (results.value) {
           //Deja la operacion  como  estaba
           if (this.OperacionMarcada === '31') {
-            let data = localStorage.getItem('state');
-            this.infoJuridicoComponent.dataEstados = JSON.parse(window.atob(data == null ? "" : data));
-            this.infoJuridicoComponent.dataEstados.forEach((elementEstado : any)=> {
+            const estados = StorageSecurity.getState();
+            if (!estados?.length) {
+              return;
+            }
+            estados.forEach((elementEstado: any) => {
               if (elementEstado.IdEstado === this.ProAprobacion) {
-                this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.reset();
-                this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.setValue(elementEstado);
-                this.infoJuridicoComponent.AnteriorEstadoSeleccion = elementEstado;
+                this.infoJuridicoComponent.infoJuridicoFrom
+                  .get('Estado')
+                  ?.reset();
+                this.infoJuridicoComponent.infoJuridicoFrom
+                  .get('Estado')
+                  ?.setValue(elementEstado);
+                this.infoJuridicoComponent.AnteriorEstadoSeleccion =
+                  elementEstado;
               }
             });
-
           } else if (this.OperacionMarcada === '20') {
             this.juridicosFrom.get('oficina')?.setValue(this.ProOficina);
           } else if (this.OperacionMarcada === '29') {
@@ -3052,9 +3073,12 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-              let state = localStorage.getItem('state');
-              this.infoJuridicoComponent.dataEstados = JSON.parse(window.atob(state == null ? "" : state));
-              this.infoJuridicoComponent.dataEstados.forEach((elementEstado : any) => {
+              const estados = StorageSecurity.getState();
+              if (!estados?.length) {
+                return;
+              }
+              this.infoJuridicoComponent.dataEstados = estados;
+              this.infoJuridicoComponent.dataEstados.forEach((elementEstado: any) => {
                 if (elementEstado.IdEstado === this.ProAprobacion) {
                   this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.reset();
                   this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.setValue(elementEstado);
@@ -3175,16 +3199,22 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-              let state = localStorage.getItem('state');
-              this.infoJuridicoComponent.dataEstados = JSON.parse(window.atob(state == null ? "" : state));
-              this.infoJuridicoComponent.dataEstados.forEach((elementEstado : any) => {
+              const estados = StorageSecurity.getState();
+              if (!estados?.length) {
+                return;
+              }
+              this.infoJuridicoComponent.dataEstados = estados;
+              this.infoJuridicoComponent.dataEstados.forEach((elementEstado: any) => {
                 if (elementEstado.IdEstado === this.ProAprobacion) {
-                  this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.reset();
-                  this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.setValue(elementEstado);
+                  this.infoJuridicoComponent.infoJuridicoFrom
+                    .get('Estado')
+                    ?.reset();
+                  this.infoJuridicoComponent.infoJuridicoFrom
+                    .get('Estado')
+                    ?.setValue(elementEstado);
                   this.infoJuridicoComponent.AnteriorEstadoSeleccion = elementEstado;
                 }
               });
-
             } else if (this.OperacionMarcada === '20') {
               this.juridicosFrom.get('oficina')?.setValue(this.ProOficina);
             } else if (this.OperacionMarcada === '29') {
@@ -3306,16 +3336,23 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-              let state = localStorage.getItem('state');
-              this.infoJuridicoComponent.dataEstados = JSON.parse(window.atob(state == null ? "" : state));
-              this.infoJuridicoComponent.dataEstados.forEach((elementEstado : any) => {
+              const estados = StorageSecurity.getState();
+              if (!estados?.length) {
+                return;
+              }
+              this.infoJuridicoComponent.dataEstados = estados;
+              this.infoJuridicoComponent.dataEstados.forEach((elementEstado: any) => {
                 if (elementEstado.IdEstado === this.ProAprobacion) {
-                  this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.reset();
-                  this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.setValue(elementEstado);
-                  this.infoJuridicoComponent.AnteriorEstadoSeleccion = elementEstado;
+                  this.infoJuridicoComponent.infoJuridicoFrom
+                    .get('Estado')
+                    ?.reset();
+                  this.infoJuridicoComponent.infoJuridicoFrom
+                    .get('Estado')
+                    ?.setValue(elementEstado);
+                  this.infoJuridicoComponent.AnteriorEstadoSeleccion =
+                    elementEstado;
                 }
               });
-
             } else if (this.OperacionMarcada === '20') {
               this.juridicosFrom.get('oficina')?.setValue(this.ProOficina);
             } else if (this.OperacionMarcada === '29') {
@@ -3431,8 +3468,11 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-              let state = localStorage.getItem('state');
-              this.infoJuridicoComponent.dataEstados = JSON.parse(window.atob(state == null ? "" : state));
+             const estados = StorageSecurity.getState();
+              if (!estados?.length) {
+                return;
+              }
+              this.infoJuridicoComponent.dataEstados = estados;
               this.infoJuridicoComponent.dataEstados.forEach((elementEstado : any) => {
                 if (elementEstado.IdEstado === this.ProAprobacion) {
                   this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.reset();
@@ -3549,8 +3589,11 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-              let state = localStorage.getItem('state');
-              this.infoJuridicoComponent.dataEstados = JSON.parse(window.atob(state == null ? "" : state));
+              const estados = StorageSecurity.getState();
+              if (!estados?.length) {
+                return;
+              }
+              this.infoJuridicoComponent.dataEstados = estados;
               this.infoJuridicoComponent.dataEstados.forEach((elementEstado : any) => {
                 if (elementEstado.IdEstado === this.ProAprobacion) {
                   this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.reset();
@@ -3667,9 +3710,12 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-              let state = localStorage.getItem('state');
-              this.infoJuridicoComponent.dataEstados = JSON.parse(window.atob(state == null ? ""  : state));
-              this.infoJuridicoComponent.dataEstados.forEach((elementEstado : any) => {
+            const estados = StorageSecurity.getState();
+              if (!estados?.length) {
+                return;
+              }
+              this.infoJuridicoComponent.dataEstados = estados;
+               this.infoJuridicoComponent.dataEstados.forEach((elementEstado : any) => {
                 if (elementEstado.IdEstado === this.ProAprobacion) {
                   this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.reset();
                   this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.setValue(elementEstado);
@@ -3783,9 +3829,12 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-              let state = localStorage.getItem('state');
-              this.infoJuridicoComponent.dataEstados = JSON.parse(window.atob(state == null ? "" : state));
-              this.infoJuridicoComponent.dataEstados.forEach((elementEstado : any) => {
+             const estados = StorageSecurity.getState();
+              if (!estados?.length) {
+                return;
+              }
+              this.infoJuridicoComponent.dataEstados = estados;
+               this.infoJuridicoComponent.dataEstados.forEach((elementEstado : any) => {
                 if (elementEstado.IdEstado === this.ProAprobacion) {
                   this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.reset();
                   this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.setValue(elementEstado);
@@ -3905,8 +3954,11 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-              let state = localStorage.getItem('state');
-              this.infoJuridicoComponent.dataEstados = JSON.parse(window.atob(state == null ? "" : state));
+              const estados = StorageSecurity.getState();
+              if (!estados?.length) {
+                return;
+              }
+              this.infoJuridicoComponent.dataEstados = estados;
               this.infoJuridicoComponent.dataEstados.forEach((elementEstado : any) => {
                 if (elementEstado.IdEstado === this.ProAprobacion) {
                   this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.reset();
@@ -4030,8 +4082,11 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-              let state = localStorage.getItem('state');
-              this.infoJuridicoComponent.dataEstados = JSON.parse(window.atob(state == null ? "" : state));
+             const estados = StorageSecurity.getState();
+              if (!estados?.length) {
+                return;
+              }
+              this.infoJuridicoComponent.dataEstados = estados;
               this.infoJuridicoComponent.dataEstados.forEach((elementEstado : any) => {
                 if (elementEstado.IdEstado === this.ProAprobacion) {
                   this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.reset();
@@ -4154,9 +4209,12 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-              let state = localStorage.getItem('state');
-              this.infoJuridicoComponent.dataEstados = JSON.parse(window.atob(state == null ? "" : state));
-              this.infoJuridicoComponent.dataEstados.forEach((elementEstado : any) => {
+            const estados = StorageSecurity.getState();
+              if (!estados?.length) {
+                return;
+              }
+              this.infoJuridicoComponent.dataEstados = estados;
+               this.infoJuridicoComponent.dataEstados.forEach((elementEstado : any) => {
                 if (elementEstado.IdEstado === this.ProAprobacion) {
                   this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.reset();
                   this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.setValue(elementEstado);
@@ -4285,8 +4343,11 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-              let state = localStorage.getItem('state');
-              this.infoJuridicoComponent.dataEstados = JSON.parse(window.atob(state == null ? "" : state));
+             const estados = StorageSecurity.getState();
+              if (!estados?.length) {
+                return;
+              }
+              this.infoJuridicoComponent.dataEstados = estados;
               this.infoJuridicoComponent.dataEstados.forEach((elementEstado : any) => {
                 if (elementEstado.IdEstado === this.ProAprobacion) {
                   this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.reset();
@@ -4416,8 +4477,11 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-              let state = localStorage.getItem('state');
-              this.infoJuridicoComponent.dataEstados = JSON.parse(window.atob(state == null ? "" : state));
+             const estados = StorageSecurity.getState();
+              if (!estados?.length) {
+                return;
+              }
+              this.infoJuridicoComponent.dataEstados = estados;
               this.infoJuridicoComponent.dataEstados.forEach((elementEstado : any) => {
                 if (elementEstado.IdEstado === this.ProAprobacion) {
                   this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.reset();
@@ -4547,8 +4611,11 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-              let state = localStorage.getItem('state');
-              this.infoJuridicoComponent.dataEstados = JSON.parse(window.atob(state == null ? "" : state));
+              const estados = StorageSecurity.getState();
+              if (!estados?.length) {
+                return;
+              }
+              this.infoJuridicoComponent.dataEstados = estados;
               this.infoJuridicoComponent.dataEstados.forEach((elementEstado : any) => {
                 if (elementEstado.IdEstado === this.ProAprobacion) {
                   this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.reset();
@@ -4678,8 +4745,11 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-              let state = localStorage.getItem('state');
-              this.infoJuridicoComponent.dataEstados = JSON.parse(window.atob(state == null ? "" : state));
+              const estados = StorageSecurity.getState();
+              if (!estados?.length) {
+                return;
+              }
+              this.infoJuridicoComponent.dataEstados = estados;
               this.infoJuridicoComponent.dataEstados.forEach((elementEstado : any) => {
                 if (elementEstado.IdEstado === this.ProAprobacion) {
                   this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.reset();
@@ -4809,8 +4879,11 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-              let state = localStorage.getItem('state');
-              this.infoJuridicoComponent.dataEstados = JSON.parse(window.atob(state == null ? "" : state));
+             const estados = StorageSecurity.getState();
+              if (!estados?.length) {
+                return;
+              }
+              this.infoJuridicoComponent.dataEstados = estados;
               this.infoJuridicoComponent.dataEstados.forEach((elementEstado : any) => {
                 if (elementEstado.IdEstado === this.ProAprobacion) {
                   this.infoJuridicoComponent.infoJuridicoFrom.get('Estado')?.reset();
@@ -5555,15 +5628,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
   }
 
   GetOficinas() {
-    // this.oficinasService.getOficinas().subscribe(
-    //   resultOfi => {
-        let ofi = localStorage.getItem('oficinas');
-        this.dataOficinas = JSON.parse(window.atob(ofi == null ? "" : ofi));
-      // },
-      // error => {
-      //   this.notif.onDanger('Error', error);
-      //   console.error(error);
-      // });
+    this.dataOficinas = StorageSecurity.getItem('oficinas') || [];   
   }
 
   GetPaises() {
@@ -6449,7 +6514,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
 
   consultarJuridicosNit(nit : string) {
     if (nit !== '' && nit !== undefined && nit !== null ) {
-      localStorage.setItem('trasabilidad-juridico', window.btoa(JSON.stringify(nit)));
+      StorageSecurity.saveTrasabilidadJuridico(nit);
        this.LimpiarFormularios();
        this.loading.show();
       this.juridicosService.BuscarJuridicosAll(nit, '*').subscribe(
@@ -6470,8 +6535,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
               this.ActivarAsteriscosEditar(result.BasicosDto.IdRelacion);
             } 
           } else {
-            this.notif.onWarning('Advertencia', 'No se encontró registro.');
-            this.loading.hide();
+            this.notif.onWarning('Advertencia', 'No se encontró registro.');            
             this.juridicosFrom.get('buscar')?.reset();
             this.juridicosFrom.get('nombre')?.reset();
             this.generalesService.Autofocus('BuscarDocumento');

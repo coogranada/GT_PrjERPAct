@@ -232,11 +232,10 @@ export class AportesTabComponent implements OnInit {
             const tercero = Number(
               $("#TerceroPrincipal").val()
             );
-            const data = localStorage.getItem("Data");
-            const dataLocalStorage = JSON.parse(
-              window.atob(data == null ? "" : data)
-            );
-
+            const dataLocalStorage = StorageSecurity.getData();
+              if (!dataLocalStorage) {
+                return;
+              }
             //#region Guarda log
 
             const logMisProductosData =
@@ -756,8 +755,10 @@ export class AportesTabComponent implements OnInit {
 
   DetalleAporte(data : any) {
     //#region Guarda log
-    let datas = localStorage.getItem("Data");
-    var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
+    const dataLocalStorage = StorageSecurity.getData();
+    if (!dataLocalStorage) {
+      return;
+    }
     var LogMisProductosData = new LogMisProductos();
     var nuevoItem = new DatosProductos();
     LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);

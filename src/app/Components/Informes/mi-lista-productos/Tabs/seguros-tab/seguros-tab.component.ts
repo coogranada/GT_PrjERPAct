@@ -9,6 +9,7 @@ import {
 import moment from 'moment';
 import swal from "sweetalert2";
 import { LoadingService } from "../../../../../Services/shared/loading.service";
+import { StorageSecurity } from "../../../../../utils/storage-security.util";
 
 const ColorPrimario = "rgb(13,165,80)";
 const ColorSecundario = "rgb(13,165,80,0.7)";
@@ -568,18 +569,13 @@ SendMailSeguros(): void {
             const tercero = Number(
               $("#TerceroPrincipal").val()
             );
-
-            const datas = localStorage.getItem("Data");
-
-            const dataLocalStorage = JSON.parse(
-              window.atob(datas == null ? "" : datas)
-            );
-
+            const dataLocalStorage = StorageSecurity.getData();
+            if (!dataLocalStorage) {
+              return;
+            }
             //#region Guarda log
-
             const logMisProductosData =
               new LogMisProductos();
-
             const nuevoItem =
               new DatosProductos();
 
@@ -657,10 +653,10 @@ SendMailSeguros(): void {
             const tercero = Number(
               $("#TerceroPrincipal").val()
             );
-            const datas = localStorage.getItem("Data");
-            const dataLocalStorage = JSON.parse(
-              window.atob(datas == null ? "" : datas)
-            );
+            const dataLocalStorage = StorageSecurity.getData();
+            if (!dataLocalStorage) {
+              return;
+            }
             //#region Guarda log
             const logMisProductosData =
               new LogMisProductos();
@@ -1113,8 +1109,10 @@ SendMailSeguros(): void {
       this.SelectErroneo = false;
 
       this.loading.show();
-      let datas = localStorage.getItem("Data");
-      var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
+      const dataLocalStorage = StorageSecurity.getData();
+      if (!dataLocalStorage) {
+        return;
+      }
       this.ExtactoSeguro.get("yearInit")?.setValue(yearInicial);
       this.ExtactoSeguro.get("yearEnd")?.setValue(yearFinal);
       this.ExtactoSeguro.get("MesInit")?.setValue(MesInicial);
@@ -1130,8 +1128,10 @@ SendMailSeguros(): void {
           this.MapearEncabezadoTabla(result, 1);
 
           //#region Guarda log
-          let datas = localStorage.getItem("Data");
-          var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
+          const dataLocalStorage = StorageSecurity.getData();
+          if (!dataLocalStorage) {
+            return;
+          }
           var LogMisProductosData = new LogMisProductos();
           var nuevoItem = new DatosProductos();
           LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
@@ -1201,8 +1201,10 @@ SendMailSeguros(): void {
       this.SelectErroneo = false;
 
       this.loading.show();
-      let datas = localStorage.getItem("Data");
-      var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
+      const dataLocalStorage = StorageSecurity.getData();
+      if (!dataLocalStorage) {
+        return;
+      }
       this.ExtactoSeguroVhi.get("yearInit")?.setValue(yearInicial);
       this.ExtactoSeguroVhi.get("yearEnd")?.setValue(yearFinal);
       this.ExtactoSeguroVhi.get("MesInit")?.setValue(MesInicial);
@@ -1217,8 +1219,10 @@ SendMailSeguros(): void {
           this.loading.hide();
           this.MapearEncabezadoTabla(result, 3);
           //#region Guarda log
-          let datas = localStorage.getItem("Data");
-          var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
+          const dataLocalStorage = StorageSecurity.getData();
+          if (!dataLocalStorage) {
+            return;
+          }
           var LogMisProductosData = new LogMisProductos();
           var nuevoItem = new DatosProductos();
           LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
@@ -1320,8 +1324,10 @@ SendMailSeguros(): void {
             this.MapearEncabezadoTabla(result, 1);
 
             //#region Guarda log
-            let datas = localStorage.getItem("Data");
-            var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
+            const dataLocalStorage = StorageSecurity.getData();
+            if (!dataLocalStorage) {
+              return;
+            }
             var LogMisProductosData = new LogMisProductos();
             var nuevoItem = new DatosProductos();
             LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
@@ -1358,8 +1364,10 @@ SendMailSeguros(): void {
             this.loading.hide();
             this.MapearEncabezadoTablaMov(result, 2);
             //#region Guarda log
-            let datas = localStorage.getItem("Data");
-            var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
+            const dataLocalStorage = StorageSecurity.getData();
+            if (!dataLocalStorage) {
+              return;
+            }
             var LogMisProductosData = new LogMisProductos();
             var nuevoItem = new DatosProductos();
             LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
@@ -1464,8 +1472,10 @@ SendMailSeguros(): void {
             this.loading.hide();
             this.MapearEncabezadoTabla(result, 3);
             //#region Guarda log
-            let datas = localStorage.getItem("Data");
-            var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
+            const dataLocalStorage = StorageSecurity.getData();
+            if (!dataLocalStorage) {
+              return;
+            }
             var LogMisProductosData = new LogMisProductos();
             var nuevoItem = new DatosProductos();
             LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
@@ -1502,8 +1512,10 @@ SendMailSeguros(): void {
             this.loading.hide();
             this.MapearEncabezadoTablaMov(result, 3);
             //#region Guarda log
-            let datas = localStorage.getItem("Data");
-          var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
+            const dataLocalStorage = StorageSecurity.getData();
+            if (!dataLocalStorage) {
+              return;
+            }
             var LogMisProductosData = new LogMisProductos();
             var nuevoItem = new DatosProductos();
             LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
@@ -2671,8 +2683,10 @@ SendMailSeguros(): void {
 
 
     //#region Guarda log
-    let datas = localStorage.getItem("Data");
-          var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
+    const dataLocalStorage = StorageSecurity.getData();
+    if (!dataLocalStorage) {
+      return;
+    }
     var LogMisProductosData = new LogMisProductos();
     var nuevoItem = new DatosProductos();
     LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
@@ -2836,8 +2850,10 @@ SendMailSeguros(): void {
     );
 
     //#region Guarda log
-    let datas = localStorage.getItem("Data");
-          var dataLocalStorage = JSON.parse(window.atob(datas == null ? "" : datas));
+    const dataLocalStorage = StorageSecurity.getData();
+    if (!dataLocalStorage) {
+      return;
+    }
     var LogMisProductosData = new LogMisProductos();
     var nuevoItem = new DatosProductos();
     LogMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);

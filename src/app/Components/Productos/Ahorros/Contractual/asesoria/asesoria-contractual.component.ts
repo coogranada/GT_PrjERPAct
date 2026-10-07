@@ -1646,30 +1646,50 @@ GuardarAsesoria(): void {
 
   this.confirmarSinAsesor();
 }
-private prepararDatosIniciales(): void {
-  const data = localStorage.getItem("Data");
-  const dataLocalStorage = JSON.parse(window.atob(data || ""));
-
-  this.asesoriacontractualFrom.patchValue({
-    IdRelacionTipo: this.datoRelacion,
-    IdUsuarioERP: dataLocalStorage.IdUsuario
-  });
-
-  const primerNombre = this.creacionFrom.get('PrimerNombre')?.value;
-
-  if (primerNombre) {
+  private prepararDatosIniciales(): void {
+    const dataLocalStorage = StorageSecurity.getData();
+    if (!dataLocalStorage) {
+      return;
+    }
     this.asesoriacontractualFrom.patchValue({
-      IdTipoDocumento: this.creacionFrom.get('TipoDocumento')?.value,
-      PrimerNombre: this.capitalize(primerNombre),
-      SegundoNombre: this.capitalize(this.creacionFrom.get('SegundoNombre')?.value),
-      PrimerApellido: this.capitalize(this.creacionFrom.get('PrimerApellido')?.value),
-      SegundoApellido: this.capitalize(this.creacionFrom.get('SegundoApellido')?.value),
-      TelefonoAsesoria: this.creacionFrom.get('TelefonoAsesoria')?.value
+      IdRelacionTipo: this.datoRelacion,
+      IdUsuarioERP: dataLocalStorage.IdUsuario
     });
-  }
+    const primerNombre =
+      this.creacionFrom.get('PrimerNombre')?.value;
+
+    if (primerNombre) {
+      this.asesoriacontractualFrom.patchValue({
+        IdTipoDocumento:
+          this.creacionFrom.get('TipoDocumento')?.value,
+
+        PrimerNombre:
+          this.capitalize(primerNombre),
+
+        SegundoNombre:
+          this.capitalize(
+            this.creacionFrom.get('SegundoNombre')?.value
+          ),
+
+        PrimerApellido:
+          this.capitalize(
+            this.creacionFrom.get('PrimerApellido')?.value
+          ),
+
+        SegundoApellido:
+          this.capitalize(
+            this.creacionFrom.get('SegundoApellido')?.value
+          ),
+
+        TelefonoAsesoria:
+          this.creacionFrom.get('TelefonoAsesoria')?.value
+      });
+
+    }
 
   this.aplicarReglaProducto207();
   this.limpiarCamposVacios();
+
 }
 private aplicarReglaProducto207(): void {
   if (this.asesoriacontractualFrom.get('IdProducto')?.value === 207) {

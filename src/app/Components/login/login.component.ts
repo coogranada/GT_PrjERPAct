@@ -178,7 +178,7 @@ export class LoginComponent implements OnInit {
         this.SessionUser.FechaInicioSesion = FechaFormat;
         this.loginService.PerfilesUsuario(this.dataUser.IdUsuario).subscribe(
           (perfil: any) => {
-            localStorage.setItem('profiles', window.btoa(JSON.stringify(perfil)));
+           StorageSecurity.saveItem('profiles', perfil);
             if (this.dataUser.IdEstado === 4) {
               Swal.fire({
                 title: 'Advertencia',

@@ -7,6 +7,7 @@ import { ConfiguracionNotificacion } from '../../../../../environments/config.no
 import Swal from "sweetalert2";
 import moment from 'moment';
 import { LoadingService } from '../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../utils/storage-security.util';
 import { ERP_MENSAJES, ERP_TOAST } from '../../../../Services/Generics/Validaciones.service';
 declare var $: any;
 @Component({
@@ -76,8 +77,10 @@ export class LogLogGeneralesComponent implements OnInit {
     this.Campos = this.serviceLogs.GetCampos();
   }
   getOficinaOrAdmin() {
-    let datas = localStorage.getItem("Data");
-    var resultDataStore = JSON.parse(window.atob(datas == null ? "" : datas));
+    const resultDataStore = StorageSecurity.getData();
+    if (!resultDataStore) {
+      return;
+    }
     this.IdOficina = Number(resultDataStore.NumeroOficina);
     this.NombreOficina = resultDataStore.Oficina;
   }

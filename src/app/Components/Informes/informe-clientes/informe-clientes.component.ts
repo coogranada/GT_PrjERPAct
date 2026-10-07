@@ -10,6 +10,7 @@ import { ClientesGetListService } from '../../../Services/Clientes/clientesGetLi
 import { ToastrService } from 'ngx-toastr';
 import { InformePersonasNaturalesComponent } from './informe-personas-naturales/informe-personas-naturales/informe-personas-naturales.component';
 import { InformePersonasJuridicasComponent } from './informe-personas-juridicas/informe-personas-juridicas/informe-personas-juridicas.component';
+import { StorageSecurity } from '../../../utils/storage-security.util';
 
 declare var $: any;
 @Component({
@@ -53,27 +54,47 @@ export class InformeClientesComponent implements OnInit {
     $('#select').focus().select();
     this.IrArriba();
   }
-  GetOperaciones() {
-    let datas = localStorage.getItem("Data")
-    var resultDataStore = JSON.parse(window.atob(datas == null ? "" : datas));
-    var arrayExample = [{
-        IdModulo:  this.CodModulo,
-        IdUsuario: resultDataStore.IdUsuario,
-        IdPerfil: resultDataStore.UsuarioPerfil
-      }];
 
-    this.operacionesService.OperacionesPermitidas(JSON.stringify(arrayExample[0])).subscribe((result) =>
-    {
-      result.forEach((element : any) => {
-        if (element.IdOperaciones == 88) // Informe naturales
-          this.Operaciones.push(element);
-        if (element.IdOperaciones == 89)  // Informe Juridicos
-          this.Operaciones.push(element);
-        });
-      this.OpcionSelected = true;
-    },(error) => {
-      this.notif.error( "Error", error, ConfiguracionNotificacion.configRightTopNoClose );
-    });
+  GetOperaciones() {
+    const resultDataStore = StorageSecurity.getData();
+    if (!resultDataStore) {
+      return;
+    }
+
+    const payload = {
+      IdModulo: this.CodModulo,
+      IdUsuario: resultDataStore.IdUsuario,
+      IdPerfil: resultDataStore.UsuarioPerfil
+    };
+
+    this.operacionesService
+      .OperacionesPermitidas(JSON.stringify(payload))
+      .subscribe(
+        (result) => {
+
+          result.forEach((element: any) => {
+
+            if (
+              element.IdOperaciones === 88 || // Informe Naturales
+              element.IdOperaciones === 89    // Informe Jurídicos
+            ) {
+              this.Operaciones.push(element);
+            }
+
+          });
+
+          this.OpcionSelected = true;
+
+        },
+        (error) => {
+          this.notif.error(
+            'Error',
+            error,
+            ConfiguracionNotificacion.configRightTopNoClose
+          );
+        }
+      );
+
   }
 
   onChange(event : Event){

@@ -7,6 +7,7 @@ import { ConfiguracionNotificacion } from '../../../../../environments/config.no
 import Swal from "sweetalert2";
 import moment from 'moment';
 import { LoadingService } from '../../../../Services/shared/loading.service';
+import { StorageSecurity } from '../../../../utils/storage-security.util';
 import { ERP_MENSAJES, ERP_TOAST } from '../../../../Services/Generics/Validaciones.service';
 
 @Component({
@@ -104,10 +105,11 @@ export class LogAutenticacionErpComponent implements OnInit {
     if (this.IdOficina != 3) 
       this.AddFiltro(3, this.IdOficina,"Oficina", this.NombreOficina,"", "Es Igual");
   }
-  getOficinaOrAdmin()
-  {
-    let datas = localStorage.getItem("Data");
-    var resultDataStore = JSON.parse(window.atob(datas == null ? "" : datas));
+  getOficinaOrAdmin() {
+    const resultDataStore = StorageSecurity.getData();
+    if (!resultDataStore) {
+      return;
+    }
     this.IdOficina = Number(resultDataStore.NumeroOficina);
     this.NombreOficina = resultDataStore.Oficina;
   }

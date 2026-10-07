@@ -110,8 +110,10 @@ export class LogGestionCarteraComponent {
   }
 
   getOficina() {
-    let datas = localStorage.getItem("Data");
-    var resultDataStore = JSON.parse(window.atob(datas == null ? "" : datas));
+    const resultDataStore = StorageSecurity.getData();
+    if (!resultDataStore) {
+      return;
+    }
     this.idOficina = Number(resultDataStore.NumeroOficina);
     this.nombreOficina = resultDataStore.Oficina;
   }

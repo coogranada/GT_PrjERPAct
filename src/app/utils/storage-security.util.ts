@@ -11,7 +11,7 @@ export class StorageSecurity {
       this.SECRET
     ).toString();
 
-  }
+  } 
 
   static decrypt(value: string): any {
 
@@ -75,4 +75,41 @@ export class StorageSecurity {
     const value = localStorage.getItem(key);
     return this.decrypt(value || '');
   }
+
+  static saveProfiles(data: any): void {
+    localStorage.setItem(
+      'profiles',
+      this.encrypt(data)
+    );
+  }
+
+  static getProfiles(): any {
+    const value = localStorage.getItem('profiles');
+    return this.decrypt(value || '');
+  }
+
+  static saveState(data: any): void {
+    localStorage.setItem(
+      'state',
+      this.encrypt(data)
+    );
+  }
+
+  static getState(): any {
+    const value = localStorage.getItem('state');
+    return this.decrypt(value || '');
+  }
+
+  static saveTrasabilidadJuridico(data: any): void {
+    localStorage.setItem(
+      'trasabilidad-juridico',
+      this.encrypt(data)
+    );
+  }
+
+  static getTrasabilidadJuridico(): any {
+    const value = localStorage.getItem('trasabilidad-juridico');
+    return this.decrypt(value || '');
+  }
+  
 }
