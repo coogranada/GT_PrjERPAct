@@ -18,6 +18,10 @@ import { ERP_MENSAJES, ERP_TOAST } from '../../../../Services/Generics/Validacio
   standalone : false
 })
 export class LogMisProductosComponent implements OnInit {
+  cuentaOficina: string = '';
+  cuentaProducto: string = '';
+  cuentaConsecutivo: string = '';
+  cuentaDigito: string = '';
   Campos: Campo[] = [];
   Filtros: Filtro[] = [];
   filtrosAgregado: Filtro[] = [];
@@ -337,8 +341,39 @@ export class LogMisProductosComponent implements OnInit {
       );
     
     }
-    else if (s == 13)
-      this.validarSplit(this.TituloGenerico);
+    // else if (s == 13)
+      // this.validarSplit(this.TituloGenerico);
+    else if (s == 13) {
+    
+      if (
+        !this.cuentaOficina ||
+        !this.cuentaProducto ||
+        !this.cuentaConsecutivo ||
+        !this.cuentaDigito
+      ) {
+        return;
+      }
+    
+      const cuentaVisual =
+        this.cuentaOficina.padStart(3, '0') + '-' +
+        this.cuentaProducto.padStart(3, '0') + '-' +
+        this.cuentaConsecutivo.padStart(7, '0') + '-' +
+        this.cuentaDigito;
+    
+      this.AddFiltro(
+        13,
+        0,
+        this.TituloGenerico,
+        cuentaVisual,
+        '',
+        'Es Igual'
+      );
+    
+      this.cuentaOficina = '';
+      this.cuentaProducto = '';
+      this.cuentaConsecutivo = '';
+      this.cuentaDigito = '';
+    }
     else if (s == 14)
       this.AddFiltro(this.filtroSelect, 0, this.TituloGenerico, this.strInput, "", "Es Igual");
     
@@ -507,5 +542,45 @@ export class LogMisProductosComponent implements OnInit {
         );
       }
     );
+  }
+
+  soloNumeros(event: KeyboardEvent): boolean {
+    const tecla = event.key;
+
+    if (!/^\d$/.test(tecla)) {
+      event.preventDefault();
+      return false;
+    }
+
+    return true;
+  }  
+
+  pegarCuenta(event: ClipboardEvent) {
+    const texto = (event.clipboardData?.getData('text') ?? '').trim();
+
+    if (!texto.includes('-')) {
+      return;
+    }
+
+    const partes = texto.split('-');
+
+    if (partes.length !== 4) {
+      event.preventDefault();
+
+      this.notif.warning(
+        'Advertencia',
+        'La cuenta debe tener el formato 000-000-0000000-0.',
+        ConfiguracionNotificacion.configRightTop
+      );
+
+      return;
+    }
+
+    event.preventDefault();
+
+    this.cuentaOficina = partes[0];
+    this.cuentaProducto = partes[1];
+    this.cuentaConsecutivo = partes[2];
+    this.cuentaDigito = partes[3];
   }
 }

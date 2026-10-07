@@ -67,7 +67,46 @@
                                                     <span class="help-block validationSpan" *ngIf="!(strInput.length >= 4) && filtroSelect == 12 && validBlur" >
                                                     {{alertGenerico}}
                                                     </span>
-                                                    <input type="text" class="form-control" [(ngModel)]="strInput" (blur)="SelectBlur()" *ngIf="filtroSelect != 12"/>
+                                                    <div class="row" *ngIf="filtroSelect == 13">
+                                                    
+                                                      <div class="col-md-3">
+                                                        <input
+                                                          type="text"
+                                                          class="form-control"
+                                                          [(ngModel)]="cuentaOficina"
+                                                          maxlength="3"
+                                                          (keypress)="soloNumeros($event)"
+                                                          (paste)="pegarCuenta($event)">
+                                                      </div>
+                                                  
+                                                      <div class="col-md-3">
+                                                        <input
+                                                          type="text"
+                                                          class="form-control"
+                                                          [(ngModel)]="cuentaProducto"
+                                                          maxlength="3"
+                                                          (keypress)="soloNumeros($event)">
+                                                      </div>
+                                                  
+                                                      <div class="col-md-3">
+                                                        <input
+                                                          type="text"
+                                                          class="form-control"
+                                                          [(ngModel)]="cuentaConsecutivo"
+                                                          maxlength="7"
+                                                          (keypress)="soloNumeros($event)">
+                                                      </div>
+                                                  
+                                                      <div class="col-md-3">
+                                                        <input
+                                                          type="text"
+                                                          class="form-control"
+                                                          [(ngModel)]="cuentaDigito"
+                                                          maxlength="1"
+                                                          (keypress)="soloNumeros($event)">
+                                                      </div>
+                                                  
+                                                    </div>                                                    
                                                     <span class="help-block validationSpan" *ngIf="filtroSelect != 12 && validBlur">
                                                     {{alertGenerico}}
                                                     </span>
