@@ -1514,6 +1514,7 @@ export class GestionCarteraComponent {
   }
 
   private construirDtoInsolvencia(): CrearInsolvencia {
+    const dataUser = StorageSecurity.getData() || {};
     return {
       idCuenta: Number( this.gestionCreditoForm.get('IdCuenta')?.value ),
       oficina: Number( this.gestionCreditoForm.get('IdOficinaCuenta')?.value ),
@@ -1522,8 +1523,8 @@ export class GestionCarteraComponent {
       estadoActual: Number( this.gestionCreditoForm.get('IdEstadoCuenta')?.value ),
       formaPago: Number( this.gestionCreditoForm.get('IdFormaPago')?.value ),
       motivo: Number( this.insolvenciaForm.get('IdCausal')?.value ),
-      tipoInstancia: Number( this.insolvenciaForm.get('IdInstancia')?.value ),
-      usuario: this.dataUser.IdUsuario,
+      tipoInstancia: Number( this.insolvenciaForm.get('IdInstancia')?.value ),      
+      usuario: dataUser.IdUsuario,
       edoTaquilla: 0,
       tipoSeguimiento: Number( this.insolvenciaForm.get('IdTipoSeguimiento')?.value ),
       fechaEvento: this.obtenerFechaEvento(),
@@ -2207,8 +2208,9 @@ export class GestionCarteraComponent {
       IdConsecutivo,
       IdDigito
     } = this.gestionCreditoForm.value;
-
-    const usuario = this.dataUser?.IdUsuario;
+    
+    const dataUser = StorageSecurity.getData() || {};
+    const usuario = dataUser?.IdUsuario;
 
     const dto: CambiarGarantiasRequestDto = {
       oficina: IdOficinaCuenta,
@@ -2407,6 +2409,7 @@ export class GestionCarteraComponent {
   }
 
   private construirDtoCambioCalificacion(form: any): CambiarCalificacionDto {
+    const dataUser = StorageSecurity.getData() || {};
     return {
       idCuenta: Number(this.gestionCreditoForm.get('IdCuenta')?.value),
       cumplimiento: form.Cumplimiento,
@@ -2414,7 +2417,7 @@ export class GestionCarteraComponent {
       reestructurado: form.Reestructurado,
       cualitativa: form.Cualitativa,
       causal: Number(form.IdCausal),
-      usuario: this.dataUser.IdUsuario
+      usuario: dataUser.IdUsuario
     };
   }
 
@@ -2949,6 +2952,7 @@ export class GestionCarteraComponent {
   }
 
   actualizarFormaPago() {
+    const dataUser = StorageSecurity.getData() || {};
     const formaPagoNueva = Number(this.gestionCreditoForm.get('IdFormaPago')?.value);
     const formaPagoActual = Number(this.formaPagoActual);
     
@@ -2972,8 +2976,8 @@ export class GestionCarteraComponent {
       formaPagoActual,
       formaPagoNueva,
     
-      usuario: this.dataUser.IdUsuario,
-      autoriza: this.dataUser.IdUsuario,
+      usuario: dataUser.IdUsuario,
+      autoriza: dataUser.IdUsuario,
       novedad: 0,
     
       ...debitoParams
@@ -3150,18 +3154,17 @@ export class GestionCarteraComponent {
   }
 
   confirmarManejoSeguro(estaSinCobertura: boolean): void {
-
+    const dataUser = StorageSecurity.getData() || {};
     const valorAnterior = estaSinCobertura ? 1 : 0;
     const valorActual   = estaSinCobertura ? 0 : 1;
-
     const dto: ManejarSeguroCreditoDto = {
       oficina: this.gestionCreditoForm.get('IdOficinaCuenta')?.value,
       producto: this.gestionCreditoForm.get('IdProductoCuenta')?.value,
       consecutivo: this.gestionCreditoForm.get('IdConsecutivo')?.value,
       digito: this.gestionCreditoForm.get('IdDigito')?.value,
       manejaSeguro: valorActual,
-      usuario: this.dataUser.IdUsuario,
-      autoriza: this.dataUser.IdUsuario,
+      usuario: dataUser.IdUsuario,
+      autoriza: dataUser.IdUsuario,
       novedad: 212
     };
 
@@ -3738,6 +3741,7 @@ export class GestionCarteraComponent {
   } 
   
   actualizarPagare() {
+    const dataUser = StorageSecurity.getData() || {};
     const nuevoPagare = this.gestionCreditoForm.get('pagare')?.value;
     let nuevoTipoPagareId = this.gestionCreditoForm.get('TipoPagare')?.value;
   
@@ -3756,8 +3760,8 @@ export class GestionCarteraComponent {
       Consecutivo: this.gestionCreditoForm.get('IdConsecutivo')?.value,
       Digito: this.gestionCreditoForm.get('IdDigito')?.value,
       NuevoPagare: nuevoPagare,
-      Usuario: this.dataUser.IdUsuario,
-      Autoriza: this.dataUser.IdUsuario,
+      Usuario: dataUser.IdUsuario,
+      Autoriza: dataUser.IdUsuario,
       Novedad: 61,
       TipoPagare: Number(nuevoTipoPagareId)
     };
