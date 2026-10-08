@@ -11,8 +11,8 @@ import { InformeLogService } from '../../../../../Services/Informes/informe-log.
 import Swal from 'sweetalert2';
 import { OperacionesService } from '../../../../../Services/Maestros/operaciones.service';
 import { CuentaService } from '../../../../../Services/Generics/resultado-cuenta.service';
-import { ERP_MENSAJES, ERP_TOAST } from '../../../../../Services/Generics/Validaciones.service';
 import { StorageSecurity } from '../../../../../utils/storage-security.util';
+import { ERP_MESSAGES, ERP_REGEX, ERP_TOAST } from '../../../../../utils/constant';
 
 @Component({
   selector: 'app-log-gestion-cartera',
@@ -96,11 +96,11 @@ export class LogGestionCarteraComponent {
       ],
       '@IdOficina': [0],
       '@Usuario': [''],
-      // '@Cuenta': [''],
-      '@IdOficinaCuenta': ['', Validators.pattern(/^[0-9]*$/)],
-      '@IdProductoCuenta': ['', Validators.pattern(/^[0-9]*$/)],
-      '@IdConsecutivo': ['', Validators.pattern(/^[0-9]*$/)],
-      '@IdDigito': ['', Validators.pattern(/^[0-9]*$/)],      '@Operacion': ['']
+      '@IdOficinaCuenta': ['', Validators.pattern(ERP_REGEX.NUMERO)],
+      '@IdProductoCuenta': ['', Validators.pattern(ERP_REGEX.NUMERO)],
+      '@IdConsecutivo': ['', Validators.pattern(ERP_REGEX.NUMERO)],
+      '@IdDigito': ['', Validators.pattern(ERP_REGEX.NUMERO)],      
+      '@Operacion': ['']
     },
     {
       validators: this.validarRangoFechas()
@@ -132,14 +132,14 @@ export class LogGestionCarteraComponent {
   ejecutarSP(origen: boolean) {
 
     if (this.formulario.invalid) {
-      this.notif.onWarning('Advertencia', 'Debe diligenciar los campos obligatorios.');
+      this.notif.onWarning(ERP_TOAST.WARNING, 'Debe diligenciar los campos obligatorios.');
       return;
     }
 
     const columnasSeleccionadas = this.ListfilteredColumnasInf.filter(x => x.selected);
 
     if (columnasSeleccionadas.length === 0) {
-      this.notif.onWarning('Advertencia', 'Debe seleccionar al menos un campo para generar el informe.'
+      this.notif.onWarning(ERP_TOAST.WARNING, 'Debe seleccionar al menos un campo para generar el informe.'
       );
       return;
     }
@@ -161,7 +161,7 @@ export class LogGestionCarteraComponent {
           this.ocultarModalProgreso();
 
           if (!respuesta || respuesta.length === 0) {
-            this.notif.onWarning('Advertencia', 'No se encontraron datos para mostrar, verifique los filtros.');
+            this.notif.onWarning(ERP_TOAST.WARNING, 'No se encontraron datos para mostrar, verifique los filtros.');
             return;
           }
 
@@ -199,7 +199,7 @@ export class LogGestionCarteraComponent {
         error: (error) => {
           this.ocultarModalProgreso();
 
-          let mensaje = 'Ha ocurrido un error inesperado.';
+          let mensaje = ERP_MESSAGES.ERROR_INESPERADO;
 
           try {
             if (error && error.Mensaje) {
@@ -208,7 +208,7 @@ export class LogGestionCarteraComponent {
           } catch (e) {
             console.error('Error al obtener el mensaje:', e);
           }
-          this.notif.onWarning('Advertencia',mensaje,);
+          this.notif.onWarning(ERP_TOAST.WARNING,mensaje,);
         }
       });
   }
@@ -240,8 +240,8 @@ export class LogGestionCarteraComponent {
 
     if (Cant === 0) {
       this.notif.onWarning(
-        'Advertencia',
-        'No se encontró registro.'
+        ERP_TOAST.WARNING,
+        ERP_MESSAGES.REGISTRO_NO_ENCONTRADO
       );
       return;
     }
@@ -305,7 +305,7 @@ export class LogGestionCarteraComponent {
           this.ListfilteredColumnasInf = [...this.ListColumnasInf];
         },
         error: () => {
-          this.notif.onWarning('Advertencia', 'Error al cargar columnas.');
+          this.notif.onWarning(ERP_TOAST.WARNING, 'Error al cargar columnas.');
         }
       });
   }
@@ -354,8 +354,8 @@ export class LogGestionCarteraComponent {
     if (existe) {
     
       this.notif.onWarning(
-        ERP_TOAST.TITULO_ADVERTENCIA,
-        ERP_MENSAJES.FILTRO_DUPLICADO
+        ERP_TOAST.WARNING,
+        ERP_MESSAGES.FILTRO_DUPLICADO
       );
     
       setTimeout(() => {
@@ -439,7 +439,7 @@ export class LogGestionCarteraComponent {
         .replace(/[\r\n\t]/g, '').trim();
     
       if (!cuenta) {
-        this.notif.onWarning('Advertencia', 'Debe ingresar una cuenta.');
+        this.notif.onWarning(ERP_TOAST.WARNING, 'Debe ingresar una cuenta.');
         return;
       }
     
@@ -447,8 +447,8 @@ export class LogGestionCarteraComponent {
     
       if (partes.length !== 4) {
         this.notif.onWarning(
-          'Advertencia',
-          'La cuenta debe tener el formato 000-000-0000000-0.'
+          ERP_TOAST.WARNING,
+          ERP_MESSAGES.FORMATO_CUENTA_INVALIDO
         );
         return;
       }
@@ -457,8 +457,8 @@ export class LogGestionCarteraComponent {
     
       if (!formatoCuenta.test(cuenta)) {
         this.notif.onWarning(
-          'Advertencia',
-          'La cuenta debe tener el formato 000-000-0000000-0.'
+          ERP_TOAST.WARNING,
+          ERP_MESSAGES.FORMATO_CUENTA_INVALIDO
         );
         return;
       }
@@ -483,7 +483,7 @@ export class LogGestionCarteraComponent {
             this.loading.hide();
           
             if (!existe) {
-              this.notif.onWarning('Advertencia','No se encontró registro.');
+              this.notif.onWarning(ERP_TOAST.WARNING,ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
               return;
             }
           
@@ -507,7 +507,7 @@ export class LogGestionCarteraComponent {
           },
           error: () => {
             this.loading.hide();
-            this.notif.onWarning('Advertencia','Error al validar la cuenta.');
+            this.notif.onWarning(ERP_TOAST.WARNING,'Error al validar la cuenta.');
           }
         });
       
@@ -617,12 +617,12 @@ export class LogGestionCarteraComponent {
     this.formulario.get('@Usuario')?.setValue(usuario);
   
     if (!usuario) {
-      this.notif.onWarning('Advertencia', 'Debe ingresar un usuario.');
+      this.notif.onWarning(ERP_TOAST.WARNING, 'Debe ingresar un usuario.');
       return;
     }
 
     if (!/^[A-Za-z]+$/.test(usuario)) {
-      this.notif.onWarning('Advertencia', 'El usuario solo acepta letras.');
+      this.notif.onWarning(ERP_TOAST.WARNING, 'El usuario solo acepta letras.');
       return;
     }
 
@@ -646,7 +646,7 @@ export class LogGestionCarteraComponent {
             this.limpiarSelected();
           } else {
             this.notif.onWarning(
-              'Advertencia',
+              ERP_TOAST.WARNING,
               'El usuario no existe en el sistema, valide el valor ingresado.'
             );
           }
@@ -654,7 +654,7 @@ export class LogGestionCarteraComponent {
         },
         err => {
           this.loading.hide();
-          this.notif.onWarning('Advertencia','Error al validar el usuario.');
+          this.notif.onWarning(ERP_TOAST.WARNING,'Error al validar el usuario.');
         }
       );
   }
@@ -743,7 +743,7 @@ export class LogGestionCarteraComponent {
       ).subscribe({
         next: (existe) => {
           if (!existe) {
-            this.notif.onWarning('Advertencia', 'No se encontró registro.');
+            this.notif.onWarning(ERP_TOAST.WARNING, ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
           }
         }
       });
@@ -761,8 +761,8 @@ export class LogGestionCarteraComponent {
     if (!cuenta) {
       event.preventDefault();
       this.notif.onWarning(
-        'Advertencia',
-        'La cuenta debe tener el formato 000-000-0000000-0.'
+        ERP_TOAST.WARNING,
+        ERP_MESSAGES.FORMATO_CUENTA_INVALIDO
       );
       return;
     }
@@ -809,7 +809,7 @@ export class LogGestionCarteraComponent {
       },
       err => {
         this.loading.hide();
-        this.notif.onWarning('Advertencia', 'Error al cargar usuarios.');
+        this.notif.onWarning(ERP_TOAST.WARNING, 'Error al cargar usuarios.');
       }
     );
   }

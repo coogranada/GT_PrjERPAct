@@ -40,6 +40,7 @@ import { MiListaProductosService } from '../../../Services/Informes/mi-lista-pro
 import { Estados } from '../../../../environments/Estados';
 import { LoadingService } from '../../../Services/shared/loading.service';
 import { StorageSecurity } from '../../../utils/storage-security.util';
+import { ERP_MESSAGES } from '../../../utils/constant';
 
 declare var $: any;
 const PrimaryWhite = 'rgb(13,165,80)';
@@ -6534,7 +6535,8 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
               this.ActivarAsteriscosEditar(result.BasicosDto.IdRelacion);
             } 
           } else {
-            this.notif.onWarning('Advertencia', 'No se encontró registro.');            
+            this.notif.onWarning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
+            this.loading.hide();
             this.juridicosFrom.get('buscar')?.reset();
             this.juridicosFrom.get('nombre')?.reset();
             this.generalesService.Autofocus('BuscarDocumento');
@@ -6581,7 +6583,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
             this.AbrirListaJuridicosModal.nativeElement.click();
             this.listaJuridicos = result;
             } else {
-              this.notif.onWarning('Advertencia', 'No se encontró registro.');
+              this.notif.onWarning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
               this.juridicosFrom.get('buscar')?.reset();
               this.juridicosFrom.get('nombre')?.reset();
             this.generalesService.Autofocus('BuscarNombre');
@@ -7834,7 +7836,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
                 result.Persona.PrimerApellido + ' ' + result.Persona.SegundoApellido);
               this.serviciosFrom.get('TipoDocumento')?.setValue(result.Persona.IdTipoDocumento);
             } else {
-              this.notif.onWarning('Advertencia', 'No se encontró registro.');
+              this.notif.onWarning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
               this.serviciosFrom.get('NombreDeudor')?.reset();
               this.serviciosFrom.get('NumeroDocumento')?.reset();
             }

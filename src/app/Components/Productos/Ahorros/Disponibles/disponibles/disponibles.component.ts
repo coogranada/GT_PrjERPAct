@@ -17,6 +17,8 @@ import { StorageSecurity } from '../../../../../utils/storage-security.util';
 import { CambiarGarantiasRequestDto, DetalleGarantiaCreditoDto, GarantiaCompartida, GarantiaDisponible, GarantiaRealAsignada, ObtenerCodeudorBasicoModel } from '../../../../../Models/Productos/garantias.model';
 import { GarantiasService } from '../../../../../Services/Productos/garantias.service';
 import { CambiarGarantiasModalComponent } from '../../../../shared/cambiar-garantias-modal/cambiar-garantias-modal.component';
+import { ERP_MESSAGES } from '../../../../../utils/constant';
+
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var Tiff: any;
@@ -505,7 +507,7 @@ export class DisponiblesComponent implements OnInit {
           this.DisponibleOperacionFrom.get('Codigo')?.reset();
         }        
       } else {
-        this.notif.warning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.', ConfiguracionNotificacion.configRightTop);
+        this.notif.warning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA, ConfiguracionNotificacion.configRightTop);
         this.DisponibleOperacionFrom.get('Codigo')?.reset();
       } 
         
@@ -593,7 +595,7 @@ export class DisponiblesComponent implements OnInit {
         }
         
       } else {
-        this.notif.warning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.', ConfiguracionNotificacion.configRightTop);
+        this.notif.warning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA, ConfiguracionNotificacion.configRightTop);
         this.DisponibleOperacionFrom.get('Codigo')?.reset();
       }
 
@@ -678,7 +680,7 @@ export class DisponiblesComponent implements OnInit {
           this.DisponibleOperacionFrom.get('Codigo')?.reset(); 
         }       
       } else {
-        this.notif.warning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.',
+        this.notif.warning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA,
           ConfiguracionNotificacion.configRightTop);
         this.DisponibleOperacionFrom.get('Codigo')?.reset();
       }
@@ -764,7 +766,7 @@ export class DisponiblesComponent implements OnInit {
         }       
 
       } else {
-        this.notif.warning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.',ConfiguracionNotificacion.configRightTop);
+        this.notif.warning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA,ConfiguracionNotificacion.configRightTop);
         this.DisponibleOperacionFrom.get('Codigo')?.reset();
       }
     } else if (this.DisponibleOperacionFrom.get('Codigo')?.value === '10' || this.DisponibleOperacionFrom.get('Codigo')?.value === '40') {  // Apertura de cuenta Mismo titular
@@ -967,7 +969,7 @@ export class DisponiblesComponent implements OnInit {
           }
         );
       } else {
-        this.notif.warning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.', ConfiguracionNotificacion.configRightTop);
+        this.notif.warning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA, ConfiguracionNotificacion.configRightTop);
         this.DisponibleOperacionFrom.get('Codigo')?.reset();
       }
 
@@ -1100,7 +1102,7 @@ export class DisponiblesComponent implements OnInit {
           }
         );
       } else {
-        this.notif.warning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.', ConfiguracionNotificacion.configRightTop);
+        this.notif.warning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA, ConfiguracionNotificacion.configRightTop);
         this.DisponibleOperacionFrom.get('Codigo')?.reset();
       }
 
@@ -1177,7 +1179,7 @@ export class DisponiblesComponent implements OnInit {
         }
      
       } else {
-        this.notif.warning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.',ConfiguracionNotificacion.configRightTop);
+        this.notif.warning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA,ConfiguracionNotificacion.configRightTop);
         this.DisponibleOperacionFrom.get('Codigo')?.reset();
       }
     } else if (this.DisponibleOperacionFrom.get('Codigo')?.value === '34') {  // Asignar cupo
@@ -1276,7 +1278,7 @@ export class DisponiblesComponent implements OnInit {
           },
         )      
       } else {
-        this.notif.warning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.',ConfiguracionNotificacion.configRightTop);
+        this.notif.warning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA,ConfiguracionNotificacion.configRightTop);
         this.DisponibleOperacionFrom.get('Codigo')?.reset();
       }
 
@@ -1373,7 +1375,7 @@ export class DisponiblesComponent implements OnInit {
           },
         )       
       } else {
-        this.notif.warning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.',ConfiguracionNotificacion.configRightTop);
+        this.notif.warning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA,ConfiguracionNotificacion.configRightTop);
         this.DisponibleOperacionFrom.get('Codigo')?.reset();
       }
     } else if (this.DisponibleOperacionFrom.get('Codigo')?.value === '111') { // Marcar y Desmarcar GMF
@@ -1429,7 +1431,7 @@ export class DisponiblesComponent implements OnInit {
           },
         )              
       } else {
-        this.notif.warning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.',ConfiguracionNotificacion.configRightTop);
+        this.notif.warning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA,ConfiguracionNotificacion.configRightTop);
         this.DisponibleOperacionFrom.get('Codigo')?.reset();
       }
     } else if (this.DisponibleOperacionFrom.get('Codigo')?.value === '109') { // Timbrar mensaje
@@ -1478,7 +1480,7 @@ export class DisponiblesComponent implements OnInit {
           },
         ) 
       } else {
-        this.notif.warning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.',ConfiguracionNotificacion.configRightTop);
+        this.notif.warning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA,ConfiguracionNotificacion.configRightTop);
         this.DisponibleOperacionFrom.get('Codigo')?.reset();
       }
     } else if (this.DisponibleOperacionFrom.get('Codigo')?.value === '110') { // Adicionar y/o eliminar fecha exoneración
@@ -1552,7 +1554,7 @@ export class DisponiblesComponent implements OnInit {
           },
         ) 
       } else {
-        this.notif.warning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.',ConfiguracionNotificacion.configRightTop);
+        this.notif.warning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA,ConfiguracionNotificacion.configRightTop);
         this.DisponibleOperacionFrom.get('Codigo')?.reset();
       }
     } else if (this.DisponibleOperacionFrom.get('Codigo')?.value === '36') {  // Editar Canales
@@ -1652,7 +1654,7 @@ export class DisponiblesComponent implements OnInit {
         }
         
       } else {
-        this.notif.warning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.',
+        this.notif.warning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA,
           ConfiguracionNotificacion.configRightTop);
         this.DisponibleOperacionFrom.get('Codigo')?.reset();
       }
@@ -1724,7 +1726,7 @@ export class DisponiblesComponent implements OnInit {
           this.DisponibleOperacionFrom.get('Codigo')?.reset(); 
         }
       } else {
-        this.notif.warning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.', ConfiguracionNotificacion.configRightTop);
+        this.notif.warning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA, ConfiguracionNotificacion.configRightTop);
         this.DisponibleOperacionFrom.get('Codigo')?.reset();
       }
     } else if (this.DisponibleOperacionFrom.get('Codigo')?.value === '25') {  // Imprimir registro de firmas
@@ -1775,7 +1777,7 @@ export class DisponiblesComponent implements OnInit {
           this.notif.warning('Advertencia', 'Cuenta no se puede editar, estado no valido.', ConfiguracionNotificacion.configRightTop);
         this.DisponibleOperacionFrom.get('Codigo')?.reset(); 
       } else {
-        this.notif.warning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.',ConfiguracionNotificacion.configRightTop);
+        this.notif.warning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA,ConfiguracionNotificacion.configRightTop);
         this.DisponibleOperacionFrom.get('Codigo')?.reset();
         this.bloquearConsultaCuenta = false;
         this.BloquearBuscar = false;
@@ -1863,7 +1865,7 @@ export class DisponiblesComponent implements OnInit {
         }
         
       } else {
-        this.notif.warning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.', ConfiguracionNotificacion.configRightTop);
+        this.notif.warning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA, ConfiguracionNotificacion.configRightTop);
         this.DisponibleOperacionFrom.get('Codigo')?.reset();
         this.bloquearConsultaCuenta = false;
         this.BloquearBuscar = false;
@@ -1919,7 +1921,7 @@ export class DisponiblesComponent implements OnInit {
         this.BloquearPuntos = false;
         this.BloquearGarantiaReal = false;
       } else {
-        this.notif.warning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.', ConfiguracionNotificacion.configRightTop);
+        this.notif.warning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA, ConfiguracionNotificacion.configRightTop);
         this.DisponibleOperacionFrom.get('Codigo')?.reset();
         this.bloquearConsultaCuenta = false;
         this.BloquearBuscar = false;
@@ -2015,14 +2017,14 @@ export class DisponiblesComponent implements OnInit {
           this.DisponibleOperacionFrom.get('Codigo')?.reset(); 
         }        
       } else {
-        this.notif.warning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.', ConfiguracionNotificacion.configRightTop);
+        this.notif.warning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA, ConfiguracionNotificacion.configRightTop);
         this.DisponibleOperacionFrom.get('Codigo')?.reset();
         this.bloquearConsultaCuenta = false;
         this.BloquearBuscar = false;
       }
     } else if (this.DisponibleOperacionFrom.get('Codigo')?.value === '115') { // Activar libreta
       if (!this.DisponibleForm.get('NumeroDocumento')?.value) {
-        this.notif.warning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.', ConfiguracionNotificacion.configRightTop);
+        this.notif.warning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA, ConfiguracionNotificacion.configRightTop);
         return;
       }
       if (this.DisponibleForm.get('IdMedioPago')?.value !== 0) {
@@ -2063,7 +2065,7 @@ export class DisponiblesComponent implements OnInit {
         ) {
   
           if (this.DisponibleForm.get('IdEstado')?.value == 25 || this.DisponibleForm.get('IdEstado')?.value == 10) {
-            this.notif.warning('Advertencia', 'Cuenta no se puede editar, estado no válido.', ConfiguracionNotificacion.configRightTop);
+            this.notif.warning('Advertencia', ERP_MESSAGES.CUENTA_ESTADO_NO_VALIDO, ConfiguracionNotificacion.configRightTop);
             this.DisponibleOperacionFrom.get('Codigo')?.reset(); 
             return;
           }
@@ -2106,7 +2108,7 @@ export class DisponiblesComponent implements OnInit {
             },
           )              
         } else {
-          this.notif.warning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.',ConfiguracionNotificacion.configRightTop);
+          this.notif.warning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA,ConfiguracionNotificacion.configRightTop);
           this.DisponibleOperacionFrom.get('Codigo')?.reset();
         }
     } else if (this.DisponibleOperacionFrom.get('Codigo')?.value === '118') {  // Imprimir reglamento tarjeta
@@ -2196,7 +2198,7 @@ export class DisponiblesComponent implements OnInit {
         }
 
       } else {
-        this.notif.warning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.',
+        this.notif.warning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA,
           ConfiguracionNotificacion.configRightTop);
         this.DisponibleOperacionFrom.get('Codigo')?.reset();
       }
@@ -2281,7 +2283,7 @@ export class DisponiblesComponent implements OnInit {
 
 
       } else {
-        this.notif.warning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.',
+        this.notif.warning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA,
         ConfiguracionNotificacion.configRightTop);
         this.DisponibleOperacionFrom.get('Codigo')?.reset();
       }
@@ -2544,7 +2546,7 @@ export class DisponiblesComponent implements OnInit {
         result => {
           this.loading.hide();          
           if (result.length === 0) {
-            this.notif.warning('Advertencia', 'No se encontró registro.', ConfiguracionNotificacion.configRightTop);
+            this.notif.warning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO, ConfiguracionNotificacion.configRightTop);
             this.clearFrom();
           } else if (result.length == 1) {
             this.ResetValorSeleccionado(1);
@@ -2714,7 +2716,7 @@ export class DisponiblesComponent implements OnInit {
           }
 
         } else if (result.length === 0) {
-          this.notif.warning('Advertencia', 'No se encontró registro.', ConfiguracionNotificacion.configRightTop);
+          this.notif.warning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO, ConfiguracionNotificacion.configRightTop);
           this.clearFrom();
           this.generalesService.Autofocus('SelectBuscar');
 
@@ -3523,7 +3525,7 @@ export class DisponiblesComponent implements OnInit {
                       this.BloquearNumeroTarjeta = false;
                       this.BloquearPagare = false;
                       this.BloquearDiaCortePlazo = false;
-                      this.notif.warning('Advertencia', 'No se encontró el asociado.', ConfiguracionNotificacion.configRightTop);                  
+                      this.notif.warning('Advertencia', ERP_MESSAGES.ASOCIADO_NO_ENCONTRADO, ConfiguracionNotificacion.configRightTop);                  
               } else if (result.length > 0) {
           if (result.length === 1) {
             this.DisponiblesServices.ValidaFechaActualiza(result[0].lngTercero).subscribe(
@@ -3591,7 +3593,7 @@ export class DisponiblesComponent implements OnInit {
                     text: '',
                     icon: 'error',
                     animation: false,
-                    html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                    html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                       + result.Mensaje + '.',
                     //customClass: 'animated tada',
                     allowOutsideClick: false,
@@ -3605,7 +3607,7 @@ export class DisponiblesComponent implements OnInit {
                     text: '',
                     icon: 'error',
                     animation: false,
-                    html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                    html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                       + result.Mensaje + '.',
                     //customClass: 'animated tada',
                     allowOutsideClick: false,
@@ -3674,7 +3676,7 @@ export class DisponiblesComponent implements OnInit {
             result => {
               this.loading.hide();
               if (result.length === 0) {
-                this.notif.warning('Advertencia', 'No se encontró el asociado.', ConfiguracionNotificacion.configRightTop);
+                this.notif.warning('Advertencia', ERP_MESSAGES.ASOCIADO_NO_ENCONTRADO, ConfiguracionNotificacion.configRightTop);
               } else if (result.length === 1) {
                 this.DisponibleForm.get('IdTipoDocumento')?.setValue(result[0].IdTipoDocumento);
                 this.DisponibleForm.get('NumeroDocumento')?.setValue(result[0].NumeroDocumento);
@@ -3701,7 +3703,7 @@ export class DisponiblesComponent implements OnInit {
                     text: '',
                     icon: 'error',
                     animation: false,
-                    html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                    html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                       + result.Mensaje + '.',
                     //customClass: 'animated tada',
                     allowOutsideClick: false,
@@ -3715,7 +3717,7 @@ export class DisponiblesComponent implements OnInit {
                     text: '',
                     icon: 'error',
                     animation: false,
-                    html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                    html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                       + result.Mensaje + '.',
                     //customClass: 'animated tada',
                     allowOutsideClick: false,
@@ -4126,7 +4128,7 @@ export class DisponiblesComponent implements OnInit {
       result => {
         this.dataObjet = undefined;
         if (result.length === 0) {
-          this.notif.warning('Advertencia', 'No se encontró el asociado.', ConfiguracionNotificacion.configRightTop);
+          this.notif.warning('Advertencia', ERP_MESSAGES.ASOCIADO_NO_ENCONTRADO, ConfiguracionNotificacion.configRightTop);
           this.btnGuardar = false;
         } else if (result.length === 1) {
           // Validar  aportes ysalazar
@@ -4221,7 +4223,7 @@ export class DisponiblesComponent implements OnInit {
         },
         error => {
           this.loading.hide();
-          this.notif.warning('Advertencia', 'El valor ingresado no tiene el formato correcto.',
+          this.notif.warning('Advertencia', ERP_MESSAGES.VALOR_INGRESADO_FORMATO_INCORRECTO,
             ConfiguracionNotificacion.configRightTopNoClose);
           const errorMessage = <any>error;
           console.log(errorMessage);
@@ -4267,7 +4269,7 @@ export class DisponiblesComponent implements OnInit {
       },
       error => {
         this.loading.hide();
-        this.notif.warning('Advertencia', 'El valor ingresado no tiene el formato correcto.', ConfiguracionNotificacion.configRightTopNoClose);
+        this.notif.warning('Advertencia', ERP_MESSAGES.VALOR_INGRESADO_FORMATO_INCORRECTO, ConfiguracionNotificacion.configRightTopNoClose);
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -4379,7 +4381,7 @@ export class DisponiblesComponent implements OnInit {
         this.bloquearbtnCambioEstado = false;
       }
     } else {
-      this.notif.warning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.', ConfiguracionNotificacion.configRightTop);
+      this.notif.warning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA, ConfiguracionNotificacion.configRightTop);
     }
   }
   Observaciones(IdEstado : string) {
@@ -6795,7 +6797,7 @@ export class DisponiblesComponent implements OnInit {
         })
       }
     } else 
-      this.notif.warning('Advertencia','Debe buscar una cuenta para realizar esta operación.', ConfiguracionNotificacion.configRightTop);
+      this.notif.warning('Advertencia',ERP_MESSAGES.CUENTA_REQUERIDA, ConfiguracionNotificacion.configRightTop);
   }
 
   validarLiberacion(cambios: boolean) {
@@ -7861,7 +7863,7 @@ export class DisponiblesComponent implements OnInit {
                     text: '',
                     icon: 'error',
                     animation: false,
-                    html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                    html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                       + result.Mensaje + '.',
                     //customClass: 'animated tada',
                     allowOutsideClick: false,
@@ -7875,7 +7877,7 @@ export class DisponiblesComponent implements OnInit {
                     text: '',
                     icon: 'error',
                     animation: false,
-                    html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                    html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                       + result.Mensaje + '.',
                     //customClass: 'animated tada',
                     allowOutsideClick: false,
@@ -7932,7 +7934,7 @@ export class DisponiblesComponent implements OnInit {
                       text: '',
                       icon: 'error',
                       animation: false,
-                      html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                      html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                         + result.Mensaje + '.',
                       //customClass: 'animated tada',
                       allowOutsideClick: false,
@@ -7946,7 +7948,7 @@ export class DisponiblesComponent implements OnInit {
                       text: '',
                       icon: 'error',
                       animation: false,
-                      html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                      html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                         + result.Mensaje + '.',
                       //customClass: 'animated tada',
                       allowOutsideClick: false,
@@ -8013,7 +8015,7 @@ export class DisponiblesComponent implements OnInit {
                       text: '',
                       icon: 'error',
                       animation: false,
-                      html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                      html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                         + result.Mensaje + '.',
                       //customClass: 'animated tada',
                       allowOutsideClick: false,
@@ -8027,7 +8029,7 @@ export class DisponiblesComponent implements OnInit {
                       text: '',
                       icon: 'error',
                       animation: false,
-                      html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                      html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                         + result.Mensaje + '.',
                       //customClass: 'animated tada',
                       allowOutsideClick: false,
@@ -8085,7 +8087,7 @@ export class DisponiblesComponent implements OnInit {
                         text: '',
                         icon: 'error',
                         animation: false,
-                        html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                        html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                           + result.Mensaje + '.',
                         //customClass: 'animated tada',
                         allowOutsideClick: false,
@@ -8099,7 +8101,7 @@ export class DisponiblesComponent implements OnInit {
                         text: '',
                         icon: 'error',
                         animation: false,
-                        html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                        html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                           + result.Mensaje + '.',
                        // customClass: 'animated tada',
                         allowOutsideClick: false,
@@ -8238,7 +8240,7 @@ export class DisponiblesComponent implements OnInit {
               text: '',
               icon: 'error',
               animation: false,
-              html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+              html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                 + result.Mensaje + '.',
               //customClass: 'animated tada',
               allowOutsideClick: false,
@@ -8252,7 +8254,7 @@ export class DisponiblesComponent implements OnInit {
               text: '',
               icon: 'error',
               animation: false,
-              html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+              html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                 + result.Mensaje + '.',
               //customClass: 'animated tada',
               allowOutsideClick: false,
@@ -9233,7 +9235,7 @@ esMismoDia(fechaStr: string): boolean {
 
           this.notif.warning(
             'Advertencia',
-            'No fue posible consultar los créditos asociados.',
+            ERP_MESSAGES.CONSULTA_CREDITOS_ASOCIADOS_ERROR,
             ConfiguracionNotificacion.configRightTop
           );
 
@@ -9308,7 +9310,7 @@ esMismoDia(fechaStr: string): boolean {
   validarSaldo(totales: any): boolean {
     if ( this.garantiasCompartidas.length > 0) {
       if ((totales.cobertura - totales.respalda) <= 0) {
-        this.notif.warning('Advertencia', 'Garantía no cubre el valor del crédito.', ConfiguracionNotificacion.configRightTop);
+        this.notif.warning('Advertencia', ERP_MESSAGES.GARANTIA_NO_CUBRE_CREDITO, ConfiguracionNotificacion.configRightTop);
         return false;
       }
     }

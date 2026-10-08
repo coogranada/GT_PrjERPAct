@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { AlertService } from '../../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../../Services/shared/loading.service';
 import { StorageSecurity } from '../../../../utils/storage-security.util';
+import { ERP_MESSAGES } from '../../../../utils/constant';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -77,7 +78,7 @@ export class PermisosEspecialesComponent implements OnInit {
           this.bUsuario = false;
           this.ObtenerModulos(_usuario);
         } else {
-          this.notificacion.onWarning('Advertencia', 'No se encontró registro.');
+          this.notificacion.onWarning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
         }
       },
       error => {
@@ -101,7 +102,7 @@ export class PermisosEspecialesComponent implements OnInit {
         this.loading.hide();
         this.ListaOperacionesDenegadas = result;
         if (this.ListaOperacionesDenegadas === null || this.ListaOperacionesDenegadas === undefined) {
-          this.notificacion.onWarning('Advertencia', 'No se encontró registro.');
+          this.notificacion.onWarning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
         }
       },
       error => {
@@ -123,7 +124,7 @@ export class PermisosEspecialesComponent implements OnInit {
         this.loading.hide();
         this.ListaOperacionesPermitidas = result;
         if (this.ListaOperacionesPermitidas === null || this.ListaOperacionesPermitidas === undefined) {
-          this.notificacion.onWarning('Advertencia', 'No se encontró registro.');
+          this.notificacion.onWarning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
         }
       },
       error => {
@@ -140,7 +141,7 @@ export class PermisosEspecialesComponent implements OnInit {
         this.loading.hide();
         this.ListaModulos = result;
         if (this.ListaModulos === null) {
-          this.notificacion.onWarning('Advertencia', 'No se encontró registro.');
+          this.notificacion.onWarning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
         }
       },
       error => {

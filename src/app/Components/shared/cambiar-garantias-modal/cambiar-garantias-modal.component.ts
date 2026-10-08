@@ -8,6 +8,7 @@ import { finalize } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { ConfiguracionNotificacion } from '../../../../environments/config.noticaciones';
 import { TooltipService } from '../../../Services/Tooltip/tooltip.service';
+import { ERP_MESSAGES, ERP_TOAST } from '../../../utils/constant';
 
 @Component({
   selector: 'app-cambiar-garantias-modal',
@@ -1078,8 +1079,8 @@ export class CambiarGarantiasModalComponent {
       },
       error: () => {
         this.notif.warning(
-          'Advertencia',
-          'No fue posible consultar los créditos asociados.',
+          ERP_TOAST.WARNING,
+          ERP_MESSAGES.CONSULTA_CREDITOS_ASOCIADOS_ERROR,
           ConfiguracionNotificacion.configRightTop
         );
 

@@ -17,6 +17,7 @@ import { GeneralesService } from '../../../../Services/Productos/generales.servi
 import { ExceljsService } from '../../../../Services/General/exceljs.service';
 import { ShareComponentModule } from '../../../../Modules/share-component.module';
 import { LoadingService } from '../../../../Services/shared/loading.service';
+import { ERP_MESSAGES } from '../../../../utils/constant';
 import { StorageSecurity } from '../../../../utils/storage-security.util';
 
 
@@ -362,7 +363,7 @@ export class InformeAhorrosComponent implements OnInit {
         },
           error => {
             this.ocultarModalProgreso();
-            let mensaje = 'Ha ocurrido un error inesperado.';
+            let mensaje = ERP_MESSAGES.ERROR_INESPERADO;
             try {
               if (error && error.Mensaje) {
                 mensaje = error.Mensaje;
@@ -922,7 +923,7 @@ export class InformeAhorrosComponent implements OnInit {
           },
           error => {
             this.ocultarModalProgreso();
-            let mensaje = 'Ha ocurrido un error inesperado.';
+            let mensaje = ERP_MESSAGES.ERROR_INESPERADO;
             try {
               if (error && error.Mensaje) {
                 mensaje = error.Mensaje;

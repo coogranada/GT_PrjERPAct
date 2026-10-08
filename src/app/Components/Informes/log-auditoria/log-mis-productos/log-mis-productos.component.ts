@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 import moment from 'moment';
 import { LoadingService } from '../../../../Services/shared/loading.service';
 import { StorageSecurity } from '../../../../utils/storage-security.util';
-import { ERP_MENSAJES, ERP_TOAST } from '../../../../Services/Generics/Validaciones.service';
+import { ERP_MESSAGES, ERP_TOAST } from '../../../../utils/constant';
 
 @Component({
   selector: 'app-log-mis-productos',
@@ -204,8 +204,8 @@ export class LogMisProductosComponent implements OnInit {
 
     if (existe) {
       this.notif.warning(
-        ERP_TOAST.TITULO_ADVERTENCIA,
-        ERP_MENSAJES.FILTRO_DUPLICADO,
+        ERP_TOAST.WARNING,
+        ERP_MESSAGES.FILTRO_DUPLICADO,
         ConfiguracionNotificacion.configRightTop
       );
     
@@ -248,7 +248,7 @@ export class LogMisProductosComponent implements OnInit {
       case "17":
          if (this.filtrosAgregado.filter(x => x.idFiltro == 16)[0] == null) {
            this.filtroSelect = 0;
-           this.notif.warning('Advertencia', 'Debe seleccionar primero una operación', ConfiguracionNotificacion.configRightTop);
+           this.notif.warning(ERP_TOAST.WARNING, 'Debe seleccionar primero una operación', ConfiguracionNotificacion.configRightTop);
            return
          }
           this.TituloGenerico = "Opcion: ";
@@ -384,7 +384,7 @@ export class LogMisProductosComponent implements OnInit {
     if (temp.length == 4) 
       this.AddFiltro(this.filtroSelect, 0, TituloGenerico, this.strInput, "", "Es Igual");
     else  
-      this.notif.warning('Advertencia', 'Debe ingresar la cuenta en su formato.', ConfiguracionNotificacion.configRightTop);
+      this.notif.warning(ERP_TOAST.WARNING, 'Debe ingresar la cuenta en su formato.', ConfiguracionNotificacion.configRightTop);
       
     this.strInput = "";
   }
@@ -412,7 +412,7 @@ export class LogMisProductosComponent implements OnInit {
   }
   eliminarAgregadas(element: Filtro) {
       if (element.idFiltro == 16 && this.filtrosAgregado.filter(x => x.idFiltro == 17)[0] != null) {
-        this.notif.warning('Advertencia', 'Debe eliminar primero la opción.', ConfiguracionNotificacion.configRightTop);
+        this.notif.warning(ERP_TOAST.WARNING, 'Debe eliminar primero la opción.', ConfiguracionNotificacion.configRightTop);
         return
       }
       else
@@ -423,7 +423,7 @@ export class LogMisProductosComponent implements OnInit {
     if (temp.length > 0 )
       this.GetCantInforme(true);
     else
-    this.notif.warning('Advertencia', 'Debe seleccionar campos.', ConfiguracionNotificacion.configRightTop);    
+    this.notif.warning(ERP_TOAST.WARNING, ERP_MESSAGES.CAMPOS_REQUERIDOS, ConfiguracionNotificacion.configRightTop);    
   }
   GetCantInforme(isDowload: boolean) {
     this.InformesLog = [];
@@ -459,7 +459,7 @@ export class LogMisProductosComponent implements OnInit {
   }
   ModalCantidadRegistros(Cant: number, idDowload: boolean) {
       if (Cant == 0) { 
-        this.notif.warning('Advertencia', 'No se encuentran registros', ConfiguracionNotificacion.configRightTop);   
+        this.notif.warning(ERP_TOAST.WARNING, 'No se encuentran registros', ConfiguracionNotificacion.configRightTop);   
         return;
       }
     Swal.fire({
@@ -568,8 +568,8 @@ export class LogMisProductosComponent implements OnInit {
       event.preventDefault();
 
       this.notif.warning(
-        'Advertencia',
-        'La cuenta debe tener el formato 000-000-0000000-0.',
+        ERP_TOAST.WARNING,
+        ERP_MESSAGES.FORMATO_CUENTA_INVALIDO,
         ConfiguracionNotificacion.configRightTop
       );
 

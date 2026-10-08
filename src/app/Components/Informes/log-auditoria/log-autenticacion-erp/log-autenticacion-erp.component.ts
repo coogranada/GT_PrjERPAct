@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 import moment from 'moment';
 import { LoadingService } from '../../../../Services/shared/loading.service';
 import { StorageSecurity } from '../../../../utils/storage-security.util';
-import { ERP_MENSAJES, ERP_TOAST } from '../../../../Services/Generics/Validaciones.service';
+import { ERP_MESSAGES, ERP_TOAST } from '../../../../utils/constant';
 
 @Component({
   selector: 'app-log-autenticacion-erp',
@@ -135,8 +135,8 @@ export class LogAutenticacionErpComponent implements OnInit {
   
     if (existe) {
       this.notif.warning(
-        ERP_TOAST.TITULO_ADVERTENCIA,
-        ERP_MENSAJES.FILTRO_DUPLICADO,
+        ERP_TOAST.WARNING,
+        ERP_MESSAGES.FILTRO_DUPLICADO,
         ConfiguracionNotificacion.configRightTop
       );
     
@@ -294,7 +294,7 @@ export class LogAutenticacionErpComponent implements OnInit {
     if (temp.length > 0 )
       this.GetCantInforme(true);
     else
-      this.notif.warning('Advertencia', 'Debe seleccionar campos.', ConfiguracionNotificacion.configRightTop);    
+      this.notif.warning('Advertencia', ERP_MESSAGES.CAMPOS_REQUERIDOS, ConfiguracionNotificacion.configRightTop);    
   }
   GetCantInforme(isDowload: boolean) {
     this.InformesLog = [];

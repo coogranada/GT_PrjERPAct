@@ -30,6 +30,7 @@ import {
 import { AlertService } from '../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../Services/shared/loading.service';
 import { StorageSecurity } from '../../../utils/storage-security.util';
+import { ERP_MESSAGES, ERP_TOAST } from '../../../utils/constant';
 
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -556,7 +557,7 @@ export class MiListaProductosComponent implements OnInit {
             var diffDays: any = Math.floor((date2 - date1) / (1000 * 60 * 60 * 24));           
             if (diffDays >= 180) {              
               swal.fire({
-                title: 'Advertencia',
+                title: ERP_TOAST.WARNING,
                 text: '',
                 html: 'Asociado debe actualizar datos',
                 icon: 'warning',
@@ -746,7 +747,7 @@ export class MiListaProductosComponent implements OnInit {
                     this.Totales.TotalCoodeudor = 0;
                     this.Totales.TotalSeguro = 0;
                     this.Totales.TotalTarjeta = 0;
-                    this.notif.onWarning("Advertencia", "No se encontró registro.");
+                    this.notif.onWarning(ERP_TOAST.WARNING, ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
                     this.btnLupa = false;
                     this.btnBorrador = true;
                     this.disbaleBusqueda = null;
@@ -936,7 +937,7 @@ export class MiListaProductosComponent implements OnInit {
                 this.Totales.TotalCoodeudor = 0;
                 this.Totales.TotalSeguro = 0;
                 this.Totales.TotalTarjeta = 0;
-                this.notif.onWarning("Advertencia", "No se encontró registro.");
+                this.notif.onWarning(ERP_TOAST.WARNING, ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
                 this.btnLupa = false;
                 this.btnBorrador = true;
                 this.disbaleBusqueda = null;
@@ -957,7 +958,7 @@ export class MiListaProductosComponent implements OnInit {
       } else {
         this.closedTabSearch();
         this.notif.onWarning(
-          "Advertencia",
+          ERP_TOAST.WARNING,
           "Debe ingresar un numero de documento.");
         this.disabledTabs = true;
         this.misProductosFrom.reset();
@@ -1041,7 +1042,7 @@ export class MiListaProductosComponent implements OnInit {
       this.Totales.TotalSeguro = 0;
       this.Totales.TotalTarjeta = 0;
       this.notif.onWarning(
-        "Advertencia",
+        ERP_TOAST.WARNING,
         "Debe seleccionar el estado de los productos a consultar.");
     }
   }
@@ -1345,7 +1346,7 @@ export class MiListaProductosComponent implements OnInit {
               this.AnalisisCuenta(Tercero.toString());
               swal.close();
             } else {
-              this.notif.onWarning('Advertencia', 'Seleccione una opción valida');
+              this.notif.onWarning(ERP_TOAST.WARNING, 'Seleccione una opción valida');
               swal.close();
               // resolve("");
             }
@@ -1377,7 +1378,7 @@ export class MiListaProductosComponent implements OnInit {
               this.OpcionAnalisisCuenta = false;
               swal.close();
             }else {
-              this.notif.onWarning('Advertencia', 'Seleccione una opción valida');
+              this.notif.onWarning(ERP_TOAST.WARNING, 'Seleccione una opción valida');
               swal.close();
               // resolve("");
             }
@@ -1409,7 +1410,7 @@ export class MiListaProductosComponent implements OnInit {
               this.AnalisisCuenta(Tercero.toString());
               swal.close();
             } else {
-              this.notif.onWarning('Advertencia', 'Seleccione una opción valida');
+              this.notif.onWarning(ERP_TOAST.WARNING, 'Seleccione una opción valida');
               swal.close();
             }
           });
@@ -1482,25 +1483,16 @@ export class MiListaProductosComponent implements OnInit {
                   }
                 );
 
+              } else {
+                this.loading.hide();
+                this.notif.onWarning(ERP_TOAST.WARNING, 'No se encontraron productos y/o saldos contables');
+              }
             } else {
-
               this.loading.hide();
-
-              this.notif.onWarning(
-                'Advertencia',
-                'No se encontraron productos y/o saldos contables'
-              );
+              this.notif.onWarning(ERP_TOAST.WARNING, 'No se encontraron productos y/o saldos contables');
             }
-
-          } else {
-            this.loading.hide();
-            this.notif.onWarning(
-              'Advertencia',
-              'No se encontraron productos y/o saldos contables'
-            );
-          }
-
-        },
+          
+          },  
         error => {
           this.loading.hide();
           const errorMessage = <any>error;
@@ -1591,14 +1583,14 @@ export class MiListaProductosComponent implements OnInit {
             } else {
               this.loading.hide();
               this.notif.onWarning(
-                'Advertencia',
+                ERP_TOAST.WARNING,
                 'No se encontraron productos y/o saldos contables'
               );
             }
           } else {
             this.loading.hide();
             this.notif.onWarning(
-              'Advertencia',
+              ERP_TOAST.WARNING,
               'No se encontraron productos y/o saldos contables'
             );
           }
@@ -1630,7 +1622,7 @@ export class MiListaProductosComponent implements OnInit {
     }
     if (value == "1" || value == 1) {
       swal.fire({
-        title: "Advertencia",
+        title: ERP_TOAST.WARNING,
         text: "",
         html: "El asociado no tiene email.",
         icon: "warning",
@@ -1992,7 +1984,7 @@ export class MiListaProductosComponent implements OnInit {
 
           } else {
             this.loading.hide();
-            this.notif.onWarning('Advertencia', 'No se encontró  registro');
+            this.notif.onWarning(ERP_TOAST.WARNING, ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
             this.btnLupa = false;
             this.btnBorrador = true;
             this.disbaleBusqueda = null;

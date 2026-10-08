@@ -15,6 +15,7 @@ import { TerminoAhorrosService } from '../../../../../Services/Productos/termino
 import { ClientesGetListService } from '../../../../../Services/Clientes/clientesGetList.service';
 import { LoadingService } from '../../../../../Services/shared/loading.service';
 import { StorageSecurity } from '../../../../../utils/storage-security.util';
+import { ERP_MESSAGES } from '../../../../../utils/constant';
 declare var $: any;
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -1520,7 +1521,7 @@ private registrarLogAsesoria(payload: any, puntos: number): void {
               text: '',
               icon: 'error',
               animation: false,
-              html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>' + result.Mensaje + '.',
+              html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO + result.Mensaje + '.',
               allowOutsideClick: false,
               allowEscapeKey: false,
               confirmButtonText: 'Ok',
@@ -1532,7 +1533,7 @@ private registrarLogAsesoria(payload: any, puntos: number): void {
               text: '',
               icon: 'error',
               animation: false,
-              html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'+ result.Mensaje + '.',
+              html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO+ result.Mensaje + '.',
               allowOutsideClick: false,
               allowEscapeKey: false,
               confirmButtonText: 'Ok',
@@ -1673,7 +1674,7 @@ private registrarLogAsesoria(payload: any, puntos: number): void {
           this.creacionFrom.reset();
           this.asesoriaterminoForm.get('Edad')?.reset();
           if (result.length === 0) {
-            this.notif.warning('Advertencia', 'No se encontró el asociado.', ConfiguracionNotificacion.configRightTop);
+            this.notif.warning('Advertencia', ERP_MESSAGES.ASOCIADO_NO_ENCONTRADO, ConfiguracionNotificacion.configRightTop);
             if(/^[a-zA-Z0-9]{3,15}$/.test(Documento)) {
               this.clientesGetListService.GetTipoDocumento().subscribe(
                 result => {
@@ -1714,7 +1715,7 @@ private registrarLogAsesoria(payload: any, puntos: number): void {
                 text: '',
                 icon: 'error',
                 animation: false,
-                html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>' + result.Mensaje + '.',
+                html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO + result.Mensaje + '.',
                 allowOutsideClick: false,
                 allowEscapeKey: false,
                 confirmButtonText: 'Ok',
@@ -1726,7 +1727,7 @@ private registrarLogAsesoria(payload: any, puntos: number): void {
                 text: '',
                 icon: 'error',
                 animation: false,
-                html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'+ result.Mensaje + '.',
+                html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO+ result.Mensaje + '.',
                 allowOutsideClick: false,
                 allowEscapeKey: false,
                 confirmButtonText: 'Ok',
@@ -1765,7 +1766,7 @@ private registrarLogAsesoria(payload: any, puntos: number): void {
         this.loading.hide();
         this.dataObjet = undefined;
         if (result.length === 0) {
-          this.notif.warning('Advertencia', 'No se encontró el asociado.', ConfiguracionNotificacion.configRightTop);
+          this.notif.warning('Advertencia', ERP_MESSAGES.ASOCIADO_NO_ENCONTRADO, ConfiguracionNotificacion.configRightTop);
           this.asesoriaterminoForm.get('NumeroDocumento')?.reset();
           this.asesoriaterminoForm.get('Nombre')?.reset();
           this.btnGuardar = false;
@@ -1927,7 +1928,7 @@ capitalize(str: any): any {
         },
         error => {
           this.loading.hide();
-          this.notif.warning('Advertencia', 'El valor ingresado no tiene el formato correcto',ConfiguracionNotificacion.configRightTopNoClose);
+          this.notif.warning('Advertencia', ERP_MESSAGES.VALOR_INGRESADO_FORMATO_INCORRECTO,ConfiguracionNotificacion.configRightTopNoClose);
           const errorMessage = <any>error;
           console.log(errorMessage);
         });
@@ -1970,7 +1971,7 @@ capitalize(str: any): any {
         }
       },
       error => {
-        this.notif.warning('Advertencia', 'El valor ingresado no tiene el formato correcto',
+        this.notif.warning('Advertencia', ERP_MESSAGES.VALOR_INGRESADO_FORMATO_INCORRECTO,
           ConfiguracionNotificacion.configRightTopNoClose);
         const errorMessage = <any>error;
         console.log(errorMessage);

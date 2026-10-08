@@ -29,6 +29,7 @@ import { CambiarGarantiasModalComponent } from '../../../shared/cambiar-garantia
 import { TooltipService } from '../../../../Services/Tooltip/tooltip.service';
 import { CuentaService } from '../../../../Services/Generics/resultado-cuenta.service';
 import { StorageSecurity } from '../../../../utils/storage-security.util';
+import { ERP_MESSAGES, ERP_REGEX, ERP_TOAST } from '../../../../utils/constant';
 
 @Component({
   selector: 'app-gestion-cartera',
@@ -56,6 +57,7 @@ export class GestionCarteraComponent {
   @ViewChild('modalGarantias') modalGarantias!: CambiarGarantiasModalComponent;
   @ViewChild('openProcesoInsolvenciaModal', { static: true }) private openProcesoInsolvenciaModal!: ElementRef;
 
+  public mensajes = ERP_MESSAGES;
   private codModulo = 45;
   public dataUser: any;
   detalleCuenta!: CuentaCarteraDetalle;
@@ -294,11 +296,11 @@ export class GestionCarteraComponent {
       Validators.pattern("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s'-]+$")
     ]);
     const Codigo = new FormControl({ value: '', disabled: false }, [Validators.required]);
-    const IdDigito = new FormControl({ value: '', disabled: true }, [Validators.pattern('^[0-9]*$')]);
-    const IdConsecutivo = new FormControl({ value: '', disabled: true }, [Validators.pattern('^[0-9]*$')]);
-    const IdProductoCuenta = new FormControl({ value: '', disabled: true }, [Validators.pattern('^[0-9]*$')]);
-    const CodigoCuentaFormateado = new FormControl({ value: '', disabled: true }, [Validators.pattern('^[0-9]*$')]);
-    const IdOficinaCuenta = new FormControl({ value: '', disabled: true }, [Validators.pattern('^[0-9]*$')]);
+    const IdDigito = new FormControl({ value: '', disabled: true }, [Validators.pattern(ERP_REGEX.NUMERO)]);
+    const IdConsecutivo = new FormControl({ value: '', disabled: true }, [Validators.pattern(ERP_REGEX.NUMERO)]);
+    const IdProductoCuenta = new FormControl({ value: '', disabled: true }, [Validators.pattern(ERP_REGEX.NUMERO)]);
+    const CodigoCuentaFormateado = new FormControl({ value: '', disabled: true }, [Validators.pattern(ERP_REGEX.NUMERO)]);
+    const IdOficinaCuenta = new FormControl({ value: '', disabled: true }, [Validators.pattern(ERP_REGEX.NUMERO)]);
     const NumeroOficinaAsociado = new FormControl({ value: '', disabled: true }, [Validators.required]);
     const NombreOficinaAsociado = new FormControl({ value: '', disabled: true }, [Validators.required]);
     const NombreOficina = new FormControl({ value: '', disabled: true }, [Validators.required]);
@@ -307,7 +309,7 @@ export class GestionCarteraComponent {
     const NombreEstadoCuenta = new FormControl({ value: '', disabled: true }, []);
     const IdFormaPago = new FormControl({ value: '', disabled: true }, []);
     const DescripcionFormaPago = new FormControl({ value: '', disabled: true }, [Validators.required]);
-    const IdAsesorExterno = new FormControl({ value: '', disabled: true }, [Validators.pattern('[0-9]*')]);
+    const IdAsesorExterno = new FormControl({ value: '', disabled: true }, [Validators.pattern(ERP_REGEX.NUMERO)]);
     const NombreAsesorExterno = new FormControl({ value: '', disabled: true }, []);
     const IdCuenta = new FormControl({ value: '', disabled: true }, []);
     const CuotaManejo = new FormControl({ value: '', disabled: true }, []);
@@ -317,8 +319,8 @@ export class GestionCarteraComponent {
     const IdDiaCorte = new FormControl({ value: '', disabled: true }, []);
     const CupoAprobado = new FormControl({ value: '', disabled: true }, []);
     const CupoUtilizado = new FormControl({ value: '', disabled: true }, []);
-    const NumeroPagare = new FormControl({ value: '', disabled: true }, [Validators.pattern('[0-9]*')]);
-    const Radicado = new FormControl({ value: '', disabled: true }, [Validators.pattern('[0-9]*')]);
+    const NumeroPagare = new FormControl({ value: '', disabled: true }, [Validators.pattern(ERP_REGEX.NUMERO)]);
+    const Radicado = new FormControl({ value: '', disabled: true }, [Validators.pattern(ERP_REGEX.NUMERO)]);
     const Tipo = new FormControl({ value: '', disabled: true }, []);
     const TipoFirma = new FormControl({ value: '', disabled: true }, []);
     const IdLinea = new FormControl({ value: '', disabled: true }, []);
@@ -329,7 +331,7 @@ export class GestionCarteraComponent {
     const FechaCredito = new FormControl({ value: '', disabled: true }, []);
     const FechaProximoCobro = new FormControl({ value: '', disabled: true }, []);
     const LibretaPlastico = new FormControl({ value: '', disabled: true }, []);
-    const pagare = new FormControl({ value: '', disabled: true }, [Validators.pattern('^[0-9]*$')]);
+    const pagare = new FormControl({ value: '', disabled: true }, [Validators.pattern(ERP_REGEX.NUMERO)]);
     const IdRelacionCliente = new FormControl({ value: '', disabled: true }, []);
     const NombreRelacionCliente = new FormControl({ value: '', disabled: true }, []);
     const estaReestructurado = new FormControl({ value: false, disabled: true }, []);
@@ -824,7 +826,7 @@ export class GestionCarteraComponent {
   private validarEstadoCuenta(): boolean {
     if (this.gestionCreditoForm.get('fechaCancelacion')?.value?.trim()) {
       this.notif.warning(
-        'Advertencia', 'Cuenta no se puede editar, estado no válido.',
+        ERP_TOAST.WARNING, ERP_MESSAGES.CUENTA_ESTADO_NO_VALIDO,
         ConfiguracionNotificacion.configRightTop
       );
       this.gestionCreditoOperacionForm.get('Codigo')?.setValue('');
@@ -836,7 +838,7 @@ export class GestionCarteraComponent {
   private validarSigla(sigla: string, mensaje: string): boolean {
     if(this.gestionCreditoForm.get('Sigla')?.value === sigla ){
       this.notif.warning(
-        'Advertencia',
+        ERP_TOAST.WARNING,
         mensaje,
         ConfiguracionNotificacion.configRightTop
       );
@@ -853,7 +855,7 @@ export class GestionCarteraComponent {
     ) {
       this.gestionCreditoOperacionForm.get('Codigo')?.reset();
       this.notif.warning(
-        'Advertencia',
+        ERP_TOAST.WARNING,
         'Cuenta no se puede editar, crédito hijo.',
         ConfiguracionNotificacion.configRightTop
       );
@@ -921,7 +923,7 @@ export class GestionCarteraComponent {
         await this.BuscarSaldosCartera();
         const error = this.validarEdicionCredito(operacionCodigo);
         if (error) {
-          this.notif.warning('Advertencia', error, ConfiguracionNotificacion.configRightTop);
+          this.notif.warning(ERP_TOAST.WARNING, error, ConfiguracionNotificacion.configRightTop);
           this.gestionCreditoOperacionForm.get('Codigo')?.reset();
           return;
         }
@@ -933,7 +935,7 @@ export class GestionCarteraComponent {
         await this.BuscarSaldosCartera();
         const error = this.validarEdicionCredito(operacionCodigo);
         if (error) {
-          this.notif.warning('Advertencia', error, ConfiguracionNotificacion.configRightTop);
+          this.notif.warning(ERP_TOAST.WARNING, error, ConfiguracionNotificacion.configRightTop);
           this.gestionCreditoOperacionForm.get('Codigo')?.reset();
           return;
         }
@@ -943,7 +945,7 @@ export class GestionCarteraComponent {
         await this.BuscarSaldosCartera();
         const error = this.validarEdicionCredito(operacionCodigo);
         if (error) {
-          this.notif.warning('Advertencia', error, ConfiguracionNotificacion.configRightTop);
+          this.notif.warning(ERP_TOAST.WARNING, error, ConfiguracionNotificacion.configRightTop);
           this.gestionCreditoOperacionForm.get('Codigo')?.reset();
           return;
         }
@@ -953,7 +955,7 @@ export class GestionCarteraComponent {
         await this.BuscarSaldosCartera();
         const error = this.validarEdicionCredito(operacionCodigo) ?? this.validarEdicionCreditoAlCambiarSistema();
         if (error) {
-          this.notif.warning('Advertencia', error, ConfiguracionNotificacion.configRightTop);
+          this.notif.warning(ERP_TOAST.WARNING, error, ConfiguracionNotificacion.configRightTop);
           this.gestionCreditoOperacionForm.get('Codigo')?.reset();
           return;
         }
@@ -1183,7 +1185,7 @@ export class GestionCarteraComponent {
       if (tipoSeguimiento !== 1) {
       
         this.notif.warning(
-          'Advertencia',
+          ERP_TOAST.WARNING,
           'El primer detalle debe ser Fecha de admisión a insolvencia.',
           ConfiguracionNotificacion.configRightTop
         );
@@ -1201,7 +1203,7 @@ export class GestionCarteraComponent {
     if (tiposRegistrados.includes(tipoSeguimiento)) {
     
       this.notif.warning(
-        'Advertencia',
+        ERP_TOAST.WARNING,
         'El detalle ya fue registrado para esta insolvencia.',
         ConfiguracionNotificacion.configRightTop
       );
@@ -1218,7 +1220,7 @@ export class GestionCarteraComponent {
       if (tipoSeguimiento !== 1) {
       
         this.notif.warning(
-          'Advertencia',
+          ERP_TOAST.WARNING,
           'El primer detalle debe ser Fecha de admisión a insolvencia.',
           ConfiguracionNotificacion.configRightTop
         );
@@ -1235,7 +1237,7 @@ export class GestionCarteraComponent {
       if (tipoSeguimiento === 2 && !tiposRegistrados.includes(1)) {
       
         this.notif.warning(
-          'Advertencia',
+          ERP_TOAST.WARNING,
           'Primero debe registrar Fecha de admisión a insolvencia.',
           ConfiguracionNotificacion.configRightTop
         );
@@ -1250,7 +1252,7 @@ export class GestionCarteraComponent {
       if (tipoSeguimiento === 3 && !tiposRegistrados.includes(2)) {
       
         this.notif.warning(
-          'Advertencia',
+          ERP_TOAST.WARNING,
           'Primero debe registrar Fecha de notificación.',
           ConfiguracionNotificacion.configRightTop
         );
@@ -1265,7 +1267,7 @@ export class GestionCarteraComponent {
       if (tipoSeguimiento === 8 && !tiposRegistrados.includes(3)) {
       
         this.notif.warning(
-          'Advertencia',
+          ERP_TOAST.WARNING,
           'Primero debe registrar Fecha de inicio de negociación.',
           ConfiguracionNotificacion.configRightTop
         );
@@ -1280,7 +1282,7 @@ export class GestionCarteraComponent {
       if (tipoSeguimiento === 4 && !tiposRegistrados.includes(8)) {
       
         this.notif.warning(
-          'Advertencia',
+          ERP_TOAST.WARNING,
           'Primero debe registrar Acuerdo de pago.',
           ConfiguracionNotificacion.configRightTop
         );
@@ -1298,7 +1300,7 @@ export class GestionCarteraComponent {
       ) {
       
         this.notif.warning(
-          'Advertencia',
+          ERP_TOAST.WARNING,
           'Primero debe registrar la aprobación del acuerdo.',
           ConfiguracionNotificacion.configRightTop
         );
@@ -1317,7 +1319,7 @@ export class GestionCarteraComponent {
         if (!esInsolvente && tipoSeguimiento === 9) {
 
           this.notif.warning(
-            'Advertencia',
+            ERP_TOAST.WARNING,
             'El crédito no se encuentra marcado como insolvente.',
             ConfiguracionNotificacion.configRightTop
           );
@@ -1370,7 +1372,7 @@ export class GestionCarteraComponent {
 
     if (!this.insolvenciaForm.get('IdCausal')?.value) {
       this.notif.warning(
-        'Advertencia',
+        ERP_TOAST.WARNING,
         'Debe seleccionar una causal de insolvencia.',
         ConfiguracionNotificacion.configRightTop
       );
@@ -1379,7 +1381,7 @@ export class GestionCarteraComponent {
 
     if (!this.insolvenciaForm.get('IdInstancia')?.value) {
       this.notif.warning(
-        'Advertencia',
+        ERP_TOAST.WARNING,
         'Debe seleccionar una instancia de insolvencia.',
         ConfiguracionNotificacion.configRightTop
       );
@@ -1395,7 +1397,7 @@ export class GestionCarteraComponent {
       case 1:
         if (!this.insolvenciaForm.get('FechaAdmision')?.value) {
           this.notif.warning(
-            'Advertencia',
+            ERP_TOAST.WARNING,
             'Debe ingresar la fecha de admisión.',
             ConfiguracionNotificacion.configRightTop
           );
@@ -1406,7 +1408,7 @@ export class GestionCarteraComponent {
       case 2:
         if (!this.insolvenciaForm.get('FechaNotificacion')?.value) {
           this.notif.warning(
-            'Advertencia',
+            ERP_TOAST.WARNING,
             'Debe ingresar la fecha de notificación.',
             ConfiguracionNotificacion.configRightTop
           );
@@ -1417,7 +1419,7 @@ export class GestionCarteraComponent {
       case 3:
         if (!this.insolvenciaForm.get('FechaInicioNegociacion')?.value) {
           this.notif.warning(
-            'Advertencia',
+            ERP_TOAST.WARNING,
             'Debe ingresar la fecha de inicio de negociación.',
             ConfiguracionNotificacion.configRightTop
           );
@@ -1428,7 +1430,7 @@ export class GestionCarteraComponent {
       case 4:
         if (!this.insolvenciaForm.get('FechaAprobacionAcuerdo')?.value) {
           this.notif.warning(
-            'Advertencia',
+            ERP_TOAST.WARNING,
             'Debe ingresar la fecha de aprobación del acuerdo.',
             ConfiguracionNotificacion.configRightTop
           );
@@ -1439,7 +1441,7 @@ export class GestionCarteraComponent {
       case 5:
         if (!this.insolvenciaForm.get('FechaTerminacionAcuerdo')?.value) {
           this.notif.warning(
-            'Advertencia',
+            ERP_TOAST.WARNING,
             'Debe ingresar la fecha de terminación del acuerdo.',
             ConfiguracionNotificacion.configRightTop
           );
@@ -1450,7 +1452,7 @@ export class GestionCarteraComponent {
       case 6:
         if (!this.insolvenciaForm.get('FechaIncumplimientoAcuerdo')?.value) {
           this.notif.warning(
-            'Advertencia',
+            ERP_TOAST.WARNING,
             'Debe ingresar la fecha de incumplimiento del acuerdo.',
             ConfiguracionNotificacion.configRightTop
           );
@@ -1461,7 +1463,7 @@ export class GestionCarteraComponent {
       case 7:
         if (!this.insolvenciaForm.get('FechaLiquidacion')?.value) {
           this.notif.warning(
-            'Advertencia',
+            ERP_TOAST.WARNING,
             'Debe ingresar la fecha de liquidación.',
             ConfiguracionNotificacion.configRightTop
           );
@@ -1473,7 +1475,7 @@ export class GestionCarteraComponent {
 
         if (!this.insolvenciaForm.get('NumeroCuotasPactadas')?.value) {
           this.notif.warning(
-            'Advertencia',
+            ERP_TOAST.WARNING,
             'Debe ingresar el número de cuotas pactadas.',
             ConfiguracionNotificacion.configRightTop
           );
@@ -1489,7 +1491,7 @@ export class GestionCarteraComponent {
       
         if (!tieneDetalleAcuerdo) {
           this.notif.warning(
-            'Advertencia',
+            ERP_TOAST.WARNING,
             'Debe diligenciar al menos un campo del acuerdo de pago.',
             ConfiguracionNotificacion.configRightTop
           );
@@ -1504,7 +1506,7 @@ export class GestionCarteraComponent {
     const mensajeFecha = this.validarFecha(fechaEvento);
 
     if (mensajeFecha) {
-      this.notif.warning('Advertencia', mensajeFecha,
+      this.notif.warning(ERP_TOAST.WARNING, mensajeFecha,
         ConfiguracionNotificacion.configRightTop
       );
       return false;
@@ -1583,7 +1585,7 @@ export class GestionCarteraComponent {
         if (resp.Exitoso) {
 
           this.notif.success(
-            'Exitoso',
+            ERP_TOAST.SUCCESS,
             resp.Mensaje,
             ConfiguracionNotificacion.configRightTop
           );
@@ -1635,7 +1637,7 @@ export class GestionCarteraComponent {
         } else {
 
           this.notif.warning(
-            'Advertencia',
+            ERP_TOAST.WARNING,
             resp.Mensaje,
             ConfiguracionNotificacion.configRightTop
           );
@@ -1650,7 +1652,7 @@ export class GestionCarteraComponent {
         this.notif.error(
           error?.error?.Message ??
           'Error al registrar la insolvencia.',
-          'Error',
+          ERP_TOAST.ERROR,
           ConfiguracionNotificacion.configRightTop
         );
 
@@ -1925,11 +1927,11 @@ export class GestionCarteraComponent {
     );
   
     if (fechaIngresada > fechaActual) {
-      return 'La fecha no puede ser mayor a la fecha actual.';
+      return ERP_MESSAGES.FECHA_MAYOR_ACTUAL;
     }
   
     if (fechaIngresada < fechaMinima) {
-      return 'La fecha no puede ser menor al 01/01/2000.';
+      return ERP_MESSAGES.FECHA_MENOR_PERMITIDA;
     }
   
     return null;
@@ -2085,7 +2087,7 @@ export class GestionCarteraComponent {
         },
         error: (err) => {
           console.error(err);
-          this.notif.warning('Advertencia', 'No se encontró registro.', ConfiguracionNotificacion.configRightTop);
+          this.notif.warning(ERP_TOAST.WARNING, ERP_MESSAGES.REGISTRO_NO_ENCONTRADO, ConfiguracionNotificacion.configRightTop);
           this.garantiasForm.reset();        
           this.loading.hide();
         }
@@ -2152,7 +2154,7 @@ export class GestionCarteraComponent {
   validarSaldo(totales: any): boolean {
     if ( this.garantiasCompartidas.length > 0) {
       if ((totales.cobertura - totales.respalda) <= 0) {
-        this.notif.warning('Advertencia', 'Garantía no cubre el valor del crédito.', ConfiguracionNotificacion.configRightTop);
+        this.notif.warning(ERP_TOAST.WARNING, ERP_MESSAGES.GARANTIA_NO_CUBRE_CREDITO, ConfiguracionNotificacion.configRightTop);
         return false;
       }
     }
@@ -2253,17 +2255,19 @@ export class GestionCarteraComponent {
     .subscribe({
       next: (res) => {
         if (!res?.Exitoso) {
-          this.notif.warning('Advertencia', res.Mensaje, ConfiguracionNotificacion.configRightTop);
+          this.notif.warning(ERP_TOAST.WARNING, res.Mensaje, ConfiguracionNotificacion.configRightTop);
           return;
         }
         
         this.guardarLogGestionCartera(jsonLog);
-        this.notif.success('Exitoso', 'El cambio de garantía se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+        this.notif.success(ERP_TOAST.SUCCESS, 
+          ERP_MESSAGES.CAMBIO_EXITOSO.replace('{0}','garantía'),
+          ConfiguracionNotificacion.configRightTop);
         this.accionSeleccionada = false;
         this.cerrarModalYRefrescarCambiarGarantia();
       },
       error: () => {
-        this.notif.error('Error', 'No se pudo guardar', ConfiguracionNotificacion.configRightTop);
+        this.notif.error(ERP_TOAST.ERROR, 'No se pudo guardar', ConfiguracionNotificacion.configRightTop);
       }
     });
   }
@@ -2346,8 +2350,8 @@ export class GestionCarteraComponent {
         error: () => {
 
           this.notif.warning(
-            'Advertencia',
-            'No fue posible consultar los créditos asociados.',
+            ERP_TOAST.WARNING,
+            ERP_MESSAGES.CONSULTA_CREDITOS_ASOCIADOS_ERROR,
             ConfiguracionNotificacion.configRightTop
           );
 
@@ -2389,7 +2393,7 @@ export class GestionCarteraComponent {
 
     const form = this.calificacionForm.getRawValue();
     if (!form.IdCausal || Number(form.IdCausal) === 0) {
-      this.notif.warning('Advertencia', 'Debe seleccionar Causal.', ConfiguracionNotificacion.configRightTop);
+      this.notif.warning(ERP_TOAST.WARNING, 'Debe seleccionar Causal.', ConfiguracionNotificacion.configRightTop);
       return false;
     }
 
@@ -2401,7 +2405,7 @@ export class GestionCarteraComponent {
       form.Modelo !== this.calificacionInicial.Modelo;
 
     if (!cambio) {
-      this.notif.warning('Advertencia', 'Debe cambiar calificación.', ConfiguracionNotificacion.configRightTop);
+      this.notif.warning(ERP_TOAST.WARNING, 'Debe cambiar calificación.', ConfiguracionNotificacion.configRightTop);
       return false;
     }
 
@@ -2461,8 +2465,8 @@ export class GestionCarteraComponent {
 
   private handleErrorCambioCalificacion(err: HttpErrorResponse) {
     this.notif.error(
-      'Error',
-      'El cambio de calificación no se realizó correctamente.',
+      ERP_TOAST.ERROR,
+      ERP_MESSAGES.CAMBIO_NO_REALIZADO.replace('{0}','calificación'),
       ConfiguracionNotificacion.configRightTop
     );
   }
@@ -2471,8 +2475,8 @@ export class GestionCarteraComponent {
 
     if (!resp.Exitoso) {
       this.notif.warning(
-        'Advertencia',
-        resp.Mensaje ?? 'El cambio de calificación no se realizó correctamente.',
+        ERP_TOAST.WARNING,
+        resp.Mensaje ?? ERP_MESSAGES.CAMBIO_NO_REALIZADO.replace('{0}','calificación'),
         ConfiguracionNotificacion.configRightTop
       );
       this.accionSeleccionada = false;
@@ -2483,7 +2487,7 @@ export class GestionCarteraComponent {
 
     this.notif.success(
       'Exito',
-      resp.Mensaje ?? 'El cambio de calificación se realizó correctamente.',
+      resp.Mensaje ?? ERP_MESSAGES.CAMBIO_EXITOSO.replace('{0}', 'calificación'),
       ConfiguracionNotificacion.configRightTop
     );
     this.accionSeleccionada = false;
@@ -2542,8 +2546,8 @@ export class GestionCarteraComponent {
           
           if(!this.calificacionForm.get('DtmFecha')?.value){
             this.gestionCreditoOperacionForm.get('Codigo')?.setValue('');
-            this.notif.warning('Advertencia',
-              'No se encontró la calificación.',
+            this.notif.warning(ERP_TOAST.WARNING,
+              ERP_MESSAGES.REGISTRO_NO_ENCONTRADO,
               ConfiguracionNotificacion.configRightTop
             )
             return
@@ -2582,14 +2586,14 @@ export class GestionCarteraComponent {
     });
 
     if(seHizoReestructuracionHoy) {
-      this.notif.warning('Advertencia', "El crédito ya fué reestructurado hoy.", ConfiguracionNotificacion.configRightTop);
+      this.notif.warning(ERP_TOAST.WARNING, "El crédito ya fué reestructurado hoy.", ConfiguracionNotificacion.configRightTop);
       this.gestionCreditoOperacionForm.get('Codigo')?.reset();
       return;
     }
 
     const error = this.validarEdicionCredito(this.gestionCreditoOperacionForm.get('Codigo')?.value) ?? this.validarEdicionCreditoAlCambiarSistema();
     if (error) {
-      this.notif.warning('Advertencia', error, ConfiguracionNotificacion.configRightTop);
+      this.notif.warning(ERP_TOAST.WARNING, error, ConfiguracionNotificacion.configRightTop);
       this.gestionCreditoOperacionForm.get('Codigo')?.reset();
       return;
     }
@@ -2609,7 +2613,7 @@ export class GestionCarteraComponent {
     });
 
     if (!ultimaReest) {
-      this.notif.warning('Advertencia', "Hoy no se ha realizado reestructuración al crédito.", ConfiguracionNotificacion.configRightTop);
+      this.notif.warning(ERP_TOAST.WARNING, "Hoy no se ha realizado reestructuración al crédito.", ConfiguracionNotificacion.configRightTop);
       this.gestionCreditoOperacionForm.get('Codigo')?.reset();
       return;
     }
@@ -2618,20 +2622,20 @@ export class GestionCarteraComponent {
     const fechaUltimaTransaccion = new Date(this.gestionCreditoForm.get('fechaUltimaTrans')?.value);
 
     if(fechaUltimaTransaccion >= fechaUltimaReest) {
-      this.notif.warning('Advertencia', "Se realizó una transacción después de la reestructuración.", ConfiguracionNotificacion.configRightTop);
+      this.notif.warning(ERP_TOAST.WARNING, "Se realizó una transacción después de la reestructuración.", ConfiguracionNotificacion.configRightTop);
       this.gestionCreditoOperacionForm.get('Codigo')?.reset();
       return;
     }
 
     const datosUsuario = StorageSecurity.getData() || {};
     if (datosUsuario?.NumeroOficina != this.gestionCreditoForm.get('NumeroOficina')?.value) {
-      this.notif.warning('Advertencia', ERROR_MESSAGES.OTRA_OFICINA, ConfiguracionNotificacion.configRightTop);
+      this.notif.warning(ERP_TOAST.WARNING, ERROR_MESSAGES.OTRA_OFICINA, ConfiguracionNotificacion.configRightTop);
       this.gestionCreditoOperacionForm.get('Codigo')?.reset();
       return;
     }
 
     Swal.fire({
-      title: 'Advertencia',
+      title: ERP_TOAST.WARNING,
       text: '',
       html: '¿Está seguro que desea devolver reestructurado?',
       icon: 'warning',
@@ -2742,8 +2746,7 @@ export class GestionCarteraComponent {
     
     if (!idTercero) {
       this.notif.warning(
-        'Advertencia',
-        'No se encontró tercero.',
+        ERP_TOAST.WARNING, ERP_MESSAGES.REGISTRO_NO_ENCONTRADO,
         ConfiguracionNotificacion.configRightTop
       );
       return;
@@ -2760,7 +2763,7 @@ export class GestionCarteraComponent {
         if (!tieneConvenio) {
           this.gestionCreditoForm.get('IdFormaPago')?.setValue(this.formaPagoInicial);
           this.notif.warning(
-            'Advertencia',
+            ERP_TOAST.WARNING,
             'No posee convenio de nómina.',
             ConfiguracionNotificacion.configRightTop
           );
@@ -2769,7 +2772,7 @@ export class GestionCarteraComponent {
       },
       error: () => {
         this.notif.error(
-          'Error',
+          ERP_TOAST.ERROR,
           'Error al obtener convenio de nómina.',
           ConfiguracionNotificacion.configRightTop
         );
@@ -2788,7 +2791,7 @@ export class GestionCarteraComponent {
 
     if (!this.huboCambioFormaPago) {
       this.notif.warning(
-        'Advertencia',
+        ERP_TOAST.WARNING,
         'Debe cambiar forma de pago.',
         ConfiguracionNotificacion.configRightTop);
         return;
@@ -2827,7 +2830,7 @@ export class GestionCarteraComponent {
       (<any>$('#ModalRegistrarDebitoAutomatico')).modal('hide');
 
     } else {
-      this.notif.warning('Advertencia', 
+      this.notif.warning(ERP_TOAST.WARNING, 
         'Debe diligenciar los datos para guardar el débito.',
          ConfiguracionNotificacion.configRightTop);
     }
@@ -2859,7 +2862,7 @@ export class GestionCarteraComponent {
       result => {
         this.loading.hide();
         if (result.length === 0) {
-          this.notif.warning('Advertencia', 'No se encontró el asociado.', ConfiguracionNotificacion.configRightTop);
+          this.notif.warning(ERP_TOAST.WARNING, ERP_MESSAGES.REGISTRO_NO_ENCONTRADO , ConfiguracionNotificacion.configRightTop);
           this.resultCuentaDebito = undefined;
         } else if (result.length === 1) {
           this.debitoAutomaticoFrom.get('DocumentoDebito')?.setValue(result[0].NumeroDocumento);
@@ -2875,8 +2878,7 @@ export class GestionCarteraComponent {
               text: '',
               icon: 'error',
               animation: false,
-              html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
-                + result.Mensaje + '.',
+              html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO + result.Mensaje + '.',
               allowOutsideClick: false,
               allowEscapeKey: false
             });
@@ -2886,7 +2888,7 @@ export class GestionCarteraComponent {
               text: '',
               icon: 'error',
               animation: false,
-              html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+              html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                 + result.Mensaje + '.',
               allowOutsideClick: false,
               allowEscapeKey: false
@@ -2917,7 +2919,7 @@ export class GestionCarteraComponent {
             this.debitoAutomaticoFrom.get('IdConsecutivoDebito')?.setValue(result[0].IdConsecutivo);
             this.debitoAutomaticoFrom.get('IdDigitoDebito')?.setValue(result[0].IdDigito);
           } else if (result.Mensaje !== undefined || result.Mensaje !== null) {
-            this.notif.warning('Advertencia', result.Mensaje, ConfiguracionNotificacion.configRightTop);
+            this.notif.warning(ERP_TOAST.WARNING, result.Mensaje, ConfiguracionNotificacion.configRightTop);
             this.debitoAutomaticoFrom.get('DocumentoDebito')?.reset();
             this.debitoAutomaticoFrom.get('NombreDebito')?.reset();
             this.resultCuentaDebito = undefined;
@@ -2958,7 +2960,7 @@ export class GestionCarteraComponent {
     
     if (!this.huboCambioFormaPago) {
       this.notif.warning(
-        'Advertencia',
+        ERP_TOAST.WARNING,
         'Debe cambiar forma de pago.',
         ConfiguracionNotificacion.configRightTop)
         ;
@@ -3006,8 +3008,8 @@ export class GestionCarteraComponent {
       next: resp => this.procesarResCambiarFormaPago(resp, formaPagoNueva),
       error: err => {
         this.notif.error(
-          'Error',
-          err?.Mensaje ?? 'El cambio de forma de pago no se realizó correctamente.',
+          ERP_TOAST.ERROR,
+          err?.Mensaje ?? ERP_MESSAGES.CAMBIO_NO_REALIZADO.replace('{0}', 'forma de pago'),
           ConfiguracionNotificacion.configRightTop
         );
       }
@@ -3082,8 +3084,8 @@ export class GestionCarteraComponent {
     this.gestionCreditoOperacionForm.get('Codigo')?.reset();
 
     this.notif.success(
-      'Exitoso',
-      'El cambio de forma de pago se realizó correctamente.',
+      ERP_TOAST.SUCCESS,
+      ERP_MESSAGES.CAMBIO_EXITOSO.replace('{0}', 'forma de pago'),
       ConfiguracionNotificacion.configRightTop
     );
     this.cuotaTabBloqueado = false;
@@ -3098,7 +3100,7 @@ export class GestionCarteraComponent {
     if (!cuentaSeleccionada.ActivaMovimiento) {
 
       this.notif.warning(
-        'Advertencia',
+        ERP_TOAST.WARNING,
         'Cuenta inactiva por movimiento.',
         ConfiguracionNotificacion.configRightTop
       );
@@ -3133,7 +3135,7 @@ export class GestionCarteraComponent {
       : '¿Desea realizar la exclusión del seguro?';
 
     Swal.fire({
-      title: 'Advertencia',
+      title: ERP_TOAST.WARNING,
       text: texto,
       icon: 'warning',
       showCancelButton: true,
@@ -3185,8 +3187,8 @@ export class GestionCarteraComponent {
     .subscribe({
       next: (resp) => {
         if (resp.Exitoso) {
-          this.notif.success('Exitoso', 
-            'El cambio de inclusión/exclusión de seguro se realizó correctamente.', 
+          this.notif.success(ERP_TOAST.SUCCESS, 
+            ERP_MESSAGES.CAMBIO_EXITOSO.replace('{0}','inclusión/exclusión de seguro'),
             ConfiguracionNotificacion.configRightTop
           );
           this.accionSeleccionada = false;
@@ -3205,8 +3207,8 @@ export class GestionCarteraComponent {
   advertenciaOperacionSinCuenta(): boolean {
     if (!this.gestionCreditoForm.get('IdCuenta')?.value) {
       this.notif.warning(
-        'Advertencia',
-        'Debe buscar una cuenta para realizar esta operación.',
+        ERP_TOAST.WARNING,
+        ERP_MESSAGES.CUENTA_REQUERIDA,
         ConfiguracionNotificacion.configRightTop
       );
       this.gestionCreditoOperacionForm.get('Codigo')?.reset();
@@ -3308,7 +3310,7 @@ export class GestionCarteraComponent {
       },
       error: () => {
         this.loading.hide();
-        this.notif.error('Error', 'Error al obtener las líneas.', ConfiguracionNotificacion.configRightTop);
+        this.notif.error(ERP_TOAST.ERROR, 'Error al obtener las líneas.', ConfiguracionNotificacion.configRightTop);
       }
     });
   }
@@ -3353,7 +3355,7 @@ export class GestionCarteraComponent {
       Number(controlIdLinea) === Number(this.lineaActual) ||
       controlLinea === this.nombreLineaActual
     ) {
-      this.notif.warning('Advertencia','Debe cambiar línea.',
+      this.notif.warning(ERP_TOAST.WARNING,'Debe cambiar línea.',
         ConfiguracionNotificacion.configRightTop
       );
       return;
@@ -3378,8 +3380,8 @@ export class GestionCarteraComponent {
       },
       onNotFound: () => {
         this.notif.warning(
-          'Advertencia',
-          'No se encontró registro.',
+          ERP_TOAST.WARNING,
+          ERP_MESSAGES.REGISTRO_NO_ENCONTRADO,
           ConfiguracionNotificacion.configRightTop
         );
       }
@@ -3415,7 +3417,7 @@ export class GestionCarteraComponent {
     control.enable();
     control.setValidators([
       Validators.required,
-      Validators.pattern('^[0-9]*$')
+      Validators.pattern(ERP_REGEX.NUMERO)
     ]);
     control.setErrors(null);
     control.updateValueAndValidity();
@@ -3437,7 +3439,7 @@ export class GestionCarteraComponent {
       const tipoPagareControl = this.gestionCreditoForm.get('TipoPagare');
         
       control?.clearValidators();
-      control?.setValidators([Validators.pattern('^[0-9]*$')]);
+      control?.setValidators([Validators.pattern(ERP_REGEX.NUMERO)]);
       control?.setErrors(null);
       control?.disable();
       control?.setValue(this.pagareActual);
@@ -3523,9 +3525,9 @@ export class GestionCarteraComponent {
       result => {
         this.loading.hide();
         if (!result) {
-          this.notif.warning('Advertencia', 'No se encontró registro.', ConfiguracionNotificacion.configRightTop);
+          this.notif.warning(ERP_TOAST.WARNING, ERP_MESSAGES.REGISTRO_NO_ENCONTRADO, ConfiguracionNotificacion.configRightTop);
         } else if (result.length === 0) {
-          this.notif.warning('Advertencia', 'No se encontró registro.', ConfiguracionNotificacion.configRightTop);
+          this.notif.warning(ERP_TOAST.WARNING, ERP_MESSAGES.REGISTRO_NO_ENCONTRADO, ConfiguracionNotificacion.configRightTop);
         } else if (result.length === 1) {
           this.buscarCuentaDetalle(result[0].IdCuenta);
         } else if (result.length > 1) {
@@ -3747,7 +3749,7 @@ export class GestionCarteraComponent {
   
     if (!this.huboCambio) {
       this.notif.warning(
-        'Advertencia',
+        ERP_TOAST.WARNING,
         'Debe cambiar el tipo y/o número de pagaré.',
          ConfiguracionNotificacion.configRightTop)
         ;
@@ -3874,7 +3876,7 @@ export class GestionCarteraComponent {
 
     if (!nuevoNombreLinea || !nuevaLinea )  {
       this.notif.warning(
-        'Advertencia',
+        ERP_TOAST.WARNING,
         'Debe seleccionar una línea válida.',
         ConfiguracionNotificacion.configRightTop
       )
@@ -3883,7 +3885,7 @@ export class GestionCarteraComponent {
 
     if (this.lineaActual === nuevaLinea || this.nombreLineaActual === nuevoNombreLinea) {
       this.notif.warning(
-        'Advertencia',
+        ERP_TOAST.WARNING,
         'Debe cambiar línea.',
         ConfiguracionNotificacion.configRightTop
       )
@@ -3938,8 +3940,8 @@ export class GestionCarteraComponent {
 
     this.gestionCreditoOperacionForm.get('Codigo')?.reset();
     this.notif.success(
-      'Exitoso',
-      'El cambio de línea se realizó correctamente.',
+      ERP_TOAST.SUCCESS,
+      ERP_MESSAGES.CAMBIO_EXITOSO.replace('{}', 'línea'),
       ConfiguracionNotificacion.configRightTop
     );
     this.cuotaTabBloqueado = false;
@@ -3984,8 +3986,8 @@ export class GestionCarteraComponent {
     this.gestionCreditoOperacionForm.get('Codigo')?.reset();
 
     this.notif.success(
-      'Exitoso',
-      'El cambio del tipo y/o número de pagaré se realizó correctamente.',
+      ERP_TOAST.SUCCESS,
+      ERP_MESSAGES.CAMBIO_EXITOSO.replace('{}', 'tipo y/o número de pagaré'),
       ConfiguracionNotificacion.configRightTop
     );
     this.cuotaTabBloqueado = false;
@@ -3994,8 +3996,8 @@ export class GestionCarteraComponent {
 
   private errorActualizarPagare(resp: ResultadoOperacionDto) {
     this.notif.warning(
-      'Advertencia',
-      resp?.Mensaje ?? 'El cambio del tipo y/o número de pagaré no se realizó correctamente.',
+      ERP_TOAST.WARNING,
+      resp?.Mensaje ?? ERP_MESSAGES.CAMBIO_NO_REALIZADO.replace('{}', 'tipo y/o número de pagaré'),
       ConfiguracionNotificacion.configRightTop
     );
     this.cuotaTabBloqueado = false;
@@ -4003,8 +4005,8 @@ export class GestionCarteraComponent {
 
   private procesarErrorLinea(resp: ResultadoOperacionDto){
     this.notif.warning(
-      'Advertencia',
-      resp?.Mensaje ?? 'El cambio de línea no se realizó correctamente.',
+      ERP_TOAST.WARNING,
+      resp?.Mensaje ?? ERP_MESSAGES.CAMBIO_NO_REALIZADO.replace('{}', 'línea'),
       ConfiguracionNotificacion.configRightTop
     );
     this.cuotaTabBloqueado = false;
@@ -4029,7 +4031,7 @@ export class GestionCarteraComponent {
       next: (resp) => {
         if (!resp.Exitoso) {
           this.notif.error(
-            'Error',
+            ERP_TOAST.ERROR,
             resp.Mensaje,
             ConfiguracionNotificacion.configRightTop
           );
@@ -4039,7 +4041,7 @@ export class GestionCarteraComponent {
       },
       error: () => {
         this.notif.error(
-          'Error',
+          ERP_TOAST.ERROR,
           'Error al registrar el log.',
           ConfiguracionNotificacion.configRightTop
         );
@@ -4348,7 +4350,7 @@ ValidarNumeroCuota() {
     const NumeroCuota = +this.CuotaForm.get('NumeroCuota')?.value;
     const CuotasPediente = this.SaldosForm.get('CuotasPendientes')?.value;
     if (NumeroCuota > CuotasPediente) {
-      this.notif.warning('Advertencia', 'El número de cuota debe ser menor que las cuotas pendientes.', ConfiguracionNotificacion.configRightTop);
+      this.notif.warning(ERP_TOAST.WARNING, 'El número de cuota debe ser menor que las cuotas pendientes.', ConfiguracionNotificacion.configRightTop);
       this.CuotaForm.get('NumeroCuota')?.reset();
     }
      // 4- Valida sistema
@@ -4361,7 +4363,7 @@ ValidarNumeroCuota() {
     if (intSistema === SistemaTres || intSistema === SistemaCuatro) {
       if (intNroCuotas > intCuotasMora + 1) {
         intNroCuotas = intCuotasMora + 1;
-         this.notif.warning('Advertencia', 'Número de cuotas no valido para este crédito.', ConfiguracionNotificacion.configRightTop);
+         this.notif.warning(ERP_TOAST.WARNING, 'Número de cuotas no valido para este crédito.', ConfiguracionNotificacion.configRightTop);
          this.CuotaForm.get('NumeroCuota')?.reset();
           this.lstCalcularCuota = [];
       }
@@ -4396,7 +4398,7 @@ CalcularCuota() {
     let intNroCuotas = +this.CuotaForm.get('NumeroCuota')?.value;
     if (this.option === 1 && (!intNroCuotas || intNroCuotas <= 0)) {
     this.notif.warning(
-      'Advertencia',
+      ERP_TOAST.WARNING,
       'Debe ingresar número de cuotas.',
       ConfiguracionNotificacion.configRightTop
     );
@@ -4435,7 +4437,7 @@ CalcularCuota() {
           }
         );
       } else {
-        this.notif.warning('Advertencia', 'Debe ingresar número de cuotas.', ConfiguracionNotificacion.configRightTop);
+        this.notif.warning(ERP_TOAST.WARNING, 'Debe ingresar número de cuotas.', ConfiguracionNotificacion.configRightTop);
       }
 
 
@@ -4481,7 +4483,7 @@ CalcularSimularPago(){
     const valorSaldo =  this.carteraInfo.SaldoDeuda;
     // valida que saldo ingresado no  sea mayor que el saldo de la deuda
     if(+valorSaldo < +valorIngresado){
-        this.notif.warning('Advertencia', 'Valor ingresado no valido.', ConfiguracionNotificacion.configRightTop);
+        this.notif.warning(ERP_TOAST.WARNING, 'Valor ingresado no valido.', ConfiguracionNotificacion.configRightTop);
         this.CuotaForm.get('EfectivoSimularPago')?.reset();
           this.lstSimularPago = [];
           return;
@@ -4497,7 +4499,7 @@ CalcularSimularPago(){
           }
         );
       } else {
-        this.notif.warning('Advertencia', 'Debe ingresar efectivo.', ConfiguracionNotificacion.configRightTop);
+        this.notif.warning(ERP_TOAST.WARNING, 'Debe ingresar efectivo.', ConfiguracionNotificacion.configRightTop);
       }
 
 
@@ -4584,7 +4586,7 @@ CalcularSimularPago(){
     this.carteraService.getDeducibles(this.gestionCreditoForm.get('IdCuenta')?.value).pipe(
       catchError(error => {
         console.error('Error al obtener deducibles:', error);
-        this.notif.error('Error', 'Error al obtener deducibles.', ConfiguracionNotificacion.configRightTop);
+        this.notif.error(ERP_TOAST.ERROR, 'Error al obtener deducibles.', ConfiguracionNotificacion.configRightTop);
         return of(null);
       })
     ).subscribe(
@@ -4651,7 +4653,7 @@ CalcularSimularPago(){
     this.carteraService.getProvisiones(this.gestionCreditoForm.get('IdCuenta')?.value).pipe(
       catchError(error => {
         console.error('Error al obtener provisiones:', error);
-        this.notif.error('Error', 'Error al obtener provisiones.', ConfiguracionNotificacion.configRightTop);
+        this.notif.error(ERP_TOAST.ERROR, 'Error al obtener provisiones.', ConfiguracionNotificacion.configRightTop);
         return of(null);
       })
     ).subscribe(
@@ -4871,7 +4873,7 @@ if (historialOperaciones) {
 
       return {
         ...registroHist,
-        Detalles: 'ERROR'
+        Detalles: ERP_TOAST.ERROR
       };
     }
   });
@@ -5036,7 +5038,7 @@ if (historialOperaciones) {
     const documentoABuscar = this.codeudorForm.get('documento')?.value?.trim();
     const documentoDeudor = this.gestionCreditoForm.get('NumeroDocumento')?.value?.trim();
     if (documentoABuscar === documentoDeudor) {
-      this.notif.warning('Advertencia', 'Deudor no puede ser agregado como codeudor.', ConfiguracionNotificacion.configRightTop);
+      this.notif.warning(ERP_TOAST.WARNING, 'Deudor no puede ser agregado como codeudor.', ConfiguracionNotificacion.configRightTop);
       this.codeudorForm.reset();
       return;
     }
@@ -5044,7 +5046,7 @@ if (historialOperaciones) {
     const yaEsCodeudor = this.codeudoresDraft.some(cod => cod.documento == documentoABuscar);
     if(yaEsCodeudor) {
       this.codeudorForm.reset();
-      this.notif.warning('Advertencia', 'No se pueden agregar codeudores duplicados.', ConfiguracionNotificacion.configRightTop);
+      this.notif.warning(ERP_TOAST.WARNING, 'No se pueden agregar codeudores duplicados.', ConfiguracionNotificacion.configRightTop);
       return;
     }
 
@@ -5058,7 +5060,7 @@ if (historialOperaciones) {
         const hoy: Date = new Date();
         const meses: number = diferenciaEnMeses(fechaActualizacion, hoy);
         if (meses >= 6) {
-          this.notif.warning('Advertencia', 'Asociado no se ha actualizado en los últimos 6 meses.', ConfiguracionNotificacion.configRightTop);
+          this.notif.warning(ERP_TOAST.WARNING, ERP_MESSAGES.ACTUALIZACION_DEMORADA, ConfiguracionNotificacion.configRightTop);
           this.codeudorForm.reset();
           return;
         }
@@ -5071,19 +5073,19 @@ if (historialOperaciones) {
         console.log(error)
         this.loading.hide();
         if (error.status === 404) {
-          this.notif.warning('Advertencia', 'No se encontró registro.', ConfiguracionNotificacion.configRightTop);
+          this.notif.warning(ERP_TOAST.WARNING, ERP_MESSAGES.REGISTRO_NO_ENCONTRADO, ConfiguracionNotificacion.configRightTop);
           this.codeudorForm.reset();
           return;
         }
 
         const errorCode = error.error?.ErrorCode as ErrorCode;
         if (ERROR_MESSAGES[errorCode]) {
-          this.notif.warning('Advertencia', ERROR_MESSAGES[errorCode], ConfiguracionNotificacion.configRightTop);
+          this.notif.warning(ERP_TOAST.WARNING, ERROR_MESSAGES[errorCode], ConfiguracionNotificacion.configRightTop);
           this.codeudorForm.reset();
           return;
         }
 
-        this.notif.error('Error', 'Error inesperado.', ConfiguracionNotificacion.configRightTop);
+        this.notif.error(ERP_TOAST.ERROR, 'Error inesperado.', ConfiguracionNotificacion.configRightTop);
       }
     });
 
@@ -5099,7 +5101,7 @@ if (historialOperaciones) {
     const documento = this.codeudorForm.get('documento')?.value?.trim();
     const yaEsCodeudor = this.codeudoresDraft.some(cod => cod.documento == documento);
     if(yaEsCodeudor) {
-      this.notif.warning('Advertencia', 'No se pueden agregar codeudores duplicados.', ConfiguracionNotificacion.configRightTop);
+      this.notif.warning(ERP_TOAST.WARNING, 'No se pueden agregar codeudores duplicados.', ConfiguracionNotificacion.configRightTop);
       return;
     }
 
@@ -5116,7 +5118,7 @@ if (historialOperaciones) {
   
   onClickEliminarCodeudor(idTercero: number) {
     if(this.garantiasPersonalesCod.length && this.codeudoresDraft.length === 1) {
-      this.notif.warning('Advertencia', 'Debe tener al menos un codeudor.', ConfiguracionNotificacion.configRightTop);
+      this.notif.warning(ERP_TOAST.WARNING, 'Debe tener al menos un codeudor.', ConfiguracionNotificacion.configRightTop);
       return;
     }
 
@@ -5147,7 +5149,7 @@ if (historialOperaciones) {
       (result) => {
         this.loading.hide();
         if(result) {
-          this.notif.success('Exitoso', 'El cambio de codeudores se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
+          this.notif.success(ERP_TOAST.SUCCESS, ERP_MESSAGES.CAMBIO_EXITOSO.replace('{0}', 'codeudores'), ConfiguracionNotificacion.configRightTop);
 
           const logCambios: LogCambiarCodeudores = {
             Anteriores: this.codeudoresAnteriores,
@@ -5382,7 +5384,7 @@ if (historialOperaciones) {
 
     this.gestionCreditoOperacionForm.get('Codigo')?.reset();
     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    this.notif.success('Exitoso', `${novedad} se realizó correctamente.`, ConfiguracionNotificacion.configRightTop);
+    this.notif.success(ERP_TOAST.SUCCESS, `${novedad} se realizó correctamente.`, ConfiguracionNotificacion.configRightTop);
     this.accionSeleccionada = false;
   }
 
@@ -5411,8 +5413,7 @@ if (historialOperaciones) {
     if (!cuenta) {
       event.preventDefault();
       this.notif.warning(
-        'Advertencia',
-        'La cuenta debe tener el formato 000-000-0000000-0.',
+        ERP_TOAST.WARNING, ERP_MESSAGES.FORMATO_CUENTA_INVALIDO,
         ConfiguracionNotificacion.configRightTop
       );
       return;

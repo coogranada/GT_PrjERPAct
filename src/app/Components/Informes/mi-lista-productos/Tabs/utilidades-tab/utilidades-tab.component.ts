@@ -13,6 +13,7 @@ import {
 import swal from "sweetalert2";
 import { AlertService } from '../../../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../../../Services/shared/loading.service';
+import { ERP_MESSAGES, ERP_TOAST } from '../../../../../utils/constant';
 import { StorageSecurity } from '../../../../../utils/storage-security.util';
 
 const ColorPrimario = 'rgb(13,165,80)';
@@ -258,7 +259,7 @@ private consultarSaldos(
 
         this.notif.onWarning(
           "Advertencia",
-          "No se encontró registro."
+          ERP_MESSAGES.REGISTRO_NO_ENCONTRADO
         );
 
         return;
@@ -411,8 +412,8 @@ private consultarRetenciones(
         this.loading.hide();
 
         this.notif.onWarning(
-          "Advertencia",
-          "No se encontró registro."
+          ERP_TOAST.WARNING, 
+          ERP_MESSAGES.REGISTRO_NO_ENCONTRADO
         );
 
         return;

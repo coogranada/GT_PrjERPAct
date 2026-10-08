@@ -8,6 +8,7 @@ import { ConfiguracionInformesService } from '../../../../../../Services/Informe
 import { InformePerfilService } from '../../../../../../Services/Maestros/informes-perfiles';
 import swal from 'sweetalert2';
 import { LoadingService } from '../../../../../../Services/shared/loading.service';
+import { ERP_MESSAGES } from '../../../../../../utils/constant';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 
@@ -142,7 +143,7 @@ export class PermisosInformesComponent implements OnInit {
         this.notif.success('Exitoso', 'Permiso adicionado correctamente', ConfiguracionNotificacion.configRightTopNoClose);
       },
       error => {
-        let mensaje = 'Ha ocurrido un error inesperado.';
+        let mensaje = ERP_MESSAGES.ERROR_INESPERADO;
         try {
           if (error && error.Mensaje) {
             mensaje = error.Mensaje;
@@ -167,7 +168,7 @@ export class PermisosInformesComponent implements OnInit {
         this.notif.success('Exitoso', 'Permisos adicionados correctamente', ConfiguracionNotificacion.configRightTopNoClose);
       },
       error => {
-        let mensaje = 'Ha ocurrido un error inesperado.';
+        let mensaje = ERP_MESSAGES.ERROR_INESPERADO;
         try {
           if (error && error.Mensaje) {
             mensaje = error.Mensaje;
@@ -191,7 +192,7 @@ export class PermisosInformesComponent implements OnInit {
         this.notif.success('Exitoso', 'Permisos eliminados correctamente', ConfiguracionNotificacion.configRightTopNoClose);
       },
       error => {
-        let mensaje = 'Ha ocurrido un error inesperado.';
+        let mensaje = ERP_MESSAGES.ERROR_INESPERADO;
         try {
           if (error && error.Mensaje) {
             mensaje = error.Mensaje;
@@ -219,7 +220,7 @@ export class PermisosInformesComponent implements OnInit {
         this.notif.success('Exitoso', 'Permiso eliminado correctamente', ConfiguracionNotificacion.configRightTopNoClose);
       },
       error => {
-        let mensaje = 'Ha ocurrido un error inesperado.';
+        let mensaje = ERP_MESSAGES.ERROR_INESPERADO;
         try {
           if (error && error.Mensaje) {
             mensaje = error.Mensaje;
@@ -329,7 +330,7 @@ export class PermisosInformesComponent implements OnInit {
       },
       error => {
         this.loading.hide();
-        let mensaje = 'Ha ocurrido un error inesperado.';
+        let mensaje = ERP_MESSAGES.ERROR_INESPERADO;
         try {
           if (error && error.Mensaje) {
             mensaje = error.Mensaje;

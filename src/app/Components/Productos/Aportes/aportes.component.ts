@@ -16,6 +16,8 @@ import { JuridicosService } from '../../../Services/Clientes/Juridicos.service';
 import { AlertService } from '../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../Services/shared/loading.service';
 import { StorageSecurity } from '../../../utils/storage-security.util';
+import { ERP_MESSAGES } from '../../../utils/constant';
+
 declare var $: any;
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -207,7 +209,7 @@ export class AportesComponent implements OnInit {
     
   if (((this.aportesFrom.get('IdEstado')?.value  == 25 || this.aportesFrom.get('IdEstado')?.value  == 10) && this.aportesOperacionFrom.get('Codigo')?.value  != '2' ) &&  this.aportesOperacionFrom.get('Codigo')?.value  != '10')
     {
-      this.notif.onWarning('Advertencia', 'Cuenta no se puede editar, estado no válido.');
+      this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_ESTADO_NO_VALIDO);
       this.aportesOperacionFrom.get('Codigo')?.reset()
       return;
     }
@@ -317,7 +319,7 @@ export class AportesComponent implements OnInit {
         $('#historial').removeClass('activar');
         $('#historial').removeClass('active');
       } else {
-        this.notif.onWarning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.');
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA);
         this.aportesOperacionFrom.get('Codigo')?.reset();
         this.clearFormAportes();
         this.BloquearAsociado = false;
@@ -410,7 +412,7 @@ export class AportesComponent implements OnInit {
         $('#historial').removeClass('activar');
         $('#historial').removeClass('active');
       } else {
-        this.notif.onWarning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.');
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA);
         this.aportesOperacionFrom.get('Codigo')?.reset();
         this.clearFormAportes();
         this.BloquearAsociado = false;
@@ -468,7 +470,7 @@ export class AportesComponent implements OnInit {
         $('#historial').removeClass('activar');
         $('#historial').removeClass('active');
       } else {
-        this.notif.onWarning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.');
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA);
         this.aportesOperacionFrom.get('Codigo')?.reset();
         this.clearFormAportes();
         this.BloquearAsociado = false;
@@ -521,11 +523,11 @@ export class AportesComponent implements OnInit {
           this.bloquearbtnActalizar = false;
           this.operacionEscogida = '/ Cambio de estado';
         } else {
-          this.notif.onWarning('Advertencia', 'Cuenta no se puede editar, estado no válido.');
+          this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_ESTADO_NO_VALIDO);
           this.aportesOperacionFrom.get('Codigo')?.reset();
         }
       } else {
-        this.notif.onWarning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.');
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA);
         this.aportesOperacionFrom.get('Codigo')?.reset();
       }
     }
@@ -1051,7 +1053,7 @@ export class AportesComponent implements OnInit {
           this.BloquearDatoBenf = false;
           this.BloquearNombreBenf = false;
           if (result.length === 0) {
-            this.notif.onWarning('Advertencia', 'No se encontró el asociado.');
+            this.notif.onWarning('Advertencia', ERP_MESSAGES.ASOCIADO_NO_ENCONTRADO);
             this.btnGuardar = false;
           } else if (result.length === 1) {
             this.aportesFrom.get('TipoDocumento')?.setValue(result[0].IdTipoDocumento);
@@ -1073,7 +1075,7 @@ export class AportesComponent implements OnInit {
                 text: '',
                 icon: 'error',
                 animation: false,
-                html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                   + result.Mensaje + '.',
                 allowOutsideClick: false,
                 allowEscapeKey: false,
@@ -1086,7 +1088,7 @@ export class AportesComponent implements OnInit {
                 text: '',
                 icon: 'error',
                 animation: false,
-                html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                   + result.Mensaje + '.',
                 allowOutsideClick: false,
                 allowEscapeKey: false,
@@ -1153,7 +1155,7 @@ export class AportesComponent implements OnInit {
         this.BloquearDatoBenf = false;
         this.BloquearNombreBenf = false;
         if (result.length === 0) {
-          this.notif.onWarning('Advertencia', 'No se encontró el asociado.');
+          this.notif.onWarning('Advertencia', ERP_MESSAGES.ASOCIADO_NO_ENCONTRADO);
           this.btnGuardar = false;
         } else if (result.length === 1) {
           this.aportesFrom.get('TipoDocumento')?.setValue(result[0].IdTipoDocumento);
@@ -1250,7 +1252,7 @@ export class AportesComponent implements OnInit {
         }
         // No encontró registros
         if (result.length === 0) {
-          this.notif.onWarning('Advertencia','No se encontró registro.');
+          this.notif.onWarning('Advertencia',ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
 
           this.clearFrom();
           this.generalesService.Autofocus('selectBuscar');
@@ -1313,12 +1315,12 @@ export class AportesComponent implements OnInit {
             this.loading.hide();
             this.aportesFrom.get('BuscarNombre')?.reset();
             if (result.length === 0) {
-              this.notif.onWarning('Advertencia', 'No se encontró registro.');
+              this.notif.onWarning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
               this.clearFormAportes();
               this.BloquearBuscar = null;
               this.generalesService.Autofocus('selectBuscarNombre');
             } else if (result.length === null) {
-              this.notif.onWarning('Advertencia', 'No se encontró registro.');
+              this.notif.onWarning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
               this.clearFormAportes();
               this.BloquearBuscar = null;
               this.generalesService.Autofocus('selectBuscarNombre');
@@ -1422,7 +1424,7 @@ export class AportesComponent implements OnInit {
         },
         error => {
           this.loading.hide();
-          this.notif.onWarning('Advertencia', 'El valor ingresado no tiene el formato correcto.');
+          this.notif.onWarning('Advertencia', ERP_MESSAGES.VALOR_INGRESADO_FORMATO_INCORRECTO);
           const errorMessage = <any>error;
           console.log(errorMessage);
         });
@@ -1460,7 +1462,7 @@ export class AportesComponent implements OnInit {
         }
       },
       error => {
-        this.notif.onWarning('Advertencia', 'El valor ingresado no tiene el formato correcto.');
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.VALOR_INGRESADO_FORMATO_INCORRECTO);
         const errorMessage = <any>error;
         console.log(errorMessage);
       });
@@ -1836,7 +1838,7 @@ export class AportesComponent implements OnInit {
       text: '',
       icon: 'error',
       animation: false,
-      html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+      html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
         + Mensaje + '.',
       allowOutsideClick: false,
       allowEscapeKey: false,

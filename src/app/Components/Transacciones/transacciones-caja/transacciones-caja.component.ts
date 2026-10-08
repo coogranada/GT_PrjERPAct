@@ -14,6 +14,7 @@ import { ShareComponentModule } from '../../../Modules/share-component.module';
 import { ModuleValidationService } from '../../../Services/Enviroment/moduleValidation.service';
 import { ChequeDTO, ChequeRetDTO } from '../../../Models/Transacciones/TransaccionesCaja/Cheque.model';
 import { StorageSecurity } from '../../../utils/storage-security.util';
+import { ERP_MESSAGES } from '../../../utils/constant';
 
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -1347,7 +1348,7 @@ export class TransaccionesCajaComponent implements OnInit {
       result => {
         this.ListAutorizados = result;
       }, error => {
-        this.notif.onDanger('Error', 'Ha ocurrido un error inesperado.');
+        this.notif.onDanger('Error', ERP_MESSAGES.ERROR_INESPERADO);
         console.error('ObtenerAutorizados- ' + error);
         this.loading.hide();
       }
@@ -1483,7 +1484,7 @@ export class TransaccionesCajaComponent implements OnInit {
         }, error => {
           this.loading.hide();
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', 'Ha ocurrido un error inesperado.');
+          this.notif.onDanger('Error', ERP_MESSAGES.ERROR_INESPERADO);
           console.log(errorMessage);
         });
   }

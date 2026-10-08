@@ -15,6 +15,7 @@ import { forkJoin, fromEvent, map } from 'rxjs';
 import { ConfiguracionNotificacion } from '../../../../../../environments/config.noticaciones';
 import Swal from 'sweetalert2';
 import { LoadingService } from '../../../../../Services/shared/loading.service';
+import { ERP_MESSAGES } from '../../../../../utils/constant';
 import { StorageSecurity } from '../../../../../utils/storage-security.util';
 
 @Component({
@@ -355,7 +356,7 @@ export class InformePersonasJuridicasComponent {
         },
           error => {
             this.ocultarModalProgreso();
-            let mensaje = 'Ha ocurrido un error inesperado.';
+            let mensaje = ERP_MESSAGES.ERROR_INESPERADO;
             try {
               if (error && error.Mensaje) {
                 mensaje = error.Mensaje;
@@ -1073,7 +1074,7 @@ export class InformePersonasJuridicasComponent {
           },
           error => {
             this.ocultarModalProgreso();
-            let mensaje = 'Ha ocurrido un error inesperado.';
+            let mensaje = ERP_MESSAGES.ERROR_INESPERADO;
             try {
               if (error && error.Mensaje) {
                 mensaje = error.Mensaje;

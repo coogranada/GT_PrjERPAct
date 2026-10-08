@@ -13,6 +13,8 @@ import { DisponiblesService } from '../../../../../Services/Productos/disponible
 import { ConfiguracionNotificacion } from '../../../../../../environments/config.noticaciones';
 import { LoadingService } from '../../../../../Services/shared/loading.service';
 import { StorageSecurity } from '../../../../../utils/storage-security.util';
+import { ERP_MESSAGES } from '../../../../../utils/constant';
+
 declare var $: any;
 
 @Component({
@@ -625,11 +627,11 @@ export class TerminoComponent implements OnInit {
           $('#negociacion').removeClass('active');
           this.generalesService.Autofocus('SelectTitular');
         } else {
-          this.notif.onWarning('Advertencia', 'Cuenta no se puede editar, estado no válido.');
+          this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_ESTADO_NO_VALIDO);
           this.TerminoOperacionForm.get('Codigo')?.reset();
         }
       } else {
-        this.notif.onWarning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.');
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA);
         this.TerminoOperacionForm.get('Codigo')?.reset();
       }
     } else if (this.TerminoOperacionForm.get('Codigo')?.value === '28') {  // Adicionar puntos
@@ -776,11 +778,11 @@ export class TerminoComponent implements OnInit {
             }
           }         
         } else {
-          this.notif.onWarning('Advertencia', 'Cuenta no se puede editar, estado no válido.');
+          this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_ESTADO_NO_VALIDO);
           this.TerminoOperacionForm.get('Codigo')?.reset();
         }
       } else {
-        this.notif.onWarning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.');
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA);
         this.TerminoOperacionForm.get('Codigo')?.reset();
       }
     } else if (this.TerminoOperacionForm.get('Codigo')?.value === '13') {  // Reimprimir 
@@ -859,7 +861,7 @@ export class TerminoComponent implements OnInit {
           this.notif.onWarning('Advertencia', 'Cuenta no se puede reimprimir, estado no válido.');
         }
       } else {
-        this.notif.onWarning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.');
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA);
       }
 
     } else if (this.TerminoOperacionForm.get('Codigo')?.value === '19') {  // Cambiar asesor externo
@@ -902,11 +904,11 @@ export class TerminoComponent implements OnInit {
           this.btnAsesoria = true;
           this.bloquearPuntos = false;
         } else {
-          this.notif.onWarning('Advertencia', 'Cuenta no se puede editar, estado no válido.');
+          this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_ESTADO_NO_VALIDO);
           this.TerminoOperacionForm.get('Codigo')?.reset();
         }
       } else {
-        this.notif.onWarning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.');
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA);
         this.TerminoOperacionForm.get('Codigo')?.reset();
       }
     } else if (this.TerminoOperacionForm.get('Codigo')?.value === '9') {   // Cambio de estado
@@ -951,11 +953,11 @@ export class TerminoComponent implements OnInit {
           this.bloquearPuntos = false;
           this.operacionEscogida = '/ Cambio de estado';
         } else {
-          this.notif.onWarning('Advertencia', 'Cuenta no se puede editar, estado no válido.');
+          this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_ESTADO_NO_VALIDO);
           this.TerminoOperacionForm.get('Codigo')?.reset();
         }
       } else {
-        this.notif.onWarning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.');
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA);
         this.TerminoOperacionForm.get('Codigo')?.reset();
       }
     } else if (this.TerminoOperacionForm.get('Codigo')?.value === '44') {  // Cambiar Nro Titulo     
@@ -1035,11 +1037,11 @@ export class TerminoComponent implements OnInit {
             this.ObtenerHistorial();
           }         
         } else {
-          this.notif.onWarning('Advertencia', 'Cuenta no se puede editar, estado no válido.');
+          this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_ESTADO_NO_VALIDO);
           this.TerminoOperacionForm.get('Codigo')?.reset();
         }
       } else {
-        this.notif.onWarning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.');
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA);
         this.TerminoOperacionForm.get('Codigo')?.reset();
       }
     } else if (this.TerminoOperacionForm.get('Codigo')?.value === '27') {  // Cambiar tipo de cuenta destino
@@ -1083,11 +1085,11 @@ export class TerminoComponent implements OnInit {
           this.SeleccionLiquidacion();
           this.bloquearActualizar = false;
         } else {
-          this.notif.onWarning('Advertencia', 'Cuenta no se puede editar, estado no válido.');
+          this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_ESTADO_NO_VALIDO);
           this.TerminoOperacionForm.get('Codigo')?.reset();
         }
       } else {
-        this.notif.onWarning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.');
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA);
         this.TerminoOperacionForm.get('Codigo')?.reset();
       }
     } else if (this.TerminoOperacionForm.get('Codigo')?.value === '11') {  // Adicionar y/o eliminar beneficiario
@@ -1113,11 +1115,11 @@ export class TerminoComponent implements OnInit {
           this.btnOpcionActualizarBeneficiario = false;
           this.generalesService.Autofocus('BeneficiarioSeguroDocumento');
         } else {
-          this.notif.onWarning('Advertencia', 'Cuenta no se puede editar, estado no válido.');
+          this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_ESTADO_NO_VALIDO);
           this.TerminoOperacionForm.get('Codigo')?.reset();
         }
       } else {
-        this.notif.onWarning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.');
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA);
         this.TerminoOperacionForm.get('Codigo')?.reset();
       }
     } else if (this.TerminoOperacionForm.get('Codigo')?.value === '100') {  // Adicionar y/o eliminar cesion CDAT
@@ -1145,11 +1147,11 @@ export class TerminoComponent implements OnInit {
           this.operacionEscogida = '/ Adicionar y/o eliminar cesion titulo';
           this.generalesService.Autofocus('SelectCesionTitulo');
         } else {
-          this.notif.onWarning('Advertencia', 'Cuenta no se puede editar, estado no válido.');
+          this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_ESTADO_NO_VALIDO);
           this.TerminoOperacionForm.get('Codigo')?.reset();
         }
       } else {
-        this.notif.onWarning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.');
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA);
         this.TerminoOperacionForm.get('Codigo')?.reset();
       }
     } else if (this.TerminoOperacionForm.get('Codigo')?.value === '103') {  // Reimprimir Capitalizacion
@@ -1201,7 +1203,7 @@ export class TerminoComponent implements OnInit {
         }
       } else {
         this.TerminoOperacionForm.get('Codigo')?.setValue("");
-        this.notif.onWarning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.');
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA);
       }
 
     } else if (this.TerminoOperacionForm.get('Codigo')?.value === '104') {  // Corregir Reciprocidad
@@ -1219,7 +1221,7 @@ export class TerminoComponent implements OnInit {
         && this.TerminoForm.get('IdDigito')?.value !== ''
       ) {
         if (this.TerminoForm.get('IdEstado')?.value == 25 || this.TerminoForm.get('IdEstado')?.value == 10 && this.TerminoForm.get('IdEstado')?.value !== 45) {
-          this.notif.onWarning('Advertencia', 'Cuenta no se puede editar, estado no válido.');
+          this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_ESTADO_NO_VALIDO);
           this.TerminoOperacionForm.get('Codigo')?.reset();
           return;
         }
@@ -1266,7 +1268,7 @@ export class TerminoComponent implements OnInit {
           element.scrollIntoView({ behavior: "smooth", block: "start" })
         this.ObtenerHistorial();
       } else {
-        this.notif.onWarning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.');
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA);
         this.TerminoOperacionForm.get('Codigo')?.reset();
       }
     }
@@ -2003,7 +2005,7 @@ export class TerminoComponent implements OnInit {
           this.btnOpcionesActualizarTitulares = true;
           this.btnGuardar = true;
         } else if (result.length === 0) {
-          this.notif.onWarning('Advertencia', 'No se encontró registro.');
+          this.notif.onWarning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
           this.ClearFrom();
           this.generalesService.Autofocus('SelectBuscar');
         } else if (result.length = 1) {
@@ -2133,7 +2135,7 @@ export class TerminoComponent implements OnInit {
             result => {
               this.loading.hide();
               if (result.length === 0) {
-                this.notif.onWarning('Advertencia', 'No se encontró el asociado.');
+                this.notif.onWarning('Advertencia', ERP_MESSAGES.ASOCIADO_NO_ENCONTRADO);
                 this.TerminoForm.get('NumeroDocumento')?.reset();
                 this.TerminoForm.get('Nombre')?.reset();
               } else if (result.length === 1) {                
@@ -2176,7 +2178,7 @@ export class TerminoComponent implements OnInit {
                     text: '',
                     icon: 'error',
                     animation: false,
-                    html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                    html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                       + result.Mensaje + '.',
                     allowOutsideClick: false,
                     allowEscapeKey: false,
@@ -2189,7 +2191,7 @@ export class TerminoComponent implements OnInit {
                     text: '',
                     icon: 'error',
                     animation: false,
-                    html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                    html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                       + result.Mensaje + '.',
                     allowOutsideClick: false,
                     allowEscapeKey: false,
@@ -2254,7 +2256,7 @@ export class TerminoComponent implements OnInit {
             result => {
               this.loading.hide();
               if (result.length === 0) {
-                this.notif.onWarning('Advertencia', 'No se encontró el asociado.');
+                this.notif.onWarning('Advertencia', ERP_MESSAGES.ASOCIADO_NO_ENCONTRADO);
                 this.TerminoForm.get('NumeroDocumento')?.reset();
                 this.TerminoForm.get('Nombre')?.reset();
               } else if (result.length === 1) {
@@ -2289,7 +2291,7 @@ export class TerminoComponent implements OnInit {
                     text: '',
                     icon: 'error',
                     animation: false,
-                    html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                    html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                       + result.Mensaje + '.',
                     allowEscapeKey: false,
                     confirmButtonText: 'Ok',
@@ -2301,7 +2303,7 @@ export class TerminoComponent implements OnInit {
                     text: '',
                     icon: 'error',
                     animation: false,
-                    html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                    html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                       + result.Mensaje + '.',
                     allowOutsideClick: false,
                     allowEscapeKey: false,
@@ -2360,7 +2362,7 @@ export class TerminoComponent implements OnInit {
         this.loading.hide();
         this.dataObjet = undefined;
         if (result.length === 0) {
-          this.notif.onWarning('Advertencia', 'No se encontró el asociado.');
+          this.notif.onWarning('Advertencia', ERP_MESSAGES.ASOCIADO_NO_ENCONTRADO);
           this.TerminoForm.get('NumeroDocumento')?.reset();
           this.TerminoForm.get('Nombre')?.reset();
           this.btnGuardar = false;
@@ -2742,7 +2744,7 @@ export class TerminoComponent implements OnInit {
         },
         error => {
           this.loading.hide();
-          this.notif.onWarning('Advertencia', 'El valor ingresado no tiene el formato correcto');
+          this.notif.onWarning('Advertencia', ERP_MESSAGES.VALOR_INGRESADO_FORMATO_INCORRECTO);
         }
       );
     }
@@ -2785,7 +2787,7 @@ export class TerminoComponent implements OnInit {
         }
       },
       error => {
-        this.notif.onWarning('Advertencia', 'El valor ingresado no tiene el formato correcto.');
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.VALOR_INGRESADO_FORMATO_INCORRECTO);
         const errorMessage = <any>error;
         this.notif.onDanger('Error', errorMessage);
         console.log(errorMessage);
@@ -4835,7 +4837,7 @@ export class TerminoComponent implements OnInit {
       text: '',
       icon: 'error',
       animation: false,
-      html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+      html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
         + Mensaje + '.',
       allowOutsideClick: false,
       allowEscapeKey: false,
@@ -5158,7 +5160,7 @@ export class TerminoComponent implements OnInit {
                     text: '',
                     icon: 'error',
                     animation: false,
-                    html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                    html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                       + result.Mensaje + '.',
                     
                     allowOutsideClick: false,
@@ -5172,7 +5174,7 @@ export class TerminoComponent implements OnInit {
                     text: '',
                     icon: 'error',
                     animation: false,
-                    html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                    html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                       + result.Mensaje + '.',
                     
                     allowOutsideClick: false,
@@ -5229,7 +5231,7 @@ export class TerminoComponent implements OnInit {
                       text: '',
                       icon: 'error',
                       animation: false,
-                      html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                      html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                         + result.Mensaje + '.',
                       
                       allowOutsideClick: false,
@@ -5243,7 +5245,7 @@ export class TerminoComponent implements OnInit {
                       text: '',
                       icon: 'error',
                       animation: false,
-                      html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                      html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                         + result.Mensaje + '.',
                       
                       allowOutsideClick: false,
@@ -5318,7 +5320,7 @@ export class TerminoComponent implements OnInit {
                     text: '',
                     icon: 'error',
                     animation: false,
-                    html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                    html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                       + result.Mensaje + '.',
                     
                     allowOutsideClick: false,
@@ -5332,7 +5334,7 @@ export class TerminoComponent implements OnInit {
                     text: '',
                     icon: 'error',
                     animation: false,
-                    html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                    html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                       + result.Mensaje + '.',
                     
                     allowOutsideClick: false,
@@ -5390,7 +5392,7 @@ export class TerminoComponent implements OnInit {
                     text: '',
                     icon: 'error',
                     animation: false,
-                    html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                    html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                       + result.Mensaje + '.',
                     
                     allowOutsideClick: false,
@@ -5404,7 +5406,7 @@ export class TerminoComponent implements OnInit {
                     text: '',
                     icon: 'error',
                     animation: false,
-                    html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                    html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                       + result.Mensaje + '.',
                     
                     allowOutsideClick: false,
@@ -5471,7 +5473,7 @@ export class TerminoComponent implements OnInit {
               text: '',
               icon: 'error',
               animation: false,
-              html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+              html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                 + result.Mensaje + '.',
               
               allowOutsideClick: false,
@@ -5485,7 +5487,7 @@ export class TerminoComponent implements OnInit {
               text: '',
               icon: 'error',
               animation: false,
-              html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+              html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                 + result.Mensaje + '.',
               
               allowOutsideClick: false,
@@ -5780,7 +5782,7 @@ export class TerminoComponent implements OnInit {
       else if (x.length == 0) {
         this.TerminoForm.controls["CesionTituloDocumento"].setValue("");
         this.TerminoForm.controls["CesionTituloNombre"].setValue("");
-        this.notif.onWarning('Advertencia', 'No se encontró registro.');
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
       } else if (x.length == 1 && x[0].IdRelacion == 10)
         this.NoMenores();
       else if (x.length == 1) {
@@ -6175,7 +6177,7 @@ export class TerminoComponent implements OnInit {
         this.bloquearbtnCambioEstado = false;
       }
     } else {
-      this.notif.onWarning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.');
+      this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA);
     }
   }
   Observaciones(IdEstado : string) {
@@ -7447,7 +7449,7 @@ export class TerminoComponent implements OnInit {
       }
     } else {
       this.notif.onWarning('Advertencia',
-        'Debe buscar una cuenta para realizar esta operación.');
+        ERP_MESSAGES.CUENTA_REQUERIDA);
     }
   }
   //Imprimir Capitalizacion

@@ -17,10 +17,11 @@ import { ToastrService } from 'ngx-toastr';
 import { ConfiguracionNotificacion } from '../../../../../environments/config.noticaciones';
 import { finalize, forkJoin, switchMap } from 'rxjs';
 import { MiListaProductosService } from '../../../../Services/Informes/mi-lista-productos.service';
+import { ERP_MESSAGES } from '../../../../utils/constant';
 
 @Component({
   selector: 'app-asesoria',
-  imports: [ReactiveFormsModule, ShareComponentModule, TabNegociacionComponent, TablaHistorialComponent, CurrencyPipe],
+  imports: [ReactiveFormsModule, ShareComponentModule, TabNegociacionComponent, CurrencyPipe],
   templateUrl: './asesoria.component.html',
   styleUrl: './asesoria.component.css',
   providers: [GestionCreditoService]
@@ -122,7 +123,7 @@ export class AsesoriaComponent {
   //     error: (err: HttpErrorResponse) => {
   //       this.loading.hide();
   //       if (err.status === 404) {
-  //         this.notif.warning('Advertencia', 'No se encontró registro.', ConfiguracionNotificacion.configRightTop);
+  //         this.notif.warning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO, ConfiguracionNotificacion.configRightTop);
   //         return;
   //       }
 
@@ -164,7 +165,7 @@ export class AsesoriaComponent {
   //       if (err.status === 404) {
   //         this.notif.warning(
   //           'Advertencia',
-  //           'No se encontró registro.',
+  //           ERP_MESSAGES.REGISTRO_NO_ENCONTRADO,
   //           ConfiguracionNotificacion.configRightTop
   //         );
   //         return;
@@ -214,7 +215,7 @@ export class AsesoriaComponent {
       },
       error: (err: HttpErrorResponse) => {
         if (err.status === 404) {
-          this.notif.warning('Advertencia', 'No se encontró registro.', ConfiguracionNotificacion.configRightTop);
+          this.notif.warning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO, ConfiguracionNotificacion.configRightTop);
           return;
         }
 
@@ -288,7 +289,7 @@ export class AsesoriaComponent {
           this.modalBuscarAsesorias.nativeElement.click();
         } else {
           this.loading.hide();
-          this.notif.warning('Advertencia', 'No se encontró registro.', ConfiguracionNotificacion.configRightTop);
+          this.notif.warning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO, ConfiguracionNotificacion.configRightTop);
 
         }
       }, 

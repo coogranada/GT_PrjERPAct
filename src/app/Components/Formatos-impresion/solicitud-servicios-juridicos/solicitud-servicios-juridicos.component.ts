@@ -14,6 +14,7 @@ import { ClientesService } from '../../../Services/Clientes/clientes.service';
 import { GeneralesService } from '../../../Services/Productos/generales.service';
 import { LoadingService } from '../../../Services/shared/loading.service';
 import { StorageSecurity } from '../../../utils/storage-security.util';
+import { ERP_MESSAGES } from '../../../utils/constant';
 
 @Component({
   selector: 'app-solicitud-servicios-juridicos',
@@ -628,7 +629,7 @@ export class SolicitudServiciosJuridicosComponent implements OnInit {
     if (now.getDate() < targetDate.getDate()) totalMonths -= 1;
     
     if(totalMonths > 6 && this.GetServiceSolicited.idProceso == 2) {
-      this.notif.onWarning('Advertencia', 'Asociado no se ha actualizado en los últimos 6 meses.');
+      this.notif.onWarning('Advertencia', ERP_MESSAGES.ACTUALIZACION_DEMORADA);
       return;
     }
 

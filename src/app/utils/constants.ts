@@ -1,4 +1,5 @@
 import { CriterioBusquedaAsesoria, TipoSistemas } from "../Models/Productos/cartera/gestion-credito.enum";
+import { ERP_MESSAGES } from "./constant";
 
 export enum ErrorCode {
     PERSONA_VETADA = 'PERSONA_VETADA',
@@ -22,10 +23,10 @@ export const ERROR_MESSAGES: Record<ErrorCode, string> = {
     [ErrorCode.PERSONA_VETADA]: 'Se encontraron coincidencias en la lista de personas vetadas.',
     [ErrorCode.PERSONA_FALLECIDA]: 'Persona con estado fallecido.',
     [ErrorCode.PERSONA_MENOR]: 'El codeudor no puede ser menor.',
-    [ErrorCode.ACTUALIZACION_DEMORADA]: 'Asociado no se ha actualizado en los últimos 6 meses.',
+    [ErrorCode.ACTUALIZACION_DEMORADA]: ERP_MESSAGES.ACTUALIZACION_DEMORADA,
     [ErrorCode.CUPO_TARJETA_DEBITO]: 'No se puede realizar esta operación, tarjeta débito.',
     [ErrorCode.INTERESES_AL_DIA]: 'Debe ponerse al día con los intereses.',
-    [ErrorCode.CUENTA_CANCELADA]: 'Cuenta no se puede editar, estado no válido.',
+    [ErrorCode.CUENTA_CANCELADA]: ERP_MESSAGES.CUENTA_ESTADO_NO_VALIDO,
     [ErrorCode.CUENTA_VENCIDA]: 'Cuenta no se puede editar, crédito vencido.',
     [ErrorCode.TASA_USURA]: 'Las tasas de la línea no cumplen con las condiciones.',
     [ErrorCode.PERIODOS_NO_CUMPLEN]: 'Periodos no cumplen con las condiciones.',

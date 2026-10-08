@@ -37,6 +37,7 @@ import { MiListaProductosService } from '../../../Services/Informes/mi-lista-pro
 import { Estados } from '../../../../environments/Estados';
 import { LoadingService } from '../../../Services/shared/loading.service';
 import { StorageSecurity } from '../../../utils/storage-security.util';
+import { ERP_MESSAGES } from '../../../utils/constant';
 
 declare var $: any;
 const PrimaryWhite = 'rgb(13,165,80)';
@@ -9600,7 +9601,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           }
         },
         error => {
-          this.notif.onWarning('Advertencia', 'El valor ingresado no tiene el formato correcto');
+          this.notif.onWarning('Advertencia', ERP_MESSAGES.VALOR_INGRESADO_FORMATO_INCORRECTO);
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
@@ -9721,7 +9722,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           }
         },
         error => {
-          this.notif.onWarning('Advertencia', 'El valor ingresado no tiene el formato correcto');
+          this.notif.onWarning('Advertencia', ERP_MESSAGES.VALOR_INGRESADO_FORMATO_INCORRECTO);
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
@@ -10972,7 +10973,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       const meses = this.calcularMeses(fechaActualizacion);
 
       if (meses > 6 && this.serviciosFrom.value?.proceso == 2) {
-        this.notif.onWarning('Advertencia', 'Asociado no se ha actualizado en los últimos 6 meses.');
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.ACTUALIZACION_DEMORADA);
         return;
       }
 
@@ -23515,7 +23516,7 @@ enviarWorkManager() {
             this.formTutorOculto = false;
             this.ResetAllFormBusqueda();
             this.ResetItemForm();
-            this.notif.onWarning('Advertencia', 'No se encontró registro.');
+            this.notif.onWarning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
             this.loading.hide();
             this.mostrarOficina = false;
             this.basicosFrom.get('operacion')?.setValue(2);
@@ -23566,7 +23567,7 @@ enviarWorkManager() {
           this.BuscarAsociados.nativeElement.click();
           } else {
             this.loading.hide();
-            this.notif.onWarning('Advertencia', 'No se encontró registro.');
+            this.notif.onWarning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
             this.basicosFrom.get('NombreBusqueda')?.reset();
             this.basicosFrom.get('DocumentoBusqueda')?.reset();
             this.generalesService.Autofocus('BuscarNombre');
@@ -26079,7 +26080,7 @@ enviarWorkManager() {
               this.serviciosFrom.get('TipoDocumento')?.setValue(result.Persona.IdTipoDocumento);
               this.esDeudorAsociado = result.IdRelacion == 5 || result.IdRelacion == 10 ? 'Si' : 'No';
             } else {
-              this.notif.onWarning('Advertencia', 'No se encontró registro..');
+              this.notif.onWarning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
               this.serviciosFrom.get('NombreDeudor')?.reset();
               this.serviciosFrom.get('NumeroDocumento')?.reset();
             }

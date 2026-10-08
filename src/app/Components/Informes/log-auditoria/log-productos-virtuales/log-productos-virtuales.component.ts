@@ -7,6 +7,7 @@ import moment from 'moment';
 import { Campo, Filtro } from '../../../../Models/Informes/informe-clientes/informe-clientes.model';
 import { ConfiguracionNotificacion } from '../../../../../environments/config.noticaciones';
 import { LoadingService } from '../../../../Services/shared/loading.service';
+import { ERP_MESSAGES } from '../../../../utils/constant';
 import { StorageSecurity } from '../../../../utils/storage-security.util';
 declare var $: any;
 @Component({
@@ -304,7 +305,7 @@ export class LogProductosVirtualesComponent implements OnInit {
     if (temp.length > 0)
       this.GetCantInforme(true);
     else
-      this.notif.warning('Advertencia', 'Debe seleccionar campos.', ConfiguracionNotificacion.configRightTop);
+      this.notif.warning('Advertencia', ERP_MESSAGES.CAMPOS_REQUERIDOS, ConfiguracionNotificacion.configRightTop);
   }
   GetCantInforme(isDowload: boolean) {
     this.InformesLog = [];
