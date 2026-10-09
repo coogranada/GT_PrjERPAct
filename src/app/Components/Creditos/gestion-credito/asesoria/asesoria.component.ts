@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TablaHistorialComponent } from '../../../shared/tabla-historial/tabla-historial.component';
 import { TabNegociacionComponent } from '../shared/tab-negociacion/tab-negociacion.component';
 import { AsesoriaEncabezadoForm, BuscarAsesoriasResponse, BuscarAsesoriasResponseTabla, ConsultarAsesoriaResponse, DeduciblesResponse, SaldosVigentesResponse } from '../../../../Models/Creditos/GestionCredito/gestion-credito.model';
-import { CriterioBusquedaAsesoria } from '../../../../Models/Productos/cartera/gestion-credito.enum';
 import { GestionCreditoService } from '../../../../Services/Productos/GestionCredito.service';
 import { MapeoColumna, transformarDatosParaTabla } from '../../../../utils/tabla-utils';
 import { CurrencyPipe, formatDate } from '@angular/common';
@@ -18,6 +17,7 @@ import { ConfiguracionNotificacion } from '../../../../../environments/config.no
 import { finalize, forkJoin, switchMap } from 'rxjs';
 import { MiListaProductosService } from '../../../../Services/Informes/mi-lista-productos.service';
 import { ERP_MESSAGES } from '../../../../utils/constant';
+import { CriterioBusquedaAsesoria } from '../../../../Models/Creditos/GestionCredito/gestion-credito-enum';
 
 @Component({
   selector: 'app-asesoria',

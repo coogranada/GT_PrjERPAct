@@ -1,5 +1,6 @@
 import { FormControl } from "@angular/forms"
-import { CriterioBusquedaAsesoria, FormaPagoEnum, GarantiaEnum, PeriodoPagoEnum, TipoSistemas } from "../../Productos/cartera/gestion-credito.enum";
+import {  FormaPagoEnum, GarantiaEnum, PeriodoPagoEnum, TipoSistemas } from "../../Productos/cartera/gestion-credito.enum";
+import { CriterioBusquedaAsesoria } from "./gestion-credito-enum";
 
 
 export interface AsesoriaEncabezadoForm {

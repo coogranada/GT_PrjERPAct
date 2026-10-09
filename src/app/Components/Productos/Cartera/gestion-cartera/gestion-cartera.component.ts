@@ -1,9 +1,9 @@
 import { Component, ElementRef, EventEmitter, Output, signal, viewChild, ViewChild } from '@angular/core';
 import { AbstractControl, ControlContainer, FormControl, FormGroup, Validators } from '@angular/forms';
 import { OperacionesService } from '../../../../Services/Maestros/operaciones.service';
-import { FormaPagoEnum, Tabs, TipoBusquedaResumen, TipoSistemas } from '../../../../Models/Productos/cartera/gestion-credito.enum';
+import { ErrorCode, FormaPagoEnum, Tabs, TipoBusquedaResumen, TipoSistemas } from '../../../../Models/Productos/cartera/gestion-credito.enum';
 import { CarteraService } from '../../../../Services/Productos/cartera.service';
-import { ActualizarPagareDto, CalcularCuota, CambiarCalificacionDto, CambiarFormaPagoDto, CambiarLineaCreditoDto, CodeudorDraft, CuentaCarteraDetalle, CuentaCarteraResumen, CuentaFormateada, DebitoAutomaticoCreditoDto, Diferido, FechasCredito, GarantiaDisponible, GarantiaPersonalCod, GarantiaReal, HistorialOperacion, LineaCambioListDto, LogCambiarCodeudores, ManejarSeguroCreditoDto, ObservacionRadicado, Provision, Referencia, ResultadoOperacionDto, CambiarInfoCreditoLog, CambiarGarantiaDto, CambiarGarantiasRequestDto, DetalleGarantiaCreditoDto, GarantiaRealAsignada, ObtenerCodeudorBasicoModel, PeriodoPago, GarantiaCompartida, CrearInsolvencia, DevolverReest, TipoSeguimientoInsolvencia, InsolvenciaHistoricoDto, InsolvenciaAcuerdoPagoDto, InstanciaInsolvencia, LogInsolvenciaHijosCTD } from '../../../../Models/Productos/cartera/gestion-credito.model';
+import { ActualizarPagareDto, CalcularCuota, CambiarCalificacionDto, CambiarFormaPagoDto, CambiarLineaCreditoDto, CodeudorDraft, CuentaCarteraDetalle, CuentaCarteraResumen, CuentaFormateada, DebitoAutomaticoCreditoDto, Diferido, FechasCredito, GarantiaDisponible, GarantiaPersonalCod, GarantiaReal, HistorialOperacion, LineaCambioListDto, LogCambiarCodeudores, ManejarSeguroCreditoDto, ObservacionRadicado, Provision, Referencia, ResultadoOperacionDto, CambiarInfoCreditoLog, CambiarGarantiaDto, CambiarGarantiasRequestDto, DetalleGarantiaCreditoDto, GarantiaRealAsignada, ObtenerCodeudorBasicoModel, PeriodoPago, GarantiaCompartida, CrearInsolvencia, DevolverReest, TipoSeguimientoInsolvencia, InsolvenciaHistoricoDto, InsolvenciaAcuerdoPagoDto, InstanciaInsolvencia, LogInsolvenciaHijosCTD, ERROR_MESSAGES } from '../../../../Models/Productos/cartera/gestion-credito.model';
 import { catchError, concatMap, finalize, firstValueFrom, forkJoin, Observable, of, switchMap, tap } from 'rxjs';
 import { MiListaProductosService } from '../../../../Services/Informes/mi-lista-productos.service';
 import { ToastrService } from 'ngx-toastr';
@@ -22,7 +22,6 @@ import { CambiarInfoCreditoContext, Novedad, Operacion } from '../../../../Model
 import { CambiarInfoCreditoForm } from './cambiar-infocredito-form/cambiar-infocredito-form.component';
 import { ModalComponent } from '../../../shared/modal/modal.component';
 import { BusquedaGenericaService } from '../../../../Services/Generics/busqueda-generica.service';
-import { ERROR_MESSAGES, ErrorCode, PERIODOS_MESES } from '../../../../utils/constants';
 import { LoadingService } from '../../../../Services/shared/loading.service';
 import { diferenciaEnDias, diferenciaEnMeses, omit } from '../../../../utils/helpers';
 import { CambiarGarantiasModalComponent } from '../../../shared/cambiar-garantias-modal/cambiar-garantias-modal.component';
@@ -30,6 +29,7 @@ import { TooltipService } from '../../../../Services/Tooltip/tooltip.service';
 import { CuentaService } from '../../../../Services/Generics/resultado-cuenta.service';
 import { StorageSecurity } from '../../../../utils/storage-security.util';
 import { ERP_MESSAGES, ERP_REGEX, ERP_TOAST } from '../../../../utils/constant';
+import { PERIODOS_MESES } from '../../../../Models/Creditos/GestionCredito/gestion-credito-constants';
 
 @Component({
   selector: 'app-gestion-cartera',
@@ -5151,8 +5151,8 @@ if (historialOperaciones) {
           this.notif.success(ERP_TOAST.SUCCESS, ERP_MESSAGES.CAMBIO_EXITOSO.replace('{0}', 'codeudores'), ConfiguracionNotificacion.configRightTop);
 
           const logCambios: LogCambiarCodeudores = {
-            Anteriores: this.codeudoresAnteriores,
-            Actuales: this.codeudoresDraft
+            Anteriores: this.codeudoresAnteriores.map(({ idTercero, ...rest }) => rest),
+            Actuales: this.codeudoresDraft.map(({ idTercero, ...rest }) => rest)
           }
           this.accionSeleccionada = false;
           this.guardarLogGestionCartera(logCambios);

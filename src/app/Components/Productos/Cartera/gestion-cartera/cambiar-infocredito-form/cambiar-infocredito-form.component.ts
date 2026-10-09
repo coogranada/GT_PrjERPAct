@@ -1,19 +1,19 @@
 import { Component, ElementRef, EventEmitter, Injectable, Input, Output, ViewChild } from '@angular/core';
 import { CambiarInfoCreditoContext, Novedad, Operacion } from '../../../../../Models/Productos/cartera/cambiar-tasa-context';
 import { FormControl, FormGroup, ɵInternalFormsSharedModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CalcularDatosAlCambiarTasa, CalcularDatosReeliquidacion, CalcularDatosRequest, ConPlazo, ConTasa, ICambiarInfoCreditoForm, PeriodoPago, ResultCalcularCambioDatos } from '../../../../../Models/Productos/cartera/gestion-credito.model';
+import { CalcularDatosAlCambiarTasa, CalcularDatosReeliquidacion, CalcularDatosRequest, ConPlazo, ConTasa, ERROR_MESSAGES, ICambiarInfoCreditoForm, PeriodoPago, ResultCalcularCambioDatos } from '../../../../../Models/Productos/cartera/gestion-credito.model';
 import { CarteraService } from '../../../../../Services/Productos/cartera.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PeriodoPagoEnum, TipoSistemas } from '../../../../../Models/Productos/cartera/gestion-credito.enum';
 import { ToastrService } from 'ngx-toastr';
 import { ConfiguracionNotificacion } from '../../../../../../environments/config.noticaciones';
 import { CommonModule } from '@angular/common';
-import { ERROR_MESSAGES, PERIODOS_MESES, SISTEMAS } from '../../../../../utils/constants';
 import { firstValueFrom, switchMap, tap } from 'rxjs';
 import { PorcentajeDirective } from '../../../../shared/directives/porcentaje.directive';
 import { diferenciaEnMeses } from '../../../../../utils/helpers';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { ShareComponentModule } from '../../../../../Modules/share-component.module';
+import { PERIODOS_MESES, SISTEMAS } from '../../../../../Models/Creditos/GestionCredito/gestion-credito-constants';
 
 @Component({
   selector: 'app-cambiar-infocredito-form',

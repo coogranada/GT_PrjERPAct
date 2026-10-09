@@ -14,7 +14,7 @@ export const formateadoresPorOperacion: Record<number, FormateadorOperacion> = {
   125: (registro) => {
     const detalles: LogCambiarCodeudores = JSON.parse(registro.Detalles);
 
-    const formatear = (lista: CodeudorDraft[]) =>
+    const formatear = (lista: Omit<CodeudorDraft, 'idTercero'>[]) =>
       lista.map(p => `${p.documento} ${p.nombreCompleto}`).join(' - ');
 
     return {

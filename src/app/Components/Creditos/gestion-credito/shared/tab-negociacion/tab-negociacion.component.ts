@@ -1,5 +1,4 @@
 import { Component, effect, ElementRef, inject, input, ViewChild } from '@angular/core';
-import { PERIODOS_MESES, SISTEMAS } from '../../../../../utils/constants';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CarteraService } from '../../../../../Services/Productos/cartera.service';
 import { PeriodoPago } from '../../../../../Models/Productos/cartera/gestion-credito.model';
@@ -14,6 +13,7 @@ import { GestionCreditoService } from '../../../../../Services/Productos/Gestion
 import { concatWithSpace } from '../../../../../utils/helpers';
 import { PorcentajeDirective } from '../../../../shared/directives/porcentaje.directive';
 import { CommonModule } from '@angular/common';
+import { PERIODOS_MESES, SISTEMAS } from '../../../../../Models/Creditos/GestionCredito/gestion-credito-constants';
 
 @Component({
   selector: 'app-tab-negociacion',
