@@ -2176,9 +2176,8 @@ export class GestionCarteraComponent {
   private construirLogCambioGarantia() {
     const formatear = (lista: GarantiaRealAsignada[]) =>
       lista.map(g => ({
-        IdInterno: g.Consecutivo,
         Id: g.Matricula,
-        Tipo: g.Tipo,
+        Tipo: this.mapTipoGarantia(g.Tipo),
         ValorCobertura: g.Cobertura
       }));
     
