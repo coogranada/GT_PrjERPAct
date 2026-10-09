@@ -49,7 +49,7 @@
                         </div>
                         <div class="col-xs-4 col-md-3 col-lg-1">
                             <input type="text" class="form-control" formControlName="IdOficina"
-                                [attr.disabled]="bloquearConsultaCuenta" maxlength="3">
+                                [attr.disabled]="bloquearConsultaCuenta" maxlength="3" (paste)="pegarCuenta($event)">
                             <span class="help-block validationSpan"
                                 *ngIf="contractualFrom.controls['IdOficina'].errors?.['pattern']">
                                 La cuenta solo acepta números.

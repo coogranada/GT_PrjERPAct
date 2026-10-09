@@ -46,7 +46,7 @@
                             <label class="textNegrilla">Cuenta:</label>
                         </div>
                         <div class="col-xs-4 col-md-3 col-lg-1">
-                            <input type="text" class="form-control" maxlength="3" formControlName="IdOficina" [attr.disabled]="bloquearCuenta">
+                            <input type="text" class="form-control" maxlength="3" formControlName="IdOficina" [attr.disabled]="bloquearCuenta" (paste)="pegarCuenta($event)">
                             <span class="help-block validationSpan" *ngIf="TerminoForm.controls['IdOficina'].errors?.['pattern']">
                                   La cuenta solo acepta números.
                                   </span>

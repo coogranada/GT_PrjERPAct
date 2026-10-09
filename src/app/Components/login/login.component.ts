@@ -163,162 +163,252 @@ export class LoginComponent implements OnInit {
     const claveEncriptada = btoa(btoa(this.loginFrom.get('Clave')?.value)).toString();
     this.loginFrom.patchValue({
       Clave: claveEncriptada
-    })
-
+    })   
     this.loginService.userAuthentication(this.loginFrom.value).subscribe(
       (data: any) => {
         this.loading.hide();
+        // Guardar información del usuario
         StorageSecurity.saveData(data);
         this.dataUser = data;
         this.SessionUser.Estado = true;
         this.SessionUser.IdUsuario = this.dataUser.IdUsuario;
         this.SessionUser.IdSesionxUsuario = 0;
         this.SessionUser.Oficina = this.dataUser.Oficina;
-        const FechaFormat = new DatePipe('en-CO').transform(now, 'yyyy/MM/dd hh:mm:ss');
+
+        const FechaFormat = new DatePipe('en-CO')
+          .transform(now, 'yyyy/MM/dd hh:mm:ss');
+
         this.SessionUser.FechaInicioSesion = FechaFormat;
+
         this.loginService.PerfilesUsuario(this.dataUser.IdUsuario).subscribe(
           (perfil: any) => {
-           StorageSecurity.saveItem('profiles', perfil);
+
+            // Antes localStorage
+            StorageSecurity.saveItem('profiles', perfil);
+
             if (this.dataUser.IdEstado === 4) {
+
               Swal.fire({
                 title: 'Advertencia',
-                text: '',
-                html: 'El usuario se encuentra en estado inactivo. ',
+                html: 'El usuario se encuentra en estado inactivo.',
                 icon: 'warning',
                 showCancelButton: false,
-                confirmButtonText: '<i class="glyphicon glyphicon-log-out"></i>  Cerrar',
-                cancelButtonText: 'No',
+                confirmButtonText:
+                  '<i class="glyphicon glyphicon-log-out"></i> Cerrar',
                 confirmButtonColor: 'rgb(13,165,80)',
-                cancelButtonColor: 'rgb(160,0,87)',
                 allowOutsideClick: false,
                 allowEscapeKey: false
-              }).then((results : any) => {
+              }).then((results: any) => {
+
                 if (results.value) {
-                  localStorage.removeItem('Data');
+                  StorageSecurity.removeItem('Data');
                   this.dataUser = null;
                 }
+
               });
 
-            } else if(this.dataUser.admEstado === 35){
-                Swal.fire({
-                  title: 'Advertencia',
-                  text: '',
-                  html: 'Ingreso no permitido. ',
-                  icon: 'warning',
-                  showCancelButton: false,
-                  confirmButtonText: '<i class="glyphicon glyphicon-log-out"></i>  Cerrar',
-                  cancelButtonText: 'No',
-                  confirmButtonColor: 'rgb(13,165,80)',
-                  cancelButtonColor: 'rgb(160,0,87)',
-                  allowOutsideClick: false,
-                  allowEscapeKey: false
-                }).then((results : any) => {
-                  if (results.value) {
-                    localStorage.removeItem('Data');
-                    this.dataUser = null;
-                  }
-                });
-            }else {
+            } else if (this.dataUser.admEstado === 35) {
+
+              Swal.fire({
+                title: 'Advertencia',
+                html: 'Ingreso no permitido.',
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonText:
+                  '<i class="glyphicon glyphicon-log-out"></i> Cerrar',
+                confirmButtonColor: 'rgb(13,165,80)',
+                allowOutsideClick: false,
+                allowEscapeKey: false
+              }).then((results: any) => {
+
+                if (results.value) {
+                  StorageSecurity.removeItem('Data');
+                  this.dataUser = null;
+                }
+
+              });
+
+            } else {
+
               this.loading.hide();
-              localStorage.setItem('userName', window.btoa(JSON.stringify(this.dataUser.Usuario)));
+
+              // Antes localStorage.setItem('userName', ...)
+              StorageSecurity.saveItem(
+                'userName',
+                this.dataUser.Usuario
+              );
+
               this.isLoginError = false;
+
               this.clientesGetListService.GetParentescos().subscribe(
                 async (result: any) => {
-                  sessionStorage.setItem('token', this.dataUser.token);
-                  sessionStorage.setItem('refreshToken', this.dataUser.refreshToken);
-                  // this.ValidarMetodosCarga(); 
-                    this.catalogosService.cargarCatalogosSiNoExisten(); // ysalazar ajuste
-                  localStorage.setItem('parentescoChange', window.btoa(JSON.stringify(result)));
+
+                  sessionStorage.setItem(
+                    'token',
+                    this.dataUser.token
+                  );
+
+                  sessionStorage.setItem(
+                    'refreshToken',
+                    this.dataUser.refreshToken
+                  );
+
+                  this.catalogosService.cargarCatalogosSiNoExisten();
+
+                  // Antes localStorage.setItem('parentescoChange', ...)
+                  StorageSecurity.saveItem(
+                    'parentescoChange',
+                    result
+                  );
+
                   let browser = await detectIncognito();
-                  let strBrowser: string = browser.browserName + "-" + (browser.isPrivate == true ? "Incognito" : "No Incognito");
+
+                  let strBrowser =
+                    browser.browserName +
+                    '-' +
+                    (browser.isPrivate
+                      ? 'Incognito'
+                      : 'No Incognito');
+
                   let perfilLog: any[] = perfil;
+
                   perfilLog.forEach(x => {
                     delete x.$id;
                     delete x.IdPerfilUsuario;
                   });
-                  let payload: any = {
+
+                  let payload = {
                     UserId: this.dataUser.IdUsuario,
                     Browser: strBrowser,
                     IdOficina: this.dataUser.NumeroOficina,
                     IdTercero: this.dataUser.lngTercero,
                     Json: JSON.stringify(perfilLog)
                   };
-                  this.loginService.SesionOtroDispositivo(this.dataUser.IdUsuario, strBrowser).subscribe(result => {
-                    if (result) {
-                      Swal.fire({
-                        title: "Advertencia",
-                        text: '¿Deseas cerrar la sesión en el navegador anterior?',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonText: 'Si',
-                        cancelButtonText: 'No',
-                        confirmButtonColor: 'rgb(13,165,80)',
-                        cancelButtonColor: 'rgb(160,0,87)',
-                        allowOutsideClick: false,
-                        allowEscapeKey: false
-                      }).then((results: any) => {
-                        if (results.value) {
-                          this.webSocket.Init();
-                          setTimeout(() => {
-                            this.webSocket.Send("ClosedSesion", this.dataUser.IdUsuario);
-                          }, 700);
-                          setTimeout(() => {
-                            this.loginService.SetSesionUser(this.SessionUser).subscribe((result: any) => {
+
+                  this.loginService
+                    .SesionOtroDispositivo(
+                      this.dataUser.IdUsuario,
+                      strBrowser
+                    )
+                    .subscribe(result => {
+
+                      if (result) {
+
+                        Swal.fire({
+                          title: 'Advertencia',
+                          text: '¿Deseas cerrar la sesión en el navegador anterior?',
+                          icon: 'warning',
+                          showCancelButton: true,
+                          confirmButtonText: 'Si',
+                          cancelButtonText: 'No',
+                          confirmButtonColor: 'rgb(13,165,80)',
+                          cancelButtonColor: 'rgb(160,0,87)',
+                          allowOutsideClick: false,
+                          allowEscapeKey: false
+                        }).then((results: any) => {
+
+                          if (results.value) {
+
+                            this.webSocket.Init();
+
+                            setTimeout(() => {
+                              this.webSocket.Send(
+                                'ClosedSesion',
+                                this.dataUser.IdUsuario
+                              );
+                            }, 700);
+
+                            setTimeout(() => {
+
+                              this.loginService
+                                .SetSesionUser(this.SessionUser)
+                                .subscribe(
+                                  () => {
+                                    this.IniciarSesion(payload);
+                                  },
+                                  (error: any) => {
+                                    console.error(
+                                      'Error SetSesionUser - ',
+                                      error
+                                    );
+                                  }
+                                );
+
+                            }, 1500);
+
+                          } else {
+                            this.loginFrom.get('Clave')?.reset();
+                          }
+
+                        });
+
+                      } else {
+
+                        this.loginService
+                          .SetSesionUser(this.SessionUser)
+                          .subscribe(
+                            () => {
                               this.IniciarSesion(payload);
                             },
-                              (error: any) => {
-                                console.error('Error SetSesionUser - ' + error);
-                              });
-                          }, 1500);
-                        }else
-                        {
-                          this.loginFrom.get('Clave')?.reset();
-                        }
-                      });
-                    } else
-                      this.loginService.SetSesionUser(this.SessionUser).subscribe((result: any) => {
-                        this.IniciarSesion(payload);
-                      },
-                        (error: any) => {
-                          console.error('Error SetSesionUser - ' + error);
-                        });
-                  });
+                            (error: any) => {
+                              console.error(
+                                'Error SetSesionUser - ',
+                                error
+                              );
+                            }
+                          );
+
+                      }
+
+                    });
+
                 },
                 (error: any) => {
-                  const errorMessage = <any>error;
-                  // this.notif.onDanger('Error', errorMessage);
-                  console.error(errorMessage);
-                });
-             
+                  console.error(error);
+                }
+              );
+
             }
-          });
-      }, (error : any )  => {
+
+          }
+        );
+
+      },
+      (error: any) => {
+
         this.loading.hide();
-         if (error.TipoAlerta == "Error") {
-           Swal.fire({
-             title: 'Advertencia',
-             text: '',
-             html: error.Mensaje,
-             icon: 'warning',
-             showCancelButton: false,
-             confirmButtonText: '<i class="glyphicon glyphicon-log-out"></i>  Cerrar',
-             cancelButtonText: 'No',
-             confirmButtonColor: 'rgb(13,165,80)',
-             cancelButtonColor: 'rgb(160,0,87)',
-             allowOutsideClick: false,
-             allowEscapeKey: false
-           }).then((results : any) => {
-             if (results.value) {
-               localStorage.removeItem('Data');
-               this.dataUser = null;
-             }
-           });
-         } else {
-           this.loginFrom.controls["Clave"].reset();
-           console.log(error);
-           this.isLoginError = true;
-         }
-      });
+
+        if (error.TipoAlerta === 'Error') {
+
+          Swal.fire({
+            title: 'Advertencia',
+            html: error.Mensaje,
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonText:
+              '<i class="glyphicon glyphicon-log-out"></i> Cerrar',
+            confirmButtonColor: 'rgb(13,165,80)',
+            allowOutsideClick: false,
+            allowEscapeKey: false
+          }).then((results: any) => {
+
+            if (results.value) {
+              StorageSecurity.removeItem('Data');
+              this.dataUser = null;
+            }
+
+          });
+
+        } else {
+
+          this.loginFrom.controls['Clave'].reset();
+          console.log(error);
+          this.isLoginError = true;
+
+        }
+
+      }
+    );
   }
   IniciarSesion(payload : any) {
     this.usuariosServices.InsertIpUltimaSesion(payload).subscribe((x : any) => {

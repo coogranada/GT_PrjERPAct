@@ -17,6 +17,7 @@ import { StorageSecurity } from '../../../../../utils/storage-security.util';
 import { CambiarGarantiasRequestDto, DetalleGarantiaCreditoDto, GarantiaCompartida, GarantiaDisponible, GarantiaRealAsignada, ObtenerCodeudorBasicoModel } from '../../../../../Models/Productos/garantias.model';
 import { GarantiasService } from '../../../../../Services/Productos/garantias.service';
 import { CambiarGarantiasModalComponent } from '../../../../shared/cambiar-garantias-modal/cambiar-garantias-modal.component';
+import { CuentaService } from '../../../../../Services/Generics/resultado-cuenta.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var Tiff: any;
@@ -281,7 +282,8 @@ export class DisponiblesComponent implements OnInit {
     private generalesService: GeneralesService,
     private moduleValidationService: ModuleValidationService, private el: ElementRef,
     private loading: LoadingService,
-    private garantiasService: GarantiasService) {
+    private garantiasService: GarantiasService,
+    private cuentaService: CuentaService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -9452,47 +9454,24 @@ esMismoDia(fechaStr: string): boolean {
   });
 }
 
-  // CargarGarantias(idGarantia: number) {
-  //   this.limpiarvaloresGarantias();
-  //   const newLocal = this;
-  //   newLocal.DisponiblesServices.CargarGarantia(this.DisponibleForm.get('LngTercero')?.value, this.DisponibleForm.controls['Radicado'].value).subscribe(
-  //     result => {
-  //       this.ListGarantiasReales = result.reales;
-  //       this.resultGarantia = result.reales;
-  //       this.dataObjetCd = result.codeudores;
-  //       //dataObjetR
-  //       if (this.ListGarantiasReales.length > 0 && idGarantia == 5) {
-  //         this.ListGarantiasReales.forEach(( x: any) => {
-  //           x.ValorDisponible = Number(x.ValorCobertura) - Number(x.ValorRespaldado)
-  //         });
-  //         this.ListGarantiasRealesAgregadas.forEach(( x: any) => {
-  //           this.ListGarantiasReales = this.ListGarantiasReales.filter(( xx: any) => xx.NumeroMatricula != x.NumeroMatricula);
-  //         });
-  //         this.ModalGarantiasReales.nativeElement.click();
-  //       } else if (idGarantia == 10)
-  //         this.enableBtnActualizar = true;
-  //       else if (this.ListGarantiasReales.length == 0 && idGarantia == 5) {
-  //         let Text: string = "Radicado con garantía admisible y no se encontraron registros con el asociado.";
-  //         swal.fire({
-  //           title: '<strong>! Advertencia ¡</strong>',
-  //           text: '',
-  //           icon: 'error',
-  //           animation: false,
-  //           html: Text,
-  //           //customClass: 'animated tada',
-  //           allowOutsideClick: false,
-  //           allowEscapeKey: false,
-  //           confirmButtonText: 'Ok',
-  //           confirmButtonColor: 'rgb(160, 0, 87)'
-  //         });
-  //       }
+  pegarCuenta(event: ClipboardEvent) {
+    const texto = (event.clipboardData?.getData('text') ?? '').trim();
+    if (!texto.includes('-')) return;
+    const cuenta = this.cuentaService.parsearCuenta(texto);
+    if (!cuenta) {
+      event.preventDefault();
+      this.notif.warning('Advertencia', 'La cuenta debe tener el formato 000-000-0000000-0.');
+      return;
+    }
+    event.preventDefault();
+    this.DisponibleForm.patchValue({
+      IdOficina: cuenta.oficina,
+      IdProductoCuenta: cuenta.producto,
+      IdConsecutivo: cuenta.consecutivo,
+      IdDigito: cuenta.digito
+    });
+    setTimeout(() => { this.BuscarPorCuenta(); });
+  }
 
-  //     },
-  //     error => {
-  //       const errorMessage = <any>error;
-  //       console.log(errorMessage);
-  //     }
-  //   );
-  // }
 
 }

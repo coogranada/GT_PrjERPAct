@@ -3077,12 +3077,12 @@ CargarIngresoData(i: number, index: number) {
 
 
   if (tipoOcupa === true) {
-      const productValue = this.resultadoInfoRadicado?.[0]?.ProductValueList;
-    if (!productValue) {
-      console.warn('ProductValueList no disponible (i=1)');
-      return;
+       var productValue = null;
+    if (i === 1){
+      productValue = this.resultadoInfoRadicado?.[0]?.ProductValueList;
+    }else if(i === 2){
+      productValue =  this.codSelected?.[index]?.ProductValueList;
     }
-
     try {
       lista = JSON.parse(productValue);
     } catch {

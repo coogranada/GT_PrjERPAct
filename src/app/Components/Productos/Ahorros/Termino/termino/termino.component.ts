@@ -13,6 +13,7 @@ import { DisponiblesService } from '../../../../../Services/Productos/disponible
 import { ConfiguracionNotificacion } from '../../../../../../environments/config.noticaciones';
 import { LoadingService } from '../../../../../Services/shared/loading.service';
 import { StorageSecurity } from '../../../../../utils/storage-security.util';
+import { CuentaService } from '../../../../../Services/Generics/resultado-cuenta.service';
 declare var $: any;
 
 @Component({
@@ -32,7 +33,8 @@ export class TerminoComponent implements OnInit {
     private TerminoService: TerminoAhorrosService,
     private generalesService: GeneralesService,
     private DisponiblesServices: DisponiblesService,
-    private loading: LoadingService) {
+    private loading: LoadingService, 
+    private cuentaService: CuentaService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -7899,6 +7901,24 @@ export class TerminoComponent implements OnInit {
       return this.dataUser.Nombre
     }
     return NombreCompleto;
-  }  
+  } 
+  pegarCuenta(event: ClipboardEvent) {
+    const texto = (event.clipboardData?.getData('text') ?? '').trim();
+    if (!texto.includes('-')) return;
+    const cuenta = this.cuentaService.parsearCuenta(texto);
+    if (!cuenta) {
+      event.preventDefault();
+      this.notif.onWarning('Advertencia', 'La cuenta debe tener el formato 000-000-0000000-0.');
+      return;
+    }
+    event.preventDefault();
+    this.TerminoForm.patchValue({
+      IdOficina: cuenta.oficina,
+      IdProductoCuenta: cuenta.producto,
+      IdConsecutivo: cuenta.consecutivo,
+      IdDigito: cuenta.digito
+    });
+    setTimeout(() => { this.BuscarPorCuenta(); });
+  }
 
 }

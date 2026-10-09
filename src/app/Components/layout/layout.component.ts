@@ -609,13 +609,11 @@ this.userIdle.onTimeout().subscribe(() => {
         result => {
           if (result !== null && result !== undefined && result !== '') {
             try {
-              const JsonResul = JSON.stringify(result);
-              localStorage.setItem('Permisos', CryptoJS.AES.encrypt(JsonResul.trim(), this.PassJs.pass).toString());
+              StorageSecurity.saveItem('Permisos', result);
+              const r1 = StorageSecurity.getItem('Permisos');
             } catch (error) {
               console.error(error);
             }
-            let permi: string | null = localStorage.getItem('Permisos')
-            const r1 = JSON.parse(CryptoJS.AES.decrypt(permi == null ? "" : permi, this.PassJs.pass).toString(CryptoJS.enc.Utf8));
           }
           result.forEach((element: any) => {
             /* Configuracion */
@@ -1191,14 +1189,18 @@ this.userIdle.onTimeout().subscribe(() => {
     });
   }
   setModuloLocalStorage(IdModulo: number) {
-    let permi: string | null = localStorage.getItem('Permisos');
-    const permisosUsuario = JSON.parse(CryptoJS.AES.decrypt(permi == null ? "" : permi, this.PassJs.pass).toString(CryptoJS.enc.Utf8));
-
-    let pr: any = permisosUsuario.find((x: any) => x.IdModulo == IdModulo);
-    if (pr == null || pr.IdModulo != IdModulo)
+    const permisosUsuario = StorageSecurity.getItem('Permisos');
+    let pr: any = permisosUsuario?.find(
+      (x: any) => x.IdModulo == IdModulo
+    );
+    if (pr == null || pr.IdModulo != IdModulo) {
       this.router.navigateByUrl('/');
-    else
-      localStorage.setItem('IdModuloActivo', window.btoa(JSON.stringify(IdModulo)));
+    } else {
+      StorageSecurity.saveItem(
+        'IdModuloActivo',
+        IdModulo
+      );
+    }
   }
   created(e: any) {
     console.log("create", e)

@@ -13,6 +13,7 @@ import { Replace } from '../../../../../Pipes/utilidades/replace.pipe';
 import { AlertService } from '../../../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../../../Services/shared/loading.service';
 import { StorageSecurity } from '../../../../../utils/storage-security.util';
+import { CuentaService } from '../../../../../Services/Generics/resultado-cuenta.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 declare var $: any;
@@ -211,7 +212,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
     private operacionesService: OperacionesService,
     private generalesService: GeneralesService,
     private moduleValidationService: ModuleValidationService, 
-    private el: ElementRef, private loading: LoadingService) {
+    private el: ElementRef, private loading: LoadingService, private cuentaService: CuentaService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -18174,6 +18175,29 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
       // limpia sombreado anterior
     }
   }
+
+  pegarCuenta(event: ClipboardEvent) {
+      const texto = (event.clipboardData?.getData('text') ?? '').trim();  
+      if (!texto.includes('-')) return;  
+      const cuenta = this.cuentaService.parsearCuenta(texto);  
+      if (!cuenta) {
+        event.preventDefault();
+        this.notif.onWarning(
+          'Advertencia',
+          'La cuenta debe tener el formato 000-000-0000000-0.');
+        return;
+      }  
+      event.preventDefault();
+      this.contractualFrom.patchValue({
+        IdOficina: cuenta.oficina,
+        IdProductoCuenta: cuenta.producto,
+        IdConsecutivo: cuenta.consecutivo,
+        IdDigito: cuenta.digito
+      });
+  
+      setTimeout(() => { this.BuscarPorCuenta(); });
+    }
+
   // FIN GENERAL
 
   ValidateForm() {

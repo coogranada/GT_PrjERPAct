@@ -16,6 +16,7 @@ import { JuridicosService } from '../../../Services/Clientes/Juridicos.service';
 import { AlertService } from '../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../Services/shared/loading.service';
 import { StorageSecurity } from '../../../utils/storage-security.util';
+import { CuentaService } from '../../../Services/Generics/resultado-cuenta.service';
 declare var $: any;
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -158,7 +159,8 @@ export class AportesComponent implements OnInit {
     private loginService: LoginService, private router: Router, 
     private clientesService: ClientesService,
     private JuridicosService : JuridicosService, 
-    private loading: LoadingService) {
+    private loading: LoadingService,
+    private cuentaService: CuentaService) {
     const obs = fromEvent(this.el.nativeElement, 'click').pipe(
       map((e: any) => {
         this.moduleValidationService.validarLocalPermisos(this.CodModulo);
@@ -166,7 +168,7 @@ export class AportesComponent implements OnInit {
     );
     obs.subscribe((resulr) => console.log(resulr));
   }
-  ngOnInit() {
+  ngOnInit() {   
     this.NombresCapitaliceBasico();
     this.moduleValidationService.ValidatePermissionsModule(this.CodModulo);
     this.activaSaldos = true;
@@ -508,7 +510,7 @@ export class AportesComponent implements OnInit {
             this.aportesOperacionFrom.get('Codigo')?.reset();
             return;
           }
-          console.log("222",this.dataObjet.IdTipoDocumento )
+          // console.log("222",this.dataObjet.IdTipoDocumento )
           this.datoCambioEstado = this.aportesFrom.get('IdEstado')?.value ;
           this.ObtenerEstado();
           this.inputEstado = true;
@@ -530,7 +532,7 @@ export class AportesComponent implements OnInit {
       }
     }
     this.ResetValorSeleccionado();
-    console.log("slog",this.aportesOperacionFrom.get('Codigo')?.value)
+    // console.log("slog",this.aportesOperacionFrom.get('Codigo')?.value)
   }
 
   selectEstadoActivo() {
@@ -2502,7 +2504,6 @@ export class AportesComponent implements OnInit {
     this.aportesServices.ObtenerHistorial
       ({ 'IdOficina': IdOficina, 'IdProductoCuenta': IdProductoCuenta, 'IdConsecutivo': IdConsecutivo, 'IdDigito': IdDigito  }).subscribe(
         result => {
-          console.log("h",result)
           this.loading.hide();
           this.dataHistorial = result;
           this.dataHistorial.forEach(element => {
@@ -2766,6 +2767,29 @@ export class AportesComponent implements OnInit {
       this.ColorAnterior2 = fil;
     }
   }
+
+   
+    pegarCuenta(event: ClipboardEvent) {
+      const texto = (event.clipboardData?.getData('text') ?? '').trim();  
+      if (!texto.includes('-')) return;  
+      const cuenta = this.cuentaService.parsearCuenta(texto);  
+      if (!cuenta) {
+        event.preventDefault();
+        this.notif.onWarning(
+          'Advertencia',
+          'La cuenta debe tener el formato 000-000-0000000-0.');
+        return;
+      }  
+      event.preventDefault();
+      this.aportesFrom.patchValue({
+        IdOficina: cuenta.oficina,
+        IdProductoCuenta: cuenta.producto,
+        IdConsecutivo: cuenta.consecutivo,
+        IdDigito: cuenta.digito
+      });  
+      setTimeout(() => { this.BuscarPorCuenta(); });
+    }
+
 
   ValidateForm() {
     const Codigo = new FormControl('', [Validators.required]);

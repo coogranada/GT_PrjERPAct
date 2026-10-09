@@ -111,5 +111,9 @@ export class StorageSecurity {
     const value = localStorage.getItem('trasabilidad-juridico');
     return this.decrypt(value || '');
   }
+
+  public static removeItem(key: string): void {
+    localStorage.removeItem(key);
+  }
   
 }
