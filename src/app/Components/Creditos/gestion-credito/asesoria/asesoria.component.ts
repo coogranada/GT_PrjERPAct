@@ -32,8 +32,8 @@ export class AsesoriaComponent {
   @ViewChild('inputBusqueda')
   private inputBusqueda!: ElementRef<HTMLInputElement>;
 
-  @ViewChild('modalBuscarAsesorias', { static: true }) 
-  private modalBuscarAsesorias!: ElementRef;
+  @ViewChild('btnAbrirModalBuscarAsesorias', { static: true }) 
+  private btnAbrirModalBuscarAsesorias!: ElementRef;
 
   @ViewChild('cerrarModal', { static: true }) 
   private cerrarModal!: ElementRef;
@@ -59,13 +59,23 @@ export class AsesoriaComponent {
   totalCuotaSaldosVig = 0;
 
   analisisCalificaciones: any[] = [];
-  meses = ['Septiembre', 'Agosto', 'Julio', 'Junio', 'Mayo', 'Abril', 'Marzo', 'Febrero', 'Enero', 'Diciembre', 'Octubre'];
-  calificacionesPorMes = null;
-  calificaconAnual: any = null;
+  meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+  mesesOrdenados: string[] = [];
+  calificacionesPorMes: any = null;
+  calificacionAnual: any = null;
 
   selectedRowDed: number | null = null;
   selectedRowSaldosVig: number | null = null;
   selectedRowAnalisis: number | null = null;
+
+
+
+  crearTerceroBtnDisabled = true;
+  @ViewChild('btnAbrirModalCrearTercero', { static: true }) 
+  private btnAbrirModalCrearTercero!: ElementRef<HTMLButtonElement>;
+
+  @ViewChild('cerrarModalCrearTercero', { static: true }) 
+  private cerrarModalCrearTercero!: ElementRef;
 
   constructor(
     private fb: FormBuilder,
@@ -83,7 +93,7 @@ export class AsesoriaComponent {
       nombreOficinaAsociado: this.fb.nonNullable.control({ value: '', disabled: true }),
       asesoria: this.fb.control({ value: null, disabled: true }),
       tipoDocumento: this.fb.nonNullable.control({ value: '', disabled: true }),
-      numeroDocumento: this.fb.nonNullable.control({ value: '', disabled: true }),
+      numeroDocumento: this.fb.nonNullable.control({ value: '', disabled: false }),
       nombreAsociado: this.fb.nonNullable.control({ value: '', disabled: true }),
       criterioBusqueda: this.fb.nonNullable.control(CriterioBusquedaAsesoria.PorAsesoria),
       busqueda: this.fb.nonNullable.control(''),
@@ -286,7 +296,7 @@ export class AsesoriaComponent {
 
           ];
           this.datosTransformados = transformarDatosParaTabla<BuscarAsesoriasResponse>(result, columnasConfiguradas);
-          this.modalBuscarAsesorias.nativeElement.click();
+          this.btnAbrirModalBuscarAsesorias.nativeElement.click();
         } else {
           this.loading.hide();
           this.notif.warning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO, ConfiguracionNotificacion.configRightTop);
@@ -342,8 +352,9 @@ export class AsesoriaComponent {
       calificacionesMes: this.listaProductoService.getCalificacionesAnuales(idCuenta)
     }).subscribe({
       next: ({ calificaAnual, calificacionesMes }) => {
-        this.calificaconAnual = calificaAnual[0];
+        this.calificacionAnual = calificaAnual[0];
         this.calificacionesPorMes = calificacionesMes;
+        this.mesesOrdenados = this.obtenerMesesOrdenados(this.calificacionesPorMes?.MesActual);
         this.loading.hide();
       },
       error: (error) => {
@@ -353,5 +364,33 @@ export class AsesoriaComponent {
     });
   }
 
+  obtenerMesesOrdenados(mesActual: number): string[] {
+    const resultado: string[] = [];
+    let indice = mesActual - 2;
 
+    if (indice < 0) {
+      indice = 11;
+    }
+
+    for (let i = 0; i < 12; i++) {
+      resultado.push(this.meses[indice]);
+
+      indice--;
+
+      if (indice < 0) {
+        indice = 11;
+      }
+    }
+
+    return resultado;
+  }
+
+  onClickTabAlertas() {
+    this.changeTab('alertas');
+  }
+
+
+  onBlurDocumento() {
+    this.btnAbrirModalCrearTercero.nativeElement.click();
+  }
 }

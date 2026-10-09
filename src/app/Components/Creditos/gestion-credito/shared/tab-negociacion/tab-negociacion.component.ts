@@ -74,6 +74,7 @@ export class TabNegociacionComponent {
   asesorExtBtnFlag = true;
   calculatBtnDisabled = true;
   totalCuota: number | null = null;
+  verGarantiasBtnDisabled = true;
 
   @ViewChild('searchButton')
   searchButton!: ElementRef<HTMLInputElement>;
