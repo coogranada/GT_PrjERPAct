@@ -12,7 +12,7 @@ import { AlertService } from '../../../../Services/Alert/alert.service';
 import { Filtro } from '../../../../Models/Informes/informe-clientes/informe-clientes.model';
 import { InformeLogService } from '../../../../Services/Informes/informe-log.service';
 import { StorageSecurity } from '../../../../utils/storage-security.util';
-import { ERP_MENSAJES, ERP_TOAST } from '../../../../Services/Generics/Validaciones.service';
+import { ERP_MESSAGES, ERP_TOAST } from '../../../../utils/constant';
 
 @Component({
   selector: 'app-log-recaudo-olivos',
@@ -185,7 +185,7 @@ export class LogRecaudoOlivosComponent {
         },
           error => {
             this.ocultarModalProgreso();
-            let mensaje = 'Ha ocurrido un error inesperado.';
+            let mensaje = ERP_MESSAGES.ERROR_INESPERADO;
             try {
               if (error && error.Mensaje) {
                 mensaje = error.Mensaje;
@@ -387,8 +387,8 @@ export class LogRecaudoOlivosComponent {
       if (existe) {
       
         this.notif.onWarning(
-          ERP_TOAST.TITULO_ADVERTENCIA,
-          ERP_MENSAJES.FILTRO_DUPLICADO
+          ERP_TOAST.WARNING,
+          ERP_MESSAGES.FILTRO_DUPLICADO
         );
       
         setTimeout(() => {

@@ -1,5 +1,7 @@
 import { FormControl } from "@angular/forms";
 import { Novedad } from "./cambiar-tasa-context";
+import { ErrorCode } from "./gestion-credito.enum";
+import { ERP_MESSAGES } from "../../../utils/constant";
 
 export interface CuentaCarteraResumen {
   IdOficinaCuenta: number;
@@ -301,8 +303,8 @@ export interface ResultCalcularCambioDatos {
 }
 
 export interface LogCambiarCodeudores {
-  Anteriores: CodeudorDraft[],
-  Actuales: CodeudorDraft[],
+  Anteriores: Omit<CodeudorDraft, 'idTercero'>[],
+  Actuales: Omit<CodeudorDraft, 'idTercero'>[]
 }
 
 export interface CambiarInfoCreditoLog {
@@ -677,3 +679,20 @@ export interface LogInsolvenciaHijosCTD {
   idObseCambioEstado?: number;
   fechaModificacion: string;
 }
+
+export const ERROR_MESSAGES: Record<ErrorCode, string> = {
+    [ErrorCode.PERSONA_VETADA]: 'Se encontraron coincidencias en la lista de personas vetadas.',
+    [ErrorCode.PERSONA_FALLECIDA]: 'Persona con estado fallecido.',
+    [ErrorCode.PERSONA_MENOR]: 'El codeudor no puede ser menor.',
+    [ErrorCode.ACTUALIZACION_DEMORADA]: ERP_MESSAGES.ACTUALIZACION_DEMORADA,
+    [ErrorCode.CUPO_TARJETA_DEBITO]: 'No se puede realizar esta operación, tarjeta débito.',
+    [ErrorCode.INTERESES_AL_DIA]: 'Debe ponerse al día con los intereses.',
+    [ErrorCode.CUENTA_CANCELADA]: ERP_MESSAGES.CUENTA_ESTADO_NO_VALIDO,
+    [ErrorCode.CUENTA_VENCIDA]: 'Cuenta no se puede editar, crédito vencido.',
+    [ErrorCode.TASA_USURA]: 'Las tasas de la línea no cumplen con las condiciones.',
+    [ErrorCode.PERIODOS_NO_CUMPLEN]: 'Periodos no cumplen con las condiciones.',
+    [ErrorCode.SALDO_MONTO_NO_CUMPLE]: 'No puede cambiar cuota. Crédito no cumple con las condiciones.',
+    [ErrorCode.CREDITO_NO_CUMPLE]: 'Crédito no cumple con las condiciones.',
+    [ErrorCode.OTRA_OFICINA]: 'La cuenta pertenece a otra oficina.',
+    [ErrorCode.PLAZO_NUEVO_MAYOR]: 'El nuevo plazo debe ser mayor al faltante.',
+};

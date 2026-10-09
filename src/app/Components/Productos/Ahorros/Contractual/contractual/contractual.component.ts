@@ -13,6 +13,7 @@ import { Replace } from '../../../../../Pipes/utilidades/replace.pipe';
 import { AlertService } from '../../../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../../../Services/shared/loading.service';
 import { StorageSecurity } from '../../../../../utils/storage-security.util';
+import { ERP_MESSAGES } from '../../../../../utils/constant';
 import { CuentaService } from '../../../../../Services/Generics/resultado-cuenta.service';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -428,7 +429,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           this.contractualOperacionFrom.get('Codigo')?.reset();
         }
       } else {
-        this.notif.onWarning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.');
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA);
         this.contractualOperacionFrom.get('Codigo')?.reset();
       }
     } else if (this.contractualOperacionFrom.get('Codigo')?.value === '27') {  // Cambiar tipo de cuenta destino
@@ -493,7 +494,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           this.contractualOperacionFrom.get('Codigo')?.reset();
         }
       } else {
-        this.notif.onWarning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.');
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA);
         this.contractualOperacionFrom.get('Codigo')?.reset();
       }
     } else if (this.contractualOperacionFrom.get('Codigo')?.value === '12') {  // Adicionar y/o  eliminar autorizados
@@ -557,7 +558,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           this.contractualOperacionFrom.get('Codigo')?.reset();
         }
       } else {
-        this.notif.onWarning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.');
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA);
         this.contractualOperacionFrom.get('Codigo')?.reset();
       }
     } else if (this.contractualOperacionFrom.get('Codigo')?.value === '9')  {  // Cambio de estado
@@ -620,7 +621,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           this.contractualOperacionFrom.get('Codigo')?.reset();
         }
       } else {
-        this.notif.onWarning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.');
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA);
         this.contractualOperacionFrom.get('Codigo')?.reset();
       }
     } else if (this.contractualOperacionFrom.get('Codigo')?.value === '10') {  // Apertura de cuenta
@@ -771,7 +772,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           this.contractualOperacionFrom.get('Codigo')?.reset();
         }
       } else {
-        this.notif.onWarning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.',
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA,
 );
         this.contractualOperacionFrom.get('Codigo')?.reset();
       }
@@ -834,7 +835,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           this.contractualOperacionFrom.get('Codigo')?.reset();
         }
       } else {
-        this.notif.onWarning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.');
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA);
         this.contractualOperacionFrom.get('Codigo')?.reset();
       }
     } else if (this.contractualOperacionFrom.get('Codigo')?.value === '28') {  // Adicionar puntos
@@ -916,7 +917,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           this.contractualOperacionFrom.get('Codigo')?.reset();
         }
       } else {
-        this.notif.onWarning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.');
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA);
       this.contractualOperacionFrom.get('Codigo')?.reset();
       }
     } else if (this.contractualOperacionFrom.get('Codigo')?.value === '23') {  // Gestionar operacion
@@ -986,7 +987,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           this.contractualOperacionFrom.get('Codigo')?.reset();
         }
       } else {
-        this.notif.onWarning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.',
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA,
         );
       this.contractualOperacionFrom.get('Codigo')?.reset();
       }
@@ -1128,7 +1129,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           this.contractualOperacionFrom.get('Codigo')?.reset();
         }
       } else {
-        this.notif.onWarning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.');
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA);
         this.contractualOperacionFrom.get('Codigo')?.reset();
       }
     } 
@@ -1233,7 +1234,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
         this.bloquearbtnCambioEstado = false;
       }
     } else
-      this.notif.onWarning('Advertencia', 'Debe buscar una cuenta para realizar esta operación.');
+      this.notif.onWarning('Advertencia', ERP_MESSAGES.CUENTA_REQUERIDA);
   }
   FormaPagoSeleccionada(event: Event): void {
     const selectElement = event?.target as HTMLSelectElement;
@@ -1592,7 +1593,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
             result => {
               this.loading.hide();
               if (result.length === 0) {
-                this.notif.onWarning('Advertencia', 'No se encontró el asociado.');
+                this.notif.onWarning('Advertencia', ERP_MESSAGES.ASOCIADO_NO_ENCONTRADO);
               } else if (result.length === 1) {
                 // Validar  aportes ysalazar
                 this.ContractualServices.CuentaAportes(result[0].lngTercero).subscribe(
@@ -1630,7 +1631,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                     text: '',
                     icon: 'error',
                     animation: false,
-                    html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                    html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                       + result.Mensaje + '.',
                     allowOutsideClick: false,
                     allowEscapeKey: false,
@@ -1643,7 +1644,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                     text: '',
                     icon: 'error',
                     animation: false,
-                    html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                    html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                       + result.Mensaje + '.',
                     allowOutsideClick: false,
                     allowEscapeKey: false,
@@ -1713,7 +1714,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
             result => {
               this.loading.hide();
               if (result.length === 0) {
-                this.notif.onWarning('Advertencia', 'No se encontró el asociado.');
+                this.notif.onWarning('Advertencia', ERP_MESSAGES.ASOCIADO_NO_ENCONTRADO);
               } else if (result.length === 1) {
                 this.contractualFrom.get('IdTipoDocumento')?.setValue(result[0].IdTipoDocumento);
                 this.contractualFrom.get('NumeroDocumento')?.setValue(result[0].NumeroDocumento);
@@ -1740,7 +1741,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                     text: '',
                     icon: 'error',
                     animation: false,
-                    html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                    html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                       + result.Mensaje + '.',
                     allowOutsideClick: false,
                     allowEscapeKey: false,
@@ -1753,7 +1754,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
                     text: '',
                     icon: 'error',
                     animation: false,
-                    html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+                    html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                       + result.Mensaje + '.',
                     allowOutsideClick: false,
                     allowEscapeKey: false,
@@ -1818,7 +1819,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
         this.dataObjet = undefined;
         console.log("persona",result)
         if (result.length === 0) {
-          this.notif.onWarning('Advertencia', 'No se encontró el asociado.');
+          this.notif.onWarning('Advertencia', ERP_MESSAGES.ASOCIADO_NO_ENCONTRADO);
           this.btnGuardar = false;
         } else if (result.length === 1) {
           // Validar  aportes ysalazar
@@ -2388,7 +2389,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
         result => {
           this.loading.hide();
           if (result.length === 0) {
-            this.notif.onWarning('Advertencia', 'No se encontró registro.');
+            this.notif.onWarning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
             this.clearFrom();
             this.generalesService.Autofocus('SelectBuscar');
           } else if (result.length <= 1) {
@@ -2436,7 +2437,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           result => {
             this.loading.hide();
             if (result.length === 0) {
-              this.notif.onWarning('Advertencia', 'No se encontró registro.');
+              this.notif.onWarning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
               this.clearFrom();
               this.generalesService.Autofocus('SelectBuscarNombre');
             } else if (result.length <= 1) {
@@ -2528,7 +2529,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
         },
         error => {
           this.loading.hide();
-          this.notif.onWarning('Advertencia', 'El valor ingresado no tiene el formato correcto');
+          this.notif.onWarning('Advertencia', ERP_MESSAGES.VALOR_INGRESADO_FORMATO_INCORRECTO);
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
@@ -2573,7 +2574,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
         }
       },
       error => {
-        this.notif.onWarning('Advertencia', 'El valor ingresado no tiene el formato correcto');
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.VALOR_INGRESADO_FORMATO_INCORRECTO);
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -16762,7 +16763,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
         }
       }
     } else {
-      this.notif.onWarning('Advertencia','Debe buscar una cuenta para realizar esta operación.');
+      this.notif.onWarning('Advertencia',ERP_MESSAGES.CUENTA_REQUERIDA);
     }
   }
   Observaciones(IdEstado : string) {
@@ -17986,7 +17987,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
       result => {
         this.loading.hide();
         if (result.length === 0) {
-          this.notif.onWarning('Advertencia', 'No se encontró el asociado.');
+          this.notif.onWarning('Advertencia', ERP_MESSAGES.ASOCIADO_NO_ENCONTRADO);
           this.resultCuentaDebito = undefined;
         } else if (result.length === 1) {
           this.DebitoAutomaticoFrom.get('DocumentoDebito')?.setValue(result[0].NumeroDocumento);
@@ -18002,7 +18003,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
               text: '',
               icon: 'error',
               animation: false,
-              html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+              html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                 + result.Mensaje + '.',
               allowOutsideClick: false,
               allowEscapeKey: false
@@ -18013,7 +18014,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
               text: '',
               icon: 'error',
               animation: false,
-              html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'
+              html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO
                 + result.Mensaje + '.',
               allowOutsideClick: false,
               allowEscapeKey: false

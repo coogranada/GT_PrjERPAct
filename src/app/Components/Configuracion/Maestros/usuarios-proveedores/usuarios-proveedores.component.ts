@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators, ValidatorFn, AbstractControl } from
 import { UsuariosProveedoresService } from '../../../../Services/Maestros/usuarios-proveedores';
 import { GeneralesService } from '../../../../Services/Productos/generales.service';
 import { AlertService } from '../../../../Services/Alert/alert.service';
+import { ERP_MESSAGES } from '../../../../utils//constant'
 declare var $: any;
 
 @Component({
@@ -90,7 +91,7 @@ export class UsuariosProveedoresComponent implements OnInit {
             this.usuariosproveedoresForm.reset();
             this.usuariosproveedoresForm.get('Estado')?.setValue('3');
             this.usuariosproveedoresForm.get('FechaCreacion')?.setValue('N/A');
-            this.notificacion.onWarning('Advertencia', 'No se encontró registro.');
+            this.notificacion.onWarning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
           }
         },
         error => {
@@ -186,7 +187,7 @@ export class UsuariosProveedoresComponent implements OnInit {
             this.usuariosproveedoresForm.get('FechaCreacion')?.setValue('N/A');
             this.usuariosproveedoresForm.get('Estado')?.setValue('3');
             this.usuariosproveedoresForm.get('NombreProveedor')?.setValue('');
-            this.notificacion.onWarning('Advertencia', 'No se encontró registro.');
+            this.notificacion.onWarning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
           }
         },
         error => {

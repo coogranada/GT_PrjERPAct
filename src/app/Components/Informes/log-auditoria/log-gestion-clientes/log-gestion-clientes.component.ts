@@ -6,6 +6,7 @@ import { ConfiguracionNotificacion } from '../../../../../environments/config.no
 import Swal from "sweetalert2";
 import moment from 'moment';
 import { LoadingService } from '../../../../Services/shared/loading.service';
+import { ERP_MESSAGES } from '../../../../utils/constant';
 
 @Component({
   selector: 'app-log-gestion-clientes',
@@ -183,7 +184,7 @@ ngOnInit() {
     if (temp.length > 0 )
       this.GetCantInforme(true);
     else
-    this.notif.warning('Advertencia', 'Debe seleccionar campos.', ConfiguracionNotificacion.configRightTop);    
+    this.notif.warning('Advertencia', ERP_MESSAGES.CAMPOS_REQUERIDOS, ConfiguracionNotificacion.configRightTop);    
   }
   setFiltroFecha() {
     this.DateBeginAndEnd();

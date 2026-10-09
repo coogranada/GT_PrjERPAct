@@ -4,8 +4,8 @@ import { EnvironmentService } from "../Enviroment/enviroment.service";
 import { FormaPago } from "../../Models/Productos/cartera/gestion-credito.model";
 import { HttpClient } from "@angular/common/http";
 import { BuscarAsesoriasResponse, ConsultarAsesoriaResponse, ConsultarNegociacionAsesoriaCreditoResponse, DeduciblesResponse, SaldosVigentesResponse } from "../../Models/Creditos/GestionCredito/gestion-credito.model";
-import { CriterioBusquedaAsesoria } from "../../Models/Productos/cartera/gestion-credito.enum";
-import { CRITERIOS_BUSQUEDA_ASESORIA } from "../../utils/constants";
+import { CriterioBusquedaAsesoria } from "../../Models/Creditos/GestionCredito/gestion-credito-enum";
+import { CRITERIOS_BUSQUEDA_ASESORIA } from "../../Models/Creditos/GestionCredito/gestion-credito-constants";
 
 @Injectable({
     providedIn: 'root'

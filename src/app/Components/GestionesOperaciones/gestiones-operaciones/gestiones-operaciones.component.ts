@@ -9,6 +9,7 @@ import { GestioOperacionesService } from '../../..//Services/Gestiones/gestioOpe
 import { AlertService } from '../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../Services/shared/loading.service';
 import { StorageSecurity } from '../../../utils/storage-security.util';
+import { ERP_MESSAGES } from '../../../utils/constant';
 
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -74,7 +75,7 @@ export class GestionesOperacionesComponent implements OnInit {
 
         this.ListaGestiones = result;
         if (this.ListaGestiones === null || this.ListaGestiones === undefined) {
-          this.notificacion.onWarning('Advertencia', 'No se encontró registro.');
+          this.notificacion.onWarning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
         } else {
           const _idUsuario = this.DatosUsuario.IdUsuario;
           this.ListaGestiones.forEach((element : any) => {

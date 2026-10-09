@@ -78,7 +78,7 @@
                             </div>
                         </div>
                     </div>
-                    <input type="hidden" #modalBuscarAsesorias data-toggle="modal" data-target="#modalBuscarAsesorias"
+                    <input type="hidden" #btnAbrirModalBuscarAsesorias data-toggle="modal" data-target="#modalBuscarAsesorias"
                         data-popup="tooltip" data-trigger="hover" data-placement="top">
                     <!--/ Fin Modal BuscarAsesorias -->
 
@@ -154,7 +154,7 @@
         <div class="row row-margin">
             <div class="col-lg-7">
                 <div class="row">
-
+        
                     <div class="col-xs-2 col-lg-1-7">
                         <label for="" class="textNegrilla">Nombre:</label>
                         <span class="grande"> *</span>
@@ -163,21 +163,43 @@
                         <input type="text" class="form-control" formControlName="tipoDocumento">
                     </div>
                     <div class="col-xs-3 pr-0">
-                        <input type="text" class="form-control" formControlName="numeroDocumento">
+                        <input type="text" class="form-control" formControlName="numeroDocumento" (blur)="onBlurDocumento()">
                     </div>
                     <div class="col-xs-4 col-lg-4-7">
                         <input type="text" class="form-control" formControlName="nombreAsociado">
                     </div>
-
+        
                     <div class="col-lg-1">
                         <button type="button" class="btn Gt-btn-verde btn-icon" [disabled]="nombreBtnFlag">
                             <i class="icon-search4"></i>
                         </button>
                     </div>
-
+        
                 </div>
+        
+                <div id="modalCrearTercero" class="modal fade" data-backdrop="static">
+                    <div class="modal-dialog">
+                        <div class="modal-content modal-lg">
+                            <div class="modal-header bg-morado">
+                                <h6 class="modal-title">Crear tercero</h6>
+                            </div>
+                            <div class="modal-body">
+        
+        
+                            </div>
+                            <div class="modal-footer">
+        
+                                <button type="button" class="btn Gt-btn-verde"
+                                    [disabled]="crearTerceroBtnDisabled">Guardar</button>
+        
+                                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button #btnAbrirModalCrearTercero type="button" hidden data-toggle="modal" data-target="#modalCrearTercero"></button>
             </div>
-
+        
             <div class="col-lg-4">
                 <div class="row">
                     <div class="col-xs-2 col-lg-3">
@@ -229,6 +251,11 @@
                     (click)="onClickTabAnalisis()">
                     <a>Análisis</a>
                 </li>
+
+                <li class="nav-item" [class.active]="activeTab === 'alertas'"
+                    (click)="onClickTabAlertas()">
+                    <a>Alertas</a>
+                </li>
             </ul>
             <div class="tab-content">
             
@@ -246,11 +273,11 @@
                         <table class="table table-hover horizontal-scroll encabezado-fijo">
                             <thead>
                                 <tr>
-                                    <th class="table-header text-center textNegrilla">Código</th>
-                                    <th class="table-header text-center textNegrilla">Nombre</th>
-                                    <th class="table-header text-center textNegrilla">Saldo</th>
-                                    <th class="table-header text-center textNegrilla">Valor cuota</th>
-                                    <th class="table-header text-center textNegrilla">Plazo</th>
+                                    <th class="text-center textNegrilla">Código</th>
+                                    <th class="text-center textNegrilla">Nombre</th>
+                                    <th class="text-center textNegrilla">Saldo</th>
+                                    <th class="text-center textNegrilla">Valor cuota</th>
+                                    <th class="text-center textNegrilla">Plazo</th>
                                     
                                 </tr>
                             </thead>
@@ -297,17 +324,17 @@
                     </div>
                     } @else {
                     <div class="table-responsive scrollTabla scroll-y-auto">
-                        <table class="table table-hover horizontal-scroll encabezado-fijo">
+                        <table class="table table-hover horizontal-scroll encabezado-fijo txtNoWrap">
                             <thead>
                                 <tr>
-                                    <th class="table-header text-center textNegrilla">Cuenta</th>
-                                    <th class="table-header text-center textNegrilla">Saldo préstamo</th>
-                                    <th class="table-header text-center textNegrilla">Interés corriente</th>
-                                    <th class="table-header text-center textNegrilla">Interés de mora</th>
-                                    <th class="table-header text-center textNegrilla">Abono en canje</th>
-                                    <th class="table-header text-center textNegrilla">Saldo total</th>
-                                    <th class="table-header text-center textNegrilla">Radicado</th>
-                                    <th class="table-header text-center textNegrilla">Valor cuota</th>
+                                    <th class="text-center textNegrilla">Cuenta</th>
+                                    <th class="text-center textNegrilla">Saldo préstamo</th>
+                                    <th class="text-center textNegrilla">Interés corriente</th>
+                                    <th class="text-center textNegrilla">Interés de mora</th>
+                                    <th class="text-center textNegrilla">Abono en canje</th>
+                                    <th class="text-center textNegrilla">Saldo total</th>
+                                    <th class="text-center textNegrilla">Radicado</th>
+                                    <th class="text-center textNegrilla">Valor cuota</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -350,101 +377,117 @@
                     </div>
                     } @else {
                     <div class="table-responsive scrollTabla scroll-y-auto mx-350">
-                        <table class="table table-hover horizontal-scroll encabezado-fijo">
+                        <table class="table table-hover horizontal-scroll encabezado-fijo txtNoWrap">
                             <thead>
                                 <tr>
-                                    <th class="table-header text-center textNegrilla th-fijo">Cuenta</th>
-                                    <th class="table-header text-center textNegrilla th-fijo">Monto</th>
-                                    <th class="table-header text-center textNegrilla th-fijo">Cuota</th>
-                                    <th class="table-header text-center textNegrilla th-fijo">Plazo</th>
-                                    <th class="table-header text-center textNegrilla th-fijo">Estado</th>
-                                    <th class="table-header text-center textNegrilla th-fijo">Fecha apertura</th>
-                                    <th class="table-header text-center textNegrilla th-fijo">Fecha cancelado</th>
+                                    <th class="text-center textNegrilla th-fijo">Cuenta</th>
+                                    <th class="text-center textNegrilla th-fijo">Monto</th>
+                                    <th class="text-center textNegrilla th-fijo">Cuota</th>
+                                    <th class="text-center textNegrilla th-fijo">Plazo</th>
+                                    <th class="text-center textNegrilla th-fijo">Estado</th>
+                                    <th class="text-center textNegrilla th-fijo">Fecha apertura</th>
+                                    <th class="text-center textNegrilla th-fijo">Fecha cancelado</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @for (cal of analisisCalificaciones; track cal.lngIdCuenta) {
-                                <tr (click)="onClickFilaAnalisis(cal.lngIdCuenta)" [class.tr-selected]="cal.lngIdCuenta === selectedRowAnalisis" class="cursor-p">
+                                <tr (click)="onClickFilaAnalisis(cal.lngIdCuenta)"
+                                    [class.tr-selected]="cal.lngIdCuenta === selectedRowAnalisis" class="cursor-p">
                                     <td class="text-center">{{ cal.strCuenta }}</td>
-                                    <td><div class="align-right">{{ cal.curEfectivo | currency }}</div></td>
-                                    <td><div class="align-right">{{ cal.curCuota | currency }}</div></td>
+                                    <td>
+                                        <div class="align-right">{{ cal.curEfectivo | currency }}</div>
+                                    </td>
+                                    <td>
+                                        <div class="align-right">{{ cal.curCuota | currency }}</div>
+                                    </td>
                                     <td class="">{{ cal.Periodo }}</td>
                                     <td class="">{{ cal.Estado }}</td>
                                     <td class="text-center">{{ cal.dtmMatricula }}</td>
                                     <td class="text-center">{{ cal.dtmCancela }}</td>
                                 </tr>
                                 }
-            
+                
                             </tbody>
-                            <!-- <tfoot class="total-tfoot">
-                                <tr class="total-bg">
-                                    <td class="text-center"><strong>Total</strong></td>
-                                    <td class=""><div class="align-right">{{ totalSaldoPrestamo | currency }}</div></td>
-                                    <td class=""><div class="align-right">{{ totalInteresCorriente | currency }}</div></td>
-                                    <td class=""><div class="align-right">{{ totalInteresMora | currency }}</div></td>
-                                    <td class=""><div class="align-right">{{ totalAbonoCanje | currency }}</div></td>
-                                    <td class=""><div class="align-right">{{ totalSaldoTotal | currency }}</div></td>
-                                    <td class="text-center">—</td>
-                                    <td class=""><div class="align-right">{{ totalCuotaSaldosVig | currency }}</div></td>
-                                </tr>
-                            </tfoot> -->
                         </table>
                     </div>
-                    }
-            
                     <div class="borde-morado"></div>
+                    }
+                
 
-                    @if(calificacionesPorMes == null) {
-                    <div class="alert alert-secondary" role="alert">
-                        No hay registros
-                    </div>
-                    } @else {
                     <div class="row">
                         <div class="col-lg-9">
                             <div class="textNegrilla">Calificación del crédito</div>
+                            @if(!calificacionesPorMes || !calificacionAnual) {
+                            <div class="alert alert-secondary" role="alert">
+                                No hay registros
+                            </div>
+                            } @else {
                             <div class="table-responsive scrollTabla scroll-y-auto mx-350 border-tabla">
                                 <table class="table table-hover horizontal-scroll encabezado-fijo">
                                     <thead>
                                         <tr>
-                                            @for (mes of meses; track mes) {
-                                            <th class="table-header text-center textNegrilla th-fijo">{{ mes }}</th>
+                                            @for (mes of mesesOrdenados; track mes) {
+                                            <th class="text-center textNegrilla th-fijo">{{ mes }}</th>
                                             }
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            @for (mes of meses; track mes) {
+                                            @for (mes of mesesOrdenados; track mes) {
                                             <td class="text-center">{{ calificacionesPorMes[mes] }}</td>
                                             }
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
+                            }
+
                         </div>
                         <div class="col-lg-3">
                             <div class="textNegrilla">Análisis</div>
+                            @if(!calificacionesPorMes || !calificacionAnual) {
+                            <div class="alert alert-secondary" role="alert">
+                                No hay registros
+                            </div>
+                            } @else {
                             <div class="table-responsive scrollTabla scroll-y-auto border-tabla">
                                 <table class="table table-hover horizontal-scroll encabezado-fijo">
                                     <thead>
-                    
+                
                                         <tr>
-                                            <th class="table-header text-center textNegrilla">Calificación</th>
-                                            <th class="table-header text-center textNegrilla">Nro. veces</th>
+                                            <th class="text-center textNegrilla">Calificación</th>
+                                            <th class="text-center textNegrilla p-5">Nro. veces</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td class="text-center">{{ calificaconAnual?.strCumplimiento }}</td>
-                                            <td class="text-center">{{ calificaconAnual?.NroVeces }}</td>
+                                            <td class="text-center">{{ calificacionAnual?.strCumplimiento }}</td>
+                                            <td class="text-center">{{ calificacionAnual?.NroVeces }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
+                            }
                         </div>
                     </div>
-                    
-                    }
+                
+                
+                
+                </article>
 
+                <article [hidden]="activeTab !== 'alertas'">
+                    <div class="row">
+                        <div class="col-lg-10">
+                            <div class="alert alert-warning no-border">
+                                <span class="text-semibold">Advertencia!</span>
+                                Better check yourself, you're not looking too good.
+                            </div>
+                            <div class="alert alert-warning no-border">
+                                <span class="text-semibold">Advertencia!</span>
+                                Better check yourself, you're not looking too good.
+                            </div>
+                        </div>
+                    </div>
                 </article>
             
             

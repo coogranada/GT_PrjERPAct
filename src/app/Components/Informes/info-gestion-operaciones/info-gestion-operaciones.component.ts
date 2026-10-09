@@ -11,6 +11,8 @@ import { ModulosService } from '../../../Services/Maestros/modulos.service';
 import { AlertService } from '../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../Services/shared/loading.service';
 import { StorageSecurity } from '../../../utils/storage-security.util';
+import { ERP_MESSAGES } from '../../../utils/constant';
+
 // import moment = require('moment');
 
 @Component({
@@ -77,7 +79,7 @@ export class InfoGestionOperacionesComponent implements OnInit {
 
         this.ListaGestiones = result;
         if (this.ListaGestiones === null || this.ListaGestiones === undefined) {
-          this.notificacion.onWarning('Advertencia', 'No se encontró registro.');
+          this.notificacion.onWarning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
         }
       },
       error => {
@@ -170,7 +172,7 @@ export class InfoGestionOperacionesComponent implements OnInit {
         this.loading.hide();
         this.ListaGestiones = result;
         if (this.ListaGestiones === null || this.ListaGestiones === undefined) {
-          this.notificacion.onWarning('Advertencia', 'No se encontró registro.');
+          this.notificacion.onWarning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
         } else {
           if ((incial !== '' && incial !== null && incial !== undefined)
             && (final !== '' && final !== null && final !== undefined)

@@ -17,6 +17,7 @@ import { CheckList, FADeudor, LogFichaAnalisis, ObligacionesExtinguidas, Obligac
 import { AlertService } from '../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../Services/shared/loading.service';
 import { StorageSecurity } from '../../../utils/storage-security.util';
+import { ERP_MESSAGES } from '../../../utils/constant';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 @Component({
@@ -3373,7 +3374,7 @@ CargarIngresoData(i: number, index: number) {
         this.configuracionListaChequeo.reset();
       },
       error => {
-        let mensaje = 'Ha ocurrido un error inesperado.';
+        let mensaje = ERP_MESSAGES.ERROR_INESPERADO;
         try {
           if (error && error.Mensaje) {
             mensaje = error.Mensaje;

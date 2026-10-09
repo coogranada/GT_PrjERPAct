@@ -10,6 +10,7 @@ import { OperacionesModulosService } from '../../../../../Services/Maestros/oper
 import swal from 'sweetalert2';
 import { PermisosInformesComponent } from '../permisos-informes/permisos-informes/permisos-informes.component';
 import { LoadingService } from '../../../../../Services/shared/loading.service';
+import { ERP_MESSAGES } from '../../../../../utils/constant';
 
 
 @Component({
@@ -356,7 +357,7 @@ export class ConfiguracionInformesComponent implements OnInit {
         this.IrAbajo();
       },
       error => {
-        let mensaje = 'Ha ocurrido un error inesperado.';
+        let mensaje = ERP_MESSAGES.ERROR_INESPERADO;
         try {
           if (error && error.Mensaje) {
             mensaje = error.Mensaje;
@@ -384,7 +385,7 @@ export class ConfiguracionInformesComponent implements OnInit {
         this.IrAbajo();
       },
       error => {
-        let mensaje = 'Ha ocurrido un error inesperado.';
+        let mensaje = ERP_MESSAGES.ERROR_INESPERADO;
         try {
           if (error && error.Mensaje) {
             mensaje = error.Mensaje;
@@ -454,7 +455,7 @@ export class ConfiguracionInformesComponent implements OnInit {
         this.notif.success('Exitoso', 'Parámetros guardados correctamente', ConfiguracionNotificacion.configRightTopNoClose);
       },
       error => {
-        let mensaje = 'Ha ocurrido un error inesperado.';
+        let mensaje = ERP_MESSAGES.ERROR_INESPERADO;
         try {
           if (error && error.Mensaje) {
             mensaje = error.Mensaje;
@@ -569,7 +570,7 @@ export class ConfiguracionInformesComponent implements OnInit {
         this.obtenerConfiguracionInformes();
       },
       error => {
-        let mensaje = 'Ha ocurrido un error inesperado.';
+        let mensaje = ERP_MESSAGES.ERROR_INESPERADO;
         try {
           if (error && error.Mensaje) {
             mensaje = error.Mensaje;

@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { LoginService } from '../../../Services/Login/login.service';
 import { AlertService } from '../../../Services/Alert/alert.service';
 import { StorageSecurity } from '../../../utils/storage-security.util';
+import { ERP_MESSAGES } from '../../../utils/constant';
 
 
 @Component({
@@ -141,7 +142,7 @@ export class DebitosAutomaticosComponent implements OnInit {
             this.BloquearCuenta = null;
             this.BloquearBotonConsultar = null;
           } else {
-            this.notif.onWarning('Alerta', 'No se encontró registro.');
+            this.notif.onWarning('Alerta', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
             this.BloquearCuenta = false;
           }
         },

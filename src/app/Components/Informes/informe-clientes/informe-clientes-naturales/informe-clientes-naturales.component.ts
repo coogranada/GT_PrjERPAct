@@ -17,6 +17,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ExcelService } from '../../../../Services/General/excel.service';
 import { TablaVirtualComponent } from '../../../Tabla-virtual/tabla-virtual/tabla-virtual.component';
 import { LoadingService } from '../../../../Services/shared/loading.service';
+import { ERP_MESSAGES } from '../../../../utils/constant';
 import { StorageSecurity } from '../../../../utils/storage-security.util';
 declare var $: any;
 @Component({
@@ -568,7 +569,7 @@ export class InformeClientesNaturalesComponent implements OnInit {
     if (temp.length > 0 )
       this.GetCantInforme();
     else
-    this.notif.warning('Advertencia', 'Debe seleccionar campos.', ConfiguracionNotificacion.configRightTop);
+    this.notif.warning('Advertencia', ERP_MESSAGES.CAMPOS_REQUERIDOS, ConfiguracionNotificacion.configRightTop);
       
   }
   GetCantInforme() {

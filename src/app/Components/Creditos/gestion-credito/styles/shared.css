@@ -36,5 +36,30 @@
     border-color: #b39ddb;
 }
 
+.scroll-thin {
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(156 163 175) transparent;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgb(156 163 175);
+    border-radius: 9999px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgb(107 114 128);
+  }
+}
+
+
 
 

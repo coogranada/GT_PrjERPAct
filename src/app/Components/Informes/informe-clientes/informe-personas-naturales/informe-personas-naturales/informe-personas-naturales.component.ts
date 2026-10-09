@@ -16,6 +16,7 @@ import { ConfiguracionInformesService } from '../../../../../Services/Informes/c
 import { TablaVirtualComponent } from '../../../../Tabla-virtual/tabla-virtual/tabla-virtual.component';
 import { ExceljsService } from '../../../../../Services/General/exceljs.service';
 import { LoadingService } from '../../../../../Services/shared/loading.service';
+import { ERP_MESSAGES } from '../../../../../utils/constant';
 import { StorageSecurity } from '../../../../../utils/storage-security.util';
 
 @Component({
@@ -359,7 +360,7 @@ export class InformePersonasNaturalesComponent {
         },
           error => {
             this.ocultarModalProgreso();
-            let mensaje = 'Ha ocurrido un error inesperado.';
+            let mensaje = ERP_MESSAGES.ERROR_INESPERADO;
             try {
               if (error && error.Mensaje) {
                 mensaje = error.Mensaje;
@@ -1137,7 +1138,7 @@ export class InformePersonasNaturalesComponent {
             this.ocultarModalProgreso();
             this.loading.hide();
 
-            let mensaje = 'Ha ocurrido un error inesperado.';
+            let mensaje = ERP_MESSAGES.ERROR_INESPERADO;
             if (error?.error) {
               if (error.error.Mensaje) {
                 mensaje = error.error.Mensaje;

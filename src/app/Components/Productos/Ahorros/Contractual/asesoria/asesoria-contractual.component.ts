@@ -13,6 +13,8 @@ import { ClientesGetListService } from '../../../../../Services/Clientes/cliente
 import { LogDataOnEditAsesorExterno, LogDataOnEditAsesoria } from '../../../../../Models/Productos/asesoria-contractual.model';
 import { LoadingService } from '../../../../../Services/shared/loading.service';
 import { StorageSecurity } from '../../../../../utils/storage-security.util';
+import { ERP_MESSAGES } from '../../../../../utils/constant';
+
 declare var $: any;
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -413,7 +415,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
         result => {
           this.loading.hide();
           if (result.length === 0) {
-            this.notif.onWarning('Alerta', 'No se encontró registro.');
+            this.notif.onWarning('Alerta', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
             this.asesoriacontractualFrom.get('IdProducto')?.reset();
           } else if (result.length === 1) {
             const fechaHoy = new DatePipe('en-CO').transform(new Date(), 'yyyy/MM/dd');
@@ -549,7 +551,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
             this.resultAsesor = result;
             this.ModalAsesores.nativeElement.click();
           } else if (result === null || result.length === 0) {
-            this.notif.onWarning('Alerta', 'No se encontró registro.');
+            this.notif.onWarning('Alerta', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
           }
         },
         error => {
@@ -589,7 +591,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
             this.resultAsesoresExterno = result;
             this.ModalAsesoresExterno.nativeElement.click();
           } else if (result === null || result.length === 0) {
-            this.notif.onWarning('Advertencia', 'No se encontró registro.');
+            this.notif.onWarning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
             this.AsesorFrom.get('strCodigo')?.reset();
             this.AsesorFrom.get('strNombre')?.reset();
           }
@@ -601,7 +603,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
         },
         error => {
           this.loading.hide();
-          this.notif.onWarning('Advertencia', 'El valor ingresado no tiene el formato correcto');
+          this.notif.onWarning('Advertencia', ERP_MESSAGES.VALOR_INGRESADO_FORMATO_INCORRECTO);
           const errorMessage = <any>error;
           console.log(errorMessage);
         }
@@ -639,12 +641,12 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
           } else {
             this.AsesorFrom.get('strNombre')?.setValue('');
             this.AsesorFrom.get('strCodigo')?.setValue('');
-            this.notif.onWarning('Advertencia', 'No se encontró registro.');
+            this.notif.onWarning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
           }
         }
       },
       error => {
-        this.notif.onWarning('Advertencia', 'El valor ingresado no tiene el formato correcto');
+        this.notif.onWarning('Advertencia', ERP_MESSAGES.VALOR_INGRESADO_FORMATO_INCORRECTO);
         const errorMessage = <any>error;
         console.log(errorMessage);
       }
@@ -998,7 +1000,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
         result => {
           this.loading.hide();
           if (result.length === 0) {
-            this.notif.onWarning('Alerta', 'No se encontró registro.');
+            this.notif.onWarning('Alerta', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
             this.ClearForm();
             this.BloquearBuscar = null;
             this.generalesService.Autofocus('BuscarAsesoria');
@@ -1223,7 +1225,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
       result => {
         this.loading.hide();
         if (result.length === 0) {
-          this.notif.onWarning('Advertencia', 'No se encontró registro.');
+          this.notif.onWarning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
           this.ClearForm();
         } else if (result.length === 1) {
           this.asesoriacontractualFrom.get('BuscarDocumento')?.reset();
@@ -1304,7 +1306,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
                     text: '',
                     icon: 'error',
                     animation: false,
-                    html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>' + result.Mensaje + '.',
+                    html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO + result.Mensaje + '.',
                     allowOutsideClick: false,
                     allowEscapeKey: false,
                     confirmButtonText: 'Ok',
@@ -1316,7 +1318,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
                     text: '',
                     icon: 'error',
                     animation: false,
-                    html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'+ result.Mensaje + '.',
+                    html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO+ result.Mensaje + '.',
                     allowOutsideClick: false,
                     allowEscapeKey: false,
                     confirmButtonText: 'Ok',
@@ -1349,7 +1351,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
             result => {
               this.loading.hide();
               if (result.length === 0) {
-                this.notif.onWarning('Advertencia', 'No se encontró registro.');
+                this.notif.onWarning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
               } else if (result.length === 1) {
                 const Documento = result[0].NumeroDocumento;
                 this.BuscarNombreModal(Documento);
@@ -1406,7 +1408,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
               text: '',
               icon: 'error',
               animation: false,
-              html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>' + result.Mensaje + '.',
+              html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO + result.Mensaje + '.',
               allowOutsideClick: false,
               allowEscapeKey: false,
               confirmButtonText: 'Ok',
@@ -1418,7 +1420,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
               text: '',
               icon: 'error',
               animation: false,
-              html: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>'+ result.Mensaje + '.',
+              html: ERP_MESSAGES.PERSONA_VETADA_CONTACTO+ result.Mensaje + '.',
               allowOutsideClick: false,
               allowEscapeKey: false,
               confirmButtonText: 'Ok',
@@ -1628,7 +1630,7 @@ export class AsesoriaContractualComponent implements OnInit, AfterViewInit {
       }
       } else {
       this.notif.onWarning('Advertencia',
-      'Debe buscar una cuenta para realizar esta operación.');
+      ERP_MESSAGES.CUENTA_REQUERIDA);
       }
   }
  dataAsesor: any;
