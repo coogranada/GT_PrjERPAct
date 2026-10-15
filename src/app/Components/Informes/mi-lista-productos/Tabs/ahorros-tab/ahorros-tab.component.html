@@ -43,6 +43,9 @@
                                     <th class="columnEfectivo_disponible">
                                         <strong>Saldo efectivo</strong>
                                     </th>
+                                    <th class="columnEfectivo_disponible">
+                                        <strong>Saldo canje</strong>
+                                    </th>
                                     <th class="columnEstado_disponible centerColumn">
                                         <strong>Estado</strong>
                                     </th>
@@ -67,6 +70,7 @@
                                         {{itemDispo.NameProducto}}
                                     </td>
                                     <td class="columnEfectivo_disponible"> {{itemDispo.curEfectivo |  currency}}</td>
+                                    <td class="columnEfectivo_disponible"> {{itemDispo.curCanje |  currency}}</td>
                                     <td class="columnEstado_disponible centerColumn">{{itemDispo.NameEstado}}</td>
                                     <td class="columnApertura_disponible centerColumn">{{itemDispo.dtmMatricula | date: 'yyyy/MM/dd'}}</td>
                                     <td class="columnUltTrans_disponible centerColumn">{{itemDispo.dtmUltimaTrans | date: 'yyyy/MM/dd'}}</td>
@@ -187,6 +191,9 @@
                                     <th class="columnEfectivo_Contractuales">
                                         <strong>Saldo efectivo</strong>
                                     </th>
+                                     <th class="columnEfectivo_Contractuales">
+                                        <strong>Saldo canje</strong>
+                                    </th>
                                     <th class="columnInteres_Contractuales">
                                         <strong>Interés por pagar</strong>
                                     </th>
@@ -217,6 +224,7 @@
                                             'columnProductoX2_Ahorros': itemContrac.NameProducto.length > 29 && itemContrac.NameProducto.length < 35,
                                             'columnProductoX3_Ahorros': itemContrac.NameProducto.length >= 35}"> {{itemContrac.NameProducto}}</td>
                                     <td class="columnEfectivo_Contractuales">{{itemContrac.curEfectivo |  currency}}</td>
+                                     <td class="columnEfectivo_Contractuales">{{itemContrac.curCanje |  currency}}</td>
                                     <td class="columnInteres_Contractuales">{{itemContrac.curIntxPagarC |  currency}}</td>
                                     <td class="columnCuota_Contractuales">{{itemContrac.curCuota |  currency}}</td>
                                     <td class="columnSorteo_Contractuales centerColumn">{{itemContrac.lngSorteo}}</td>
@@ -350,6 +358,9 @@
                                     <th class="columnEfectivo_Atermino">
                                         <strong>Saldo efectivo</strong>
                                     </th>
+                                     <th class="columnEfectivo_Atermino">
+                                        <strong>Saldo canje</strong>
+                                    </th>
                                     <th class="columnInteres_Atermino">
                                         <strong>Interés por pagar</strong>
                                     </th>
@@ -374,6 +385,7 @@
                                             'columnProductoX2_Ahorros': itemTermino.NameProducto.length > 29 && itemTermino.NameProducto.length < 35,
                                             'columnProductoX3_Ahorros': itemTermino.NameProducto.length >= 35}">{{itemTermino.NameProducto}}</td>
                                     <td class="columnEfectivo_Atermino"> {{itemTermino.curEfectivo |  currency}}</td>
+                                     <td class="columnEfectivo_Atermino"> {{itemTermino.curCanje |  currency}}</td>
                                     <td class="columnInteres_Atermino">
                                          {{itemTermino.curIntxPagar |  currency}}
                                     </td>

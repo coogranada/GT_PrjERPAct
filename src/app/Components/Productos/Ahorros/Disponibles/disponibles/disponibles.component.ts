@@ -6578,13 +6578,15 @@ export class DisponiblesComponent implements OnInit {
       }
       } else if (this.DisponibleOperacionFrom.get('Codigo')?.value === '34') {  // Asignar cupo 
         this.loading.show();
+        this.dataUser = StorageSecurity.getData();
         let payload: any = this.DisponibleForm.value;
         // payload.Real = this.ListGarantiasRealesAgregadas;
         payload.Real = this.garantiasRealesAsignadas;
         payload.Codeudor = this.dataObjetCd;
         payload.TipoPagare = this.DisponibleForm.get('TipoPagare')?.value;
-        payload.NumeroPagare = this.DisponibleForm.get('NumeroPagare')?.value;
-        // console.log('❤️🤠😒👌', payload);
+        payload.NumeroPagare = this.DisponibleForm.get('NumeroPagare')?.value;        
+        payload.IdAsesor = this.dataUser.IdAsesor;
+        // console.log(payload);
             // this.GuardarGarantiasAndLog("guardar");
                 // this.loading.hide();
 

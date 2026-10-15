@@ -20,6 +20,9 @@
                         <th class="columnEfectivo_aportes">
                             <strong>Saldo efectivo</strong>
                         </th>
+                        <th class="columnEfectivo_aportes">
+                            <strong>Saldo canje</strong>
+                        </th>
                         <th class="columnEstado_aportes">
                             <strong>Estado</strong>
                         </th>
@@ -41,6 +44,7 @@
                         'columnProductoX2_aportes': itemAportes.NameProducto.length > 29 && itemAportes.NameProducto.length < 35,
                         'columnProductoX3_aportes': itemAportes.NameProducto.length >= 35}">{{itemAportes.NameProducto}}</td>
                         <td class="columnEfectivo_aportes">{{itemAportes.curEfectivo |  currency}}</td>
+                        <td class="columnEfectivo_aportes">{{itemAportes.curCanje |  currency}}</td>
                         <td class="columnEstado_aportes centerColumn">{{itemAportes.NameEstado}}</td>
                         <td class="columnApertura_aportes centerColumn">{{itemAportes.dtmMatricula}}</td>
                         <td class="columnUltTrans_aportes centerColumn">{{itemAportes.dtmUltimaTrans}}</td>
