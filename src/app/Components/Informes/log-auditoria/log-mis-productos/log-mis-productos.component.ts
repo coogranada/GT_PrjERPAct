@@ -18,6 +18,7 @@ import { ERP_MESSAGES, ERP_TOAST } from '../../../../utils/constant';
   standalone : false
 })
 export class LogMisProductosComponent implements OnInit {
+  ERP_MESSAGES = ERP_MESSAGES;
   cuentaOficina: string = '';
   cuentaProducto: string = '';
   cuentaConsecutivo: string = '';
@@ -259,8 +260,8 @@ export class LogMisProductosComponent implements OnInit {
     this.btnMore = false;
   }
   InitVariables() {
-    this.fechaMax = moment(new Date()).format('YYYY-MM-DD');
-    this.fechaMinima = moment(new Date('1900-01-01')).format('YYYY-MM-DD');
+    this.fechaMax = moment().format('YYYY-MM-DD');
+    this.fechaMinima = '2000-01-01';
   }
   opcionSelectedCombo(value : number) {   
     if (this.SelectedCombo != 1000 && this.SelectedCombo != undefined) {
@@ -292,15 +293,22 @@ export class LogMisProductosComponent implements OnInit {
 }
   opcionSelectedFechas(value : number) {
     if (value == 1) {
-      if ((this.valueFechaInicial.toString() >= this.fechaMinima && this.valueFechaInicial <= this.fechaMax) || this.valueFechaInicial == this.valueFechaFinal) 
-        this.valida1F = true;
+      if (
+        this.valueFechaInicial.toString() >= this.fechaMinima &&
+        this.valueFechaInicial <= this.fechaMax
+      )       
+      this.valida1F = true;
       else 
         this.valida1F = false;
       
       this.clearFechaInicial = false;
     }
     else if (value == 2) {
-      if ((this.valueFechaFinal.toString() > this.fechaMinima && this.valueFechaFinal <= this.fechaMax && this.valueFechaInicial.toString() < this.valueFechaFinal.toString()) || this.valueFechaInicial == this.valueFechaFinal) 
+      if (
+        this.valueFechaFinal.toString() >= this.fechaMinima &&
+        this.valueFechaFinal <= this.fechaMax &&
+        this.valueFechaInicial.toString() <= this.valueFechaFinal.toString()
+      )        
         this.valida2F = true;
       else
         this.valida2F = false;
@@ -582,5 +590,13 @@ export class LogMisProductosComponent implements OnInit {
     this.cuentaProducto = partes[1];
     this.cuentaConsecutivo = partes[2];
     this.cuentaDigito = partes[3];
+  }
+
+  esFechaInicialMayorActual(): boolean {
+    return this.valueFechaInicial?.toString() > this.fechaMax;
+  }
+
+  esFechaFinalMayorActual(): boolean {
+    return this.valueFechaFinal?.toString() > this.fechaMax;
   }
 }

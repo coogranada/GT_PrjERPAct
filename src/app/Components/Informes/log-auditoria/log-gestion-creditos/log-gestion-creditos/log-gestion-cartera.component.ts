@@ -22,6 +22,7 @@ import { ERP_MESSAGES, ERP_REGEX, ERP_TOAST } from '../../../../../utils/constan
   styleUrl: './log-gestion-cartera.component.css'
 })
 export class LogGestionCarteraComponent {
+  ERP_MESSAGES = ERP_MESSAGES;
 
   @ViewChild(TablaVirtualComponent) tablaVirtual!: TablaVirtualComponent;
   @ViewChild('ShowModalList', { static: true }) private ShowModalList!: ElementRef;
@@ -327,9 +328,9 @@ export class LogGestionCarteraComponent {
 
   obtenerFiltro() {
     switch (this.filtroSelect.toString()) {
-      case "1":
-        this.tituloGenerico = "Fecha:";
-        break;
+      // case "1":
+      //   this.tituloGenerico = "Fecha:";
+      //   break;
       case "2":
         this.tituloGenerico = "Operación:";
         break;
@@ -589,9 +590,13 @@ export class LogGestionCarteraComponent {
     );
   }
   
-  mostrarBotones(): boolean {
-    if (this.filtroSelect == 1) return true;
+  // mostrarBotones(): boolean {
+  //   if (this.filtroSelect == 1) return true;
 
+  //   return this.filtrosAgregado.length > 0;
+  // }
+
+  mostrarBotones(): boolean {
     return this.filtrosAgregado.length > 0;
   }
 

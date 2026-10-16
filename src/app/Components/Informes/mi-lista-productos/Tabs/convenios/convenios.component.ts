@@ -22,6 +22,7 @@ import { DatePipe } from '@angular/common';
 import swal from "sweetalert2";
 import { LoadingService } from '../../../../../Services/shared/loading.service';
 import { StorageSecurity } from '../../../../../utils/storage-security.util';
+import { ERP_MESSAGES } from '../../../../../utils/constant';
 
 //import { isString } from 'util';
 
@@ -45,6 +46,8 @@ export class ConveniosComponent implements OnInit {
   ) {
 
   }
+
+  ERP_MESSAGES = ERP_MESSAGES;
 
   public ServicioExequialData: any[] = [];
   public ServicioExequialCancelado: any[] = [];

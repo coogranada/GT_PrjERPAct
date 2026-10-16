@@ -18,6 +18,11 @@ export const ERP_MESSAGES = {
     CUENTA_ESTADO_NO_VALIDO: 'Cuenta no se puede editar, estado no válido.',
     GARANTIA_NO_CUBRE_CREDITO: 'Garantía no cubre el valor del crédito.',
     VALOR_INGRESADO_FORMATO_INCORRECTO: 'El valor ingresado no tiene el formato correcto.',
+    FCHA_MAYOR_A_ACTUAL: 'La fecha final no puede ser mayor a la fecha actual.',
+    FECHA_FINAL_MAYOR_A_INICIAL:'La fecha final debe ser mayor o igual a la fecha inicial.',
+    FECHA_INICIAL_MENOR_A_FINAL: 'La fecha inicial debe ser menor o igual a la fecha final.',
+    FECHA_FINAL_OBLIGATORIA: 'La fecha final es obligatoria.',
+    FECHA_INICIAL_OBLIGATORIA: 'La fecha inicial es obligatoria.',
 };
 
 export const ERP_TOAST = {

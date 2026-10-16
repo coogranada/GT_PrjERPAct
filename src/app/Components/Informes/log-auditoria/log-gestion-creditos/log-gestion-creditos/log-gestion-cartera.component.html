@@ -234,7 +234,7 @@
                                   formulario.get('@FechaInicial')?.value &&
                                   formulario.get('@FechaFinal')?.value
                                 ">
-                                La fecha inicial debe ser menor o igual a la fecha final.
+                                  {{ ERP_MESSAGES.FECHA_INICIAL_MENOR_A_FINAL }}
                               </span>                           
 
                               <!-- Mayor a hoy -->
@@ -244,7 +244,7 @@
                                   formulario.get('@FechaInicial')?.touched &&
                                   formulario.get('@FechaInicial')?.errors?.['fechaMayorActual']
                                 ">
-                                La fecha inicial no puede ser mayor a la fecha actual.
+                                {{ ERP_MESSAGES.FECHA_FINAL_MAYOR_A_INICIAL }}
                               </span>                           
 
                               <!-- Menor al 2000 -->
@@ -254,7 +254,7 @@
                                   formulario.get('@FechaInicial')?.touched &&
                                   formulario.get('@FechaInicial')?.errors?.['fechaMenorPermitida']
                                 ">
-                                La fecha inicial no puede ser menor al 01/01/2000.
+                                {{ ERP_MESSAGES.FECHA_MENOR_PERMITIDA }}
                               </span>                           
 
                             </div>
@@ -328,29 +328,29 @@
                             </div>
                           </div>
                         </div>
-
-                        @if (mostrarBotones()) {
-                        <div class="col-md-12 col-lg-12 col-sm-12 text-right">
-                          <br>
-                          <button
-                            type="button"
-                            class="btn Gt-btn-verde btn-icon legitRipple"
-                            (click)="ejecutarSP(false)"
-                            [disabled]="formulario.invalid">
-                            Ver informe
-                          </button>
-
-                          &nbsp;&nbsp;&nbsp;
-                          <button
-                            type="submit"
-                            class="btn Gt-btn-verde"
-                            (click)="ejecutarSP(true)"
-                            [disabled]="formulario.invalid">
-                            Generar informe
-                          </button>
-                        </div>
+                        @if (formulario.valid) {
+                          <div class="col-md-12 col-lg-12 col-sm-12 text-right">
+                            <br>
+                          
+                            <button
+                              type="button"
+                              class="btn Gt-btn-verde btn-icon legitRipple"
+                              (click)="ejecutarSP(false)">
+                              Ver informe
+                            </button>
+                          
+                            &nbsp;&nbsp;&nbsp;
+                          
+                            <button
+                              type="submit" 
+                              class="btn Gt-btn-verde"
+                              (click)="ejecutarSP(true)">
+                              Generar informe
+                            </button>
+                          
+                            <br><br><br>
+                          </div>
                         }
-
 
                       </form>
 

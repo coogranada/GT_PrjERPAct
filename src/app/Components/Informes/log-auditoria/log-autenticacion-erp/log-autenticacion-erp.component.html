@@ -13,7 +13,7 @@
                             <div class="row">
                                 <div class="col-md-8 col-lg-8 col-sm-8  panel-default" id="PanelDatos">
                                     <div class="panel-body ">
-                                        <div class="row" id="SelectFilter" [ngClass]="{'BordeLine': filtrosAgregado.length > 0}">
+                                        <div class="row" id="SelectFilter">
                                            
                                             <div class="col-md-4 col-lg-4 col-sm-4">
                                                 <div class="form-group">
@@ -88,13 +88,19 @@
                                                             <span class="grande"> *</span>
                                                             <input type="date" class="form-control" min="{{fechaMinima}}" max="{{fechaMax}}"  [(ngModel)]="valueFechaInicial" (change)="opcionSelectedFechas(1)" />
                                                             <span class="help-block validationSpan" *ngIf="valueFechaInicial === undefined && clearFechaInicial == false">
-                                                            La fecha inicial es obligatoria.
+                                                                {{ ERP_MESSAGES.FECHA_INICIAL_OBLIGATORIA }}
                                                             </span>
-                                                            <span class="help-block validationSpan" *ngIf="!valida1F && clearFechaInicial == false">
-                                                            La fecha inicial no valida.
+                                                            <span class="help-block validationSpan"
+                                                                  *ngIf="fechaInicialMayorActual">
+                                                                {{ ERP_MESSAGES.FECHA_MAYOR_ACTUAL }}
+                                                            </span>
+
+                                                            <span class="help-block validationSpan"
+                                                                  *ngIf="!valida1F && !fechaInicialMayorActual && clearFechaInicial == false">
+                                                                {{ ERP_MESSAGES.FECHA_MENOR_PERMITIDA }}
                                                             </span>
                                                             <span class="help-block validationSpan" *ngIf="valueFechaInicial > valueFechaFinal && clearFechaInicial == false">
-                                                            La fecha inicial debe ser menor o igual a la fecha final.
+                                                                {{ ERP_MESSAGES.FECHA_INICIAL_MENOR_A_FINAL }}
                                                         </span>
                                                         </div>
                                                     </div>
@@ -107,13 +113,19 @@
                                                             <input type="date" class="form-control" min="{{valueFechaInicial}}"  max="{{fechaMax}}"   [(ngModel)]="valueFechaFinal" (change)="opcionSelectedFechas(2)" [disabled]="(valueFechaInicial === undefined ) && valueFechaFinal == undefined"
                                                             />
                                                             <span class="help-block validationSpan" *ngIf="valueFechaFinal === undefined && (valueFechaInicial != undefined ) && clearFechaFinal == false">
-                                                            La fecha final es obligatoria.
+                                                                {{ ERP_MESSAGES.FECHA_FINAL_OBLIGATORIA }}
                                                             </span>
-                                                            <span class="help-block validationSpan" *ngIf="!valida2F && clearFechaFinal == false">
-                                                            La fecha final no valida.
+                                                            <span class="help-block validationSpan"
+                                                                  *ngIf="fechaFinalMayorActual">
+                                                                {{ ERP_MESSAGES.FECHA_MAYOR_ACTUAL }}
+                                                            </span>
+
+                                                            <span class="help-block validationSpan"
+                                                                  *ngIf="!valida2F && !fechaFinalMayorActual && clearFechaFinal == false">
+                                                                {{ ERP_MESSAGES.FECHA_MENOR_PERMITIDA }}
                                                             </span>
                                                             <span class="help-block validationSpan" *ngIf="valueFechaFinal < valueFechaInicial ">
-                                                            La fecha final debe ser mayor o igual a la fecha inicial.
+                                                                {{ ERP_MESSAGES.FECHA_FINAL_MAYOR_A_INICIAL }}
                                                             </span>
                                                         </div>
                                                     </div>
@@ -148,17 +160,33 @@
                                                 </div>
                                             </div>
                                            
-                                            <div class="col-md-12 col-lg-12 col-sm-12 text-right" *ngIf="filtrosAgregado.length > 0 && btnGenerate">
-                                                <button type="button"  (click)="GetCantInforme(false)" class="btn Gt-btn-verde btn-icon legitRipple">
-                                                    Ver informe
-                                                </button>
+                                            <div class="row">
+                                                <div class="col-md-12 col-lg-12 col-sm-12 text-right"
+                                                     *ngIf="filtrosAgregado.length > 0 && btnGenerate">
+                                            
+                                                    <br>
+                                            
+                                                    <button
+                                                        type="button"
+                                                        (click)="GetCantInforme(false)"
+                                                        class="btn Gt-btn-verde btn-icon legitRipple">
+                                                        Ver informe
+                                                    </button>
+                                                
                                                     &nbsp;
                                                     &nbsp;
                                                     &nbsp;
-                                                <button type="submit" class="btn Gt-btn-verde" value="Confirmar" (click)="GenerarInformeLogs()">
-                                                Generar informe
-                                                </button>
-                                                <br><br><br>
+                                                
+                                                    <button
+                                                        type="submit"
+                                                        class="btn Gt-btn-verde"
+                                                        value="Confirmar"
+                                                        (click)="GenerarInformeLogs()">
+                                                        Generar informe
+                                                    </button>
+                                                
+                                                    <br><br><br>
+                                                </div>
                                             </div>
                 
                                         </div>

@@ -20,6 +20,8 @@ declare var $: any;
   standalone : false
 })
 export class InformeJuridicosComponent implements OnInit {
+  ERP_MESSAGES = ERP_MESSAGES;
+
   Campos: Campo[] = [];
   Filtros: Filtro[] = [];
   filtrosAgregado: Filtro[] = [];

@@ -1537,10 +1537,10 @@
                                         <input type="date" class="form-control" name="FechaFin" id="fechaendSegVehiculo" value="{{fechaAperturaActualDisabled}}" min="{{fechaAperturaCuenta}}" max="{{fechaAperturaActualDisabled}}" formControlName="FechaFin" [(ngModel)]="valueFechaFinal" (change)="opcionSelectedFechasVehiculo(2)"
                                         />
                                         <span class="help-block validationSpan" *ngIf="FinVacida">
-                                            La fecha final es obligatoria.
+                                            {{ ERP_MESSAGES.FECHA_FINAL_OBLIGATORIA }}
                                         </span>
                                         <span class="help-block validationSpan" *ngIf="FechaMenorMayor">
-                                            La fecha final debe ser mayor a la fecha inicial.
+                                            {{ ERP_MESSAGES.FECHA_FINAL_MAYOR_A_INICIAL }}
                                         </span>
                                         <span class="help-block validationSpan" *ngIf="finNoValida">
                                             La fecha final no valida.
@@ -1743,10 +1743,10 @@
                                         <input type="date" class="form-control" name="FechaFin" id="fechaendSegVida" value="{{fechaAperturaActualDisabled}}" min="{{fechaAperturaCuenta}}" max="{{fechaAperturaActualDisabled}}" formControlName="FechaFin" [(ngModel)]="valueFechaFinal" (change)="opcionSelectedFechasVida(2)"
                                         />
                                         <span class="help-block validationSpan" *ngIf="FinVacida">
-                                            La fecha final es obligatoria.
+                                            {{ ERP_MESSAGES.FECHA_FINAL_OBLIGATORIA }}
                                         </span>
                                         <span class="help-block validationSpan" *ngIf="FechaMenorMayor">
-                                            La fecha final debe ser mayor a la fecha inicial.
+                                            {{ ERP_MESSAGES.FECHA_FINAL_MAYOR_A_INICIAL }}
                                         </span>
                                         <span class="help-block validationSpan" *ngIf="finNoValida">
                                             La fecha final no valida.

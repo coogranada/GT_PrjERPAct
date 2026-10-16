@@ -53,10 +53,10 @@
                                                     <span class="text-danger"></span>
                                                     <input type="date" class="form-control" min="{{valueFechaInicial}}"  max="{{fechaMax}}" (blur)="BlurDate(2)"  [(ngModel)]="valueFechaFinal" (change)="opcionSelectedFechas(2)" [disabled]="(valueFechaInicial === undefined ) && valueFechaFinal == undefined"/>
                                                     <span class="help-block validationSpan" *ngIf="valida2">
-                                                        La fecha final es obligatoria.
+                                                        {{ ERP_MESSAGES.FECHA_FINAL_OBLIGATORIA }}
                                                     </span>
                                                     <span class="help-block validationSpan" *ngIf="valueFechaFinal < valueFechaInicial ">
-                                                    La fecha final debe ser mayor a la fecha inicial.
+                                                    {{ ERP_MESSAGES.FECHA_FINAL_MAYOR_A_INICIAL }}
                                                     </span>
                                                 </div>
                                             </div>

@@ -24,6 +24,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AlertService } from '../../../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../../../Services/shared/loading.service';
 import { StorageSecurity } from '../../../../../utils/storage-security.util';
+import { ERP_MESSAGES } from '../../../../../utils/constant';
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
 @Component({
@@ -34,6 +35,8 @@ const ColorSecundario = 'rgb(13,165,80,0.7)';
   standalone: false
 })
 export class AhorrosTabComponent implements OnInit {
+  ERP_MESSAGES = ERP_MESSAGES;
+  
   //#region Variables Bloqueo
   private resultDataStore : any = {};
 

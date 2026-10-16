@@ -398,10 +398,10 @@
                                         <input type="date" class="form-control" formControlName="FechaFin" name="FechaFin" id="fechaend" value="{{fechaAperturaActualDisabled}}" min="{{fechaAperturaCuenta}}" max="{{fechaAperturaActualDisabled}}" [(ngModel)]="valueFechaFinal" (change)="opcionSelectedFechas(2)"
                                         />
                                         <span class="help-block validationSpan" *ngIf="FinVacida">
-                                            La fecha final es obligatoria.
+                                            {{ ERP_MESSAGES.FECHA_FINAL_OBLIGATORIA }}
                                         </span>
                                         <span class="help-block validationSpan" *ngIf="FechaMenorMayor">
-                                            La fecha final debe ser mayor a la fecha inicial.
+                                            {{ ERP_MESSAGES.FECHA_FINAL_MAYOR_A_INICIAL }}
                                         </span>
                                         <span class="help-block validationSpan" *ngIf="finNoValida">
                                             La fecha final no valida.

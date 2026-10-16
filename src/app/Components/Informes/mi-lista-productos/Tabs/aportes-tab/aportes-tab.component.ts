@@ -9,6 +9,7 @@ import swal from "sweetalert2";
 import { AlertService } from '../../../../../Services/Alert/alert.service';
 import { LoadingService } from '../../../../../Services/shared/loading.service';
 import { StorageSecurity } from '../../../../../utils/storage-security.util';
+import { ERP_MESSAGES } from "../../../../../utils/constant";
 
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -21,6 +22,8 @@ const ColorSecundario = 'rgb(13,165,80,0.7)';
   standalone : false
 })
 export class AportesTabComponent implements OnInit {
+  ERP_MESSAGES = ERP_MESSAGES;
+
   @ViewChild("pdfTable", { static: false }) pdfTable!: ElementRef;
   public Extractos: any[] = [];
   public Movimientos: any[] = [];

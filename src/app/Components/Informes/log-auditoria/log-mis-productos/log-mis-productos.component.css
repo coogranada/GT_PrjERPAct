@@ -72,10 +72,6 @@ color: white !important;
     display: block;
 }
 
-.BordeLine {
-    border-bottom: 1px solid rgb(160, 0, 87);
-}
-
 mat-slider {
     width: 300px;
 }
@@ -138,7 +134,8 @@ thead tr th{
     z-index: 10;
     background-color: #ffffff;
   }
-.table-responsive { 
-    
-    overflow:scroll;
-  }
+
+.table-responsive {
+    overflow-x: auto;
+    overflow-y: auto;
+}

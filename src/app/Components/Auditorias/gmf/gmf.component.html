@@ -39,7 +39,7 @@
                         </span>
                         <input type="date" class="form-control" formControlName="FechaFinal">
                         <span class="help-block validationSpan" *ngIf="GFMFrom.controls['FechaFinal'].errors?.['required'] && (GFMFrom.controls['FechaFinal'].dirty || GFMFrom.controls['FechaFinal'].touched)">
-                            La fecha final es obligatoria.</span>
+                            {{ ERP_MESSAGES.FECHA_FINAL_OBLIGATORIA }}</span>
                     </div>
                 </div>
                 <div class="col-xs-12 col-md-3 col-lg-3">

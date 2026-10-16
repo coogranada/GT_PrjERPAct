@@ -151,7 +151,6 @@ export class InformeLogService {
     this.AddFiltro(Filtros, 4, "Usuario");
   }
   CrateFiltrosRecaudoOlivos(Filtros: Filtro[]) {
-    this.AddFiltro(Filtros, 1, "Fecha");
     this.AddFiltro(Filtros, 4, "Usuario");
     this.AddFiltro(Filtros, 3, "Oficina");
   }
@@ -323,7 +322,7 @@ export class InformeLogService {
   GetFiltrosGestionCreditos(): Filtro[] {
     let Filtros: Filtro[] = [];
 
-    this.AddFiltro(Filtros, 1, "Fecha");
+    // this.AddFiltro(Filtros, 1, "Fecha");
     this.AddFiltro(Filtros, 2, "Operación");
     this.AddFiltro(Filtros, 3, "Oficina");
     this.AddFiltro(Filtros, 4, "Usuario");

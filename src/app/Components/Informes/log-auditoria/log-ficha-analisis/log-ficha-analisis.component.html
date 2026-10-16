@@ -76,7 +76,7 @@
                                                             La fecha inicial no valida.
                                                             </span>
                                                             <span class="help-block validationSpan" *ngIf="valueFechaInicial > valueFechaFinal && clearFechaInicial == false">
-                                                            La fecha inicial debe ser menor o igual a la fecha final.
+                                                            {{ ERP_MESSAGES.FECHA_INICIAL_MENOR_A_FINAL }}
                                                         </span>
                                                         </div>
                                                     </div>
@@ -89,7 +89,7 @@
                                                             <input type="date" class="form-control" min="{{valueFechaInicial}}"  max="{{fechaMax}}"   [(ngModel)]="valueFechaFinal" (change)="opcionSelectedFechas(2)" [disabled]="(valueFechaInicial === undefined) && valueFechaFinal == undefined"
                                                             />
                                                             <span class="help-block validationSpan" *ngIf="valueFechaFinal === undefined && (valueFechaInicial != undefined ) && clearFechaFinal == false">
-                                                            La fecha final es obligatoria.
+                                                            {{ ERP_MESSAGES.FECHA_FINAL_OBLIGATORIA }}
                                                             </span>
                                                             <span class="help-block validationSpan" *ngIf="!valida2F && clearFechaFinal == false">
                                                             La fecha final no valida.

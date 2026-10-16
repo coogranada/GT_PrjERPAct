@@ -12,6 +12,7 @@ import { ExceljsService } from '../../../Services/General/exceljs.service';
 import { TablaVirtualComponent } from '../../Tabla-virtual/tabla-virtual/tabla-virtual.component';
 import { LoadingService } from '../../../Services/shared/loading.service';
 import { StorageSecurity } from '../../../utils/storage-security.util';
+import { ERP_MESSAGES } from '../../../utils/constant';
 
 @Component({
   selector: 'app-datacredito',
@@ -21,6 +22,8 @@ import { StorageSecurity } from '../../../utils/storage-security.util';
   standalone: false
 })
 export class DatacreditoComponent implements OnInit {
+  ERP_MESSAGES = ERP_MESSAGES;
+  
   primaryColour = 'rgb(13,165,80)';
   secondaryColour = 'rgb(13,165,80,0.7)';
 

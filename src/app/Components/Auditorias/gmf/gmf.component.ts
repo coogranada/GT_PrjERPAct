@@ -11,6 +11,7 @@ import { map } from 'rxjs/operators';
 import { LoginService } from '../../../Services/Login/login.service';
 import { Router } from '@angular/router';
 import { StorageSecurity } from '../../../utils/storage-security.util';
+import { ERP_MESSAGES } from '../../../utils/constant';
 
 @Component({
   selector: 'app-gmf',
@@ -20,6 +21,8 @@ import { StorageSecurity } from '../../../utils/storage-security.util';
   standalone : false
 })
 export class GMFComponent implements OnInit {
+  ERP_MESSAGES = ERP_MESSAGES;
+  
   public GFMFrom!: FormGroup;
   public dataGFMAuditoria : any;
   public dataGMFReport : any | null = null;

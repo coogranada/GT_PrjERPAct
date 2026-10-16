@@ -18,6 +18,7 @@ declare var $: any;
   standalone : false
 })
 export class LogProductosVirtualesComponent implements OnInit {
+  ERP_MESSAGES = ERP_MESSAGES;
 
   Campos: Campo[] = [];
   Filtros: Filtro[] = [];

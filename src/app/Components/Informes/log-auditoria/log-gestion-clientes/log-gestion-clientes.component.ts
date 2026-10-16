@@ -16,6 +16,8 @@ import { ERP_MESSAGES } from '../../../../utils/constant';
   standalone : false
 })
 export class LogGestionClientesComponent implements OnInit {
+  ERP_MESSAGES = ERP_MESSAGES;
+  fechaMayorActual = false;
 
   Campos: Campo[] = [];
   Filtros: Filtro[] = [];
@@ -130,23 +132,38 @@ ngOnInit() {
     this.getcampos(this.filtroSelect)
   }
   InitVariables() {
-    this.fechaMax = moment(new Date()).format('YYYY-MM-DD');
-    this.fechaMinima = moment(new Date('1900-01-01')).format('YYYY-MM-DD');
+    this.fechaMax = moment().format('YYYY-MM-DD');
+    this.fechaMinima = '2000-01-01';
   }
   opcionSelectedFechas(value : number) {
     if (value == 1) {
       this.clearFechaInicial = false;
-    if ((this.valueFechaInicial.toString() >= this.fechaMinima && this.valueFechaInicial  <= this.fechaMax) || this.valueFechaInicial == this.valueFechaFinal)
-      this.valida1F = true;
+    if (
+        this.valueFechaInicial.toString() >= this.fechaMinima &&
+        this.valueFechaInicial <= this.fechaMax
+    )      this.valida1F = true;
     else 
       this.valida1F = false;
   }
-    else if (value == 2) {
-      this.clearFechaFinal = false;
-    if ((this.valueFechaFinal.toString() > this.fechaMinima && this.valueFechaFinal <= this.fechaMax && this.valueFechaInicial.toString() < this.valueFechaFinal.toString()) || this.valueFechaInicial == this.valueFechaFinal) 
-        this.valida2F = true;
-    else
+  else if (value == 2) {
+    this.clearFechaFinal = false;
+  
+    this.fechaMayorActual = false;
+  
+    if (this.valueFechaFinal > this.fechaMax) {
+      this.fechaMayorActual = true;
       this.valida2F = false;
+    }
+    else if (
+        this.valueFechaFinal.toString() >= this.fechaMinima &&
+        this.valueFechaFinal <= this.fechaMax &&
+        this.valueFechaInicial.toString() <= this.valueFechaFinal.toString()
+    ) {
+      this.valida2F = true;
+    }
+    else {
+      this.valida2F = false;
+    }
   }
   if (this.valida1F && this.valida2F)
     this.btnGenerate = true;

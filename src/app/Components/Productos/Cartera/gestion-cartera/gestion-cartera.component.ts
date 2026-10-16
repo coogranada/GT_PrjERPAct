@@ -3940,7 +3940,7 @@ export class GestionCarteraComponent {
     this.gestionCreditoOperacionForm.get('Codigo')?.reset();
     this.notif.success(
       ERP_TOAST.SUCCESS,
-      ERP_MESSAGES.CAMBIO_EXITOSO.replace('{}', 'línea'),
+      ERP_MESSAGES.CAMBIO_EXITOSO.replace('{0}', 'línea'),
       ConfiguracionNotificacion.configRightTop
     );
     this.cuotaTabBloqueado = false;
@@ -3986,7 +3986,7 @@ export class GestionCarteraComponent {
 
     this.notif.success(
       ERP_TOAST.SUCCESS,
-      ERP_MESSAGES.CAMBIO_EXITOSO.replace('{}', 'tipo y/o número de pagaré'),
+      ERP_MESSAGES.CAMBIO_EXITOSO.replace('{0}', 'tipo y/o número de pagaré'),
       ConfiguracionNotificacion.configRightTop
     );
     this.cuotaTabBloqueado = false;
@@ -3996,7 +3996,7 @@ export class GestionCarteraComponent {
   private errorActualizarPagare(resp: ResultadoOperacionDto) {
     this.notif.warning(
       ERP_TOAST.WARNING,
-      resp?.Mensaje ?? ERP_MESSAGES.CAMBIO_NO_REALIZADO.replace('{}', 'tipo y/o número de pagaré'),
+      resp?.Mensaje ?? ERP_MESSAGES.CAMBIO_NO_REALIZADO.replace('{0}', 'tipo y/o número de pagaré'),
       ConfiguracionNotificacion.configRightTop
     );
     this.cuotaTabBloqueado = false;
@@ -4005,7 +4005,7 @@ export class GestionCarteraComponent {
   private procesarErrorLinea(resp: ResultadoOperacionDto){
     this.notif.warning(
       ERP_TOAST.WARNING,
-      resp?.Mensaje ?? ERP_MESSAGES.CAMBIO_NO_REALIZADO.replace('{}', 'línea'),
+      resp?.Mensaje ?? ERP_MESSAGES.CAMBIO_NO_REALIZADO.replace('{0}', 'línea'),
       ConfiguracionNotificacion.configRightTop
     );
     this.cuotaTabBloqueado = false;

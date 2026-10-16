@@ -29,7 +29,7 @@
                         <span class="input-group-addon"><i class="icon-calendar22"></i></span>
                         <input type="date" class="form-control " formControlName="FechaFinal">
                         <span class="help-block validationSpan" *ngIf="ScoreForm.controls['FechaFinal'].errors?.['required'] && (ScoreForm.controls['FechaFinal'].dirty || ScoreForm.controls['FechaFinal'].touched)">
-                      La fecha final es obligatoria.</span>
+                      {{ ERP_MESSAGES.FECHA_FINAL_OBLIGATORIA }}</span>
                     </div>
                 </div>
                 <div class="col-xs-12 col-md-3 col-lg-3">

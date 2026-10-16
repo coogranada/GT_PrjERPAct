@@ -6,12 +6,6 @@
     position: absolute;
 }
 
-
-/* .scrollTablaFiltros{
-    max-height: 368px;
-    overflow-y: scroll;
-} */
-
 .scrollTablaFiltros {
     max-height: 265px;
     overflow-y: scroll;
@@ -31,7 +25,6 @@
 
 .active {
     background-color: rgba(160, 0, 87, 0.60) !important;
-    /* color: white; */
 }
 
 .textNegrilla {
@@ -47,21 +40,6 @@
     border: 1px solid rgb(38, 144, 81);
 }
 
-
-/*
-.activar a {
-color: white !important;
-}
-
-@media print {
-.doNotPrint {
-    display: none !important;
-}
-} */
-
-
-/* estilos de range  */
-
 .range-slider {
     width: 300px;
     text-align: center;
@@ -70,10 +48,6 @@ color: white !important;
 
 .rangeValues {
     display: block;
-}
-
-.BordeLine {
-    border-bottom: 1px solid rgb(160, 0, 87);
 }
 
 mat-slider {
@@ -132,16 +106,18 @@ input[type="range"]::-moz-range-thumb {
     border-radius: 50%;
     background: #852662;
 }
+
 thead tr th{ 
     position: sticky;
     top: 0;
     z-index: 10;
     background-color: #ffffff;
   }
-.table-responsive { 
-    
-    overflow:scroll;
-  }
+
+.table-responsive {
+    overflow-x: auto;
+    overflow-y: auto;
+}
 
 .capitalize {
    text-transform: capitalize;

@@ -18,6 +18,10 @@ declare var $: any;
   standalone : false
 })
 export class LogLogGeneralesComponent implements OnInit {
+  ERP_MESSAGES = ERP_MESSAGES;
+  fechaMayorActual = false;
+  fechaInicialMayorActual = false;
+  fechaFinalMayorActual = false;
   ListUsuarios: any[] = [];
   Campos: Campo[] = [];
   Filtros: Filtro[] = [];
@@ -67,8 +71,8 @@ export class LogLogGeneralesComponent implements OnInit {
     this.InitFiltros(this.IdOficina);
   }
   InitVariables() {
-    this.fechaMax = moment(new Date()).format('YYYY-MM-DD');
-    this.fechaMinima = moment(new Date('1900-01-01')).format('YYYY-MM-DD');
+    this.fechaMax = moment().format('YYYY-MM-DD');
+    this.fechaMinima = '2000-01-01';
   }
   InitFiltros(oficinaOrAdmin: number) {
     this.Filtros = this.serviceLogs.GetFiltros(oficinaOrAdmin, false);
@@ -267,28 +271,52 @@ export class LogLogGeneralesComponent implements OnInit {
         x => x.id == this.SelectedCombo
       )?.descri ?? '';
   }
-  opcionSelectedFechas(value : number) {
+  opcionSelectedFechas(value: number) {
+  
     if (value == 1) {
-      if ((this.valueFechaInicial.toString() >= this.fechaMinima && this.valueFechaInicial <= this.fechaMax) || this.valueFechaInicial == this.valueFechaFinal)
-        this.valida1F = true;
-      else
-        this.valida1F = false;
     
       this.clearFechaInicial = false;
+      this.fechaInicialMayorActual = false;
+    
+      if (new Date(this.valueFechaInicial) > new Date(this.fechaMax)) {
+        this.fechaInicialMayorActual = true;
+        this.valida1F = false;
+      }
+      else if (
+        this.valueFechaInicial.toString() >= this.fechaMinima &&
+        this.valueFechaInicial <= this.fechaMax
+      ){
+        this.valida1F = true;
+      }
+      else {
+        this.valida1F = false;
+      }
     }
+  
     else if (value == 2) {
-      if ((this.valueFechaFinal.toString() > this.fechaMinima && this.valueFechaFinal <= this.fechaMax && this.valueFechaInicial.toString() < this.valueFechaFinal.toString()) || this.valueFechaInicial == this.valueFechaFinal)
-        this.valida2F = true;
-      else
-        this.valida2F = false;
     
       this.clearFechaFinal = false;
+      this.fechaFinalMayorActual = false;
+    
+      if (new Date(this.valueFechaFinal) > new Date(this.fechaMax)) {
+        this.fechaFinalMayorActual = true;
+        this.valida2F = false;
+      }
+      else if (
+        this.valueFechaFinal.toString() >= this.fechaMinima &&
+        this.valueFechaFinal <= this.fechaMax &&
+        this.valueFechaInicial.toString() <= this.valueFechaFinal.toString()
+      ) {
+        this.valida2F = true;
+      }
+      else {
+        this.valida2F = false;
+      }
     }
-    if (this.valida1F && this.valida2F)
-      this.btnGenerate = true;
-    else
-      this.btnGenerate = false;
+  
+    this.btnGenerate = this.valida1F && this.valida2F;
   }
+
   DateBeginAndEnd() {
     this.dateBegin = this.valueFechaInicial.toString().replace("-", "/").replace("-", "/").replace("-", "/");
     this.dateEnd = this.valueFechaFinal.toString().replace("-", "/").replace("-", "/").replace("-", "/");

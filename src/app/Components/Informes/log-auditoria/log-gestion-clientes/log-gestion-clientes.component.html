@@ -58,14 +58,22 @@
                                                             <span class="grande"> *</span>
                                                             <input type="date" class="form-control" min="{{fechaMinima}}" max="{{fechaMax}}"  [(ngModel)]="valueFechaInicial" (change)="opcionSelectedFechas(1)" />
                                                             <span class="help-block validationSpan" *ngIf="valueFechaInicial === undefined && clearFechaInicial == false ">
-                                                            La fecha inicial es obligatoria.
+                                                            {{ ERP_MESSAGES.FECHA_INICIAL_OBLIGATORIA }}
                                                             </span>
-                                                            <span class="help-block validationSpan" *ngIf="!valida1F && clearFechaInicial == false ">
-                                                            La fecha inicial no valida.
+                                                            <span class="help-block validationSpan"
+                                                                  *ngIf="valueFechaInicial === undefined && clearFechaInicial == false">
+                                                              {{ ERP_MESSAGES.FECHA_INICIAL_OBLIGATORIA }}
+                                                            </span>                                                         
+
+                                                            <span class="help-block validationSpan"
+                                                                  *ngIf="!valida1F && clearFechaInicial == false">
+                                                              {{ ERP_MESSAGES.FECHA_MENOR_PERMITIDA }}
+                                                            </span>                                                         
+
+                                                            <span class="help-block validationSpan"
+                                                                  *ngIf="valueFechaInicial > valueFechaFinal">
+                                                              {{ ERP_MESSAGES.FECHA_INICIAL_MENOR_A_FINAL }}
                                                             </span>
-                                                            <span class="help-block validationSpan" *ngIf="valueFechaInicial > valueFechaFinal">
-                                                            La fecha inicial debe ser menor a la fecha final.
-                                                        </span>
                                                         </div>
                                                     </div>
                             
@@ -77,13 +85,19 @@
                                                             <input type="date" class="form-control" min="{{valueFechaInicial}}"  max="{{fechaMax}}"   [(ngModel)]="valueFechaFinal" (change)="opcionSelectedFechas(2)" [disabled]="(valueFechaInicial === undefined) && valueFechaFinal == undefined"
                                                             />
                                                             <span class="help-block validationSpan" *ngIf="valueFechaFinal === undefined && (valueFechaInicial != undefined) && clearFechaFinal == false">
-                                                            La fecha final es obligatoria.
+                                                            {{ ERP_MESSAGES.FECHA_FINAL_OBLIGATORIA }}
                                                             </span>
-                                                            <span class="help-block validationSpan" *ngIf="!valida2F && clearFechaFinal == false">
-                                                            La fecha final no valida.
+                                                            <span class="help-block validationSpan"
+                                                                  *ngIf="fechaMayorActual">
+                                                              {{ ERP_MESSAGES.FECHA_MAYOR_ACTUAL }}
                                                             </span>
+                                                            
+                                                            <span class="help-block validationSpan"
+                                                                  *ngIf="!valida2F && !fechaMayorActual && clearFechaFinal == false">
+                                                              {{ ERP_MESSAGES.FECHA_MENOR_PERMITIDA }}
+                                                            </span> 
                                                             <span class="help-block validationSpan" *ngIf="valueFechaFinal < valueFechaInicial && clearFechaFinal == false ">
-                                                            La fecha final debe ser mayor a la fecha inicial.
+                                                            {{ ERP_MESSAGES.FECHA_FINAL_MAYOR_A_INICIAL }}
                                                             </span>
                                                         </div>
                                                     </div>
@@ -91,18 +105,34 @@
                                             </div>
                                            
                                            
-                                            <div class="col-md-12 col-lg-12 col-sm-12 text-right" *ngIf="selectedFiltroBool == true && btnGenerate">
-                                                <button type="button"  (click)="GetCantInforme(false)" class="btn Gt-btn-verde btn-icon legitRipple">
+                                        <div class="row">
+                                            <div class="col-md-12 col-lg-12 col-sm-12 text-right"
+                                                 *ngIf="selectedFiltroBool == true && btnGenerate">
+                                        
+                                                <br>
+                                        
+                                                <button
+                                                    type="button"
+                                                    (click)="GetCantInforme(false)"
+                                                    class="btn Gt-btn-verde btn-icon legitRipple">
                                                     Ver informe
                                                 </button>
-                                                    &nbsp;
-                                                    &nbsp;
-                                                    &nbsp;
-                                                <button type="submit" class="btn Gt-btn-verde" value="Confirmar" (click)="GenerarInformeLogs()">
-                                                Generar informe
+                                            
+                                                &nbsp;
+                                                &nbsp;
+                                                &nbsp;
+                                            
+                                                <button
+                                                    type="submit"
+                                                    class="btn Gt-btn-verde"
+                                                    value="Confirmar"
+                                                    (click)="GenerarInformeLogs()">
+                                                    Generar informe
                                                 </button>
+                                            
                                                 <br><br><br>
                                             </div>
+                                        </div>
                 
                                         </div>
                                     </div>

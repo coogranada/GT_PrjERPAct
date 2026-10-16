@@ -10,6 +10,8 @@ import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { LoginService } from '../../../Services/Login/login.service';
 import { StorageSecurity } from '../../../utils/storage-security.util';
+import { ERP_MESSAGES } from '../../../utils/constant';
+
 @Component({
   selector: 'app-score',
   templateUrl: './score.component.html',
@@ -18,6 +20,8 @@ import { StorageSecurity } from '../../../utils/storage-security.util';
   standalone : false
 })
 export class ScoreComponent implements OnInit {
+  ERP_MESSAGES = ERP_MESSAGES;
+  
   public ScoreForm!: FormGroup;
   public dataScoreAuditoria : any;
   private CodModulo = 35;

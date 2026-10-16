@@ -28,6 +28,8 @@ declare var $: any;
   standalone : false
 })
 export class InformeClientesNaturalesComponent implements OnInit {
+  ERP_MESSAGES = ERP_MESSAGES;
+
   fechaMax: any = null;
   fechaMinima: any = null;
   CodModulo = 76;

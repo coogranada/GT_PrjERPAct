@@ -2,7 +2,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { InformeClientesService } from '../../../../Services/Informes/informe-clientes.service';
 import { ToastrService } from 'ngx-toastr';
 import { ConfiguracionInformesService } from '../../../../Services/Informes/configuracion-informes.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import Swal from "sweetalert2";
 import { TablaVirtualComponent } from '../../../Tabla-virtual/tabla-virtual/tabla-virtual.component';
 import { ShareComponentModule } from '../../../../Modules/share-component.module';
@@ -22,10 +22,12 @@ import { ERP_MESSAGES, ERP_TOAST } from '../../../../utils/constant';
   standalone: false
 })
 export class LogRecaudoOlivosComponent {
+  ERP_MESSAGES = ERP_MESSAGES;
 
   @ViewChild(TablaVirtualComponent) tablaVirtual!: TablaVirtualComponent;
   @ViewChild('ShowModalList', { static: true }) private ShowModalList!: ElementRef;
-
+  public fechaMaxima = new Date().toISOString().split('T')[0];
+  public fechaMinima = '2000-01-01';
   public nombreOficina: string = "";
   public tituloGenerico: string = "";
   public alertGenerico: string = "";
@@ -57,12 +59,29 @@ export class LogRecaudoOlivosComponent {
     this.getOficina(); //Captura oficina actual
     this.getOficinas(); // Obtiene listado de oficinas
 
-    this.formulario = this.fb.group({
-      '@FechaInicial': [null, Validators.required],
-      '@FechaFinal': [null, Validators.required],
-      '@IdOficina': [0],
-      '@Usuario': ['']
-    });
+    this.formulario = this.fb.group(
+      {
+        '@FechaInicial': [
+          null,
+          [
+            Validators.required,
+            this.validarFecha.bind(this)
+          ]
+        ],
+        '@FechaFinal': [
+          null,
+          [
+            Validators.required,
+            this.validarFecha.bind(this)
+          ]
+        ],
+        '@IdOficina': [0],
+        '@Usuario': ['']
+      },
+      {
+        validators: this.validarRangoFechas()
+      }
+    );
 
     this.InitFiltros();
 
@@ -336,8 +355,6 @@ export class LogRecaudoOlivosComponent {
 
   obtenerFiltro() {
     switch (this.filtroSelect.toString()) {
-      case "1":
-        break;
       case "3":
         this.tituloGenerico = "Oficina: ";
         this.alertGenerico = "La oficina es obligatoria."
@@ -499,4 +516,66 @@ export class LogRecaudoOlivosComponent {
     );
   }
 
+ obtenerMinFechaFinal(): string {
+  return this.formulario?.get('@FechaInicial')?.value || '';
+}
+
+obtenerMaxFechaInicial(): string {
+  const fechaFinal = this.formulario?.get('@FechaFinal')?.value;
+
+  return fechaFinal || this.fechaMaxima;
+}
+
+validarRangoFechas(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+
+    const fechaInicial = control.get('@FechaInicial')?.value;
+    const fechaFinal = control.get('@FechaFinal')?.value;
+
+    if (!fechaInicial || !fechaFinal) {
+      return null;
+    }
+
+    return new Date(fechaInicial) <= new Date(fechaFinal)
+      ? null
+      : { rangoFechas: true };
+  };
+}
+
+  private validarFecha(control: AbstractControl): ValidationErrors | null {
+  
+    const fecha = control.value;
+  
+    if (!fecha) {
+      return null;
+    }
+  
+    const partes = fecha.split('-');
+  
+    const fechaIngresada = new Date(
+      Number(partes[0]),
+      Number(partes[1]) - 1,
+      Number(partes[2])
+    );
+  
+    const fechaMinima = new Date(2000, 0, 1);
+  
+    const hoy = new Date();
+  
+    const fechaActual = new Date(
+      hoy.getFullYear(),
+      hoy.getMonth(),
+      hoy.getDate()
+    );
+  
+    if (fechaIngresada > fechaActual) {
+      return { fechaMayorActual: true };
+    }
+  
+    if (fechaIngresada < fechaMinima) {
+      return { fechaMenorPermitida: true };
+    }
+  
+    return null;
+  } 
 }
