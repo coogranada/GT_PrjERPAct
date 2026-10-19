@@ -4,6 +4,7 @@ import { CriterioBusquedaAsesoria } from "./gestion-credito-enum";
 
 
 export interface AsesoriaEncabezadoForm {
+    idOperacion: FormControl<number | null>;
     idOficinaAsociado: FormControl<number | null>;
     nombreOficinaAsociado: FormControl<string>;
     asesoria: FormControl<number | null>;
@@ -124,6 +125,8 @@ export interface ConsultarNegociacionAsesoriaCreditoResponse {
     diasGracia: number;
     idGarantia: number;
     garantia: string;
+    idTipoGarantia: number;
+    tipoGarantia: string;
     idAsesor: number;
     primerNombreAsesor: string;
     segundoNombreAsesor: string;

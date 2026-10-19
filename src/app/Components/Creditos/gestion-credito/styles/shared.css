@@ -37,7 +37,7 @@
 }
 
 .scroll-thin {
-  overflow: auto;
+  /* overflow: auto; */
   scrollbar-width: thin;
   scrollbar-color: rgb(156 163 175) transparent;
 
@@ -60,6 +60,56 @@
   }
 }
 
+.mensajeInfo {
+    display: inline;
+}
+.mensajeInfo i{
+  font-size: 13px;
+  color: rgb(38, 144, 81);
+  margin-left: 5px;
+}
+
+.mensajeInfoText {
+  visibility: hidden;
+  width: 300px;
+  background-color: rgba(63, 63, 63, 0.894);
+  color: white;
+  text-align: center;
+  padding: 5px;
+  border-radius: 6px;
+
+  /* Position the tooltip text - see examples below! */
+  overflow: visible;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -150px;
+}
+.mensajeInfoTextBottom {
+  visibility: hidden;
+  width: 300px;
+  background-color: rgba(63, 63, 63, 0.9);
+  color: white;
+  text-align: center;
+  padding: 5px;
+  z-index: 20;
+  border-radius: 6px;
+
+  /* Position the tooltip text - see examples below! */
+  overflow: visible;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -150px;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.mensajeInfo:hover .mensajeInfoText {
+  visibility: visible;
+}
+.mensajeInfo:hover .mensajeInfoTextBottom {
+  visibility: visible;
+}
 
 
 

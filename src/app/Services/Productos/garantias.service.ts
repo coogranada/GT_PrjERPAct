@@ -85,6 +85,14 @@ export class GarantiasService {
         return this.http.get<GarantiaCompartida[]>(url, { params });
     }
 
+    getGarantiasCompartidasPorIdTercero(idTercero: number): Observable<GarantiaCompartida[]> {
+        const url = `${this.environment.Url}/ObtenerGarantiasCompartidasPorIdTercero`;
+        const params = new HttpParams()
+            .set('idTercero', idTercero);
+
+        return this.http.get<GarantiaCompartida[]>(url, { params });
+    }
+
     getGarantiasDerivadas(
         garantia: number,
         tipo: string,
