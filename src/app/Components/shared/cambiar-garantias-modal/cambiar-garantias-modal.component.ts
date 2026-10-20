@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ConfiguracionNotificacion } from '../../../../environments/config.noticaciones';
 import { TooltipService } from '../../../Services/Tooltip/tooltip.service';
 import { ERP_MESSAGES, ERP_TOAST } from '../../../utils/constant';
+import { IdModulo } from '../../../Models/Generales/modulos.enum';
 
 @Component({
   selector: 'app-cambiar-garantias-modal',
@@ -42,8 +43,10 @@ export class CambiarGarantiasModalComponent {
     asignadas: null
   };
   public garantiasDisponiblesInicialCodeudor: GarantiaDisponible[] = [];
+  Modulo = IdModulo;
 
-
+  @Input() tituloModal?: string = 'Cambiar garantías'; 
+  @Input() moduloInvocacion?: IdModulo; 
   @Input() garantiasForm!: FormGroup;
   @Input() mostrarGarantiasCodeudor: boolean = false;
   @Input() mostrarDetalleGarantia: boolean = false;
@@ -582,6 +585,7 @@ export class CambiarGarantiasModalComponent {
         totalCompartidas
       );
     });
+    if(this.moduloInvocacion == IdModulo.GestionCredito) this.valorCoberturaCompartidas += this.valorCoberturaDisponibleDeudor;
 
     this.valorRespaldadoCompartidas = totalCompartidas.valor;
 

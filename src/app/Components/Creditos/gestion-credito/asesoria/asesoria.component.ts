@@ -18,13 +18,14 @@ import { finalize, forkJoin, switchMap } from 'rxjs';
 import { MiListaProductosService } from '../../../../Services/Informes/mi-lista-productos.service';
 import { ERP_MESSAGES } from '../../../../utils/constant';
 import { CriterioBusquedaAsesoria } from '../../../../Models/Creditos/GestionCredito/gestion-credito-enum';
+import { AsesoriaContractualService } from '../../../../Services/Productos/asesoriaContractual.service';
 
 @Component({
   selector: 'app-asesoria',
   imports: [ReactiveFormsModule, ShareComponentModule, TabNegociacionComponent, CurrencyPipe],
   templateUrl: './asesoria.component.html',
   styleUrl: './asesoria.component.css',
-  providers: [GestionCreditoService]
+  providers: [GestionCreditoService, AsesoriaContractualService]
 })
 export class AsesoriaComponent {
 
@@ -41,7 +42,7 @@ export class AsesoriaComponent {
   encabezadosTablaBuscarAsesorias = ['Asesoria', 'Documento', 'Nombre Asociado', 'Estado', 'Fecha', 'Linea'];
   datosTransformados: any[] = [];
   formEncabezado!: FormGroup<AsesoriaEncabezadoForm>;
-  nombreBtnFlag = true;
+  buscarAsociadoBtnDisabled = true;
   idTercero: number | null = null;
 
   deducibles: DeduciblesResponse[] = [];
@@ -77,10 +78,16 @@ export class AsesoriaComponent {
   @ViewChild('cerrarModalCrearTercero', { static: true }) 
   private cerrarModalCrearTercero!: ElementRef;
 
+  @ViewChild('numeroDocumento', { static: true }) 
+  private numeroDocumentoInput!: ElementRef<HTMLInputElement>;
+
+  existeElAsociado = false;
+
   constructor(
     private fb: FormBuilder,
     private gestionCreditoService: GestionCreditoService,
     private listaProductoService: MiListaProductosService,
+    private asesoriaContractualService: AsesoriaContractualService,
 
     private loading: LoadingService,
     private notif: ToastrService,
@@ -89,11 +96,12 @@ export class AsesoriaComponent {
 
   ngOnInit(): void {
     this.formEncabezado = this.fb.group<AsesoriaEncabezadoForm>({
+      idOperacion: this.fb.control({ value: null, disabled: false }),
       idOficinaAsociado: this.fb.control({ value: null, disabled: true }),
       nombreOficinaAsociado: this.fb.nonNullable.control({ value: '', disabled: true }),
       asesoria: this.fb.control({ value: null, disabled: true }),
       tipoDocumento: this.fb.nonNullable.control({ value: '', disabled: true }),
-      numeroDocumento: this.fb.nonNullable.control({ value: '', disabled: false }),
+      numeroDocumento: this.fb.nonNullable.control({ value: '', disabled: true }),
       nombreAsociado: this.fb.nonNullable.control({ value: '', disabled: true }),
       criterioBusqueda: this.fb.nonNullable.control(CriterioBusquedaAsesoria.PorAsesoria),
       busqueda: this.fb.nonNullable.control(''),
@@ -104,14 +112,33 @@ export class AsesoriaComponent {
     });
 
    
-    const { criterioBusqueda, busqueda } = this.formEncabezado.controls;
+    const { criterioBusqueda, busqueda, idOperacion } = this.formEncabezado.controls;
 
-    criterioBusqueda.valueChanges
-      .subscribe(idCriterio => {    
-        if (idCriterio === CriterioBusquedaAsesoria.PorAsesoria) {
-          busqueda.reset('');
-        }
-      });
+    criterioBusqueda.valueChanges.subscribe(idCriterio => {
+      if (idCriterio === CriterioBusquedaAsesoria.PorAsesoria) {
+        busqueda.reset('', { emitEvent: false });
+      }
+    });
+
+    idOperacion.valueChanges.subscribe(idOperacion => {
+
+      // this.formEncabezado.reset({
+      //   idOperacion: this.formEncabezado.controls.idOperacion.value
+      //  });
+      
+      this.formEncabezado.controls.numeroDocumento.disable({ emitEvent: false });
+      this.formEncabezado.controls.nombreAsociado.disable({ emitEvent: false });
+
+      if(idOperacion === 1) {
+       
+      }
+      else if(idOperacion === 2) {
+        this.formEncabezado.controls.numeroDocumento.enable({ emitEvent: false });
+        this.formEncabezado.controls.nombreAsociado.enable({ emitEvent: false });
+        this.buscarAsociadoBtnDisabled = false;
+        this.numeroDocumentoInput.nativeElement.focus();
+      }
+    });
 
   }
 
@@ -391,6 +418,34 @@ export class AsesoriaComponent {
 
 
   onBlurDocumento() {
-    this.btnAbrirModalCrearTercero.nativeElement.click();
+    const numeroDocumentoCtrl = this.formEncabezado.controls.numeroDocumento;
+    const numeroDocumento = numeroDocumentoCtrl.value;
+
+    if(!numeroDocumento?.trim()) return;
+
+    this.loading.show();
+    this.asesoriaContractualService.BuscarNombreXDocumento(numeroDocumento).subscribe({
+      next: result => {
+        this.loading.hide();
+        if(!result.NumeroDocumento) {
+          this.existeElAsociado = false;
+          this.btnAbrirModalCrearTercero.nativeElement.click();
+          return;
+        }
+        this.existeElAsociado = true;
+        numeroDocumentoCtrl.setValue(result.NumeroDocumento);
+        const nombre = concatWithSpace(result.PrimerApellido, result.SegundoApellido, result.PrimerNombre, result.SegundoNombre);
+        this.formEncabezado.controls.nombreAsociado.setValue(nombre);
+        this.formEncabezado.controls.tipoDocumento.setValue(TipoDocumentoDescripcion[result.TipoDocumento as TipoDocumento]);
+        this.btnAbrirModalCrearTercero.nativeElement.click();
+
+
+      },
+      error: () => {
+        this.loading.hide();
+
+      }
+    })
+
   }
 }

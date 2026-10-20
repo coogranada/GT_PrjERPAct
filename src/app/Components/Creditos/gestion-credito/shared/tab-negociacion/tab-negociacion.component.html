@@ -184,9 +184,33 @@
                 <div class="col-xs-9 col-lg-9">
                     <input type="text" id="garantia" class="form-control" formControlName="garantia">
                 </div>
-                <div class="col-lg-1">
-                    <button type="button" class="btn Gt-btn-verde btn-icon" [disabled]="verGarantiasBtnDisabled"><i class="icon-drawer3"></i></button>
-                </div>
+                @if(detalleGarantiasVisible) {
+                    <div class="col-lg-1">
+                        <button type="button" class="btn Gt-btn-verde btn-icon" (click)="onClickVerGarantias()"><i
+                                class="icon-drawer3"></i></button>
+                    </div>
+                }
+                
+            
+                @if(mostrarModalGarantias) {
+                <app-cambiar-garantias-modal 
+                    [tituloModal]="'Garantias'"
+                    [moduloInvocacion]="Modulo.GestionCredito"
+                    [textoBotonConfirmar]="'Guardar'" 
+                    #modalGarantias
+                    [datosCuenta]="datosCuenta" [garantiasForm]="garantiasForm"
+                    [SaldoCapital]="formNegociacion.controls.monto.value ?? 0"
+                    [listGarantiasDisponiblesDeudor]="listGarantiasDisponiblesDeudor"
+                    [listGarantiasDisponiblesCodeudor]="listGarantiasDisponiblesCodeudor"
+                    [garantiasCompartidasBackendInput]="garantiasCompartidasBackend"
+                    [garantiasRealesAsignadasInput]="garantiasRealesAsignadas" 
+                    [garantiasCompartidas]="garantiasCompartidas"
+                    [codeudoresBasico]="codeudoresBasico" 
+                    [mostrarGarantiasCodeudor]="mostrarGarantiasCodeudor"
+                    (cerrar)="onClickCerrarModalGarantias()" />
+                }
+
+
             </div>
         </div>
     </div>
@@ -294,32 +318,7 @@
     <div class="row row-margin"></div>
 
     <div class="row row-margin">
-    
-        <div class="col-lg-3">
-            <div class="row">
-                <div class="col-xs-6 col-lg-6">
-                    <div>
-                        <label class="textNegrilla">Indicador:</label>
-                    </div>
-                    <div>
-                        <input type="text" class="form-control" formControlName="indicador">
-                    </div>
-                </div>
-    
-                <div class="col-xs-6 col-lg-6">
-                    <div>
-                        <label class="textNegrilla">Puntos:</label>
-                    </div>
-                    <div>
-                        <input type="text" class="form-control text-right" formControlName="puntos" appPorcentajeDirectiva>
-                    </div>
-                </div>
-    
-            </div>
-        </div>
 
-        <div class="col-lg-1"></div>
-     
         <div class="col-xs-7 col-lg-3">
             <div class="row">
                 <div class="col-xs-4 col-lg-4">
@@ -355,14 +354,35 @@
         </div>
 
         <div class="col-lg-1"></div>
+
+        <div class="col-lg-3">
+            <div class="row">
+                <div class="col-xs-6 col-lg-6">
+                    <div>
+                        <label class="textNegrilla">Indicador:</label>
+                    </div>
+                    <div>
+                        <input type="text" class="form-control" formControlName="indicador">
+                    </div>
+                </div>
+    
+                <div class="col-xs-6 col-lg-6">
+                    <div>
+                        <label class="textNegrilla">Puntos:</label>
+                    </div>
+                    <div>
+                        <input type="text" class="form-control text-right" formControlName="puntos" appPorcentajeDirectiva>
+                    </div>
+                </div>
+    
+            </div>
+        </div>     
+        
+        <div class="col-lg-1"></div>
         
         <div class="col-xs-3 col-lg-3">
             <div class="btn-space"></div>
             <button class="btn Gt-btn-morado" [disabled]="calculatBtnDisabled">Calcular</button>
-        
-            <!-- <div class="btn-calc-cont">
-                        <button class="btn Gt-btn-morado btn-calc" [disabled]="calculatBtnDisabled">Calcular</button>
-                    </div> -->
         </div>
     
     </div>
@@ -370,8 +390,8 @@
     <div class="scroll-thin">
         <div class="totales txtNoWrap">
             <!-- cards -->
-            <!-- <div class="col-lg-2"> -->
-            <div class="total-item signoResta">
+    
+            <div class="total-item">
                 <div class="">Valor préstamo</div>
                 <div class="textNegrilla total-item-text">
                     @if(idAsesoria()) {
@@ -381,11 +401,13 @@
                     }
     
                 </div>
-            </div>
-            <!-- </div> -->
     
-            <!-- <div class="col-lg-2"> -->
-            <div class="total-item signoResta">
+                <div class="signo-resta icon-minus-circle2"></div>
+            </div>
+    
+    
+    
+            <div class="total-item">
                 <div class="">Deducciones</div>
                 <div class="textNegrilla total-item-text">
                     @if(idAsesoria()) {
@@ -395,25 +417,31 @@
                     }
     
                 </div>
+    
+                <div class="signo-resta icon-minus-circle2"></div>
             </div>
-            <!-- </div> -->
     
-            <!-- <div class="col-lg-2"> -->
-            <div class="total-item signoResta">
-                <div class="">Otras deducciones</div>
-                <div class="textNegrilla total-item-text">
-                    @if(idAsesoria()) {
-                    {{ deducciones() | number:'1.2-2' }}
-                    } @else {
-                    0.00
-                    }
     
+    
+            <div class="total-item">
+                <div class="">
+                    Otras deducciones
+                    <div class="mensajeInfo">
+                        <i class="icon-info22"></i>
+                        <span class="mensajeInfoText">
+                            Unión Coop
+                        </span>
+                    </div>
                 </div>
+                <div class="textNegrilla total-item-text">
+                    0.00
+                </div>
+                <div class="signo-resta icon-minus-circle2"></div>
             </div>
-            <!-- </div> -->
     
-            <!-- <div class="col-lg-2"> -->
-            <div class="total-item signoIgual">
+    
+    
+            <div class="total-item">
                 <div class="">Saldo a cancelar</div>
                 <div class="textNegrilla total-item-text">
                     @if(idAsesoria() && saldoCancelar()) {
@@ -422,10 +450,11 @@
                     0.00
                     }
                 </div>
+                <div class="signo-igual icon-pause"></div>
             </div>
-            <!-- </div> -->
     
-            <!-- <div class="col-lg-2"> -->
+    
+    
             <div class="total-item">
                 <div class="">Desembolso</div>
                 <div class="textNegrilla total-item-text text-red">
@@ -437,24 +466,55 @@
     
                 </div>
             </div>
-            <!-- </div>     -->
     
-            <!-- <div class="col-lg-2"> -->
-            <div class="total-item">
-                <div class="">Total cuota</div>
-                <div class="textNegrilla total-item-text">
-                    @if(idAsesoria()) {
-                    {{ totalCuota | number:'1.2-2' }}
-                    } @else {
-                    0.00
-                    }
-    
+            <div class="flip-card" [class.flipped]="isFlipped">
+                <div class="flip-card-inner">
+            
+                    <div class="total-item flip-card-front">
+                        <div>Cuota sin diferidos <i class="icon-rotate-cw2 cursor-pointer ic-rot" (click)="isFlipped = true"></i></div>
+                        <div class="textNegrilla total-item-text">
+                            @if(idAsesoria()) {
+                            {{ totalCuota | number:'1.2-2' }}
+                            } @else {
+                            0.00
+                            }
+                        </div>
+                    </div>
+            
+                    <div class="total-item flip-card-back">
+                        <div>Cuota con diferidos <i class="icon-rotate-ccw2 cursor-pointer ic-rot" (click)="isFlipped = false"></i></div>
+                        <div class="textNegrilla total-item-text">
+                            @if (idAsesoria()) {
+                                {{ (totalCuota ?? 0) + (deducciones() ?? 0) | number:'1.2-2' }}
+                            } @else {
+                                0.00
+                            }
+                        </div>
+                    </div>
                 </div>
             </div>
-            <!-- </div> -->
+
+
             <!-- cards -->
         </div>
     </div>
     
+
+
+    <!-- <div class="flip-card">
+    <div class="flip-card-inner">
+
+        <div class="flip-card-front">
+            <h4>Frente</h4>
+            <p>Haz click</p>
+        </div>
+
+        <div class="flip-card-back">
+            <h4>Reverso</h4>
+            <p>Contenido oculto</p>
+        </div>
+
+    </div> -->
+<!-- </div> -->
 
 </form>
