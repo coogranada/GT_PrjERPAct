@@ -233,6 +233,21 @@ export class LogAsesoriaComponent implements OnInit {
         break;
       case "21":
         this.TituloGenerico = "Operación ";
+        const moduloSeleccionado =
+          this.filtrosAgregado.find(x => x.idFiltro == 20);
+        if (!moduloSeleccionado) {
+          this.filtroSelect = 0;
+          this.notif.warning('Advertencia','Debe seleccionar primero un modulo',
+            ConfiguracionNotificacion.configRightTop
+          );
+          return;
+        }
+        console.log('Modulo seleccionado:', moduloSeleccionado.idValue);
+        this.alertGenerico = " La operación es obligatoria.";
+        this.getOperaciones(moduloSeleccionado.idValue.toString()
+        );
+        break;
+        this.TituloGenerico = "Operación ";
         console.log("dark",this.filtrosAgregado.filter(x => x.idFiltro == 20)[0].idValue.toString())
         if (this.filtrosAgregado.filter(x => x.idFiltro == 20)[0] == null) {
           this.filtroSelect = 0;

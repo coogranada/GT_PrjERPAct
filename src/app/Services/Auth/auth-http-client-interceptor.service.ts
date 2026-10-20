@@ -24,6 +24,7 @@ export class AuthHttpClientInterceptorService implements HttpInterceptor {
         const isExpired = payload.exp * 1000 < Date.now();
 
         if (isExpired) {
+          console.log('JWT EXPIRADO');
           localStorage.removeItem('token');
           jwt = null;
         }
@@ -68,6 +69,7 @@ export class AuthHttpClientInterceptorService implements HttpInterceptor {
           return throwError(() => err);
         }
         if (err.status == 401) {
+          console.error('401 DETECTADO URL:', req.url);
           localStorage.removeItem('token');
           localStorage.removeItem('refreshToken');
           Swal.fire({

@@ -1014,38 +1014,37 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
  
   //#region Carga de Maestros
   GetSeguros() {
-    const seguro = localStorage.getItem('seguros');
-    if (!seguro) {
-      return;
-    }
     try {
-      this.dataSeguros = StorageSecurity.getItem('seguro') || [];
+      const seguros = StorageSecurity.getItem('seguros');
+      this.dataSeguros = seguros ?? [];
+      // console.log('dataSeguros', this.dataSeguros);
     } catch (error) {
-      console.error(error);
+      console.error('Error obteniendo seguros', error);
+      this.dataSeguros = [];
     }
   }
 
   GetEstadosSeguro() {
-    const seguro = localStorage.getItem('estadoSeguro');
-    if (!seguro) {
-      return;
-    }
     try {
-      this.dataEstadosSeguro = StorageSecurity.getItem('seguro') || [];
+      this.dataEstadosSeguro =
+        StorageSecurity.getItem('estadoSeguro') || [];
+      // console.log('dataEstadosSeguro:', this.dataEstadosSeguro);
     } catch (error) {
-      console.error(error);
+      console.error(
+        'Error GetEstadosSeguro:',
+        error
+      );
+      this.dataEstadosSeguro = [];
     }
   }
 
   GetCargos() {
-    const cargo = localStorage.getItem('cargos');
-    if (!cargo) {
-      return;
-    }
     try {
-      this.dataCargos = StorageSecurity.getItem('cargo') || [];
+      this.dataCargos =
+        StorageSecurity.getItem('cargos') || [];
     } catch (error) {
-      console.error(error);
+      console.error('Error GetCargos:', error);
+      this.dataCargos = [];
     }
   }
 
@@ -1874,6 +1873,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       this.BloquearPreguntasPeps = true;
       this.BloquearPreguntas = true;
     } else if (results === '1') { // Editar  
+      this.EjecutarMetodosMaestros();
       if (this.basicosFrom.get('tipoEmpleo')?.value === 0) {
         $('#SelectTipoEmpleo').focus().select();
       }
@@ -20977,6 +20977,10 @@ enviarWorkManager() {
   }
 
   MapearSeguro(i : any, data : any) {
+    if (!data || !data.seguro) {
+      console.error('Seguro inválido:', data);
+      return;
+    }
     this.VolverArriba();
     this.indexSeguro = i;
     this.Blockseguro = true;
@@ -21035,36 +21039,42 @@ enviarWorkManager() {
 
   GetHistorialLogSeguros() {
     this.itemsLogSeguro = [];
-    const tercerEdit = localStorage.getItem('TerceroNatura');
-    this.clientesService.GetHistoralLogSeguro(tercerEdit == null ? "" : tercerEdit).subscribe(
-      result => {
-        result.forEach((elementHisto: any) => {
-          this.LogSeguroModel = new LogSegurosModel;
-          this.dataSeguros.forEach(( elementSeg : any ) => {
-            if (elementSeg.Clase === elementHisto.IdSeguro) {
-              this.LogSeguroModel.Seguro = elementSeg.Descripcion;
-            }
+    const tercerEdit =  localStorage.getItem('TerceroNatura') ?? '';
+    this.clientesService
+      .GetHistoralLogSeguro(tercerEdit)
+      .subscribe({
+        next: (result: any[]) => {
+          result.forEach((elementHisto: any) => {
+            const seguro = this.dataSeguros?.find(
+              (x: any) => x.Clase === elementHisto.IdSeguro
+            );
+            const estado = this.dataEstadosSeguro?.find(
+              (x: any) => x.Id === elementHisto.IdEstado
+            );
+            const logSeguro = new LogSegurosModel();
+            logSeguro.Seguro =
+              seguro?.Descripcion ?? 'Seguro no encontrado';
+            logSeguro.Estado =
+              elementHisto.IdEstado === 0
+                ? 'Eliminado'
+                : (estado?.Nombre ?? 'Estado no encontrado');
+            logSeguro.FechaCreacion = elementHisto.FechaCreacion;
+            logSeguro.FechaModificacion = elementHisto.FechaModificacion;
+            logSeguro.FechaRptaAseguradora = elementHisto.FechaRptaAseguradora;
+            logSeguro.MontoAsegurado = elementHisto.MontoAsegurado;
+            this.itemsLogSeguro.push(logSeguro);
           });
-          this.dataEstadosSeguro.forEach((elementEstado : any) => {
-            if (elementHisto.IdEstado !== 0) {
-              if (elementEstado.Id === elementHisto.IdEstado) {
-                this.LogSeguroModel.Estado = elementEstado.Nombre;
-              }
-            } else {
-              this.LogSeguroModel.Estado = 'Eliminado';
-            }
-          });
-          this.LogSeguroModel.FechaCreacion = elementHisto.FechaCreacion;
-          this.LogSeguroModel.FechaModificacion = elementHisto.FechaModificacion;
-          this.LogSeguroModel.FechaRptaAseguradora = elementHisto.FechaRptaAseguradora;
-          this.LogSeguroModel.MontoAsegurado = elementHisto.MontoAsegurado;
-          this.itemsLogSeguro.push(this.LogSeguroModel);
-        });
-      },
-      error => {
-        this.notif.onWarning('Advertencia',
-          'El tipo de seguro ya fue ingresado.');
-        console.error('GetHistorialLogSeguro - ' + error);
+        },
+        error: (error) => {
+          this.notif.onWarning(
+            'Advertencia',
+            'Error consultando historial de seguros.'
+          );
+          console.error(
+            'GetHistorialLogSeguro',
+            error
+          );
+        }
       });
   }
 
@@ -23023,8 +23033,7 @@ enviarWorkManager() {
                     this.referenciaForm.get('email')?.setValue(null);
                   }
                   if (elementReferencia.IdTipoReferencia === 2) {
-                    this.itemsFamiliaPersonal.push(this.referenciaForm.value);
-                    console.log(this.itemsFamiliaPersonal);
+                    this.itemsFamiliaPersonal.push(this.referenciaForm.value);                    
                     this.referenciaForm.reset();
                   }
                 } else  { // personal

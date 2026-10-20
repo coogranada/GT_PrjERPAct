@@ -1,16 +1,31 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { EnvironmentService } from '../Enviroment/enviroment.service';
-import { Observable } from 'rxjs';
+import { Observable, shareReplay } from 'rxjs';
 @Injectable()
 export class ImagenesBannerServices {
     public url: string = "";
     constructor(private _http: HttpClient,private environment: EnvironmentService) { }  
     
+    private banner$!: Observable<any>;
     getImagenesBanner(): Observable<any> {
-        this.url = `${this.environment.Url}/ConsultarImagenBanner`;
-        return this._http.get<any>(this.url);
+        if (!this.banner$) {
+            console.count('HTTP ConsultarImagenBanner');
+            this.url = `${this.environment.Url}/ConsultarImagenBanner`;
+            this.banner$ = this._http
+                .get<any>(this.url)
+                .pipe(
+                    shareReplay(1)
+                );
+        }
+        return this.banner$;
     }
+
+
+    // getImagenesBanner(): Observable<any> {
+    //     this.url = `${this.environment.Url}/ConsultarImagenBanner`;
+    //     return this._http.get<any>(this.url);
+    // }
     setImagenBanner(Datos: any): Observable<any> {
         this.url = `${this.environment.Url}/GuardarImagenBanner`;
         return this._http.post<any>(this.url, Datos);

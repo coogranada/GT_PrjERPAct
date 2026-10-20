@@ -522,6 +522,7 @@ export class LayoutComponent implements OnInit,OnDestroy {
     }
   }
   public timeout() {
+    console.log('TIMEOUT EJECUTADO', new Date());
     this.DataUser = StorageSecurity.getData();
     if (!this.DataUser) {
       return;
