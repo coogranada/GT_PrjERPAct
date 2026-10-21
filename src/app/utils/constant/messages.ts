@@ -12,6 +12,7 @@ export const ERP_MESSAGES = {
     CAMBIO_NO_REALIZADO: 'El cambio de {0} no se realizó correctamente.',
     PERSONA_VETADA_CONTACTO: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>',
     ASOCIADO_NO_ENCONTRADO: 'No se encontró el asociado.',
+    ASESOR_EXT_NO_ENCONTRADO: 'No se encontró el asesor externo.',
     CONSULTA_CREDITOS_ASOCIADOS_ERROR: 'No fue posible consultar los créditos asociados.',
     CAMPOS_REQUERIDOS: 'Debe seleccionar campos.',
     ERROR_INESPERADO: 'Ha ocurrido un error inesperado.',

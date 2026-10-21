@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { EnvironmentService } from '../Enviroment/enviroment.service';
-import { Observable } from 'rxjs';
+import { Observable, shareReplay } from 'rxjs';
 import { formatDate } from '@angular/common';
 import { LogGestionCreditoRequest } from '../../Models/Productos/cartera/gestion-credito.model';
 import { StorageSecurity } from '../../utils/storage-security.util';
+import { TiposDocumentoResponse } from '../../Models/Generales/generales.model';
 declare var $: any;
 @Injectable()
 
 export class GeneralesService {
     private url: string = "";
+    private tiposDocumento$?: Observable<TiposDocumentoResponse[]>;
   constructor(private _http: HttpClient,private environment: EnvironmentService) { }
 
     Guardarlog(formValue : any, idOperacion : number, lngCuenta : number | null = 0, tercero : number | null = 0 , modulo : number , numeroDoc: string | null = null): Observable<any> {
@@ -177,6 +179,19 @@ export class GeneralesService {
       return this._http.post<any>(this.url, payload);
     }
 
+    obtenerTiposDocumento() {
+        this.url = `${this.environment.Url}/GetTipoDocumento`;
+
+        if (!this.tiposDocumento$) {
+            this.tiposDocumento$ = this._http
+                .get<TiposDocumentoResponse[]>(this.url)
+                .pipe(
+                    shareReplay(1)
+                );
+        }
+
+        return this.tiposDocumento$;
+    }
 
 
 }

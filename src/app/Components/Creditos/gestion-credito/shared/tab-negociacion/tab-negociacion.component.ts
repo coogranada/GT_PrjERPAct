@@ -108,22 +108,10 @@ export class TabNegociacionComponent {
 
   //Garantias
   datosCuenta: any;
-  garantiasForm = this.fb.group({
-    codeudorSeleccionado: this.fb.control('')
-  });
-  isDisabledConfirmarGarantiasButton: boolean = true;
-  isDisabledLimpiarGarantiasButton: boolean = true;
-  mostrarGarantiasCodeudor: boolean = false;
-  isDisabledSaveGarantiasButton: boolean = true;
-  garantiasEliminar: GarantiaRealAsignada[] = [];
-  garantiasAgregar: GarantiaRealAsignada[] = [];
   garantiasCompartidas: GarantiaCompartida[] = [];
   garantiasRealesAsignadas: GarantiaRealAsignada[] = [];
   garantiasCompartidasBackend: GarantiaCompartida[] = [];
-  listGarantiasDisponiblesCodeudor: GarantiaDisponible[] = [];
   listGarantiasDisponiblesDeudor: GarantiaDisponible[] = [];
-  codeudoresBasico: ObtenerCodeudorBasicoModel[] = []
-  garantiasReales: GarantiaRealAsignada[] = [];
   garantiasRealesAsignadasInicial: GarantiaRealAsignada[] = [];
   mostrarDetalleGarantia = false;
   valorCoberturaCompartidas: number = 0;
@@ -137,20 +125,14 @@ export class TabNegociacionComponent {
     };
   public detalleGarantiaCreditos: DetalleGarantiaCreditoDto[] = [];
   @ViewChild('modalGarantias') modalGarantias!: CambiarGarantiasModalComponent;
-     valorCoberturaDisponibleDeudor: number = 0;
-   valorRespaldadoDisponibleDeudor: number = 0;
-   valorCoberturaDisponibleCodeudor: number = 0;
-   valorRespaldadoDisponibleCodeudor: number = 0;
-  //  valorCoberturaCompartidas: number = 0;
-   valorRespaldadoCompartidas: number = 0;
-   SaldoCapital: number = 0;
-   garantiasCompartidasView: GarantiaCompartida[] = [];
-   Modulo = IdModulo;
-   idCuenta: number | null = null;
+  valorCoberturaDisponibleDeudor: number = 0;
+  valorRespaldadoDisponibleDeudor: number = 0;
+  valorRespaldadoCompartidas: number = 0;
+  Modulo = IdModulo;
+  idCuenta: number | null = null;
   //Fin garantias
 
   // private asesoriaTerminoServices = inject(AsesoriaTerminoService);
-  // esVisibleModal = false;
   tituloModal = 'Asesor Externo';
   constructor(
     // private fb: FormBuilder,
@@ -221,7 +203,7 @@ export class TabNegociacionComponent {
             if (result.idGarantia === GarantiaEnum.Admisible) {
               this.detalleGarantiasVisible = true;
             }
-              this.detalleGarantiasVisible = true;
+            this.detalleGarantiasVisible = true;
 
 
           },
@@ -319,7 +301,7 @@ export class TabNegociacionComponent {
         next: result => {
 
           if (result.length == 0) {
-            this.notif.warning('Advertencia', 'No se encontró el asesor externo.', ConfiguracionNotificacion.configRightTop);
+            this.notif.warning(ERP_TOAST.WARNING, ERP_MESSAGES.ASESOR_EXT_NO_ENCONTRADO, ConfiguracionNotificacion.configRightTop);
             codigoCtrl.setValue(null);
 
           } else if (result.length == 1) {
@@ -343,7 +325,7 @@ export class TabNegociacionComponent {
         next: result => {
 
           if (result.length == 0) {
-            this.notif.warning('Advertencia', 'No se encontró el asesor externo.', ConfiguracionNotificacion.configRightTop);
+            this.notif.warning(ERP_TOAST.WARNING, ERP_MESSAGES.ASESOR_EXT_NO_ENCONTRADO, ConfiguracionNotificacion.configRightTop);
             nombreCtrl.setValue('');
 
           } else if (result.length == 1) {
@@ -355,7 +337,6 @@ export class TabNegociacionComponent {
           } else {
             // Modal
             this.modalAsesoresExterno.nativeElement.click();
-            // this.esVisibleModal = true;
             this.asesoresExternos = result;
           }
         }
@@ -369,24 +350,11 @@ export class TabNegociacionComponent {
     });
 
     this.modalAsesoresExterno.nativeElement.click();
-    // this.esVisibleModal = false;
-  }
-
-  onCloseModal() {
-    // this.esVisibleModal = false;
-
   }
 
 
 
-
-
-    //Inicio cambiar garantias
-  private validarCreditoPadre(): boolean {
-    return true;
-  }
-
-
+  //Inicio cambiar garantias
   habilitarCambiarGarantia() {
 
     this.loading.show();
@@ -399,7 +367,7 @@ export class TabNegociacionComponent {
         this.garantiasCompartidasBackend = garantiasCompartidas ?? [];
 
         const idCuenta = this.listGarantiasDisponiblesDeudor[0].GrupoGarantia?.split(':').shift();
-        if(idCuenta) this.idCuenta = +idCuenta;
+        if (idCuenta) this.idCuenta = +idCuenta;
 
         //Filtramos las garantias que ya estan en compartidas, en disponibles solo quedan las nuevas.
         const matriculas = garantiasCompartidas.map(g => g.IdGarantia);
@@ -408,10 +376,10 @@ export class TabNegociacionComponent {
         this.getDatosSimulacion();
 
         this.loading.hide();
-        this.mostrarModalGarantias = true;   
-          setTimeout(() => {
-            this.modalGarantias.abrir();
-          });   
+        this.mostrarModalGarantias = true;
+        setTimeout(() => {
+          this.modalGarantias.abrir();
+        });
 
 
       },
@@ -420,203 +388,94 @@ export class TabNegociacionComponent {
       }
     });
 
-    // this.loading.show();
-    // // if (this.gestionCreditoForm.get('Sigla')?.value === 'CTD')
-    //   if (!this.validarCreditoPadre()) return;
-
-    // this.getDatosSimulacion();
-
-    // this.getGarantiasDisponibles(this.idTercero()!).pipe(
-    //   // concatMap(() =>
-    //   //     this.getGarantiasAsignadas(this.idTercero()!)
-    //   //   ),
-    //   concatMap(() =>
-    //       this.getGarantiasCompartidas()
-    //     )
-    //   ).subscribe({
-    //     next: () => {   
-    //       this.mostrarModalGarantias = true;   
-    //       setTimeout(() => {
-    //         this.modalGarantias.abrir();
-    //       });   
-    //       this.loading.hide();
-    //     },
-    //     error: () => {
-    //       this.loading.hide();
-    //     }
-    //   });
   }
-  
-    getDatosSimulacion(){
-      this.datosCuenta = {
-        idTercero: this.idTercero(),
-        idCuenta: this.idCuenta,
-        // idOficina: this.gestionCreditoForm.get('IdOficinaCuenta')?.value,
-        // idProducto: this.gestionCreditoForm.get('IdProductoCuenta')?.value,
-        // idConsecutivo: this.gestionCreditoForm.get('IdConsecutivo')?.value,
-        // idDigito: this.gestionCreditoForm.get('IdDigito')?.value,
-        // linea: this.gestionCreditoForm.get('IdLinea')?.value || '',
-        // nombreLinea: this.gestionCreditoForm.get('Linea')?.value || '',
-        // documento: this.gestionCreditoForm.get('NumeroDocumento')?.value ||
-        //   this.gestionCreditoForm.get('IdTercero')?.value || '',
-        // nombre: this.gestionCreditoForm.get('NombreDeudor')?.value ||
-        //   this.gestionCreditoForm.get('Nombre')?.value || ''
-      };  
-    }
-  
-  
-    getGarantiasDisponibles(idTercero: number) {
-      this.loading.show();
-      return this.garantiasService.getGarantiasDisponibles(idTercero).pipe(
-        tap((data: any) => {
-          this.listGarantiasDisponiblesDeudor = data ?? [];
-          this.loading.hide();
-        })
-      );
-    }
-  
-    getGarantiasAsignadas() {
-      const idCuenta = 1111;
-      this.loading.show();
-    
-      return this.garantiasService.getGarantiasAsignadas(idCuenta).pipe(
-        tap((data: any) => {
-          this.garantiasRealesAsignadas = data ?? [];
-          this.garantiasRealesAsignadasInicial = JSON.parse(
-            JSON.stringify(this.garantiasRealesAsignadas)
-          );
-        }),
-        finalize(() => this.loading.hide())
-      );
-    }
-  
-    getGarantiasCompartidas() {      
-      return this.garantiasService
-        .getGarantiasCompartidasPorIdTercero(this.idTercero()!)
-        .pipe(
-          tap((data: any) => {
-            this.garantiasCompartidasBackend = data ?? [];
-          })
-        );
-    }
-  
+
+  getDatosSimulacion() {
+    this.datosCuenta = {
+      idTercero: this.idTercero(),
+      idCuenta: this.idCuenta
+    };
+  }
+
+
+  getGarantiasDisponibles(idTercero: number) {
+    this.loading.show();
+    return this.garantiasService.getGarantiasDisponibles(idTercero).pipe(
+      tap((data: any) => {
+        this.listGarantiasDisponiblesDeudor = data ?? [];
+        this.loading.hide();
+      })
+    );
+  }
+
   onClickCerrarModalGarantias() {
-    this.garantiasForm.reset();
-    // this.gestionCreditoOperacionForm.get('Codigo')?.reset();
-    this.garantiasAgregar = [];
-    this.garantiasEliminar = [];
     this.garantiasRealesAsignadas = [];
-    this.isDisabledConfirmarGarantiasButton = true;
-    this.isDisabledLimpiarGarantiasButton = true;
-    this.isDisabledSaveGarantiasButton = true;
-    this.mostrarGarantiasCodeudor = false;
     this.mostrarDetalleGarantia = false;
     ($('#cambiarGarantias') as any).modal('hide');
     this.mostrarModalGarantias = false;
   }
-  
-    validarSaldo(totales: any): boolean {
-      if ( this.garantiasCompartidas.length > 0) {
-        if ((totales.cobertura - totales.respalda) <= 0) {
-          this.notif.warning(ERP_TOAST.WARNING, ERP_MESSAGES.GARANTIA_NO_CUBRE_CREDITO, ConfiguracionNotificacion.configRightTop);
-          return false;
+
+  mapTipoGarantia(tipo: string): string {
+    if (!tipo) return '';
+
+    switch (tipo) {
+      case 'H': return 'Hipoteca';
+      case 'P': return 'Pignoración';
+      case 'T': return 'Títulos';
+      default: return tipo;
+    }
+  }
+
+  cerrarDetalleGarantia(event?: Event) {
+    if (event) event.stopPropagation();
+
+    this.mostrarDetalleGarantia = false;
+    this.filaSeleccionadaGarantia = null;
+    this.tablaDetalleActiva = '';
+    this.detalleGarantiaCreditos = [];
+  }
+
+  onClickDetalleGarantia(garantiaId: number, tipo: string, tabla: string) {
+
+    if (
+      this.mostrarDetalleGarantia &&
+      this.filaSeleccionadaGarantia === garantiaId &&
+      this.tablaDetalleActiva === tabla
+    ) {
+
+      this.cerrarDetalleGarantia();
+      return;
+    }
+
+    this.filaSeleccionadaGarantia = garantiaId;
+    this.tablaDetalleActiva = tabla;
+
+    this.loading.show();
+
+    this.carteraService.obtenerDetalleGarantiaCreditos(garantiaId, this.mapTipoGarantia(tipo))
+      .pipe(finalize(() => this.loading.hide())).subscribe({
+        next: (data) => {
+          this.detalleGarantiaCreditos = data ?? [];
+          this.mostrarDetalleGarantia = true;
+        },
+        error: () => {
+
+          this.notif.warning(
+            ERP_TOAST.WARNING,
+            ERP_MESSAGES.CONSULTA_CREDITOS_ASOCIADOS_ERROR,
+            ConfiguracionNotificacion.configRightTop
+          );
+
+          this.cerrarDetalleGarantia();
         }
-      }
-      return true;
-    }
-  
+      });
+  }
 
-    selectRowGarantias(tableName: string, index: number, garantiaId?: any): void {
-      if (this.mostrarDetalleGarantia && garantiaId &&
-        this.filaSeleccionadaGarantia === garantiaId &&
-        this.tablaDetalleActiva === tableName) {
-        return;
-      }
-  
-      if (this.selectedRowsGarantias[tableName] === index) {
-        this.selectedRowsGarantias[tableName] = null;
-      } else {
-        Object.keys(this.selectedRowsGarantias).forEach(key => {
-          this.selectedRowsGarantias[key] = null;
-        });
-        this.selectedRowsGarantias[tableName] = index;
-      }
-    }
-
-    mapTipoGarantia(tipo: string): string {
-      if (!tipo) return '';
-  
-      switch (tipo) {
-        case 'H': return 'Hipoteca';
-        case 'P': return 'Pignoración';
-        case 'T': return 'Títulos';
-        default: return tipo;
-      }
-    }
-  
-    cerrarDetalleGarantia(event?: Event) {
-      if (event) event.stopPropagation();
-  
-      this.mostrarDetalleGarantia = false;
-      this.filaSeleccionadaGarantia = null;
-      this.tablaDetalleActiva = '';
-      this.detalleGarantiaCreditos = [];
-    }
-  
-    onClickDetalleGarantia(garantiaId: number, tipo: string, tabla: string) {
-  
-      if (
-        this.mostrarDetalleGarantia &&
-        this.filaSeleccionadaGarantia === garantiaId &&
-        this.tablaDetalleActiva === tabla
-      ) {
-  
-        this.cerrarDetalleGarantia();
-        return;
-      }
-  
-      this.filaSeleccionadaGarantia = garantiaId;
-      this.tablaDetalleActiva = tabla;
-  
-      this.loading.show();
-  
-      this.carteraService.obtenerDetalleGarantiaCreditos(garantiaId, this.mapTipoGarantia(tipo))
-        .pipe( finalize(() => this.loading.hide())).subscribe({
-          next: (data) => {
-  
-            this.detalleGarantiaCreditos = data ?? [];
-            this.mostrarDetalleGarantia = true;
-  
-          },
-          error: () => {
-  
-            this.notif.warning(
-              ERP_TOAST.WARNING,
-              ERP_MESSAGES.CONSULTA_CREDITOS_ASOCIADOS_ERROR,
-              ConfiguracionNotificacion.configRightTop
-            );
-  
-            this.cerrarDetalleGarantia();
-          }
-        });
-    }
-  
-    isRowSelected(tableName: string, index: number, garantiaId: any ): boolean {
-      if (
-        this.mostrarDetalleGarantia &&
-        this.filaSeleccionadaGarantia === garantiaId &&
-        this.tablaDetalleActiva === tableName
-      ) {
-        return true;
-      }
-      return this.selectedRowsGarantias[tableName] === index;
-    }
-  
-      onClickVerGarantias() {
+  onClickVerGarantias() {
     this.habilitarCambiarGarantia()
   }
 
-    //Fin cambiar garantías
+  //Fin cambiar garantías
 
 
 }

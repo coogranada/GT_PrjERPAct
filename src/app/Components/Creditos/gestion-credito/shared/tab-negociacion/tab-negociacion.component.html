@@ -198,15 +198,15 @@
                     [moduloInvocacion]="Modulo.GestionCredito"
                     [textoBotonConfirmar]="'Guardar'" 
                     #modalGarantias
-                    [datosCuenta]="datosCuenta" [garantiasForm]="garantiasForm"
+                    [datosCuenta]="datosCuenta"
                     [SaldoCapital]="formNegociacion.controls.monto.value ?? 0"
                     [listGarantiasDisponiblesDeudor]="listGarantiasDisponiblesDeudor"
-                    [listGarantiasDisponiblesCodeudor]="listGarantiasDisponiblesCodeudor"
+                    [listGarantiasDisponiblesCodeudor]="[]"
                     [garantiasCompartidasBackendInput]="garantiasCompartidasBackend"
                     [garantiasRealesAsignadasInput]="garantiasRealesAsignadas" 
                     [garantiasCompartidas]="garantiasCompartidas"
-                    [codeudoresBasico]="codeudoresBasico" 
-                    [mostrarGarantiasCodeudor]="mostrarGarantiasCodeudor"
+                    [codeudoresBasico]="[]" 
+                    [mostrarGarantiasCodeudor]="false"
                     (cerrar)="onClickCerrarModalGarantias()" />
                 }
 
@@ -312,8 +312,6 @@
             </div>
         </div>
     </div>
-
-    <!--  -->
 
     <div class="row row-margin"></div>
 
@@ -425,11 +423,11 @@
     
             <div class="total-item">
                 <div class="">
-                    Otras deducciones
+                    Otros cobros
                     <div class="mensajeInfo">
                         <i class="icon-info22"></i>
                         <span class="mensajeInfoText">
-                            Unión Coop
+                            Unioncoop
                         </span>
                     </div>
                 </div>
@@ -471,7 +469,7 @@
                 <div class="flip-card-inner">
             
                     <div class="total-item flip-card-front">
-                        <div>Cuota sin diferidos <i class="icon-rotate-cw2 cursor-pointer ic-rot" (click)="isFlipped = true"></i></div>
+                        <div>Cuota sin deducibles <i class="icon-rotate-cw2 cursor-pointer ic-rot" (click)="isFlipped = true"></i></div>
                         <div class="textNegrilla total-item-text">
                             @if(idAsesoria()) {
                             {{ totalCuota | number:'1.2-2' }}
@@ -482,7 +480,7 @@
                     </div>
             
                     <div class="total-item flip-card-back">
-                        <div>Cuota con diferidos <i class="icon-rotate-ccw2 cursor-pointer ic-rot" (click)="isFlipped = false"></i></div>
+                        <div>Cuota con deducibles <i class="icon-rotate-ccw2 cursor-pointer ic-rot" (click)="isFlipped = false"></i></div>
                         <div class="textNegrilla total-item-text">
                             @if (idAsesoria()) {
                                 {{ (totalCuota ?? 0) + (deducciones() ?? 0) | number:'1.2-2' }}
@@ -493,28 +491,8 @@
                     </div>
                 </div>
             </div>
-
-
             <!-- cards -->
         </div>
     </div>
     
-
-
-    <!-- <div class="flip-card">
-    <div class="flip-card-inner">
-
-        <div class="flip-card-front">
-            <h4>Frente</h4>
-            <p>Haz click</p>
-        </div>
-
-        <div class="flip-card-back">
-            <h4>Reverso</h4>
-            <p>Contenido oculto</p>
-        </div>
-
-    </div> -->
-<!-- </div> -->
-
 </form>

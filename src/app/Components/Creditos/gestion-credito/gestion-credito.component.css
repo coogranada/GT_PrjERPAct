@@ -1,6 +1,5 @@
 .panel-heading.green {
-    /* background-color: #269051; */
-    /* background-color: #852662; */
+  
     background: linear-gradient(155deg, var(--wine-900) 0%, var(--wine-700) 62%, var(--wine-600) 100%);
 }
 
@@ -22,10 +21,6 @@
     min-width: 0;
 }
 
-.node.home {
-    /* flex: 0 0 auto;
-    padding-right: 6px; */
-}
 
 .connector {
     flex: 1;

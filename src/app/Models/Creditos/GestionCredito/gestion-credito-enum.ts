@@ -4,3 +4,8 @@ export enum CriterioBusquedaAsesoria {
     PorDocumento = 3,
     PorNombre = 4,
 }
+
+export enum AsesoriaOperacion {
+    Buscar = 1,
+    NuevaAsesoria = 2
+}

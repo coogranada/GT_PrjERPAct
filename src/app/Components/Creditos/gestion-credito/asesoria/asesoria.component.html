@@ -55,7 +55,8 @@
                         }
 
                     </div>
-                    <button type="button" class="btn Gt-btn-verde btn-icon" (click)="onClickBuscarAsesosrias()">
+                    <button type="button" class="btn Gt-btn-verde btn-icon" (click)="onClickBuscarAsesosrias()"
+                        [disabled]="buscarBtnDisabled">
                         <i class="icon-search4"></i>
                     </button>
 
@@ -79,8 +80,9 @@
                             </div>
                         </div>
                     </div>
-                    <input type="hidden" #btnAbrirModalBuscarAsesorias data-toggle="modal" data-target="#modalBuscarAsesorias"
-                        data-popup="tooltip" data-trigger="hover" data-placement="top">
+                    <input type="hidden" #btnAbrirModalBuscarAsesorias data-toggle="modal"
+                        data-target="#modalBuscarAsesorias" data-popup="tooltip" data-trigger="hover"
+                        data-placement="top">
                     <!--/ Fin Modal BuscarAsesorias -->
 
                 </div>
@@ -155,29 +157,77 @@
         <div class="row row-margin">
             <div class="col-lg-7">
                 <div class="row">
-        
+
                     <div class="col-xs-2 col-lg-1-7">
                         <label for="" class="textNegrilla">Nombre:</label>
                         <span class="grande"> *</span>
                     </div>
                     <div class="col-xs-1 pr-0">
-                        <input type="text" class="form-control" formControlName="tipoDocumento" >
+                        <input type="text" class="form-control" formControlName="tipoDocumento">
                     </div>
                     <div class="col-xs-3 pr-0">
-                        <input type="text" class="form-control" formControlName="numeroDocumento" (blur)="onBlurDocumento()" #numeroDocumento>
+                        <input type="text" class="form-control" formControlName="numeroDocumento"
+                            (blur)="onBlurDocumento($event)" (input)="onNumDocumentoInput()" #numeroDocumento>
                     </div>
                     <div class="col-xs-4 col-lg-4-7">
-                        <input type="text" class="form-control" formControlName="nombreAsociado">
+                        <input type="text" class="form-control" formControlName="nombreAsociado"
+                            (input)="onNombreAsociadoInput()">
                     </div>
-        
+
                     <div class="col-lg-1">
-                        <button type="button" class="btn Gt-btn-verde btn-icon" [disabled]="buscarAsociadoBtnDisabled">
+                        <button type="button" class="btn Gt-btn-verde btn-icon" [disabled]="buscarAsociadoBtnDisabled"
+                            (click)="onClickBuscarAsociado()" #buscarAsociadoBtn>
                             <i class="icon-search4"></i>
                         </button>
                     </div>
-        
+
+                    <!--/ Modal Nombre -->
+                    <div id="modalListaAsociados" class="modal fade">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header bg-morado">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h6 class="modal-title">Nombre</h6>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="table-responsive scrollTabla">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <strong>Documento</strong>
+                                                    </th>
+                                                    <th>
+                                                        <strong>Nombre</strong>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @for (asociado of resultBusquedaAsociados; track
+                                                asociado.NumeroDocumento) {
+                                                <tr (click)="mapearDatosAsociado(asociado)">
+                                                    <td data-dismiss="modal">{{ asociado.NumeroDocumento }}</td>
+                                                    <td data-dismiss="modal">{{ asociado.PrimerApellido |
+                                                        concatWithSpace:asociado.SegundoApellido:asociado.PrimerNombre:asociado.SegundoNombre
+                                                        }}</td>
+                                                </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button #btnAbrirModalListaAsociados type="button" hidden data-toggle="modal"
+                        data-target="#modalListaAsociados"></button>
+                    <!--/ Fin Modal Asociado -->
+
                 </div>
-        
+
                 <div id="modalCrearTercero" class="modal fade" data-backdrop="static">
                     <div class="modal-dialog">
                         <div class="modal-content modal-lg">
@@ -191,11 +241,15 @@
 
                                 <div class="row mb-20">
                                     <div class="col-lg-3">
-                                            <label for="tipoDocumentoTercero" class="textNegrilla">Tipo documento: <span
-                                                    class="grande">*</span></label>
-                                            <select id="tipoDocumentoTercero" class="form-control">
-                
-                                            </select>
+                                        <label for="tipoDocumentoTercero" class="textNegrilla">Tipo documento: <span
+                                                class="grande">*</span></label>
+                                        <select id="tipoDocumentoTercero" class="form-control">
+                                            @for (tipoDoc of (tiposDocumento$ | async); track tipoDoc.Clase) {
+                                            <option [value]="tipoDoc.Clase">
+                                                {{ tipoDoc.Descripcion }}
+                                            </option>
+                                            }
+                                        </select>
                                     </div>
                                     <div class="col-lg-3">
                                         <label for="primerApellidoTercero" class="textNegrilla">Primer apellido: <span
@@ -213,19 +267,19 @@
                                         <input type="text" class="form-control">
                                     </div>
                                 </div>
-                
+
                                 <div class="row mb-20">
                                     <div class="col-lg-3">
-                                        <label for="segundoNombreTercero" class="textNegrilla">Segundo nombre: <span
+                                        <label for="segundoNombreTercero" class="textNegrilla">Segundo nombre: </label>
+                                        <input type="text" class="form-control">
+                                    </div>
+
+                                    <div class="col-lg-3">
+                                        <label for="celularTercero" class="textNegrilla">Celular: <span
                                                 class="grande">*</span></label>
                                         <input type="text" class="form-control">
                                     </div>
-                
-                                    <div class="col-lg-3">
-                                        <label for="celularTercero" class="textNegrilla">Celular: <span class="grande">*</span></label>
-                                        <input type="text" class="form-control">
-                                    </div>
-                
+
                                     <div class="col-lg-6">
                                         <label for="correoTercero" class="textNegrilla">Correo:</label>
                                         <input type="text" class="form-control">
@@ -233,95 +287,97 @@
                                 </div>
 
                                 <div class="borde-morado"></div>
-                            }
-                
+                                }
+
                                 <h6 class="textNegrilla">Canales de contacto: <span class="grande">*</span></h6>
                                 <div class="row mb-10">
                                     <div class="col-lg-3">
-                                
+
                                         <input type="checkbox" id="canalContCorreo" class="switchery chk-ajuste">
                                         <label for="canalContCorreo" class="">Correo eletrónico</label>
-                                
-                                
+
+
                                     </div>
-                                
+
                                     <div class="col-lg-3">
-                                
+
                                         <input type="checkbox" id="canalContMsjeTexto" class="switchery chk-ajuste">
                                         <label for="canalContMsjeTexto" class="">Mensaje de texto</label>
-                                
-                                
+
+
                                     </div>
-                                
+
                                     <div class="col-lg-3">
-                                
+
                                         <input type="checkbox" id="canalContWhatsapp" class="switchery chk-ajuste">
                                         <label for="canalContWhatsapp" class="">Whatsapp</label>
                                     </div>
                                     <div class="col-lg-3">
-                                
+
                                         <input type="checkbox" id="canalContTelPers" class="switchery chk-ajuste">
                                         <label for="canalContTelPers" class="">Teléfono personal</label>
-                                
-                                
-                                    </div>
-                                </div>
-                                
-                                <div class="row mb-10">
-                                
-                                
-                                    <div class="col-lg-3">
-                                
-                                        <input type="checkbox" id="canalContCelular" class="switchery chk-ajuste">
-                                        <label for="canalContCelular" class="">Télefono celular</label>
-                                
-                                
-                                    </div>
-                                
-                                    <div class="col-lg-3">
-                                
-                                        <input type="checkbox" id="canalContVisitaDom" class="switchery chk-ajuste">
-                                        <label for="canalContVisitaDom" class="">Visita domiciliaria</label>
-                                
-                                
-                                    </div>
-                                
-                                    <div class="col-lg-6">
-                                        <input type="checkbox" id="canalContNotifDom" class="switchery chk-ajuste">
-                                        <label for="canalContNotifDom" class="">Notificación escrita a la dirección de domicilio</label>
+
+
                                     </div>
                                 </div>
 
-                                <!-- @if(!existeElAsociado) { -->
+                                <div class="row mb-10">
+
+
+                                    <div class="col-lg-3">
+
+                                        <input type="checkbox" id="canalContCelular" class="switchery chk-ajuste">
+                                        <label for="canalContCelular" class="">Télefono celular</label>
+
+
+                                    </div>
+
+                                    <div class="col-lg-3">
+
+                                        <input type="checkbox" id="canalContVisitaDom" class="switchery chk-ajuste">
+                                        <label for="canalContVisitaDom" class="">Visita domiciliaria</label>
+
+
+                                    </div>
+
+                                    <div class="col-lg-6">
+                                        <input type="checkbox" id="canalContNotifDom" class="switchery chk-ajuste">
+                                        <label for="canalContNotifDom" class="">Notificación escrita a la dirección de
+                                            domicilio</label>
+                                    </div>
+                                </div>
+
+
                                 <div class="borde-morado"></div>
 
                                 <div class="row">
-                                     <div class="col-lg-3">
-                                        <label for="pesoTercero" class="textNegrilla">Peso: <span
-                                                class="grande">*</span></label>
+                                    <div class="col-lg-3">
+                                        <label for="pesoTercero" class="textNegrilla">Peso:</label>
                                         <input type="text" class="form-control">
                                     </div>
-                
+
                                     <div class="col-lg-3">
-                                        <label for="tallaTercero" class="textNegrilla">Talla: <span class="grande">*</span></label>
+                                        <label for="tallaTercero" class="textNegrilla">Talla: </label>
                                         <input type="text" class="form-control">
                                     </div>
                                 </div>
-                            <!-- } -->
-                
+
+
                             </div>
                             <div class="modal-footer">
-                
-                                <button type="button" class="btn Gt-btn-verde" [disabled]="crearTerceroBtnDisabled">Guardar</button>
-                
+
+                                <button type="button" class="btn Gt-btn-verde"
+                                    [disabled]="crearTerceroBtnDisabled">Guardar</button>
+
                                 <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <button #btnAbrirModalCrearTercero type="button" hidden data-toggle="modal" data-target="#modalCrearTercero"></button>
+                <button #btnAbrirModalCrearTercero type="button" hidden data-toggle="modal"
+                    data-target="#modalCrearTercero"></button>
             </div>
-        
+
             <div class="col-lg-4">
                 <div class="row">
                     <div class="col-xs-2 col-lg-3">
@@ -365,26 +421,21 @@
                     <a>Saldos vigentes</a>
                 </li>
 
-                <!-- <li class="nav-item" [class.active]="activeTab === 'historial'" (click)="changeTab('historial')">
-                    <a>Historial</a>
-                </li> -->
-
-                <li class="nav-item" [class.active]="activeTab === 'analisis'"
-                    (click)="onClickTabAnalisis()">
+                <li class="nav-item" [class.active]="activeTab === 'analisis'" (click)="onClickTabAnalisis()">
                     <a>Análisis</a>
                 </li>
 
-                <li class="nav-item" [class.active]="activeTab === 'alertas'"
-                    (click)="onClickTabAlertas()">
+                <li class="nav-item" [class.active]="activeTab === 'alertas'" (click)="onClickTabAlertas()">
                     <a>Alertas</a>
                 </li>
             </ul>
             <div class="tab-content">
-            
-                <app-tab-negociacion [hidden]="activeTab !== 'negociacion'" [idAsesoria]="formEncabezado.controls.asesoria.value"
-                    [deducciones]="totalCuotaDed" [saldoCancelar]="totalSaldoTotal" [idTercero]="idTercero" />
-            
-            
+
+                <app-tab-negociacion [hidden]="activeTab !== 'negociacion'"
+                    [idAsesoria]="formEncabezado.controls.asesoria.value" [deducciones]="totalCuotaDed"
+                    [saldoCancelar]="totalSaldoTotal" [idTercero]="idTercero" />
+
+
                 <article [hidden]="activeTab !== 'deducibles'">
                     @if(deducibles.length === 0) {
                     <div class="alert alert-secondary" role="alert">
@@ -400,12 +451,13 @@
                                     <th class="text-center textNegrilla">Saldo</th>
                                     <th class="text-center textNegrilla">Valor cuota</th>
                                     <th class="text-center textNegrilla">Plazo</th>
-                                    
+
                                 </tr>
                             </thead>
                             <tbody>
                                 @for (ded of deducibles; track ded.codigo) {
-                                <tr [class.tr-selected]="ded.codigo === selectedRowDed" (click)="selectedRowDed = ded.codigo">
+                                <tr [class.tr-selected]="ded.codigo === selectedRowDed"
+                                    (click)="selectedRowDed = ded.codigo">
                                     <td class="text-center">{{ ded.codigo }}</td>
                                     <td>{{ ded.nombre }}</td>
                                     <td>
@@ -415,10 +467,10 @@
                                         <div class="align-right">{{ ded.cuota | currency }}</div>
                                     </td>
                                     <td class="text-center">{{ ded.plazo }} </td>
-                                    
+
                                 </tr>
                                 }
-            
+
                             </tbody>
                             <tfoot class="total-tfoot">
                                 <tr class="total-bg">
@@ -430,15 +482,14 @@
                                         <div class="align-right">{{ totalCuotaDed | currency }}</div>
                                     </td>
                                     <td class="text-center">—</td>
-                                    <!-- <td class=""><div class="align-right">{{ deducibles[0].valor | currency }}</div></td> -->
                                 </tr>
                             </tfoot>
                         </table>
                     </div>
                     }
-            
+
                 </article>
-            
+
                 <article [hidden]="activeTab !== 'saldosVigentes'">
                     @if(saldosVigentes.length === 0) {
                     <div class="alert alert-secondary" role="alert">
@@ -461,35 +512,64 @@
                             </thead>
                             <tbody>
                                 @for (sald of saldosVigentes; track sald.lngConsecutivo) {
-                                <tr [class.tr-selected]="sald.lngConsecutivo === selectedRowSaldosVig" (click)="selectedRowSaldosVig = sald.lngConsecutivo">
-                                    <td><div class="align-right">{{ sald.lngIdCuenta }}</div></td>
-                                    <td><div class="align-right">{{ sald.curEfectivo | currency }}</div></td>
-                                    <td><div class="align-right">{{ sald.curIntVencidos | currency }}</div></td>
-                                    <td><div class="align-right">{{ sald.curIntMora | currency }}</div></td>
-                                    <td><div class="align-right">{{ sald.curCanje | currency }}</div></td>
-                                    <td><div class="align-right">{{ sald.saldoTotalDeuda | currency }}</div></td>
-                                    <td><div class="align-right">{{ sald.lngRadicado }}</div></td>
-                                    <td><div class="align-right">{{ sald.curCuota | currency }}</div></td>
+                                <tr [class.tr-selected]="sald.lngConsecutivo === selectedRowSaldosVig"
+                                    (click)="selectedRowSaldosVig = sald.lngConsecutivo">
+                                    <td>
+                                        <div class="align-right">{{ sald.lngIdCuenta }}</div>
+                                    </td>
+                                    <td>
+                                        <div class="align-right">{{ sald.curEfectivo | currency }}</div>
+                                    </td>
+                                    <td>
+                                        <div class="align-right">{{ sald.curIntVencidos | currency }}</div>
+                                    </td>
+                                    <td>
+                                        <div class="align-right">{{ sald.curIntMora | currency }}</div>
+                                    </td>
+                                    <td>
+                                        <div class="align-right">{{ sald.curCanje | currency }}</div>
+                                    </td>
+                                    <td>
+                                        <div class="align-right">{{ sald.saldoTotalDeuda | currency }}</div>
+                                    </td>
+                                    <td>
+                                        <div class="align-right">{{ sald.lngRadicado }}</div>
+                                    </td>
+                                    <td>
+                                        <div class="align-right">{{ sald.curCuota | currency }}</div>
+                                    </td>
                                 </tr>
                                 }
-            
+
                             </tbody>
                             <tfoot class="total-tfoot">
                                 <tr class="total-bg">
                                     <td class="text-center"><strong>Total</strong></td>
-                                    <td class=""><div class="align-right">{{ totalSaldoPrestamo | currency }}</div></td>
-                                    <td class=""><div class="align-right">{{ totalInteresCorriente | currency }}</div></td>
-                                    <td class=""><div class="align-right">{{ totalInteresMora | currency }}</div></td>
-                                    <td class=""><div class="align-right">{{ totalAbonoCanje | currency }}</div></td>
-                                    <td class=""><div class="align-right">{{ totalSaldoTotal | currency }}</div></td>
+                                    <td class="">
+                                        <div class="align-right">{{ totalSaldoPrestamo | currency }}</div>
+                                    </td>
+                                    <td class="">
+                                        <div class="align-right">{{ totalInteresCorriente | currency }}</div>
+                                    </td>
+                                    <td class="">
+                                        <div class="align-right">{{ totalInteresMora | currency }}</div>
+                                    </td>
+                                    <td class="">
+                                        <div class="align-right">{{ totalAbonoCanje | currency }}</div>
+                                    </td>
+                                    <td class="">
+                                        <div class="align-right">{{ totalSaldoTotal | currency }}</div>
+                                    </td>
                                     <td class="text-center">—</td>
-                                    <td class=""><div class="align-right">{{ totalCuotaSaldosVig | currency }}</div></td>
+                                    <td class="">
+                                        <div class="align-right">{{ totalCuotaSaldosVig | currency }}</div>
+                                    </td>
                                 </tr>
                             </tfoot>
                         </table>
                     </div>
                     }
-            
+
                 </article>
 
                 <article [hidden]="activeTab !== 'analisis'">
@@ -528,13 +608,13 @@
                                     <td class="text-center">{{ cal.dtmCancela }}</td>
                                 </tr>
                                 }
-                
+
                             </tbody>
                         </table>
                     </div>
                     <div class="borde-morado"></div>
                     }
-                
+
 
                     <div class="row">
                         <div class="col-lg-9">
@@ -575,7 +655,7 @@
                             <div class="table-responsive scrollTabla scroll-y-auto border-tabla">
                                 <table class="table table-hover horizontal-scroll encabezado-fijo">
                                     <thead>
-                
+
                                         <tr>
                                             <th class="text-center textNegrilla">Calificación</th>
                                             <th class="text-center textNegrilla p-5">Nro. veces</th>
@@ -592,41 +672,35 @@
                             }
                         </div>
                     </div>
-                
-                
-                
+
+
+
                 </article>
 
                 <article [hidden]="activeTab !== 'alertas'">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="alert alert-warning alert-styled-left">
-                                
-                                <span class="text-semibold">Advertencia!</span> El solicitante presenta condiciones que podrían requerir validaciones adicionales de asegurabilidad. Revise antecedentes, requisitos médicos, edad, monto solicitado e IMC antes de continuar.
+
+                                <span class="text-semibold">Advertencia!</span> El solicitante presenta condiciones que
+                                podrían requerir validaciones adicionales de asegurabilidad. Revise antecedentes,
+                                requisitos médicos, edad, monto solicitado e IMC antes de continuar.
                             </div>
-                            <!-- <div class="alert alert-warning no-border">
-                                <span class="text-semibold">Advertencia!</span>
-                                Better check yourself, you're not looking too good.
-                            </div> -->
+
                         </div>
 
                         <div class="col-lg-12">
                             <div class="alert alert-warning alert-styled-left">
-                                
-                                <span class="text-semibold">Advertencia!</span> El solicitante presenta condiciones que podrían requerir validaciones adicionales de asegurabilidad. Revise antecedentes, requisitos médicos, edad, monto solicitado e IMC antes de continuar.
+
+                                <span class="text-semibold">Advertencia!</span> El solicitante presenta condiciones que
+                                podrían requerir validaciones adicionales de asegurabilidad. Revise antecedentes,
+                                requisitos médicos, edad, monto solicitado e IMC antes de continuar.
                             </div>
-                            <!-- <div class="alert alert-warning no-border">
-                                <span class="text-semibold">Advertencia!</span>
-                                Better check yourself, you're not looking too good.
-                            </div> -->
+
                         </div>
 
                     </div>
                 </article>
-            
-            
-                <!-- <app-tabla-historial [hidden]="activeTab !== 'historial'" /> -->
-            
             </div>
         </div>
     </div>

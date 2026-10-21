@@ -6,7 +6,7 @@ import { TabNegociacionComponent } from '../shared/tab-negociacion/tab-negociaci
 import { AsesoriaEncabezadoForm, BuscarAsesoriasResponse, BuscarAsesoriasResponseTabla, ConsultarAsesoriaResponse, DeduciblesResponse, SaldosVigentesResponse } from '../../../../Models/Creditos/GestionCredito/gestion-credito.model';
 import { GestionCreditoService } from '../../../../Services/Productos/GestionCredito.service';
 import { MapeoColumna, transformarDatosParaTabla } from '../../../../utils/tabla-utils';
-import { CurrencyPipe, formatDate } from '@angular/common';
+import { AsyncPipe, CurrencyPipe, formatDate } from '@angular/common';
 import { TipoDocumento, TipoDocumentoDescripcion } from '../../../../Models/Generales/tipos-documento.enum';
 import { concatWithSpace } from '../../../../utils/helpers';
 import { LoadingService } from '../../../../Services/shared/loading.service';
@@ -14,21 +14,31 @@ import { HttpError } from '@microsoft/signalr';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { ConfiguracionNotificacion } from '../../../../../environments/config.noticaciones';
-import { finalize, forkJoin, switchMap } from 'rxjs';
+import { finalize, forkJoin, Observable, switchMap } from 'rxjs';
 import { MiListaProductosService } from '../../../../Services/Informes/mi-lista-productos.service';
-import { ERP_MESSAGES } from '../../../../utils/constant';
-import { CriterioBusquedaAsesoria } from '../../../../Models/Creditos/GestionCredito/gestion-credito-enum';
+import { ERP_MESSAGES, ERP_TOAST } from '../../../../utils/constant';
+import { AsesoriaOperacion, CriterioBusquedaAsesoria } from '../../../../Models/Creditos/GestionCredito/gestion-credito-enum';
 import { AsesoriaContractualService } from '../../../../Services/Productos/asesoriaContractual.service';
+import { GeneralesService } from '../../../../Services/Productos/generales.service';
+import { AsociadoResponse, TiposDocumentoResponse } from '../../../../Models/Generales/generales.model';
+import { ConcatWithSpacePipe } from '../../../../Pipes/utilidades/concatWithSpace.pipe';
 
 @Component({
   selector: 'app-asesoria',
-  imports: [ReactiveFormsModule, ShareComponentModule, TabNegociacionComponent, CurrencyPipe],
+  imports: [ReactiveFormsModule, ShareComponentModule, TabNegociacionComponent, CurrencyPipe, AsyncPipe, ConcatWithSpacePipe],
   templateUrl: './asesoria.component.html',
   styleUrl: './asesoria.component.css',
   providers: [GestionCreditoService, AsesoriaContractualService]
 })
 export class AsesoriaComponent {
 
+  buscarBtnDisabled = true;
+  estadoInicialForm: any;
+
+  @ViewChild('btnAbrirModalListaAsociados', { static: true }) 
+  private btnAbrirModalListaAsociados!: ElementRef;
+
+  resultBusquedaAsociados: any[] = [];
   activeTab = 'negociacion';
   @ViewChild('inputBusqueda')
   private inputBusqueda!: ElementRef<HTMLInputElement>;
@@ -50,7 +60,6 @@ export class AsesoriaComponent {
   totalCuotaDed = 0;
   totalValorPagadoDed = 0;
 
-  // saldoCancelar = 0;
   saldosVigentes: SaldosVigentesResponse[] = [];
   totalSaldoPrestamo = 0;
   totalInteresCorriente = 0;
@@ -82,12 +91,17 @@ export class AsesoriaComponent {
   private numeroDocumentoInput!: ElementRef<HTMLInputElement>;
 
   existeElAsociado = false;
+  tiposDocumento$!: Observable<TiposDocumentoResponse[]>;
+
+  @ViewChild('buscarAsociadoBtn')
+  buscarAsociadoBtn!: ElementRef<HTMLInputElement>;
 
   constructor(
     private fb: FormBuilder,
     private gestionCreditoService: GestionCreditoService,
     private listaProductoService: MiListaProductosService,
     private asesoriaContractualService: AsesoriaContractualService,
+    private generalesService: GeneralesService,
 
     private loading: LoadingService,
     private notif: ToastrService,
@@ -95,6 +109,10 @@ export class AsesoriaComponent {
   ) { }
 
   ngOnInit(): void {
+
+    this.tiposDocumento$ = this.generalesService.obtenerTiposDocumento();
+
+
     this.formEncabezado = this.fb.group<AsesoriaEncabezadoForm>({
       idOperacion: this.fb.control({ value: null, disabled: false }),
       idOficinaAsociado: this.fb.control({ value: null, disabled: true }),
@@ -103,13 +121,15 @@ export class AsesoriaComponent {
       tipoDocumento: this.fb.nonNullable.control({ value: '', disabled: true }),
       numeroDocumento: this.fb.nonNullable.control({ value: '', disabled: true }),
       nombreAsociado: this.fb.nonNullable.control({ value: '', disabled: true }),
-      criterioBusqueda: this.fb.nonNullable.control(CriterioBusquedaAsesoria.PorAsesoria),
-      busqueda: this.fb.nonNullable.control(''),
+      criterioBusqueda: this.fb.nonNullable.control({ value: CriterioBusquedaAsesoria.PorAsesoria, disabled: true }),
+      busqueda: this.fb.nonNullable.control({ value: '', disabled: true }),
       estado: this.fb.nonNullable.control({ value: '', disabled: true }),
       relacion: this.fb.nonNullable.control({ value: '', disabled: true }),
       idOficina: this.fb.control({ value: null, disabled: true }),
       nombreOficina: this.fb.nonNullable.control({ value: '', disabled: true })
     });
+
+    this.estadoInicialForm = this.obtenerEstadoFormulario(this.formEncabezado);
 
    
     const { criterioBusqueda, busqueda, idOperacion } = this.formEncabezado.controls;
@@ -121,18 +141,14 @@ export class AsesoriaComponent {
     });
 
     idOperacion.valueChanges.subscribe(idOperacion => {
+      this.resetearFormulario();
 
-      // this.formEncabezado.reset({
-      //   idOperacion: this.formEncabezado.controls.idOperacion.value
-      //  });
-      
-      this.formEncabezado.controls.numeroDocumento.disable({ emitEvent: false });
-      this.formEncabezado.controls.nombreAsociado.disable({ emitEvent: false });
-
-      if(idOperacion === 1) {
-       
+      if(idOperacion === AsesoriaOperacion.Buscar) {
+       this.formEncabezado.controls.busqueda.enable({ emitEvent: false });
+       this.formEncabezado.controls.criterioBusqueda.enable({ emitEvent: false });
+       this.buscarBtnDisabled = false;
       }
-      else if(idOperacion === 2) {
+      else if(idOperacion === AsesoriaOperacion.NuevaAsesoria) {
         this.formEncabezado.controls.numeroDocumento.enable({ emitEvent: false });
         this.formEncabezado.controls.nombreAsociado.enable({ emitEvent: false });
         this.buscarAsociadoBtnDisabled = false;
@@ -142,80 +158,46 @@ export class AsesoriaComponent {
 
   }
 
+  private obtenerEstadoFormulario(form: FormGroup) {
+    return Object.entries(form.controls).reduce(
+      (acc, [key, control]) => {
+        acc[key] = {
+          value: control.value,
+          disabled: control.disabled
+        };
+
+        return acc;
+      },
+      {} as Record<string, { value: unknown; disabled: boolean }>
+    );
+  }
+
+  private resetearFormulario() {
+    const idOperacion = this.formEncabezado.controls.idOperacion.value;
+
+    this.formEncabezado.reset({
+      ...this.estadoInicialForm,
+      idOperacion: {
+        value: idOperacion,
+        disabled: false
+      }
+    }, { emitEvent: false });
+
+    this.buscarBtnDisabled = true;
+    this.buscarAsociadoBtnDisabled = true;
+  }
+
   changeTab(tab: string) {
     this.activeTab = tab;
   }
 
+  onNumDocumentoInput() {
+    this.formEncabezado.controls.nombreAsociado.setValue('', { emitEvent: false });
+  }
 
-  // cargarAsesoria(idAsesoria: number) {
-
-  //   this.loading.show();
-  //   this.gestionCreditoService.consultarAsesoria(idAsesoria)?.subscribe({
-  //     next: result => {
-  //       this.loading.hide();
-  //       if (!result) return;
-  //       this.cargarAsesoriaEnFormulario(result);
-
-  //     },
-  //     error: (err: HttpErrorResponse) => {
-  //       this.loading.hide();
-  //       if (err.status === 404) {
-  //         this.notif.warning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO, ConfiguracionNotificacion.configRightTop);
-  //         return;
-  //       }
-
-  //       this.notif.error('Error', 'Error al consultar asesoria.', ConfiguracionNotificacion.configRightTop);
-  //     }
-  //   });
-
-  // }
-
-  // cargarAsesoria(idAsesoria: number): void {
-  //   this.loading.show();
-
-  //   this.gestionCreditoService.consultarAsesoria(idAsesoria)?.pipe(
-  //     switchMap(asesoria => {
-  //       if (!asesoria) {
-  //         throw { status: 404 };
-  //       }
-
-  //       this.cargarAsesoriaEnFormulario(asesoria);
-
-  //       return this.gestionCreditoService.obtenerDeducibles(idAsesoria);
-  //     }),
-  //     finalize(() => this.loading.hide())
-  //   ).subscribe({
-  //     next: deducibles => {
-  //       this.deducibles = deducibles;
-
-  //       this.totalSaldoDed = deducibles.reduce(
-  //         (acc, value) => acc + value.valor,
-  //         0
-  //       );
-
-  //       this.totalCuotaDed = deducibles.reduce(
-  //         (acc, value) => acc + value.cuota,
-  //         0
-  //       );
-  //     },
-  //     error: (err: HttpErrorResponse) => {
-  //       if (err.status === 404) {
-  //         this.notif.warning(
-  //           'Advertencia',
-  //           ERP_MESSAGES.REGISTRO_NO_ENCONTRADO,
-  //           ConfiguracionNotificacion.configRightTop
-  //         );
-  //         return;
-  //       }
-
-  //       this.notif.error(
-  //         'Error',
-  //         'Error al consultar asesoría.',
-  //         ConfiguracionNotificacion.configRightTop
-  //       );
-  //     }
-  //   });
-  // }
+  onNombreAsociadoInput() {
+    this.formEncabezado.controls.numeroDocumento.setValue('', { emitEvent: false });
+  }
 
   cargarAsesoria(idAsesoria: number): void {
     this.loading.show();
@@ -239,7 +221,6 @@ export class AsesoriaComponent {
         this.deducibles = deducibles;
         this.totalSaldoDed = deducibles.reduce((acc, value) => acc + value.valor, 0);
         this.totalCuotaDed = deducibles.reduce((acc, value) => acc + value.cuota, 0);
-        // this.saldoCancelar = saldosVigentes.reduce((acc, value) => acc + value.saldoTotalDeuda, 0);
 
         this.saldosVigentes = saldosVigentes;
         this.totalSaldoPrestamo = saldosVigentes.reduce((acc, value) => acc + value.curEfectivo, 0);
@@ -252,11 +233,11 @@ export class AsesoriaComponent {
       },
       error: (err: HttpErrorResponse) => {
         if (err.status === 404) {
-          this.notif.warning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO, ConfiguracionNotificacion.configRightTop);
+          this.notif.warning(ERP_TOAST.WARNING, ERP_MESSAGES.REGISTRO_NO_ENCONTRADO, ConfiguracionNotificacion.configRightTop);
           return;
         }
 
-        this.notif.error('Error', 'Error al consultar asesoría.', ConfiguracionNotificacion.configRightTop);
+        this.notif.error(ERP_TOAST.ERROR, 'Error al consultar asesoría.', ConfiguracionNotificacion.configRightTop);
       }
     });
 
@@ -290,15 +271,13 @@ export class AsesoriaComponent {
 
     this.idTercero = result.idTercero;
     
-
-    // this.formEncabezado.markAsPristine();
   }
 
   onClickBuscarAsesosrias() {
     const criterioBusqueda = this.formEncabezado.controls.criterioBusqueda.value;
     const valorBusqueda = this.formEncabezado.controls.busqueda.value;
 
-    if (!valorBusqueda.trim() /* || this.formEncabezado.pristine */) return;
+    if (!valorBusqueda.trim()) return;
 
     if (criterioBusqueda == CriterioBusquedaAsesoria.PorAsesoria) {
       this.cargarAsesoria(+valorBusqueda);
@@ -326,12 +305,12 @@ export class AsesoriaComponent {
           this.btnAbrirModalBuscarAsesorias.nativeElement.click();
         } else {
           this.loading.hide();
-          this.notif.warning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO, ConfiguracionNotificacion.configRightTop);
+          this.notif.warning(ERP_TOAST.WARNING, ERP_MESSAGES.REGISTRO_NO_ENCONTRADO, ConfiguracionNotificacion.configRightTop);
 
         }
       }, 
       error: () => {
-        this.notif.error('Error', 'Error al buscar asesorias.', ConfiguracionNotificacion.configRightTop);
+        this.notif.error(ERP_TOAST.ERROR, 'Error al buscar asesorias.', ConfiguracionNotificacion.configRightTop);
       }
     });
 
@@ -417,9 +396,14 @@ export class AsesoriaComponent {
   }
 
 
-  onBlurDocumento() {
+  onBlurDocumento(event: FocusEvent) {
     const numeroDocumentoCtrl = this.formEncabezado.controls.numeroDocumento;
     const numeroDocumento = numeroDocumentoCtrl.value;
+    const focoCambioABotonLupa = event.relatedTarget == this.buscarAsociadoBtn.nativeElement;
+    if (!numeroDocumento || focoCambioABotonLupa) {
+      numeroDocumentoCtrl.setValue('');
+      return;
+    }
 
     if(!numeroDocumento?.trim()) return;
 
@@ -433,13 +417,8 @@ export class AsesoriaComponent {
           return;
         }
         this.existeElAsociado = true;
-        numeroDocumentoCtrl.setValue(result.NumeroDocumento);
-        const nombre = concatWithSpace(result.PrimerApellido, result.SegundoApellido, result.PrimerNombre, result.SegundoNombre);
-        this.formEncabezado.controls.nombreAsociado.setValue(nombre);
-        this.formEncabezado.controls.tipoDocumento.setValue(TipoDocumentoDescripcion[result.TipoDocumento as TipoDocumento]);
+        this.mapearDatosAsociado(result);
         this.btnAbrirModalCrearTercero.nativeElement.click();
-
-
       },
       error: () => {
         this.loading.hide();
@@ -447,5 +426,44 @@ export class AsesoriaComponent {
       }
     })
 
+  }
+
+
+  onClickBuscarAsociado() {
+    const nombreCtrl = this.formEncabezado.controls.nombreAsociado;
+    const nombre = nombreCtrl.value?.replace(/\s{2,}/g, ' ')?.trim();
+    if (!nombre) return;
+
+    this.asesoriaContractualService.BuscarNombreXNombre(nombre)
+      .subscribe({
+        next: result => {
+
+          if (result.length == 0) {
+            this.notif.warning(ERP_TOAST.WARNING, ERP_MESSAGES.ASOCIADO_NO_ENCONTRADO, ConfiguracionNotificacion.configRightTop);
+            this.formEncabezado.patchValue({
+              tipoDocumento: '',
+              numeroDocumento: '',
+              nombreAsociado: ''
+            });            
+
+          } else if (result.length == 1) {
+            // Mapea directamente
+            this.mapearDatosAsociado(result);
+          } else {
+            // Modal
+            this.btnAbrirModalListaAsociados.nativeElement.click();
+            this.resultBusquedaAsociados = result;
+          }
+        }
+      });
+  }
+
+  mapearDatosAsociado(asociado: AsociadoResponse) {
+    const nombre = concatWithSpace(asociado.PrimerApellido, asociado.SegundoApellido, asociado.PrimerNombre, asociado.SegundoNombre);
+    this.formEncabezado.patchValue({
+      tipoDocumento: TipoDocumentoDescripcion[''+asociado.TipoDocumento as TipoDocumento],
+      numeroDocumento: asociado.NumeroDocumento,
+      nombreAsociado: nombre
+    });
   }
 }
