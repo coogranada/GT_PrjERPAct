@@ -25109,7 +25109,7 @@ enviarWorkManager() {
   validateConyugue() {
     const idConyugue = new FormControl('', []);
     const TipoDocumento = new FormControl('', [Validators.required]);
-    const NumeroDocumento = new FormControl('', [Validators.required, Validators.pattern('^[0-9]*')]);
+    const NumeroDocumento = new FormControl('', [Validators.required, Validators.pattern('[0-9a-zA-Z]{3,15}')]);
     const PrimerApellidoC = new FormControl('', [Validators.required, Validators.pattern('[a-zA-ZñÑ ]*')]);
     const SegundoApellidoC = new FormControl('', [Validators.pattern('[a-zA-ZñÑ ]*')]);
     const PrimerNombreC = new FormControl('', [Validators.required, Validators.pattern('[a-zA-ZñÑ ]*')]);

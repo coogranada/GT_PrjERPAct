@@ -534,7 +534,7 @@ export class RepresentanteLegalComponent implements OnInit {
   validarRepresentante() {
     const IdJuridico = new FormControl('', []);
     const TipoDocumento = new FormControl('', []);
-    const NumeroDocumento = new FormControl('', [Validators.required, Validators.pattern('^[0-9]*'), Validators.minLength(4)]);
+    const NumeroDocumento = new FormControl('', [Validators.required, Validators.pattern('[0-9a-zA-Z]{3,15}')]);
     const PrimerNombre = new FormControl('', []);
     const SegundoNombre = new FormControl('', []);
     const PrimerApellido = new FormControl('', []);

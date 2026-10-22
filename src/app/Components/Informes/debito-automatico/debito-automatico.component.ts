@@ -175,7 +175,7 @@ export class DebitosAutomaticosComponent implements OnInit {
 
 
   ValidarFormulario() {
-    const NumeroDocumento = new FormControl('', [Validators.required, Validators.pattern('[0-9]*')]);
+    const NumeroDocumento = new FormControl('', [Validators.required, Validators.pattern('[0-9a-zA-Z]{3,15}')]);
     const NumeroCuentas = new FormControl('', []);
 
     this.debitoAutomaticoForm = new FormGroup({

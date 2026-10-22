@@ -554,7 +554,7 @@ private procesarAccionista(result: any) {
     const IdJuridico = new FormControl('', []);
     const IdPersonaAccionista = new FormControl('', []);
     const TipoDocumento = new FormControl('', [Validators.required]);
-    const NumeroDocumento = new FormControl('', [Validators.required]);
+    const NumeroDocumento = new FormControl('', [Validators.required, Validators.pattern('[0-9a-zA-Z]{3,15}')]);
     const RazonNombre = new FormControl('', [Validators.required, Validators.pattern('[A-Za-zñÑ. 0-9]+')]);
     const EsPeps = new FormControl('', [Validators.required]);
     const Participacion = new FormControl('', [Validators.required, Validators.pattern('[0-9]{1,3}')]);

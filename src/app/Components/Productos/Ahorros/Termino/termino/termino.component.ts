@@ -4438,6 +4438,20 @@ export class TerminoComponent implements OnInit {
   }
   //CALCULAR INTERESES
   CalcularAsesoria() {
+   Object.keys(this.TerminoForm.controls).forEach(controlName => {
+  const control = this.TerminoForm.get(controlName);
+
+  if (control?.invalid) {
+    console.log(
+      'Control inválido:',
+      controlName,
+      'Valor:',
+      control.value,
+      'Errores:',
+      control.errors
+    );
+  }
+});
     if (this.TerminoForm.get('IdFrecuenciaPago')?.value == undefined || this.TerminoForm.get('IdFrecuenciaPago')?.value == null || Number(this.TerminoForm.get('IdFrecuenciaPago')?.value) == -1) {
       this.notif.onWarning('Advertencia', 'Datos incompletos para calcular asesoria.');
       return;
@@ -7538,7 +7552,7 @@ export class TerminoComponent implements OnInit {
     const NombreOficinaAsociado = new FormControl('', [Validators.required]);
     const Clase = new FormControl('', [Validators.required]);
     const Nombre = new FormControl('', [Validators.required]);
-    const NumeroDocumento = new FormControl('', [Validators.required, Validators.pattern('[0-9]*')]);
+    const NumeroDocumento = new FormControl('', [Validators.required, Validators.pattern('[0-9a-zA-Z]{3,15}')]);
     const NombreOficina = new FormControl('', [Validators.required]);
     const NumeroOficina = new FormControl('', [Validators.required]);
     const IdProducto = new FormControl('', []);
