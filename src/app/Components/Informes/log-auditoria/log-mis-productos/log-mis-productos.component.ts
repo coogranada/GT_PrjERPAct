@@ -187,12 +187,20 @@ export class LogMisProductosComponent implements OnInit {
     this.IdOficina = Number(resultDataStore.NumeroOficina);
     this.NombreOficina = resultDataStore.Oficina;
   }
-  SeleccionaTodoCampos(index : number) {
+  SeleccionaTodoCampos(index: number) {
     if (index == -1) {
-      this.Campos.forEach(x => x.check = !this.checkAll);
       this.checkAll = !this.checkAll;
-    } else 
-      this.Campos[index].check = !this.Campos[index].check
+
+    this.Campos.forEach(x => {
+      x.check = this.checkAll;
+      });
+
+      return;
+    }
+
+    this.Campos[index].check = !this.Campos[index].check;
+
+    this.checkAll = this.Campos.every(x => x.check);
   }
   SelectBlur() {
     if(this.SelectedCombo == 1000)
@@ -426,12 +434,19 @@ export class LogMisProductosComponent implements OnInit {
       else
         this.filtrosAgregado = this.filtrosAgregado.filter(x => x.idFiltro != element.idFiltro);
   }
-  GenerarInformeLogs() {
-    let temp : Campo[] = this.Campos.filter(x => x.check == true)
-    if (temp.length > 0 )
-      this.GetCantInforme(true);
-    else
-    this.notif.warning(ERP_TOAST.WARNING, ERP_MESSAGES.CAMPOS_REQUERIDOS, ConfiguracionNotificacion.configRightTop);    
+  GenerarInformeLogs(isDownload: boolean) {
+    const camposSeleccionados = this.Campos.filter(x => x.check == true);
+  
+    if (camposSeleccionados.length === 0) {
+      this.notif.warning(
+        ERP_TOAST.WARNING,
+        ERP_MESSAGES.CAMPOS_REQUERIDOS,
+        ConfiguracionNotificacion.configRightTop
+      );
+      return;
+    }
+  
+    this.GetCantInforme(isDownload);
   }
   GetCantInforme(isDowload: boolean) {
     this.InformesLog = [];
@@ -467,7 +482,7 @@ export class LogMisProductosComponent implements OnInit {
   }
   ModalCantidadRegistros(Cant: number, idDowload: boolean) {
       if (Cant == 0) { 
-        this.notif.warning(ERP_TOAST.WARNING, 'No se encuentran registros', ConfiguracionNotificacion.configRightTop);   
+        this.notif.warning(ERP_TOAST.WARNING, ERP_MESSAGES.REGISTROS_NO_ENCONTRADOS, ConfiguracionNotificacion.configRightTop);   
         return;
       }
     Swal.fire({
@@ -495,35 +510,48 @@ export class LogMisProductosComponent implements OnInit {
     });
   }
   DescargarInforme() {
-      this.filtroSelect = -1;
-      this.MostrarPanel();
+    this.filtroSelect = -1;
+    this.MostrarPanel();
     this.setFiltroOficina();
-    let payload: any =
-    {
+  
+    let payload: any = {
       Filtros: this.filtrosAgregado,
-      Campos: this.Campos.filter(x => x.check == true),
+      Campos: this.Campos.filter(x => x.check),
       TipoInforme: 7,
       Accion: 2
-    }
-      this.loading.show();
-      this.serviceLogs.GenerateInformesJuridicos(payload).subscribe(x => {
-      this.loading.hide();
-     this.DeletedOficina();
-      var baseg4 = x;
-      const linkSource = `data:application/xlsx;base64,${baseg4}`;
-      const downloadLink = document.createElement("a");
-      const fileName = "InformeLogsMisProductos.xlsx";
-      downloadLink.href = linkSource;
-      downloadLink.download = fileName;
-      downloadLink.click();
-    },
-    err => {
+    };
+  
+    this.loading.show();
+  
+    this.serviceLogs.GenerateInformesJuridicos(payload).subscribe(
+      x => {
+      
         this.DeletedOficina();
+      
+        const linkSource = `data:application/xlsx;base64,${x}`;
+        const downloadLink = document.createElement("a");
+      
+        downloadLink.href = linkSource;
+        downloadLink.download = "InformeLogsMisProductos.xlsx";
+        downloadLink.click();
+      
         this.loading.hide();
+      },
+      err => {
+      
+        this.loading.hide();
+        this.DeletedOficina();
+      
         const errorMessage = <any>err;
-        this.notif.error("Error al generar el informe", errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
-        console.log(err)
-      })
+        this.notif.error(
+          "Error al generar el informe",
+          errorMessage,
+          ConfiguracionNotificacion.configRightTopNoClose
+        );
+      
+        console.log(err);
+      }
+    );
   }
   ColorAnterior5: any;
   CambiarColor(fil : number) {
@@ -599,4 +627,9 @@ export class LogMisProductosComponent implements OnInit {
   esFechaFinalMayorActual(): boolean {
     return this.valueFechaFinal?.toString() > this.fechaMax;
   }
+
+  mostrarCampo(idCampo: number): boolean {
+    return this.Campos.some(x => x.idCampo === idCampo && x.check);
+  }
+
 }

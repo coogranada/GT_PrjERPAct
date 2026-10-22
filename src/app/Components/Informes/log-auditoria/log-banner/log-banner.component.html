@@ -151,7 +151,7 @@
                                                     <br>
                                             
                                                     <button type="button"
-                                                            (click)="GetCantInforme(false)"
+                                                            (click)="GenerarInformeLogs(false)"
                                                             class="btn Gt-btn-verde btn-icon legitRipple">
                                                         Ver informe
                                                     </button>
@@ -163,7 +163,7 @@
                                                     <button type="submit"
                                                             class="btn Gt-btn-verde"
                                                             value="Confirmar"
-                                                            (click)="GenerarInformeLogs()">
+                                                            (click)="GenerarInformeLogs(true)">
                                                         Generar informe
                                                     </button>
                                                 
@@ -227,14 +227,27 @@
                    <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th style="min-width: 300px;"><strong>Nombre</strong></th>
-                                <th style="min-width: 200px;"><strong>Fecha</strong></th>
+                                <th *ngIf="mostrarCampo(1)" style="min-width: 300px;">
+                                    <strong>Nombre</strong>
+                                </th>
+                            
+                                <th *ngIf="mostrarCampo(2)" style="min-width: 200px;">
+                                    <strong>Fecha</strong>
+                                </th>
                             </tr>
                         </thead>
-                        <tbody *ngFor="let log of InformesLog  ; let i=index">
+                        <tbody *ngFor="let log of InformesLog; let i = index">
                             <tr class="FilRecip{{i}}" (click)="CambiarColor(i)">
-                                <td >{{log.Nombre}} </td>
-                                <td >{{log.Fecha  == "1900-01-01T00:00:00" ? "" : log.Fecha |  date: "yyyy/MM/dd HH:mm:ss"}} </td>
+                            
+                                <td *ngIf="mostrarCampo(1)">
+                                    {{log.Nombre}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(2)">
+                                    {{log.Fecha == "1900-01-01T00:00:00" ? "" : (log.Fecha | date:'yyyy/MM/dd HH:mm:ss')}}
+                                </td>
+                            
+                            </tr>
                         </tbody>
                     </table>
                 </div>

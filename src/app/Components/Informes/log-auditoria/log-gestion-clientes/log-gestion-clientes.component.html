@@ -113,7 +113,7 @@
                                         
                                                 <button
                                                     type="button"
-                                                    (click)="GetCantInforme(false)"
+                                                    (click)="GenerarInformeLogs(false)"
                                                     class="btn Gt-btn-verde btn-icon legitRipple">
                                                     Ver informe
                                                 </button>
@@ -126,7 +126,7 @@
                                                     type="submit"
                                                     class="btn Gt-btn-verde"
                                                     value="Confirmar"
-                                                    (click)="GenerarInformeLogs()">
+                                                    (click)="GenerarInformeLogs(true)">
                                                     Generar informe
                                                 </button>
                                             
@@ -193,57 +193,206 @@
                 <div class="table-responsive scrollTabla">
                    <table class="table table-hover">
                         <thead>
-                            <tr>
-                                <th style="min-width: 220px;"><strong>Tipo documento</strong></th>
-                                <th style="min-width: 200px;"><strong>Documento</strong></th>
-                                <th style="min-width: 300px;"><strong>Nombre</strong></th>
-                                <th *ngIf="Type == 2 && isShowFechaMarcacion" style="min-width: 200px;"><strong>Fecha marcación</strong></th>
-                                <th *ngIf="Type == 2 && isShowFechaDesmarcacion " style="min-width: 200px;"><strong>Fecha desmarcación</strong></th>
-                                <th *ngIf="Type == 2" style="min-width: 300px;"><strong>Asesor</strong></th>
-                                <th *ngIf="Type == 3" style="min-width: 200px;"><strong>Fecha retiro</strong></th>
-                                <th *ngIf="Type == 3" style="min-width: 300px;"><strong>Asesor</strong></th>
-                                <th *ngIf="Type == 3" style="min-width: 250px;"><strong>Motivo retiro</strong></th>
-                                <th *ngIf="Type == 3" style="min-width: 300px;"><strong>Descripción </strong></th>
-                                <th *ngIf="Type == 4" style="min-width: 200px;"><strong>Fecha de reingreso</strong></th>
-                                <th *ngIf="Type == 4" style="min-width: 300px;"><strong>Asesor</strong></th>
-                                <th *ngIf="Type == 5" style="min-width: 100px;"><strong>Acepta</strong></th>
-                                <th *ngIf="Type == 5  && filtroSelect == 9" style="min-width: 200px;"><strong>Fecha acepta</strong></th>
-                                <th *ngIf="Type == 5  && filtroSelect == 23" style="min-width: 200px;"><strong>Fecha no acepta</strong></th>
-                                <th *ngIf="Type == 5" style="min-width: 300px;"><strong>Asesor</strong></th>
-                                <th *ngIf="Type == 6" style="min-width: 300px;"><strong>Estado</strong></th>
-                                <th *ngIf="Type == 6" style="min-width: 200px;"><strong>Seguro</strong></th>
-                                <th *ngIf="Type == 6" style="min-width: 200px;"><strong>Monto asegurado</strong></th>
-                                <th *ngIf="Type == 6" style="min-width: 200px;"><strong>Fecha matricula</strong></th>
-                                <th *ngIf="Type == 6" style="min-width: 300px;"><strong>Fecha respuesta aseguradora</strong></th>
-                                <th *ngIf="Type == 6" style="min-width: 200px;"><strong>Fecha modificación</strong></th>
-                               
-                            </tr>
+                        <tr>
+                            <th *ngIf="mostrarCampo(9)" style="min-width: 220px;">
+                                <strong>Tipo documento</strong>
+                            </th>
+                        
+                            <th *ngIf="mostrarCampo(10)" style="min-width: 200px;">
+                                <strong>Documento</strong>
+                            </th>
+                        
+                            <th *ngIf="mostrarCampo(11)" style="min-width: 300px;">
+                                <strong>Nombre</strong>
+                            </th>
+                        
+                            <th *ngIf="mostrarCampo(12) && Type == 2 && isShowFechaMarcacion"
+                                style="min-width: 200px;">
+                                <strong>Fecha marcación</strong>
+                            </th>
+                        
+                            <th *ngIf="mostrarCampo(13) && Type == 2 && isShowFechaDesmarcacion"
+                                style="min-width: 200px;">
+                                <strong>Fecha desmarcación</strong>
+                            </th>
+                        
+                            <th *ngIf="mostrarCampo(14) && Type == 2"
+                                style="min-width: 300px;">
+                                <strong>Asesor</strong>
+                            </th>
+                        
+                            <th *ngIf="mostrarCampo(15) && Type == 3"
+                                style="min-width: 200px;">
+                                <strong>Fecha retiro</strong>
+                            </th>
+                        
+                            <th *ngIf="mostrarCampo(16) && Type == 3"
+                                style="min-width: 300px;">
+                                <strong>Asesor</strong>
+                            </th>
+                        
+                            <th *ngIf="mostrarCampo(17) && Type == 3"
+                                style="min-width: 250px;">
+                                <strong>Motivo retiro</strong>
+                            </th>
+                        
+                            <th *ngIf="mostrarCampo(18) && Type == 3"
+                                style="min-width: 300px;">
+                                <strong>Descripción</strong>
+                            </th>
+                        
+                            <th *ngIf="mostrarCampo(19) && Type == 4"
+                                style="min-width: 200px;">
+                                <strong>Fecha de reingreso</strong>
+                            </th>
+                        
+                            <th *ngIf="mostrarCampo(20) && Type == 4"
+                                style="min-width: 300px;">
+                                <strong>Asesor</strong>
+                            </th>
+                        
+                            <th *ngIf="mostrarCampo(21) && Type == 5"
+                                style="min-width: 100px;">
+                                <strong>Acepta</strong>
+                            </th>
+                        
+                            <th *ngIf="mostrarCampo(22) && Type == 5 && filtroSelect == 9"
+                                style="min-width: 200px;">
+                                <strong>Fecha acepta</strong>
+                            </th>
+                        
+                            <th *ngIf="mostrarCampo(23) && Type == 5 && filtroSelect == 23"
+                                style="min-width: 200px;">
+                                <strong>Fecha no acepta</strong>
+                            </th>
+                        
+                            <th *ngIf="mostrarCampo(24) && Type == 5"
+                                style="min-width: 300px;">
+                                <strong>Asesor</strong>
+                            </th>
+                        
+                            <th *ngIf="mostrarCampo(25) && Type == 6"
+                                style="min-width: 300px;">
+                                <strong>Estado</strong>
+                            </th>
+                        
+                            <th *ngIf="mostrarCampo(26) && Type == 6"
+                                style="min-width: 200px;">
+                                <strong>Seguro</strong>
+                            </th>
+                        
+                            <th *ngIf="mostrarCampo(27) && Type == 6"
+                                style="min-width: 200px;">
+                                <strong>Monto asegurado</strong>
+                            </th>
+                        
+                            <th *ngIf="mostrarCampo(28) && Type == 6"
+                                style="min-width: 200px;">
+                                <strong>Fecha matricula</strong>
+                            </th>
+                        
+                            <th *ngIf="mostrarCampo(29) && Type == 6"
+                                style="min-width: 300px;">
+                                <strong>Fecha respuesta aseguradora</strong>
+                            </th>
+                        
+                            <th *ngIf="mostrarCampo(30) && Type == 6"
+                                style="min-width: 200px;">
+                                <strong>Fecha modificación</strong>
+                            </th>
+                        </tr>
                         </thead>
                         <tbody *ngFor="let log of InformesLog ; let i=index">
                             <tr class="FilRecip{{i}}" (click)="CambiarColor(i)">
-                                <td >{{log.TipoDoc}}</td>
-                                <td >{{log.Doc}}</td>
-                                <td >{{log.Nombre}}</td>
-                                <td *ngIf="Type == 2 && isShowFechaMarcacion" >{{log.FechaMarca == "1900-01-01T00:00:00" ? "" : log.FechaMarca |  date: "yyyy/MM/dd"}}</td>
-                                <td *ngIf="Type == 2 && isShowFechaDesmarcacion" >{{log.FechaDesMarca == "1900-01-01T00:00:00" ? "" : log.FechaDesMarca | date: "yyyy/MM/dd"}}</td>
-                                <td *ngIf="Type == 2" >{{log.Asesor}}</td>
-                                <td *ngIf="Type == 3" >{{log.FechaRetiro == "1900-01-01T00:00:00" ? "" : log.FechaRetiro  | date: "yyyy/MM/dd HH:mm:ss" }}</td>  
-                                <td *ngIf="Type == 3" >{{log.Asesor}}</td>
-                                <td *ngIf="Type == 3" >{{log.MotivoRetiro}}</td>
-                                <td *ngIf="Type == 3" >{{log.Descripcion}}</td>  
-                                <td *ngIf="Type == 4" >{{log.FechaReingreso == "1900-01-01T00:00:00" ? "" : log.FechaReingreso | date: "yyyy/MM/dd HH:mm:ss" }}</td>
-                                <td *ngIf="Type == 4" >{{log.Asesor}}</td>  
-                                <td *ngIf="Type == 5" >{{log.Acepta}}</td>  
-                                <td *ngIf="Type == 5  && filtroSelect == 9" >{{log.FechaAcepta == "1900-01-01T00:00:00" ? "" : log.FechaAcepta | date: "yyyy/MM/dd" }}</td>
-                                <td *ngIf="Type == 5  && filtroSelect == 23" >{{log.FechaNoAcepta == "1900-01-01T00:00:00" ? "" : log.FechaNoAcepta | date: "yyyy/MM/dd" }}</td>  
-                                <td *ngIf="Type == 5" >{{log.Asesor}}</td>  
-                                <td *ngIf="Type == 6" >{{log.Estado}}</td>
-                                <td *ngIf="Type == 6" >{{log.Seguro}}</td>  
-                                <td *ngIf="Type == 6 " style="text-align:right" >{{log.Monto  | number:'1.2-2'}}</td>
-                                <td *ngIf="Type == 6" >{{log.FechaCrea == "1900-01-01T00:00:00" ? "" : log.FechaCrea  | date: "yyyy/MM/dd HH:mm:ss" }}</td>  
-                                <td *ngIf="Type == 6" >{{log.FechaResp == "1900-01-01T00:00:00" ? "" : log.FechaResp  | date: "yyyy/MM/dd" }}</td>
-                                <td *ngIf="Type == 6" >{{log.FechaModifica == "1900-01-01T00:00:00" ? "" : log.FechaModifica  | date: "yyyy/MM/dd HH:mm:ss" }}</td>  
-                                                          
+                            
+                                <td *ngIf="mostrarCampo(9)">
+        {{log.TipoDoc}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(10)">
+                                    {{log.Doc}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(11)">
+                                    {{log.Nombre}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(12) && Type == 2 && isShowFechaMarcacion">
+                                    {{log.FechaMarca == "1900-01-01T00:00:00" ? "" : (log.FechaMarca | date:'yyyy/MM/dd')}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(13) && Type == 2 && isShowFechaDesmarcacion">
+                                    {{log.FechaDesMarca == "1900-01-01T00:00:00" ? "" : (log.FechaDesMarca | date:'yyyy/MM/dd')}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(14) && Type == 2">
+                                    {{log.Asesor}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(15) && Type == 3">
+                                    {{log.FechaRetiro == "1900-01-01T00:00:00" ? "" : (log.FechaRetiro | date:'yyyy/MM/dd HH:mm:ss')}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(16) && Type == 3">
+                                    {{log.Asesor}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(17) && Type == 3">
+                                    {{log.MotivoRetiro}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(18) && Type == 3">
+                                    {{log.Descripcion}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(19) && Type == 4">
+                                    {{log.FechaReingreso == "1900-01-01T00:00:00" ? "" : (log.FechaReingreso | date:'yyyy/MM/dd HH:mm:ss')}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(20) && Type == 4">
+                                    {{log.Asesor}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(21) && Type == 5">
+                                    {{log.Acepta}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(22) && Type == 5 && filtroSelect == 9">
+                                    {{log.FechaAcepta == "1900-01-01T00:00:00" ? "" : (log.FechaAcepta | date:'yyyy/MM/dd')}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(23) && Type == 5 && filtroSelect == 23">
+                                    {{log.FechaNoAcepta == "1900-01-01T00:00:00" ? "" : (log.FechaNoAcepta | date:'yyyy/MM/dd')}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(24) && Type == 5">
+                                    {{log.Asesor}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(25) && Type == 6">
+                                    {{log.Estado}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(26) && Type == 6">
+                                    {{log.Seguro}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(27) && Type == 6" style="text-align:right">
+                                    {{log.Monto | number:'1.2-2'}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(28) && Type == 6">
+                                    {{log.FechaCrea == "1900-01-01T00:00:00" ? "" : (log.FechaCrea | date:'yyyy/MM/dd HH:mm:ss')}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(29) && Type == 6">
+                                    {{log.FechaResp == "1900-01-01T00:00:00" ? "" : (log.FechaResp | date:'yyyy/MM/dd')}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(30) && Type == 6">
+                                    {{log.FechaModifica == "1900-01-01T00:00:00" ? "" : (log.FechaModifica | date:'yyyy/MM/dd HH:mm:ss')}}
+                                </td>
+                            
                             </tr>
                         </tbody>
                     </table>

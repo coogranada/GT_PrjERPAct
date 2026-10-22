@@ -140,7 +140,7 @@ export class LogGestionCarteraComponent {
     const columnasSeleccionadas = this.ListfilteredColumnasInf.filter(x => x.selected);
 
     if (columnasSeleccionadas.length === 0) {
-      this.notif.onWarning(ERP_TOAST.WARNING, 'Debe seleccionar al menos un campo para generar el informe.'
+      this.notif.onWarning(ERP_TOAST.WARNING, ERP_MESSAGES.CAMPOS_REQUERIDOS
       );
       return;
     }
@@ -162,7 +162,7 @@ export class LogGestionCarteraComponent {
           this.ocultarModalProgreso();
 
           if (!respuesta || respuesta.length === 0) {
-            this.notif.onWarning(ERP_TOAST.WARNING, 'No se encontraron datos para mostrar, verifique los filtros.');
+            this.notif.onWarning(ERP_TOAST.WARNING, ERP_MESSAGES.REGISTROS_NO_ENCONTRADOS);
             return;
           }
 
@@ -242,7 +242,7 @@ export class LogGestionCarteraComponent {
     if (Cant === 0) {
       this.notif.onWarning(
         ERP_TOAST.WARNING,
-        ERP_MESSAGES.REGISTRO_NO_ENCONTRADO
+        ERP_MESSAGES.REGISTROS_NO_ENCONTRADOS
       );
       return;
     }

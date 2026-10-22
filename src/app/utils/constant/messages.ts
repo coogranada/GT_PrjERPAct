@@ -2,6 +2,7 @@
 
 export const ERP_MESSAGES = {
     REGISTRO_NO_ENCONTRADO: 'No se encontró registro.',
+    REGISTROS_NO_ENCONTRADOS: 'No se encontraron registros.',
     FORMATO_CUENTA_INVALIDO: 'La cuenta debe tener el formato 000-000-0000000-0.',
     FECHA_MAYOR_ACTUAL: 'La fecha no puede ser mayor a la fecha actual.',
     FECHA_MENOR_PERMITIDA: 'La fecha no puede ser menor al 01/01/2000.',

@@ -175,12 +175,20 @@ export class LogLogGeneralesComponent implements OnInit {
       console.log(err)
     })
   }
-  SeleccionaTodoJuridico(index : number) {
+  SeleccionaTodoJuridico(index: number) {
     if (index == -1) {
-      this.Campos.forEach(x => x.check = !this.checkAll);
       this.checkAll = !this.checkAll;
-    } else
-      this.Campos[index].check = !this.Campos[index].check
+
+      this.Campos.forEach(x => {
+        x.check = this.checkAll;
+      });
+
+      return;
+    }
+
+    this.Campos[index].check = !this.Campos[index].check;
+
+    this.checkAll = this.Campos.every(x => x.check);
   }
   SelectBlur() {
     if (this.SelectedCombo == 0)
@@ -273,23 +281,43 @@ export class LogLogGeneralesComponent implements OnInit {
   }
   opcionSelectedFechas(value: number) {
   
+    const fechaMinima = new Date(2000, 0, 1);
+  
+    const hoy = new Date();
+  
+    const fechaActual = new Date(
+      hoy.getFullYear(),
+      hoy.getMonth(),
+      hoy.getDate()
+    );
+  
     if (value == 1) {
     
       this.clearFechaInicial = false;
       this.fechaInicialMayorActual = false;
     
-      if (new Date(this.valueFechaInicial) > new Date(this.fechaMax)) {
+      if (!this.valueFechaInicial) {
+        this.valida1F = false;
+        return;
+      }
+    
+      const partes = this.valueFechaInicial.toString().split('-');
+    
+      const fechaInicial = new Date(
+        Number(partes[0]),
+        Number(partes[1]) - 1,
+        Number(partes[2])
+      );
+    
+      if (fechaInicial > fechaActual) {
         this.fechaInicialMayorActual = true;
         this.valida1F = false;
       }
-      else if (
-        this.valueFechaInicial.toString() >= this.fechaMinima &&
-        this.valueFechaInicial <= this.fechaMax
-      ){
-        this.valida1F = true;
+      else if (fechaInicial < fechaMinima) {
+        this.valida1F = false;
       }
       else {
-        this.valida1F = false;
+        this.valida1F = true;
       }
     }
   
@@ -298,19 +326,39 @@ export class LogLogGeneralesComponent implements OnInit {
       this.clearFechaFinal = false;
       this.fechaFinalMayorActual = false;
     
-      if (new Date(this.valueFechaFinal) > new Date(this.fechaMax)) {
+      if (!this.valueFechaFinal) {
+        this.valida2F = false;
+        return;
+      }
+    
+      const partesFinal = this.valueFechaFinal.toString().split('-');
+    
+      const fechaFinal = new Date(
+        Number(partesFinal[0]),
+        Number(partesFinal[1]) - 1,
+        Number(partesFinal[2])
+      );
+    
+      const partesInicial = this.valueFechaInicial.toString().split('-');
+    
+      const fechaInicial = new Date(
+        Number(partesInicial[0]),
+        Number(partesInicial[1]) - 1,
+        Number(partesInicial[2])
+      );
+    
+      if (fechaFinal > fechaActual) {
         this.fechaFinalMayorActual = true;
         this.valida2F = false;
       }
-      else if (
-        this.valueFechaFinal.toString() >= this.fechaMinima &&
-        this.valueFechaFinal <= this.fechaMax &&
-        this.valueFechaInicial.toString() <= this.valueFechaFinal.toString()
-      ) {
-        this.valida2F = true;
+      else if (fechaFinal < fechaMinima) {
+        this.valida2F = false;
+      }
+      else if (fechaFinal < fechaInicial) {
+        this.valida2F = false;
       }
       else {
-        this.valida2F = false;
+        this.valida2F = true;
       }
     }
   
@@ -387,13 +435,19 @@ export class LogLogGeneralesComponent implements OnInit {
     if (element.idFiltro == 1)
       this.idModulo = "";
   }
-  GenerarInformeLogs() {
-    let temp: Campo[] = this.Campos.filter(x => x.check == true);
-
-    if (temp.length > 0)
-      this.GetCantInforme(true);
-    else
-      this.notif.warning('Advertencia', ERP_MESSAGES.CAMPOS_REQUERIDOS, ConfiguracionNotificacion.configRightTop);
+  GenerarInformeLogs(isDownload: boolean) {
+    const camposSeleccionados = this.Campos.filter(x => x.check == true);
+  
+    if (camposSeleccionados.length === 0) {
+      this.notif.warning(
+        ERP_TOAST.WARNING,
+        ERP_MESSAGES.CAMPOS_REQUERIDOS,
+        ConfiguracionNotificacion.configRightTop
+      );
+      return;
+    }
+  
+    this.GetCantInforme(isDownload);
   }
   GetCantInforme(isDowload: boolean) {
 
@@ -430,7 +484,7 @@ export class LogLogGeneralesComponent implements OnInit {
   }
   ModalCantidadRegistros(Cant: number, idDowload: boolean) {
     if (Cant == 0) {
-      this.notif.warning('Advertencia', 'No hay registros', ConfiguracionNotificacion.configRightTop);
+      this.notif.warning('Advertencia', ERP_MESSAGES.REGISTROS_NO_ENCONTRADOS, ConfiguracionNotificacion.configRightTop);
       return;
     }
     Swal.fire({
@@ -460,32 +514,43 @@ export class LogLogGeneralesComponent implements OnInit {
     this.filtroSelect = 0;
     this.MostrarPanel();
     this.setFiltroOficina();
-    let payload: any =
-    {
+
+    const payload: any = {
       Filtros: this.filtrosAgregado,
       Campos: this.GetCamposByFilter(false),
       TipoInforme: 1,
       Accion: 2
-    }
+    };
+
     this.loading.show();
-    this.serviceLogs.GenerateInformesJuridicos(payload).subscribe(x => {
-      this.loading.hide();
-      this.DeletedOficina();
-      var baseg4 = x;
-      const linkSource = `data:application/xlsx;base64,${baseg4}`;
-      const downloadLink = document.createElement("a");
-      const fileName = "InformeLogsGenerales.xlsx";
-      downloadLink.href = linkSource;
-      downloadLink.download = fileName;
-      downloadLink.click();
-    },
-      err => {
+
+    this.serviceLogs.GenerateInformesJuridicos(payload).subscribe({
+      next: x => {
+
         this.DeletedOficina();
-        this.loading.hide();
+
+        const linkSource = `data:application/xlsx;base64,${x}`;
+        const downloadLink = document.createElement('a');
+
+        downloadLink.href = linkSource;
+        downloadLink.download = 'InformeLogsGenerales.xlsx';
+        downloadLink.click();
+      },
+      error: err => {
+
+        this.DeletedOficina();
+
         const errorMessage = <any>err;
-        this.notif.error("Error al generar el informe", errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
-        console.log(err)
-      })
+        this.notif.error(
+          'Error al generar el informe',
+          errorMessage,
+          ConfiguracionNotificacion.configRightTopNoClose
+        );
+      },
+      complete: () => {
+        this.loading.hide();
+      }
+    });
   }
   GetCamposByFilter(descarga: boolean) {
     if (descarga)
@@ -525,5 +590,8 @@ export class LogLogGeneralesComponent implements OnInit {
       }
     );
   }
-
+  
+  mostrarCampo(idCampo: number): boolean {
+    return this.Campos.some(x => x.idCampo === idCampo && x.check);
+  }
 }

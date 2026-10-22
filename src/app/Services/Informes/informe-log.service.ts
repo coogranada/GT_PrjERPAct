@@ -211,7 +211,7 @@ export class InformeLogService {
   
   private CreaCamposBanners(Campos: Campo[]) {
     this.AddCampo(Campos,1, "Nombre", "ISNULL(Per.PrimerNombre + ' ' + Per.SegundoNombre + ' ' + Per.PrimerApellido + ' ' +Per.SegundoApellido , '') AS nombre", "nombre");
-    this.AddCampo(Campos,1, "Fecha", "ISNULL(Banner.FechaModificacion,'') AS Fecha", "Fecha");
+    this.AddCampo(Campos,2, "Fecha", "ISNULL(Banner.FechaModificacion,'') AS Fecha", "Fecha");
   }
   private CreaCamposAsesorias(Campos: Campo[]) {
     this.AddCampo(Campos,1, "Oficina", "ISNULL(dbo.fn_genNomOficina(Ase.IdOFicina), '') AS Oficina","Oficina");

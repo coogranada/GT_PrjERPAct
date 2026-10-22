@@ -168,7 +168,7 @@
                                             
                                                     <button
                                                         type="button"
-                                                        (click)="GetCantInforme(false)"
+                                                        (click)="GenerarInformeLogs(false)"
                                                         class="btn Gt-btn-verde btn-icon legitRipple">
                                                         Ver informe
                                                     </button>
@@ -181,7 +181,7 @@
                                                         type="submit"
                                                         class="btn Gt-btn-verde"
                                                         value="Confirmar"
-                                                        (click)="GenerarInformeLogs()">
+                                                        (click)="GenerarInformeLogs(true)">
                                                         Generar informe
                                                     </button>
                                                 
@@ -245,22 +245,63 @@
                    <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th style="min-width: 300px;"><strong>Oficina</strong></th>
-                                <th style="min-width: 300px;"><strong>Usuario</strong></th>
-                                <th style="min-width: 300px;"><strong>Nombre</strong></th>
-                                <th style="min-width: 200px;"><strong>Fecha</strong></th>
-                                <th style="min-width: 200px;"><strong>Ip</strong></th>
-                                <th style="min-width: 900px;  max-width: 9999999999px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;"><strong>JSON</strong></th>
+                                <th *ngIf="mostrarCampo(25)" style="min-width: 300px;">
+                                    <strong>Oficina</strong>
+                                </th>
+                            
+                                <th *ngIf="mostrarCampo(26)" style="min-width: 300px;">
+                                    <strong>Usuario</strong>
+                                </th>
+                            
+                                <th *ngIf="mostrarCampo(27)" style="min-width: 300px;">
+                                    <strong>Nombre</strong>
+                                </th>
+                            
+                                <th *ngIf="mostrarCampo(28)" style="min-width: 200px;">
+                                    <strong>Fecha</strong>
+                                </th>
+                            
+                                <th *ngIf="mostrarCampo(29)" style="min-width: 200px;">
+                                    <strong>Ip</strong>
+                                </th>
+                            
+                                <th
+                                    *ngIf="mostrarCampo(30)"
+                                    style="min-width: 900px; max-width: 9999999999px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+                                    <strong>JSON</strong>
+                                </th>
                             </tr>
                         </thead>
                         <tbody *ngFor="let log of InformesLog  ; let i=index">
                             <tr class="FilRecip{{i}}" (click)="CambiarColor(i)">
-                                <td >{{log.Oficina}} </td>
-                                <td >{{log.Usuario}} </td>
-                                <td >{{log.Nombre}} </td>
-                                <td >{{log.Fecha  == "1900-01-01T00:00:00" ? "" : log.Fecha |  date: "yyyy/MM/dd HH:mm:ss"}} </td>
-                                <td >{{log.Ip}} </td>
-                                <td  style="min-width: 900px;  max-width: 9999999999px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">{{log.Json}} </td>          
+                                <td *ngIf="mostrarCampo(25)">
+                                    {{log.Oficina}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(26)">
+                                    {{log.Usuario}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(27)">
+                                    {{log.Nombre}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(28)">
+                                    {{log.Fecha == "1900-01-01T00:00:00"
+                                        ? ""
+                                        : (log.Fecha | date:'yyyy/MM/dd HH:mm:ss')}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(29)">
+                                    {{log.Ip}}
+                                </td>
+                            
+                                <td
+                                    *ngIf="mostrarCampo(30)"
+                                    style="min-width: 900px; max-width: 9999999999px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+                                    {{log.Json}}
+                                </td>
+                            </tr>      
                         </tbody>
                     </table>
                 </div>

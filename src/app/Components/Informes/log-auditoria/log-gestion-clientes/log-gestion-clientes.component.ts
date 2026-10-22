@@ -120,12 +120,20 @@ ngOnInit() {
         this.Campos = [];
     }
   }
-  SeleccionaTodoJuridico(index : number) {
+  SeleccionaTodoJuridico(index: number) {
     if (index == -1) {
-      this.Campos.forEach(x => x.check = !this.checkAll);
       this.checkAll = !this.checkAll;
-    } else 
-      this.Campos[index].check = !this.Campos[index].check
+    
+      this.Campos.forEach(x => {
+        x.check = this.checkAll;
+      });
+    
+      return;
+    }
+  
+    this.Campos[index].check = !this.Campos[index].check;
+  
+    this.checkAll = this.Campos.every(x => x.check);
   }
   opcionSelectedFilter(value : number) {
     this.checkAll = false;
@@ -135,41 +143,91 @@ ngOnInit() {
     this.fechaMax = moment().format('YYYY-MM-DD');
     this.fechaMinima = '2000-01-01';
   }
-  opcionSelectedFechas(value : number) {
+  opcionSelectedFechas(value: number) {
+  
+    const fechaMinima = new Date(2000, 0, 1);
+  
+    const hoy = new Date();
+  
+    const fechaActual = new Date(
+      hoy.getFullYear(),
+      hoy.getMonth(),
+      hoy.getDate()
+    );
+  
     if (value == 1) {
+    
       this.clearFechaInicial = false;
-    if (
-        this.valueFechaInicial.toString() >= this.fechaMinima &&
-        this.valueFechaInicial <= this.fechaMax
-    )      this.valida1F = true;
-    else 
-      this.valida1F = false;
-  }
-  else if (value == 2) {
-    this.clearFechaFinal = false;
+      this.fechaMayorActual  = false;
+    
+      if (!this.valueFechaInicial) {
+        this.valida1F = false;
+        return;
+      }
+    
+      const partes = this.valueFechaInicial.toString().split('-');
+    
+      const fechaInicial = new Date(
+        Number(partes[0]),
+        Number(partes[1]) - 1,
+        Number(partes[2])
+      );
+    
+      if (fechaInicial > fechaActual) {
+        this.fechaMayorActual = true;
+        this.valida1F = false;
+      }
+      else if (fechaInicial < fechaMinima) {
+        this.valida1F = false;
+      }
+      else {
+        this.valida1F = true;
+      }
+    }
   
-    this.fechaMayorActual = false;
+    else if (value == 2) {
+    
+      this.clearFechaFinal = false;
+      this.fechaMayorActual = false;
+    
+      if (!this.valueFechaFinal) {
+        this.valida2F = false;
+        return;
+      }
+    
+      const partesFinal = this.valueFechaFinal.toString().split('-');
+    
+      const fechaFinal = new Date(
+        Number(partesFinal[0]),
+        Number(partesFinal[1]) - 1,
+        Number(partesFinal[2])
+      );
+    
+      const partesInicial = this.valueFechaInicial.toString().split('-');
+    
+      const fechaInicial = new Date(
+        Number(partesInicial[0]),
+        Number(partesInicial[1]) - 1,
+        Number(partesInicial[2])
+      );
+    
+      if (fechaFinal > fechaActual) {
+        this.fechaMayorActual = true;
+        this.valida2F = false;
+      }
+      else if (fechaFinal < fechaMinima) {
+        this.valida2F = false;
+      }
+      else if (fechaFinal < fechaInicial) {
+        this.valida2F = false;
+      }
+      else {
+        this.valida2F = true;
+      }
+    }
   
-    if (this.valueFechaFinal > this.fechaMax) {
-      this.fechaMayorActual = true;
-      this.valida2F = false;
-    }
-    else if (
-        this.valueFechaFinal.toString() >= this.fechaMinima &&
-        this.valueFechaFinal <= this.fechaMax &&
-        this.valueFechaInicial.toString() <= this.valueFechaFinal.toString()
-    ) {
-      this.valida2F = true;
-    }
-    else {
-      this.valida2F = false;
-    }
+    this.btnGenerate = this.valida1F && this.valida2F;
   }
-  if (this.valida1F && this.valida2F)
-    this.btnGenerate = true;
-  else
-    this.btnGenerate = false;
- }
   DateBeginAndEnd() {
     this.dateBegin = this.valueFechaInicial.toString().replace("-", "/").replace("-", "/").replace("-", "/");
     this.dateEnd = this.valueFechaFinal.toString().replace("-", "/").replace("-", "/").replace("-", "/");
@@ -196,12 +254,19 @@ ngOnInit() {
    newRegistro.Validacion = validacion;
    this.filtrosAgregado.push(newRegistro);
  }
-  GenerarInformeLogs() {
-    let temp : Campo[] = this.Campos.filter(x => x.check == true)
-    if (temp.length > 0 )
-      this.GetCantInforme(true);
-    else
-    this.notif.warning('Advertencia', ERP_MESSAGES.CAMPOS_REQUERIDOS, ConfiguracionNotificacion.configRightTop);    
+  GenerarInformeLogs(isDownload: boolean) {
+    const camposSeleccionados = this.Campos.filter(x => x.check == true);
+  
+    if (camposSeleccionados.length === 0) {
+      this.notif.warning(
+        'Advertencia',
+        ERP_MESSAGES.CAMPOS_REQUERIDOS,
+        ConfiguracionNotificacion.configRightTop
+      );
+      return;
+    }
+  
+    this.GetCantInforme(isDownload);
   }
   setFiltroFecha() {
     this.DateBeginAndEnd();
@@ -252,7 +317,7 @@ ngOnInit() {
   }
   ModalCantidadRegistros(Cant: number, idDowload: boolean) {
     if (Cant == 0) { 
-      this.notif.warning('Advertencia', 'No hay registros.', ConfiguracionNotificacion.configRightTop);   
+      this.notif.warning('Advertencia', ERP_MESSAGES.REGISTROS_NO_ENCONTRADOS, ConfiguracionNotificacion.configRightTop);   
       return;
     }
     Swal.fire({
@@ -308,23 +373,35 @@ ngOnInit() {
           fileName = "Informe Logs Seguros.xlsx";
             break;
     }
-      this.serviceLogs.GenerateInformesJuridicos(payload).subscribe(x => {
-      this.loading.hide();
-      this.filtrosAgregado = [];
-      var baseg4 = x;
-      const linkSource = `data:application/xlsx;base64,${baseg4}`;
-      const downloadLink = document.createElement("a"); 
-      downloadLink.href = linkSource;
-      downloadLink.download = fileName;
-      downloadLink.click();
-    },
-    err => {
-        this.filtrosAgregado = [];
+    this.serviceLogs.GenerateInformesJuridicos(payload).subscribe(
+      x => {
         this.loading.hide();
+      
+        this.filtrosAgregado = [];
+      
+        const linkSource = `data:application/xlsx;base64,${x}`;
+        const downloadLink = document.createElement("a");
+      
+        downloadLink.href = linkSource;
+        downloadLink.download = fileName;
+        downloadLink.click();
+      },
+      err => {
+        this.loading.hide();
+      
+        this.filtrosAgregado = [];
+      
         const errorMessage = <any>err;
-        this.notif.error("Error al generar el informe", errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
-        console.log(err)
-    })
+        this.notif.error(
+          "Error al generar el informe",
+          errorMessage,
+          ConfiguracionNotificacion.configRightTopNoClose
+        );
+      },
+      () => {
+        this.loading.hide();
+      }
+    );
   }
   IsShowNow() {
     this.IsShow = true;
@@ -334,6 +411,9 @@ ngOnInit() {
     $(".FilRecip" + this.ColorAnterior5).css("background", "#FFFFFF");
     $(".FilRecip" + fil).css("background", "#e5e5e5");
       this.ColorAnterior5 = fil;
+  }
+  mostrarCampo(idCampo: number): boolean {
+    return this.Campos.some(x => x.idCampo === idCampo && x.check);
   }
 }
 
