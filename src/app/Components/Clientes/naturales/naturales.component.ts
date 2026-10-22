@@ -1491,8 +1491,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.disbaleFromDocumento = true;
   }
   validarTipoOperacion() {
-    localStorage.setItem('IdModuloActivo', window.btoa(JSON.stringify(this.CodModulo)));
-    this.operacion = '';
+   this.operacion = '';
     this.esReimpresion = false;
     this.MostrarFechaTratamiento = false;
     this.vetadosFrom.get('documeto')?.setValue(this.basicosFrom.get('DocumentoBusqueda')?.value);
@@ -1501,14 +1500,8 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     const resultPerfil = StorageSecurity.getData();
     this.operacionesModel.idOperacion = results;
     this.operacionesModel.idPerfil = resultPerfil.idPerfilUsuario;
-    const idModuloActivo = localStorage.getItem('IdModuloActivo');
-    if (idModuloActivo) {
-      try {
-        this.operacionesModel.idModulo = StorageSecurity.getItem('idModuloActivo') || [];
-      } catch (error) {
-         console.error('Error obteniendo IdModuloActivo:', error);
-      }
-    }
+    this.operacionesModel.idModulo = 11;   
+
     this.mostrarPorQueCobertura = false;
     this.solicitudRetiroForm.reset();
  
@@ -2920,7 +2913,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           this.mostrarFemiliaresPeps = false;
           this.operacionesModel.idOperacion = results;
           this.operacionesModel.idPerfil = resultPerfil.idPerfilUsuario;
-          this.operacionesModel.idModulo = StorageSecurity.getItem('IdModuloActivo') || [];  
+          this.operacionesModel.idModulo = 11;
           this.bloquearTodo();
           const strNumeroDocumento = this.basicosFrom.get('DocumentoBusqueda')?.value;
           if (strNumeroDocumento === '' || strNumeroDocumento === null || strNumeroDocumento === undefined) {
@@ -9543,7 +9536,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     }
   }
   GetObservacionAll() {
-    const modulo = StorageSecurity.getItem('IdModuloActivo') || [];
+    const modulo = '11';
     this.clientesGetListService.GetObservacionAll(modulo).subscribe(
       result => {
         this.dataObservacion = result;

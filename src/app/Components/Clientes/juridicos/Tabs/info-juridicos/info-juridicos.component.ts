@@ -179,7 +179,6 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
     this.GetRegimenTributarios();
     this.GetObjetoSocial();
     this.GetCiiuList();
-    localStorage.setItem('IdModuloActivo', window.btoa(JSON.stringify(this.CodModulo)));
     this.onChanges();
 
     this.infoJuridicoFrom.get('Relacion')?.valueChanges.subscribe(value => {      

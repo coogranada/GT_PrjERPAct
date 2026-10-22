@@ -4482,7 +4482,7 @@ CalcularSimularPago(){
     const valorSaldo =  this.carteraInfo.SaldoDeuda;
     // valida que saldo ingresado no  sea mayor que el saldo de la deuda
     if(+valorSaldo < +valorIngresado){
-        this.notif.warning(ERP_TOAST.WARNING, 'Valor ingresado no valido.', ConfiguracionNotificacion.configRightTop);
+        this.notif.warning(ERP_TOAST.WARNING, 'Valor ingresado no valido, supera saldo total', ConfiguracionNotificacion.configRightTop);
         this.CuotaForm.get('EfectivoSimularPago')?.reset();
           this.lstSimularPago = [];
           return;

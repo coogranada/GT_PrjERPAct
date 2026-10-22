@@ -533,8 +533,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     this.BloquearCamposFormularios();
     this.mostrarOficina = false;
     this.LimpiarTrasabilidad.emit(true);
-    localStorage.setItem('IdModuloActivo', window.btoa(JSON.stringify(this.CodModulo)));
-    this.GetPaises();
+     this.GetPaises();
     this.GetVias(this.dataVias);
     this.GetCardinalidad(this.dataCardinal);
     this.GetLetra();
@@ -546,7 +545,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     const resultPerfil = StorageSecurity.getData();     
     this.operacionesModel.idOperacion = operaSeleccionada;
     this.operacionesModel.idPerfil = resultPerfil.idPerfilUsuario;
-    this.operacionesModel.idModulo = this.CodModulo;
+    this.operacionesModel.idModulo = 12;
     this.infoJuridicoComponent.bloquearEstado = true;
     if (operaSeleccionada === null || operaSeleccionada === undefined || operaSeleccionada === 0) {
       this.notif.onWarning('Advertencia', 'Debe seleccionar una operación.');
@@ -1029,7 +1028,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     const DataUserLog = StorageSecurity.getData();    
     this.operacionesModel.idOperacion = operaSeleccionada;
     this.operacionesModel.idPerfil = DataUserLog.idPerfilUsuario;
-    this.operacionesModel.idModulo = this.CodModulo;
+    this.operacionesModel.idModulo = 12;
     const strNit = this.infoJuridicoComponent.infoJuridicoFrom.get('Nit')?.value;
     if (strNit === '' || strNit === null || strNit === undefined) {
       this.notif.onWarning('Advertencia','Debe buscar un asociado para realizar esta operación.');
@@ -4978,7 +4977,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     const resultPerfil = StorageSecurity.getData();
     this.operacionesModel.idOperacion = operaSeleccionada;
     this.operacionesModel.idPerfil = resultPerfil.idPerfilUsuario;
-    this.operacionesModel.idModulo = this.CodModulo;  
+    this.operacionesModel.idModulo = 12;  
   
     this.EnviarOperacionFormularios(operaSeleccionada);
     if (operaSeleccionada !== 2 && operaSeleccionada !== 5) {

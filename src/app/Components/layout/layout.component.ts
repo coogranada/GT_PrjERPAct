@@ -1148,7 +1148,6 @@ this.userIdle.onTimeout().subscribe(() => {
       localStorage.removeItem('userName');
       localStorage.removeItem('dataUserConect');
       localStorage.removeItem('TerceroNatura');
-      localStorage.removeItem('IdModuloActivo');
       localStorage.removeItem('Permisos');
 
       this.router.navigateByUrl('/Login');
@@ -1181,7 +1180,6 @@ this.userIdle.onTimeout().subscribe(() => {
       localStorage.removeItem('userName');
       localStorage.removeItem('dataUserConect');
       localStorage.removeItem('TerceroNatura');
-      localStorage.removeItem('IdModuloActivo');
       localStorage.removeItem('Data')
       localStorage.clear();
     }, error => {
@@ -1189,20 +1187,20 @@ this.userIdle.onTimeout().subscribe(() => {
       this.isLoginError = true;
     });
   }
-  setModuloLocalStorage(IdModulo: number) {
-    const permisosUsuario = StorageSecurity.getItem('Permisos');
-    let pr: any = permisosUsuario?.find(
-      (x: any) => x.IdModulo == IdModulo
-    );
-    if (pr == null || pr.IdModulo != IdModulo) {
-      this.router.navigateByUrl('/');
-    } else {
-      StorageSecurity.saveItem(
-        'IdModuloActivo',
-        IdModulo
-      );
-    }
-  }
+  // setModuloLocalStorage(IdModulo: number) {
+  //   const permisosUsuario = StorageSecurity.getItem('Permisos');
+  //   let pr: any = permisosUsuario?.find(
+  //     (x: any) => x.IdModulo == IdModulo
+  //   );
+  //   if (pr == null || pr.IdModulo != IdModulo) {
+  //     this.router.navigateByUrl('/');
+  //   } else {
+  //     StorageSecurity.saveItem(
+  //       'IdModuloActivo',
+  //       IdModulo
+  //     );
+  //   }
+  // }
   created(e: any) {
     console.log("create", e)
   }

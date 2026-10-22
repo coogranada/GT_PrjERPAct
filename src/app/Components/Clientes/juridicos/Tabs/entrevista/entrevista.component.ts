@@ -646,14 +646,9 @@ private configurarTratamiento(dataUser: any): void {
     next: (result) => {
 
       if (result) {
-
-        localStorage.setItem('IdModuloActivo', window.btoa(JSON.stringify(12)));
-
         const dataJuridico = result;
         const AnimoLucro = infoTotal.BasicosDto.AnimoLucro ? 'Si' : 'No';
-
-        this.GuardarLog(
-          {
+        this.GuardarLog(          {
             ...infoTotal,
             BasicosDto: { ...infoTotal.BasicosDto, AnimoLucro }
           },
