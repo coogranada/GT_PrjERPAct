@@ -73,8 +73,9 @@ export class LogAsesoriaComponent implements OnInit {
     $('#SelectFilter').focus().select();
   }
   getInformeList() {
-      this.filtroSelect = -2;
-      this.MostrarPanel();
+    this.loading.show();
+    this.filtroSelect = -2;
+    this.MostrarPanel();
     this.setFiltroOficina();
     let payload: any =
     {
@@ -293,47 +294,88 @@ export class LogAsesoriaComponent implements OnInit {
       )?.descri ?? '';
   }
   opcionSelectedFechas(value: number) {
+  
+    const fechaMinima = new Date(2000, 0, 1);
+  
+    const hoy = new Date();
+  
+    const fechaActual = new Date(
+      hoy.getFullYear(),
+      hoy.getMonth(),
+      hoy.getDate()
+    );
+  
     if (value == 1) {
-
+    
       this.clearFechaInicial = false;
       this.fechaInicialMayorActual = false;
-
-      if (new Date(this.valueFechaInicial) > new Date(this.fechaMax)) {
+    
+      if (!this.valueFechaInicial) {
+        this.valida1F = false;
+        return;
+      }
+    
+      const partes = this.valueFechaInicial.toString().split('-');
+    
+      const fechaInicial = new Date(
+        Number(partes[0]),
+        Number(partes[1]) - 1,
+        Number(partes[2])
+      );
+    
+      if (fechaInicial > fechaActual) {
         this.fechaInicialMayorActual = true;
         this.valida1F = false;
       }
-      else if (
-        this.valueFechaInicial.toString() >= this.fechaMinima &&
-        this.valueFechaInicial <= this.fechaMax
-      ) {
-        this.valida1F = true;
-      }
-      else {
+      else if (fechaInicial < fechaMinima) {
         this.valida1F = false;
       }
+      else {
+        this.valida1F = true;
+      }
     }
-
+  
     else if (value == 2) {
-
+    
       this.clearFechaFinal = false;
       this.fechaFinalMayorActual = false;
-
-      if (new Date(this.valueFechaFinal) > new Date(this.fechaMax)) {
+    
+      if (!this.valueFechaFinal) {
+        this.valida2F = false;
+        return;
+      }
+    
+      const partesFinal = this.valueFechaFinal.toString().split('-');
+    
+      const fechaFinal = new Date(
+        Number(partesFinal[0]),
+        Number(partesFinal[1]) - 1,
+        Number(partesFinal[2])
+      );
+    
+      const partesInicial = this.valueFechaInicial.toString().split('-');
+    
+      const fechaInicial = new Date(
+        Number(partesInicial[0]),
+        Number(partesInicial[1]) - 1,
+        Number(partesInicial[2])
+      );
+    
+      if (fechaFinal > fechaActual) {
         this.fechaFinalMayorActual = true;
         this.valida2F = false;
       }
-      else if (
-        this.valueFechaFinal.toString() >= this.fechaMinima &&
-        this.valueFechaFinal <= this.fechaMax &&
-        this.valueFechaFinal >= this.valueFechaInicial
-      ) {
-        this.valida2F = true;
-      }
-      else {
+      else if (fechaFinal < fechaMinima) {
         this.valida2F = false;
       }
+      else if (fechaFinal < fechaInicial) {
+        this.valida2F = false;
+      }
+      else {
+        this.valida2F = true;
+      }
     }
-
+  
     this.btnGenerate = this.valida1F && this.valida2F;
   }
   DateBeginAndEnd() {
@@ -394,13 +436,22 @@ export class LogAsesoriaComponent implements OnInit {
       else
         this.filtrosAgregado = this.filtrosAgregado.filter(x => x.idFiltro != element.idFiltro);
   }
-  GenerarInformeLogs() {
-    let temp : Campo[] = this.Campos.filter(x => x.check == true)
-    if (temp.length > 0 )
-      this.GetCantInforme(true);
-    else
-      this.notif.warning('Advertencia', ERP_MESSAGES.CAMPOS_REQUERIDOS, ConfiguracionNotificacion.configRightTop);    
+
+  GenerarInformeLogs(isDownload: boolean) {
+    const camposSeleccionados = this.Campos.filter(x => x.check == true);
+
+    if (camposSeleccionados.length === 0) {
+      this.notif.warning(
+        ERP_TOAST.WARNING,
+        ERP_MESSAGES.CAMPOS_REQUERIDOS,
+        ConfiguracionNotificacion.configRightTop
+      );
+      return;
+    }
+
+    this.GetCantInforme(isDownload);
   }
+
   GetCantInforme(isDowload: boolean) {
     this.InformesLog = [];
     this.filtroSelect = -2;
@@ -435,10 +486,10 @@ export class LogAsesoriaComponent implements OnInit {
       this.filtrosAgregado = this.filtrosAgregado.filter(x => x.idFiltro != 18);
   }
   ModalCantidadRegistros(Cant: number, idDowload: boolean) {
-      if (Cant == 0) { 
-        this.notif.warning('Advertencia', 'No se encuentran registros', ConfiguracionNotificacion.configRightTop);   
-        return;
-      }
+    if (Cant == 0) { 
+      this.notif.warning('Advertencia', ERP_MESSAGES.REGISTROS_NO_ENCONTRADOS, ConfiguracionNotificacion.configRightTop);   
+      return;
+    }
     Swal.fire({
       imageUrl: 'https://www.pgro.org/images/shop/more/493x500_700_121fd5db7d62d33519e2e6bf96d156a3_1618820954excel.png',
       imageWidth: 50,
@@ -452,8 +503,6 @@ export class LogAsesoriaComponent implements OnInit {
       confirmButtonText: idDowload == true ? "Descargar" : "Ver Lista"
     }).then((result) => {
       if (result.value) {
-        
-        this.loading.show();
         setTimeout(() => {
           if (idDowload)
             this.DescargarInforme();
@@ -464,8 +513,8 @@ export class LogAsesoriaComponent implements OnInit {
     });
   }
   DescargarInforme() {
-      this.filtroSelect = -2;
-      this.MostrarPanel();
+    this.filtroSelect = -2;
+    this.MostrarPanel();
     this.setFiltroOficina();
     let payload: any =
     {
@@ -475,24 +524,37 @@ export class LogAsesoriaComponent implements OnInit {
       Accion: 2
     }
       this.loading.show();
-      this.serviceLogs.GenerateInformesJuridicos(payload).subscribe(x => {
-      this.loading.hide();
-     this.DeletedOficina();
-      var baseg4 = x;
-      const linkSource = `data:application/xlsx;base64,${baseg4}`;
-      const downloadLink = document.createElement("a");
-      const fileName = "InformeLogsAsesorias.xlsx";
-      downloadLink.href = linkSource;
-      downloadLink.download = fileName;
-      downloadLink.click();
-    },
-    err => {
-     this.DeletedOficina();
-      this.loading.hide();
-      const errorMessage = <any>err;
-      this.notif.error("Error al generar el informe", errorMessage, ConfiguracionNotificacion.configRightTopNoClose);
-      console.log(err)
-    })
+    this.serviceLogs.GenerateInformesJuridicos(payload).subscribe({
+      next: x => {
+      
+        this.DeletedOficina();
+      
+        const linkSource = `data:application/xlsx;base64,${x}`;
+        const downloadLink = document.createElement("a");
+      
+        downloadLink.href = linkSource;
+        downloadLink.download = "InformeLogsAsesorias.xlsx";
+        downloadLink.click();
+      },
+      error: err => {
+      
+        this.DeletedOficina();
+      
+        const errorMessage = <any>err;
+      
+        this.notif.error(
+          "Error al generar el informe",
+          errorMessage,
+          ConfiguracionNotificacion.configRightTopNoClose
+        );
+      
+        this.loading.hide();
+      },
+      complete: () => {
+        this.loading.hide();
+      }
+    });
+
   }
   CambiarColor(fil : number) {
     $(".FilRecip" + this.ColorAnterior5).css("background", "#FFFFFF");
@@ -525,5 +587,8 @@ export class LogAsesoriaComponent implements OnInit {
       }
     );
   }
-
+  
+  mostrarCampo(idCampo: number): boolean {
+    return this.Campos.some(x => x.idCampo === idCampo && x.check);
+  }
 }

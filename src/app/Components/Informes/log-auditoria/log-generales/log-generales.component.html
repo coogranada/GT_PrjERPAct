@@ -182,7 +182,7 @@
                                             
                                                     <button
                                                         type="button"
-                                                        (click)="GetCantInforme(false)"
+                                                        (click)="GenerarInformeLogs(false)"
                                                         class="btn Gt-btn-verde btn-icon legitRipple">
                                                         Ver informe
                                                     </button>
@@ -195,7 +195,7 @@
                                                         type="submit"
                                                         class="btn Gt-btn-verde"
                                                         value="Confirmar"
-                                                        (click)="GenerarInformeLogs()">
+                                                        (click)="GenerarInformeLogs(true)">
                                                         Generar informe
                                                     </button>
                                                 
@@ -263,31 +263,77 @@
                 <div class="table-responsive scrollTabla">
                    <table class="table table-hover">
                         <thead>
-                            <tr >
-                                <th style="min-width: 200px;"><strong>Oficina</strong></th>
-                                <th style="min-width: 200px;"><strong>Modulo</strong></th>
-                                <th style="min-width: 300px;"><strong>Operación</strong></th>
-                                <th style="min-width: 200px;" *ngIf="isShowDoc"><strong>Documento</strong></th>
-                                <th style="min-width: 200px;" *ngIf="isShowCuenta"><strong>Cuenta</strong></th>
-                                <th style="min-width: 300px;"><strong>Asesor</strong></th>
-                                <th style="min-width: 200px;"><strong>Fecha modifica</strong></th>
-                                <th style="min-width: 900px;  max-width: 9999999999px; text-overflow: ellipsis;
-                                white-space: nowrap;
-                                overflow: hidden;"><strong>JSON</strong></th>
+                            <tr>
+                                <th *ngIf="mostrarCampo(1)" style="min-width: 200px;">
+                                    <strong>Oficina</strong>
+                                </th>
+                            
+                                <th *ngIf="mostrarCampo(2)" style="min-width: 200px;">
+                                    <strong>Modulo</strong>
+                                </th>
+                            
+                                <th *ngIf="mostrarCampo(3)" style="min-width: 300px;">
+                                    <strong>Operación</strong>
+                                </th>
+                            
+                                <th *ngIf="mostrarCampo(4) && isShowDoc" style="min-width: 200px;">
+                                    <strong>Documento</strong>
+                                </th>
+                            
+                                <th *ngIf="mostrarCampo(5) && isShowCuenta" style="min-width: 200px;">
+                                    <strong>Cuenta</strong>
+                                </th>
+                            
+                                <th *ngIf="mostrarCampo(6)" style="min-width: 300px;">
+                                    <strong>Asesor</strong>
+                                </th>
+                            
+                                <th *ngIf="mostrarCampo(7)" style="min-width: 200px;">
+                                    <strong>Fecha modifica</strong>
+                                </th>
+                            
+                                <th *ngIf="mostrarCampo(8)"
+                                    style="min-width: 900px; max-width: 9999999999px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+                                    <strong>JSON</strong>
+                                </th>
                             </tr>
                         </thead>
                         <tbody *ngFor="let log of InformesLog  ; let i=index">
                             <tr class="FilRecip{{i}}" (click)="CambiarColor(i)">
-                                <td >{{log.Oficina}} </td>
-                                <td >{{log.Modulo}} </td>
-                                <td >{{log.Operacion}} </td>
-                                <td *ngIf="isShowDoc">{{log.Doc}} </td>
-                                <td *ngIf="isShowCuenta">{{log.Cuenta}} </td>
-                                <td >{{log.Asesor}} </td>
-                                <td >{{log.FechaModifica == "1900-01-01T00:00:00" ? "" : log.FechaModifica | date: "yyyy/MM/dd HH:mm:ss" }} </td>
-                                <td  style="min-width: 900px;  max-width: 9999999999px; text-overflow: ellipsis;
-                                white-space: nowrap;
-                                overflow: hidden;">{{log.Json}} </td>                               
+                            
+                                <td *ngIf="mostrarCampo(1)">
+                                    {{log.Oficina}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(2)">
+                                    {{log.Modulo}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(3)">
+                                    {{log.Operacion}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(4) && isShowDoc">
+                                    {{log.Doc}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(5) && isShowCuenta">
+                                    {{log.Cuenta}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(6)">
+                                    {{log.Asesor}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(7)">
+                                    {{log.FechaModifica == "1900-01-01T00:00:00" ? "" : (log.FechaModifica | date:'yyyy/MM/dd HH:mm:ss')}}
+                                </td>
+                            
+                                <td *ngIf="mostrarCampo(8)"
+                                    style="min-width: 900px; max-width: 9999999999px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+                                    {{log.Json}}
+                                </td>
+                            
                             </tr>
                         </tbody>
                     </table>

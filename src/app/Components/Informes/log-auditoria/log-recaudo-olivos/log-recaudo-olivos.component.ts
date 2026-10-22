@@ -139,7 +139,7 @@ export class LogRecaudoOlivosComponent {
       .filter(col => col.selected)
       .map(col => col.name);
     if (columnasSeleccionadas.length === 0) {
-      this.notif.onWarning('Advertencia', 'Debe seleccionar al menos un campo para generar el informe.');
+      this.notif.onWarning('Advertencia', ERP_MESSAGES.CAMPOS_REQUERIDOS);
       return;
     }
 
@@ -178,7 +178,7 @@ export class LogRecaudoOlivosComponent {
         .subscribe(respuesta => {
           this.ocultarModalProgreso();
           if (respuesta.length <= 0) {
-            this.notif.onWarning('Advertencia', 'No se encontraron datos para mostrar, verifique los filtros.');
+            this.notif.onWarning('Advertencia', ERP_MESSAGES.REGISTROS_NO_ENCONTRADOS);
             return;
           }
           if (respuesta && respuesta.length > 0) {
@@ -244,7 +244,7 @@ export class LogRecaudoOlivosComponent {
 
   ModalCantidadRegistros(Cant: number, idDowload: boolean) {
     if (Cant == 0) {
-      this.notif.onWarning('Advertencia', 'No se encuentran registros');
+      this.notif.onWarning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
       return;
     }
     Swal.fire({
@@ -456,13 +456,18 @@ export class LogRecaudoOlivosComponent {
   }
 
   limpiarSelected() {
+      console.log('Filtro', this.filtroSelect);
+  console.log('Usuario', this.formulario.get('@Usuario')?.value);
+  console.log('Oficina', this.formulario.get('@IdOficina')?.value);
     this.btnMore = false;
     this.filtroSelect = 0;
     this.ListGenerico = [];
     this.tituloGenerico = "";
     this.alertGenerico = "";
-    this.formulario.get('@IdOficina')?.reset();
-    this.formulario.get('@Usuario')?.reset();
+    // this.formulario.get('@IdOficina')?.reset();
+    // this.formulario.get('@Usuario')?.reset();
+    this.formulario.get('@IdOficina')?.setValue(0);
+this.formulario.get('@Usuario')?.setValue('');
 
   }
 

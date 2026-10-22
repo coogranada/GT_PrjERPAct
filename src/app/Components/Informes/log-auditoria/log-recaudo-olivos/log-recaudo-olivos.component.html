@@ -19,16 +19,21 @@
                                                 <div class="form-group">
                                                     <label class="textNegrilla">Filtro:</label>
                                                     <span class="grande"> *</span>
-                                                    <select class="form-control form-control-lg" id="select"
-                                                        name="select" [(ngModel)]="filtroSelect"
-                                                        (change)="seleccionarFiltro()">
-                                                        <option value="0" selected="true">
+                                                    <select class="form-control form-control-lg"
+                                                            id="select"
+                                                            name="select"
+                                                            [(ngModel)]="filtroSelect"
+                                                            (change)="seleccionarFiltro()">
+                                                    
+                                                        <option [ngValue]="0">
                                                             --Seleccione--
                                                         </option>
-                                                        <option *ngFor="let item of Filtros" [value]="item.idFiltro">
+                                                    
+                                                        <option *ngFor="let item of Filtros" [ngValue]="item.idFiltro">
                                                             {{item.NombreFiltro}}
                                                         </option>
                                                     </select>
+
                                                 </div>
                                             </div>
 

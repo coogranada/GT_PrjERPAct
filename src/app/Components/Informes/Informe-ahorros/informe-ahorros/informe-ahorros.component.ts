@@ -519,7 +519,7 @@ export class InformeAhorrosComponent implements OnInit {
 
   ModalCantidadRegistros(Cant: number, idDowload: boolean) {
     if (Cant == 0) {
-      this.notif.warning('Advertencia', 'No se encuentran registros', ConfiguracionNotificacion.configRightTop);
+      this.notif.warning('Advertencia', ERP_MESSAGES.REGISTRO_NO_ENCONTRADO, ConfiguracionNotificacion.configRightTop);
       return;
     }
     Swal.fire({
@@ -885,7 +885,7 @@ export class InformeAhorrosComponent implements OnInit {
       .filter(col => col.selected)
       .map(col => col.name);
     if (columnasSeleccionadas.length === 0) {
-      this.notif.warning('Advertencia', 'Debe seleccionar al menos un campo para generar el informe.', ConfiguracionNotificacion.configRightTop);
+      this.notif.warning('Advertencia', ERP_MESSAGES.CAMPOS_REQUERIDOS, ConfiguracionNotificacion.configRightTop);
       this.loading.hide();
       return;
     }
