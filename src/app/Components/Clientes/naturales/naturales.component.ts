@@ -5206,7 +5206,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   }
   ActualizarFecha() {
     this.GuardarLog('Tercer al que Actualizan - ' + localStorage.getItem('TerceroNatura'), 6, 0, Number(localStorage.getItem('TerceroNatura')),11);
-    let TerceroNatura : string | null = localStorage.getItem('TerceroNatura');
+    let TerceroNatura : string | null = this.basicosFrom.get('IdTerceroPrincipal')?.value;
     this.clientesService.EditarFechaModificacion(TerceroNatura).subscribe(
       resultFecha => {
         if (resultFecha) {
@@ -9542,7 +9542,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     }
   }
   CambiarEstadoObservacion() {
-    const natural = localStorage.getItem('TerceroNatura');
+    const natural = this.basicosFrom.get('IdTerceroPrincipal')?.value;
     this.FormCambioEstado.get('lngTercero')?.setValue(natural);
     this.observacionesService.GuardarObservacion(this.FormCambioEstado.value).subscribe(
       result => {
@@ -11343,7 +11343,7 @@ enviarWorkManager() {
                     if(this.basicosFrom.value.oficina.Valor !== null && this.basicosFrom.value.oficina.Valor !== undefined
                       && this.basicosFrom.value.oficina.Valor !== '') {
                           this.objOficinaVieja = this.basicosFrom.value.oficina;
-                          let TerceroNatura : string | null = localStorage.getItem('TerceroNatura');
+                          let TerceroNatura : string | null = this.basicosFrom.get('IdTerceroPrincipal')?.value;
                           this.EditarOficina(TerceroNatura == null ? "" : TerceroNatura, this.basicosFrom.value.oficina.Valor);
                           this.EditarFrom = true;
   
@@ -11376,7 +11376,7 @@ enviarWorkManager() {
         // if (this.asesorForm.value.strCodigo !== '' && this.asesorForm.value.strCodigo !== null
         //   && this.asesorForm.value.strCodigo !== undefined) {
             if(this.asesorForm.value.strCodigo !== this.CedulaAsesorExt) {
-              let TerceroNatura : string | null = localStorage.getItem('TerceroNatura');
+              let TerceroNatura : string | null = this.basicosFrom.get('IdTerceroPrincipal')?.value;
               this.EditarAsesorExterno(TerceroNatura == null ? "" : TerceroNatura, this.terceroSave.value.IdAsesorExterno);
               this.disableAsesor = false;
             } else {
@@ -13184,7 +13184,7 @@ enviarWorkManager() {
             if (result) {
               this.dataCorrespondencia = [];
                 this.loading.hide(); 
-                const tercero = localStorage.getItem('TerceroNatura');
+                const tercero = this.basicosFrom.get('IdTerceroPrincipal')?.value;
                 this.notif.onSuccess('Exitoso', 'El registro se actualizó correctamente.');
                 this.AsesorModifica(tercero == null ? "" : tercero);
                 this.EnableUpdateContacto = false;
@@ -15387,9 +15387,9 @@ enviarWorkManager() {
               if (!tieneObligaciones && this.itemsVehiculo.length !== 0 || this.itemsPropiedad.length !== 0) { // Mensaje de validacion
                 this.allItemsFormSaves.activoDto = {};
                 this.allItemsFormActivo = [];
-                const tercerEditAfuera = localStorage.getItem('TerceroNatura');
+                const tercerEditAfuera = this.basicosFrom.get('IdTerceroPrincipal')?.value;
                 this.allItemsFormActivos.forEach(elementn => {
-                  const tercerEdit = localStorage.getItem('TerceroNatura');
+                  const tercerEdit = this.basicosFrom.get('IdTerceroPrincipal')?.value;
                   this.ActivoFormSet.get('IdPatrimonio')?.setValue(elementn.idPatrimonio);
                   this.ActivoFormSet.get('IdTercero')?.setValue(tercerEdit);
                   this.ActivoFormSet.get('IdActivo')?.setValue(elementn.tipoActivo.Id);
@@ -15435,9 +15435,9 @@ enviarWorkManager() {
                 this.itemsPropiedad.length !== 0 || this.itemsOtros.length !== 0 ||
                 (campoPasivoV !== '' || campoPasivoV !== null || campoPasivoV !== 0)) {
                 this.allItemsFormActivo = [];
-                const tercerEditAfuera = localStorage.getItem('TerceroNatura');
+                const tercerEditAfuera = this.basicosFrom.get('IdTerceroPrincipal')?.value;
                 this.allItemsFormActivos.forEach(elementn => {
-                  const tercerEdit = localStorage.getItem('TerceroNatura');
+                  const tercerEdit = this.basicosFrom.get('IdTerceroPrincipal')?.value;
                   this.ActivoFormSet.get('IdPatrimonio')?.setValue(elementn.idPatrimonio);
                   this.ActivoFormSet.get('IdTercero')?.setValue(tercerEdit);
                   this.ActivoFormSet.get('IdActivo')?.setValue(elementn.tipoActivo.Id);
@@ -15978,7 +15978,7 @@ enviarWorkManager() {
       if (this.itemsConyugue.length > 0) {
         this.allItemsFormSaves.conyugueDto = {};
         this.itemsConyugue.forEach(elementcon => {
-          const tercerEdit = localStorage.getItem('TerceroNatura');
+          const tercerEdit = this.basicosFrom.get('IdTerceroPrincipal')?.value;
           this.conyugueFormSet.get('IdConyuge')?.setValue(elementcon.idConyugue);
           this.conyugueFormSet.get('IdTercero')?.setValue(tercerEdit);
           this.conyugueFormSet.get('IdTipoDocumento')?.setValue(elementcon.TipoDocumento);
@@ -17214,7 +17214,7 @@ enviarWorkManager() {
             } else {
               this.laboralFormSet.get('IdConvenio')?.setValue(elementlabo.convenio);
             }
-            const tercerEdit = localStorage.getItem('TerceroNatura');
+            const tercerEdit = this.basicosFrom.get('IdTerceroPrincipal')?.value;
             this.laboralFormSet.get('IdTercero')?.setValue(tercerEdit);
             this.laboralFormSet.get('IdCargo')?.setValue(elementlabo.cargo.Clase);
             this.laboralFormSet.get('IdTipoContratoLaboral')?.setValue(elementlabo.tipoContrato.Clase);
@@ -17245,7 +17245,7 @@ enviarWorkManager() {
       && empleoSeleccionado !== '11' && this.itemsLaboral.length === 0) { // Mensaje
       this.allItemsFormSaves.laboralDto = null;
       this.allItemsFormLaboral = [];
-      const tercerEdit = localStorage.getItem('TerceroNatura');
+      const tercerEdit = this.basicosFrom.get('IdTerceroPrincipal')?.value;
         if (results === '1') {
           this.EliminarLaborales(tercerEdit == null ? "" : tercerEdit);
         }
@@ -17348,7 +17348,7 @@ enviarWorkManager() {
           } else {
             this.laboralFormSet.get('IdConvenio')?.setValue(elementlab.convenio);
           }
-          const tercerEdit = localStorage.getItem('TerceroNatura');
+          const tercerEdit = this.basicosFrom.get('IdTerceroPrincipal')?.value;
           this.laboralFormSet.get('IdTercero')?.setValue(tercerEdit);
           if (elementlab.cargo !== null && elementlab.cargo !== undefined && elementlab.cargo !== '') {
             this.laboralFormSet.get('IdCargo')?.setValue(elementlab.cargo.Clase);
@@ -17427,7 +17427,7 @@ enviarWorkManager() {
       } else {
         this.laboralFormSet.get('IdConvenio')?.setValue(elementlab.convenio);
       }
-      const tercerEdit = localStorage.getItem('TerceroNatura');
+      const tercerEdit = this.basicosFrom.get('IdTerceroPrincipal')?.value;
       this.laboralFormSet.get('IdTercero')?.setValue(tercerEdit);
       this.laboralFormSet.get('IdCargo')?.setValue(elementlab.cargo.Clase);
       if (elementlab.tipoContrato !== null && elementlab.tipoContrato !== undefined && elementlab.tipoContrato !== '') {
@@ -20096,7 +20096,7 @@ enviarWorkManager() {
       this.allItemFormEntrevista = [];
       this.allItemFormEntrevista.push(this.entrevistaForm.value);
       this.allItemFormEntrevista.forEach((elementa :any) => {
-        const tercerEdit = localStorage.getItem('TerceroNatura');
+        const tercerEdit =this.basicosFrom.get('IdTerceroPrincipal')?.value;
         this.entrevistaFormSet.get('NumeroPregunta')?.setValue(1);
         if (elementa.RPregunta1Si !== null) {
           this.entrevistaFormSet.get('Respuesta')?.setValue(elementa.RPregunta1Si);
@@ -20390,7 +20390,7 @@ enviarWorkManager() {
     this.blockBtnBasico = null;
     this.formBuscarLocked = false;
     this.relacionPepsForm.get('IdPregunta')?.setValue(pregunta);
-    const tercerEdit = localStorage.getItem('TerceroNatura');
+    const tercerEdit = this.basicosFrom.get('IdTerceroPrincipal')?.value;
     this.relacionPepsForm.get('IdTercero')?.setValue(tercerEdit);
     if (this.itemRelacionPeps.length < 4) {
       this.itemRelacionPeps.push(this.relacionPepsForm.value);
@@ -21043,7 +21043,7 @@ enviarWorkManager() {
 
   getBakcSeguros() {
     this.itemsSeguro = [];
-    const tercerEdit = localStorage.getItem('TerceroNatura');
+    const tercerEdit = this.basicosFrom.get('IdTerceroPrincipal')?.value;
     this.clientesService.VolverACargarSeguros(tercerEdit == null ? "" : tercerEdit).subscribe(
       result => {
         result.forEach(( elementSeg : any ) => {
@@ -21324,7 +21324,7 @@ enviarWorkManager() {
 
   AbrirCorrespondenciaImpresion() {
     const operacion  =  +this.basicosFrom.get('operacion')?.value;
-    const tercero = localStorage.getItem('TerceroNatura');
+    const tercero = this.basicosFrom.get('IdTerceroPrincipal')?.value;
     const seleccionada = +this.Correspondenciasform.get('SeleccionCorrespondencia')?.value;
     if(seleccionada === 0 || seleccionada === null || seleccionada === undefined) {
       this.Correspondenciasform.get('SeleccionCorrespondencia')?.reset();
@@ -21422,7 +21422,7 @@ enviarWorkManager() {
   }
 
   EditarContactos(updateContacto : any) {
-    const tercero = localStorage.getItem('TerceroNatura');  
+    const tercero = this.basicosFrom.get('IdTerceroPrincipal')?.value;
     this.GuardarLog(updateContacto, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')), 11);
     this.clientesService.EditarContactos(updateContacto).subscribe(
       () => {
@@ -21586,7 +21586,7 @@ enviarWorkManager() {
   }
 
   EliminarPPES() {
-    let TerceroNatura : string | null = localStorage.getItem('TerceroNatura');
+    let TerceroNatura : string | null = this.basicosFrom.get('IdTerceroPrincipal')?.value;
     this.clientesService.EliminarPPES(TerceroNatura == null ? "" : TerceroNatura).subscribe(
       result => {
         this.relacionPepsForm.reset();
@@ -21604,7 +21604,7 @@ enviarWorkManager() {
     this.GuardarLog(updateSeguros, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
     this.clientesService.EditarSeguros(updateSeguros).subscribe(
       result => {
-        const tercero = localStorage.getItem('TerceroNatura');
+        const tercero = this.basicosFrom.get('IdTerceroPrincipal')?.value;
         let siNo = 0;
         if (this.segurosForm.get('debitoAuto')?.value) {
           siNo = 1;

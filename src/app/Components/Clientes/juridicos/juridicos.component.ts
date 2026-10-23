@@ -7727,7 +7727,6 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     // aqui tengo que guardar la correspondencia y abrir el modal de servicios
     const resultPerfil = StorageSecurity.getData(); 
     const operacion = +this.juridicosFrom.get('operacion')?.value;
-    // const tercero = localStorage.getItem('TerceroNatura');
    
       if (operacion === 1) {
         if (this.Correspondenciasform.value.SeleccionCorrespondencia !== null &&
