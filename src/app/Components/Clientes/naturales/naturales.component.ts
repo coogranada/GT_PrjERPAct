@@ -1017,7 +1017,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     try {
       const seguros = StorageSecurity.getItem('seguros');
       this.dataSeguros = seguros ?? [];
-      // console.log('dataSeguros', this.dataSeguros);
     } catch (error) {
       console.error('Error obteniendo seguros', error);
       this.dataSeguros = [];
@@ -1028,7 +1027,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     try {
       this.dataEstadosSeguro =
         StorageSecurity.getItem('estadoSeguro') || [];
-      // console.log('dataEstadosSeguro:', this.dataEstadosSeguro);
     } catch (error) {
       console.error(
         'Error GetEstadosSeguro:',
@@ -1301,8 +1299,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       );
       this.basicosFrom.get('actividad')?.reset();
     }
-    console.log(this.basicosFrom.get('actividad')?.value);
-    console.log(campo);
   }
 
   validarSelectsTipoDocumento() {
@@ -5846,8 +5842,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   validarTipoCliente() {
     this.blockBtnBasico = false;
     this.AsessorNecesario = true;
-    const operacion = this.basicosFrom.get('operacion')?.value;
-    console.log("opera",operacion)
+    const operacion = this.basicosFrom.get('operacion')?.value;    
     this.clientesGetListService.GetTipoDocumento().subscribe(
       result => {
          let idTipoDoc : number = this.basicosFrom.value.tipoDocumento;
@@ -6345,7 +6340,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       error => {
         const errorMessage = <any>error;
         this.notif.onDanger('Error', errorMessage);
-        console.log(errorMessage);
       });
   }
   private EliminarValidadoresProveedores() {
@@ -6768,7 +6762,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                     },
                     error => {
                       const errorMessage = <any>error;
-                      console.log(errorMessage);
                     });
                 } else {
                   this.yaIngreso = true;
@@ -6831,7 +6824,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                   },
                   error => {
                     const errorMessage = <any>error;
-                    console.log(errorMessage);
                   });
               } else {
                 this.yaIngreso = true;
@@ -6875,7 +6867,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                   },
                   error => {
                     const errorMessage = <any>error;
-                    console.log(errorMessage);
                   });
               } else {
                 this.yaIngreso = true;
@@ -6936,7 +6927,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
               },
               error => {
                 const errorMessage = <any>error;
-                console.log(errorMessage);
               });
             } else {
                this.yaIngreso = true;
@@ -6980,7 +6970,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
               },
               error => {
                 const errorMessage = <any>error;
-                console.log(errorMessage);
               });
           } else {
              this.yaIngreso = true;
@@ -7713,7 +7702,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         }
       },
       error => {
-        console.log('ValidarVetados - ' + error);
       });
   }
   ValidarVetadosDocumentoBusqueda() {
@@ -7745,7 +7733,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         }
       },
       error => {
-        console.log('ValidarVetados - ' + error);
       });
   }
   ValidarVetadosDocumentoBusquedaAlert(): boolean {
@@ -7762,7 +7749,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         }
       },
       error => {
-        console.log('ValidarVetados - ' + error);
       });
     return VRetorno;
   }
@@ -7799,7 +7785,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           }
         },
         error => {
-          console.log('ValidarVetados - ' + error);
         });
     } else {
       this.notif.onWarning('Advertencia', 'El conyugue debe ser diferente al asociado.',
@@ -7881,7 +7866,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                 }
               },
               error => {
-                console.log('ValidarVetados - ' + error);
               });
           }
         }
@@ -9596,7 +9580,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         error => {
           this.notif.onWarning('Advertencia', ERP_MESSAGES.VALOR_INGRESADO_FORMATO_INCORRECTO);
           const errorMessage = <any>error;
-          console.log(errorMessage);
         }
       );
     } else { 
@@ -9683,7 +9666,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       },
       error => {
         const errorMessage = <any>error;
-        console.log(errorMessage);
       }
     );
   }
@@ -9717,7 +9699,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         error => {
           this.notif.onWarning('Advertencia', ERP_MESSAGES.VALOR_INGRESADO_FORMATO_INCORRECTO);
           const errorMessage = <any>error;
-          console.log(errorMessage);
         }
       );
     } else {
@@ -9773,7 +9754,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       },
       error => {
         const errorMessage = <any>error;
-        console.log(errorMessage);
       }
     );
   }
@@ -9822,7 +9802,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   }
   setDataBasicos() {
     const operacion = this.basicosFrom.get('operacion')?.value;
-    const tercerEdit = localStorage.getItem('TerceroNatura');
+    const tercerEdit = this.basicosFrom.get('IdTerceroPrincipal')?.value;
     if (operacion === '5') {// Se realiza el guardar del registro natural
       const tipoCliente = +this.basicosFrom.get('tipoCliente')?.value;
       const ocupacion = +this.basicosFrom.get('tipoOcupacion')?.value;
@@ -9915,7 +9895,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                       this.basicoSave.get('IdTipoEmpleo')?.setValue(this.basicosFrom.value.tipoEmpleo);
                       localStorage.setItem('laborSeleccionada', this.basicosFrom.value.tipoEmpleo);
                       this.basicoSave.get('NumPersCargo')?.setValue(this.basicosFrom.value.numeroPersonasCargo);
-                      console.log('Informacion del tutor seteado - ' + this.infoTutor);
                       if (this.infoTutor !== null && this.infoTutor !== undefined) {
                         if (this.infoTutor.LngTercero !== undefined) {
                           this.basicoSave.get('IdTutor')?.setValue(this.infoTutor.LngTercero);
@@ -10059,7 +10038,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                     this.basicoSave.get('IdTipoEmpleo')?.setValue(this.basicosFrom.value.tipoEmpleo);
                     localStorage.setItem('laborSeleccionada', this.basicosFrom.value.tipoEmpleo);
                     this.basicoSave.get('NumPersCargo')?.setValue(this.basicosFrom.value.numeroPersonasCargo);
-                    console.log('Informacion del tutor seteado - ' + this.infoTutor);
                     if (this.infoTutor !== null && this.infoTutor !== undefined) {
                       if (this.infoTutor.LngTercero !== undefined) {
                         this.basicoSave.get('IdTutor')?.setValue(this.infoTutor.LngTercero);
@@ -10234,7 +10212,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                     this.basicoSave.get('IdTipoEmpleo')?.setValue(this.basicosFrom.value.tipoEmpleo);
                     localStorage.setItem('laborSeleccionada', this.basicosFrom.value.tipoEmpleo);
                     this.basicoSave.get('NumPersCargo')?.setValue(this.basicosFrom.value.numeroPersonasCargo);
-                    console.log('Informacion del tutor seteado - ' + this.infoTutor);
                     if (this.infoTutor !== null && this.infoTutor !== undefined) {
                       if (this.infoTutor.LngTercero !== undefined) {
                         this.basicoSave.get('IdTutor')?.setValue(this.infoTutor.LngTercero);
@@ -10377,7 +10354,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                   this.basicoSave.get('IdTipoEmpleo')?.setValue(this.basicosFrom.value.tipoEmpleo);
                   localStorage.setItem('laborSeleccionada', this.basicosFrom.value.tipoEmpleo);
                   this.basicoSave.get('NumPersCargo')?.setValue(this.basicosFrom.value.numeroPersonasCargo);
-                  console.log('Informacion del tutor seteado - ' + this.infoTutor);
                   if (this.infoTutor !== null && this.infoTutor !== undefined) {
                     if (this.infoTutor.LngTercero !== undefined) {
                       this.basicoSave.get('IdTutor')?.setValue(this.infoTutor.LngTercero);
@@ -10545,7 +10521,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             this.basicoSave.get('IdTipoEmpleo')?.setValue(this.basicosFrom.value.tipoEmpleo);
             localStorage.setItem('laborSeleccionada', this.basicosFrom.value.tipoEmpleo);
             this.basicoSave.get('NumPersCargo')?.setValue(this.basicosFrom.value.numeroPersonasCargo);
-            console.log('Informacion del tutor seteado - ' + this.infoTutor);
             if (this.infoTutor !== null && this.infoTutor !== undefined) {
               if (this.infoTutor.LngTercero !== undefined) {
                 this.basicoSave.get('IdTutor')?.setValue(this.infoTutor.LngTercero);
@@ -10974,7 +10949,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
 
     },
     error: (error) => {
-      console.log(error);
     }
   });
 }
@@ -11272,7 +11246,6 @@ enviarWorkManager() {
                 },
                 error => {
                   const errorMessage = <any>error;
-                  console.log(errorMessage);
                 });
               } else {
                 this.cambiarTipoDocumento();
@@ -11316,7 +11289,6 @@ enviarWorkManager() {
                 },
                 error => {
                   const errorMessage = <any>error;
-                  console.log(errorMessage);
                 });
             } else {
                this.cambiarTipoDocumento();
@@ -12418,7 +12390,7 @@ enviarWorkManager() {
   setDataFinancieros() {
 
     const operacion = this.basicosFrom.get('operacion')?.value;
-    const tercerEdit = localStorage.getItem('TerceroNatura');
+    const tercerEdit = this.basicosFrom.get('IdTerceroPrincipal')?.value;
     const tipoEmpleo = this.basicosFrom.get('tipoEmpleo')?.value;
     const tipoCliente = this.basicosFrom.get('tipoCliente')?.value;
     if (operacion === '5') {
@@ -15782,8 +15754,7 @@ enviarWorkManager() {
         }
       }
     } else if (results === '1') {
-      console.log('Estado civil - consultado no seleccionado - Editando -' + this.estadoCivilSeleccionado);
-      if (this.estadoCivilSeleccionado === 25) {
+     if (this.estadoCivilSeleccionado === 25) {
         this.EnableUpdateConyugue = false;
         this.notif.onWarning('Advertencia', 'No se puede registrar el conyugue, para el estado civil seleccionado. ');
         this.conyugueForm.reset();
@@ -16105,7 +16076,6 @@ enviarWorkManager() {
         },
         error => {
           const errorMessage = <any>error;
-          console.log(errorMessage);
         }
       );
     }
@@ -18985,7 +18955,7 @@ enviarWorkManager() {
   }
 
   setDataReferencia() {
-    const tercerEdit = localStorage.getItem('TerceroNatura');
+    const tercerEdit = this.basicosFrom.get('IdTerceroPrincipal')?.value;
     const results = this.basicosFrom.get('operacion')?.value;
     let tipoVivienda = '';
     if (this.viviendaSeleccionada !== undefined && this.viviendaSeleccionada !== null
@@ -20719,7 +20689,7 @@ enviarWorkManager() {
 
   setDataSeguro() {
     const operacion = this.basicosFrom.get('operacion')?.value;
-    const tercerEdit = localStorage.getItem('TerceroNatura');
+    const tercerEdit = this.basicosFrom.get('IdTerceroPrincipal')?.value;
     if (operacion === '5') {
       this.allItemsFormSaves.tratamientoDto = {};
       this.allItemsFormSaves.segurosDto = {};
@@ -21098,7 +21068,6 @@ enviarWorkManager() {
           this.itemsSeguro.push(this.segurosForm.value);
           this.segurosForm.reset();
         });
-        console.log( "lista",  this.itemsSeguro)
       },
       error => {
         this.notif.onWarning('Advertencia',
@@ -21190,11 +21159,9 @@ enviarWorkManager() {
             this.operacion =  this.basicosFrom.get('operacion')?.value;
             this.basicosFrom.get('operacion')?.reset();
             const resulNatural = result;
-            console.log(resulNatural);
             if (resulNatural.Result !== null) {
               if (resulNatural.Result.dataWorkManager !== null && resulNatural.Result.dataWorkManager !== undefined) {
                 const valorWork = resulNatural.Result.dataWorkManager.indexOf('OK ----- True');
-                console.log(valorWork);
                 if ( valorWork < 0) {
                   Swal.fire({
                     title: 'Advertencia',
@@ -21215,9 +21182,7 @@ enviarWorkManager() {
                       this.clientesService.ReplicarWorkManager(this.itemWorkManagerInsert).subscribe(
                       resultWork => {
                       const resulNaturalWork = result;
-                      console.log(resulNaturalWork);
-                      const valorWorkNat = resulNaturalWork.Result.dataWorkManager.indexOf('OK ----- True');
-                      console.log(valorWorkNat);
+                      const valorWorkNat = resulNaturalWork.Result.dataWorkManager.indexOf('OK ----- True');                      
                           if (valorWorkNat < 0) {
                           Swal.fire({
                           title: 'Advertencia',
@@ -21370,13 +21335,11 @@ enviarWorkManager() {
     }  else {
       if (operacion ===  1) {
         this.CerrarCorrespondencia.nativeElement.click();
-        console.log('datos a guardar en contacto - ' + this.Correspondenciasform.value);
         this.clientesService.EditarCorrespondecia(tercero == null ? "" : tercero, this.Correspondenciasform.value.SeleccionCorrespondencia).subscribe(
           result => {
           });
       } else {
         this.CerrarCorrespondencia.nativeElement.click();
-        console.log('datos a guardar en contacto - ' + this.Correspondenciasform.value);
         this.clientesService.EditarCorrespondecia(tercero == null ? "" : tercero,  this.Correspondenciasform.value.SeleccionCorrespondencia).subscribe(
           result => {
           });
@@ -21507,7 +21470,6 @@ enviarWorkManager() {
       },
       error => {
         const errorMessage = <any>error;
-        console.log(errorMessage);
       }
     );
   }
@@ -24359,7 +24321,7 @@ enviarWorkManager() {
     const opera = this.basicosFrom.get('operacion')?.value;
     const objReingreso = new SolicitudReingresoModel();
     objReingreso.FechaReingreso = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
-    objReingreso.IdTercero = Number(localStorage.getItem('TerceroNatura'));
+    objReingreso.IdTercero = Number(this.basicosFrom.get('IdTerceroPrincipal')?.value);
     objReingreso.IdAsesor = data.lngTercero;
     this.GuardarLog(objReingreso, opera, 0, Number(localStorage.getItem('TerceroNatura')),11);
     this.clientesService.GuardarReingreso(objReingreso).subscribe(
@@ -25889,12 +25851,9 @@ enviarWorkManager() {
 
   ValidErrorForm(formulario: any) {
 
-    Object.keys(formulario.controls).forEach(field => { // {1}
-       console.log(field);
+    Object.keys(formulario.controls).forEach(field => { // {1}      
       const control = formulario.get(field);            // {2}
-       console.log(control);
       control.markAsTouched({ onlySelf: true });       // {3}
-       console.log(control.status);
     });
   }
 
@@ -26261,7 +26220,6 @@ PreCargarPais(val: number) {
       },
       error => {
         const errorMessage = <any>error;
-        console.log(errorMessage);
       }
     );
   }
