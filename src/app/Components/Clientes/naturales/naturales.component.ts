@@ -1654,7 +1654,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       this.formLockedRecursos = true;
       this.MarcarNoPreguntas();
       this.FormCambioEstado.reset();
-      localStorage.removeItem('TerceroNatura');
       this.basicosFrom.get('numHijos')?.setValue(0);
       this.basicosFrom.get('numHijosEstudian')?.setValue(0);
       this.laboralForm.get('NumPersonasCargo')?.setValue(0);
@@ -1829,7 +1828,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       this.bloqCiudadRef = true;
       this.bloqBarrio = true;
       this.cleanAdrees();
-      localStorage.removeItem('TerceroNatura');
       this.basicosFrom.get('estado')?.setValue(0);
       this.VolverArriba();
       this.removeActiveTab();
@@ -2953,7 +2951,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                 } else {
                   this.DescripcionBtn = 'Siguiente';
                   const fechaTabRetiro = this.fechasForm.get('fechaTabRetiro')?.value;
-                  const tercero = Number(localStorage.getItem('TerceroNatura'));
+                  const tercero = this.basicosFrom.get('IdTerceroPrincipal')?.value;
                   this.clientesService.GetDateRetiro(tercero).subscribe(
                     result => {
                       if (result === null && fechaTabRetiro === null) {
@@ -3082,7 +3080,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                   if (+relacion !== 15) {
                     if (this.RetiradoBloqueado === 0) { // DUDA POR QUE POR ESTO NO  DEJA HACER REINTEGRO
                       this.DescripcionBtn = 'Siguiente';
-                      const tercero = Number(localStorage.getItem('TerceroNatura'));
+                      const tercero = this.basicosFrom.get('IdTerceroPrincipal')?.value;
                       this.clientesService.GetDateReingreso(tercero).subscribe(
                         result => {
                           if (result === null) { // valida si el asociado ya tiene una solicitud de reingreso
@@ -4964,7 +4962,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       this.bloqCiudad = true;
       this.bloqDeparta = true;
       this.bloqDepartaExp = true;
-      localStorage.removeItem('TerceroNatura');
       this.notif.onWarning('Advertencia', 'Esta operación no está habilitada.');
       this.operacionEscogida = '';
     }
@@ -5205,13 +5202,13 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.validarTipoOperacion();
   }
   ActualizarFecha() {
-    this.GuardarLog('Tercer al que Actualizan - ' + localStorage.getItem('TerceroNatura'), 6, 0, Number(localStorage.getItem('TerceroNatura')),11);
+    this.GuardarLog('Tercer al que Actualizan - ' + this.basicosFrom.get('IdTerceroPrincipal')?.value, 6, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
     let TerceroNatura : string | null = this.basicosFrom.get('IdTerceroPrincipal')?.value;
     this.clientesService.EditarFechaModificacion(TerceroNatura).subscribe(
       resultFecha => {
         if (resultFecha) {
           this.notif.onSuccess('Exitoso','La fecha de actualización se cambió correctamente.');
-          this.AsesorModifica(Number(localStorage.getItem('TerceroNatura')).toString());
+          this.AsesorModifica(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value).toString());
           this.basicosFrom.get('operacion')?.reset();
           this.botonSiguiente.nativeElement.click();
           this.devolverTab(1);
@@ -5227,9 +5224,9 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.basicosFrom.get('operacion')?.reset();
   }
   CancelarSolictudRetiro() {
-    this.GuardarLog(localStorage.getItem('TerceroNatura'), 24, 0, Number(localStorage.getItem('TerceroNatura')),11);
+    this.GuardarLog(this.basicosFrom.get('IdTerceroPrincipal')?.value, 24, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
     const data = StorageSecurity.getData();
-    this.clientesService.CancelarSolicitudRetiro(localStorage.getItem('TerceroNatura'), data.lngTercero,
+    this.clientesService.CancelarSolicitudRetiro(this.basicosFrom.get('IdTerceroPrincipal')?.value, data.lngTercero,
       formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en')).subscribe(
         resultFecha => {
           if (resultFecha) {
@@ -10900,7 +10897,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         const dataUrl = await this.clientesService.blobToBase64(blob);
         this.currentHdvBase64 = dataUrl.split(',')[1];
         const strNumeroDocumento = this.basicosFrom.get('DocumentoBusqueda')?.value;
-        this.GuardarLog('Imprimir afiliación', 3, 0, Number(localStorage.getItem('TerceroNatura')), 11);
+        this.GuardarLog('Imprimir afiliación', 3, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value), 11);
       },
       (err) => {
         console.error(err);
@@ -10929,7 +10926,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
 
   EnviarHojaVidaWorkManager() {
 
-  const tercero = Number(localStorage.getItem('TerceroNatura'));
+  const tercero = Number(this.basicosFrom.get('IdTerceroPrincipal')?.value);
 
   this.clientesService.BuscarFechaActualizacion(tercero).subscribe({
     next: (result) => {
@@ -11304,7 +11301,7 @@ enviarWorkManager() {
         this.cambiarNombresApellidos();
       } else if (this.basicosFrom.value.operacion === '20') { // Cambio de oficina
         this.blockBtnBasico = true;
-        this.clientesService.TieneCuentas(Number(localStorage.getItem('TerceroNatura'))).subscribe(
+        this.clientesService.TieneCuentas(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value)).subscribe(
           resultCuenta => {
             if (!resultCuenta) {
               this.blockBtnBasico = false;
@@ -11397,7 +11394,7 @@ enviarWorkManager() {
         if (this.asesorForm.value.strCodigoAse !== '' && this.asesorForm.value.strCodigoAse !== null
           && this.asesorForm.value.strCodigoAse !== undefined) {
             if(this.asesorForm.value.strCodigoAse !== this.CedulaAsesor) {
-              this.EditarAsesor(Number(localStorage.getItem('TerceroNatura')).toString(), this.asesorForm.value.strCodigoAse);
+              this.EditarAsesor(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value).toString(), this.asesorForm.value.strCodigoAse);
               this.disableAsesorPpal = true;
             } else {
               this.blockBtnBasico = false;
@@ -12595,7 +12592,7 @@ enviarWorkManager() {
           this.allItemsEditNatural.financieroDto = this.allItemsFormFinanciero;
 
           if (this.cambioCivil) {
-            this.clientesService.EliminarConyugue(Number(localStorage.getItem('TerceroNatura')).toString()).subscribe(
+            this.clientesService.EliminarConyugue(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value).toString()).subscribe(
               result => {
                 this.itemsConyugue = [];
                 this.cambioCivil = false;
@@ -12682,7 +12679,7 @@ enviarWorkManager() {
         // si tiene tipo de empleo a empleado para advertile que debe eliminarlos
         this.allItemsEditNatural.financieroDto = this.allItemsFormFinanciero;
         if (this.cambioCivil) {
-          this.clientesService.EliminarConyugue(Number(localStorage.getItem('TerceroNatura')).toString()).subscribe(
+          this.clientesService.EliminarConyugue(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value).toString()).subscribe(
             result => {
               this.itemsConyugue = [];
               this.cambioCivil = false;
@@ -15330,11 +15327,11 @@ enviarWorkManager() {
       });
       let campoPasivoV = this.patrimonioForm.get('tlPasivo')?.value;
       if (campoPasivoV !== '' && campoPasivoV !== null && campoPasivoV !== 0) {
-        const terceroPasivo = Number(localStorage.getItem('TerceroNatura'));
+        const terceroPasivo = Number(this.basicosFrom.get('IdTerceroPrincipal')?.value);
         const valorPasivo = this.patrimonioForm.get('tlPasivo')?.value;
          this.GuardarLog('Se agrega o edita Total pasivos - ' + 'Tercero: ' + terceroPasivo + ' Valor: ' + valorPasivo,
-        this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
-        this.GuardarPasivo(Number(localStorage.getItem('TerceroNatura')), this.patrimonioForm.get('tlPasivo')?.value);
+        this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
+        this.GuardarPasivo(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value), this.patrimonioForm.get('tlPasivo')?.value);
       }
         // se valida si el cliente tiene egresos y un egreso por concepto de obligacion financiera
         campoPasivoV = this.patrimonioForm.get('tlPasivo')?.value;
@@ -16018,7 +16015,7 @@ enviarWorkManager() {
         this.VolverArriba();
       } else {
         if (this.conyugueViejo != null) {
-          this.EliminarConyugue(Number(localStorage.getItem('TerceroNatura')).toString());
+          this.EliminarConyugue(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value).toString());
           this.devolverTab(5);
           this.VolverArriba();
         } else {
@@ -20862,7 +20859,7 @@ enviarWorkManager() {
         this.notif.onWarning('Advertencia', 'Debe ingresar una fecha de actualización válida.');
       } else {
         this.tratamientoForm.get('FechaAceptacion')?.setValue(formatDate(fechaManual, 'yyyy-MM-dd HH:mm:ss', 'en'));
-        this.tratamientoForm.get('IdTercero')?.setValue(localStorage.getItem('TerceroNatura'));
+        this.tratamientoForm.get('IdTercero')?.setValue(this.basicosFrom.get('IdTerceroPrincipal')?.value);
         this.tratamientoForm.get('Acepto')?.setValue(true);
         this.tratamientoForm.get('fechaNoAceptacion')?.setValue('');
         this.tratamientoForm.get('IdAsesor')?.setValue(dataStor.lngTercero);
@@ -20886,7 +20883,7 @@ enviarWorkManager() {
         this.notif.onWarning('Advertencia', 'Debe ingresar una fecha de actualización válida.');
       } else {
         this.tratamientoForm.get('FechaAceptacion')?.setValue('');
-        this.tratamientoForm.get('IdTercero')?.setValue(localStorage.getItem('TerceroNatura'));
+        this.tratamientoForm.get('IdTercero')?.setValue(this.basicosFrom.get('IdTerceroPrincipal')?.value);
         this.tratamientoForm.get('Acepto')?.setValue(false);
         this.tratamientoForm.get('fechaNoAceptacion')?.setValue(formatDate(fechaManual, 'yyyy-MM-dd HH:mm:ss', 'en'));
         this.tratamientoForm.get('IdAsesor')?.setValue(dataStor.lngTercero);
@@ -21002,7 +20999,7 @@ enviarWorkManager() {
 
   GetHistorialLogSeguros() {
     this.itemsLogSeguro = [];
-    const tercerEdit =  localStorage.getItem('TerceroNatura') ?? '';
+    const tercerEdit =  this.basicosFrom.get('IdTerceroPrincipal')?.value ?? '';
     this.clientesService
       .GetHistoralLogSeguro(tercerEdit)
       .subscribe({
@@ -21246,7 +21243,7 @@ enviarWorkManager() {
                 ...logData.asociadosNaturalesDto,
                 RegimenTributario: 'No responsable'
               };
-              this.GuardarLog(logData, opera, 0, Number(localStorage.getItem('TerceroNatura')),11);
+              this.GuardarLog(logData, opera, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
               this.notif.onSuccess('Exitoso', 'El registro se realizó correctamente.');
               if (resulNatural.Result.asociadosNaturalesDto.IdRelacion !== 15) {
                 // si es diferente de tercero guarda el debito automatico si no no
@@ -21380,7 +21377,7 @@ enviarWorkManager() {
 
   //#region Metodos EditarTodo
   EditarBasicoFinanciero(updateNaturalBasico : any) {
-    this.GuardarLog(updateNaturalBasico, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
+    this.GuardarLog(updateNaturalBasico, this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
     this.clientesService.EditarBasicoFinanciero(updateNaturalBasico).subscribe(
       result => {
         if (result) {
@@ -21393,7 +21390,7 @@ enviarWorkManager() {
           $('#financieroTab').removeClass('active');
           $('#financieroTab').addClass('disableTab');
           this.notif.onSuccess('Exitoso', 'El registro se actualizó correctamente.');
-          this.AsesorModifica(Number(localStorage.getItem('TerceroNatura')).toString());
+          this.AsesorModifica(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value).toString());
         } else {
           this.notif.onWarning('Advertencia', 'El registro no se actualizó correctamente.');
         }
@@ -21405,12 +21402,12 @@ enviarWorkManager() {
   }
 
   EditarFinanciero(updateNatural : any) {
-    this.GuardarLog(updateNatural, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
+    this.GuardarLog(updateNatural, this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
     this.clientesService.EditarFinanciero(updateNatural).subscribe(
       result => {
         if (result) {
           this.notif.onSuccess('Exitoso', 'El registro se actualizó correctamente.');
-          this.AsesorModifica(Number(localStorage.getItem('TerceroNatura')).toString());
+          this.AsesorModifica(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value).toString());
         } else {
           this.notif.onWarning('Advertencia', 'El registro no se actualizó correctamente.');
         }
@@ -21423,7 +21420,7 @@ enviarWorkManager() {
 
   EditarContactos(updateContacto : any) {
     const tercero = this.basicosFrom.get('IdTerceroPrincipal')?.value;
-    this.GuardarLog(updateContacto, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')), 11);
+    this.GuardarLog(updateContacto, this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value), 11);
     this.clientesService.EditarContactos(updateContacto).subscribe(
       () => {
         this.notif.onSuccess('Exitoso', 'El registro se actualizó correctamente.');
@@ -21441,16 +21438,16 @@ enviarWorkManager() {
   }
 
   EditarActivos(updateActivos : any, tercero : string) {
-    this.GuardarLog('Se editan los activos - ' + JSON.stringify(updateActivos), this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
+    this.GuardarLog('Se editan los activos - ' + JSON.stringify(updateActivos), this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
     this.clientesService.EditarActivos(updateActivos,tercero).subscribe(
       result => {
-        const terceroPasivo = Number(localStorage.getItem('TerceroNatura'));
+        const terceroPasivo = Number(this.basicosFrom.get('IdTerceroPrincipal')?.value);
         const valorPasivo = this.patrimonioForm.get('tlPasivo')?.value;
         this.GuardarLog('Se edita o agrega Total pasivos - ' + 'Tercero: ' + terceroPasivo + ' Valor: ' + valorPasivo,
-        this.basicosFrom.get('operacion')?.value, 0,  Number(localStorage.getItem('TerceroNatura')),11);
-        this.GuardarPasivo(Number(localStorage.getItem('TerceroNatura')), this.patrimonioForm.get('tlPasivo')?.value);
+        this.basicosFrom.get('operacion')?.value, 0,  Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
+        this.GuardarPasivo(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value), this.patrimonioForm.get('tlPasivo')?.value);
         this.notif.onSuccess('Exitoso', 'El registro se actualizó correctamente.');
-        this.AsesorModifica(Number(localStorage.getItem('TerceroNatura')).toString());
+        this.AsesorModifica(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value).toString());
         this.EnableUpdatePatrimonio = false;
         this.formLockedHipoPigno = false;
         this.disableAfavor = true;
@@ -21475,11 +21472,11 @@ enviarWorkManager() {
   }
 
   EditarConyugue(updateConyugue : any) {
-    this.GuardarLog(updateConyugue, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
+    this.GuardarLog(updateConyugue, this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
     this.clientesService.EditarConyugue(updateConyugue).subscribe(
       result => {
         this.notif.onSuccess('Exitoso', 'El registro se actualizó correctamente.');
-        this.AsesorModifica(Number(localStorage.getItem('TerceroNatura')).toString());
+        this.AsesorModifica(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value).toString());
         this.EnableUpdateConyugue = false;
         this.limpiarFormularios(this.conyugueForm);
       },
@@ -21491,7 +21488,7 @@ enviarWorkManager() {
 
   EliminarConyugue(tercero : string) {
     this.GuardarLog('Elimino conyugue: ' + JSON.stringify(this.itemConyugueConsultado), this.basicosFrom.get('operacion')?.value, 0
-    , Number(localStorage.getItem('TerceroNatura')),11);
+    , Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
     this.clientesService.EliminarConyugue(tercero).subscribe(
       result => {
         this.notif.onSuccess('Exitoso', 'El registro se actualizó correctamente.');
@@ -21503,7 +21500,7 @@ enviarWorkManager() {
 
   EliminarLaborales(tercero : string) {
     this.GuardarLog('Elimino Laborales: ' + JSON.stringify(this.itemsLaboralesConsultados),
-    this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
+    this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
     this.clientesService.EliminarLaborales(tercero).subscribe(
       result => {
         this.notif.onSuccess('Exitoso', 'El registro se actualizó correctamente.');
@@ -21514,11 +21511,11 @@ enviarWorkManager() {
   }
 
   EditarLaboral(updateLaboral : any) {
-    this.GuardarLog(updateLaboral, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
+    this.GuardarLog(updateLaboral, this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
     this.clientesService.EditarLaboral(updateLaboral).subscribe(
       result => {
         this.notif.onSuccess('Exitoso', 'El registro se actualizó correctamente.');
-        this.AsesorModifica(Number(localStorage.getItem('TerceroNatura')).toString());
+        this.AsesorModifica(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value).toString());
         this.EnableUpdateLaboral = false;
         this.limpiarFormularios(this.laboralForm);
       },
@@ -21529,7 +21526,7 @@ enviarWorkManager() {
   }
 
   RegistrarLaboralEdit(updateLaboral : any) {
-    this.GuardarLog(updateLaboral, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
+    this.GuardarLog(updateLaboral, this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
     this.clientesService.AgregarLaboralEdit(updateLaboral).subscribe(
       result => {
         this.allItemsFormLaboralEdit = [];
@@ -21542,12 +21539,12 @@ enviarWorkManager() {
   }
 
   EditarReferencias(updateReferencia : any) {
-    this.GuardarLog(updateReferencia, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
+    this.GuardarLog(updateReferencia, this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
     this.clientesService.EditarReferencias(updateReferencia).subscribe(
       result => {
         this.referenciaForm.reset();
         this.notif.onSuccess('Exitoso', 'El registro se actualizó correctamente.');
-        this.AsesorModifica(Number(localStorage.getItem('TerceroNatura')).toString());
+        this.AsesorModifica(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value).toString());
         this.EnableUpdateReferencia = false;
         this.limpiarFormularios(this.referenciaForm);
       },
@@ -21558,12 +21555,12 @@ enviarWorkManager() {
   }
 
   EditarEntrevista(updateEntrevista : any) {
-    this.GuardarLog(updateEntrevista, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
+    this.GuardarLog(updateEntrevista, this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
     this.clientesService.EditarEntrevista(updateEntrevista).subscribe(
       result => {
         this.EnableUpdateEntrevista = false;
         this.notif.onSuccess('Exitoso', 'El registro se actualizó correctamente.');
-        this.AsesorModifica(Number(localStorage.getItem('TerceroNatura')).toString());
+        this.AsesorModifica(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value).toString());
       },
       error => {
         console.error('EditarConyugue - ' + error);
@@ -21601,7 +21598,7 @@ enviarWorkManager() {
   }
 
   EditarSeguros(updateSeguros : any) {
-    this.GuardarLog(updateSeguros, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
+    this.GuardarLog(updateSeguros, this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
     this.clientesService.EditarSeguros(updateSeguros).subscribe(
       result => {
         const tercero = this.basicosFrom.get('IdTerceroPrincipal')?.value;
@@ -21618,7 +21615,7 @@ enviarWorkManager() {
         this.getBakcSeguros();
         // this.basicosFrom.get('operacion')?.reset();
         this.notif.onSuccess('Exitoso', 'El registro se actualizó correctamente.');
-        this.AsesorModifica(Number(localStorage.getItem('TerceroNatura')).toString());
+        this.AsesorModifica(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value).toString());
         this.EnableUpdateSeguros = false;
         this.limpiarFormularios(this.segurosForm);
       },
@@ -21630,7 +21627,7 @@ enviarWorkManager() {
   }
 
   EditarTratamiento(updateTratamiento : any) {
-    this.GuardarLog(updateTratamiento, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
+    this.GuardarLog(updateTratamiento, this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
     this.tratamientoConsulta = updateTratamiento.Acepto;
     this.clientesService.EditarTratamiento(updateTratamiento).subscribe(
       result => {
@@ -21651,7 +21648,7 @@ enviarWorkManager() {
         this.siguienteOculto = true;
         this.VolverArriba();
         this.notif.onSuccess('Exitoso', 'El registro se actualizó correctamente.');
-        this.AsesorModifica(Number(localStorage.getItem('TerceroNatura')).toString());
+        this.AsesorModifica(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value).toString());
       },
       error => {
         console.error('EditarTratamiento - ' + error);
@@ -21661,7 +21658,7 @@ enviarWorkManager() {
 
   EditarOficina(tercero : string , oficina : string) {
     const dataOficina = 'tercero modificado - ' + tercero + ' oficina modificada' + oficina;
-    this.GuardarLog(dataOficina, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
+    this.GuardarLog(dataOficina, this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
     this.clientesService.EditarOficina(tercero, oficina).subscribe(
       result => {
         this.basicosFrom.get('operacion')?.reset();
@@ -21669,7 +21666,7 @@ enviarWorkManager() {
         this.devolverTab(1);
         this.blockBtnBasico = false;
         this.notif.onSuccess('Exitoso', 'El registro se actualizó correctamente.');
-        this.AsesorModifica(Number(localStorage.getItem('TerceroNatura')).toString());
+        this.AsesorModifica(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value).toString());
         this.ProOficina = '0';
         this.ProDescripcionOpe = ' ';
         this.OperacionMarcada = undefined;
@@ -21693,7 +21690,7 @@ enviarWorkManager() {
         asesor = 0;
       }
       const dataAsesor = 'Asesor externo modificado - ' + tercero + ' -' + asesor;
-      this.GuardarLog(dataAsesor, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
+      this.GuardarLog(dataAsesor, this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
       this.clientesService.EditarAsesorExterno(tercero, asesor == null ? "0" : asesor.toString()).subscribe(
         result => {
           this.basicosFrom.get('operacion')?.reset();
@@ -21716,7 +21713,7 @@ enviarWorkManager() {
           $('#fechasTab').addClass('disableTab');
           this.blockBtnBasico = false;
           this.notif.onSuccess('Exitoso', 'El registro se actualizó correctamente.');
-          this.AsesorModifica(Number(localStorage.getItem('TerceroNatura')).toString());
+          this.AsesorModifica(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value).toString());
           this.ProIdAsesorE = '0';
           this.ProDescripcionOpe = ' ';
           this.OperacionMarcada = undefined;
@@ -21733,7 +21730,7 @@ enviarWorkManager() {
         asesor = 0;
       }
       const dataAsesor = 'Asesor externo modificado - ' + tercero + ' -' + asesor;
-      this.GuardarLog(dataAsesor, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
+      this.GuardarLog(dataAsesor, this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
       this.clientesService.EditarAsesorExterno(tercero, asesor.toString()).subscribe(
         result => {
           this.basicosFrom.get('operacion')?.reset();
@@ -21756,7 +21753,7 @@ enviarWorkManager() {
           $('#fechasTab').addClass('disableTab');
           this.blockBtnBasico = false;
           this.notif.onSuccess('Exitoso', 'El registro se actualizó correctamente.');
-          this.AsesorModifica(Number(localStorage.getItem('TerceroNatura')).toString());
+          this.AsesorModifica(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value).toString());
           this.ProIdAsesorE = '0';
           this.ProDescripcionOpe = ' ';
           this.OperacionMarcada = undefined;
@@ -21783,7 +21780,7 @@ enviarWorkManager() {
         asesor = 0;
       }
       const dataAsesor = 'Asesor modificado - Tercero: ' + tercero + '  - Asesor:' + asesor;
-      this.GuardarLog(dataAsesor, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
+      this.GuardarLog(dataAsesor, this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
       this.clientesService.EditarAsesor(tercero, asesor.toString()).subscribe(
         result => {
           this.basicosFrom.get('operacion')?.reset();
@@ -21807,7 +21804,7 @@ enviarWorkManager() {
           $('#fechasTab').addClass('disableTab');
           this.blockBtnBasico = false;
           this.notif.onSuccess('Exitoso', 'El registro se actualizó correctamente.');
-          this.AsesorModifica(Number(localStorage.getItem('TerceroNatura')).toString());
+          this.AsesorModifica(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value).toString());
           this.ProAsesor = '0';
           this.ProDescripcionOpe = ' ';
           this.OperacionMarcada = undefined;
@@ -21824,7 +21821,7 @@ enviarWorkManager() {
         asesor = 0;
       }
       const dataAsesor = 'Asesor modificado - Tercero: ' + tercero + '  - Asesor:' + asesor;
-      this.GuardarLog(dataAsesor, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
+      this.GuardarLog(dataAsesor, this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
       this.clientesService.EditarAsesor(tercero, asesor.toString()).subscribe(
         result => {
           this.basicosFrom.get('operacion')?.reset();
@@ -21848,7 +21845,7 @@ enviarWorkManager() {
           $('#fechasTab').addClass('disableTab');
           this.blockBtnBasico = false;
           this.notif.onSuccess('Exitoso', 'El registro se actualizó correctamente.');
-          this.AsesorModifica(Number(localStorage.getItem('TerceroNatura')).toString());
+          this.AsesorModifica(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value).toString());
           this.ProAsesor = '0';
           this.ProDescripcionOpe = ' ';
           this.OperacionMarcada = undefined;
@@ -23595,10 +23592,10 @@ enviarWorkManager() {
     const resultPerfil = StorageSecurity.getData();
     const cambio = new CambioEstadoModel();
     cambio.IdEstado = this.basicosFrom.get('estado')?.value;
-    cambio.IdTercero = Number(localStorage.getItem('TerceroNatura'));
+    cambio.IdTercero = Number(this.basicosFrom.get('IdTerceroPrincipal')?.value);
     cambio.userWork = resultPerfil.Usuario;
     if (this.operacionesModel.idOperacion.toString() === '9') {
-      this.GuardarLog(cambio, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
+      this.GuardarLog(cambio, this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
       this.clientesService.CambiarEstadoNatural(cambio).subscribe(
         result => {
           if (result) {
@@ -23623,7 +23620,7 @@ enviarWorkManager() {
               $('#activoTab').removeClass('disableTab');
               this.blockBtnBasico = false;
               this.notif.onSuccess('Exitoso', 'El cambio de estado se realizó correctamente');
-              this.AsesorModifica(Number(localStorage.getItem('TerceroNatura')).toString());
+              this.AsesorModifica(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value).toString());
               this.BuscarNaturalesAll(this.DocumentoSolicitud);
               this.ProEstado = '0';
               this.ProDescripcionOpe = ' ';
@@ -23654,10 +23651,10 @@ enviarWorkManager() {
     const resultPerfil = StorageSecurity.getData();
     const cambio = new CambioEstadoModel();
     cambio.IdEstado = this.basicosFrom.get('estado')?.value;
-    cambio.IdTercero = Number(localStorage.getItem('TerceroNatura'));
+    cambio.IdTercero = Number(this.basicosFrom.get('IdTerceroPrincipal')?.value);
     cambio.userWork = resultPerfil.Usuario;
     if (this.operacionesModel.idOperacion.toString() === '47') {
-      this.GuardarLog(cambio, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
+      this.GuardarLog(cambio, this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
       this.clientesService.ActivarDocumentoBloqueado(cambio).subscribe(
         result => {
           if (result) {
@@ -23701,15 +23698,15 @@ enviarWorkManager() {
   cambiarEstadoAutomaticoNatural() {
     const cambio = new CambioEstadoModel();
     cambio.IdEstado = this.basicosFrom.get('estado')?.value;
-    cambio.IdTercero = Number(localStorage.getItem('TerceroNatura'));
-    this.GuardarLog(cambio, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
+    cambio.IdTercero = Number(this.basicosFrom.get('IdTerceroPrincipal')?.value);
+    this.GuardarLog(cambio, this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
     this.clientesService.CambiarEstadoNatural(cambio).subscribe(
       result => {
         if (result) {
           this.basicosFrom.get('operacion')?.reset();
           this.VolverArriba();
           this.notif.onSuccess('Exitoso', 'El cambio de estado se realizó correctamente');
-          this.AsesorModifica(Number(localStorage.getItem('TerceroNatura')).toString());
+          this.AsesorModifica(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value).toString());
         } else {
           this.notif.onWarning('Advertencia',
             'El cambio de estado no se realizó correctamentee - ' + result);
@@ -23728,7 +23725,7 @@ enviarWorkManager() {
     const relacion = +this.basicosFrom.get('tipoCliente')?.value;
     if (relacion !== this.relacionAnterior) {
       if (relacion === 15 && this.relacionAnterior === 5) { // relacion anterior asociado a Tercero
-        this.clientesService.TieneCuentas(Number(localStorage.getItem('TerceroNatura'))).subscribe(
+        this.clientesService.TieneCuentas(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value)).subscribe(
           resultCuenta => {
             if (!resultCuenta) {
               this.loading.hide();
@@ -23743,7 +23740,7 @@ enviarWorkManager() {
               this.blockBtnBasico = null;
             } else {
               this.cambioRelacionModel.idRelacion = +this.basicosFrom.get('tipoCliente')?.value;
-              this.cambioRelacionModel.idTercero = Number(localStorage.getItem('TerceroNatura'));
+              this.cambioRelacionModel.idTercero = Number(this.basicosFrom.get('IdTerceroPrincipal')?.value);
               this.cambioRelacionModel.userWork = resultPerfil.Usuario;
               this.cambioRelacionModel.IdOficina = resultPerfil.NumeroOficina;
               if (this.dataAsociados !== null && this.dataAsociados !== undefined) {
@@ -23752,7 +23749,7 @@ enviarWorkManager() {
                 this.cambioRelacionModel.idTutor = null;
               }
               this.cambioRelacionModel.idTipoDocumento = +this.basicosFrom.get('tipoDocumento')?.value;
-              this.GuardarLog(this.cambioRelacionModel, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
+              this.GuardarLog(this.cambioRelacionModel, this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
               this.clientesService.CambiarRelacion(this.cambioRelacionModel).subscribe(
                 result => {
                   this.loading.hide();
@@ -23762,7 +23759,7 @@ enviarWorkManager() {
                   this.notif.onSuccess('Exitoso', 'El cambio de relación se realizó correctamente',
                     );
                     this.notif.onWarning('Advertencia', 'Recuerde revisar y actualizar la fecha de Expedición.');
-                  this.AsesorModifica(Number(localStorage.getItem('TerceroNatura')).toString());
+                  this.AsesorModifica(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value).toString());
                   this.ProRelacion = '0';
                   this.ProIdTutor = '0';
                   this.ProNomTutor = '0';
@@ -23792,7 +23789,7 @@ enviarWorkManager() {
             }
           });
       } else if (relacion === 15 && this.relacionAnterior === 10) { // relacion anterior menor a Tercero
-        this.clientesService.TieneCuentas(Number(localStorage.getItem('TerceroNatura'))).subscribe(
+        this.clientesService.TieneCuentas(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value)).subscribe(
           resultCuenta => {
             if (!resultCuenta) {
               this.notif.onWarning('Advertencia', 'No se puede realizar el cambio de relación, el asociado tiene cuentas activas.');
@@ -23805,7 +23802,7 @@ enviarWorkManager() {
               this.loading.hide();
             } else {
               this.cambioRelacionModel.idRelacion = +this.basicosFrom.get('tipoCliente')?.value;
-              this.cambioRelacionModel.idTercero = Number(localStorage.getItem('TerceroNatura'));
+              this.cambioRelacionModel.idTercero = Number(this.basicosFrom.get('IdTerceroPrincipal')?.value);
               this.cambioRelacionModel.userWork = resultPerfil.Usuario;
               this.cambioRelacionModel.IdOficina = resultPerfil.NumeroOficina;
               if (this.dataAsociados !== null && this.dataAsociados !== undefined) {
@@ -23814,7 +23811,7 @@ enviarWorkManager() {
                 this.cambioRelacionModel.idTutor = null;
               }
               this.cambioRelacionModel.idTipoDocumento = +this.basicosFrom.get('tipoDocumento')?.value;
-              this.GuardarLog(this.cambioRelacionModel, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
+              this.GuardarLog(this.cambioRelacionModel, this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
               this.clientesService.CambiarRelacion(this.cambioRelacionModel).subscribe(
                 result => {
                   this.loading.hide();
@@ -23822,7 +23819,7 @@ enviarWorkManager() {
                   this.VolverArriba();
                   this.blockBtnBasico = false;
                   this.notif.onSuccess('Exitoso', 'El cambio de relación se realizó correctamente.' );
-                  this.AsesorModifica(Number(localStorage.getItem('TerceroNatura')).toString());
+                  this.AsesorModifica(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value).toString());
                   this.ProRelacion = '0';
                   this.ProIdTutor = '0';
                   this.ProNomTutor = '0';
@@ -23866,7 +23863,7 @@ enviarWorkManager() {
         } else {
           // proceso normal
           this.cambioRelacionModel.idRelacion = +this.basicosFrom.get('tipoCliente')?.value;
-          this.cambioRelacionModel.idTercero = Number(localStorage.getItem('TerceroNatura'));
+          this.cambioRelacionModel.idTercero = Number(this.basicosFrom.get('IdTerceroPrincipal')?.value);
           this.cambioRelacionModel.userWork = resultPerfil.Usuario;
           this.cambioRelacionModel.IdOficina = resultPerfil.NumeroOficina;
           if (this.dataAsociados !== null && this.dataAsociados !== undefined) {
@@ -23875,7 +23872,7 @@ enviarWorkManager() {
             this.cambioRelacionModel.idTutor = null;
           }
           this.cambioRelacionModel.idTipoDocumento = +this.basicosFrom.get('tipoDocumento')?.value;
-          this.GuardarLog(this.cambioRelacionModel, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
+          this.GuardarLog(this.cambioRelacionModel, this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
           this.clientesService.CambiarRelacion(this.cambioRelacionModel).subscribe(
             result => {
               this.loading.hide();
@@ -23883,7 +23880,7 @@ enviarWorkManager() {
               this.VolverArriba();
               this.blockBtnBasico = false;
               this.notif.onSuccess('Exitoso', 'El cambio de relación se realizó correctamente.');
-              this.AsesorModifica(Number(localStorage.getItem('TerceroNatura')).toString());
+              this.AsesorModifica(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value).toString());
               this.ProRelacion = '0';
               this.ProIdTutor = '0';
               this.ProNomTutor = '0';
@@ -23938,7 +23935,7 @@ enviarWorkManager() {
             this.loading.hide();
           } else {
             this.cambioRelacionModel.idRelacion = +this.basicosFrom.get('tipoCliente')?.value;
-            this.cambioRelacionModel.idTercero = Number(localStorage.getItem('TerceroNatura'));
+            this.cambioRelacionModel.idTercero = Number(this.basicosFrom.get('IdTerceroPrincipal')?.value);
             this.cambioRelacionModel.userWork = resultPerfil.Usuario;
             this.cambioRelacionModel.IdOficina = resultPerfil.NumeroOficina;
             if (this.dataAsociados !== null && this.dataAsociados !== undefined) {
@@ -23955,7 +23952,7 @@ enviarWorkManager() {
               this.loading.hide();
             } else {
               this.cambioRelacionModel.idTipoDocumento = +this.basicosFrom.get('tipoDocumento')?.value;
-              this.GuardarLog(this.cambioRelacionModel, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
+              this.GuardarLog(this.cambioRelacionModel, this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
               this.clientesService.CambiarRelacion(this.cambioRelacionModel).subscribe(
                 result => {
                   this.loading.hide();
@@ -23966,7 +23963,7 @@ enviarWorkManager() {
                     );
                   this.notif.onWarning('Advertencia', 'Debes actualizar el tipo y número de documento del asociado.',
                     );
-                  this.AsesorModifica(Number(localStorage.getItem('TerceroNatura')).toString());
+                  this.AsesorModifica(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value).toString());
                   this.disableFromTipoCliente = true;
                   this.disableFromTipoDocumento = true;
                   this.disbaleFromTutor = true;
@@ -24005,14 +24002,14 @@ enviarWorkManager() {
   cambiarTipoDocumento() {
     this.blockBtnBasico = true;
     const resultPerfil = StorageSecurity.getData();
-    this.cambioTipoDocumentoModel.idTercero = Number(localStorage.getItem('TerceroNatura'));
+    this.cambioTipoDocumentoModel.idTercero = Number(this.basicosFrom.get('IdTerceroPrincipal')?.value);
     this.cambioTipoDocumentoModel.idtipoDocumento = this.basicosFrom.get('tipoDocumento')?.value;
     this.cambioTipoDocumentoModel.Documento = this.basicosFrom.get('numeroDocumento')?.value;
     this.DocumentoSolicitud = this.basicosFrom.get('numeroDocumento')?.value;
     this.cambioTipoDocumentoModel.userWork = resultPerfil.Usuario;
     if (this.cambioTipoDocumentoModel.idtipoDocumento !== this.tipoDocumentoAnterior ||
       this.cambioTipoDocumentoModel.Documento !== this.documentoAnterior) {
-    this.GuardarLog(this.cambioTipoDocumentoModel, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
+    this.GuardarLog(this.cambioTipoDocumentoModel, this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
     this.clientesService.CambiarTipoDocumento(this.cambioTipoDocumentoModel).subscribe(
       result => {
         this.yaIngreso = false;
@@ -24036,7 +24033,7 @@ enviarWorkManager() {
         this.blockBtnBasico = false;
         this.notif.onSuccess('Exitoso', 'El cambio tipo y número de documento se realizó correctamente.',
           );
-        this.AsesorModifica(Number(localStorage.getItem('TerceroNatura')).toString());
+        this.AsesorModifica(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value).toString());
         this.ProTipoD = '0';
         this.ProDocumento = '0';
         this.ProDescripcionOpe = ' ';
@@ -24065,13 +24062,13 @@ enviarWorkManager() {
     } else {
       if(this.ApeViejo !== this.basicosFrom.get('primerApellido')?.value || this.segApeViejo !== this.basicosFrom.get('segundoApellido')?.value
        || this.PriVNomViejo !== this.basicosFrom.get('primerNombre')?.value || this.SegNomViejo !== this.basicosFrom.get('segundoNombre')?.value ) {
-        this.cambioNombresApellidosModel.idTercero = Number(localStorage.getItem('TerceroNatura'));
+        this.cambioNombresApellidosModel.idTercero = Number(this.basicosFrom.get('IdTerceroPrincipal')?.value);
         this.cambioNombresApellidosModel.primerNombre = this.basicosFrom.get('primerNombre')?.value;
         this.cambioNombresApellidosModel.segundoNombre = this.basicosFrom.get('segundoNombre')?.value;
         this.cambioNombresApellidosModel.primerApellido = this.basicosFrom.get('primerApellido')?.value;
         this.cambioNombresApellidosModel.segundoApellido = this.basicosFrom.get('segundoApellido')?.value;
         this.cambioNombresApellidosModel.userWork = resultPerfil.Usuario;
-        this.GuardarLog(this.cambioNombresApellidosModel, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
+        this.GuardarLog(this.cambioNombresApellidosModel, this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
         this.clientesService.CambiarNombreApellido(this.cambioNombresApellidosModel).subscribe(
           result => {
             this.basicosFrom.get('operacion')?.reset();
@@ -24096,7 +24093,7 @@ enviarWorkManager() {
             this.blockBtnBasico = false;
             this.notif.onSuccess('Exitoso', 'El cambio de nombres y apellidos se realizó correctamente.',
               );
-            this.AsesorModifica(Number(localStorage.getItem('TerceroNatura')).toString());
+            this.AsesorModifica(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value).toString());
             this.ProPrimerNombre = '0';
             this.ProSegundoNombre = '0';
             this.ProPrimerApellido = '0';
@@ -24125,11 +24122,11 @@ enviarWorkManager() {
     const ppes = new MarcarDesmarcarPPESModel();
     const dataUser = StorageSecurity.getData();
     ppes.IdAsesorMarca = dataUser.lngTercero;
-    ppes.IdTerceroMarca = Number(localStorage.getItem('TerceroNatura'));
+    ppes.IdTerceroMarca = Number(this.basicosFrom.get('IdTerceroPrincipal')?.value);
 
     if (this.operacionesModel.idOperacion.toString() === '8') {
       ppes.marca = false;
-      this.GuardarLog(ppes, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
+      this.GuardarLog(ppes, this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
       this.clientesService.MarcarDesmarcarPPES(ppes).subscribe(
         result => {
           if (result) {
@@ -24139,9 +24136,9 @@ enviarWorkManager() {
             this.blockBtnBasico = false;
             this.notif.onSuccess('Exitoso', 'La desmarcación lista PEPS se realizó correctamente.',
               );
-            this.AsesorModifica(Number(localStorage.getItem('TerceroNatura')).toString());
+            this.AsesorModifica(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value).toString());
             this.basicosFrom.get('publica')?.setValue(false);
-            this.clientesService.EditarEntrevistaPeps(Number(localStorage.getItem('TerceroNatura')), false, false, false, false , false).subscribe(
+            this.clientesService.EditarEntrevistaPeps(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value), false, false, false, false , false).subscribe(
               resultPeps => {
                 this.btnGuardarOculto = false;
                 this.siguienteOculto = true;
@@ -24197,7 +24194,7 @@ enviarWorkManager() {
     const ppes = new MarcarDesmarcarPPESModel();
     const dataUser = StorageSecurity.getData();
     ppes.IdAsesorMarca = dataUser.lngTercero;
-    ppes.IdTerceroMarca = Number(localStorage.getItem('TerceroNatura'));
+    ppes.IdTerceroMarca = Number(this.basicosFrom.get('IdTerceroPrincipal')?.value);
     this.disableCampos()
     if (this.operacionesModel.idOperacion.toString() === '7') {
       const respta1 = this.entrevistaForm.get('RPregunta20Si')?.value;
@@ -24214,11 +24211,11 @@ enviarWorkManager() {
           this.blockBtnBasico = null;
         } else {
             ppes.marca = true;
-            this.GuardarLog(ppes, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
+            this.GuardarLog(ppes, this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
             this.clientesService.MarcarDesmarcarPPES(ppes).subscribe(
               result => {
                 if (result) {
-                  this.clientesService.EditarEntrevistaPeps(Number(localStorage.getItem('TerceroNatura')),
+                  this.clientesService.EditarEntrevistaPeps(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),
                     respta1, respta2, respta3, respta4, respta5).subscribe(
                     resultPeps => {
                       this.GuardarListPeps(respta4);
@@ -24228,7 +24225,7 @@ enviarWorkManager() {
                       this.formBuscarLocked = true;
                       this.notif.onSuccess('Exitoso', 'La marcación lista PEPS se realizó correctamente.',
                         );
-                      this.AsesorModifica(Number(localStorage.getItem('TerceroNatura')).toString());
+                      this.AsesorModifica(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value).toString());
                       this.basicosFrom.get('publica')?.setValue(true);                      
                       this.btnTratamientoMarcar = false;
                       this.btnMarcarEntrevista = false;
@@ -24323,7 +24320,7 @@ enviarWorkManager() {
     objReingreso.FechaReingreso = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
     objReingreso.IdTercero = Number(this.basicosFrom.get('IdTerceroPrincipal')?.value);
     objReingreso.IdAsesor = data.lngTercero;
-    this.GuardarLog(objReingreso, opera, 0, Number(localStorage.getItem('TerceroNatura')),11);
+    this.GuardarLog(objReingreso, opera, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
     this.clientesService.GuardarReingreso(objReingreso).subscribe(
       resultReingre => {
         this.basicosFrom.get('operacion')?.reset();
@@ -24332,9 +24329,9 @@ enviarWorkManager() {
           });
         const cambio = new CambioEstadoModel();
         cambio.IdEstado = 5; // se cambia el estado a activo
-        cambio.IdTercero = Number(localStorage.getItem('TerceroNatura'));
+        cambio.IdTercero = Number(this.basicosFrom.get('IdTerceroPrincipal')?.value);
         cambio.userWork = data.Usuario;
-        this.GuardarLog(cambio, 9, 0, Number(localStorage.getItem('TerceroNatura')),11);
+        this.GuardarLog(cambio, 9, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
         this.clientesService.CambiarEstadoNatural(cambio).subscribe(
           resultCambio => {      
           });
@@ -24408,7 +24405,7 @@ enviarWorkManager() {
           this.objMotivoEnvio.CiudadExpedicion = resulMotivoEnvio.CiudadExpedicion;
           this.objMotivoEnvio.Empresa = resulMotivoEnvio.Empresa;
           this.motivoEnvioJson = JSON.stringify(this.objMotivoEnvio);
-          this.GuardarLog(this.objMotivo, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
+          this.GuardarLog(this.objMotivo, this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
           this.clientesService.GuardarRetiro(this.objMotivo).subscribe(
             result => {
               // aqui abrir el modal para imprimir
@@ -24422,7 +24419,7 @@ enviarWorkManager() {
               this.mostrarBtn = false;
               // AQUI BUSCAR DE NUEVO EL HISTORIAL DEL USUARIO
               this.BuscarNaturalesAll(this.DocumentoSolicitud);
-              // this.GetRetirosLog(Number(localStorage.getItem('TerceroNatura')));
+              // this.GetRetirosLog(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value));
             }, error => {
               this.motivoEnvioJson = null;
               const errorMessage = <any>error;
@@ -24454,7 +24451,7 @@ enviarWorkManager() {
         this.objMotivoEnvio.CiudadExpedicion = resulMotivoEnvio.CiudadExpedicion;
         this.objMotivoEnvio.Empresa = resulMotivoEnvio.Empresa;
         this.motivoEnvioJson = JSON.stringify(this.objMotivoEnvio);
-        this.GuardarLog(this.objMotivo, this.basicosFrom.get('operacion')?.value, 0, Number(localStorage.getItem('TerceroNatura')),11);
+        this.GuardarLog(this.objMotivo, this.basicosFrom.get('operacion')?.value, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
         this.clientesService.GuardarRetiro(this.objMotivo).subscribe(
           result => {
             this.ObservacionRetiro = false;
@@ -24467,7 +24464,7 @@ enviarWorkManager() {
             this.mostrarBtn = false;
             // AQUI BUSCAR DE NUEVO EL HISTORIAL DEL USUARIO
             this.BuscarNaturalesAll(this.DocumentoSolicitud);
-            // this.GetRetirosLog(Number(localStorage.getItem('TerceroNatura')));
+            // this.GetRetirosLog(Number(this.basicosFrom.get('IdTerceroPrincipal')?.value));
           }, error => {
             this.motivoEnvioJson = null;
             const errorMessage = <any>error;
