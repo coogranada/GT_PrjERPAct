@@ -1147,7 +1147,6 @@ this.userIdle.onTimeout().subscribe(() => {
 
       localStorage.removeItem('userName');
       localStorage.removeItem('dataUserConect');
-      localStorage.removeItem('TerceroNatura');
       localStorage.removeItem('Permisos');
 
       this.router.navigateByUrl('/Login');
@@ -1179,7 +1178,6 @@ this.userIdle.onTimeout().subscribe(() => {
       this.NombreOficinaActual = '';
       localStorage.removeItem('userName');
       localStorage.removeItem('dataUserConect');
-      localStorage.removeItem('TerceroNatura');
       localStorage.removeItem('Data')
       localStorage.clear();
     }, error => {

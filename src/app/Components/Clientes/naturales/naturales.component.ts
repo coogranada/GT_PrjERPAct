@@ -7078,7 +7078,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.disableFormEstado = true;
     this.disableForm = true;
     this.formTutorOculto = false;
-    localStorage.removeItem('TerceroNatura');
     this.MostrarAsesorExterno = false;
     this.asesorForm.reset();
     this.basicosFrom.reset();
@@ -8063,7 +8062,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.BlockEstado = true;
     this.AsessorNecesario = true;
     this.disablePEPS = true;
-    localStorage.removeItem('TerceroNatura');
     this.basicosFrom.get('estado')?.setValue(0);
     $('#basicoTab').removeClass('disableTab');
     $('#financieroTab').removeClass('disableTab');
@@ -8329,7 +8327,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.DesbloquearRespuesta6 = true;
     this.DesbloquearRespuesta14 = true;
     this.DesbloquearRespuesta17 = true;
-    localStorage.removeItem('TerceroNatura');
     this.basicosFrom.get('estado')?.setValue(0);
     $('#basicoTab').removeClass('disableTab');
     $('#financieroTab').removeClass('disableTab');
@@ -8427,7 +8424,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.disablePEPS = true;
     this.formLockedReconocimiento = true;
     this.formLockedRecursos = true;
-    localStorage.removeItem('TerceroNatura');
     $('#basicoTab').removeClass('disableTab');
     $('#financieroTab').removeClass('disableTab');
     $('#contactoTab').removeClass('disableTab');
@@ -22339,7 +22335,7 @@ enviarWorkManager() {
                       this.asesorForm.get('strCodigoAse')?.setValue(resultSeg[0].IdAsesor);
                       this.asesorForm.get('strNombreAse')?.setValue(resultSeg[0].Nombre);
                       this.objMotivoEnvio.NombreAsesor = this.NombreAsesor;
-                      localStorage.setItem('solicituRetiroJson', window.btoa(JSON.stringify(this.objMotivoEnvio)));
+                      StorageSecurity.saveItem('solicituRetiroJson',  this.objMotivoEnvio);
                     } else {
                       this.NombreAsesor = '';
                       this.CedulaAsesor = '';
@@ -22707,7 +22703,7 @@ enviarWorkManager() {
                       if (resultUnica !== null) {
                         this.laboralForm.get('NombreDrop')?.setValue(resultUnica);
                         this.objMotivoEnvio.Empresa = resultUnica.Nombre;
-                        localStorage.setItem('solicituRetiroJson', window.btoa(JSON.stringify(this.objMotivoEnvio)));
+                        StorageSecurity.saveItem('solicituRetiroJson',  this.objMotivoEnvio);
                         if((this.dataCargos != undefined))
                           this.dataCargos.forEach((elementCargos: any) => {
                             if (elementCargos.Clase === elementLaboral.IdCargo) {
@@ -22747,7 +22743,7 @@ enviarWorkManager() {
                   this.clientesService.BuscarNaturalLaboral(elementLaboral.IdEmpresa).subscribe(
                     resultTerc => {
                       this.laboralForm.get('NombreDrop')?.setValue(resultTerc);
-                      localStorage.setItem('solicituRetiroJson', window.btoa(JSON.stringify(this.objMotivoEnvio)));
+                      StorageSecurity.saveItem('solicituRetiroJson',  this.objMotivoEnvio);
                       this.dataCargos.forEach((elementCargos: any) => {
                         if (elementCargos.Clase === elementLaboral.IdCargo) {
                           this.laboralForm.get('cargo')?.setValue(elementCargos);
@@ -23465,7 +23461,7 @@ enviarWorkManager() {
             this.GetReingresosLog(result.asociadosNaturalesDto.IdTercero);
 
             this.RetiradoBloqueado = +result.GetResultCliNaturalesGenTerceros;
-            localStorage.setItem('solicituRetiroJson', window.btoa(JSON.stringify(this.objMotivoEnvio)));
+            StorageSecurity.saveItem('solicituRetiroJson',  this.objMotivoEnvio);
             //#endregion
     
           } else {
@@ -24386,8 +24382,8 @@ enviarWorkManager() {
           this.mostarErrorMotivoDescripcion = false;
           // aqui realizar el registro
           const resultPerfil = StorageSecurity.getData();
-          let motivo : string | null = localStorage.getItem('solicituRetiroJson')
-          const resulMotivoEnvio = JSON.parse(window.atob(motivo == null ? "" : motivo));
+          const motivo: string | null = StorageSecurity.getItem('solicituRetiroJson');
+          const resulMotivoEnvio = motivo ? JSON.parse(motivo) : null;
           this.objMotivo.DescripcionOtro = this.solicitudRetiroForm.get('ObservacionMotivo')?.value;
           this.objMotivo.FechaRetiro = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
           this.objMotivo.IdTercero = this.basicosFrom.get('IdTerceroPrincipal')?.value;
@@ -24431,8 +24427,8 @@ enviarWorkManager() {
         this.mostarErrorMotivoDescripcion = false;
         // aqui realizar el registro
         const resultPerfil = StorageSecurity.getData();
-        let motivo : string | null = localStorage.getItem('solicituRetiroJson');
-        const resulMotivoEnvio = JSON.parse(window.atob(motivo == null ? "" : motivo));
+        const motivo: string | null = StorageSecurity.getItem('solicituRetiroJson');
+        const resulMotivoEnvio = motivo ? JSON.parse(motivo) : null;
         this.objMotivo.DescripcionOtro = this.solicitudRetiroForm.get('ObservacionMotivo')?.value;
         this.objMotivo.DescripcionOtro = this.solicitudRetiroForm.get('ObservacionMotivo')?.value;
         this.objMotivo.FechaRetiro = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
@@ -24529,8 +24525,7 @@ enviarWorkManager() {
     const operacion = new FormControl('', [Validators.required]);
     const tipoCliente = new FormControl('', [Validators.required]);
     const tipoDocumento = new FormControl('', [Validators.required]);
-    const numeroDocumento = new FormControl('', [Validators.required, Validators.minLength(3),
-    Validators.maxLength(15), Validators.pattern('^[0-9]*')]);
+    const numeroDocumento = new FormControl('', [Validators.required, Validators.pattern('[0-9a-zA-Z]{3,15}')]);
 
     const fechaExpedicion = new FormControl('', [Validators.required]);
     const ciudadExpedicion = new FormControl('', [Validators.required]);

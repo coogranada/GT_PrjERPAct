@@ -6294,7 +6294,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           this.mostarErrorMotivoDescripcion = false;
           // aqui realizar el registro
           const resultPerfil = StorageSecurity.getData();   
-          let solucitudR = localStorage.getItem('solicituRetiroJson');
+          let solucitudR = StorageSecurity.getItem('solicituRetiroJson')
           const resulMotivoEnvio = JSON.parse(window.atob(solucitudR == null ? "" : solucitudR));
           this.objMotivo.Descripcion = this.solicitudRetiroForm.get('ObservacionMotivo')?.value;
           this.objMotivo.FechaRetiro = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
@@ -6341,7 +6341,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         this.solicitudRetiroForm?.reset();
         this.mostarErrorMotivoDescripcion = false;
         const resultPerfil = StorageSecurity.getData();     
-        let solucitudR = localStorage.getItem('solicituRetiroJson');
+        let solucitudR = StorageSecurity.getItem('solicituRetiroJson')
         const resulMotivoEnvio = JSON.parse(window.atob(solucitudR == null ? "" : solucitudR));
         // aqui realizar el registro
        
@@ -6834,7 +6834,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
               this.infoJuridicoComponent.infoJuridicoFrom.get('NombreAsesorExt')?.setValue(elements.Nombre);
               this.infoJuridicoComponent.infoJuridicoFrom.get('CodigoAsesorExt')?.setValue(elements.intIdAsesor);
               this.objMotivoEnvio.NombreAsesor = elements.Nombre;
-              localStorage.setItem('solicituRetiroJson', window.btoa(JSON.stringify(this.objMotivoEnvio)));
+              StorageSecurity.saveItem('solicituRetiroJson',  this.objMotivoEnvio);
             });
           } else {
             this.infoJuridicoComponent.infoJuridicoFrom.get('NombreAsesorExt')?.setValue('');
@@ -6890,7 +6890,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     this.entrevistaComponent.tratamientoForm.get('fechaTrataManual')?.setValue(
       new DatePipe('en-CO').transform(new Date(dataBasico.FechaExencionGMF), 'yyyy/MM/dd HH:mm:ss'));
 
-    localStorage.setItem('solicituRetiroJson', window.btoa(JSON.stringify(this.objMotivoEnvio)));
+    StorageSecurity.saveItem('solicituRetiroJson',  this.objMotivoEnvio);
   }
 
   CargarDatosFormularioBasicoInicial(data : any, rest : any) {
@@ -7026,7 +7026,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
               }
             }
           });
-          localStorage.setItem('solicituRetiroJson', window.btoa(JSON.stringify(this.objMotivoEnvio)));
+          StorageSecurity.saveItem('solicituRetiroJson',  this.objMotivoEnvio);
         } else {
           
           if (elementData.IdCiudad !== null && elementData.IdCiudad !== undefined && elementData.IdCiudad !== ''
@@ -7184,7 +7184,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       this.objMotivoEnvio.Telefono = '';
       this.objMotivoEnvio.TelefonoEmpresa = '';
     }
-    localStorage.setItem('solicituRetiroJson', window.btoa(JSON.stringify(this.objMotivoEnvio)));
+    StorageSecurity.saveItem('solicituRetiroJson',  this.objMotivoEnvio);
   }
 
   CargarDataFormularioPatrimonio(data : any) {
