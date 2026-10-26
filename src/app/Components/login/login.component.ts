@@ -243,12 +243,12 @@ export class LoginComponent implements OnInit {
               this.clientesGetListService.GetParentescos().subscribe(
                 async (result: any) => {
 
-                  sessionStorage.setItem(
+                  localStorage.setItem(
                     'token',
                     this.dataUser.token
                   );
 
-                  sessionStorage.setItem(
+                  localStorage.setItem(
                     'refreshToken',
                     this.dataUser.refreshToken
                   );

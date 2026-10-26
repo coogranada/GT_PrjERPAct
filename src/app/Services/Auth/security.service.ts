@@ -9,11 +9,11 @@ export class SecurityService {
   constructor(private router: Router) { }
 
   GetToken() {
-    return sessionStorage.getItem('token');
+    return localStorage.getItem('token');
   }
 
   GetRefreshToken() {
-    return sessionStorage.getItem('refreshToken');
+    return localStorage.getItem('refreshToken');
   }
 
   GoLogin() {

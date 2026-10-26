@@ -9895,7 +9895,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                           this.basicoSave.get('IdTutor')?.setValue(this.infoTutor.lngTercero);
                         }
                       }
-                      this.basicoSave.get('IdEPS')?.setValue(this.BasicosEdit.value.EditEPS.IdEPS);
+                      this.basicoSave.get('IdEPS')?.setValue(this.BasicosEdit.value.EditEPS?.IdEPS);
                       this.basicoSave.get('IdMotivoIngreso')?.setValue(this.basicosFrom.value.motivoIngreso);
                       this.basicoSave.get('PersPEP')?.setValue(this.basicosFrom.value.publica);
                       this.basicoSave.get('FechaCreacion')?.setValue(formatDate(new Date(), 'yyyy-MM-dd HH:mm:ss', 'en'));
@@ -10038,7 +10038,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                         this.basicoSave.get('IdTutor')?.setValue(this.infoTutor.lngTercero);
                       }
                     }
-                    this.basicoSave.get('IdEPS')?.setValue(this.BasicosEdit.value.EditEPS.IdEPS);
+                    this.basicoSave.get('IdEPS')?.setValue(this.BasicosEdit.value.EditEPS?.IdEPS);
                     this.basicoSave.get('IdMotivoIngreso')?.setValue(this.basicosFrom.value.motivoIngreso);
                     this.basicoSave.get('PersPEP')?.setValue(this.basicosFrom.value.publica);
                     this.basicoSave.get('FechaCreacion')?.setValue(formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss', 'en'));
@@ -10212,7 +10212,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                         this.basicoSave.get('IdTutor')?.setValue(this.infoTutor.lngTercero);
                       }
                     }
-                    this.basicoSave.get('IdEPS')?.setValue(this.BasicosEdit.value.EditEPS.IdEPS);
+                    this.basicoSave.get('IdEPS')?.setValue(this.BasicosEdit.value.EditEPS?.IdEPS);
                     this.basicoSave.get('IdMotivoIngreso')?.setValue(this.basicosFrom.value.motivoIngreso);
                     this.basicoSave.get('PersPEP')?.setValue(this.basicosFrom.value.publica);
                     this.basicoSave.get('FechaCreacion')?.setValue(formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss', 'en'));
@@ -10354,7 +10354,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                       this.basicoSave.get('IdTutor')?.setValue(this.infoTutor.lngTercero);
                     }
                   }
-                  this.basicoSave.get('IdEPS')?.setValue(this.BasicosEdit.value.EditEPS.IdEPS);
+                  this.basicoSave.get('IdEPS')?.setValue(this.BasicosEdit.value.EditEPS?.IdEPS ?? null);
                   this.basicoSave.get('IdMotivoIngreso')?.setValue(this.basicosFrom.value.motivoIngreso);
                   this.basicoSave.get('PersPEP')?.setValue(this.basicosFrom.value.publica);
                   this.basicoSave.get('FechaCreacion')?.setValue(formatDate(new Date(), 'yyyy-MM-dd hh:mm:ss', 'en'));
@@ -21233,7 +21233,6 @@ enviarWorkManager() {
               this.DesbloquearRespuesta6 = true;
               this.DesbloquearRespuesta14 = true;
               this.DesbloquearRespuesta17 = true;
-              localStorage.setItem('TerceroNatura', resulNatural.Result.tercerosDto.IdTercero);
               const logData = resulNatural.Result;
               logData.asociadosNaturalesDto = {
                 ...logData.asociadosNaturalesDto,
@@ -22068,8 +22067,7 @@ enviarWorkManager() {
             this.GetTipoOcupacion();
             setTimeout(() => {
               this.basicosFrom.get('tipoOcupacion')?.setValue(this.basicosFrom.get('tipoOcupacion')?.value);
-            }, 1000);
-            localStorage.setItem('TerceroNatura', result.asociadosNaturalesDto.IdTercero);
+            }, 1000);           
             this.idTerceroConsulta = result.asociadosNaturalesDto.IdTercero;
             this.basicosFrom.get('metodo')?.setValue(result.asociadosNaturalesDto.MetodoConocio);
             this.basicosFrom.get('tipoDocumento')?.setValue(result.tercerosDto.IdTipoDocumento);
