@@ -87,8 +87,9 @@ export class DiferenciasSaldosComponent implements OnInit {
 
   ConsultarDiferencias() {
     this.loading.show();
+    const DatosUsuario = StorageSecurity.getData() || {};
     this.btnBotonesIniciales = false;
-    this.diferenciasSaldosFrom.get('Usuario')?.setValue(this.DatosUsuario.Usuario);
+    this.diferenciasSaldosFrom.get('Usuario')?.setValue(DatosUsuario.Usuario);
     this.diferenciasSaldosService.ConsultarDiferencias(this.diferenciasSaldosFrom.value).subscribe(
       result => {
         this.btnBotonesIniciales = true;
