@@ -52,8 +52,7 @@ export class DiferenciasSaldosComponent implements OnInit {
     this.validarFormulario();
     this.ObtenerDatosUsuario();
     const DatosUsuario = StorageSecurity.getData() || {};
-
-    this.loginService.GetSesionXUsuario(this.DatosUsuario.IdUsuario).subscribe(
+    this.loginService.GetSesionXUsuario(DatosUsuario.IdUsuario).subscribe(
       result => {
         if (!result.Estado) {
           this.router.navigateByUrl('/Login');
