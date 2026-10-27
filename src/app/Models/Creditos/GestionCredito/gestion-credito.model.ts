@@ -1,4 +1,4 @@
-import { FormControl } from "@angular/forms"
+import { FormControl, FormGroup } from "@angular/forms"
 import {  FormaPagoEnum, GarantiaEnum, PeriodoPagoEnum, TipoSistemas } from "../../Productos/cartera/gestion-credito.enum";
 import { CriterioBusquedaAsesoria } from "./gestion-credito-enum";
 
@@ -49,6 +49,11 @@ export interface NegociacionForm {
     indicador: FormControl<string>;
     puntos: FormControl<number | null>;
     // cuota: FormControl<number | null>;
+}
+
+export interface ProductoCredito {
+    idProducto: number;
+    DescripcionProducto: string;
 }
 
 export interface Asesor {
@@ -178,4 +183,28 @@ export interface SaldosVigentesResponse {
 
   intLinea: number;
   lngIdCuenta: number;
+}
+
+export interface InfoAsociadoForm {
+    idTipoDocumento: FormControl<number | null>;
+    tipoDocumento: FormControl<string>;
+    primerApellido: FormControl<string>;
+    segundoApellido: FormControl<string>;
+    primerNombre: FormControl<string>;
+    segundoNombre: FormControl<string>;
+    celular: FormControl<string>;
+    correo: FormControl<string>;
+    canalesContacto: FormGroup<CanalesContactoForm>;
+    peso: FormControl<number | null>;
+    talla: FormControl<number | null>;
+}
+
+export interface CanalesContactoForm {
+    canalCorreo: FormControl<boolean>;
+    canalMensajeTexto: FormControl<boolean>;
+    canalWhatsapp: FormControl<boolean>;
+    canalTelPersonal: FormControl<boolean>;
+    canalTelCelular: FormControl<boolean>;
+    canalVisita: FormControl<boolean>;
+    canalNotificacion: FormControl<boolean>;
 }

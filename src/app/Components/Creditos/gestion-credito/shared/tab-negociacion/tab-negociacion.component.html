@@ -2,7 +2,7 @@
 
 
     <div class="row row-margin">
-        <div class="col-xs-12 col-lg-4">
+        <!-- <div class="col-xs-12 col-lg-4">
             <div>
                 <label for="producto" class="textNegrilla">Producto:</label>
                 <span class="text-danger"> *</span>
@@ -15,12 +15,43 @@
                     <input type="text" class="form-control" formControlName="producto">
                 </div>
                 <div class="col-xs-1 col-lg-1">
-                    <button type="button" class="btn Gt-btn-verde btn-icon" [disabled]="productoBtnFlag">
+                    <button type="button" class="btn Gt-btn-verde btn-icon" [disabled]="productoBtnDisabled">
                         <i class="icon-search4"></i>
                     </button>
                 </div>
             </div>
-        </div>
+        </div> -->
+
+        <!-- <app-input-busqueda
+            label="Producto"
+            [requerido]="true"
+            titulo="Productos"
+            [codigoControl]="formNegociacion.controls.idProducto"
+            [descripcionControl]="formNegociacion.controls.producto"
+            [items]="[]"
+            [columns]="[]"
+            (searchCode)="buscarAsesorExternoCodigo($event)"
+            (searchText)="buscarAsesorExternoNombre($event)"
+            (selected)="mapearAsesorExterno($event)" 
+        /> -->
+
+        <app-input-busqueda
+            label="Producto"
+            [requerido]="true"
+            titulo="Productos"
+            [codigoControl]="formNegociacion.controls.idProducto"
+            [descripcionControl]="formNegociacion.controls.producto"
+            [columns]="columnasBusquedaProducto"
+            codigoField="idProducto"
+            descripcionField="descripcionProducto"
+            [buscarPorCodigoObs]="buscarProductosPorCodigo"
+            [buscarPorDescripcionObs]="buscarProductosPorNombre"
+            (selected)="onProductoSeleccionado($event)" 
+            [disabled]="false"
+            [mensajeNoEncontrado]="mensajeProductoNoEncontrado"
+            [permitirBusquedaVacia]="true"
+        />
+
 
         <div class="col-xs-12 col-lg-4">
             <div>
@@ -35,7 +66,7 @@
                     <input type="text" class="form-control" formControlName="linea">
                 </div>
                 <div class="col-xs-1 col-lg-1">
-                    <button type="button" class="btn Gt-btn-verde btn-icon" [disabled]="lineaBtnFlag">
+                    <button type="button" class="btn Gt-btn-verde btn-icon" [disabled]="lineaBtnDisabled">
                         <i class="icon-search4"></i>
                     </button>
                 </div>
@@ -199,7 +230,7 @@
                     [textoBotonConfirmar]="'Guardar'" 
                     #modalGarantias
                     [datosCuenta]="datosCuenta"
-                    [SaldoCapital]="formNegociacion.controls.monto.value ?? 0"
+                    [SaldoCapital]="negF.monto.value ?? 0"
                     [listGarantiasDisponiblesDeudor]="listGarantiasDisponiblesDeudor"
                     [listGarantiasDisponiblesCodeudor]="[]"
                     [garantiasCompartidasBackendInput]="garantiasCompartidasBackend"
@@ -230,7 +261,7 @@
                     <input type="text" class="form-control" formControlName="tipoGarantia">
                 </div>
                 <div class="col-xs-1 col-lg-1">
-                    <button type="button" class="btn Gt-btn-verde btn-icon" [disabled]="tipoGarantiaBtnFlag">
+                    <button type="button" class="btn Gt-btn-verde btn-icon" [disabled]="tipoGarantiaBtnDisabled">
                         <i class="icon-search4"></i>
                     </button>
                 </div>
@@ -254,7 +285,7 @@
 
         <div class="col-lg-1"></div>
 
-        <div class="col-lg-4">
+        <!-- <div class="col-lg-4">
             <div>
                 <label for="asesorExterno" class="textNegrilla">Asesor externo:</label>
             </div>
@@ -264,12 +295,12 @@
                         (blur)="buscarAsesorExternoCodigo($event)" (input)="onIdAsesorInput()" appSoloNumero>
                 </div>
                 <div class="col-xs-7 col-lg-7">
-                    <input type="text" class="form-control" formControlName="nombreAsesorExterno"
+                    <input type="text" class="form-control pmayuscula" formControlName="nombreAsesorExterno"
                         (input)="onNombreAsesorInput()">
                 </div>
                 <div class="col-xs-1 col-lg-1">
                     <button #searchButton type="button" class="btn Gt-btn-verde btn-icon"
-                        (click)="buscarAsesorExternoNombre()" [disabled]="asesorExtBtnFlag">
+                        (click)="buscarAsesorExternoNombre()" [disabled]="asesorExtBtnDisabled">
                         <i class="icon-search4"></i>
                     </button>
                 </div>
@@ -310,7 +341,25 @@
                 <input type="hidden" #modalAsesoresExterno data-toggle="modal" data-target="#modalAsesoresExterno"
                     data-popup="tooltip" data-trigger="hover" data-placement="top">
             </div>
-        </div>
+        </div> -->
+    
+    
+        <app-input-busqueda
+            label="Asesor Externo"
+            [requerido]="true"
+            titulo="Asesor Externo"
+            [codigoControl]="negF.idAsesorExterno"
+            [descripcionControl]="negF.nombreAsesorExterno"
+            [columns]="columnasAsesorExterno"
+            codigoField="intIdAsesor"
+            descripcionField="Nombre"
+            [buscarPorCodigoObs]="buscarAsesorExtPorCodigo"
+            [buscarPorDescripcionObs]="buscarAsesorExtPorNombre"
+            (selected)="mapearAsesorExterno($event)" 
+            [disabled]="false"
+            [mensajeNoEncontrado]="mensajeAsesorExtNoEncontrado"
+        />        
+    
     </div>
 
     <div class="row row-margin"></div>
@@ -393,7 +442,7 @@
                 <div class="">Valor préstamo</div>
                 <div class="textNegrilla total-item-text">
                     @if(idAsesoria()) {
-                    {{ formNegociacion.controls.monto.value | number:'1.2-2' }}
+                    {{ negF.monto.value | number:'1.2-2' }}
                     } @else {
                     0.00
                     }
