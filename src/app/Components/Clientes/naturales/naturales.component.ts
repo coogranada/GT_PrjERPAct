@@ -21238,7 +21238,7 @@ enviarWorkManager() {
                 ...logData.asociadosNaturalesDto,
                 RegimenTributario: 'No responsable'
               };
-              this.GuardarLog(logData, opera, 0, Number(this.basicosFrom.get('IdTerceroPrincipal')?.value),11);
+              this.GuardarLog(logData, opera, 0, Number(resulNatural.Result.tercerosDto.IdTercero),11);
               this.notif.onSuccess('Exitoso', 'El registro se realizó correctamente.');
               if (resulNatural.Result.asociadosNaturalesDto.IdRelacion !== 15) {
                 // si es diferente de tercero guarda el debito automatico si no no
