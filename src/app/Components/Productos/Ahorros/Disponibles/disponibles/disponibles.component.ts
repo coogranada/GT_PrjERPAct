@@ -1210,6 +1210,7 @@ export class DisponiblesComponent implements OnInit {
             const diferenciaEnDias = this.calcularDiferenciaEnDias(fechaHoy, fechaActualiza);
 
             if (diferenciaEnDias <= 180) { 
+          //AQUI
         if (this.DisponibleForm.get('CupoUtilizado')?.value != null && this.DisponibleForm.get('CupoUtilizado')?.value > 0) {
           this.notif.warning('Advertencia', ' Cuenta con saldo en cupo utilizado.', ConfiguracionNotificacion.configRightTop);
           this.DisponibleOperacionFrom.get('Codigo')?.reset();
@@ -6595,6 +6596,21 @@ export class DisponiblesComponent implements OnInit {
             this.AsignarCupo = true;
             this.loading.hide();
             this.BloquearAsociado = false;
+            //AQUI
+            // if (this.garantiasAgregar?.length > 0) {
+            //   this.garantiasAgregar.forEach((garantia: any) => {
+              
+            //     this.DisponiblesServices
+            //       .GuardarGarantiaCTD(
+            //         result.IdCuentaCupo,
+            //         garantia.Consecutivo
+            //       )
+            //       .subscribe();
+                
+            //   });
+            
+            // }
+
             this.notif.success('Exitoso', 'El asignar cupo se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
             this.accionSeleccionada = false;
             this.btnGuardar = true;

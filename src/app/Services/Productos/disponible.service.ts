@@ -361,6 +361,16 @@ export class DisponiblesService {
         return this._http.get<GarantiaRealAsignada[]>(this.url);
     }
     
+    GuardarGarantiaCTD(idCuenta: number, idGarantia: number): Observable<any> {
+        this.url = `${this.environment.Url}/GuardarGarantiaCTD`;
+
+        const params = new HttpParams()
+            .set('idCuenta', idCuenta.toString())
+            .set('idGarantia', idGarantia.toString());
+
+        return this._http.post<any>(this.url, null, { params });
+    }
+    
 }
 
 
