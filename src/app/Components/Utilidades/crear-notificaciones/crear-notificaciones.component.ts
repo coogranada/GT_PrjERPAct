@@ -263,7 +263,8 @@ export class CrearNotificacionesComponent implements OnInit {
 
   CrearNotificacion() {
     this.loading.show();
-    this.notificacionesFrom.get('Usuario')?.setValue(this.DatosUsuario.Usuario);
+    const DatosUsuario = StorageSecurity.getData() || {};
+    this.notificacionesFrom.get('Usuario')?.setValue(DatosUsuario.Usuario);
     if (this.notificacionesFrom.get('ActualizaSaldo')?.value === 'Si') {
       this.notificacionesFrom.get('ActualizaSaldo')?.setValue(1);
     } else if (this.notificacionesFrom.get('ActualizaSaldo')?.value === 'No') {
