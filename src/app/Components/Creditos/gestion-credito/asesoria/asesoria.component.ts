@@ -1,9 +1,9 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ShareComponentModule } from '../../../../Modules/share-component.module';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { TablaHistorialComponent } from '../../../shared/tabla-historial/tabla-historial.component';
 import { TabNegociacionComponent } from '../shared/tab-negociacion/tab-negociacion.component';
-import { AsesoriaEncabezadoForm, BuscarAsesoriasResponse, BuscarAsesoriasResponseTabla, ConsultarAsesoriaResponse, DeduciblesResponse, SaldosVigentesResponse } from '../../../../Models/Creditos/GestionCredito/gestion-credito.model';
+import { AsesoriaEncabezadoForm, BuscarAsesoriasResponse, BuscarAsesoriasResponseTabla, ConsultarAsesoriaResponse, DeduciblesResponse, InfoAsociadoForm, SaldosVigentesResponse } from '../../../../Models/Creditos/GestionCredito/gestion-credito.model';
 import { GestionCreditoService } from '../../../../Services/Productos/GestionCredito.service';
 import { MapeoColumna, transformarDatosParaTabla } from '../../../../utils/tabla-utils';
 import { AsyncPipe, CurrencyPipe, formatDate } from '@angular/common';
@@ -22,10 +22,11 @@ import { AsesoriaContractualService } from '../../../../Services/Productos/aseso
 import { GeneralesService } from '../../../../Services/Productos/generales.service';
 import { AsociadoResponse, TiposDocumentoResponse } from '../../../../Models/Generales/generales.model';
 import { ConcatWithSpacePipe } from '../../../../Pipes/utilidades/concatWithSpace.pipe';
+import { SoloLetrasDirective } from '../../../shared/directives/solo-letras.directive';
 
 @Component({
   selector: 'app-asesoria',
-  imports: [ReactiveFormsModule, ShareComponentModule, TabNegociacionComponent, CurrencyPipe, AsyncPipe, ConcatWithSpacePipe],
+  imports: [ReactiveFormsModule, ShareComponentModule, TabNegociacionComponent, CurrencyPipe, AsyncPipe, ConcatWithSpacePipe, SoloLetrasDirective],
   templateUrl: './asesoria.component.html',
   styleUrl: './asesoria.component.css',
   providers: [GestionCreditoService, AsesoriaContractualService]
@@ -81,11 +82,6 @@ export class AsesoriaComponent {
 
 
   crearTerceroBtnDisabled = true;
-  @ViewChild('btnAbrirModalCrearTercero', { static: true }) 
-  private btnAbrirModalCrearTercero!: ElementRef<HTMLButtonElement>;
-
-  @ViewChild('cerrarModalCrearTercero', { static: true }) 
-  private cerrarModalCrearTercero!: ElementRef;
 
   @ViewChild('numeroDocumento', { static: true }) 
   private numeroDocumentoInput!: ElementRef<HTMLInputElement>;
@@ -95,6 +91,15 @@ export class AsesoriaComponent {
 
   @ViewChild('buscarAsociadoBtn')
   buscarAsociadoBtn!: ElementRef<HTMLInputElement>;
+  infoAsociadoForm!: FormGroup<InfoAsociadoForm>;
+  asociadoFormEstadoInicial: any;
+  asociadoFormSubmitted = false;
+  infoAsociadoGuardado = false;
+
+  get af() {
+    return this.infoAsociadoForm.controls;
+  }
+
 
   constructor(
     private fb: FormBuilder,
@@ -156,6 +161,43 @@ export class AsesoriaComponent {
       }
     });
 
+
+    //Form asociado
+    this.infoAsociadoForm = this.fb.group<InfoAsociadoForm>({
+      idTipoDocumento: this.fb.control(null, Validators.required),
+      tipoDocumento: this.fb.nonNullable.control(''),
+      primerApellido: this.fb.nonNullable.control('', Validators.required),
+      segundoApellido: this.fb.nonNullable.control(''),
+      primerNombre: this.fb.nonNullable.control('', Validators.required),
+      segundoNombre: this.fb.nonNullable.control(''),
+      celular: this.fb.nonNullable.control('', Validators.required),
+      correo: this.fb.nonNullable.control('', Validators.email),
+      canalesContacto: this.fb.group({
+        canalCorreo: this.fb.nonNullable.control(false),
+        canalMensajeTexto: this.fb.nonNullable.control(false),
+        canalWhatsapp: this.fb.nonNullable.control(false),
+        canalTelPersonal: this.fb.nonNullable.control(false),
+        canalTelCelular: this.fb.nonNullable.control(false),
+        canalVisita: this.fb.nonNullable.control(false),
+        canalNotificacion: this.fb.nonNullable.control(false),
+      }, { validators: this.atLeastOneCheckedValidator() }),
+      peso: this.fb.control(null),
+      talla: this.fb.control(null)
+    });
+
+    this.asociadoFormEstadoInicial = this.obtenerEstadoFormulario(this.formEncabezado);
+
+  }
+
+  private atLeastOneCheckedValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+
+      const values = Object.values(control.value);
+
+      const hasOneChecked = values.some(value => value === true);
+
+      return hasOneChecked ? null : { atLeastOneRequired: true };
+    };
   }
 
   private obtenerEstadoFormulario(form: FormGroup) {
@@ -192,11 +234,17 @@ export class AsesoriaComponent {
   }
 
   onNumDocumentoInput() {
-    this.formEncabezado.controls.nombreAsociado.setValue('', { emitEvent: false });
+    this.formEncabezado.patchValue({
+      tipoDocumento: '',
+      nombreAsociado: ''
+    }, { emitEvent: false });
   }
 
   onNombreAsociadoInput() {
-    this.formEncabezado.controls.numeroDocumento.setValue('', { emitEvent: false });
+    this.formEncabezado.patchValue({
+      tipoDocumento: '',
+      numeroDocumento: ''
+    }, { emitEvent: false });
   }
 
   cargarAsesoria(idAsesoria: number): void {
@@ -399,11 +447,11 @@ export class AsesoriaComponent {
   onBlurDocumento(event: FocusEvent) {
     const numeroDocumentoCtrl = this.formEncabezado.controls.numeroDocumento;
     const numeroDocumento = numeroDocumentoCtrl.value;
-    const focoCambioABotonLupa = event.relatedTarget == this.buscarAsociadoBtn.nativeElement;
-    if (!numeroDocumento || focoCambioABotonLupa) {
-      numeroDocumentoCtrl.setValue('');
-      return;
-    }
+    // const focoCambioABotonLupa = event.relatedTarget == this.buscarAsociadoBtn.nativeElement;
+    // if (!numeroDocumento || focoCambioABotonLupa) {
+    //   numeroDocumentoCtrl.setValue('');
+    //   return;
+    // }
 
     if(!numeroDocumento?.trim()) return;
 
@@ -413,12 +461,12 @@ export class AsesoriaComponent {
         this.loading.hide();
         if(!result.NumeroDocumento) {
           this.existeElAsociado = false;
-          this.btnAbrirModalCrearTercero.nativeElement.click();
+          this.abrirModalInfoAsociado();
           return;
         }
         this.existeElAsociado = true;
         this.mapearDatosAsociado(result);
-        this.btnAbrirModalCrearTercero.nativeElement.click();
+        this.abrirModalInfoAsociado();
       },
       error: () => {
         this.loading.hide();
@@ -434,9 +482,11 @@ export class AsesoriaComponent {
     const nombre = nombreCtrl.value?.replace(/\s{2,}/g, ' ')?.trim();
     if (!nombre) return;
 
+    this.loading.show();
     this.asesoriaContractualService.BuscarNombreXNombre(nombre)
       .subscribe({
         next: result => {
+          this.loading.hide();
 
           if (result.length == 0) {
             this.notif.warning(ERP_TOAST.WARNING, ERP_MESSAGES.ASOCIADO_NO_ENCONTRADO, ConfiguracionNotificacion.configRightTop);
@@ -448,12 +498,17 @@ export class AsesoriaComponent {
 
           } else if (result.length == 1) {
             // Mapea directamente
-            this.mapearDatosAsociado(result);
+            this.mapearDatosAsociado(result[0]);
+            this.abrirModalInfoAsociado();
+
           } else {
             // Modal
             this.btnAbrirModalListaAsociados.nativeElement.click();
             this.resultBusquedaAsociados = result;
           }
+        },
+        error: () => {
+          this.loading.hide();
         }
       });
   }
@@ -466,4 +521,88 @@ export class AsesoriaComponent {
       nombreAsociado: nombre
     });
   }
+
+  private abrirModalInfoAsociado() {
+    this.infoAsociadoForm.reset(this.asociadoFormEstadoInicial);
+    ($('#modalCrearTercero') as any).modal('show');
+  }
+  
+
+  onClickFilaAsociados(asociado: AsociadoResponse) {
+    this.mapearDatosAsociado(asociado);
+    this.abrirModalInfoAsociado();
+
+  }
+
+  onClickCerrarModalNuevoAsociado() {
+    this.formEncabezado.patchValue({
+      tipoDocumento: '',
+      numeroDocumento: '',
+      nombreAsociado: ''
+    });    
+  }
+
+  onClickGuardarInfoAsociado() {
+    this.asociadoFormSubmitted = true;
+    Object.keys(this.infoAsociadoForm.controls).forEach(key => {
+      const control = this.infoAsociadoForm.get(key);
+
+      if (control?.invalid) {
+        console.log(key, control.errors);
+      }
+    });
+
+    if (this.existeElAsociado) {
+      if (this.af.canalesContacto.hasError('atLeastOneRequired')) {
+        this.af.canalesContacto.markAsTouched();
+        return;
+      }
+    } else {
+      if (this.infoAsociadoForm.invalid) {
+        this.infoAsociadoForm.markAllAsTouched();
+        return;
+      }
+
+
+      const { idTipoDocumento, primerApellido, segundoApellido, primerNombre, segundoNombre } = this.af;
+
+
+      this.mapearDatosAsociado({
+        TipoDocumento: idTipoDocumento.value!,
+        NumeroDocumento: this.formEncabezado.controls.numeroDocumento.value,
+        PrimerApellido: primerApellido.value,
+        SegundoApellido: segundoApellido.value,
+        PrimerNombre: primerNombre.value,
+        SegundoNombre: segundoNombre.value
+      });
+
+    }
+
+    ($('#modalCrearTercero') as any).modal('hide');
+    //Tab negociacion
+    this.infoAsociadoGuardado = true;
+
+  }
+
+
+  onClickContinuar() {
+    this.asociadoFormSubmitted = true;
+    Object.keys(this.infoAsociadoForm.controls).forEach(key => {
+      const control = this.infoAsociadoForm.get(key);
+
+      if (control?.invalid) {
+        console.log(key, control.errors);
+      }
+    });
+    if (this.af.canalesContacto.hasError('atLeastOneRequired')) {
+      this.af.canalesContacto.markAsTouched();
+      return;
+    }
+
+
+    this.abrirModalInfoAsociado();
+
+
+  }
+
 }

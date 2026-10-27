@@ -29,8 +29,8 @@ export class LogMisProductosComponent implements OnInit {
   filtroSelect: number = 0;
   valida1: boolean = false;
   valida2: boolean = false;
-  valueFechaInicial: Date = new Date();
-  valueFechaFinal: Date = new Date();
+  valueFechaInicial: any = null;
+  valueFechaFinal: any = null;
   clearFechaInicial: boolean = true;
   clearFechaFinal: boolean = true;
   btnMore: boolean = false;
@@ -299,38 +299,45 @@ export class LogMisProductosComponent implements OnInit {
       x => x.id == this.SelectedCombo
     )?.descri ?? '';
 }
-  opcionSelectedFechas(value : number) {
-    if (value == 1) {
-      if (
-        this.valueFechaInicial.toString() >= this.fechaMinima &&
-        this.valueFechaInicial <= this.fechaMax
-      )       
-      this.valida1F = true;
-      else 
-        this.valida1F = false;
-      
+  opcionSelectedFechas(value: number) {
+  
+    this.valida1F =
+      !!this.valueFechaInicial &&
+      this.valueFechaInicial >= this.fechaMinima &&
+      this.valueFechaInicial <= this.fechaMax;
+  
+    this.valida2F =
+      !!this.valueFechaInicial &&
+      !!this.valueFechaFinal &&
+      this.valueFechaFinal >= this.fechaMinima &&
+      this.valueFechaFinal <= this.fechaMax &&
+      this.valueFechaInicial <= this.valueFechaFinal;
+  
+    if (value === 1) {
       this.clearFechaInicial = false;
     }
-    else if (value == 2) {
-      if (
-        this.valueFechaFinal.toString() >= this.fechaMinima &&
-        this.valueFechaFinal <= this.fechaMax &&
-        this.valueFechaInicial.toString() <= this.valueFechaFinal.toString()
-      )        
-        this.valida2F = true;
-      else
-        this.valida2F = false;
-      
-        this.clearFechaFinal = false;
+  
+    if (value === 2) {
+      this.clearFechaFinal = false;
     }
-    if (this.valida1F && this.valida2F)
-      this.btnGenerate = true;
-    else
-      this.btnGenerate = false;
+  
+    this.btnGenerate = this.valida1F && this.valida2F;
   }
   DateBeginAndEnd() {
-    this.dateBegin = this.valueFechaInicial.toString().replace("-", "/").replace("-", "/").replace("-", "/");
-    this.dateEnd = this.valueFechaFinal.toString().replace("-", "/").replace("-", "/").replace("-", "/");
+  
+    if (!this.valueFechaInicial || !this.valueFechaFinal) {
+      return;
+    }
+  
+    this.dateBegin = this.valueFechaInicial.toString()
+      .replace("-", "/")
+      .replace("-", "/")
+      .replace("-", "/");
+  
+    this.dateEnd = this.valueFechaFinal.toString()
+      .replace("-", "/")
+      .replace("-", "/")
+      .replace("-", "/");
   }
   MostrarPanel() {
     let s: number = this.filtroSelect;
@@ -498,8 +505,6 @@ export class LogMisProductosComponent implements OnInit {
       confirmButtonText: idDowload == true ? "Descargar" : "Ver Lista"
     }).then((result) => {
       if (result.value) {
-        
-        this.loading.show();
         setTimeout(() => {
           if (idDowload)
             this.DescargarInforme();
@@ -522,10 +527,12 @@ export class LogMisProductosComponent implements OnInit {
     };
   
     this.loading.show();
-  
+  console.log('SHOW');
+
     this.serviceLogs.GenerateInformesJuridicos(payload).subscribe(
       x => {
-      
+          console.log('RESPUESTA OK');
+
         this.DeletedOficina();
       
         const linkSource = `data:application/xlsx;base64,${x}`;
@@ -536,10 +543,14 @@ export class LogMisProductosComponent implements OnInit {
         downloadLink.click();
       
         this.loading.hide();
+                    console.log('HIDE');
+
       },
       err => {
       
         this.loading.hide();
+    console.log('ERROR');
+
         this.DeletedOficina();
       
         const errorMessage = <any>err;

@@ -464,8 +464,6 @@ export class LogRecaudoOlivosComponent {
     this.ListGenerico = [];
     this.tituloGenerico = "";
     this.alertGenerico = "";
-    // this.formulario.get('@IdOficina')?.reset();
-    // this.formulario.get('@Usuario')?.reset();
     this.formulario.get('@IdOficina')?.setValue(0);
 this.formulario.get('@Usuario')?.setValue('');
 

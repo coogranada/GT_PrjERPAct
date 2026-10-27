@@ -25,8 +25,8 @@ export class LogGestionClientesComponent implements OnInit {
   filtroSelect: number = 0;
   valida1: boolean = false;
   valida2: boolean = false;
-  valueFechaInicial: Date = new Date();
-  valueFechaFinal: Date = new Date();
+  valueFechaInicial: any = null;
+  valueFechaFinal: any = null;
   clearFechaInicial: boolean = true;
   clearFechaFinal: boolean = true;
   btnMore: boolean = false;
@@ -145,6 +145,14 @@ ngOnInit() {
   }
   opcionSelectedFechas(value: number) {
   
+    if (value === 1) {
+      this.clearFechaInicial = false;
+    }
+  
+    if (value === 2) {
+      this.clearFechaFinal = false;
+    }
+  
     const fechaMinima = new Date(2000, 0, 1);
   
     const hoy = new Date();
@@ -155,83 +163,62 @@ ngOnInit() {
       hoy.getDate()
     );
   
-    if (value == 1) {
+    let fechaInicial: Date | null = null;
+    let fechaFinal: Date | null = null;
+  
+    if (this.valueFechaInicial) {
     
-      this.clearFechaInicial = false;
-      this.fechaMayorActual  = false;
+      const partes = this.valueFechaInicial.split('-');
     
-      if (!this.valueFechaInicial) {
-        this.valida1F = false;
-        return;
-      }
-    
-      const partes = this.valueFechaInicial.toString().split('-');
-    
-      const fechaInicial = new Date(
-        Number(partes[0]),
-        Number(partes[1]) - 1,
-        Number(partes[2])
+      fechaInicial = new Date(
+        +partes[0],
+        +partes[1] - 1,
+        +partes[2]
       );
     
-      if (fechaInicial > fechaActual) {
-        this.fechaMayorActual = true;
-        this.valida1F = false;
-      }
-      else if (fechaInicial < fechaMinima) {
-        this.valida1F = false;
-      }
-      else {
-        this.valida1F = true;
-      }
+      this.valida1F =
+        fechaInicial >= fechaMinima &&
+        fechaInicial <= fechaActual;
+    } else {
+      this.valida1F = false;
     }
   
-    else if (value == 2) {
+    if (this.valueFechaFinal) {
     
-      this.clearFechaFinal = false;
-      this.fechaMayorActual = false;
+      const partes = this.valueFechaFinal.split('-');
     
-      if (!this.valueFechaFinal) {
-        this.valida2F = false;
-        return;
-      }
-    
-      const partesFinal = this.valueFechaFinal.toString().split('-');
-    
-      const fechaFinal = new Date(
-        Number(partesFinal[0]),
-        Number(partesFinal[1]) - 1,
-        Number(partesFinal[2])
+      fechaFinal = new Date(
+        +partes[0],
+        +partes[1] - 1,
+        +partes[2]
       );
-    
-      const partesInicial = this.valueFechaInicial.toString().split('-');
-    
-      const fechaInicial = new Date(
-        Number(partesInicial[0]),
-        Number(partesInicial[1]) - 1,
-        Number(partesInicial[2])
-      );
-    
-      if (fechaFinal > fechaActual) {
-        this.fechaMayorActual = true;
-        this.valida2F = false;
-      }
-      else if (fechaFinal < fechaMinima) {
-        this.valida2F = false;
-      }
-      else if (fechaFinal < fechaInicial) {
-        this.valida2F = false;
-      }
-      else {
-        this.valida2F = true;
-      }
     }
+  
+    this.valida2F =
+      !!fechaInicial &&
+      !!fechaFinal &&
+      fechaFinal >= fechaMinima &&
+      fechaFinal <= fechaActual &&
+      fechaInicial <= fechaFinal;
   
     this.btnGenerate = this.valida1F && this.valida2F;
   }
   DateBeginAndEnd() {
-    this.dateBegin = this.valueFechaInicial.toString().replace("-", "/").replace("-", "/").replace("-", "/");
-    this.dateEnd = this.valueFechaFinal.toString().replace("-", "/").replace("-", "/").replace("-", "/");
- }
+
+    if (!this.valueFechaInicial || !this.valueFechaFinal) {
+      return;
+    }
+
+    this.dateBegin = this.valueFechaInicial.toString()
+      .replace("-", "/")
+      .replace("-", "/")
+      .replace("-", "/");
+
+    this.dateEnd = this.valueFechaFinal.toString()
+      .replace("-", "/")
+      .replace("-", "/")
+      .replace("-", "/");
+  }
  limpiarSelected() {
   this.btnMore = false;
   this.valida1 = false;
@@ -414,6 +401,14 @@ ngOnInit() {
   }
   mostrarCampo(idCampo: number): boolean {
     return this.Campos.some(x => x.idCampo === idCampo && x.check);
+  }
+
+  esFechaInicialMayorActual(): boolean {
+    return this.valueFechaInicial?.toString() > this.fechaMax;
+  }
+
+  esFechaFinalMayorActual(): boolean {
+    return this.valueFechaFinal?.toString() > this.fechaMax;
   }
 }
 
