@@ -24425,8 +24425,7 @@ enviarWorkManager() {
         this.mostarErrorMotivoDescripcion = false;
         // aqui realizar el registro
         const resultPerfil = StorageSecurity.getData();
-        const motivo: string | null = StorageSecurity.getItem('solicituRetiroJson');
-        const resulMotivoEnvio = motivo ? JSON.parse(motivo) : null;
+        const resulMotivoEnvio = StorageSecurity.getItem('solicituRetiroJson');
         this.objMotivo.DescripcionOtro = this.solicitudRetiroForm.get('ObservacionMotivo')?.value;
         this.objMotivo.DescripcionOtro = this.solicitudRetiroForm.get('ObservacionMotivo')?.value;
         this.objMotivo.FechaRetiro = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
