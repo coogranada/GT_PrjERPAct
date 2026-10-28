@@ -17,7 +17,10 @@ export class SecurityService {
   }
 
   GoLogin() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    localStorage.setItem('logout-event', Date.now().toString());
+
     this.router.navigateByUrl('/Login');
-    return null;
   }
 }

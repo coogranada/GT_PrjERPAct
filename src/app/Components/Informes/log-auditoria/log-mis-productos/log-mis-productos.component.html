@@ -135,26 +135,37 @@
                                                         <div class="form-group">
                                                             <label class="textNegrilla">Fecha Inicial:</label>
                                                             <span class="grande"> *</span>
-                                                            <input type="date" class="form-control" min="{{fechaMinima}}" max="{{fechaMax}}"  [(ngModel)]="valueFechaInicial" (change)="opcionSelectedFechas(1)" />
-                                                            <span class="help-block validationSpan" *ngIf="valueFechaInicial === undefined && clearFechaInicial == false">
-                                                                {{ ERP_MESSAGES.FECHA_INICIAL_OBLIGATORIA }}
-                                                            </span>
+                                                            <input
+                                                              type="date"
+                                                              class="form-control"
+                                                              min="{{fechaMinima}}"
+                                                              max="{{fechaMax}}"
+                                                              [(ngModel)]="valueFechaInicial"
+                                                              (change)="opcionSelectedFechas(1)"
+                                                              (blur)="clearFechaInicial = false" />
+                                                            
                                                             <span
                                                               class="help-block validationSpan"
-                                                              *ngIf="esFechaInicialMayorActual() && clearFechaInicial == false">
-                                                                {{ ERP_MESSAGES.FECHA_MAYOR_ACTUAL }}
+                                                              *ngIf="!valueFechaInicial && !clearFechaInicial">
+                                                              {{ ERP_MESSAGES.FECHA_INICIAL_OBLIGATORIA }}
                                                             </span>
-
+                                                            
                                                             <span
                                                               class="help-block validationSpan"
-                                                              *ngIf="!esFechaInicialMayorActual() && !valida1F && clearFechaInicial == false">
-                                                                {{ ERP_MESSAGES.FECHA_MENOR_PERMITIDA }}
+                                                              *ngIf="esFechaInicialMayorActual() && !clearFechaInicial">
+                                                              {{ ERP_MESSAGES.FECHA_MAYOR_ACTUAL }}
                                                             </span>
-
+                                                            
                                                             <span
                                                               class="help-block validationSpan"
-                                                              *ngIf="valueFechaInicial > valueFechaFinal && clearFechaInicial == false">
-                                                                {{ ERP_MESSAGES.FECHA_INICIAL_MENOR_A_FINAL }}
+                                                              *ngIf="!esFechaInicialMayorActual() && !valida1F && !clearFechaInicial && valueFechaInicial">
+                                                              {{ ERP_MESSAGES.FECHA_MENOR_PERMITIDA }}
+                                                            </span>
+                                                            
+                                                            <span
+                                                              class="help-block validationSpan"
+                                                              *ngIf="valueFechaInicial > valueFechaFinal && !clearFechaInicial">
+                                                              {{ ERP_MESSAGES.FECHA_INICIAL_MENOR_A_FINAL }}
                                                             </span>
                                                         </div>
                                                     </div>
@@ -164,27 +175,43 @@
                                                             <label class="textNegrilla">Fecha Final:</label>
                                                             <span class="grande"> *</span>
                                                             <span class="text-danger"></span>
-                                                            <input type="date" class="form-control" min="{{valueFechaInicial}}"  max="{{fechaMax}}"   [(ngModel)]="valueFechaFinal" (change)="opcionSelectedFechas(2)" [disabled]="(valueFechaInicial === undefined ) && valueFechaFinal == undefined"
-                                                            />
-                                                            <span class="help-block validationSpan" *ngIf="valueFechaFinal === undefined && (valueFechaInicial != undefined ) && clearFechaFinal == false">
-                                                                {{ ERP_MESSAGES.FECHA_FINAL_OBLIGATORIA }}
-                                                            </span>
+                                                            <input
+                                                              type="date"
+                                                              class="form-control"
+                                                              min="{{valueFechaInicial}}"
+                                                              max="{{fechaMax}}"
+                                                              [(ngModel)]="valueFechaFinal"
+                                                              (change)="opcionSelectedFechas(2)"
+                                                              (blur)="clearFechaFinal = false" />
+                                                            
                                                             <span
                                                               class="help-block validationSpan"
-                                                              *ngIf="esFechaFinalMayorActual() && clearFechaFinal == false">
-                                                                {{ ERP_MESSAGES.FECHA_MAYOR_ACTUAL }}
+                                                              *ngIf="!valueFechaFinal && !clearFechaFinal">
+                                                              {{ ERP_MESSAGES.FECHA_FINAL_OBLIGATORIA }}
                                                             </span>
                                                             
                                                             <span
                                                               class="help-block validationSpan"
-                                                              *ngIf="!esFechaFinalMayorActual() && !valida2F && clearFechaFinal == false">
-                                                                {{ ERP_MESSAGES.FECHA_MENOR_PERMITIDA }}
+                                                              *ngIf="esFechaFinalMayorActual() && !clearFechaFinal">
+                                                              {{ ERP_MESSAGES.FECHA_MAYOR_ACTUAL }}
                                                             </span>
                                                             
                                                             <span
                                                               class="help-block validationSpan"
-                                                              *ngIf="valueFechaInicial > valueFechaFinal && clearFechaInicial == false">
-                                                                {{ ERP_MESSAGES.FECHA_FINAL_MAYOR_A_INICIAL }}
+                                                              *ngIf="
+                                                                !esFechaFinalMayorActual() &&
+                                                                !valida2F &&
+                                                                !clearFechaFinal &&
+                                                                valueFechaFinal &&
+                                                                valueFechaInicial <= valueFechaFinal
+                                                              ">
+                                                              {{ ERP_MESSAGES.FECHA_MENOR_PERMITIDA }}
+                                                            </span>
+                                                            
+                                                            <span
+                                                              class="help-block validationSpan"
+                                                              *ngIf="valueFechaInicial > valueFechaFinal && !clearFechaInicial">
+                                                              {{ ERP_MESSAGES.FECHA_FINAL_MAYOR_A_INICIAL }}
                                                             </span>
                                                         </div>
                                                     </div>

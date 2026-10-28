@@ -225,6 +225,16 @@
                                   [min]="fechaMinima"
                                   [max]="obtenerMaxFechaInicial()" />
                               </div>                            
+                              
+                              <span
+                                class="help-block validationSpan"
+                                *ngIf="
+                                  formulario.get('@FechaInicial')?.errors?.['required'] &&
+                                  (formulario.get('@FechaInicial')?.dirty ||
+                                   formulario.get('@FechaInicial')?.touched)
+                                ">
+                                {{ ERP_MESSAGES.FECHA_INICIAL_OBLIGATORIA }}
+                              </span>
 
                               <!-- Menor o igual a fecha final -->
                               <span
@@ -271,7 +281,16 @@
                                   [min]="obtenerMinFechaFinal() || fechaMinima"
                                   [max]="fechaMaxima" />
                               </div>
-                            
+
+                              <span
+                                class="help-block validationSpan"
+                                *ngIf="
+                                  formulario.get('@FechaFinal')?.errors?.['required'] &&
+                                  (formulario.get('@FechaFinal')?.dirty ||
+                                   formulario.get('@FechaFinal')?.touched)">
+                                  {{ ERP_MESSAGES.FECHA_FINAL_OBLIGATORIA }}
+                              </span>   
+
                               <!-- Mayor o igual a fecha inicial -->
                               <span
                                 class="help-block validationSpan"
@@ -280,7 +299,7 @@
                                   formulario.get('@FechaInicial')?.value &&
                                   formulario.get('@FechaFinal')?.value
                                 ">
-                                La fecha final debe ser mayor o igual a la fecha inicial.
+                                  {{ ERP_MESSAGES.FECHA_FINAL_MAYOR_A_INICIAL }}
                               </span>
                             
                               <!-- Mayor a hoy -->
@@ -290,7 +309,7 @@
                                   formulario.get('@FechaFinal')?.touched &&
                                   formulario.get('@FechaFinal')?.errors?.['fechaMayorActual']
                                 ">
-                                La fecha final no puede ser mayor a la fecha actual.
+                                  {{ ERP_MESSAGES.FECHA_MAYOR_ACTUAL}}
                               </span>
                             
                               <!-- Menor al 2000 -->
@@ -300,7 +319,7 @@
                                   formulario.get('@FechaFinal')?.touched &&
                                   formulario.get('@FechaFinal')?.errors?.['fechaMenorPermitida']
                                 ">
-                                La fecha final no puede ser menor al 01/01/2000.
+                                  {{ ERP_MESSAGES.FECHA_MENOR_PERMITIDA}}
                               </span>
                             
                             </div>

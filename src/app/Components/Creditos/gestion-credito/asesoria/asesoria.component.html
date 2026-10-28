@@ -170,7 +170,7 @@
                             (blur)="onBlurDocumento($event)" (input)="onNumDocumentoInput()" #numeroDocumento>
                     </div>
                     <div class="col-xs-4 col-lg-4-7">
-                        <input type="text" class="form-control" formControlName="nombreAsociado"
+                        <input type="text" class="form-control pmayuscula" formControlName="nombreAsociado"
                             (input)="onNombreAsociadoInput()">
                     </div>
 
@@ -205,7 +205,7 @@
                                             <tbody>
                                                 @for (asociado of resultBusquedaAsociados; track
                                                 asociado.NumeroDocumento) {
-                                                <tr (click)="mapearDatosAsociado(asociado)">
+                                                <tr (click)="onClickFilaAsociados(asociado)">
                                                     <td data-dismiss="modal">{{ asociado.NumeroDocumento }}</td>
                                                     <td data-dismiss="modal">{{ asociado.PrimerApellido |
                                                         concatWithSpace:asociado.SegundoApellido:asociado.PrimerNombre:asociado.SegundoNombre
@@ -234,7 +234,7 @@
                             <div class="modal-header bg-morado">
                                 <h6 class="modal-title">Información</h6>
                             </div>
-                            <div class="modal-body">
+                            <form class="modal-body" [formGroup]="infoAsociadoForm">
 
                                 @if(!existeElAsociado) {
 
@@ -243,46 +243,81 @@
                                     <div class="col-lg-3">
                                         <label for="tipoDocumentoTercero" class="textNegrilla">Tipo documento: <span
                                                 class="grande">*</span></label>
-                                        <select id="tipoDocumentoTercero" class="form-control">
+                                        <select id="tipoDocumentoTercero" class="form-control"
+                                            formControlName="idTipoDocumento">
                                             @for (tipoDoc of (tiposDocumento$ | async); track tipoDoc.Clase) {
-                                            <option [value]="tipoDoc.Clase">
+                                            <option [ngValue]="tipoDoc.Clase">
                                                 {{ tipoDoc.Descripcion }}
                                             </option>
                                             }
                                         </select>
+                                        @if (
+                                        af.idTipoDocumento.hasError('required') &&
+                                        af.idTipoDocumento.touched
+                                        ) {
+                                        <div class="help-block validationSpan">
+                                            Es obligatorio.
+                                        </div>
+                                        }
                                     </div>
                                     <div class="col-lg-3">
                                         <label for="primerApellidoTercero" class="textNegrilla">Primer apellido: <span
                                                 class="grande">*</span></label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" class="form-control capitalize" formControlName="primerApellido" maxlength="20" appSoloLetras>
+                                        @if (
+                                        af.primerApellido.hasError('required') &&
+                                        af.primerApellido.touched
+                                        ) {
+                                        <div class="help-block validationSpan">
+                                            Es obligatorio.
+                                        </div>
+                                        }
                                     </div>
                                     <div class="col-lg-3">
-                                        <label for="segundoApellidoTercero" class="textNegrilla">Segundo apellido: <span
-                                                class="grande">*</span></label>
-                                        <input type="text" class="form-control">
+                                        <label for="segundoApellidoTercero" class="textNegrilla">Segundo apellido:</label>
+                                        <input type="text" class="form-control capitalize" formControlName="segundoApellido" maxlength="20" appSoloLetras>
                                     </div>
                                     <div class="col-lg-3">
                                         <label for="primerNombreTercero" class="textNegrilla">Primer nombre: <span
                                                 class="grande">*</span></label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" class="form-control capitalize" formControlName="primerNombre" maxlength="20" appSoloLetras>
+                                        @if (
+                                        af.primerNombre.hasError('required') &&
+                                        af.primerNombre.touched
+                                        ) {
+                                        <div class="help-block validationSpan">
+                                            Es obligatorio.
+                                        </div>
+                                        }
                                     </div>
                                 </div>
 
                                 <div class="row mb-20">
                                     <div class="col-lg-3">
                                         <label for="segundoNombreTercero" class="textNegrilla">Segundo nombre: </label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" class="form-control capitalize" formControlName="segundoNombre" maxlength="20" appSoloLetras>
                                     </div>
 
                                     <div class="col-lg-3">
                                         <label for="celularTercero" class="textNegrilla">Celular: <span
                                                 class="grande">*</span></label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" class="form-control" formControlName="celular" appSoloNumero maxlength="20">
+                                        @if (
+                                        af.celular.hasError('required') &&
+                                        af.celular.touched
+                                        ) {
+                                        <div class="help-block validationSpan">
+                                            Es obligatorio.
+                                        </div>
+                                        }
                                     </div>
 
                                     <div class="col-lg-6">
                                         <label for="correoTercero" class="textNegrilla">Correo:</label>
-                                        <input type="text" class="form-control">
+                                        <input type="email" class="form-control" formControlName="correo">
+                                        @if (af.correo.hasError('email')) {
+                                        <span class="help-block validationSpan">Debe ingresar un correo válido.</span>
+                                        }
                                     </div>
                                 </div>
 
@@ -290,92 +325,114 @@
                                 }
 
                                 <h6 class="textNegrilla">Canales de contacto: <span class="grande">*</span></h6>
-                                <div class="row mb-10">
-                                    <div class="col-lg-3">
+                                <div formGroupName="canalesContacto">
 
-                                        <input type="checkbox" id="canalContCorreo" class="switchery chk-ajuste">
-                                        <label for="canalContCorreo" class="">Correo eletrónico</label>
+                                    <div class="row mb-10">
+                                        <div class="col-lg-3">
+
+                                            <input type="checkbox" id="canalContCorreo" class="switchery chk-ajuste"
+                                                formControlName="canalCorreo">
+                                            <label for="canalContCorreo" class="">Correo eletrónico</label>
 
 
+                                        </div>
+
+                                        <div class="col-lg-3">
+
+                                            <input type="checkbox" id="canalContMsjeTexto" class="switchery chk-ajuste"
+                                                formControlName="canalMensajeTexto">
+                                            <label for="canalContMsjeTexto" class="">Mensaje de texto</label>
+
+
+                                        </div>
+
+                                        <div class="col-lg-3">
+
+                                            <input type="checkbox" id="canalContWhatsapp" class="switchery chk-ajuste"
+                                                formControlName="canalWhatsapp">
+                                            <label for="canalContWhatsapp" class="">Whatsapp</label>
+                                        </div>
+                                        <div class="col-lg-3">
+
+                                            <input type="checkbox" id="canalContTelPers" class="switchery chk-ajuste"
+                                                formControlName="canalTelPersonal">
+                                            <label for="canalContTelPers" class="">Teléfono personal</label>
+
+
+                                        </div>
                                     </div>
 
-                                    <div class="col-lg-3">
-
-                                        <input type="checkbox" id="canalContMsjeTexto" class="switchery chk-ajuste">
-                                        <label for="canalContMsjeTexto" class="">Mensaje de texto</label>
+                                    <div class="row mb-10">
 
 
+                                        <div class="col-lg-3">
+
+                                            <input type="checkbox" id="canalContCelular" class="switchery chk-ajuste"
+                                                formControlName="canalTelCelular">
+                                            <label for="canalContCelular" class="">Télefono celular</label>
+
+
+                                        </div>
+
+                                        <div class="col-lg-3">
+
+                                            <input type="checkbox" id="canalContVisitaDom" class="switchery chk-ajuste"
+                                                formControlName="canalVisita">
+                                            <label for="canalContVisitaDom" class="">Visita domiciliaria</label>
+
+
+                                        </div>
+
+                                        <div class="col-lg-6">
+                                            <input type="checkbox" id="canalContNotifDom" class="switchery chk-ajuste"
+                                                formControlName="canalNotificacion">
+                                            <label for="canalContNotifDom" class="">Notificación escrita a la dirección
+                                                de
+                                                domicilio</label>
+                                        </div>
                                     </div>
-
-                                    <div class="col-lg-3">
-
-                                        <input type="checkbox" id="canalContWhatsapp" class="switchery chk-ajuste">
-                                        <label for="canalContWhatsapp" class="">Whatsapp</label>
+                                    @if (
+                                    asociadoFormSubmitted &&
+                                    af.canalesContacto.hasError('atLeastOneRequired')
+                                    ) {
+                                    <div class="help-block validationSpan">
+                                        Debe seleccionar al menos 1 canal de contacto.
                                     </div>
-                                    <div class="col-lg-3">
-
-                                        <input type="checkbox" id="canalContTelPers" class="switchery chk-ajuste">
-                                        <label for="canalContTelPers" class="">Teléfono personal</label>
-
-
-                                    </div>
+                                    }
                                 </div>
 
-                                <div class="row mb-10">
-
-
-                                    <div class="col-lg-3">
-
-                                        <input type="checkbox" id="canalContCelular" class="switchery chk-ajuste">
-                                        <label for="canalContCelular" class="">Télefono celular</label>
-
-
-                                    </div>
-
-                                    <div class="col-lg-3">
-
-                                        <input type="checkbox" id="canalContVisitaDom" class="switchery chk-ajuste">
-                                        <label for="canalContVisitaDom" class="">Visita domiciliaria</label>
-
-
-                                    </div>
-
-                                    <div class="col-lg-6">
-                                        <input type="checkbox" id="canalContNotifDom" class="switchery chk-ajuste">
-                                        <label for="canalContNotifDom" class="">Notificación escrita a la dirección de
-                                            domicilio</label>
-                                    </div>
-                                </div>
 
 
                                 <div class="borde-morado"></div>
 
                                 <div class="row">
                                     <div class="col-lg-3">
-                                        <label for="pesoTercero" class="textNegrilla">Peso:</label>
-                                        <input type="text" class="form-control">
+                                        <label for="pesoTercero" class="textNegrilla">Peso (kg):</label>
+                                        <input type="text" class="form-control" formControlName="peso" maxlength="3" appSoloNumero>
                                     </div>
 
                                     <div class="col-lg-3">
-                                        <label for="tallaTercero" class="textNegrilla">Talla: </label>
-                                        <input type="text" class="form-control">
+                                        <label for="tallaTercero" class="textNegrilla">Talla (cm): </label>
+                                        <input type="text" class="form-control" formControlName="talla" maxlength="3" appSoloNumero>
                                     </div>
                                 </div>
 
 
-                            </div>
+                            </form>
                             <div class="modal-footer">
-
-                                <button type="button" class="btn Gt-btn-verde"
-                                    [disabled]="crearTerceroBtnDisabled">Guardar</button>
-
-                                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
+                                @if(existeElAsociado) {
+                                <button type="button" class="btn Gt-btn-verde" (click)="onClickGuardarInfoAsociado()">Guardar</button>
+                                } @else {
+                                <button type="button" class="btn Gt-btn-verde" (click)="onClickGuardarInfoAsociado()">Guardar</button>
+                                }
+                            
+                            
+                                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal"
+                                    (click)="onClickCerrarModalNuevoAsociado()">Cerrar</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <button #btnAbrirModalCrearTercero type="button" hidden data-toggle="modal"
-                    data-target="#modalCrearTercero"></button>
             </div>
 
             <div class="col-lg-4">
@@ -433,7 +490,7 @@
 
                 <app-tab-negociacion [hidden]="activeTab !== 'negociacion'"
                     [idAsesoria]="formEncabezado.controls.asesoria.value" [deducciones]="totalCuotaDed"
-                    [saldoCancelar]="totalSaldoTotal" [idTercero]="idTercero" />
+                    [saldoCancelar]="totalSaldoTotal" [idTercero]="idTercero" [habilitado]="infoAsociadoGuardado" />
 
 
                 <article [hidden]="activeTab !== 'deducibles'">

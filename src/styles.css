@@ -45,6 +45,11 @@
   text-wrap: nowrap;
 }
 
+.pmayuscula {
+  text-transform: capitalize;
+}
+
+
 .radio-custom {
   display: flex;
   align-items: center;
