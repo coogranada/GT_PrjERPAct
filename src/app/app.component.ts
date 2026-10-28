@@ -1,5 +1,5 @@
 import { LoginService } from './Services/Login/login.service';
-import {  Component, OnInit, OnDestroy, ElementRef, Output, EventEmitter, ViewChild, HostListener} from '@angular/core';
+import {  Component, OnInit, HostListener} from '@angular/core';
 import { Router } from '@angular/router';
 import { PlatformLocation } from '@angular/common';
 import { ClientesGetListService } from './Services/Clientes/clientesGetList.service';
@@ -22,7 +22,7 @@ declare var $: any;
     GestionesService, RecursosGeneralesService, OficinasService,
     ClientesGetListService,SecurityService]
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit {
 
   public resulStore: any = null;
 
@@ -45,7 +45,7 @@ ngOnInit(): void {
     this.handleOffline();
   }
 
-  this.setupTokenRefresh();
+  this.cerrarSesionTodasLasPestañas(); 
   this.handleNavigationChanges();
   this.blockDevTools();
 
@@ -56,12 +56,6 @@ ngOnInit(): void {
   window.addEventListener('unhandledrejection', (event) => {
     console.error('Promesa rechazada:', event.reason);
   });
-}
-
-ngOnDestroy(): void {
-  if (this.tokenRefreshInterval) {
-    clearInterval(this.tokenRefreshInterval);
-  }
 }
 
   // STORAGE
@@ -152,43 +146,12 @@ ngOnDestroy(): void {
   }
 
   // TOKEN
-  private tokenRefreshInterval: any;
-  private setupTokenRefresh(): void {
-    this.tokenRefreshInterval = setInterval(() => {
-      this.refreshToken();
-    }, 50 * 60 * 1000);
-  }
-
-  private refreshingToken = false;
-  private refreshToken(): void {
-
-    if (this.refreshingToken) {
-      return;
-    }
-
-    const refreshToken = this.Security.GetRefreshToken();
-
-    if (!refreshToken || !this.resulStore?.intlngTercero) {
-      return;
-    }
-
-    this.refreshingToken = true;
-
-    this.loginService.RefreshToken(refreshToken)
-      .subscribe({
-        next: (x: any) => {
-
-          localStorage.setItem('token', x.token);
-
-          this.refreshingToken = false;
-        },
-        error: (err) => {
-
-          this.refreshingToken = false;
-
-          console.error('Error refrescando token', err);
-        }
-      });
+  private cerrarSesionTodasLasPestañas() {
+    window.addEventListener('storage', (event) => {
+      if (event.key === 'token' && event.newValue === null) {
+        this.router.navigate(['/login']);
+      }
+    });
   }
 
 
