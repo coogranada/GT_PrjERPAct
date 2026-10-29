@@ -301,18 +301,6 @@ export class LogMisProductosComponent implements OnInit {
 }
   opcionSelectedFechas(value: number) {
   
-    this.valida1F =
-      !!this.valueFechaInicial &&
-      this.valueFechaInicial >= this.fechaMinima &&
-      this.valueFechaInicial <= this.fechaMax;
-  
-    this.valida2F =
-      !!this.valueFechaInicial &&
-      !!this.valueFechaFinal &&
-      this.valueFechaFinal >= this.fechaMinima &&
-      this.valueFechaFinal <= this.fechaMax &&
-      this.valueFechaInicial <= this.valueFechaFinal;
-  
     if (value === 1) {
       this.clearFechaInicial = false;
     }
@@ -321,7 +309,25 @@ export class LogMisProductosComponent implements OnInit {
       this.clearFechaFinal = false;
     }
   
-    this.btnGenerate = this.valida1F && this.valida2F;
+    this.valida1F =
+      !!this.valueFechaInicial &&
+      !this.esFechaInicialMayorActual() &&
+      !this.esFechaInicialMenorPermitida();
+  
+    this.valida2F =
+      !!this.valueFechaFinal &&
+      !this.esFechaFinalMayorActual() &&
+      !this.esFechaFinalMenorPermitida();
+  
+    const rangoValido =
+      !this.valueFechaInicial ||
+      !this.valueFechaFinal ||
+      this.valueFechaInicial <= this.valueFechaFinal;
+  
+    this.btnGenerate =
+      this.valida1F &&
+      this.valida2F &&
+      rangoValido;
   }
   DateBeginAndEnd() {
   
@@ -641,6 +647,20 @@ export class LogMisProductosComponent implements OnInit {
 
   mostrarCampo(idCampo: number): boolean {
     return this.Campos.some(x => x.idCampo === idCampo && x.check);
+  }
+
+  esFechaInicialMenorPermitida(): boolean {
+    return (
+      !!this.valueFechaInicial &&
+      this.valueFechaInicial.toString() < this.fechaMinima
+    );
+  }
+
+  esFechaFinalMenorPermitida(): boolean {
+    return (
+      !!this.valueFechaFinal &&
+      this.valueFechaFinal.toString() < this.fechaMinima
+    );
   }
 
 }
