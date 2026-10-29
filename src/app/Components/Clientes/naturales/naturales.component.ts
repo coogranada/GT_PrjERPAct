@@ -1267,12 +1267,12 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   }
 
   GetOficinas() {
-    const oficinas = localStorage.getItem('oficinas');
+    const oficinas = StorageSecurity.getItem('oficinas');
     if (!oficinas) {
       return;
     }
     try {
-      this.dataOficinas = StorageSecurity.getItem('oficinas') || [];
+      this.dataOficinas = oficinas
     } catch (error) {
       console.error(error);
     }
