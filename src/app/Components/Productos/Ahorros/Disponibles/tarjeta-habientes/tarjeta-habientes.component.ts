@@ -59,13 +59,7 @@ export class TarjetaHabientesComponent implements OnInit {
   }
 ObtenerDatosUsuario() {
     this.DatosUsuario = StorageSecurity.getData();
-    let permi = localStorage.getItem('Permisos');
-    this.PermisosUsuario = JSON.parse(
-      CryptoJS.AES.decrypt(
-        (permi == null ? "" : permi),
-        this.PassJs.pass
-      ).toString(CryptoJS.enc.Utf8)
-    );
+    this.PermisosUsuario = StorageSecurity.getItem('Permisos');
 }
   ConsultarAsociado() {
     this.loading.show();
