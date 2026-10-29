@@ -57,10 +57,12 @@ export class TarjetaHabientesComponent implements OnInit {
     this.validateForm();
     this.IrArriba();
   }
-ObtenerDatosUsuario() {
+  
+  ObtenerDatosUsuario() {
     this.DatosUsuario = StorageSecurity.getData();
     this.PermisosUsuario = StorageSecurity.getItem('Permisos');
-}
+  }
+
   ConsultarAsociado() {
     this.loading.show();
     if (this.TarjetaHabientesForm.valid) {
