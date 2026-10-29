@@ -48,12 +48,7 @@ export class StorageSecurity {
   }
 
   static saveData(data: any): void {
-
-    localStorage.setItem(
-      'Data',
-      this.encrypt(data)
-    );
-
+    localStorage.setItem('Data',this.encrypt(data));
   }
 
   static getData(): any {
@@ -85,18 +80,6 @@ export class StorageSecurity {
 
   static getProfiles(): any {
     const value = localStorage.getItem('profiles');
-    return this.decrypt(value || '');
-  }
-
-  static saveState(data: any): void {
-    localStorage.setItem(
-      'state',
-      this.encrypt(data)
-    );
-  }
-
-  static getState(): any {
-    const value = localStorage.getItem('state');
     return this.decrypt(value || '');
   }
 

@@ -174,9 +174,8 @@ export class GMFDisponibleComponent implements OnInit {
 
     this.Limpiar();
     this.disableBusquedaForm = true;
-    let userName = localStorage.getItem('userName');
-    this.GMFForm.get('userName')?.setValue(JSON.parse(window.atob(userName == null ? "" : userName)));
-      // localStorage.getItem('userName'));
+    const userName = StorageSecurity.getItem('userName');
+    this.GMFForm.get('userName')?.setValue(userName);
     this.gmfDisponibleService.ConsultarInfoAsociado(JSON.stringify(this.GMFForm.value)).subscribe(
       result => {
         this.ValidarDatos(result); this.loading.hide();
@@ -217,7 +216,7 @@ export class GMFDisponibleComponent implements OnInit {
           PDatos.strFechIniExonera = date;
           PDatos.strFechaCorte = date;
           PDatos.forEach((element : any) => {
-            localStorage.setItem('DataUserGMF', JSON.stringify(element));
+            StorageSecurity.saveItem('DataUserGMF', element);
           });
           this.dataMarcarDesmarcar = PDatos;
           if (PDatos.length > 1) {
@@ -236,7 +235,7 @@ export class GMFDisponibleComponent implements OnInit {
             if (_numeroCuenta === element.strNumeroCuenta) {
               const date = formatDate(new Date(), 'yyyy-MM-dd', 'en');
               element.strFechFinExonera = date;
-              localStorage.setItem('DataUserGMF', JSON.stringify(element));
+              StorageSecurity.saveItem('DataUserGMF', element);
               this.dataMarcarDesmarcar.push(element);
               this.MapearDatos(this.dataMarcarDesmarcar);
               this.AlertaCuenta = false;
@@ -262,31 +261,34 @@ export class GMFDisponibleComponent implements OnInit {
     this.loading.show();
     if (!this.GMFForm.get('desmarcarForm')?.value) {
       this.dataMarcarDesmarcar = [];
-      localStorage.removeItem('DataUserGMF');
+      StorageSecurity.removeItem('DataUserGMF');
       this.GMFForm.get('strAccion')?.setValue('Desmarcar');
-      let userName = localStorage.getItem('userName');
-      this.GMFForm.get('userName')?.setValue(JSON.parse(window.atob(userName == null ? "" : userName)));
-        // localStorage.getItem('userName'));
-      this.gmfDisponibleService.ConsultarInfoAsociado(JSON.stringify(this.GMFForm.value)).subscribe(
-        result => {
-          result.forEach((element : any) => {
-            if (this.dataConsultaGMF.strNumeroCuenta === element.strNumeroCuenta) {
-              const date = formatDate(new Date(), 'yyyy-MM-dd', 'en');
-              element.strFechFinExonera = date;
-              localStorage.setItem('DataUserGMF', JSON.stringify(element));
-              this.dataMarcarDesmarcar.push(element);
-              this.MapearDatos(this.dataMarcarDesmarcar);
-              this.AlertaCuenta = false;
-            }
-          }); this.loading.hide();
-        },
-        error => {
-          this.loading.hide();
-          const errorJson = JSON.parse(error._body);
-          this.notificacion.onDanger('Error', errorJson);
-          console.log(error);
-        }
+      this.GMFForm.get('userName')?.setValue(
+        StorageSecurity.getItem('userName')
       );
+      this.gmfDisponibleService
+        .ConsultarInfoAsociado(JSON.stringify(this.GMFForm.value))
+        .subscribe(
+          result => {
+            result.forEach((element: any) => {
+              if (this.dataConsultaGMF.strNumeroCuenta === element.strNumeroCuenta) {
+                const date = formatDate(new Date(), 'yyyy-MM-dd', 'en');
+                element.strFechFinExonera = date;
+                StorageSecurity.saveItem('DataUserGMF', element);
+                this.dataMarcarDesmarcar.push(element);
+                this.MapearDatos(this.dataMarcarDesmarcar);
+                this.AlertaCuenta = false;
+              }
+            });
+            this.loading.hide();
+          },
+          error => {
+            this.loading.hide();
+            const errorJson = JSON.parse(error._body);
+            this.notificacion.onDanger('Error', errorJson);
+            console.log(error);
+          }
+        );
     } else {
       this.dataMarcarDesmarcar = [];
       this.disableBusquedaForm = null;
@@ -297,34 +299,37 @@ export class GMFDisponibleComponent implements OnInit {
     this.loading.show();
     if (!this.GMFForm.get('marcarForm')?.value) {
       this.dataMarcarDesmarcar = [];
-      localStorage.removeItem('DataUserGMF');
+      StorageSecurity.removeItem('DataUserGMF');
       this.GMFForm.get('strAccion')?.setValue('Marcar');
-      let userName = localStorage.getItem('userName');
-      this.GMFForm.get('userName')?.setValue(JSON.parse(window.atob(userName == null ? "" : userName)));
-        // localStorage.getItem('userName'));
-      this.gmfDisponibleService.ConsultarInfoAsociado(JSON.stringify(this.GMFForm.value)).subscribe(
-        result => {
-          const date = formatDate(new Date(), 'yyyy-MM-dd', 'en');
-          result.strFechIniExonera = date;
-          result.strFechaCorte = date;
-          result.forEach((element : any) => {
-            localStorage.setItem('DataUserGMF', JSON.stringify(element));
-          });
-          this.dataMarcarDesmarcar = result;
-          if (result.length > 1) {
-            this.AlertaCuenta = true;
-          } else {
-            this.AlertaCuenta = false;
-            this.MapearDatos(this.dataMarcarDesmarcar);
-          }
-          console.log(result); this.loading.hide();
-        },
-        error => {
-          const errorJson = JSON.parse(error._body);
-          this.notificacion.onDanger('Error', errorJson);
-          console.log(error); this.loading.hide();
-        }
+      this.GMFForm.get('userName')?.setValue(
+        StorageSecurity.getItem('userName')
       );
+      this.gmfDisponibleService
+        .ConsultarInfoAsociado(JSON.stringify(this.GMFForm.value))
+        .subscribe(
+          result => {
+            const date = formatDate(new Date(), 'yyyy-MM-dd', 'en');
+            result.strFechIniExonera = date;
+            result.strFechaCorte = date;
+            result.forEach((element: any) => {
+              StorageSecurity.saveItem('DataUserGMF', element);
+            });
+            this.dataMarcarDesmarcar = result;
+            if (result.length > 1) {
+              this.AlertaCuenta = true;
+            } else {
+              this.AlertaCuenta = false;
+              this.MapearDatos(this.dataMarcarDesmarcar);
+            }
+            this.loading.hide();
+          },
+          error => {
+            const errorJson = JSON.parse(error._body);
+            this.notificacion.onDanger('Error', errorJson);
+            console.log(error);
+            this.loading.hide();
+          }
+        );
     } else {
       this.dataMarcarDesmarcar = [];
       this.disableBusquedaForm = null;
@@ -400,7 +405,7 @@ export class GMFDisponibleComponent implements OnInit {
         result => {
           this.dataConsultaGMF = result;
           if (result.strCodigoExencion === '04' || result.strCodigoExencion === '07') {
-            let dataUserG = localStorage.getItem('DataUserGMF');
+            const dataUserG = StorageSecurity.getItem('DataUserGMF');
             this.dataUserGMF = JSON.parse(dataUserG == null ? "" : dataUserG);
             this.dataGMFReport = result;
             this.notificacion.onSuccess('Exitoso', result.strMensajeExencion);
@@ -449,7 +454,7 @@ export class GMFDisponibleComponent implements OnInit {
         result => {
           this.dataConsultaGMF = result;
           if (result.strCodigoExencion === '04' || result.strCodigoExencion === '07') {
-            let dataUserG = localStorage.getItem('DataUserGMF');
+            const dataUserG = StorageSecurity.getItem('DataUserGMF');
             this.dataUserGMF = JSON.parse(dataUserG == null ? "" : dataUserG);
             this.dataGMFReport = result;
             this.notificacion.onSuccess('Exitoso', result.strMensajeExencion);

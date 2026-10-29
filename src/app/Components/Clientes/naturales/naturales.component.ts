@@ -1065,13 +1065,14 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     );
   }
 
+
   GetTipoEmpleo() {
-    const empleo = localStorage.getItem('empleo');
-    if (!empleo) {
-      return;
-    }
     try {
-      this.dataTipoEmpleo = StorageSecurity.getItem('empleo') || [];
+      const empleo = StorageSecurity.getItem('empleo');
+      if (!empleo) {
+        return;
+      }
+      this.dataTipoEmpleo = empleo;
     } catch (error) {
       console.error(error);
     }
@@ -1108,25 +1109,25 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   }
 
   GetLetra() {
-    const letras = localStorage.getItem('letras');
+    const letras = StorageSecurity.getItem('letras');
     if (!letras) {
       return;
     }
     try {
-      this.dataLetras = StorageSecurity.getItem('letras') || [];
+      this.dataLetras = letras
     } catch (error) {
       console.error(error);
     }
   }
    
   GetMarcar() {
-    const marca = localStorage.getItem('marca');
+    const marca = StorageSecurity.getItem('marca');
     if (!marca) {
       this.dataMarcas = [];
       return;
     }
     try {
-      this.dataMarcas = StorageSecurity.getItem('marca') || [];       
+      this.dataMarcas = marca;       
     } catch (error) {
       console.error(error);
       this.dataMarcas = [];
@@ -1134,12 +1135,12 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   }
   
   GetConceptosaAll() {
-    const conceptos = localStorage.getItem('conceptos');
+    const conceptos = StorageSecurity.getItem('conceptos');
     if (!conceptos) {
       return;
     }
     try {
-      this.dataConceptoAll = StorageSecurity.getItem('conceptos') || []; 
+      this.dataConceptoAll = conceptos
     } catch (error) {
       console.error(error);
     }  
@@ -1159,12 +1160,12 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   }
 
   GetProfesion() {
-    const profesion = localStorage.getItem('profesion');
+    const profesion = StorageSecurity.getItem('profesion');
     if (!profesion) {
       return;
     }
     try {
-      this.dataProfesion = StorageSecurity.getItem('profesion') || []; 
+      this.dataProfesion = profesion
     } catch (error) {
       console.error(error);
     }
@@ -1172,12 +1173,12 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   }
   
   GetPeriodosPago() {
-    const periodo = localStorage.getItem('periodo');
+    const periodo = StorageSecurity.getItem('periodo');
     if (!periodo) {
       return;
     }
     try {
-      this.dataPeriodos = StorageSecurity.getItem('periodo') || []; 
+      this.dataPeriodos = periodo
     } catch (error) {
       console.error(error);
     }
@@ -1185,12 +1186,12 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   }
   
   GetParentescos() {
-    const parentesco = localStorage.getItem('parentesco');
+    const parentesco = StorageSecurity.getItem('parentesco');
     if (!parentesco) {
       return;
     }
     try {
-      this.dataParentescos = StorageSecurity.getItem('parentesco') || [];
+      this.dataParentescos = parentesco
       if (this.dataParentescos?.length > 10) {
         this.dataParentescos.splice(10, 1);
       }
@@ -1209,12 +1210,12 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   }
 
   GetParentescosChange() {
-    const parentescoChange = localStorage.getItem('parentescoChange');
+    const parentescoChange = StorageSecurity.getItem('parentescoChange');
     if (!parentescoChange) {
       return;
     }
     try {
-      this.dataParentescosChange = StorageSecurity.getItem('parentescoChange') || [];      
+      this.dataParentescosChange = parentescoChange     
       if (this.dataParentescosChange?.length) {
         this.dataParentescosChange.splice(0, 10);
         this.dataParentescosChange.splice(1, 7);
@@ -1227,24 +1228,24 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   }
 
   GetParentescosPeps() {
-    const parentescoPeps = localStorage.getItem('parentescoPeps');
+    const parentescoPeps = StorageSecurity.getItem('parentescoPeps');
     if (!parentescoPeps) {
       return;
     }
     try {
-      this.dataParentescosPeps = StorageSecurity.getItem('parentescoPeps') || [];      
+      this.dataParentescosPeps = parentescoPeps     
     } catch (error) {
       console.error(error);
     }
   }
 
   GetTipoContacto() {
-    const contacto = localStorage.getItem('contacto');
+    const contacto = StorageSecurity.getItem('contacto');
     if (!contacto) {
       return;
     }
     try {
-      this.dataContacto = StorageSecurity.getItem('contacto') || []; 
+      this.dataContacto = contacto
       if (this.dataContacto?.length) {
         this.dataContacto.splice(6, 1);
         this.dataContacto.splice(6, 1);

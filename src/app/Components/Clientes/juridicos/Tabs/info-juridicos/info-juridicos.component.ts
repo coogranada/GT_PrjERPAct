@@ -631,7 +631,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
       // Tercero
       this.AsignarObligatoriosTercero();
       this.AgregarValidacionesTercero();
-      const estados = StorageSecurity.getState();
+      const estados = StorageSecurity.getItem('state');
       if (!estados?.length) {
         return;
       }
@@ -697,7 +697,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
   // Asociado
   this.AgregarValidacionesAsociado();
 
-  const estados = StorageSecurity.getState();
+  const estados = StorageSecurity.getItem('state');
 
   if (!estados?.length) {
     return;

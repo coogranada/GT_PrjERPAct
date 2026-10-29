@@ -120,7 +120,7 @@ export class GestionesOperacionesComponent implements OnInit {
   Procesar(data: any): void {
     this.loading.show();
     const urlModulo = moduloGestionOperacion.validarGestionOpera(data.IdModulo);
-    localStorage.setItem('EsGestion', '1');
+    StorageSecurity.saveItem('EsGestion', '1');
     StorageSecurity.saveItem('DataGest', data);
     this.router.navigate([urlModulo]);
   }

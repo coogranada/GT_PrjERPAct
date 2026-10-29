@@ -238,14 +238,14 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
   ngAfterViewInit() {
     this.emitEventContractual.subscribe(
       result => {
-        const GetOperacion = Number(localStorage.getItem('EsGestion'));
+        const GetOperacion = Number(StorageSecurity.getItem('EsGestion'));
         if (GetOperacion === 1) {
           this.loading.show();
-          let datagest = localStorage.getItem('DataGest');
+          const datagest = StorageSecurity.getItem('DataGest');
           this.dataGestionOperacion = JSON.parse(datagest == null ? "" : datagest);
           this.contractualFrom.get('IdCuenta')?.setValue(this.dataGestionOperacion.IdCuenta);
-          localStorage.removeItem('EsGestion');
-          localStorage.removeItem('DataGest');
+          StorageSecurity.removeItem('EsGestion');
+          StorageSecurity.removeItem('DataGest');
           const Operacion = (this.dataGestionOperacion.IdOperacion);
           const num = Operacion;
           const stringForm = num.toString();

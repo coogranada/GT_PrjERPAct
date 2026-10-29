@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit {
   GetParentescos() {
     this.clientesGetListService.GetParentescos().subscribe(
       (result : any) => {
-        localStorage.setItem('parentesco', window.btoa(JSON.stringify(result)));
+        StorageSecurity.saveItem('parentesco',result);
       },
       (error : any) => {
         const errorMessage = <any>error;
@@ -70,7 +70,7 @@ export class LoginComponent implements OnInit {
   GetParentescosChange() {
     this.clientesGetListService.GetParentescos().subscribe(
       (result : any) => {
-        localStorage.setItem('parentescoChange', window.btoa(JSON.stringify(result)));
+        StorageSecurity.saveItem('parentescoChange',result);
       },
       (error : any ) => {
         const errorMessage = <any>error;
@@ -81,7 +81,7 @@ export class LoginComponent implements OnInit {
   GetParentescosPeps() {
     this.clientesGetListService.GetParentescosPeps().subscribe(
       (result : any)  => {
-        localStorage.setItem('parentescoPeps', window.btoa(JSON.stringify(result)));
+        StorageSecurity.saveItem('parentescoPeps',result);
       },
       (error : any )  => {
         const errorMessage = <any>error;
@@ -92,7 +92,7 @@ export class LoginComponent implements OnInit {
   GetTipoContacto() {
     this.clientesGetListService.GetTipoContacto().subscribe(
       (result : any) => {
-        localStorage.setItem('contacto', window.btoa(JSON.stringify(result)));
+         StorageSecurity.saveItem('contacto',result);
       },
       (error : any )  => {
         const errorMessage = <any>error;
@@ -103,7 +103,7 @@ export class LoginComponent implements OnInit {
   GetOficinas() {
     this.oficinasService.getOficinas().subscribe(
       (result : any) => {
-        localStorage.setItem('oficinas', window.btoa(JSON.stringify(result)));
+        StorageSecurity.saveItem('oficinas',result);
       },
       (error : any )  => {
         console.error(error);
@@ -112,7 +112,7 @@ export class LoginComponent implements OnInit {
   GetProfesion() {
     this.clientesGetListService.GetProfesion().subscribe(
       (result : any) => {
-        localStorage.setItem('profesion', window.btoa(JSON.stringify(result)));
+         StorageSecurity.saveItem('profesion',result);
       },
       (error : any )  => {
         const errorMessage = <any>error;
@@ -123,7 +123,7 @@ export class LoginComponent implements OnInit {
   GetMarcar() {
     this.clientesGetListService.GetMarcas().subscribe(
       (result : any) => {
-        localStorage.setItem('marca', window.btoa(JSON.stringify(result)));
+        StorageSecurity.saveItem('marca',result);
       },
       (error : any )  => {
         const errorMessage = <any>error;
@@ -134,7 +134,7 @@ export class LoginComponent implements OnInit {
   GetConceptosaAll() {
     this.clientesGetListService.GetConceptosAll().subscribe(
       (result : any) => {
-        localStorage.setItem('conceptos', window.btoa(JSON.stringify(result)));
+        StorageSecurity.saveItem('conceptos',result);
       },
       (error : any )  => {
         const errorMessage = <any>error;
@@ -145,7 +145,7 @@ export class LoginComponent implements OnInit {
   GetPeriodosPago() {
     this.clientesGetListService.GetPeriodosPago().subscribe(
       (result : any) => {
-        localStorage.setItem('periodo', window.btoa(JSON.stringify(result)));
+        StorageSecurity.saveItem('periodo',result);
       },
       (error : any )  => {
         const errorMessage = <any>error;
@@ -181,13 +181,9 @@ export class LoginComponent implements OnInit {
         this.SessionUser.FechaInicioSesion = FechaFormat;
 
         this.loginService.PerfilesUsuario(this.dataUser.IdUsuario).subscribe(
-          (perfil: any) => {
-
-            // Antes localStorage
+          (perfil: any) => {   
             StorageSecurity.saveItem('profiles', perfil);
-
             if (this.dataUser.IdEstado === 4) {
-
               Swal.fire({
                 title: 'Advertencia',
                 html: 'El usuario se encuentra en estado inactivo.',
@@ -231,12 +227,7 @@ export class LoginComponent implements OnInit {
             } else {
 
               this.loading.hide();
-
-              // Antes localStorage.setItem('userName', ...)
-              StorageSecurity.saveItem(
-                'userName',
-                this.dataUser.Usuario
-              );
+              StorageSecurity.saveItem('userName',this.dataUser.Usuario);
 
               this.isLoginError = false;
 
@@ -254,15 +245,8 @@ export class LoginComponent implements OnInit {
                   );
 
                   this.catalogosService.cargarCatalogosSiNoExisten();
-
-                  // Antes localStorage.setItem('parentescoChange', ...)
-                  StorageSecurity.saveItem(
-                    'parentescoChange',
-                    result
-                  );
-
+                  StorageSecurity.saveItem('parentescoChange',result);
                   let browser = await detectIncognito();
-
                   let strBrowser =
                     browser.browserName +
                     '-' +
@@ -417,39 +401,47 @@ export class LoginComponent implements OnInit {
     });
   }
   ValidarMetodosCarga(): any {
-    const dataProfesion = localStorage.getItem('profesion');
-    if (dataProfesion === undefined || dataProfesion === null) {
+    const dataProfesion = StorageSecurity.getItem('profesion');
+    if (!dataProfesion) {
       this.GetProfesion();
     }
-    const dataParent = localStorage.getItem('parentesco');
-    if (dataParent === undefined || dataParent === null) {
+
+    const dataParent = StorageSecurity.getItem('parentesco');
+    if (!dataParent) {
       this.GetParentescos();
     }
-    const dataParentPesp = localStorage.getItem('parentescoPeps');
-    if (dataParentPesp === undefined || dataParentPesp === null) {
+
+    const dataParentPeps = StorageSecurity.getItem('parentescoPeps');
+    if (!dataParentPeps) {
       this.GetParentescosPeps();
     }
-    const dataOficina = localStorage.getItem('oficinas');
-    if (dataOficina === undefined || dataOficina === null) {
+
+    const dataOficina = StorageSecurity.getItem('oficinas');
+    if (!dataOficina) {
       this.GetOficinas();
     }
-    const dataMarca = localStorage.getItem('marca');
-    if (dataMarca === undefined || dataMarca === null) {
+
+    const dataMarca = StorageSecurity.getItem('marca');
+    if (!dataMarca) {
       this.GetMarcar();
     }
-    const dataTipo = localStorage.getItem('contacto');
-    if (dataTipo === undefined || dataTipo === null) {
+
+    const dataTipo = StorageSecurity.getItem('contacto');
+    if (!dataTipo) {
       this.GetTipoContacto();
     }
-    const dataConcepto = localStorage.getItem('conceptos');
-    if (dataConcepto === undefined || dataConcepto === null) {
+
+    const dataConcepto = StorageSecurity.getItem('conceptos');
+    if (!dataConcepto) {
       this.GetConceptosaAll();
     }
-    const dataPeriodo = localStorage.getItem('periodo');
-    if (dataPeriodo === undefined || dataPeriodo === null) {
+
+    const dataPeriodo = StorageSecurity.getItem('periodo');
+    if (!dataPeriodo) {
       this.GetPeriodosPago();
     }
   }
+
   validateForm() {
     const Usuario = new FormControl('',
       [

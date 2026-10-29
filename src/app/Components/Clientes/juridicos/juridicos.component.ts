@@ -397,12 +397,14 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     });
     // Metdod para mapear la gestion de operaciones
     this.emitEventJuridico.subscribe(res => {
-      const GetOperacion = Number(localStorage.getItem('EsGestion'));
-      if (GetOperacion === 1) {
-        let datages : string | null = localStorage.getItem('DataGest')
-        this.dataGestionOperacion = JSON.parse(datages == null ? "" : datages);
-        localStorage.removeItem('EsGestion');
-        localStorage.removeItem('DataGest');
+      const getOperacion = Number(
+        StorageSecurity.getItem('EsGestion')
+      );
+      if (getOperacion === 1) {
+        this.dataGestionOperacion =
+          StorageSecurity.getItem('DataGest');
+        StorageSecurity.removeItem('EsGestion');
+        StorageSecurity.removeItem('DataGest');
         this.MapearGestion(this.dataGestionOperacion);
       }
     });
@@ -568,7 +570,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       } else {
         this.esReimpresion = false;
         if (operaSeleccionada === 2) { // Buscar
-          const estados = StorageSecurity.getState();
+          const estados = StorageSecurity.getItem('state');
 
           if (estados) {
             this.infoJuridicoComponent.dataEstados = estados;
@@ -797,7 +799,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         if (results.value) {
           //Deja la operacion  como  estaba
           if (this.OperacionMarcada === '31') {
-            const estados = StorageSecurity.getState();
+            const estados = StorageSecurity.getItem('state');
             if (!estados?.length) {
               return;
             }
@@ -942,7 +944,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         if (results.value) {
           //Deja la operacion  como  estaba
           if (this.OperacionMarcada === '31') {
-            const estados = StorageSecurity.getState();
+            const estados = StorageSecurity.getItem('state');
             if (!estados?.length) {
               return;
             }
@@ -3073,7 +3075,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-              const estados = StorageSecurity.getState();
+              const estados = StorageSecurity.getItem('state');
               if (!estados?.length) {
                 return;
               }
@@ -3199,7 +3201,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-              const estados = StorageSecurity.getState();
+              const estados = StorageSecurity.getItem('state');
               if (!estados?.length) {
                 return;
               }
@@ -3336,7 +3338,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-              const estados = StorageSecurity.getState();
+              const estados = StorageSecurity.getItem('state');
               if (!estados?.length) {
                 return;
               }
@@ -3468,7 +3470,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-             const estados = StorageSecurity.getState();
+             const estados = StorageSecurity.getItem('state');
               if (!estados?.length) {
                 return;
               }
@@ -3589,7 +3591,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-              const estados = StorageSecurity.getState();
+              const estados = StorageSecurity.getItem('state');
               if (!estados?.length) {
                 return;
               }
@@ -3710,7 +3712,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-            const estados = StorageSecurity.getState();
+            const estados = StorageSecurity.getItem('state');
               if (!estados?.length) {
                 return;
               }
@@ -3829,7 +3831,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-             const estados = StorageSecurity.getState();
+             const estados = StorageSecurity.getItem('state');
               if (!estados?.length) {
                 return;
               }
@@ -3954,7 +3956,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-              const estados = StorageSecurity.getState();
+              const estados = StorageSecurity.getItem('state');
               if (!estados?.length) {
                 return;
               }
@@ -4082,7 +4084,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-             const estados = StorageSecurity.getState();
+             const estados = StorageSecurity.getItem('state');
               if (!estados?.length) {
                 return;
               }
@@ -4209,7 +4211,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-            const estados = StorageSecurity.getState();
+            const estados = StorageSecurity.getItem('state');
               if (!estados?.length) {
                 return;
               }
@@ -4343,7 +4345,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-             const estados = StorageSecurity.getState();
+             const estados = StorageSecurity.getItem('state');
               if (!estados?.length) {
                 return;
               }
@@ -4477,7 +4479,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-             const estados = StorageSecurity.getState();
+             const estados = StorageSecurity.getItem('state');
               if (!estados?.length) {
                 return;
               }
@@ -4611,7 +4613,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-              const estados = StorageSecurity.getState();
+              const estados = StorageSecurity.getItem('state');
               if (!estados?.length) {
                 return;
               }
@@ -4745,7 +4747,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-              const estados = StorageSecurity.getState();
+              const estados = StorageSecurity.getItem('state');
               if (!estados?.length) {
                 return;
               }
@@ -4879,7 +4881,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           if (results.value) {
             //Deja la operacion  como  estaba
             if (this.OperacionMarcada === '31') {
-             const estados = StorageSecurity.getState();
+             const estados = StorageSecurity.getItem('state');
               if (!estados?.length) {
                 return;
               }
@@ -5754,9 +5756,8 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
   GetEstado() {
     this.estadosSubscription = this.clientesGetListService.GetEstado().subscribe(
       result => {
-        localStorage.setItem('state', window.btoa(JSON.stringify(result)));
+       StorageSecurity.saveItem('state', result);
         this.infoJuridicoComponent.dataEstados = result;
-
       },
       error => {
         const errorMessage = <any>error;
