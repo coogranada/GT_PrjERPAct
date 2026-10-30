@@ -4089,6 +4089,7 @@ export class GestionCarteraComponent {
     this.lstCalificacion = [];
     this.lstAnalisisCalificacion = [];
     this.lstReestructuracion = [];
+    this.historicoInsolvencia = [];
     this.lstReliquidacion = [];
     this.cupoForm.reset();
     this.lstCalcularCuota = [];
