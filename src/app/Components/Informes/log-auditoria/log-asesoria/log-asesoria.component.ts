@@ -301,58 +301,25 @@ export class LogAsesoriaComponent implements OnInit {
       this.clearFechaFinal = false;
     }
   
-    const fechaMinima = new Date(2000, 0, 1);
-  
-    const hoy = new Date();
-  
-    const fechaActual = new Date(
-      hoy.getFullYear(),
-      hoy.getMonth(),
-      hoy.getDate()
-    );
-  
-    let fechaInicial: Date | null = null;
-    let fechaFinal: Date | null = null;
-  
-    if (this.valueFechaInicial) {
-    
-      const partes = this.valueFechaInicial.split('-');
-    
-      fechaInicial = new Date(
-        +partes[0],
-        +partes[1] - 1,
-        +partes[2]
-      );
-    
-      this.valida1F =
-        fechaInicial >= fechaMinima &&
-        fechaInicial <= fechaActual;
-    
-    } else {
-    
-      this.valida1F = false;
-    
-    }
-  
-    if (this.valueFechaFinal) {
-    
-      const partes = this.valueFechaFinal.split('-');
-    
-      fechaFinal = new Date(
-        +partes[0],
-        +partes[1] - 1,
-        +partes[2]
-      );
-    }
+    this.valida1F =
+      !!this.valueFechaInicial &&
+      !this.esFechaInicialMayorActual() &&
+      !this.esFechaInicialMenorPermitida();
   
     this.valida2F =
-      !!fechaInicial &&
-      !!fechaFinal &&
-      fechaFinal >= fechaMinima &&
-      fechaFinal <= fechaActual &&
-      fechaInicial <= fechaFinal;
+      !!this.valueFechaFinal &&
+      !this.esFechaFinalMayorActual() &&
+      !this.esFechaFinalMenorPermitida();
   
-    this.btnGenerate = this.valida1F && this.valida2F;
+    const rangoValido =
+      !this.valueFechaInicial ||
+      !this.valueFechaFinal ||
+      this.valueFechaInicial <= this.valueFechaFinal;
+  
+    this.btnGenerate =
+      this.valida1F &&
+      this.valida2F &&
+      rangoValido;
   }
   DateBeginAndEnd() {
 
@@ -586,5 +553,19 @@ export class LogAsesoriaComponent implements OnInit {
   
   esFechaFinalMayorActual(): boolean {
     return this.valueFechaFinal?.toString() > this.fechaMax;
+  }
+
+  esFechaInicialMenorPermitida(): boolean {
+    return (
+      !!this.valueFechaInicial &&
+      this.valueFechaInicial.toString() < this.fechaMinima
+    );
+  }
+  
+  esFechaFinalMenorPermitida(): boolean {
+    return (
+      !!this.valueFechaFinal &&
+      this.valueFechaFinal.toString() < this.fechaMinima
+    );
   }
 }

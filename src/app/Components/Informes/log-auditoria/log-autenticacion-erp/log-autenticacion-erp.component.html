@@ -109,13 +109,7 @@
 
                                                             <span
                                                               class="help-block validationSpan"
-                                                              *ngIf="
-                                                                !esFechaInicialMayorActual() &&
-                                                                !valida1F &&
-                                                                !clearFechaInicial &&
-                                                                valueFechaInicial &&
-                                                                (!valueFechaFinal || valueFechaInicial <= valueFechaFinal)
-                                                              ">
+                                                              *ngIf="esFechaInicialMenorPermitida() && !clearFechaInicial">
                                                               {{ ERP_MESSAGES.FECHA_MENOR_PERMITIDA }}
                                                             </span>
 
@@ -155,13 +149,7 @@
                                                             
                                                             <span
                                                               class="help-block validationSpan"
-                                                              *ngIf="
-                                                                !esFechaFinalMayorActual() &&
-                                                                !valida2F &&
-                                                                !clearFechaFinal &&
-                                                                valueFechaFinal &&
-                                                                valueFechaInicial <= valueFechaFinal
-                                                              ">
+                                                              *ngIf="esFechaFinalMenorPermitida() && !clearFechaFinal">
                                                               {{ ERP_MESSAGES.FECHA_MENOR_PERMITIDA }}
                                                             </span>
                                                             
@@ -205,7 +193,7 @@
                                            
                                             <div class="row">
                                                 <div class="col-md-12 col-lg-12 col-sm-12 text-right"
-                                                     *ngIf="filtrosAgregado.length > 0 && btnGenerate">
+                                                     *ngIf="btnGenerate">
                                             
                                                     <br>
                                             

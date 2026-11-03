@@ -465,4 +465,18 @@ export class LogBannerComponent implements OnInit {
   esFechaFinalMayorActual(): boolean {
     return this.valueFechaFinal?.toString() > this.fechaMax;
   }
+
+  esFechaInicialMenorPermitida(): boolean {
+    return (
+      !!this.valueFechaInicial &&
+      this.valueFechaInicial.toString() < this.fechaMinima
+    );
+  }
+  
+  esFechaFinalMenorPermitida(): boolean {
+    return (
+      !!this.valueFechaFinal &&
+      this.valueFechaFinal.toString() < this.fechaMinima
+    );
+  }
 }
