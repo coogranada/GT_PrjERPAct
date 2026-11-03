@@ -62,7 +62,7 @@ export class PermisosEspecialesComponent implements OnInit {
     this.loginService.GetSesionXUsuario(this.DatosUsuario.IdUsuario).subscribe(result => {
         if (!result.Estado) {
           this.router.navigateByUrl('/Login');
-          localStorage.clear();
+          StorageSecurity.clear();
         }
       });
     this.IrArriba();

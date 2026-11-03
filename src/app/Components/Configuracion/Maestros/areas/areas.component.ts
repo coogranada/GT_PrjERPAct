@@ -58,7 +58,7 @@ export class AreasComponent implements OnInit {
     this.loginService.GetSesionXUsuario(this.DatosUsuario.IdUsuario).subscribe((result : any ) => {
         if (!result.Estado) {
           this.router.navigateByUrl('/Login');
-          localStorage.clear();
+          StorageSecurity.clear();
         }
       });
     this.IrArriba();
@@ -71,7 +71,7 @@ export class AreasComponent implements OnInit {
       },(error : any) => {
         this.loading.hide();
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.log(errorMessage);
       });
   }
@@ -95,7 +95,7 @@ export class AreasComponent implements OnInit {
         },(error : any ) => {
           this.loading.hide();
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.log();
         });
     }
@@ -120,7 +120,7 @@ export class AreasComponent implements OnInit {
         }, (error : any) => {
           this.loading.hide();
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.log(errorMessage);
         });
     }

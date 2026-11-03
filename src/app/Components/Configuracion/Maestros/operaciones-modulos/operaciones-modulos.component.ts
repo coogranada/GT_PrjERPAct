@@ -64,7 +64,7 @@ export class OperacionesModulosComponent implements OnInit {
       result => {
         if (!result.Estado) {
           this.router.navigateByUrl('/Login');
-          localStorage.clear();
+          StorageSecurity.clear();
         }
       });
     this.IrArriba();

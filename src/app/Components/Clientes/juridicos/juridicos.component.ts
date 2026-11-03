@@ -318,7 +318,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       result => {
         if (!result.Estado) {
           this.router.navigateByUrl('/Login');
-          localStorage.clear();
+          StorageSecurity.clear();
         }
       }
     );
@@ -5641,7 +5641,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.error(errorMessage);
       }
     );
@@ -5677,7 +5677,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.error(errorMessage);
       }
     );
@@ -5691,7 +5691,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     //   },
     //   error => {
     //     const errorMessage = <any>error;
-    //     this.notif.onDanger('Error', errorMessage);
+    //     
     //     console.error(errorMessage);
     //   }
     // );
@@ -5705,7 +5705,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.error(errorMessage);
       }
     );
@@ -5719,7 +5719,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     //   },
     //   error => {
     //     const errorMessage = <any>error;
-    //     this.notif.onDanger('Error', errorMessage);
+    //     
     //     console.error(errorMessage);
     //   }
     // );
@@ -5733,7 +5733,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     //   },
     //   error => {
     //     const errorMessage = <any>error;
-    //     this.notif.onDanger('Error', errorMessage);
+    //     
     //     console.error(errorMessage);
     //   }
     // );
@@ -5747,7 +5747,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
   //     },
   //     error => {
   //       const errorMessage = <any>error;
-  //       this.notif.onDanger('Error', errorMessage);
+  //       
   //       console.error(errorMessage);
   //     }
   //   );
@@ -5761,7 +5761,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.error(errorMessage);
       }
     );
@@ -5791,7 +5791,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.error(errorMessage);
       }
     );
@@ -6295,8 +6295,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           this.mostarErrorMotivoDescripcion = false;
           // aqui realizar el registro
           const resultPerfil = StorageSecurity.getData();   
-          let solucitudR = StorageSecurity.getItem('solicituRetiroJson')
-          const resulMotivoEnvio = JSON.parse(window.atob(solucitudR == null ? "" : solucitudR));
+          const resulMotivoEnvio = StorageSecurity.getItem('solicituRetiroJson');
           this.objMotivo.Descripcion = this.solicitudRetiroForm.get('ObservacionMotivo')?.value;
           this.objMotivo.FechaRetiro = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
           this.objMotivo.IdJuridico = this.JuridicoSeleccionado;
@@ -6331,7 +6330,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
             }, error => {
               // this.motivoEnvioJson = null;
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.error(errorMessage);
             });
         }
@@ -6341,9 +6340,8 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
         this.botonBasico.nativeElement.click();
         this.solicitudRetiroForm?.reset();
         this.mostarErrorMotivoDescripcion = false;
-        const resultPerfil = StorageSecurity.getData();     
-        let solucitudR = StorageSecurity.getItem('solicituRetiroJson')
-        const resulMotivoEnvio = JSON.parse(window.atob(solucitudR == null ? "" : solucitudR));
+        const resultPerfil = StorageSecurity.getData();   
+        const resulMotivoEnvio = StorageSecurity.getItem('solicituRetiroJson');  
         // aqui realizar el registro
        
         // this.objMotivo.Descripcion = this.solicitudRetiroForm.get('ObservacionMotivo')?.value;
@@ -6382,7 +6380,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
           }, error => {
             this.motivoEnvioJson = null;
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.error(errorMessage);
           });
       }
@@ -6490,7 +6488,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
             },
             error => {
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.error(errorMessage);
             }
           );
@@ -6792,7 +6790,7 @@ export class JuridicosComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.error(errorMessage);
       }
     );

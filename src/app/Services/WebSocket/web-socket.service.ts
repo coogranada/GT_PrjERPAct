@@ -43,13 +43,13 @@ export class WebSocketService {
           this.LogginOut();
         }
 
-        localStorage.removeItem("ChangeState");
+        StorageSecurity.removeItem("ChangeState");
       }
     });
   }
 
   TriggerLocal(strParam: string) {
-    localStorage.setItem("ChangeState", strParam);
+    StorageSecurity.saveItem("ChangeState", strParam);
   }
 
   Init() {

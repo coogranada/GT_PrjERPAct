@@ -16773,7 +16773,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.error(errorMessage);
       }
     );
@@ -16843,7 +16843,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           },
           error => {
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
            console.error(errorMessage);
            this.contractualOperacionFrom.get('Codigo')?.reset();
           });
@@ -16873,7 +16873,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           },
           error => {
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.error(errorMessage);
             this.contractualOperacionFrom.get('Codigo')?.reset();
             });
@@ -16906,7 +16906,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           },
           error => {
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.error(errorMessage);
             this.contractualOperacionFrom.get('Codigo')?.reset();
           });
@@ -16936,7 +16936,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
           },
           error => {
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.error(errorMessage);
             this.contractualOperacionFrom.get('Codigo')?.reset();
           });
@@ -17738,7 +17738,7 @@ export class ContractualComponent implements OnInit, AfterViewInit   {
        error => {
          this.loading.hide();
          const errorMessage = <any>error;
-         this.notif.onDanger('Error', errorMessage);
+         
          console.log(errorMessage);
        });
    }

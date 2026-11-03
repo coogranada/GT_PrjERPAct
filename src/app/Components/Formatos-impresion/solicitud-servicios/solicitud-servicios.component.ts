@@ -762,7 +762,7 @@ export class SolicitudServiciosComponent implements OnInit {
                   },
                   error => {
                     const errorMessage = <any>error;
-                    this.notif.onDanger('Error', errorMessage);
+                    
                     console.error(errorMessage);
                   }
                 );
@@ -777,7 +777,7 @@ export class SolicitudServiciosComponent implements OnInit {
                   },
                   error => {
                     const errorMessage = <any>error;
-                    this.notif.onDanger('Error', errorMessage);
+                    
                     console.error(errorMessage);
                   });
               } else {

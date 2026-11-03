@@ -21,7 +21,7 @@ export class AplicacionesColaborativasComponent implements OnInit {
       (result : any) => {
         if (!result.Estado) {
           this.router.navigateByUrl('/Login');
-          localStorage.clear();
+          StorageSecurity.clear();
         }
       });
   }

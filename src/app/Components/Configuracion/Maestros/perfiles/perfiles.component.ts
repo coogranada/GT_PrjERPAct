@@ -64,7 +64,7 @@ export class PerfilesComponent implements OnInit {
       result => {
         if (!result.Estado) {
           this.router.navigateByUrl('/Login');
-          localStorage.clear();
+          StorageSecurity.clear();
         }
       });
     this.IrArriba();
@@ -84,7 +84,7 @@ export class PerfilesComponent implements OnInit {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.log(errorMessage);
       });
   }

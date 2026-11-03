@@ -76,7 +76,7 @@ ngOnInit(): void {
   }
 
   private logout(): void {
-  localStorage.clear();
+  StorageSecurity.clear();
   if (this.router.url !== '/Login') {
     this.router.navigate(['/Login']);
   }

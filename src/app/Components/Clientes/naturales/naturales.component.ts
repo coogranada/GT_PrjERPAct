@@ -921,8 +921,8 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.GetOficinas(); // false
 
     $('html, body').animate({ scrollTop: 0 }, 'slow');
-    localStorage.removeItem('estadoSeleccionado');
-    localStorage.removeItem('tipoEmpleoSeleccionado');
+    StorageSecurity.removeItem('estadoSeleccionado');
+    StorageSecurity.removeItem('tipoEmpleoSeleccionado');
     this.blockTratamiento = true;
     this.blockTratamientoFecha = true;
     $('#operaJquery').focus().select();
@@ -994,7 +994,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         .subscribe(
           result => {
             if (!result.Estado) {
-              localStorage.clear();
+              StorageSecurity.clear();
               this.router.navigateByUrl('/Login');
             }
           },
@@ -1059,7 +1059,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.error(errorMessage);
       }
     );
@@ -1153,7 +1153,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.error(error);
       }
     );
@@ -1279,9 +1279,12 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   }
 
   CargarTrasabilidad() {
-    this.condicion = true;
-     localStorage.setItem('trasabilidad', window.btoa(JSON.stringify(this.basicosFrom.get('numeroDocumento')?.value)));
-  }
+  this.condicion = true;
+  StorageSecurity.saveItem(
+    'trasabilidad',
+    this.basicosFrom.get('numeroDocumento')?.value
+  );
+}
 
   ReserTrasabilidad() {
     this.condicion = false;
@@ -1677,7 +1680,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       this.contactoForm.get('CardiDos')?.reset();
       this.contactoForm.get('Imuebles')?.reset();
 
-      localStorage.removeItem('DataService');
+      StorageSecurity.removeItem('DataService');
       this.selectAutomaticoDropEntrevista();
       this.PreCargarPais(3);
 
@@ -1852,7 +1855,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       this.basicosFrom.controls['numHijos'].setErrors({ 'incorrect': true });
       this.basicosFrom.controls['numHijosEstudian'].setValidators(Validators.required);
       this.basicosFrom.controls['numHijosEstudian'].setErrors({ 'incorrect': true });
-      localStorage.removeItem('DataService');
+      StorageSecurity.removeItem('DataService');
       this.DesbloquearRespuesta2 = true;
       this.DesbloquearRespuesta6 = true;
       this.DesbloquearRespuesta14 = true;
@@ -2529,7 +2532,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           this.formLockedHipoPigno = true;
           this.BlockFecha = true;
           this.disableCampos();
-          localStorage.removeItem('DataService');
+          StorageSecurity.removeItem('DataService');
           this.operacionEscogida = '/Imprimir afiliación';
           const strNumeroDocumento = this.basicosFrom.get('DocumentoBusqueda')?.value;
           if (strNumeroDocumento === '' || strNumeroDocumento === null || strNumeroDocumento === undefined) {
@@ -2579,9 +2582,9 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                   this.BlockVinculacion = null;
                   this.serviciosFrom.reset();
                   // se utiliza para saber si se realiza una vinculacion una actualizacion y un credito en la impresion
-                  localStorage.setItem('Credito', 'true');
-                  localStorage.setItem('Vinculacion', 'false');
-                  localStorage.setItem('Actualizacion', 'true');
+                  StorageSecurity.saveItem('Credito', true);
+                  StorageSecurity.saveItem('Vinculacion', false);
+                  StorageSecurity.saveItem('Actualizacion', true);
                   const data = StorageSecurity.getData();
                   this.serviciosFrom.get('servicioSolicitado')?.setValue(3);
                   this.serviciosFrom.get('operacionSeleccionada')?.setValue('imprimir');
@@ -6337,7 +6340,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
       });
   }
   private EliminarValidadoresProveedores() {
@@ -6997,16 +7000,15 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       }
     }
   }
-  validarEstadoCivil() {
+
+  validarEstadoCivil(): void {
     const operacion = this.basicosFrom.get('operacion')?.value;
+    const estadoCivil = Number(this.basicosFrom.get('estadoCivil')?.value);
     if (operacion === '1') {
-      const estadoCivil = +this.basicosFrom.get('estadoCivil')?.value;
       if (this.estadoCivilAnterior === 5 && estadoCivil !== 5) {
-        // aqui eliminar los registros de conyugue
-        Swal.fire({ // Se preguunta si necesita asesor externo
+        Swal.fire({
           title: 'Advertencia',
-          text: '',
-          html: '¡ Se realizó un cambio en el estado civil se eliminaran los registros del cónyuge ! ',
+          html: '¡ Se realizó un cambio en el estado civil, se eliminarán los registros del cónyuge !',
           icon: 'warning',
           showCancelButton: false,
           confirmButtonText: 'Entiendo',
@@ -7014,9 +7016,8 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           cancelButtonColor: 'rgb(160,0,87)',
           allowOutsideClick: false,
           allowEscapeKey: false
-          // tslint:disable-next-line:no-shadowed-variable
-        }).then((results) => {
-          if (results.value) {
+        }).then((result) => {
+          if (result.value) {
             this.cambioCivil = true;
           }
         });
@@ -7024,18 +7025,15 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         this.cambioCivil = false;
       }
     } else if (operacion === '5') {
-      const estadoSeleccionado = localStorage.getItem('estadoSeleccionado');
+      const estadoSeleccionado = StorageSecurity.getItem('estadoSeleccionado');
       if (estadoSeleccionado === null || estadoSeleccionado === undefined) {
-        localStorage.setItem('estadoSeleccionado', this.basicosFrom.get('estadoCivil')?.value);
+        StorageSecurity.saveItem('estadoSeleccionado', estadoCivil);
       } else {
-        const estadoEscogido = +this.basicosFrom.get('estadoCivil')?.value;
-        if (+estadoSeleccionado !== estadoEscogido) {
-          if (estadoEscogido !== 5 && this.itemsConyugue.length > 0) {
-            // aqui eliminar los registros de conyugue
-            Swal.fire({ // Se preguunta si necesita asesor externo
+        if (Number(estadoSeleccionado) !== estadoCivil) {
+          if (estadoCivil !== 5 && this.itemsConyugue.length > 0) {
+            Swal.fire({
               title: 'Advertencia',
-              text: '',
-              html: '¡ Se realizó un cambio en el estado civil se eliminaran los registros del cónyuge ! ',
+              html: '¡ Se realizó un cambio en el estado civil, se eliminarán los registros del cónyuge !',
               icon: 'warning',
               showCancelButton: false,
               confirmButtonText: 'Entiendo',
@@ -7043,24 +7041,29 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
               cancelButtonColor: 'rgb(160,0,87)',
               allowOutsideClick: false,
               allowEscapeKey: false
-              // tslint:disable-next-line:no-shadowed-variable
-            }).then((results : any) => {
+            }).then((result) => {
               this.itemsConyugue = [];
               this.allItemsFormSaves.conyugueDto = [];
-              localStorage.setItem('estadoSeleccionado', this.basicosFrom.get('estadoCivil')?.value);
               this.limpiarFormularios(this.conyugueForm);
-              if (results.value) {
+              StorageSecurity.saveItem('estadoSeleccionado', estadoCivil);
+              if (result.value) {
                 this.cambioCivil = true;
               }
             });
+          } else {
+            StorageSecurity.saveItem('estadoSeleccionado', estadoCivil);
+            this.cambioCivil = false;
           }
         } else {
-          localStorage.setItem('estadoSeleccionado', this.basicosFrom.get('estadoCivil')?.value);
+          StorageSecurity.saveItem('estadoSeleccionado', estadoCivil);
           this.cambioCivil = false;
         }
       }
     }
   }
+
+
+  
   autocompleListFormatter = (data: any): SafeHtml => {
     const html = `<span>${data.Nombre}</span>`;
     return this._sanitizer.bypassSecurityTrustHtml(html);
@@ -7965,7 +7968,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
   }
   validarSelectParentesco() {
     const parentesco = this.referenciaForm.get('IdParentesco')?.value;
-    const estadoLocal = Number(localStorage.getItem('estadoSeleccionado'));
+    const estadoLocal = Number(StorageSecurity.getItem('estadoSeleccionado'));
     const referencia = this.referenciaForm.get('idTipoReferencia')?.value;
     if (parentesco.Clase === 10 && estadoLocal === 25) {
       this.referenciaForm.get('IdParentesco')?.reset();
@@ -8083,7 +8086,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.basicosFrom.controls['numHijos'].setErrors({ 'incorrect': true });
     this.basicosFrom.controls['numHijosEstudian'].setValidators(Validators.required);
     this.basicosFrom.controls['numHijosEstudian'].setErrors({ 'incorrect': true });
-    localStorage.removeItem('DataService');
+    StorageSecurity.removeItem('DataService');
   }
   MarcarNoPreguntas() {
     this.entrevistaForm.get('RPregunta20Si')?.setValue(false);
@@ -8173,7 +8176,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     $('#referenciaTab').addClass('disableTab');
     $('#entrevistaTab').addClass('disableTab');
     $('#seguroTab').addClass('disableTab');
-    localStorage.removeItem('DataService');
+    StorageSecurity.removeItem('DataService');
     this.VolverArriba();
   }
   bloquearTodo() {
@@ -8250,7 +8253,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     $('#referenciaTab').addClass('disableTab');
     $('#entrevistaTab').addClass('disableTab');
     $('#seguroTab').addClass('disableTab');
-    localStorage.removeItem('DataService');
+    StorageSecurity.removeItem('DataService');
     this.VolverArriba();
   }
   BloquearFormBuscar() {
@@ -8444,7 +8447,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.basicosFrom.controls['numHijos'].setErrors({ 'incorrect': true });
     this.basicosFrom.controls['numHijosEstudian'].setValidators(Validators.required);
     this.basicosFrom.controls['numHijosEstudian'].setErrors({ 'incorrect': true });
-    localStorage.removeItem('DataService');
+    StorageSecurity.removeItem('DataService');
     this.VolverArriba();
   }
   valirdarPlazo() {
@@ -8538,7 +8541,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             },
             error => {
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.error(errorMessage);
             }
           );     
@@ -8559,7 +8562,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             },
             error => {
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.error(errorMessage);
             }
           );
@@ -8580,7 +8583,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           },
           error => {
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.error(errorMessage);
           }
         );
@@ -8600,7 +8603,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           },
           error => {
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.error(errorMessage);
           }
         );
@@ -8620,7 +8623,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           },
           error => {
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.error(errorMessage);
           }
         );
@@ -8656,7 +8659,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             },
             error => {
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.error(errorMessage);
             }
           );
@@ -8707,7 +8710,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
               },
               error => {
                 const errorMessage = <any>error;
-                this.notif.onDanger('Error', errorMessage);
+                
                 console.error(errorMessage);
               }
             );
@@ -8760,7 +8763,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             },
             error => {
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.error(errorMessage);
             });
       } else {
@@ -8815,7 +8818,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           },
           error => {
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.error(errorMessage);
           }
         );
@@ -8865,7 +8868,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             },
             error => {
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.error(errorMessage);
             }
           );
@@ -8907,7 +8910,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           },
           error => {
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.error(errorMessage);
           }
         );
@@ -9161,7 +9164,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         },
         error => {
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.error(errorMessage);
         }
       );
@@ -9192,7 +9195,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           },
           error => {
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.error(errorMessage);
           }
         );
@@ -9216,7 +9219,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           },
           error => {
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.error(errorMessage);
           }
         );
@@ -9233,7 +9236,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
     this.dataEmpresas = result;
     }catch(error) {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.error(errorMessage);
       }
   }
@@ -9251,7 +9254,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         },
         error => {
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.error(errorMessage);
         }
       );
@@ -9269,28 +9272,29 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.error(errorMessage);
       });
   }
 
-  GetTipoOcupacion() {
+  GetTipoOcupacion(): void {
     const tipoEmpleo = this.basicosFrom.get('tipoEmpleo')?.value;
-    const tipoCliente =  this.basicosFrom.get('tipoCliente')?.value;
-    if (+tipoEmpleo === 1 || +tipoEmpleo === 6 || +tipoEmpleo === 7 || +tipoEmpleo === 8 ||
-      +tipoEmpleo === 9 || +tipoEmpleo === 2 || + tipoEmpleo === 15 ||
-      +tipoEmpleo === 5 || +tipoEmpleo === 3 || +tipoEmpleo === 14) {
+    const tipoCliente = this.basicosFrom.get('tipoCliente')?.value;
+    const operacion = this.basicosFrom.get('operacion')?.value;
+    const fechaNacimiento = this.basicosFrom.get('fechaNacimiento')?.value;
+    const tipoEmpleoNum = Number(tipoEmpleo);
+    const empleosLaborales = [1, 2, 3, 5, 6, 7, 8, 9, 14, 15];
+    if (empleosLaborales.includes(tipoEmpleoNum)) {
       this.ocultarLaboral = false;
       this.ocultarLaboralDos = true;
       this.MostrarEmpresaDescripcion = true;
       this.MostrarEmpresaBuscar = false;
       this.laboralForm.get('EmpresaString')?.reset();
-      this.laboralForm.controls['EmpresaString'].setErrors({ 'incorrect': true });
+      this.laboralForm.controls['EmpresaString'].setErrors({ incorrect: true });
       this.laboralForm.controls['EmpresaString'].setValidators([Validators.required]);
       this.laboralForm.controls['NombreDropMostrar'].setErrors(null);
       this.laboralForm.controls['NombreDropMostrar'].clearValidators();
       this.laboralForm.controls['NombreDropMostrar'].setValidators(null);
-
     } else {
       this.ocultarLaboral = true;
       this.ocultarLaboralDos = false;
@@ -9301,145 +9305,97 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       this.laboralForm.controls['EmpresaString'].setErrors(null);
       this.laboralForm.controls['EmpresaString'].clearValidators();
       this.laboralForm.controls['EmpresaString'].setValidators(null);
-      this.laboralForm.controls['NombreDropMostrar'].setErrors({ 'incorrect': true });
+      this.laboralForm.controls['NombreDropMostrar'].setErrors({ incorrect: true });
       this.laboralForm.controls['NombreDropMostrar'].setValidators([Validators.required]);
     }
     if (tipoEmpleo === '') {
-      this.notif.onWarning('Advertencia', 'Debe seleccionar un tipo de empleo válido.');
+      this.notif.onWarning(
+        'Advertencia',
+        'Debe seleccionar un tipo de empleo válido.'
+      );
       this.basicosFrom.get('tipoEmpleo')?.reset();
-    } else {
-
-      $(document).on('click', '#agregar_nombres', function () {
-        $('#ModalAgregarNombre').modal('show');
-      });
-      const year = this.basicosFrom.get('fechaNacimiento')?.value;
-      const operacion = this.basicosFrom.get('operacion')?.value;
-      // 3 Desempleados Mayor 18 años
-      // 15 Sin Ocupación Menor de 18 años
-      if (operacion === '1') {
-        if ((this.empleoAnterior !== +'4' && this.empleoAnterior !== +'6' && this.empleoAnterior !== +'10' && this.empleoAnterior !== +'11')
-          && (tipoEmpleo === '4' || tipoEmpleo === '6' || tipoEmpleo === '10' || tipoEmpleo === '11')) {
-          if (this.itemsLaboral.length <= 0) {
-            this.AbrirLaboral.nativeElement.click();
-          }
-        }
-      }
-      if (year !== null  && !this.EsProveedor) {
-        const fechaNacimiento = this.basicosFrom.get('fechaNacimiento')?.value;
-        const fechaActualFormat = moment(new Date()).format();
-        const nacimiento = moment(fechaNacimiento).format();
-        const validacionFechas = this.ValidacionFechas(fechaActualFormat, nacimiento);
-        if (!validacionFechas && tipoEmpleo === '3') {
-          this.basicosFrom.get('tipoEmpleo')?.reset();
-          this.notif.onWarning('Advertencia','El tipo de relación seleccionado no es válido para el tipo de empleo');
-          this.basicosFrom.get('tipoEmpleo')?.reset();
-        } else if (validacionFechas && tipoEmpleo === '15') {
-          this.basicosFrom.get('tipoEmpleo')?.reset();
-          this.notif.onWarning('Advertencia','El tipo de cliente seleccionado no concuerda con el tipo de empleo.');
-        } else {
-          this.resetConcepto();
-          this.dataActividad = [];
-          this.basicosFrom.get('actividad')?.reset();
-          const empleoSeleccionado = localStorage.getItem('tipoEmpleoSeleccionado');
-          if (empleoSeleccionado === null || empleoSeleccionado === undefined) {
-            localStorage.setItem('tipoEmpleoSeleccionado', this.basicosFrom.get('tipoEmpleo')?.value);
-            this.cambioEmpleo = false;
-          } else {
-            if (empleoSeleccionado !== this.basicosFrom.get('tipoEmpleo')?.value) {
-              this.cambioEmpleo = true;
-              localStorage.setItem('tipoEmpleoSeleccionado', this.basicosFrom.get('tipoEmpleo')?.value);
-            } else {
-              this.cambioEmpleo = false;
-            }
-          }
-          this.basicosFrom.get('tipoOcupacion')?.setValue(null);
-         
-          this.clientesGetListService.GetTipoOcupacion(this.basicosFrom.get('tipoEmpleo')?.value).subscribe(
-            result => {
-              this.dataTipoOcupacion = result;
-            
-            },
-            error => {
-              const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
-              console.error(errorMessage);
-            }
-          );
-        }
-      } else  if (year !== null  && this.EsProveedor) {
-        const fechaNacimiento = this.basicosFrom.get('fechaNacimiento')?.value;
-        const fechaActualFormat = moment(new Date()).format();
-        const nacimiento = moment(fechaNacimiento).format();
-        const validacionFechas = this.ValidacionFechas(fechaActualFormat, nacimiento);
-        if (!validacionFechas && tipoEmpleo === '3') {
-          this.basicosFrom.get('tipoEmpleo')?.reset();
-          this.notif.onWarning('Advertencia','El tipo de relación seleccionado no es válido para el tipo de empleo');
-          this.basicosFrom.get('tipoEmpleo')?.reset();
-        } else if (validacionFechas && tipoEmpleo === '15') {
-          this.basicosFrom.get('tipoEmpleo')?.reset();
-          this.notif.onWarning('Advertencia','El tipo de cliente seleccionado no concuerda con el tipo de empleo.');
-        } else {
-        this.resetConcepto();
-          this.dataActividad = [];
-          this.basicosFrom.get('actividad')?.reset();
-
-          const empleoSeleccionado = localStorage.getItem('tipoEmpleoSeleccionado');
-          if (empleoSeleccionado === null || empleoSeleccionado === undefined) {
-            localStorage.setItem('tipoEmpleoSeleccionado', this.basicosFrom.get('tipoEmpleo')?.value);
-            this.cambioEmpleo = false;
-          } else {
-            if (empleoSeleccionado !== this.basicosFrom.get('tipoEmpleo')?.value) {
-              this.cambioEmpleo = true;
-              localStorage.setItem('tipoEmpleoSeleccionado', this.basicosFrom.get('tipoEmpleo')?.value);
-            } else {
-              this.cambioEmpleo = false;
-            }
-          }
-          this.basicosFrom.get('tipoOcupacion')?.setValue(null);
-          this.clientesGetListService.GetTipoOcupacion(this.basicosFrom.get('tipoEmpleo')?.value).subscribe(
-            result => {
-              this.dataTipoOcupacion = result;
-            },
-            error => {
-              const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
-              console.error(errorMessage);
-            }
-          );
-        }
-      } else  if (year === null && tipoCliente === '15' && this.EsProveedor) {
-        this.resetConcepto();
-          this.dataActividad = [];
-          this.basicosFrom.get('actividad')?.reset();
-          const empleoSeleccionado = localStorage.getItem('tipoEmpleoSeleccionado');
-          if (empleoSeleccionado === null || empleoSeleccionado === undefined) {
-            localStorage.setItem('tipoEmpleoSeleccionado', this.basicosFrom.get('tipoEmpleo')?.value);
-            this.cambioEmpleo = false;
-          } else {
-            if (empleoSeleccionado !== this.basicosFrom.get('tipoEmpleo')?.value) {
-              this.cambioEmpleo = true;
-              localStorage.setItem('tipoEmpleoSeleccionado', this.basicosFrom.get('tipoEmpleo')?.value);
-            } else {
-              this.cambioEmpleo = false;
-            }
-          }
-          this.basicosFrom.get('tipoOcupacion')?.setValue(null);
-          this.clientesGetListService.GetTipoOcupacion(this.basicosFrom.get('tipoEmpleo')?.value).subscribe(
-            result => {
-              this.dataTipoOcupacion = result;
-            },
-            error => {
-              const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
-              console.error(errorMessage);
-            }
-          );
-      } else {
-        this.notif.onWarning('Advertencia','Debe ingresar la fecha de nacimiento.');
-        this.basicosFrom.get('tipoEmpleo')?.reset();
+      return;
+    }
+    $(document).on('click', '#agregar_nombres', () => {
+      $('#ModalAgregarNombre').modal('show');
+    });
+    // Validación operación 1
+    if (
+      operacion === '1' &&
+      !['4', '6', '10', '11'].includes(String(this.empleoAnterior)) &&
+      ['4', '6', '10', '11'].includes(String(tipoEmpleo))
+    ) {
+      if (this.itemsLaboral.length <= 0) {
+        this.AbrirLaboral.nativeElement.click();
       }
     }
+    // Validaciones fecha
+    if (fechaNacimiento !== null || (tipoCliente === '15' && this.EsProveedor)) {
+      if (fechaNacimiento !== null) {
+        const fechaActualFormat = moment(new Date()).format();
+        const nacimiento = moment(fechaNacimiento).format();
+        const validacionFechas = this.ValidacionFechas(
+          fechaActualFormat,
+          nacimiento
+        );
+        if (!validacionFechas && tipoEmpleo === '3') {
+          this.basicosFrom.get('tipoEmpleo')?.reset();
+          this.notif.onWarning(
+            'Advertencia',
+            'El tipo de relación seleccionado no es válido para el tipo de empleo'
+          );
+          return;
+        }
+        if (validacionFechas && tipoEmpleo === '15') {
+          this.basicosFrom.get('tipoEmpleo')?.reset();
+          this.notif.onWarning(
+            'Advertencia',
+            'El tipo de cliente seleccionado no concuerda con el tipo de empleo.'
+          );
+          return;
+        }
+      }
+      this.resetConcepto();
+      this.dataActividad = [];
+      this.basicosFrom.get('actividad')?.reset();     
+      const empleoSeleccionado = StorageSecurity.getItem('tipoEmpleoSeleccionado');
+      if (empleoSeleccionado == null) {
+        StorageSecurity.saveItem('tipoEmpleoSeleccionado',tipoEmpleo);
+        this.cambioEmpleo = false;
+      } else {
+        this.cambioEmpleo =
+          String(empleoSeleccionado) !== String(tipoEmpleo);
+        if (this.cambioEmpleo) {
+          StorageSecurity.saveItem(
+            'tipoEmpleoSeleccionado',
+            tipoEmpleo
+          );
+        }
+      }
+      this.basicosFrom.get('tipoOcupacion')?.setValue(null);
+      this.clientesGetListService
+        .GetTipoOcupacion(tipoEmpleo)
+        .subscribe(
+          result => {
+            this.dataTipoOcupacion = result;
+          },
+          error => {
+            console.error(error);
+          }
+        );
+
+    } else {
+
+      this.notif.onWarning(
+        'Advertencia',
+        'Debe ingresar la fecha de nacimiento.'
+      );
+
+      this.basicosFrom.get('tipoEmpleo')?.reset();
+    }
   }
+
+  
   GetActividadEconomica() {
     const tipoOcupacion = this.basicosFrom.get('tipoOcupacion')?.value;
     if (tipoOcupacion === '') {
@@ -9463,7 +9419,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         },
         error => {
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.error(errorMessage);
         }
       );
@@ -9502,7 +9458,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           },
           error => {
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.error(errorMessage);
           }
         );
@@ -9521,7 +9477,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.error(errorMessage);
       });
   }
@@ -9794,6 +9750,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
         this.dataAsesor = result;
       });
   }
+  
   setDataBasicos() {
     const operacion = this.basicosFrom.get('operacion')?.value;
     const tercerEdit = this.basicosFrom.get('IdTerceroPrincipal')?.value;
@@ -9866,7 +9823,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                   }
                       this.basicoSave.get('IdEstadoCivil')?.setValue(this.basicosFrom.value.estadoCivil);
                       this.estadoCivilSeleccionado = +this.basicosFrom.value.estadoCivil;
-                      localStorage.setItem('estadoSeleccionado', this.basicosFrom.value.estadoCivil);
+                      StorageSecurity.saveItem('estadoSeleccionado', this.basicosFrom.value.estadoCivil);
                       this.basicoSave.get('IdRelacion')?.setValue(this.basicosFrom.value.tipoCliente);
                       this.basicoSave.get('NumHijos')?.setValue(this.basicosFrom.value.numHijos);
                       this.basicoSave.get('NumHijosEstudian')?.setValue(this.basicosFrom.value.numHijosEstudian);
@@ -9887,7 +9844,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                       this.basicoSave.get('IdSegmento')?.setValue(this.basicosFrom.value.segmento);
                       this.basicoSave.get('IdTipoOcupacion')?.setValue(this.basicosFrom.value.tipoOcupacion);
                       this.basicoSave.get('IdTipoEmpleo')?.setValue(this.basicosFrom.value.tipoEmpleo);
-                      localStorage.setItem('laborSeleccionada', this.basicosFrom.value.tipoEmpleo);
+                      StorageSecurity.saveItem('laborSeleccionada', this.basicosFrom.value.tipoEmpleo);
                       this.basicoSave.get('NumPersCargo')?.setValue(this.basicosFrom.value.numeroPersonasCargo);
                       if (this.infoTutor !== null && this.infoTutor !== undefined) {
                         if (this.infoTutor.LngTercero !== undefined) {
@@ -10009,7 +9966,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                     }
                     this.basicoSave.get('IdEstadoCivil')?.setValue(this.basicosFrom.value.estadoCivil);
                     this.estadoCivilSeleccionado = +this.basicosFrom.value.estadoCivil;
-                    localStorage.setItem('estadoSeleccionado', this.basicosFrom.value.estadoCivil);
+                    StorageSecurity.saveItem('estadoSeleccionado', this.basicosFrom.value.estadoCivil);
                     this.basicoSave.get('IdRelacion')?.setValue(this.basicosFrom.value.tipoCliente);
                     this.basicoSave.get('NumHijos')?.setValue(this.basicosFrom.value.numHijos);
                     this.basicoSave.get('NumHijosEstudian')?.setValue(this.basicosFrom.value.numHijosEstudian);
@@ -10030,7 +9987,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                     this.basicoSave.get('IdSegmento')?.setValue(this.basicosFrom.value.setSegmento);
                     this.basicoSave.get('IdTipoOcupacion')?.setValue(this.basicosFrom.value.tipoOcupacion);
                     this.basicoSave.get('IdTipoEmpleo')?.setValue(this.basicosFrom.value.tipoEmpleo);
-                    localStorage.setItem('laborSeleccionada', this.basicosFrom.value.tipoEmpleo);
+                    StorageSecurity.saveItem('laborSeleccionada', this.basicosFrom.value.tipoEmpleo);
                     this.basicoSave.get('NumPersCargo')?.setValue(this.basicosFrom.value.numeroPersonasCargo);
                     if (this.infoTutor !== null && this.infoTutor !== undefined) {
                       if (this.infoTutor.LngTercero !== undefined) {
@@ -10183,7 +10140,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                     }
                     this.basicoSave.get('IdEstadoCivil')?.setValue(this.basicosFrom.value.estadoCivil);
                     this.estadoCivilSeleccionado = +this.basicosFrom.value.estadoCivil;
-                    localStorage.setItem('estadoSeleccionado', this.basicosFrom.value.estadoCivil);
+                    StorageSecurity.saveItem('laborSeleccionada', this.basicosFrom.value.estadoCivil);
                     this.basicoSave.get('IdRelacion')?.setValue(this.basicosFrom.value.tipoCliente);
                     this.basicoSave.get('NumHijos')?.setValue(this.basicosFrom.value.numHijos);
                     this.basicoSave.get('NumHijosEstudian')?.setValue(this.basicosFrom.value.numHijosEstudian);
@@ -10204,7 +10161,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                     this.basicoSave.get('IdSegmento')?.setValue(this.basicosFrom.value.setSegmento);
                     this.basicoSave.get('IdTipoOcupacion')?.setValue(this.basicosFrom.value.tipoOcupacion);
                     this.basicoSave.get('IdTipoEmpleo')?.setValue(this.basicosFrom.value.tipoEmpleo);
-                    localStorage.setItem('laborSeleccionada', this.basicosFrom.value.tipoEmpleo);
+                    StorageSecurity.saveItem('laborSeleccionada',this.basicosFrom.value.tipoEmpleo);
                     this.basicoSave.get('NumPersCargo')?.setValue(this.basicosFrom.value.numeroPersonasCargo);
                     if (this.infoTutor !== null && this.infoTutor !== undefined) {
                       if (this.infoTutor.LngTercero !== undefined) {
@@ -10325,7 +10282,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                     }
                   this.basicoSave.get('IdEstadoCivil')?.setValue(this.basicosFrom.value.estadoCivil);
                   this.estadoCivilSeleccionado = +this.basicosFrom.value.estadoCivil;
-                  localStorage.setItem('estadoSeleccionado', this.basicosFrom.value.estadoCivil);
+                  StorageSecurity.saveItem('estadoSeleccionado',this.basicosFrom.value.estadoCivil);
                   this.basicoSave.get('IdRelacion')?.setValue(this.basicosFrom.value.tipoCliente);
                   this.basicoSave.get('NumHijos')?.setValue(this.basicosFrom.value.numHijos);
                   this.basicoSave.get('NumHijosEstudian')?.setValue(this.basicosFrom.value.numHijosEstudian);
@@ -10346,7 +10303,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                   this.basicoSave.get('IdSegmento')?.setValue(this.basicosFrom.value.setSegmento);
                   this.basicoSave.get('IdTipoOcupacion')?.setValue(this.basicosFrom.value.tipoOcupacion);
                   this.basicoSave.get('IdTipoEmpleo')?.setValue(this.basicosFrom.value.tipoEmpleo);
-                  localStorage.setItem('laborSeleccionada', this.basicosFrom.value.tipoEmpleo);
+                  StorageSecurity.saveItem('laborSeleccionada',this.basicosFrom.value.tipoEmpleo);
                   this.basicoSave.get('NumPersCargo')?.setValue(this.basicosFrom.value.numeroPersonasCargo);
                   if (this.infoTutor !== null && this.infoTutor !== undefined) {
                     if (this.infoTutor.LngTercero !== undefined) {
@@ -10488,7 +10445,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                     }
             this.basicoSave.get('IdEstadoCivil')?.setValue(this.basicosFrom.value.estadoCivil);
             this.estadoCivilSeleccionado = +this.basicosFrom.value.estadoCivil;
-            localStorage.setItem('estadoSeleccionado', this.basicosFrom.value.estadoCivil);
+            StorageSecurity.saveItem('estadoSeleccionado',this.basicosFrom.value.estadoCivil);
             this.basicoSave.get('IdRelacion')?.setValue(this.basicosFrom.value.tipoCliente);
             this.basicoSave.get('NumHijos')?.setValue(this.basicosFrom.value.numHijos);
             this.basicoSave.get('NumHijosEstudian')?.setValue(this.basicosFrom.value.numHijosEstudian);
@@ -10513,7 +10470,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             this.basicoSave.get('IdSegmento')?.setValue(this.basicosFrom.value.setSegmento);
             this.basicoSave.get('IdTipoOcupacion')?.setValue(this.basicosFrom.value.tipoOcupacion);
             this.basicoSave.get('IdTipoEmpleo')?.setValue(this.basicosFrom.value.tipoEmpleo);
-            localStorage.setItem('laborSeleccionada', this.basicosFrom.value.tipoEmpleo);
+            StorageSecurity.saveItem('laborSeleccionada',this.basicosFrom.value.tipoEmpleo);
             this.basicoSave.get('NumPersCargo')?.setValue(this.basicosFrom.value.numeroPersonasCargo);
             if (this.infoTutor !== null && this.infoTutor !== undefined) {
               if (this.infoTutor.LngTercero !== undefined) {
@@ -10543,7 +10500,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             }
             this.basicoSave.get('NombreArrendador')?.setValue(this.basicosFrom.value.nombreArrendador);
             this.basicoSave.get('TelefonoArrendador')?.setValue(this.basicosFrom.value.telefonoArrendador);
-            this.basicoSave.get('IdSegmento')?.setValue(Number(localStorage.getItem('seg')));
+            this.basicoSave.get('IdSegmento')?.setValue(Number(StorageSecurity.getItem('seg')));
             this.terceroSave.get('NumeroDocumento')?.setValue(this.basicosFrom.value.numeroDocumento);
             this.terceroSave.get('IdTipoDocumento')?.setValue(this.basicosFrom.value.tipoDocumento);
 
@@ -10645,7 +10602,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                     }
           this.basicoSave.get('IdEstadoCivil')?.setValue(this.basicosFrom.value.estadoCivil);
           this.estadoCivilSeleccionado = +this.basicosFrom.value.estadoCivil;
-          localStorage.setItem('estadoSeleccionado', this.basicosFrom.value.estadoCivil);
+          StorageSecurity.saveItem('estadoSeleccionado',this.basicosFrom.value.estadoCivil);
           this.basicoSave.get('IdRelacion')?.setValue(this.basicosFrom.value.tipoCliente);
           this.basicoSave.get('NumHijos')?.setValue(this.basicosFrom.value.numHijos);
           this.basicoSave.get('NumHijosEstudian')?.setValue(this.basicosFrom.value.numHijosEstudian);
@@ -10670,7 +10627,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           this.basicoSave.get('IdSegmento')?.setValue(this.basicosFrom.value.setSegmento);
           this.basicoSave.get('IdTipoOcupacion')?.setValue(this.basicosFrom.value.tipoOcupacion);
           this.basicoSave.get('IdTipoEmpleo')?.setValue(this.basicosFrom.value.tipoEmpleo);
-          localStorage.setItem('laborSeleccionada', this.basicosFrom.value.tipoEmpleo);
+          StorageSecurity.saveItem('laborSeleccionada',this.basicosFrom.value.tipoEmpleo);
           this.basicoSave.get('NumPersCargo')?.setValue(this.basicosFrom.value.numeroPersonasCargo);
           if (this.infoTutor !== null && this.infoTutor !== undefined) {
             if (this.infoTutor.LngTercero !== undefined) {
@@ -10700,7 +10657,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           }
           this.basicoSave.get('NombreArrendador')?.setValue(this.basicosFrom.value.nombreArrendador);
           this.basicoSave.get('TelefonoArrendador')?.setValue(this.basicosFrom.value.telefonoArrendador);
-          this.basicoSave.get('IdSegmento')?.setValue(Number(localStorage.getItem('seg')));
+          this.basicoSave.get('IdSegmento')?.setValue(Number(StorageSecurity.getItem('seg')));
           this.terceroSave.get('NumeroDocumento')?.setValue(this.basicosFrom.value.numeroDocumento);
           this.terceroSave.get('IdTipoDocumento')?.setValue(this.basicosFrom.value.tipoDocumento);
           if (this.basicosFrom.value.ciudadExpedicion !== undefined && this.basicosFrom.value.ciudadExpedicion !== null) {
@@ -11541,7 +11498,7 @@ enviarWorkManager() {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.error(errorMessage);
       }
     );
@@ -11555,7 +11512,7 @@ enviarWorkManager() {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.error(errorMessage);
       }
     );
@@ -11622,7 +11579,7 @@ enviarWorkManager() {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.error(errorMessage);
       });
     this.financieroFrom.get('idDatoFinanciero')?.setValue(data.idDatoFinanciero);
@@ -12973,106 +12930,122 @@ enviarWorkManager() {
     
   }
 
-  setDataContactos() {
+  setDataContactos(): void {
     const results = this.basicosFrom.get('operacion')?.value;
-    const tipoEmpleo = localStorage.getItem('laborSeleccionada');
+    const tipoEmpleo = Number(StorageSecurity.getItem('laborSeleccionada'));
     let ppalDir = false;
     let ppalcel = false;
-    let tieneDir = null;
-    let tieneOtro = null;
+    let tieneDir = false;
+    let tieneOtro = false;
     let tieneDirLabor = false;
     let tieneTelLabor = false;
     this.contactoModelList = [];
-
     if (this.itemsContacto.length <= 0) {
-      this.notif.onWarning('Advertencia', 'No hay registros relacionados para continuar.');
+      this.notif.onWarning(
+        'Advertencia',
+        'No hay registros relacionados para continuar.'
+      );
     } else {
       this.itemsContacto.forEach(element => {
-        if (element.TipoContacto.Id === 2 || element.TipoContacto.Id === 1 ) {
-          tieneDir = 1;
+        if ([1, 2].includes(element.TipoContacto.Id)) {
+          tieneDir = true;
         }
-        if (element.TipoContacto.Id === 3 || element.TipoContacto.Id === 4 || 
-          element.TipoContacto.Id === 5 ||element.TipoContacto.Id === 6) {
-          tieneOtro = 1;
+        if ([3, 4, 5, 6].includes(element.TipoContacto.Id)) {
+          tieneOtro = true;
         }
-      });
-
-      this.itemsContacto.forEach(elementCont => {
-        if (elementCont.contactoPpal === true && (elementCont.TipoContacto.Id === 1 || elementCont.TipoContacto.Id === 2)) {
-            ppalDir = true;
+        if (
+          element.contactoPpal &&
+          [1, 2].includes(element.TipoContacto.Id)
+        ) {
+          ppalDir = true;
         }
-        if (elementCont.contactoPpal === true && elementCont.TipoContacto.Id === 6) { 
-            ppalcel = true;
+        if (
+          element.contactoPpal &&
+          element.TipoContacto.Id === 6
+        ) {
+          ppalcel = true;
         }
-        if(elementCont.TipoContacto.Id === 2) {
+        if (element.TipoContacto.Id === 2) {
           tieneDirLabor = true;
         }
-        if(elementCont.TipoContacto.Id === 5) {
+        if (element.TipoContacto.Id === 5) {
           tieneTelLabor = true;
         }
       });
+      if (!ppalDir) {
+        this.notif.onWarning(
+          'Advertencia',
+          'Debe tener un contacto principal para dirección.'
+        );
 
-      if (!ppalDir){ // Direccion
-        this.notif.onWarning('Advertencia', 'Debe tener un contacto principal para dirección..',
-          );
+      } else if (!ppalcel) {
 
-      } else if (!ppalcel){  // Celular
-        this.notif.onWarning('Advertencia', 'Debe ingresar un número de celular principal.',
-          );
-      } else if (!tieneDirLabor && tipoEmpleo === '4') {
-        this.notif.onWarning('Advertencia',
-                  'El registro debe contar con una dirección laboral.');
-      } else if (!tieneTelLabor && tipoEmpleo === '4') { 
-         this.notif.onWarning('Advertencia',
-                  'El registro debe contar con un teléfono laboral.');
+        this.notif.onWarning(
+          'Advertencia',
+          'Debe ingresar un número de celular principal.'
+        );
+
+      } else if (!tieneDirLabor && tipoEmpleo === 4) {
+
+        this.notif.onWarning(
+          'Advertencia',
+          'El registro debe contar con una dirección laboral.'
+        );
+
+      } else if (!tieneTelLabor && tipoEmpleo === 4) {
+
+        this.notif.onWarning(
+          'Advertencia',
+          'El registro debe contar con un teléfono laboral.'
+        );
+
       } else {
-        if (this.itemsContacto.length >= 2 && tieneDir != null && tieneOtro != null) {
+
+        if (
+          this.itemsContacto.length >= 2 &&
+          tieneDir &&
+          tieneOtro
+        ) {
           this.itemsContacto.forEach(elementContacto => {
             this.contactoModel = new ContactoModelNatu();
-            this.contactoModel.IdTipoContacto = elementContacto.TipoContacto.Id;
-
-            if (elementContacto.TipoContacto.Id === 1 || elementContacto.TipoContacto.Id === 2) {
-              this.contactoModel.Descripcion = elementContacto.DescripcionAdress?.replace(/,/g, '-');
-              this.contactoModel.DescripcionIds = elementContacto.DescripcionAdressIds?.replace(/,/g, '-');
-              if (elementContacto.Ciudad !== null && elementContacto.Ciudad !== undefined) {
-                this.contactoModel.IdCiudad = elementContacto.Ciudad.IdCiudad;
-              } else {
-                 this.contactoModel.IdCiudad = null;
+            this.contactoModel.IdTipoContacto =
+              elementContacto.TipoContacto.Id;
+            this.contactoModel.IdCiudad = null;
+            this.contactoModel.IdPais = null;
+            this.contactoModel.IdBarrio = 0;
+            if ([1, 2].includes(elementContacto.TipoContacto.Id)) {
+              this.contactoModel.Descripcion =
+                elementContacto.DescripcionAdress?.replace(/,/g, '-');
+              this.contactoModel.DescripcionIds =
+                elementContacto.DescripcionAdressIds?.replace(/,/g, '-');
+              if (elementContacto.Ciudad) {
+                this.contactoModel.IdCiudad =
+                  elementContacto.Ciudad.IdCiudad;
               }
-             
-              if (elementContacto.Barrio !== null && elementContacto.Barrio !== undefined) {
-                this.contactoModel.IdBarrio = elementContacto.Barrio.IdBarrio;
-              } else {
-                this.contactoModel.IdBarrio = 0;
+              if (elementContacto.Barrio) {
+                this.contactoModel.IdBarrio =
+                  elementContacto.Barrio.IdBarrio;
               }
-
-              if (elementContacto.Pais !== null && elementContacto.Pais !== undefined) {
-                this.contactoModel.IdPais = elementContacto.Pais.IdPais;
-              } else {
-                this.contactoModel.IdPais = null;
+              if (elementContacto.Pais) {
+                this.contactoModel.IdPais =
+                  elementContacto.Pais.IdPais;
               }
             } else if (elementContacto.TipoContacto.Id === 3) {
-              this.contactoModel.Descripcion = elementContacto.Email;
-              this.contactoModel.IdCiudad = null;
-               this.contactoModel.IdPais = null;
-              this.contactoModel.IdBarrio = 0;
+              this.contactoModel.Descripcion =
+                elementContacto.Email;
             } else if (elementContacto.TipoContacto.Id === 5) {
-              this.contactoModel.Descripcion = elementContacto.Telefonos;
-              this.contactoModel.IdCiudad = null;
-               this.contactoModel.IdPais = null;
-              this.contactoModel.IdBarrio = 0;
+              this.contactoModel.Descripcion =
+                elementContacto.Telefonos;
             } else {
-              this.contactoModel.Descripcion = elementContacto.Celular;
-              this.contactoModel.IdCiudad = null;
-               this.contactoModel.IdPais = null;
-              this.contactoModel.IdBarrio = 0;
+              this.contactoModel.Descripcion =
+                elementContacto.Celular;
             }
-            this.contactoModel.ContactoPrincipal = elementContacto.contactoPpal;
-
+            this.contactoModel.ContactoPrincipal =
+              elementContacto.contactoPpal;
             this.contactoModelList.push(this.contactoModel);
           });
-
-          this.allItemsFormSaves.contactoDto = this.contactoModelList;
+          this.allItemsFormSaves.contactoDto =
+            this.contactoModelList;
           $('#activoTab').removeClass('disableTab');
           this.disableTabActivo = true;
           $('#contactoTab').removeClass('activar');
@@ -13080,16 +13053,20 @@ enviarWorkManager() {
           this.botonContactoSiguiente.nativeElement.click();
           this.devolverTab(4);
           this.VolverArriba();
-          // this.botonContactoSiguiente.nativeElement.click();
-          // this.devolverTab(4);
-          // this.VolverArriba();
-
         } else {
-          this.notif.onWarning('Advertencia', 'Debe contar con al menos un registro para dirección y otro para celular para continuar');
+          this.notif.onWarning(
+            'Advertencia',
+            'Debe contar con al menos un registro para dirección y otro para celular para continuar'
+          );
+
         }
+
       }
+
     }
+
   }
+
 
   ActualizarContacto() {
     let tieneDir = null;
@@ -13160,12 +13137,12 @@ enviarWorkManager() {
           this.contactoModel.IdTercero = this.JuridicoEdit;
 
           this.contactoModelList.push(this.contactoModel);
-          const dataLocalStorage = StorageSecurity.getData();
-          if (!dataLocalStorage) {
+          const dataLocal = StorageSecurity.getData();
+          if (!dataLocal) {
             return;
           }
-          const Usuario = dataLocalStorage.Usuario;
-          const Oficina = dataLocalStorage.NumeroOficina;
+          const Usuario = dataLocal.Usuario;
+          const Oficina = dataLocal.NumeroOficina;
           this.contactoModel.Usuario = Usuario;
           this.contactoModel.Oficina = Oficina;
 
@@ -13277,7 +13254,7 @@ enviarWorkManager() {
            },
            error => {
              const errorMessage = <any>error;
-             this.notif.onDanger('Error', errorMessage);
+             
              console.error(errorMessage);
            }
          );
@@ -14007,7 +13984,7 @@ enviarWorkManager() {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.error(errorMessage);
       }
     );
@@ -14123,7 +14100,7 @@ enviarWorkManager() {
             },
             error => {
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.error(errorMessage);
             }
           );   
@@ -14313,7 +14290,7 @@ enviarWorkManager() {
             },
             error => {
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.error(errorMessage);
             }
           );   
@@ -15611,7 +15588,7 @@ enviarWorkManager() {
         },
         error => {
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.error(errorMessage);
         }
       );
@@ -16219,7 +16196,7 @@ enviarWorkManager() {
         },
         error => {
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.error(errorMessage);
         }
       );
@@ -16240,7 +16217,7 @@ enviarWorkManager() {
         },
         error => {
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.error(errorMessage);
         }
       );
@@ -16262,7 +16239,7 @@ enviarWorkManager() {
         },
         error => {
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.error(errorMessage);
         }
       );
@@ -16282,7 +16259,7 @@ enviarWorkManager() {
         },
         error => {
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.error(errorMessage);
         }
       );
@@ -17100,7 +17077,7 @@ enviarWorkManager() {
 
   setDataLaboral() {
     // 4- Empleado 10 -jubilado Empleado 11 -jubilado pensionado
-    const empleoSeleccionado = localStorage.getItem('laborSeleccionada');
+    const empleoSeleccionado = String(StorageSecurity.getItem('laborSeleccionada'));
     const results = this.basicosFrom.get('operacion')?.value;
     if (empleoSeleccionado === '4' || empleoSeleccionado === '10' || empleoSeleccionado === '11') { // Mensaje
       if (this.itemsLaboral.length === 0) { // Mensaje
@@ -17749,7 +17726,7 @@ enviarWorkManager() {
         },
         error => {
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.error(errorMessage);
         }
       );
@@ -17770,7 +17747,7 @@ enviarWorkManager() {
         },
         error => {
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.error(errorMessage);
         }
       );
@@ -17847,7 +17824,7 @@ enviarWorkManager() {
             },
             error => {
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.error(errorMessage);
             }
           );  
@@ -21250,7 +21227,7 @@ enviarWorkManager() {
               }
               // aqui agregar la operacion que realizó y asi mostrar si es credito venculacion o edicion
               this.serviciosFrom.get('operacionSeleccionada')?.setValue(this.basicosFrom.get('operacion')?.value);
-              localStorage.setItem('DataService', JSON.stringify(this.serviciosFrom.value));
+             StorageSecurity.saveItem('DataService',this.serviciosFrom.value);
               this.entrevistaForm.reset();
               this.allItemsFormSaves = {
                 asociadosNaturalesDto: {},
@@ -22052,7 +22029,7 @@ enviarWorkManager() {
               },
               error => {
                 const errorMessage = <any>error;
-                this.notif.onDanger('Error', errorMessage);
+                
                 console.error(errorMessage);
               }
             );
@@ -22281,7 +22258,7 @@ enviarWorkManager() {
               this.ocultarLaboral = true;
               this.ocultarLaboralDos = false;
             }
-            localStorage.setItem('laborSeleccionada', result.asociadosNaturalesDto.IdTipoEmpleo);
+            StorageSecurity.saveItem('laborSeleccionada',result.asociadosNaturalesDto.IdTipoEmpleo);
             this.basicosFrom.get('nivelEstudio')?.setValue(result.asociadosNaturalesDto.IdNivelEstudio);
             this.basicosFrom.get('tipoOcupacion')?.setValue(result.asociadosNaturalesDto.IdTipoOcupacion);
             if(result.asociadosNaturalesDto.IdMotivoIngreso !== 0){
@@ -24302,7 +24279,7 @@ enviarWorkManager() {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.error(errorMessage);
       }
     );
@@ -24338,7 +24315,7 @@ enviarWorkManager() {
         // this.BuscarNaturalesAll(this.DocumentoSolicitud);
       }, error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.error(errorMessage);
       });
   }
@@ -24357,7 +24334,7 @@ enviarWorkManager() {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.error(errorMessage);
       }
     );
@@ -24381,8 +24358,7 @@ enviarWorkManager() {
           this.mostarErrorMotivoDescripcion = false;
           // aqui realizar el registro
           const resultPerfil = StorageSecurity.getData();
-          const motivo: string | null = StorageSecurity.getItem('solicituRetiroJson');
-          const resulMotivoEnvio = motivo ? JSON.parse(motivo) : null;
+          const resulMotivoEnvio = StorageSecurity.getItem('solicituRetiroJson');
           this.objMotivo.DescripcionOtro = this.solicitudRetiroForm.get('ObservacionMotivo')?.value;
           this.objMotivo.FechaRetiro = formatDate(new Date(), 'yyyy/MM/dd HH:mm:ss', 'en');
           this.objMotivo.IdTercero = this.basicosFrom.get('IdTerceroPrincipal')?.value;
@@ -24418,7 +24394,7 @@ enviarWorkManager() {
             }, error => {
               this.motivoEnvioJson = null;
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.error(errorMessage);
             });
         }
@@ -24462,7 +24438,7 @@ enviarWorkManager() {
           }, error => {
             this.motivoEnvioJson = null;
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.error(errorMessage);
           });
       }
@@ -24495,7 +24471,7 @@ enviarWorkManager() {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.error(errorMessage);
       }
     );

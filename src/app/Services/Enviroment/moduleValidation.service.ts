@@ -18,7 +18,7 @@ export class ModuleValidationService {
 
         if (!resulStore) {
             this.router.navigate(['/Login']);
-            localStorage.clear();
+            StorageSecurity.clear();
             return;
         }
 
@@ -26,7 +26,7 @@ export class ModuleValidationService {
 
         if (!permisosUsuario) {
             this.router.navigate(['/Login']);
-            localStorage.clear();
+            StorageSecurity.clear();
             return;
         }
 

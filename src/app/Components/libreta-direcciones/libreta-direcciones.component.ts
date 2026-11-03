@@ -217,7 +217,7 @@ export class LibretaDireccionesComponent implements OnInit {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.log(errorMessage);
       });
   }
@@ -227,7 +227,7 @@ export class LibretaDireccionesComponent implements OnInit {
       },
       error => {    
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.log(errorMessage);
       }
     );

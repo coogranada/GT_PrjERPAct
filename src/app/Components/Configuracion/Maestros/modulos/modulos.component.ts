@@ -60,7 +60,7 @@ export class ModulosComponent implements OnInit {
       result => {
         if (!result.Estado) {
           this.router.navigateByUrl('/Login');
-          localStorage.clear();
+          StorageSecurity.clear();
         }
       });
     this.IrArriba();
@@ -74,7 +74,7 @@ export class ModulosComponent implements OnInit {
       error => {
         this.loading.hide();
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.log(errorMessage);
       });
   }
@@ -99,7 +99,7 @@ export class ModulosComponent implements OnInit {
         error => {
           this.loading.hide();
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.log(errorMessage);
         });
     }
@@ -126,7 +126,7 @@ export class ModulosComponent implements OnInit {
         error => {
           this.loading.hide();
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.log(errorMessage);
         });
     }

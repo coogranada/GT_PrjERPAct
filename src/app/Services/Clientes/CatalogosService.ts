@@ -179,62 +179,65 @@ export class CatalogosService {
   // CARGAR SOLO SI NO EXISTEN
   // =========================
 
+
+
   cargarCatalogosSiNoExisten(): void {
 
-    if (!localStorage.getItem('profesion')) {
+    if (!StorageSecurity.getItem('profesion')) {
       this.GetProfesion();
     }
 
-    if (!localStorage.getItem('parentesco')) {
+    if (!StorageSecurity.getItem('parentesco')) {
       this.GetParentescos();
     }
 
-    if (!localStorage.getItem('parentescoChange')) {
+    if (!StorageSecurity.getItem('parentescoChange')) {
       this.GetParentescosChange();
     }
 
-    if (!localStorage.getItem('parentescoPeps')) {
+    if (!StorageSecurity.getItem('parentescoPeps')) {
       this.GetParentescosPeps();
     }
 
-    if (!localStorage.getItem('oficinas')) {
+    if (!StorageSecurity.getItem('oficinas')) {
       this.GetOficinas();
     }
 
-    if (!localStorage.getItem('marca')) {
+    if (!StorageSecurity.getItem('marca')) {
       this.GetMarcar();
     }
 
-    if (!localStorage.getItem('contacto')) {
+    if (!StorageSecurity.getItem('contacto')) {
       this.GetTipoContacto();
     }
 
-    if (!localStorage.getItem('conceptos')) {
+    if (!StorageSecurity.getItem('conceptos')) {
       this.GetConceptosaAll();
     }
 
-    if (!localStorage.getItem('periodo')) {
+    if (!StorageSecurity.getItem('periodo')) {
       this.GetPeriodosPago();
     }
 
-    if (!localStorage.getItem('cargos')) {
+    if (!StorageSecurity.getItem('cargos')) {
       this.GetCargos();
     }
 
-    if (!localStorage.getItem('estadoSeguro')) {
+    if (!StorageSecurity.getItem('estadoSeguro')) {
       this.GetEstadosSeguro();
     }
 
-    if (!localStorage.getItem('letras')) {
+    if (!StorageSecurity.getItem('letras')) {
       this.GetLetra();
     }
 
-    if (!localStorage.getItem('seguros')) {
+    if (!StorageSecurity.getItem('seguros')) {
       this.GetSeguros();
     }
 
-    if (!localStorage.getItem('empleo')) {
+    if (!StorageSecurity.getItem('empleo')) {
       this.GetTipoEmpleo();
     }
   }
+  
 }

@@ -544,7 +544,7 @@ export class LayoutComponent implements OnInit,OnDestroy {
           allowEscapeKey: false,
         }).then((result) => {
 
-          localStorage.clear();
+          StorageSecurity.clear();
           sessionStorage.clear();
 
           if (result.value) {
@@ -998,7 +998,7 @@ this.userIdle.onTimeout().subscribe(() => {
       this.router.navigateByUrl('/login');
       this.nameUser = '';
       this.NombreOficinaActual = '';
-      localStorage.clear();
+      StorageSecurity.clear();
     }
     this.VerificarPaginaActual();
     this.GetModuloOfice();
@@ -1071,7 +1071,7 @@ this.userIdle.onTimeout().subscribe(() => {
                   this.webSocket.TriggerLocal("CloseSesion");
                   this.webSocket.CloseSesion("");
               } else {
-                 localStorage.removeItem("ChangeState");
+                 StorageSecurity.removeItem("ChangeState");
                  window.location.reload();
               }
               }, 300);
@@ -1144,11 +1144,9 @@ this.userIdle.onTimeout().subscribe(() => {
     this.resulStore = StorageSecurity.getData();
 
     if (!this.resulStore) {
-
-      localStorage.removeItem('userName');
-      localStorage.removeItem('dataUserConect');
-      localStorage.removeItem('Permisos');
-
+      StorageSecurity.removeItem('userName');
+      StorageSecurity.removeItem('dataUserConect');
+      StorageSecurity.removeItem('Permisos');
       this.router.navigateByUrl('/Login');
     }
   }
@@ -1176,10 +1174,10 @@ this.userIdle.onTimeout().subscribe(() => {
       this.router.navigateByUrl('/Login');
       this.nameUser = '';
       this.NombreOficinaActual = '';
-      localStorage.removeItem('userName');
-      localStorage.removeItem('dataUserConect');
-      localStorage.removeItem('Data')
-      localStorage.clear();
+      StorageSecurity.removeItem('userName');
+      StorageSecurity.removeItem('dataUserConect');
+      StorageSecurity.removeItem('Data')
+      StorageSecurity.clear();
     }, error => {
       console.log(error);
       this.isLoginError = true;

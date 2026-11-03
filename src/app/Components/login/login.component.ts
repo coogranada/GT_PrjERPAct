@@ -62,7 +62,7 @@ export class LoginComponent implements OnInit {
       },
       (error : any) => {
         const errorMessage = <any>error;
-        // this.notif.onDanger('Error', errorMessage);
+        // 
         console.error(errorMessage);
       }
     );
@@ -74,7 +74,7 @@ export class LoginComponent implements OnInit {
       },
       (error : any ) => {
         const errorMessage = <any>error;
-        // this.notif.onDanger('Error', errorMessage);
+        // 
         console.error(errorMessage);
       });
   }
@@ -85,7 +85,7 @@ export class LoginComponent implements OnInit {
       },
       (error : any )  => {
         const errorMessage = <any>error;
-        // this.notif.onDanger('Error', errorMessage);
+        // 
         console.error(errorMessage);
       });
   }
@@ -96,7 +96,7 @@ export class LoginComponent implements OnInit {
       },
       (error : any )  => {
         const errorMessage = <any>error;
-        // this.notif.onDanger('Error', errorMessage);
+        // 
         console.error(errorMessage);
       });
   }
@@ -116,7 +116,7 @@ export class LoginComponent implements OnInit {
       },
       (error : any )  => {
         const errorMessage = <any>error;
-        // this.notif.onDanger('Error', errorMessage);
+        // 
         console.error(errorMessage);
       });
   }
@@ -127,7 +127,7 @@ export class LoginComponent implements OnInit {
       },
       (error : any )  => {
         const errorMessage = <any>error;
-        // this.notif.onDanger('Error', errorMessage);
+        // 
         console.error(errorMessage);
       });
   }
@@ -138,7 +138,7 @@ export class LoginComponent implements OnInit {
       },
       (error : any )  => {
         const errorMessage = <any>error;
-        // this.notif.onDanger('Error', errorMessage);
+        // 
         console.error(errorMessage);
       });
   }
@@ -149,7 +149,7 @@ export class LoginComponent implements OnInit {
       },
       (error : any )  => {
         const errorMessage = <any>error;
-        // this.notif.onDanger('Error', errorMessage);
+        // 
         console.error(errorMessage);
       });
   }

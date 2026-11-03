@@ -62,7 +62,7 @@ export class CargosComponent implements OnInit {
     this.loginService.GetSesionXUsuario(this.DatosUsuario.IdUsuario).subscribe((result : any) => {
         if (!result.Estado) {
           this.router.navigateByUrl('/Login');
-          localStorage.clear();
+          StorageSecurity.clear();
         }
       });
     this.IrArriba();
@@ -84,7 +84,7 @@ export class CargosComponent implements OnInit {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.log(errorMessage);
       });
   }
@@ -103,7 +103,7 @@ export class CargosComponent implements OnInit {
         error => {
           this.loading.hide();
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.log(errorMessage);
         });
     }
@@ -128,7 +128,7 @@ export class CargosComponent implements OnInit {
         error => {
           this.loading.hide();
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.log(errorMessage);
         });
     }

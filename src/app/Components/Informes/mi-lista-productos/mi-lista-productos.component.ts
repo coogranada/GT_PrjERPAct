@@ -1561,8 +1561,7 @@ export class MiListaProductosComponent implements OnInit {
                     //#region Guarda log
                     const logMisProductosData = new LogMisProductos();
                     const nuevoItem = new DatosProductos();
-                    logMisProductosData.IdOficina =
-                      parseInt(dataLocalStorage.NumeroOficina);
+                    logMisProductosData.IdOficina = parseInt(dataLocalStorage.NumeroOficina);
                     logMisProductosData.IdModulo = 69;
                     logMisProductosData.IdOperacion = 72;
                     logMisProductosData.IdOpcion = 11;

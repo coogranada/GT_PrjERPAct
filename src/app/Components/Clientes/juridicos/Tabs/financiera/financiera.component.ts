@@ -317,7 +317,7 @@ export class FinancieraComponent implements OnInit {
         },
         error => {
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.error(errorMessage);
         }
       );

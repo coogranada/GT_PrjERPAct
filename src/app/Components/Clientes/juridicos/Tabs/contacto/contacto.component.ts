@@ -130,7 +130,7 @@ export class ContactoComponent implements OnInit {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.error(errorMessage);
       }
     );
@@ -157,7 +157,7 @@ export class ContactoComponent implements OnInit {
             },
             error => {
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.error(errorMessage);
             }
           );
@@ -174,7 +174,7 @@ export class ContactoComponent implements OnInit {
             },
             error => {
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.error(errorMessage);
             }
           );
@@ -211,7 +211,7 @@ export class ContactoComponent implements OnInit {
           },
           error => {
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.error(errorMessage);
           }
         );
@@ -250,7 +250,7 @@ export class ContactoComponent implements OnInit {
           },
           error => {
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.error(errorMessage);
           }
         );

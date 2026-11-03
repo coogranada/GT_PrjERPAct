@@ -181,14 +181,14 @@ export class AportesComponent implements OnInit {
     this.ObtenerTipoDocumento();
     this.VolverArriba();
     $('#select').focus().select();
-    localStorage.removeItem('TerceroAportes');
+    StorageSecurity.removeItem('TerceroAportes');
     this.aportesFrom.get('DocumentoBeneficiario')?.disable();
      this.DatosUsuario = StorageSecurity.getData();
     this.loginService.GetSesionXUsuario(this.DatosUsuario.IdUsuario).subscribe(
       result => {
         if (!result.Estado) {
           this.router.navigateByUrl('/Login');
-          localStorage.clear();
+          StorageSecurity.clear();
         }
       });
   }
@@ -236,7 +236,7 @@ export class AportesComponent implements OnInit {
       
     if (this.aportesOperacionFrom.get('Codigo')?.value  === '10') {         // Apertura Cuenta
       this.dataUser = StorageSecurity.getData();
-      localStorage.removeItem('TerceroAportes');
+      StorageSecurity.removeItem('TerceroAportes');
       
       if (this.dataUser.NumeroOficina === '3') {
         this.notif.onWarning('Advertencia', 'No se puede abrir una cuenta en la oficina de administración.');
@@ -340,7 +340,7 @@ export class AportesComponent implements OnInit {
       this.generalesService.Autofocus('selectBuscar');
       this.aportesFrom.get('DocumentoBeneficiario')?.disable();
       this.clearFrom();
-      localStorage.removeItem('TerceroAportes');
+      StorageSecurity.removeItem('TerceroAportes');
       this.operacionEscogida = '/Buscar';
       this.BloquearAsociado = false;
       this.BloquearBuscar = null;
@@ -595,7 +595,7 @@ export class AportesComponent implements OnInit {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.error(errorMessage);
         this.aportesOperacionFrom.get('Codigo')?.reset();
       });
@@ -853,7 +853,7 @@ export class AportesComponent implements OnInit {
       this.dataUser = StorageSecurity.getData();
       if (result.length >= 1) {
         this.dataObjet = result[0];
-        localStorage.setItem('TerceroAportes', this.dataObjet.LngTercero);
+        StorageSecurity.saveItem('TerceroAportes',this.dataObjet.LngTercero);
         this.aportesFrom.get('IdUsuarioSGF')?.setValue(this.dataUser.IdUsuarioSGF);
         this.aportesFrom.get('LngTercero')?.setValue(this.dataObjet.LngTercero);
         this.aportesFrom.get('IdCuenta')?.setValue(this.dataObjet.IdCuenta);
@@ -923,8 +923,7 @@ export class AportesComponent implements OnInit {
       } else {
 
         this.dataObjet = result;
-       
-        localStorage.setItem('TerceroAportes', this.dataObjet.LngTercero);
+        StorageSecurity.saveItem('TerceroAportes',this.dataObjet.LngTercero);
         this.aportesFrom.get('IdUsuarioSGF')?.setValue(this.dataUser.IdUsuarioSGF);
         this.aportesFrom.get('IdCuenta')?.setValue(this.dataObjet.IdCuenta);
         this.aportesFrom.get('LngTercero')?.setValue(this.dataObjet.LngTercero);
@@ -1061,7 +1060,7 @@ export class AportesComponent implements OnInit {
             this.aportesFrom.get('TipoDocumento')?.setValue(result[0].IdTipoDocumento);
             this.aportesFrom.get('NumeroDocumento')?.setValue(result[0].NumeroDocumento);
             this.aportesFrom.get('Nombre')?.setValue(result[0].PrimerApellido + ' ' + result[0].SegundoApellido + ' ' + result[0].PrimerNombre + ' ' + result[0].SegundoNombre);
-            localStorage.setItem('TerceroAportes', result[0].lngTercero);
+            StorageSecurity.saveItem('TerceroAportes',result[0].lngTercero);
             this.aportesFrom.get('LngTercero')?.setValue(result[0].lngTercero);
             this.BloquearDatoBenf = null;
             this.BloquearNombreBenf = false;
@@ -1630,7 +1629,7 @@ export class AportesComponent implements OnInit {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.log(errorMessage);
       });
   }
@@ -1810,7 +1809,7 @@ export class AportesComponent implements OnInit {
                 },
                 error => {
                   const errorMessage = <any>error;
-                  this.notif.onDanger('Error', errorMessage);
+                  
                   console.log(errorMessage);
                 }
               );
@@ -2345,7 +2344,7 @@ export class AportesComponent implements OnInit {
     }, err => {
       this.loading.hide();
       const errorMessage = <any>err;
-      this.notif.onDanger('Error', errorMessage);
+      
       console.log(errorMessage);
       this.BenificiariosElminar = [];
       this.dataObjetBeneficiarios = this.dataObjetBeneficiarios.filter(x => x.Accion != "Eliminar");

@@ -72,7 +72,7 @@ export class DatacreditoCreditosComponent implements OnInit {
       result => {
         if (!result.Estado) {
           this.router.navigateByUrl('/Login');
-          localStorage.clear();
+          StorageSecurity.clear();
         }
       });
   }

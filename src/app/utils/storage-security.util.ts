@@ -98,5 +98,9 @@ export class StorageSecurity {
   public static removeItem(key: string): void {
     localStorage.removeItem(key);
   }
+
+  static clear(): void {
+  localStorage.clear();
+}
   
 }

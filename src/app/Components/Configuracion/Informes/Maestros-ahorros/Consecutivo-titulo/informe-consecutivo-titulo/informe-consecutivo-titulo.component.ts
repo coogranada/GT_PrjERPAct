@@ -244,7 +244,7 @@ export class InformeConsecutivoTituloComponent implements OnInit {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.log(errorMessage);
       }
     );
@@ -868,7 +868,7 @@ export class InformeConsecutivoTituloComponent implements OnInit {
         error => {
           this.loading.hide();
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.log(errorMessage);
         }
       );
@@ -890,7 +890,7 @@ export class InformeConsecutivoTituloComponent implements OnInit {
           error => {
             this.loading.hide();
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.log(errorMessage);
           }
         );
@@ -911,7 +911,7 @@ export class InformeConsecutivoTituloComponent implements OnInit {
           error => {
             this.loading.hide();
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.log(errorMessage);
           }
         );
@@ -932,7 +932,7 @@ export class InformeConsecutivoTituloComponent implements OnInit {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.log(errorMessage);
       }
     );
@@ -980,7 +980,7 @@ export class InformeConsecutivoTituloComponent implements OnInit {
         error => {
           this.loading.hide();
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.log(errorMessage);
         }
       );
@@ -1002,7 +1002,7 @@ export class InformeConsecutivoTituloComponent implements OnInit {
           error => {
             this.loading.hide();
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.log(errorMessage);
           }
         );
@@ -1023,7 +1023,7 @@ export class InformeConsecutivoTituloComponent implements OnInit {
           error => {
             this.loading.hide();
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.log(errorMessage);
           }
         );

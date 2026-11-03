@@ -1975,7 +1975,7 @@ private resetUI(): void {
       error => {
         this.loading.hide();
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.log(errorMessage);
       }
     );

@@ -856,7 +856,7 @@ export class ConsecutivoTituloComponent implements OnInit {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.log(errorMessage);
       }
     );
@@ -959,7 +959,7 @@ export class ConsecutivoTituloComponent implements OnInit {
             error => {
               this.loading.hide();
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.log(errorMessage);
             }
           );
@@ -986,7 +986,7 @@ export class ConsecutivoTituloComponent implements OnInit {
             error => {
               this.loading.hide();
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.log(errorMessage);
             }
           );
@@ -1018,7 +1018,7 @@ export class ConsecutivoTituloComponent implements OnInit {
               error => {
                 this.loading.hide();
                 const errorMessage = <any>error;
-                this.notif.onDanger('Error', errorMessage);
+                
                 console.log(errorMessage);
               }
             );
@@ -1045,7 +1045,7 @@ export class ConsecutivoTituloComponent implements OnInit {
               error => {
                 this.loading.hide();
                 const errorMessage = <any>error;
-                this.notif.onDanger('Error', errorMessage);
+                
                 console.log(errorMessage);
               });
           }
@@ -1072,7 +1072,7 @@ export class ConsecutivoTituloComponent implements OnInit {
             error => {
               this.loading.hide();
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.log(errorMessage);
             });
         }
@@ -1165,7 +1165,7 @@ export class ConsecutivoTituloComponent implements OnInit {
           },
           error => {
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.log(errorMessage);
           });
       }
@@ -1189,7 +1189,7 @@ export class ConsecutivoTituloComponent implements OnInit {
           },
           error => {
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.log(errorMessage);
           });
       }
@@ -1280,7 +1280,7 @@ export class ConsecutivoTituloComponent implements OnInit {
           }, error => {
             this.loading.hide();
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.log(errorMessage);
           });
       }
@@ -1295,7 +1295,7 @@ export class ConsecutivoTituloComponent implements OnInit {
           }, error => {
             this.loading.hide();
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.log(errorMessage);
           });
       }
@@ -1314,7 +1314,7 @@ export class ConsecutivoTituloComponent implements OnInit {
             }, error => {
               this.loading.hide();
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.log(errorMessage);
             });
         }
@@ -1332,7 +1332,7 @@ export class ConsecutivoTituloComponent implements OnInit {
             }, error => {
               this.loading.hide();
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.log(errorMessage);
             }
           );
@@ -1349,7 +1349,7 @@ export class ConsecutivoTituloComponent implements OnInit {
           }, error => {
             this.loading.hide();
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.log(errorMessage);
           }
         );
@@ -1427,7 +1427,7 @@ export class ConsecutivoTituloComponent implements OnInit {
                 },
                 error => {
                   const errorMessage = <any>error;
-                  this.notif.onDanger('Error', errorMessage);
+                  
                   console.log(errorMessage);
                 });
             }
@@ -1455,7 +1455,7 @@ export class ConsecutivoTituloComponent implements OnInit {
                 },
                 error => {
                   const errorMessage = <any>error;
-                  this.notif.onDanger('Error', errorMessage);
+                  
                   console.log(errorMessage);
                 });
             }
@@ -1481,7 +1481,7 @@ export class ConsecutivoTituloComponent implements OnInit {
                   },
                   error => {
                     const errorMessage = <any>error;
-                    this.notif.onDanger('Error', errorMessage);
+                    
                     console.log(errorMessage);
                   });
               }
@@ -1509,7 +1509,7 @@ export class ConsecutivoTituloComponent implements OnInit {
                   },
                   error => {
                     const errorMessage = <any>error;
-                    this.notif.onDanger('Error', errorMessage);
+                    
                     console.log(errorMessage);
                   });
               }
@@ -1538,7 +1538,7 @@ export class ConsecutivoTituloComponent implements OnInit {
                 },
                 error => {
                   const errorMessage = <any>error;
-                  this.notif.onDanger('Error', errorMessage);
+                  
                   console.log(errorMessage);
                 });
             }
@@ -1580,7 +1580,7 @@ export class ConsecutivoTituloComponent implements OnInit {
           else if (int == 2) this.ConfirmarConsecutivo();
         }, error => {
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.log(errorMessage);
         });
     }
@@ -1592,7 +1592,7 @@ export class ConsecutivoTituloComponent implements OnInit {
           else if (int == 2) this.ConfirmarConsecutivo();
         }, error => {
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.log(errorMessage);
         });
       }
@@ -1619,7 +1619,7 @@ export class ConsecutivoTituloComponent implements OnInit {
                 }
               }, error => {
                 const errorMessage = <any>error;
-                this.notif.onDanger('Error', errorMessage);
+                
                 console.log(errorMessage);
               });
             Inicial += colillas + 1;
@@ -1640,7 +1640,7 @@ export class ConsecutivoTituloComponent implements OnInit {
               else if (int == 2) this.ConfirmarConsecutivo();
             }, error => {
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.log(errorMessage);
             });
         }
@@ -1653,7 +1653,7 @@ export class ConsecutivoTituloComponent implements OnInit {
             else if (int == 2) this.ConfirmarConsecutivo();
           }, error => {
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.log(errorMessage);
           }
         );
@@ -1682,7 +1682,7 @@ export class ConsecutivoTituloComponent implements OnInit {
         error => {
           this.loading.hide();
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.log(errorMessage);
         }
       )
@@ -1709,7 +1709,7 @@ export class ConsecutivoTituloComponent implements OnInit {
         error => {
           this.loading.hide();
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.log(errorMessage);
         }
       )
@@ -1740,7 +1740,7 @@ export class ConsecutivoTituloComponent implements OnInit {
           error => {
             this.loading.hide();
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.log(errorMessage);
           }
         )
@@ -1767,7 +1767,7 @@ export class ConsecutivoTituloComponent implements OnInit {
           error => {
             this.loading.hide();
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.log(errorMessage);
           });
       }
@@ -1794,7 +1794,7 @@ export class ConsecutivoTituloComponent implements OnInit {
         error => {
           this.loading.hide();
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.log(errorMessage);
         });
     }
@@ -1845,7 +1845,7 @@ export class ConsecutivoTituloComponent implements OnInit {
         error => {
           this.loading.hide();
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.log(errorMessage);
         }
       );
@@ -1866,7 +1866,7 @@ export class ConsecutivoTituloComponent implements OnInit {
         error => {
           this.loading.hide();
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.log(errorMessage);
         }
       );
@@ -1887,7 +1887,7 @@ export class ConsecutivoTituloComponent implements OnInit {
           },
           error => {
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.log(errorMessage);
           }
         );
@@ -1909,7 +1909,7 @@ export class ConsecutivoTituloComponent implements OnInit {
           error => {
             this.loading.hide();
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.log(errorMessage);
           }
         );
@@ -1931,7 +1931,7 @@ export class ConsecutivoTituloComponent implements OnInit {
         error => {
           this.loading.hide();
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.log(errorMessage);
         }
       );
@@ -2043,7 +2043,7 @@ export class ConsecutivoTituloComponent implements OnInit {
             error => {
               this.loading.hide();
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.log(errorMessage);
             }
           )
@@ -2070,7 +2070,7 @@ export class ConsecutivoTituloComponent implements OnInit {
             error => {
               this.loading.hide();
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.log(errorMessage);
             }
           )
@@ -2101,7 +2101,7 @@ export class ConsecutivoTituloComponent implements OnInit {
               error => {
                 this.loading.hide();
                 const errorMessage = <any>error;
-                this.notif.onDanger('Error', errorMessage);
+                
                 console.log(errorMessage);
               }
             )
@@ -2128,7 +2128,7 @@ export class ConsecutivoTituloComponent implements OnInit {
               error => {
                 this.loading.hide();
                 const errorMessage = <any>error;
-                this.notif.onDanger('Error', errorMessage);
+                
                 console.log(errorMessage);
               }
             )
@@ -2156,7 +2156,7 @@ export class ConsecutivoTituloComponent implements OnInit {
             error => {
               this.loading.hide();
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.log(errorMessage);
             }
           )
@@ -2238,7 +2238,7 @@ export class ConsecutivoTituloComponent implements OnInit {
         },error => {
           this.loading.hide();
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.log(errorMessage);
         }
       )
@@ -2257,7 +2257,7 @@ export class ConsecutivoTituloComponent implements OnInit {
           error => {
             this.loading.hide();
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.log(errorMessage);
           }
         )
@@ -2278,7 +2278,7 @@ export class ConsecutivoTituloComponent implements OnInit {
             error => {
               this.loading.hide();
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.log(errorMessage);
             }
           )
@@ -2298,7 +2298,7 @@ export class ConsecutivoTituloComponent implements OnInit {
             error => {
               this.loading.hide();
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.log(errorMessage);
             }
           )

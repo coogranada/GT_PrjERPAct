@@ -66,7 +66,7 @@ export class DebitosAutomaticosComponent implements OnInit {
       result => {
         if (!result.Estado) {
           this.router.navigateByUrl('/Login');
-          localStorage.clear();
+          StorageSecurity.clear();
         }
       }
     );

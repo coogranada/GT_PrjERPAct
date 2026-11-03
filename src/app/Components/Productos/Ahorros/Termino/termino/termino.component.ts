@@ -267,7 +267,7 @@ export class TerminoComponent implements OnInit {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.log(errorMessage);
       }
     );
@@ -279,7 +279,7 @@ export class TerminoComponent implements OnInit {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.log(errorMessage);
       }
     );
@@ -292,7 +292,7 @@ export class TerminoComponent implements OnInit {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.log(errorMessage);
       }
     );
@@ -1458,7 +1458,7 @@ export class TerminoComponent implements OnInit {
           this.bloquearBuscar = null;
           this.ClearFromTermino();
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.log(errorMessage);
         }
       );
@@ -1553,7 +1553,7 @@ export class TerminoComponent implements OnInit {
             },
             error => {
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.log(errorMessage);
             }
           );
@@ -1804,7 +1804,7 @@ export class TerminoComponent implements OnInit {
             },
             error => {
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.log(errorMessage);
             }
           );
@@ -2026,7 +2026,7 @@ export class TerminoComponent implements OnInit {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.log(errorMessage);
       }
     );
@@ -2054,7 +2054,7 @@ export class TerminoComponent implements OnInit {
         },
         error => {
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.log(errorMessage);
         }
       );
@@ -2079,7 +2079,7 @@ export class TerminoComponent implements OnInit {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.log(errorMessage);
       }
     );
@@ -2224,7 +2224,7 @@ export class TerminoComponent implements OnInit {
             error => {
               this.loading.hide();
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.log(errorMessage);
             }
           );
@@ -2336,7 +2336,7 @@ export class TerminoComponent implements OnInit {
             error => {
               this.loading.hide();
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.log(errorMessage);
             }
           );
@@ -2454,7 +2454,7 @@ export class TerminoComponent implements OnInit {
       error => {
         this.loading.hide();
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.log(errorMessage);
       }
     );
@@ -2481,7 +2481,7 @@ export class TerminoComponent implements OnInit {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.log(errorMessage);
       }
     );
@@ -2596,7 +2596,7 @@ export class TerminoComponent implements OnInit {
         error => {
           this.loading.hide();
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.log(errorMessage);
         }
       );
@@ -2657,7 +2657,7 @@ export class TerminoComponent implements OnInit {
         error => {
           this.loading.hide();
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.log(errorMessage);
         }
       );
@@ -2791,7 +2791,7 @@ export class TerminoComponent implements OnInit {
       error => {
         this.notif.onWarning('Advertencia', ERP_MESSAGES.VALOR_INGRESADO_FORMATO_INCORRECTO);
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.log(errorMessage);
       }
     );
@@ -2980,7 +2980,7 @@ export class TerminoComponent implements OnInit {
                     error => {
                       this.loading.hide();
                       const errorMessage = <any>error;
-                      this.notif.onDanger('Error', errorMessage);
+                      
                       console.log(errorMessage);
                     }
                   );
@@ -3069,7 +3069,7 @@ export class TerminoComponent implements OnInit {
                         error => {
                           this.loading.hide();
                           const errorMessage = <any>error;
-                          this.notif.onDanger('Error', errorMessage);
+                          
                           console.log(errorMessage);
                         }
                       );
@@ -3153,7 +3153,7 @@ export class TerminoComponent implements OnInit {
                       error => {
                         this.loading.hide();
                         const errorMessage = <any>error;
-                        this.notif.onDanger('Error', errorMessage);
+                        
                         console.log(errorMessage);
                       }
                     );
@@ -3244,7 +3244,7 @@ export class TerminoComponent implements OnInit {
                           error => {
                             this.loading.hide();
                             const errorMessage = <any>error;
-                            this.notif.onDanger('Error', errorMessage);
+                            
                             console.log(errorMessage);
                           }
                         );
@@ -3329,7 +3329,7 @@ export class TerminoComponent implements OnInit {
                     error => {
                       this.loading.hide();
                       const errorMessage = <any>error;
-                      this.notif.onDanger('Error', errorMessage);
+                      
                       console.log(errorMessage);
                     }
                   );
@@ -3420,7 +3420,7 @@ export class TerminoComponent implements OnInit {
                         error => {
                           this.loading.hide();
                           const errorMessage = <any>error;
-                          this.notif.onDanger('Error', errorMessage);
+                          
                           console.log(errorMessage);
                         }
                       );
@@ -3596,7 +3596,7 @@ export class TerminoComponent implements OnInit {
                   error => {
                     this.loading.hide();
                     const errorMessage = <any>error;
-                    this.notif.onDanger('Error', errorMessage);
+                    
                     console.log(errorMessage);
                   }
                 );
@@ -3685,7 +3685,7 @@ export class TerminoComponent implements OnInit {
                       error => {
                         this.loading.hide();
                         const errorMessage = <any>error;
-                        this.notif.onDanger('Error', errorMessage);
+                        
                         console.log(errorMessage);
                       }
                     );
@@ -3769,7 +3769,7 @@ export class TerminoComponent implements OnInit {
                     error => {
                       this.loading.hide();
                       const errorMessage = <any>error;
-                      this.notif.onDanger('Error', errorMessage);
+                      
                       console.log(errorMessage);
                     }
                   );
@@ -3858,7 +3858,7 @@ export class TerminoComponent implements OnInit {
                         error => {
                           this.loading.hide();
                           const errorMessage = <any>error;
-                          this.notif.onDanger('Error', errorMessage);
+                          
                           console.log(errorMessage);
                         }
                       );
@@ -3941,7 +3941,7 @@ export class TerminoComponent implements OnInit {
                   error => {
                     this.loading.hide();
                     const errorMessage = <any>error;
-                    this.notif.onDanger('Error', errorMessage);
+                    
                     console.log(errorMessage);
                   }
                 );
@@ -4030,7 +4030,7 @@ export class TerminoComponent implements OnInit {
                       error => {
                         this.loading.hide();
                         const errorMessage = <any>error;
-                        this.notif.onDanger('Error', errorMessage);
+                        
                         console.log(errorMessage);
                       }
                     );
@@ -4073,7 +4073,7 @@ export class TerminoComponent implements OnInit {
       error => {
         const errorMessage = <any>error;
         console.log(errorMessage);
-        this.notif.onDanger('Error', errorMessage);
+        
       }
     );
   }
@@ -4092,7 +4092,7 @@ export class TerminoComponent implements OnInit {
           error => {
             this.loading.hide();
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.log(errorMessage);
           }
         );
@@ -4105,7 +4105,7 @@ export class TerminoComponent implements OnInit {
           error => {
             this.loading.hide();
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.log(errorMessage);
           }
         );
@@ -4123,7 +4123,7 @@ export class TerminoComponent implements OnInit {
         error => {
           const errorMessage = <any>error;
           console.log(errorMessage);
-          this.notif.onDanger('Error', errorMessage);
+          
         }
       );
     } else {
@@ -4139,7 +4139,7 @@ export class TerminoComponent implements OnInit {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.log(errorMessage);
       }
     );
@@ -4151,7 +4151,7 @@ export class TerminoComponent implements OnInit {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.log(errorMessage);
       }
     );
@@ -4249,7 +4249,7 @@ export class TerminoComponent implements OnInit {
         error => {
           this.loading.hide();
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.log(errorMessage);
         }
       );
@@ -4314,7 +4314,7 @@ export class TerminoComponent implements OnInit {
         },
         error => {
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.log(errorMessage);
         }
       );
@@ -4349,7 +4349,7 @@ export class TerminoComponent implements OnInit {
         error => {
           this.loading.hide();
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.log(errorMessage);
         }
       );
@@ -4638,7 +4638,7 @@ export class TerminoComponent implements OnInit {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.log(errorMessage);
       }
     );
@@ -4819,7 +4819,7 @@ export class TerminoComponent implements OnInit {
                 },
                 error => {
                   const errorMessage = <any>error;
-                  this.notif.onDanger('Error', errorMessage);
+                  
                   console.log(errorMessage);
                 }
               );
@@ -4922,7 +4922,7 @@ export class TerminoComponent implements OnInit {
       error => {
         this.loading.hide();
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.log(errorMessage);
       }
     );
@@ -5089,7 +5089,7 @@ export class TerminoComponent implements OnInit {
     }, err => {
       this.loading.hide();
       const errorMessage = <any>err;
-      this.notif.onDanger('Error', errorMessage);
+      
       console.log(errorMessage);
       this.BenificiariosElminar = [];
       this.dataObjetBeneficiarios = this.dataObjetBeneficiarios.filter(( x: any) => x.Accion != "Eliminar");
@@ -5285,7 +5285,7 @@ export class TerminoComponent implements OnInit {
               error => {
                 this.loading.hide();
                 const errorMessage = <any>error;
-                this.notif.onDanger('Error', errorMessage);
+                
                 console.log(errorMessage);
               }
             );
@@ -5380,7 +5380,7 @@ export class TerminoComponent implements OnInit {
           error => {
             this.loading.hide();
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.log(errorMessage);
           }
         );
@@ -5465,7 +5465,7 @@ export class TerminoComponent implements OnInit {
           error => {
             this.loading.hide();
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.log(errorMessage);
           }
         );
@@ -5544,7 +5544,7 @@ export class TerminoComponent implements OnInit {
       error => {
         this.loading.hide();
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.log(errorMessage);
       }
     );
@@ -5569,7 +5569,7 @@ export class TerminoComponent implements OnInit {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.log(errorMessage);
       }
     );
@@ -5810,7 +5810,7 @@ export class TerminoComponent implements OnInit {
     }, err => {
       this.loading.hide();
       const errorMessage = <any>err;
-      this.notif.onDanger('Error', errorMessage);
+      
       console.log(errorMessage);
     })
   }
@@ -5859,7 +5859,7 @@ export class TerminoComponent implements OnInit {
     }, err => {
       this.loading.hide();
       const errorMessage = <any>err;
-      this.notif.onDanger('Error', errorMessage);
+      
       console.log(errorMessage);
     })
   }
@@ -5963,7 +5963,7 @@ export class TerminoComponent implements OnInit {
     }, err => {
       this.loading.hide();
       const errorMessage = <any>err;
-      this.notif.onDanger('Error', errorMessage);
+      
       console.log(errorMessage);
       this.CesionTituloEliminar = [];
       this.dataObjetCesionTitulo = this.dataObjetCesionTitulo.filter(( x: any) => x.Accion != "Eliminar");
@@ -6047,20 +6047,20 @@ export class TerminoComponent implements OnInit {
           error => {
             this.loading.hide();
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.log(errorMessage);
           }
         );
       }, error => {
         this.loading.hide();
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.error(errorMessage);
       })
     }, err => {
       this.loading.hide();
       const errorMessage = <any>err;
-      this.notif.onDanger('Error', errorMessage);
+      
       console.log(errorMessage);
     })
   }
@@ -6125,20 +6125,20 @@ export class TerminoComponent implements OnInit {
           },
           error => {
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.error(errorMessage);
           }
         );
       }, error => {
         this.loading.hide();
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.error(errorMessage);
       })
     }, error => {
       this.loading.hide();
       const errorMessage = <any>error;
-      this.notif.onDanger('Error', errorMessage);
+      
       console.error(errorMessage);
     })
 
@@ -6203,7 +6203,7 @@ export class TerminoComponent implements OnInit {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.error(errorMessage);
       }
     );
@@ -6286,7 +6286,7 @@ export class TerminoComponent implements OnInit {
         },
         error => {
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.error(errorMessage);
           this.TerminoOperacionForm.get('Codigo')?.reset();
         }
@@ -6335,7 +6335,7 @@ export class TerminoComponent implements OnInit {
         },
         error => {
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.error(errorMessage);
           this.TerminoOperacionForm.get('Codigo')?.reset();
         }
@@ -6369,7 +6369,7 @@ export class TerminoComponent implements OnInit {
         },
         error => {
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.error(errorMessage);
           this.TerminoOperacionForm.get('Codigo')?.reset();
         }
@@ -6402,7 +6402,7 @@ export class TerminoComponent implements OnInit {
         },
         error => {
           const errorMessage = <any>error;
-          this.notif.onDanger('Error', errorMessage);
+          
           console.error(errorMessage);
           this.TerminoOperacionForm.get('Codigo')?.reset();
         }
@@ -6417,7 +6417,7 @@ export class TerminoComponent implements OnInit {
       console.log("respuesta ", x)
     }, err => {
       const errorMessage = <any>err;
-      this.notif.onDanger('Error', errorMessage);
+      
       console.error(errorMessage);
     })
   }
@@ -6428,7 +6428,7 @@ export class TerminoComponent implements OnInit {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
       }
     );
   }
@@ -6447,7 +6447,7 @@ export class TerminoComponent implements OnInit {
           },
           error => {
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.log(errorMessage);
           }
         );
@@ -6515,7 +6515,7 @@ export class TerminoComponent implements OnInit {
         this.ListCuentaReciprocidad = [];
         this.loading.hide();
         const errorMessage = <any>err;
-        this.notif.onDanger('Error', errorMessage);
+        
       });
     }
     else
@@ -6540,7 +6540,7 @@ export class TerminoComponent implements OnInit {
       }, err => {
         this.loading.hide();
         const errorMessage = <any>err;
-        this.notif.onDanger('Error', errorMessage);
+        
       });
     }
   }
@@ -6567,7 +6567,7 @@ export class TerminoComponent implements OnInit {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.log(errorMessage);
       });
   }
@@ -6768,7 +6768,7 @@ export class TerminoComponent implements OnInit {
       error => {
         this.loading.hide();
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.log(errorMessage);
       }
     );
@@ -6891,7 +6891,7 @@ export class TerminoComponent implements OnInit {
               error => {
                 this.loading.hide();
                 const errorMessage = <any>error;
-                this.notif.onDanger('Error', errorMessage);
+                
                 console.log(errorMessage);
               });
 
@@ -6935,7 +6935,7 @@ export class TerminoComponent implements OnInit {
               error => {
                 this.loading.hide();
                 const errorMessage = <any>error;
-                this.notif.onDanger('Error', errorMessage);
+                
                 console.log(errorMessage);
               });
             this.ObtenerHistorial();
@@ -6991,7 +6991,7 @@ export class TerminoComponent implements OnInit {
               error => {
                 this.loading.hide();
                 const errorMessage = <any>error;
-                this.notif.onDanger('Error', errorMessage);
+                
                 console.log(errorMessage);
               }
             );
@@ -7068,7 +7068,7 @@ export class TerminoComponent implements OnInit {
                 error => {
                   this.loading.hide();
                   const errorMessage = <any>error;
-                  this.notif.onDanger('Error', errorMessage);
+                  
                   console.log(errorMessage);
                 }
               );
@@ -7138,7 +7138,7 @@ export class TerminoComponent implements OnInit {
               error => {
                 this.loading.hide();
                 const errorMessage = <any>error;
-                this.notif.onDanger('Error', errorMessage);
+                
                 console.log(errorMessage);
               }
             );
@@ -7901,7 +7901,7 @@ export class TerminoComponent implements OnInit {
       error => {
         this.loading.hide();
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.log(errorMessage);
       }
     );

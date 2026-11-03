@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChild, EventEmitter, Output } from '@angular/core';
 import { ClientesGetListService } from '../../../../../Services/Clientes/clientesGetList.service';
+import { StorageSecurity } from '../../../../../utils/storage-security.util';
 declare var $: any;
 @Component({
   selector: 'app-trasavilidad-asociado',
@@ -15,13 +16,12 @@ export class TrasavilidadAsociadoComponent implements OnInit, AfterViewInit {
   constructor(private clientesGetListService: ClientesGetListService) { }
 
   ngOnInit() {
-    const getStorageTra = localStorage.getItem('trasabilidad');
-    if (getStorageTra !== null) {
-        let trasabilidad : string | null = localStorage.getItem('trasabilidad')
-        const documentoConsulta = JSON.parse(window.atob(trasabilidad == null ? "" : trasabilidad));
-        this.ConsultarTrasabilidad(documentoConsulta);
-    }
+  const documentoConsulta = StorageSecurity.getItem('trasabilidad');
+
+  if (documentoConsulta) {
+    this.ConsultarTrasabilidad(documentoConsulta);
   }
+}
   ngAfterViewInit() {
     
   }

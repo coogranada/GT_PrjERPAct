@@ -371,7 +371,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
                 },
                 error => {
                   const errorMessage = <any>error;
-                  this.notif.onDanger('Error', errorMessage);
+                  
                   console.error(errorMessage);
                 }
               );
@@ -410,7 +410,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
             },
             error => {
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.error(errorMessage);
             }
           );
@@ -434,7 +434,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
               },
               error => {
                 const errorMessage = <any>error;
-                this.notif.onDanger('Error', errorMessage);
+                
                 console.error(errorMessage);
               }
             );
@@ -506,7 +506,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
               error => {
                 this.infoJuridicoFrom.get('Ciudad')?.reset();
                 const errorMessage = <any>error;
-                this.notif.onDanger('Error', errorMessage);
+                
                 console.error(errorMessage);
               }
             );
@@ -521,7 +521,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
             error => {
               this.infoJuridicoFrom.get('Ciudad')?.reset();
               const errorMessage = <any>error;
-              this.notif.onDanger('Error', errorMessage);
+              
               console.error(errorMessage);
             }
           );
@@ -537,7 +537,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
           error => {
             this.infoJuridicoFrom.get('Ciudad')?.reset();
             const errorMessage = <any>error;
-            this.notif.onDanger('Error', errorMessage);
+            
             console.error(errorMessage);
           }
         );
@@ -560,7 +560,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.error(errorMessage);
       }
     );
@@ -575,7 +575,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.error(errorMessage);
       }
     );
@@ -588,7 +588,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.error(errorMessage);
       }
     );
@@ -605,7 +605,7 @@ export class InfoJuridicosComponent implements OnInit, AfterViewInit {
       },
       error => {
         const errorMessage = <any>error;
-        this.notif.onDanger('Error', errorMessage);
+        
         console.error(errorMessage);
       }
     );

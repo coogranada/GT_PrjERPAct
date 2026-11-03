@@ -79,7 +79,7 @@ export class LlavesComponent implements OnInit {
     }, error => {
       this.loading.hide();
       const errorMessage = <any>error;
-      this.notif.onDanger('Error', errorMessage);
+      
     });
   }
   CambiarLlaves() {
@@ -93,7 +93,7 @@ export class LlavesComponent implements OnInit {
       this.loading.hide();
       this.GetLlaves();
       const errorMessage = <any>error;
-      this.notif.onDanger('Error', errorMessage);
+      
     });
   }
   GetGenerarLlaves() {
@@ -114,7 +114,7 @@ export class LlavesComponent implements OnInit {
     }, error => {
       this.loading.hide();
       const errorMessage = <any>error;
-      this.notif.onDanger('Error', errorMessage);
+      
     });
   }
   GuardarLlaves() {
@@ -139,7 +139,7 @@ export class LlavesComponent implements OnInit {
       this.loading.hide();
       this.GetLlaves();
       const errorMessage = <any>error;
-      this.notif.onDanger('Error', errorMessage);
+      
     });
   }
   GetProveedores() {
@@ -152,7 +152,7 @@ export class LlavesComponent implements OnInit {
       this.loading.hide();
       this.GetLlaves();
       const errorMessage = <any>error;
-      this.notif.onDanger('Error', errorMessage);
+      
     });
   }
   Back() {
