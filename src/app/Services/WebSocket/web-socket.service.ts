@@ -216,11 +216,11 @@ export class WebSocketService {
     this.Stop();
     this.LogginOut();
     this.TriggerLocal("CloseSesion");
-    localStorage.removeItem("ChangeState");
+    StorageSecurity.removeItem("ChangeState");
   }
 
   LogginOut() {
-    localStorage.clear();
+    StorageSecurity.clear();
     this.router.navigateByUrl('/Login');
   }
 }

@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { EncryptionService } from '../Encryption/encryption.service';
 import { LoginService } from '../Login/login.service';
+import { StorageSecurity } from '../../utils/storage-security.util';
 
 @Injectable({
   providedIn: 'root'
@@ -107,7 +108,8 @@ export class AuthHttpClientInterceptorService implements HttpInterceptor {
             .RefreshToken(refreshToken)
             .pipe(
               switchMap(response => {
-                localStorage.setItem('token', response.token);
+                
+                StorageSecurity.saveItem('token', response.token);
 
                 // Despierta las peticiones que estaban esperando
                 this.refreshTokenSubject.next(response.token);

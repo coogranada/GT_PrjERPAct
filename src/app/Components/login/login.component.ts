@@ -155,8 +155,8 @@ export class LoginComponent implements OnInit {
   }
 //juanes
   isAuthenticated() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('refreshToken');
+    StorageSecurity.removeItem('token');
+    StorageSecurity.removeItem('refreshToken');
     const now: Date = new Date();
     this.loading.show();
     //DFRAMIREZ: encriptar clave autenticación
@@ -233,17 +233,10 @@ export class LoginComponent implements OnInit {
 
               this.clientesGetListService.GetParentescos().subscribe(
                 async (result: any) => {
-
-                  localStorage.setItem(
-                    'token',
-                    this.dataUser.token
-                  );
-
-                  localStorage.setItem(
-                    'refreshToken',
-                    this.dataUser.refreshToken
-                  );
-
+                  //TOKEN
+                  StorageSecurity.saveItem('token', this.dataUser.token);
+                  StorageSecurity.saveItem('refreshToken', this.dataUser.refreshToken);
+                  
                   this.catalogosService.cargarCatalogosSiNoExisten();
                   StorageSecurity.saveItem('parentescoChange',result);
                   let browser = await detectIncognito();

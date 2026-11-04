@@ -2582,9 +2582,9 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                   this.BlockVinculacion = null;
                   this.serviciosFrom.reset();
                   // se utiliza para saber si se realiza una vinculacion una actualizacion y un credito en la impresion
-                  StorageSecurity.saveItem('Credito', true);
-                  StorageSecurity.saveItem('Vinculacion', false);
-                  StorageSecurity.saveItem('Actualizacion', true);
+                  // StorageSecurity.saveItem('Credito', true);
+                  // StorageSecurity.saveItem('Vinculacion', false);
+                  // StorageSecurity.saveItem('Actualizacion', true);
                   const data = StorageSecurity.getData();
                   this.serviciosFrom.get('servicioSolicitado')?.setValue(3);
                   this.serviciosFrom.get('operacionSeleccionada')?.setValue('imprimir');
@@ -9844,7 +9844,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                       this.basicoSave.get('IdSegmento')?.setValue(this.basicosFrom.value.segmento);
                       this.basicoSave.get('IdTipoOcupacion')?.setValue(this.basicosFrom.value.tipoOcupacion);
                       this.basicoSave.get('IdTipoEmpleo')?.setValue(this.basicosFrom.value.tipoEmpleo);
-                      StorageSecurity.saveItem('laborSeleccionada', this.basicosFrom.value.tipoEmpleo);
                       this.basicoSave.get('NumPersCargo')?.setValue(this.basicosFrom.value.numeroPersonasCargo);
                       if (this.infoTutor !== null && this.infoTutor !== undefined) {
                         if (this.infoTutor.LngTercero !== undefined) {
@@ -9987,7 +9986,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                     this.basicoSave.get('IdSegmento')?.setValue(this.basicosFrom.value.setSegmento);
                     this.basicoSave.get('IdTipoOcupacion')?.setValue(this.basicosFrom.value.tipoOcupacion);
                     this.basicoSave.get('IdTipoEmpleo')?.setValue(this.basicosFrom.value.tipoEmpleo);
-                    StorageSecurity.saveItem('laborSeleccionada', this.basicosFrom.value.tipoEmpleo);
                     this.basicoSave.get('NumPersCargo')?.setValue(this.basicosFrom.value.numeroPersonasCargo);
                     if (this.infoTutor !== null && this.infoTutor !== undefined) {
                       if (this.infoTutor.LngTercero !== undefined) {
@@ -10140,7 +10138,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                     }
                     this.basicoSave.get('IdEstadoCivil')?.setValue(this.basicosFrom.value.estadoCivil);
                     this.estadoCivilSeleccionado = +this.basicosFrom.value.estadoCivil;
-                    StorageSecurity.saveItem('laborSeleccionada', this.basicosFrom.value.estadoCivil);
                     this.basicoSave.get('IdRelacion')?.setValue(this.basicosFrom.value.tipoCliente);
                     this.basicoSave.get('NumHijos')?.setValue(this.basicosFrom.value.numHijos);
                     this.basicoSave.get('NumHijosEstudian')?.setValue(this.basicosFrom.value.numHijosEstudian);
@@ -10161,7 +10158,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                     this.basicoSave.get('IdSegmento')?.setValue(this.basicosFrom.value.setSegmento);
                     this.basicoSave.get('IdTipoOcupacion')?.setValue(this.basicosFrom.value.tipoOcupacion);
                     this.basicoSave.get('IdTipoEmpleo')?.setValue(this.basicosFrom.value.tipoEmpleo);
-                    StorageSecurity.saveItem('laborSeleccionada',this.basicosFrom.value.tipoEmpleo);
                     this.basicoSave.get('NumPersCargo')?.setValue(this.basicosFrom.value.numeroPersonasCargo);
                     if (this.infoTutor !== null && this.infoTutor !== undefined) {
                       if (this.infoTutor.LngTercero !== undefined) {
@@ -10303,7 +10299,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                   this.basicoSave.get('IdSegmento')?.setValue(this.basicosFrom.value.setSegmento);
                   this.basicoSave.get('IdTipoOcupacion')?.setValue(this.basicosFrom.value.tipoOcupacion);
                   this.basicoSave.get('IdTipoEmpleo')?.setValue(this.basicosFrom.value.tipoEmpleo);
-                  StorageSecurity.saveItem('laborSeleccionada',this.basicosFrom.value.tipoEmpleo);
                   this.basicoSave.get('NumPersCargo')?.setValue(this.basicosFrom.value.numeroPersonasCargo);
                   if (this.infoTutor !== null && this.infoTutor !== undefined) {
                     if (this.infoTutor.LngTercero !== undefined) {
@@ -10470,7 +10465,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
             this.basicoSave.get('IdSegmento')?.setValue(this.basicosFrom.value.setSegmento);
             this.basicoSave.get('IdTipoOcupacion')?.setValue(this.basicosFrom.value.tipoOcupacion);
             this.basicoSave.get('IdTipoEmpleo')?.setValue(this.basicosFrom.value.tipoEmpleo);
-            StorageSecurity.saveItem('laborSeleccionada',this.basicosFrom.value.tipoEmpleo);
             this.basicoSave.get('NumPersCargo')?.setValue(this.basicosFrom.value.numeroPersonasCargo);
             if (this.infoTutor !== null && this.infoTutor !== undefined) {
               if (this.infoTutor.LngTercero !== undefined) {
@@ -10627,7 +10621,6 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
           this.basicoSave.get('IdSegmento')?.setValue(this.basicosFrom.value.setSegmento);
           this.basicoSave.get('IdTipoOcupacion')?.setValue(this.basicosFrom.value.tipoOcupacion);
           this.basicoSave.get('IdTipoEmpleo')?.setValue(this.basicosFrom.value.tipoEmpleo);
-          StorageSecurity.saveItem('laborSeleccionada',this.basicosFrom.value.tipoEmpleo);
           this.basicoSave.get('NumPersCargo')?.setValue(this.basicosFrom.value.numeroPersonasCargo);
           if (this.infoTutor !== null && this.infoTutor !== undefined) {
             if (this.infoTutor.LngTercero !== undefined) {
@@ -12932,7 +12925,7 @@ enviarWorkManager() {
 
   setDataContactos(): void {
     const results = this.basicosFrom.get('operacion')?.value;
-    const tipoEmpleo = Number(StorageSecurity.getItem('laborSeleccionada'));
+    const tipoEmpleo =  Number(this.basicosFrom.get('tipoEmpleo')?.value);
     let ppalDir = false;
     let ppalcel = false;
     let tieneDir = false;
@@ -17077,7 +17070,7 @@ enviarWorkManager() {
 
   setDataLaboral() {
     // 4- Empleado 10 -jubilado Empleado 11 -jubilado pensionado
-    const empleoSeleccionado = String(StorageSecurity.getItem('laborSeleccionada'));
+    const empleoSeleccionado =   String(this.basicosFrom.get('tipoEmpleo')?.value);
     const results = this.basicosFrom.get('operacion')?.value;
     if (empleoSeleccionado === '4' || empleoSeleccionado === '10' || empleoSeleccionado === '11') { // Mensaje
       if (this.itemsLaboral.length === 0) { // Mensaje
@@ -22258,7 +22251,6 @@ enviarWorkManager() {
               this.ocultarLaboral = true;
               this.ocultarLaboralDos = false;
             }
-            StorageSecurity.saveItem('laborSeleccionada',result.asociadosNaturalesDto.IdTipoEmpleo);
             this.basicosFrom.get('nivelEstudio')?.setValue(result.asociadosNaturalesDto.IdNivelEstudio);
             this.basicosFrom.get('tipoOcupacion')?.setValue(result.asociadosNaturalesDto.IdTipoOcupacion);
             if(result.asociadosNaturalesDto.IdMotivoIngreso !== 0){
