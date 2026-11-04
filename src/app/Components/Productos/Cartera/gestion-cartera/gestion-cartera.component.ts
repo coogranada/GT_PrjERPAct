@@ -3975,7 +3975,8 @@ export class GestionCarteraComponent {
     const nuevoTipoId = Number(this.gestionCreditoForm.get('TipoPagare')?.value);
     this.tipoPagareInicial = nuevoTipoId;
     this.tipoPagareActual = nuevoTipoId;
-
+    this.tipoPagareDescripcionActual = tipoDescripcion;
+    
     this.gestionCreditoForm.get('pagare')?.disable();
     this.gestionCreditoForm.get('TipoPagare')?.disable();
 
