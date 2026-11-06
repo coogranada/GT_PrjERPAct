@@ -127,6 +127,7 @@ export class LayoutComponent implements OnInit,OnDestroy {
   public Seguros = false;
   public Generales = false;
   public Cancelacion = false;
+  public Garantias = false;
   /*Fin Productos */
 
    /*Creditos */
@@ -268,7 +269,9 @@ export class LayoutComponent implements OnInit,OnDestroy {
   public GestionCreditoModel: any;
   /*Fin Creditos */
 
-
+  /* Cartera */
+  public GarantiasModel: any;
+  /*Fin Creditos */
 
   /*  Transacciones Financieras */
   public TransaccionesFinancierasModel: any;
@@ -844,7 +847,7 @@ this.userIdle.onTimeout().subscribe(() => {
             }
             /* Fin Productos */
 
-              /* Creditos */
+            /* Creditos */
             else if (element.IdModulo === 27) {
               this.Score = true;
               this.ScoreModel = element;
@@ -861,8 +864,14 @@ this.userIdle.onTimeout().subscribe(() => {
               this.GestionCredito = true;
               this.GestionCreditoModel = element;
             }
-               /* Fin Creditos */
+            /* Fin Creditos */
 
+            /* Garantías */
+            else if (element.IdModulo === 91) {
+              this.Garantias = true;
+              this.GarantiasModel = element;
+            }
+            /* Fin Garantías */
 
             /*  Transacciones Financieras */
             else if (element.IdModulo === 86) { 

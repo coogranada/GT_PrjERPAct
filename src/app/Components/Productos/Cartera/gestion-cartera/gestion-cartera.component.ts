@@ -175,6 +175,7 @@ export class GestionCarteraComponent {
   };
   public detalleGarantiaCreditos: DetalleGarantiaCreditoDto[] = [];
 
+  public tienmora: boolean = false;
 
   private readonly NOMBRES_CAMPOS_NUMERO_CUENTA: string[] = ['IdOficinaCuenta', 'IdProductoCuenta', 'IdConsecutivo', 'IdDigito'];
   private readonly NOMBRES_CAMPOS_BUSQUEDA: string[] = [...this.NOMBRES_CAMPOS_NUMERO_CUENTA, 'BuscarDocumento', 'BuscarNombre', 'pagare'];
@@ -3127,6 +3128,18 @@ export class GestionCarteraComponent {
       return;
 
 
+    if (this.tienmora) {
+      this.notif.warning(
+        ERP_TOAST.WARNING,
+        'No se puede realizar la operación, crédito en mora.',
+        ConfiguracionNotificacion.configRightTop
+      );
+    
+      this.gestionCreditoOperacionForm.get('Codigo')?.reset();
+      this.cuotaTabBloqueado = false;
+      return;
+    }
+
     const estaSinCobertura = this.gestionCreditoForm.get('estaSinCobertura')?.value;
 
     const texto = estaSinCobertura
@@ -4172,7 +4185,7 @@ export class GestionCarteraComponent {
       this.DatosForm.get('IdPeriodoInteres')?.setValue(result.IdPeriodoInteres);
       this.DatosForm.get('IdPeriodoCapital')?.setValue(result.IdPeriodoCapital);
       this.DatosForm.get('Formula')?.setValue(result.Formula);
-
+      this.tienmora = result.TieneMora;
     } catch (error) {
       const errorMessage = <any>error;
       console.log(errorMessage);
