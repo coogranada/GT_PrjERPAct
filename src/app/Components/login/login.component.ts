@@ -19,6 +19,7 @@ import { Router } from '@angular/router';
 import { LoadingService } from '../../Services/shared/loading.service';
 import { CatalogosService } from '../../Services/Clientes/CatalogosService';
 import { StorageSecurity } from '../../utils/storage-security.util';
+import { SecurityService } from '../../Services/Auth/security.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -41,9 +42,15 @@ export class LoginComponent implements OnInit {
     private clientesGetListService: ClientesGetListService,private route : Router,
     private oficinasService: OficinasService, private webSocket : WebSocketService,
     private loading: LoadingService,
-   private catalogosService: CatalogosService) {}
+   private catalogosService: CatalogosService, private router: Router, private securityService: SecurityService) {}
 
-  ngOnInit() {
+  ngOnInit() {    
+    const token = this.securityService.GetToken();
+    if (token) {
+      this.router.navigateByUrl('/');
+    }
+
+
     this.validateForm();
   //   this.GetProfesion();
   //   this.GetParentescos();

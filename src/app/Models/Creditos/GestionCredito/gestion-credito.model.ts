@@ -7,7 +7,7 @@ export interface AsesoriaEncabezadoForm {
     idOperacion: FormControl<number | null>;
     idOficinaAsociado: FormControl<number | null>;
     nombreOficinaAsociado: FormControl<string>;
-    asesoria: FormControl<number | null>;
+    idAsesoria: FormControl<number | null>;
     tipoDocumento: FormControl<string>;
     numeroDocumento: FormControl<string>;
     nombreAsociado: FormControl<string>;
@@ -24,19 +24,24 @@ export interface NegociacionForm {
     producto: FormControl<string>;
     idLinea: FormControl<number | null>;
     linea: FormControl<string>;
-    idSistema: FormControl<TipoSistemas | null>;
+    // idSistema: FormControl<TipoSistemas | null>;
     sistema: FormControl<string>;
-    idFormaPago: FormControl<FormaPagoEnum | null>;
+    selectSistema: FormControl<TipoSistemas | null>;
+    // idFormaPago: FormControl<FormaPagoEnum | null>;
     formaPago: FormControl<string>;
-    idPeriodoCapital: FormControl<PeriodoPagoEnum | null>;
+    selectFormaPago: FormControl<FormaPagoEnum | null>;
+    // idPeriodoCapital: FormControl<PeriodoPagoEnum | null>;
     periodoCapital: FormControl<string>;
-    idPeriodoInteres: FormControl<PeriodoPagoEnum | null>;
+    selectPeriodoCapital: FormControl<PeriodoPagoEnum | null>;
+    // idPeriodoInteres: FormControl<PeriodoPagoEnum | null>;
     periodoInteres: FormControl<string>;
+    selectPeriodoInteres: FormControl<PeriodoPagoEnum | null>;
     monto: FormControl<number | null>;
     plazo: FormControl<number | null>;
     periodoGracia: FormControl<number | null>;
     idGarantia: FormControl<GarantiaEnum | null>;
     garantia: FormControl<string>;
+    selectGarantia: FormControl<GarantiaEnum | null>;
     idTipoGarantia: FormControl<number | null>;
     tipoGarantia: FormControl<string>;
     idAsesor: FormControl<number | null>;
@@ -54,6 +59,33 @@ export interface NegociacionForm {
 export interface ProductoCredito {
     idProducto: number;
     DescripcionProducto: string;
+}
+
+export interface LineaResponse {
+    idLinea: number;
+    linea: string;
+    idProducto: number;
+    sigla: string;
+    tipoConfiguracionSistema: number;
+}
+
+export interface TiposGarantiasResponse {
+    idTipoGarantia: number;
+    tipoGarantia: string;
+}
+
+export interface CombinacionResponse {
+  plazoMinimo: number;
+  plazoMaximo: number;
+  idGarantia: number;
+  idFormaPago: number;
+  idPeriodoPagoInteres: number;
+  tasaEfectiva: number;
+}
+
+export interface FormaPagoResponse {
+    IdFormaPago: number;
+    DescripcionFormaPago: string;
 }
 
 export interface Asesor {
@@ -207,4 +239,23 @@ export interface CanalesContactoForm {
     canalTelCelular: FormControl<boolean>;
     canalVisita: FormControl<boolean>;
     canalNotificacion: FormControl<boolean>;
+}
+
+export interface CalcularCreditoRequest {
+    numeroDocumento: string;
+    idLinea: number;
+    idSistema: number;
+    idFormaPago: number;
+    idPeriodoCapital: number;
+    idPeriodoInteres: number;
+    monto: number;
+    plazo: number;
+    idGarantia: number;
+}
+
+export interface CalcularCreditoResponse {
+    tasaEfectiva: number;
+    tasaNominal: number;
+    tasaPeriodica: number;
+    cuota: number;
 }

@@ -145,8 +145,8 @@ ngOnInit(): void {
 
   // TOKEN
   private cerrarSesionTodasLasPestañas() {
-    window.addEventListener('storage', (event) => {
-      if (event.key === 'token' && event.newValue === null) {
+    window.addEventListener('storage', (event) => {      
+      if (event.key === 'logout-event') {
         this.router.navigate(['/login']);
       }
     });

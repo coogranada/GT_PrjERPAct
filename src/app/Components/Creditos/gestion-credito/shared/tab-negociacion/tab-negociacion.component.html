@@ -2,58 +2,15 @@
 
 
     <div class="row row-margin">
+        <app-input-busqueda #inputBusquedaProducto label="Producto" [requerido]="true" titulo="Productos"
+            [codigoControl]="negF.idProducto" [descripcionControl]="negF.producto" [columns]="columnasBusquedaProducto"
+            codigoField="idProducto" descripcionField="descripcionProducto"
+            [buscarPorCodigoObs]="buscarProductosPorCodigo" [buscarPorDescripcionObs]="buscarProductosPorNombre"
+            (selected)="onProductoSeleccionado($event)" [disabled]="productoBtnDisabled"
+            [mensajeNoEncontrado]="mensajeProductoNoEncontrado" [permitirBusquedaVacia]="true" />
+
+
         <!-- <div class="col-xs-12 col-lg-4">
-            <div>
-                <label for="producto" class="textNegrilla">Producto:</label>
-                <span class="text-danger"> *</span>
-            </div>
-            <div class="row">
-                <div class="col-xs-2 col-lg-2">
-                    <input type="text" id="producto" class="form-control" formControlName="idProducto" appSoloNumero>
-                </div>
-                <div class="col-xs-7 col-lg-7">
-                    <input type="text" class="form-control" formControlName="producto">
-                </div>
-                <div class="col-xs-1 col-lg-1">
-                    <button type="button" class="btn Gt-btn-verde btn-icon" [disabled]="productoBtnDisabled">
-                        <i class="icon-search4"></i>
-                    </button>
-                </div>
-            </div>
-        </div> -->
-
-        <!-- <app-input-busqueda
-            label="Producto"
-            [requerido]="true"
-            titulo="Productos"
-            [codigoControl]="formNegociacion.controls.idProducto"
-            [descripcionControl]="formNegociacion.controls.producto"
-            [items]="[]"
-            [columns]="[]"
-            (searchCode)="buscarAsesorExternoCodigo($event)"
-            (searchText)="buscarAsesorExternoNombre($event)"
-            (selected)="mapearAsesorExterno($event)" 
-        /> -->
-
-        <app-input-busqueda
-            label="Producto"
-            [requerido]="true"
-            titulo="Productos"
-            [codigoControl]="formNegociacion.controls.idProducto"
-            [descripcionControl]="formNegociacion.controls.producto"
-            [columns]="columnasBusquedaProducto"
-            codigoField="idProducto"
-            descripcionField="descripcionProducto"
-            [buscarPorCodigoObs]="buscarProductosPorCodigo"
-            [buscarPorDescripcionObs]="buscarProductosPorNombre"
-            (selected)="onProductoSeleccionado($event)" 
-            [disabled]="false"
-            [mensajeNoEncontrado]="mensajeProductoNoEncontrado"
-            [permitirBusquedaVacia]="true"
-        />
-
-
-        <div class="col-xs-12 col-lg-4">
             <div>
                 <label for="linea" class="textNegrilla">Linea:</label>
                 <span class="text-danger"> *</span>
@@ -71,7 +28,14 @@
                     </button>
                 </div>
             </div>
-        </div>
+        </div> -->
+
+        <app-input-busqueda label="Linea" [requerido]="true" titulo="Lineas" [codigoControl]="negF.idLinea"
+            [descripcionControl]="negF.linea" [columns]="columnasBusquedaLinea" codigoField="idLinea"
+            descripcionField="linea" [buscarPorCodigoObs]="buscarLineasPorCodigo"
+            [buscarPorDescripcionObs]="buscarLineasPorNombre" (selected)="onLineaSeleccionada($event)"
+            [disabled]="lineaBtnDisabled" [mensajeNoEncontrado]="mensajeLineaNoEncontrada"
+            [permitirBusquedaVacia]="true" />
 
         <div class="col-xs-12 col-lg-3">
             <div>
@@ -80,15 +44,20 @@
             </div>
             <div class="row">
                 <div class="col-xs-9 col-lg-12">
-                    <!-- <select id="sistema" formControlName="sistema" class="form-control">
-                            @for (sis of sistemas; track sis.id) {
-                            <option [ngValue]="sis.id">
-                                {{ sis.descripcion }}
-                            </option>
-                            }
-                        </select> -->
-        
+                    @if(mostrarSelectSistemas) {
+                    <select id="sistema" formControlName="selectSistema" class="form-control">
+                        <option [ngValue]="null">-- Seleccione --</option>
+                        @for (sis of sistemas; track sis.id) {
+                        <option [ngValue]="sis.id">
+                            {{ sis.descripcion }}
+                        </option>
+                        }
+                    </select>
+                    } @else {
                     <input type="text" id="sistema" class="form-control" formControlName="sistema">
+                    }
+
+
                 </div>
             </div>
         </div>
@@ -97,20 +66,34 @@
     <div class="row row-margin">
         <div class="col-lg-3">
             <div>
-                <label for="formaPago" class="textNegrilla">Forma de pago:</label>
+                <label for="periodoInteres" class="textNegrilla">Periodo de pago interes:</label>
                 <span class="text-danger"> *</span>
             </div>
             <div class="row">
                 <div class="col-xs-9 col-lg-12">
-                    <!-- <select class="form-control" id="formaPago" formControlName="formaPago">
-                    @for (forma of formasPago; track forma.IdFormaPago) {
-                    <option [ngValue]="forma.IdFormaPago">
-                        {{ forma.DescripcionFormaPago }}
-                    </option>
+                    @if(mostrarSelectPerInteres) {
+                    <select id="periodoInteres" formControlName="selectPeriodoInteres" class="form-control">
+                        <option [ngValue]="null">-- Seleccione --</option>
+                        @for (periodo of periodosInteresValidos; track periodo.IdFrecuenciaPago) {
+                        <option [ngValue]="periodo.IdFrecuenciaPago">
+                            {{ periodo.DescripcionFrecuenciaPago }}
+                        </option>
+                        }
+                    </select>
+                        @if(formNegociacion.errors?.['interesMayorQueCapital']) {
+                            <span class="help-block">El período de pago de intereses no puede ser mayor que el período de pago de capital.</span>
+                        }
+
+                        @else if(formNegociacion.errors?.['periodoNoEsMultiplo']) {
+                            <span class="help-block">El período de pago de intereses debe ser una subdivisión exacta del período de pago de capital.</span>
+                        }
+                    } @else {
+
+                    <input type="text" id="periodoInteres" class="form-control" formControlName="periodoInteres">
                     }
-                </select> -->
-                    <input type="text" id="formaPago" class="form-control" formControlName="formaPago">
+
                 </div>
+
             </div>
         </div>
         <div class="col-lg-1"></div>
@@ -122,42 +105,52 @@
             </div>
             <div class="row">
                 <div class="col-xs-9 col-lg-12">
-<!-- <select id="periodoCapital" formControlName="periodoCapital" class="form-control">
+                    @if(mostrarSelectPerCapital) {
+                        <select id="periodoCapital" formControlName="selectPeriodoCapital" class="form-control">
+                            <option [ngValue]="null">-- Seleccione --</option>
+                            @for (periodo of periodosPago; track periodo.IdFrecuenciaPago) {
+                            <option [ngValue]="periodo.IdFrecuenciaPago">
+                                {{ periodo.DescripcionFrecuenciaPago }}
+                            </option>
+                            }
+                        </select>
+                    } @else {
 
-                    @for (periodo of periodosPagoCapital; track periodo.IdFrecuenciaPago) {
-                    <option [ngValue]="periodo.IdFrecuenciaPago">
-                        {{ periodo.DescripcionFrecuenciaPago }}
-                    </option>
+                    <input type="text" id="periodoCapital" class="form-control" formControlName="periodoCapital">
                     }
-                </select> -->
-                <input type="text" id="periodoCapital" class="form-control" formControlName="periodoCapital">
+
                 </div>
-                
+
 
             </div>
         </div>
         <div class="col-lg-1"></div>
 
+
         <div class="col-lg-3">
             <div>
-                <label for="periodoInteres" class="textNegrilla">Periodo de pago interes:</label>
+                <label for="formaPago" class="textNegrilla">Forma de pago:</label>
                 <span class="text-danger"> *</span>
             </div>
             <div class="row">
                 <div class="col-xs-9 col-lg-12">
-                    <!-- <select id="periodoInteres" formControlName="periodoInteres" class="form-control">
-
-                    @for (periodo of periodosPagoInteres; track periodo.IdFrecuenciaPago) {
-                    <option [ngValue]="periodo.IdFrecuenciaPago">
-                        {{ periodo.DescripcionFrecuenciaPago }}
-                    </option>
+                    @if(mostrarSelectFormaPago) {
+                    <select class="form-control" id="selectFormaPago" formControlName="selectFormaPago">
+                        <option [ngValue]="null">-- Seleccione --</option>
+                        @for (forma of formasPagoValidas; track forma.IdFormaPago) {
+                        <option [ngValue]="forma.IdFormaPago">
+                            {{ forma.DescripcionFormaPago }}
+                        </option>
+                        }
+                    </select>
+                    } @else {
+                    <input type="text" id="formaPago" class="form-control" formControlName="formaPago">
                     }
-                </select> -->
-                <input type="text" id="periodoInteres" class="form-control" formControlName="periodoInteres">
+
                 </div>
-                
             </div>
         </div>
+        
     </div>
 
     <div class="row row-margin">
@@ -168,7 +161,8 @@
             </div>
             <div class="row">
                 <div class="col-xs-9 col-lg-12">
-                    <input type="text" id="monto" class="form-control text-right" formControlName="monto" appMonedaDirectiva>
+                    <input type="text" id="monto" class="form-control text-right" formControlName="monto"
+                        appMonedaDirectiva>
                 </div>
             </div>
         </div>
@@ -182,7 +176,15 @@
             </div>
             <div class="row">
                 <div class="col-xs-9 col-lg-12">
-                    <input type="text" id="plazo" class="form-control" formControlName="plazo" appSoloNumero maxlength="4">
+                    <input type="text" id="plazo" class="form-control" formControlName="plazo" appSoloNumero
+                        maxlength="4">
+                    @if(negF.selectSistema.value && esCuotaVariable(negF.selectSistema.value) && negF.plazo.value && periodoInteresMeses > 1) {
+                        <span class="help-block-grey">Equivale a {{ negF.plazo.value * periodoInteresMeses }} meses</span>
+                    }
+
+                    @if(negF.plazo.hasError('min') || negF.plazo.hasError('max')) {
+                    <span class="help-block">Plazo mínimo: {{ plazoMinimo }} <br> Plazo máximo: {{ plazoMaximo }}</span>
+                    }
                 </div>
             </div>
 
@@ -191,12 +193,12 @@
         <div class="col-lg-1 col-lg-1-5">
             <div>
                 <label for="diasGracia" class="textNegrilla">Días gracia:<span class="text-danger">*</span></label>
-                
+
             </div>
             <div class="row">
                 <div class="col-xs-9 col-lg-12">
-                    <input type="text" id="diasGracia" class="form-control" formControlName="periodoGracia" appSoloNumero
-                        maxlength="4">
+                    <input type="text" id="diasGracia" class="form-control" formControlName="periodoGracia"
+                        appSoloNumero maxlength="4">
                 </div>
             </div>
         </div>
@@ -208,37 +210,41 @@
                 <label for="garantia" class="textNegrilla">Garantía:</label>
                 <span class="text-danger"> *</span>
             </div>
-            <!-- <select id="garantia" class="form-control" formControlName="garantia">
-                <option value="">Admisible</option>
-            </select> -->
+
+
             <div class="row">
                 <div class="col-xs-9 col-lg-9">
+                    @if(mostrarSelectGarantia) {
+                    <select id="garantia" class="form-control" formControlName="selectGarantia">
+                        <option [ngValue]="null">-- Seleccione --</option>
+                        @for (gar of garantiasValidas; track gar.id) {
+                        <option [ngValue]="gar.id">{{ gar.descripcion }}</option>
+                        }
+                    </select>
+                    } @else {
                     <input type="text" id="garantia" class="form-control" formControlName="garantia">
+
+                    }
+
                 </div>
                 @if(detalleGarantiasVisible) {
-                    <div class="col-lg-1">
-                        <button type="button" class="btn Gt-btn-verde btn-icon" (click)="onClickVerGarantias()"><i
-                                class="icon-drawer3"></i></button>
-                    </div>
+                <div class="col-lg-1">
+                    <button type="button" class="btn Gt-btn-verde btn-icon" (click)="onClickVerGarantias()"><i
+                            class="icon-drawer3"></i></button>
+                </div>
                 }
-                
-            
+
+
                 @if(mostrarModalGarantias) {
-                <app-cambiar-garantias-modal 
-                    [tituloModal]="'Garantias'"
-                    [moduloInvocacion]="Modulo.GestionCredito"
-                    [textoBotonConfirmar]="'Guardar'" 
-                    #modalGarantias
-                    [datosCuenta]="datosCuenta"
+                <app-cambiar-garantias-modal [tituloModal]="'Garantias'" [moduloInvocacion]="Modulo.GestionCredito"
+                    [textoBotonConfirmar]="'Guardar'" #modalGarantias [datosCuenta]="datosCuenta"
                     [SaldoCapital]="negF.monto.value ?? 0"
                     [listGarantiasDisponiblesDeudor]="listGarantiasDisponiblesDeudor"
                     [listGarantiasDisponiblesCodeudor]="[]"
                     [garantiasCompartidasBackendInput]="garantiasCompartidasBackend"
-                    [garantiasRealesAsignadasInput]="garantiasRealesAsignadas" 
-                    [garantiasCompartidas]="garantiasCompartidas"
-                    [codeudoresBasico]="[]" 
-                    [mostrarGarantiasCodeudor]="false"
-                    (cerrar)="onClickCerrarModalGarantias()" />
+                    [garantiasRealesAsignadasInput]="garantiasRealesAsignadas"
+                    [garantiasCompartidas]="garantiasCompartidas" [codeudoresBasico]="[]"
+                    [mostrarGarantiasCodeudor]="false" (cerrar)="onClickCerrarModalGarantias()" />
                 }
 
 
@@ -247,27 +253,33 @@
     </div>
 
     <div class="row row-margin">
-        <div class="col-lg-4">
-            <div>
-                <label for="tipoGarantia" class="textNegrilla">Tipo de garantía:</label>
-                <span class="text-danger"> *</span>
-            </div>
-            <div class="row">
-                <div class="col-xs-2 col-lg-2">
-                    <input type="text" id="tipoGarantia" class="form-control" formControlName="idTipoGarantia"
-                        appSoloNumero>
+        <!-- <div class="col-lg-4">
+                <div>
+                    <label for="tipoGarantia" class="textNegrilla">Tipo de garantía:</label>
+                    <span class="text-danger"> *</span>
                 </div>
-                <div class="col-xs-7 col-lg-7">
-                    <input type="text" class="form-control" formControlName="tipoGarantia">
+                <div class="row">
+                    <div class="col-xs-2 col-lg-2">
+                        <input type="text" id="tipoGarantia" class="form-control" formControlName="idTipoGarantia"
+                            appSoloNumero>
+                    </div>
+                    <div class="col-xs-7 col-lg-7">
+                        <input type="text" class="form-control" formControlName="tipoGarantia">
+                    </div>
+                    <div class="col-xs-1 col-lg-1">
+                        <button type="button" class="btn Gt-btn-verde btn-icon" [disabled]="tipoGarantiaBtnDisabled">
+                            <i class="icon-search4"></i>
+                        </button>
+                    </div>
                 </div>
-                <div class="col-xs-1 col-lg-1">
-                    <button type="button" class="btn Gt-btn-verde btn-icon" [disabled]="tipoGarantiaBtnDisabled">
-                        <i class="icon-search4"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
+            </div> -->
+    
+        <app-input-busqueda label="Tipo de garantía" [requerido]="true" titulo="Tipos garantías"
+            [codigoControl]="negF.idTipoGarantia" [descripcionControl]="negF.tipoGarantia" [columns]="columnasBusquedaTipoGarantia"
+            codigoField="idTipoGarantia" descripcionField="tipoGarantia" [buscarPorCodigoObs]="buscarTiposGarantiasPorCodigo"
+            [buscarPorDescripcionObs]="buscarTiposGarantiasPorNombre" (selected)="onTipoGarantiaSeleccionada($event)"
+            [disabled]="tipoGarantiaBtnDisabled" [permitirBusquedaVacia]="true" />
+    
         <div class="col-lg-4">
             <div>
                 <label for="asesor" class="textNegrilla">Asesor:</label>
@@ -285,81 +297,13 @@
 
         <div class="col-lg-1"></div>
 
-        <!-- <div class="col-lg-4">
-            <div>
-                <label for="asesorExterno" class="textNegrilla">Asesor externo:</label>
-            </div>
-            <div class="row">
-                <div class="col-xs-2 col-lg-2">
-                    <input type="text" id="asesorExterno" class="form-control" formControlName="idAsesorExterno"
-                        (blur)="buscarAsesorExternoCodigo($event)" (input)="onIdAsesorInput()" appSoloNumero>
-                </div>
-                <div class="col-xs-7 col-lg-7">
-                    <input type="text" class="form-control pmayuscula" formControlName="nombreAsesorExterno"
-                        (input)="onNombreAsesorInput()">
-                </div>
-                <div class="col-xs-1 col-lg-1">
-                    <button #searchButton type="button" class="btn Gt-btn-verde btn-icon"
-                        (click)="buscarAsesorExternoNombre()" [disabled]="asesorExtBtnDisabled">
-                        <i class="icon-search4"></i>
-                    </button>
-                </div>
+        <app-input-busqueda label="Asesor Externo" [requerido]="true" titulo="Asesor Externo"
+            [codigoControl]="negF.idAsesorExterno" [descripcionControl]="negF.nombreAsesorExterno"
+            [columns]="columnasAsesorExterno" codigoField="intIdAsesor" descripcionField="Nombre"
+            [buscarPorCodigoObs]="buscarAsesorExtPorCodigo" [buscarPorDescripcionObs]="buscarAsesorExtPorNombre"
+            (selected)="mapearAsesorExterno($event)" [disabled]="asesorExtBtnDisabled"
+            [mensajeNoEncontrado]="mensajeAsesorExtNoEncontrado" />
 
-                <div id="modalAsesoresExterno" class="modal fade">
-                    <div class="modal-dialog">
-                        <div class="modal-content modal-lg">
-                            <div class="modal-header bg-morado">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <h6 class="modal-title">Asesor Externo</h6>
-                            </div>
-                            <div class="modal-body">
-                                <div class="table-responsive scrollTabla">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th><strong>Codigo</strong></th>
-                                                <th><strong>Nombre asesor externo</strong></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @for (asesor of asesoresExternos; track asesor.intIdAsesor) {
-                                            <tr (click)="mapearAsesorExterno(asesor)">
-                                                <td> {{ asesor.intIdAsesor }} </td>
-                                                <td> {{ asesor.Nombre }} </td>
-                                            </tr>
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn Gt-btn-morado" data-dismiss="modal">Cerrar</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <input type="hidden" #modalAsesoresExterno data-toggle="modal" data-target="#modalAsesoresExterno"
-                    data-popup="tooltip" data-trigger="hover" data-placement="top">
-            </div>
-        </div> -->
-    
-    
-        <app-input-busqueda
-            label="Asesor Externo"
-            [requerido]="true"
-            titulo="Asesor Externo"
-            [codigoControl]="negF.idAsesorExterno"
-            [descripcionControl]="negF.nombreAsesorExterno"
-            [columns]="columnasAsesorExterno"
-            codigoField="intIdAsesor"
-            descripcionField="Nombre"
-            [buscarPorCodigoObs]="buscarAsesorExtPorCodigo"
-            [buscarPorDescripcionObs]="buscarAsesorExtPorNombre"
-            (selected)="mapearAsesorExterno($event)" 
-            [disabled]="false"
-            [mensajeNoEncontrado]="mensajeAsesorExtNoEncontrado"
-        />        
-    
     </div>
 
     <div class="row row-margin"></div>
@@ -377,7 +321,7 @@
                             appPorcentajeDirectiva>
                     </div>
                 </div>
-    
+
                 <div class="col-xs-4 col-lg-4">
                     <div>
                         <label class="textNegrilla">Nominal:</label>
@@ -387,7 +331,7 @@
                             appPorcentajeDirectiva>
                     </div>
                 </div>
-    
+
                 <div class="col-xs-4 col-lg-4">
                     <div>
                         <label class="textNegrilla">Efectiva:</label>
@@ -412,64 +356,55 @@
                         <input type="text" class="form-control" formControlName="indicador">
                     </div>
                 </div>
-    
+
                 <div class="col-xs-6 col-lg-6">
                     <div>
                         <label class="textNegrilla">Puntos:</label>
                     </div>
                     <div>
-                        <input type="text" class="form-control text-right" formControlName="puntos" appPorcentajeDirectiva>
+                        <input type="text" class="form-control text-right" formControlName="puntos"
+                            appPorcentajeDirectiva>
                     </div>
                 </div>
-    
+
             </div>
-        </div>     
-        
+        </div>
+
         <div class="col-lg-1"></div>
-        
+
         <div class="col-xs-3 col-lg-3">
             <div class="btn-space"></div>
-            <button class="btn Gt-btn-morado" [disabled]="calculatBtnDisabled">Calcular</button>
+            <button class="btn Gt-btn-morado" [disabled]="calcularBtnDisabled" (click)="onClickCalcular()">Calcular</button>
         </div>
-    
+
     </div>
 
     <div class="scroll-thin">
         <div class="totales txtNoWrap">
             <!-- cards -->
-    
+
             <div class="total-item">
                 <div class="">Valor préstamo</div>
                 <div class="textNegrilla total-item-text">
-                    @if(idAsesoria()) {
-                    {{ negF.monto.value | number:'1.2-2' }}
-                    } @else {
-                    0.00
-                    }
-    
+                    {{ valorPrestamo | number:'1.2-2' }}
                 </div>
-    
+
                 <div class="signo-resta icon-minus-circle2"></div>
             </div>
-    
-    
-    
+
+
+
             <div class="total-item">
                 <div class="">Deducciones</div>
                 <div class="textNegrilla total-item-text">
-                    @if(idAsesoria()) {
                     {{ deducciones() | number:'1.2-2' }}
-                    } @else {
-                    0.00
-                    }
-    
                 </div>
-    
+
                 <div class="signo-resta icon-minus-circle2"></div>
             </div>
-    
-    
-    
+
+
+
             <div class="total-item">
                 <div class="">
                     Otros cobros
@@ -485,57 +420,42 @@
                 </div>
                 <div class="signo-resta icon-minus-circle2"></div>
             </div>
-    
-    
-    
+
+
+
             <div class="total-item">
                 <div class="">Saldo a cancelar</div>
                 <div class="textNegrilla total-item-text">
-                    @if(idAsesoria() && saldoCancelar()) {
                     {{ saldoCancelar() | number:'1.2-2' }}
-                    } @else {
-                    0.00
-                    }
                 </div>
                 <div class="signo-igual icon-pause"></div>
             </div>
-    
-    
-    
+
+
+
             <div class="total-item">
                 <div class="">Desembolso</div>
                 <div class="textNegrilla total-item-text text-red">
-                    @if(idAsesoria() && deducciones()) {
                     -{{ desembolso | number:'1.2-2' }}
-                    } @else {
-                    0.00
-                    }
-    
                 </div>
             </div>
-    
+
             <div class="flip-card" [class.flipped]="isFlipped">
                 <div class="flip-card-inner">
-            
+
                     <div class="total-item flip-card-front">
-                        <div>Cuota sin deducibles <i class="icon-rotate-cw2 cursor-pointer ic-rot" (click)="isFlipped = true"></i></div>
+                        <div>Cuota sin deducibles <i class="icon-rotate-cw2 cursor-pointer ic-rot"
+                                (click)="isFlipped = true"></i></div>
                         <div class="textNegrilla total-item-text">
-                            @if(idAsesoria()) {
                             {{ totalCuota | number:'1.2-2' }}
-                            } @else {
-                            0.00
-                            }
                         </div>
                     </div>
-            
+
                     <div class="total-item flip-card-back">
-                        <div>Cuota con deducibles <i class="icon-rotate-ccw2 cursor-pointer ic-rot" (click)="isFlipped = false"></i></div>
+                        <div>Cuota con deducibles <i class="icon-rotate-ccw2 cursor-pointer ic-rot"
+                                (click)="isFlipped = false"></i></div>
                         <div class="textNegrilla total-item-text">
-                            @if (idAsesoria()) {
-                                {{ (totalCuota ?? 0) + (deducciones() ?? 0) | number:'1.2-2' }}
-                            } @else {
-                                0.00
-                            }
+                            {{ totalCuota + deducciones() | number:'1.2-2' }}
                         </div>
                     </div>
                 </div>
@@ -543,5 +463,5 @@
             <!-- cards -->
         </div>
     </div>
-    
+
 </form>

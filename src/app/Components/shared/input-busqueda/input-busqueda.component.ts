@@ -1,9 +1,10 @@
-import { Component, ElementRef, inject, input, output, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, input, output, signal, viewChild, ViewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { ConfiguracionNotificacion } from '../../../../environments/config.noticaciones';
 import { ERP_MESSAGES, ERP_TOAST } from '../../../utils/constant';
+import { LoadingService } from '../../../Services/shared/loading.service';
 
 export interface LookupColumn {
   field: string;
@@ -17,6 +18,10 @@ export interface LookupColumn {
 })
 export class InputBusquedaComponent {
 
+  private notif = inject(ToastrService);
+  private loading = inject(LoadingService);
+
+
   // Visuales
   label = input.required<string>();
   requerido = input<boolean>(false);
@@ -27,6 +32,8 @@ export class InputBusquedaComponent {
 
   @ViewChild('modal')
   modal!: ElementRef;
+
+  codigoInputRef = viewChild<ElementRef<HTMLInputElement>>('codigoInput');
 
   //Peticiones
   buscarPorCodigoObs = input.required<
@@ -57,11 +64,10 @@ export class InputBusquedaComponent {
   //Acceso propiedades
   codigoField = input.required<string>();
   descripcionField = input.required<string>();
-  
-  mensajeNoEncontrado = input<string>('Registro no encontrado');
+
+  mensajeNoEncontrado = input<string>(ERP_MESSAGES.REGISTRO_NO_ENCONTRADO);
   permitirBusquedaVacia = input<boolean>(false);
 
-  private notif = inject(ToastrService);
 
   private obtenerCodigo(item: any): any {
     return item?.[this.codigoField()];
@@ -80,26 +86,28 @@ export class InputBusquedaComponent {
   }
 
   buscarPorCodigo(): void {
-    const valor = this.codigoControl().value?.trim();
+    const valor = this.codigoControl().value;
     if (!valor) return;
 
+    this.loading.show();
     this.buscarPorCodigoObs()(valor).subscribe({
-        next: results => {
-          if (results.length === 0) {
-            this.notif.warning(ERP_TOAST.WARNING, this.mensajeNoEncontrado(), ConfiguracionNotificacion.configRightTop);
-            return;
-          }
-
-          if (results.length === 1) {
-            const item = results[0];
-            this.mapearDatos(item);
-            return;
-          }
-        },
-        error: err => {
-
+      next: results => {
+        this.loading.hide();
+        if (results.length === 0) {
+          this.notif.warning(ERP_TOAST.WARNING, this.mensajeNoEncontrado(), ConfiguracionNotificacion.configRightTop);
+          return;
         }
-      });
+
+        if (results.length === 1) {
+          const item = results[0];
+          this.mapearDatos(item);
+          return;
+        }
+      },
+      error: err => {
+        this.loading.hide();
+      }
+    });
   }
 
   buscarPorDescripcion(): void {
@@ -109,30 +117,32 @@ export class InputBusquedaComponent {
 
     if (!this.permitirBusquedaVacia() && !texto) return;
 
+    this.loading.show();
     this.buscarPorDescripcionObs()(texto).subscribe({
-        next: results => {
-          if (results.length === 0) {
-            this.notif.warning(ERP_TOAST.WARNING, this.mensajeNoEncontrado(), ConfiguracionNotificacion.configRightTop);
-            return;
-          }
+      next: results => {
+        this.loading.hide();
 
-          if (results.length === 1) {
-            const item = results[0];
-            this.mapearDatos(item);
-            return;
-          }
-
-          if (results.length > 1) {
-            this.items = results;
-            ($(this.modal.nativeElement) as any).modal('show');
-            
-          }
-        },
-        error: () => {
-          
-          
+        if (results.length === 0) {
+          this.notif.warning(ERP_TOAST.WARNING, this.mensajeNoEncontrado(), ConfiguracionNotificacion.configRightTop);
+          return;
         }
-      });
+
+        if (results.length === 1) {
+          const item = results[0];
+          this.mapearDatos(item);
+          return;
+        }
+
+        if (results.length > 1) {
+          this.items = results;
+          ($(this.modal.nativeElement) as any).modal('show');
+
+        }
+      },
+      error: () => {
+        this.loading.hide();
+      }
+    });
   }
 
   mapearDatos(data: any) {
