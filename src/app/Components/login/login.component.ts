@@ -19,6 +19,7 @@ import { Router } from '@angular/router';
 import { LoadingService } from '../../Services/shared/loading.service';
 import { CatalogosService } from '../../Services/Clientes/CatalogosService';
 import { StorageSecurity } from '../../utils/storage-security.util';
+import { RecaptchaService } from '../../Services/reCaptcha/reCaptcha.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -41,6 +42,7 @@ export class LoginComponent implements OnInit {
     private clientesGetListService: ClientesGetListService,private route : Router,
     private oficinasService: OficinasService, private webSocket : WebSocketService,
     private loading: LoadingService,
+    private recaptcha: RecaptchaService,
    private catalogosService: CatalogosService) {}
 
   ngOnInit() {
@@ -153,240 +155,258 @@ export class LoginComponent implements OnInit {
         console.error(errorMessage);
       });
   }
-//juanes
-  isAuthenticated() {
-    StorageSecurity.removeItem('token');
-    StorageSecurity.removeItem('refreshToken');
-    const now: Date = new Date();
-    this.loading.show();
-    //DFRAMIREZ: encriptar clave autenticación
-    const claveEncriptada = btoa(btoa(this.loginFrom.get('Clave')?.value)).toString();
-    this.loginFrom.patchValue({
-      Clave: claveEncriptada
-    })   
-    this.loginService.userAuthentication(this.loginFrom.value).subscribe(
-      (data: any) => {
-        this.loading.hide();
-        // Guardar información del usuario
-        StorageSecurity.saveData(data);
-        this.dataUser = data;
-        this.SessionUser.Estado = true;
-        this.SessionUser.IdUsuario = this.dataUser.IdUsuario;
-        this.SessionUser.IdSesionxUsuario = 0;
-        this.SessionUser.Oficina = this.dataUser.Oficina;
+  async isAuthenticated() {
+    try {
+      StorageSecurity.removeItem('token');
+      StorageSecurity.removeItem('refreshToken');
+      const now: Date = new Date();
+      this.loading.show()    
+      // YSALAZAR 
+      const claveEncriptada = btoa(
+        btoa(this.loginFrom.get('Clave')?.value)
+      ).toString();
 
-        const FechaFormat = new DatePipe('en-CO')
-          .transform(now, 'yyyy/MM/dd hh:mm:ss');
+      this.loginFrom.patchValue({
+        Clave: claveEncriptada
+      });
 
-        this.SessionUser.FechaInicioSesion = FechaFormat;
+      const token = await this.recaptcha.execute('login');
+      this.loginFrom.patchValue({RecaptchaToken: token});
 
-        this.loginService.PerfilesUsuario(this.dataUser.IdUsuario).subscribe(
-          (perfil: any) => {   
-            StorageSecurity.saveItem('profiles', perfil);
-            if (this.dataUser.IdEstado === 4) {
-              Swal.fire({
-                title: 'Advertencia',
-                html: 'El usuario se encuentra en estado inactivo.',
-                icon: 'warning',
-                showCancelButton: false,
-                confirmButtonText:
-                  '<i class="glyphicon glyphicon-log-out"></i> Cerrar',
-                confirmButtonColor: 'rgb(13,165,80)',
-                allowOutsideClick: false,
-                allowEscapeKey: false
-              }).then((results: any) => {
+      this.loginService.userAuthentication(this.loginFrom.value).subscribe(
+        (data: any) => {
+          this.loading.hide();
+          // Guardar información del usuario
+          StorageSecurity.saveData(data);
+          this.dataUser = data;
+          this.SessionUser.Estado = true;
+          this.SessionUser.IdUsuario = this.dataUser.IdUsuario;
+          this.SessionUser.IdSesionxUsuario = 0;
+          this.SessionUser.Oficina = this.dataUser.Oficina;
 
-                if (results.value) {
-                  StorageSecurity.removeItem('Data');
-                  this.dataUser = null;
-                }
+          const FechaFormat = new DatePipe('en-CO')
+            .transform(now, 'yyyy/MM/dd hh:mm:ss');
 
-              });
+          this.SessionUser.FechaInicioSesion = FechaFormat;
 
-            } else if (this.dataUser.admEstado === 35) {
+          this.loginService.PerfilesUsuario(this.dataUser.IdUsuario).subscribe(
+            (perfil: any) => {
+              StorageSecurity.saveItem('profiles', perfil);
+              if (this.dataUser.IdEstado === 4) {
+                Swal.fire({
+                  title: 'Advertencia',
+                  html: 'El usuario se encuentra en estado inactivo.',
+                  icon: 'warning',
+                  showCancelButton: false,
+                  confirmButtonText:
+                    '<i class="glyphicon glyphicon-log-out"></i> Cerrar',
+                  confirmButtonColor: 'rgb(13,165,80)',
+                  allowOutsideClick: false,
+                  allowEscapeKey: false
+                }).then((results: any) => {
 
-              Swal.fire({
-                title: 'Advertencia',
-                html: 'Ingreso no permitido.',
-                icon: 'warning',
-                showCancelButton: false,
-                confirmButtonText:
-                  '<i class="glyphicon glyphicon-log-out"></i> Cerrar',
-                confirmButtonColor: 'rgb(13,165,80)',
-                allowOutsideClick: false,
-                allowEscapeKey: false
-              }).then((results: any) => {
+                  if (results.value) {
+                    StorageSecurity.removeItem('Data');
+                    this.dataUser = null;
+                  }
 
-                if (results.value) {
-                  StorageSecurity.removeItem('Data');
-                  this.dataUser = null;
-                }
+                });
 
-              });
+              } else if (this.dataUser.admEstado === 35) {
 
-            } else {
+                Swal.fire({
+                  title: 'Advertencia',
+                  html: 'Ingreso no permitido.',
+                  icon: 'warning',
+                  showCancelButton: false,
+                  confirmButtonText:
+                    '<i class="glyphicon glyphicon-log-out"></i> Cerrar',
+                  confirmButtonColor: 'rgb(13,165,80)',
+                  allowOutsideClick: false,
+                  allowEscapeKey: false
+                }).then((results: any) => {
 
-              this.loading.hide();
-              StorageSecurity.saveItem('userName',this.dataUser.Usuario);
+                  if (results.value) {
+                    StorageSecurity.removeItem('Data');
+                    this.dataUser = null;
+                  }
 
-              this.isLoginError = false;
+                });
 
-              this.clientesGetListService.GetParentescos().subscribe(
-                async (result: any) => {
-                  //TOKEN
-                  StorageSecurity.saveItem('token', this.dataUser.token);
-                  StorageSecurity.saveItem('refreshToken', this.dataUser.refreshToken);
-                  
-                  this.catalogosService.cargarCatalogosSiNoExisten();
-                  StorageSecurity.saveItem('parentescoChange',result);
-                  let browser = await detectIncognito();
-                  let strBrowser =
-                    browser.browserName +
-                    '-' +
-                    (browser.isPrivate
-                      ? 'Incognito'
-                      : 'No Incognito');
+              } else {
 
-                  let perfilLog: any[] = perfil;
+                this.loading.hide();
+                StorageSecurity.saveItem('userName', this.dataUser.Usuario);
 
-                  perfilLog.forEach(x => {
-                    delete x.$id;
-                    delete x.IdPerfilUsuario;
-                  });
+                this.isLoginError = false;
 
-                  let payload = {
-                    UserId: this.dataUser.IdUsuario,
-                    Browser: strBrowser,
-                    IdOficina: this.dataUser.NumeroOficina,
-                    IdTercero: this.dataUser.lngTercero,
-                    Json: JSON.stringify(perfilLog)
-                  };
+                this.clientesGetListService.GetParentescos().subscribe(
+                  async (result: any) => {
+                    //TOKEN
+                    StorageSecurity.saveItem('token', this.dataUser.token);
+                    StorageSecurity.saveItem('refreshToken', this.dataUser.refreshToken);
 
-                  this.loginService
-                    .SesionOtroDispositivo(
-                      this.dataUser.IdUsuario,
-                      strBrowser
-                    )
-                    .subscribe(result => {
+                    this.catalogosService.cargarCatalogosSiNoExisten();
+                    StorageSecurity.saveItem('parentescoChange', result);
+                    let browser = await detectIncognito();
+                    let strBrowser =
+                      browser.browserName +
+                      '-' +
+                      (browser.isPrivate
+                        ? 'Incognito'
+                        : 'No Incognito');
 
-                      if (result) {
+                    let perfilLog: any[] = perfil;
 
-                        Swal.fire({
-                          title: 'Advertencia',
-                          text: '¿Deseas cerrar la sesión en el navegador anterior?',
-                          icon: 'warning',
-                          showCancelButton: true,
-                          confirmButtonText: 'Si',
-                          cancelButtonText: 'No',
-                          confirmButtonColor: 'rgb(13,165,80)',
-                          cancelButtonColor: 'rgb(160,0,87)',
-                          allowOutsideClick: false,
-                          allowEscapeKey: false
-                        }).then((results: any) => {
-
-                          if (results.value) {
-
-                            this.webSocket.Init();
-
-                            setTimeout(() => {
-                              this.webSocket.Send(
-                                'ClosedSesion',
-                                this.dataUser.IdUsuario
-                              );
-                            }, 700);
-
-                            setTimeout(() => {
-
-                              this.loginService
-                                .SetSesionUser(this.SessionUser)
-                                .subscribe(
-                                  () => {
-                                    this.IniciarSesion(payload);
-                                  },
-                                  (error: any) => {
-                                    console.error(
-                                      'Error SetSesionUser - ',
-                                      error
-                                    );
-                                  }
-                                );
-
-                            }, 1500);
-
-                          } else {
-                            this.loginFrom.get('Clave')?.reset();
-                          }
-
-                        });
-
-                      } else {
-
-                        this.loginService
-                          .SetSesionUser(this.SessionUser)
-                          .subscribe(
-                            () => {
-                              this.IniciarSesion(payload);
-                            },
-                            (error: any) => {
-                              console.error(
-                                'Error SetSesionUser - ',
-                                error
-                              );
-                            }
-                          );
-
-                      }
-
+                    perfilLog.forEach(x => {
+                      delete x.$id;
+                      delete x.IdPerfilUsuario;
                     });
 
-                },
-                (error: any) => {
-                  console.error(error);
-                }
-              );
+                    let payload = {
+                      UserId: this.dataUser.IdUsuario,
+                      Browser: strBrowser,
+                      IdOficina: this.dataUser.NumeroOficina,
+                      IdTercero: this.dataUser.lngTercero,
+                      Json: JSON.stringify(perfilLog)
+                    };
+
+                    this.loginService
+                      .SesionOtroDispositivo(
+                        this.dataUser.IdUsuario,
+                        strBrowser
+                      )
+                      .subscribe(result => {
+
+                        if (result) {
+
+                          Swal.fire({
+                            title: 'Advertencia',
+                            text: '¿Deseas cerrar la sesión en el navegador anterior?',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Si',
+                            cancelButtonText: 'No',
+                            confirmButtonColor: 'rgb(13,165,80)',
+                            cancelButtonColor: 'rgb(160,0,87)',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false
+                          }).then((results: any) => {
+
+                            if (results.value) {
+
+                              this.webSocket.Init();
+
+                              setTimeout(() => {
+                                this.webSocket.Send(
+                                  'ClosedSesion',
+                                  this.dataUser.IdUsuario
+                                );
+                              }, 700);
+
+                              setTimeout(() => {
+
+                                this.loginService
+                                  .SetSesionUser(this.SessionUser)
+                                  .subscribe(
+                                    () => {
+                                      this.IniciarSesion(payload);
+                                    },
+                                    (error: any) => {
+                                      console.error(
+                                        'Error SetSesionUser - ',
+                                        error
+                                      );
+                                    }
+                                  );
+
+                              }, 1500);
+
+                            } else {
+                              this.loginFrom.get('Clave')?.reset();
+                            }
+
+                          });
+
+                        } else {
+
+                          this.loginService
+                            .SetSesionUser(this.SessionUser)
+                            .subscribe(
+                              () => {
+                                this.IniciarSesion(payload);
+                              },
+                              (error: any) => {
+                                console.error(
+                                  'Error SetSesionUser - ',
+                                  error
+                                );
+                              }
+                            );
+
+                        }
+
+                      });
+
+                  },
+                  (error: any) => {
+                    console.error(error);
+                  }
+                );
+
+              }
 
             }
+          );
+
+        },
+        (error: any) => {
+
+          this.loading.hide();
+
+          if (error.TipoAlerta === 'Error') {
+
+            Swal.fire({
+              title: 'Advertencia',
+              html: error.Mensaje,
+              icon: 'warning',
+              showCancelButton: false,
+              confirmButtonText:
+                '<i class="glyphicon glyphicon-log-out"></i> Cerrar',
+              confirmButtonColor: 'rgb(13,165,80)',
+              allowOutsideClick: false,
+              allowEscapeKey: false
+            }).then((results: any) => {
+
+              if (results.value) {
+                StorageSecurity.removeItem('Data');
+                this.dataUser = null;
+              }
+
+            });
+
+          } else {
+
+            this.loginFrom.controls['Clave'].reset();
+            console.log(error);
+            this.isLoginError = true;
 
           }
-        );
-
-      },
-      (error: any) => {
-
-        this.loading.hide();
-
-        if (error.TipoAlerta === 'Error') {
-
-          Swal.fire({
-            title: 'Advertencia',
-            html: error.Mensaje,
-            icon: 'warning',
-            showCancelButton: false,
-            confirmButtonText:
-              '<i class="glyphicon glyphicon-log-out"></i> Cerrar',
-            confirmButtonColor: 'rgb(13,165,80)',
-            allowOutsideClick: false,
-            allowEscapeKey: false
-          }).then((results: any) => {
-
-            if (results.value) {
-              StorageSecurity.removeItem('Data');
-              this.dataUser = null;
-            }
-
-          });
-
-        } else {
-
-          this.loginFrom.controls['Clave'].reset();
-          console.log(error);
-          this.isLoginError = true;
 
         }
+      );
+    } catch {
+      this.loading.hide();
 
-      }
-    );
+      Swal.fire({
+        title: 'Advertencia',
+        text: 'No fue posible validar reCAPTCHA.',
+        icon: 'warning',
+        confirmButtonColor: 'rgb(13,165,80)'
+      });
+    }
   }
+
   IniciarSesion(payload : any) {
     this.usuariosServices.InsertIpUltimaSesion(payload).subscribe((x : any) => {
      this.route.navigate(["/"]);
@@ -448,6 +468,7 @@ export class LoginComponent implements OnInit {
     this.loginFrom = new FormGroup({
       Usuario: Usuario,
       Clave: Clave,
+      RecaptchaToken: new FormControl('')
     });
   }
 }

@@ -15,6 +15,7 @@ import { ModuleValidationService } from '../../../Services/Enviroment/moduleVali
 import { ChequeDTO, ChequeRetDTO } from '../../../Models/Transacciones/TransaccionesCaja/Cheque.model';
 import { StorageSecurity } from '../../../utils/storage-security.util';
 import { ERP_MESSAGES } from '../../../utils/constant';
+import { RecaptchaService } from '../../../Services/reCaptcha/reCaptcha.service';
 
 const ColorPrimario = 'rgb(13,165,80)';
 const ColorSecundario = 'rgb(13,165,80,0.7)';
@@ -184,7 +185,7 @@ export class TransaccionesCajaComponent implements OnInit {
 
   //#endregion
 
-  constructor(private fb: FormBuilder, private transaccionesCajaService: TransaccionesCajaService, private notif: AlertService, private router: Router, private loading: LoadingService, private validadoraService: ValidadoraService, private DisponiblesServices: DisponiblesService, private sanitizer: DomSanitizer, private loginService: LoginService, private moduleValidationService: ModuleValidationService) { }
+  constructor(private fb: FormBuilder, private transaccionesCajaService: TransaccionesCajaService, private notif: AlertService, private router: Router, private loading: LoadingService, private validadoraService: ValidadoraService, private DisponiblesServices: DisponiblesService, private sanitizer: DomSanitizer, private loginService: LoginService, private moduleValidationService: ModuleValidationService,private recaptcha: RecaptchaService,) { }
 
   //#region "Inicialización"
   ngOnInit() {
@@ -1726,10 +1727,12 @@ export class TransaccionesCajaComponent implements OnInit {
 
         try {
           this.loading.show();
+          const token = await this.recaptcha.execute('login');
           const response: any = await lastValueFrom(
             this.loginService.userAuthentication({
               Usuario: usuario,
-              clave: claveEncriptada
+              clave: claveEncriptada,
+              RecaptchaToken: token
             })
           );
 
@@ -3401,10 +3404,12 @@ setearValorAutomaticoCupos() {
 
         try {
           this.loading.show();
+          const token = await this.recaptcha.execute('login');
           const response: any = await lastValueFrom(
             this.loginService.userAuthentication({
               Usuario: usuario,
-              clave: claveEncriptada
+              clave: claveEncriptada,
+               RecaptchaToken: token
             })
           );
 

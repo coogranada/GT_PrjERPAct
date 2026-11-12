@@ -4,6 +4,8 @@
 
 export const environment = {
   production: false,
+  recaptchaSiteKey: '6LfHvRsuAAAAAGK35am1o0dytAbHiuJGK8OXnAoj',
+
   HabilitarModulos: true,
 };
 //Despliegue
