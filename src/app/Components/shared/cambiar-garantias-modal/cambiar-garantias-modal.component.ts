@@ -663,7 +663,7 @@ export class CambiarGarantiasModalComponent {
   onClickCerrarModalGarantias() {
     this.snapshotTomado = false;
 
-    this.garantiasForm.reset();
+    this.garantiasForm?.reset();
     this.cerrar.emit(true);
     this.garantiasAgregar = [];
     this.garantiasEliminar = [];

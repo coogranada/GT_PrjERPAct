@@ -7,7 +7,7 @@ import { NgControl } from '@angular/forms';
 })
 export class PorcentajeDirective implements AfterViewInit {
 
-  private valorNumerico: number = 0;
+  private valorNumerico: number | null = null;
   private enEdicion = false;
   private primeraVezFocus = true;
 
@@ -26,7 +26,11 @@ export class PorcentajeDirective implements AfterViewInit {
     return input.readOnly || input.disabled;
   }
 
-  private formatear(valor: number) {
+  private formatear(valor: number | null) {
+    if (valor === null) {
+      return '';
+    }
+
     return new Intl.NumberFormat('en-US', {
       minimumFractionDigits: 4,
       maximumFractionDigits: 4,
@@ -37,7 +41,10 @@ export class PorcentajeDirective implements AfterViewInit {
   private suscribirseCambios() {
     if (this.control?.valueChanges) {
       this.control.valueChanges.subscribe(valor => {
-        this.valorNumerico = Number(valor) || 0;
+        this.valorNumerico =
+          valor === null || valor === ''
+            ? null
+            : Number(valor);
 
         if (!this.enEdicion) {
           this.el.nativeElement.value = this.formatear(this.valorNumerico);
@@ -50,8 +57,11 @@ export class PorcentajeDirective implements AfterViewInit {
   }
 
   private aplicarFormatoInicial() {
-    const valor = this.el.nativeElement.value || '0';
-    this.valorNumerico = Number(valor.replace(/[^0-9.]/g, '')) || 0;
+    const valor = this.el.nativeElement.value;
+    this.valorNumerico =
+      valor === null || valor === undefined || valor === ''
+        ? null
+        : Number(valor.replace(/[^0-9.]/g, ''));
 
     if (this.esNoEditable()) {
       this.el.nativeElement.value = this.formatear(this.valorNumerico);
@@ -70,13 +80,18 @@ export class PorcentajeDirective implements AfterViewInit {
       valor = partes[0] + '.' + partes[1];
     }
 
-    this.valorNumerico = Number(valor) || 0;
+    this.valorNumerico = valor === ''
+      ? null
+      : Number(valor);
 
     this.control?.control?.setValue(this.valorNumerico, {
       emitEvent: false
     });
 
-    this.el.nativeElement.value = valor;
+    this.el.nativeElement.value =
+      this.valorNumerico !== null
+        ? this.valorNumerico
+        : '';
   }
 
   @HostListener('focus')

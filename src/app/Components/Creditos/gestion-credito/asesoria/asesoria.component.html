@@ -132,7 +132,7 @@
                         <span class="grande"> *</span>
                     </div>
                     <div class="col-xs-8">
-                        <input type="text" class="form-control" formControlName="asesoria">
+                        <input type="text" class="form-control" formControlName="idAsesoria">
                     </div>
                 </div>
             </div>
@@ -421,7 +421,7 @@
                             </form>
                             <div class="modal-footer">
                                 @if(existeElAsociado) {
-                                <button type="button" class="btn Gt-btn-verde" (click)="onClickGuardarInfoAsociado()">Guardar</button>
+                                <button type="button" class="btn Gt-btn-verde" (click)="onClickGuardarInfoAsociado()">Continuar</button>
                                 } @else {
                                 <button type="button" class="btn Gt-btn-verde" (click)="onClickGuardarInfoAsociado()">Guardar</button>
                                 }
@@ -452,7 +452,7 @@
         </div>
 
         <div class="row row-button">
-            @if(formEncabezado.controls.asesoria.value) {
+            @if(formEncabezado.controls.idAsesoria.value) {
             <button type="button" class="btn Gt-btn-morado btn-icon legitRipple align-right-block"> Limpiar </button>
             }
 
@@ -487,10 +487,14 @@
                 </li>
             </ul>
             <div class="tab-content">
-
-                <app-tab-negociacion [hidden]="activeTab !== 'negociacion'"
-                    [idAsesoria]="formEncabezado.controls.asesoria.value" [deducciones]="totalCuotaDed"
-                    [saldoCancelar]="totalSaldoTotal" [idTercero]="idTercero" [habilitado]="infoAsociadoGuardado" />
+            
+                <app-tab-negociacion 
+                    [hidden]="activeTab !== 'negociacion'" 
+                    [formEncabezado]="formEncabezado"
+                    [saldoCancelar]="totalSaldoTotal" 
+                    [deducciones]="totalCuotaDed" 
+                    [idTercero]="idTercero" 
+                />
 
 
                 <article [hidden]="activeTab !== 'deducibles'">

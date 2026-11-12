@@ -24,7 +24,9 @@ export const routes: Routes = [
             { path: "Auditorias", data : { breadcrub : "Auditorias"}, loadChildren : () => import("../app/Modules/auditorias.module").then( x => x.AuditoriasModule) },     
             { path: "Transacciones", data : { breadcrub : "Transacciones"}, loadChildren : () => import("../app/Modules/transacciones.module").then( x => x.TransaccionesModule) },  
             { path: "Creditos", data : { breadcrub : "Creditos"}, loadChildren : () => import("../app/Modules/creditos.module").then( x => x.CreditosModule) },    
-                                                                                                                                                       
+            { path: "Creditos", data : { breadcrub : "Creditos"}, loadChildren : () => import("../app/Modules/creditos.module").then( x => x.CreditosModule) },    
+            { path: "Garantias", data : { breadcrub : "Garantias"}, loadChildren : () => import("../app/Modules/garantias.module").then( x => x.GarantiasModule) },    
+                                                                                                                   
         ]
     }  
 ];

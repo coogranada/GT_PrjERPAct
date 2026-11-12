@@ -538,6 +538,13 @@
                                         </li>
                                     </ul>
                                 </li>
+                                <li id="garantias" *ngIf="Garantias">
+                                    <a [routerLink]="['/Garantias']"
+                                       (click)="setModuloLocalStorage(GarantiasModel.IdModuloPermiso)">
+                                        <i class="icon-files-empty"></i>
+                                        <span>Garantías</span>
+                                    </a>
+                                </li>
                                 <li id="transacciones" *ngIf="transaccionesC">
                                     <a (click)="toggleTransaccionesMenu()">
                                         <i class="glyphicon glyphicon-credit-card"></i>

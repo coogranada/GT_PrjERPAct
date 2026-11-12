@@ -20,6 +20,7 @@ import { LoadingService } from '../../Services/shared/loading.service';
 import { CatalogosService } from '../../Services/Clientes/CatalogosService';
 import { StorageSecurity } from '../../utils/storage-security.util';
 import { RecaptchaService } from '../../Services/reCaptcha/reCaptcha.service';
+import { SecurityService } from '../../Services/Auth/security.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -43,9 +44,15 @@ export class LoginComponent implements OnInit {
     private oficinasService: OficinasService, private webSocket : WebSocketService,
     private loading: LoadingService,
     private recaptcha: RecaptchaService,
-   private catalogosService: CatalogosService) {}
+   private catalogosService: CatalogosService, private router: Router, private securityService: SecurityService) {}
 
-  ngOnInit() {
+  ngOnInit() {    
+    const token = this.securityService.GetToken();
+    if (token) {
+      this.router.navigateByUrl('/');
+    }
+
+
     this.validateForm();
   //   this.GetProfesion();
   //   this.GetParentescos();
