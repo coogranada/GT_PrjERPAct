@@ -5,6 +5,7 @@ export class EnvironmentService {
   public UrlCore: string = "";//Url de back .net core
   public UrlFront : string = "";// Url front
   public UrlBaseOlivos : string = ""; 
+  public storageSecurity : string = "APP_STORAGE_2026";
   UrlBackEnvironmentInt: number = 1;// variable de entorno
   //UrlBackEnvironmentInt == 1 == Desarrollo
   //UrlBackEnvironmentInt == 2 == Pruebas

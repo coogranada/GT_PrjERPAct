@@ -2,7 +2,13 @@ import * as CryptoJS from 'crypto-js';
 
 export class StorageSecurity {
 
-  private static readonly SECRET = 'APP_STORAGE_2026';
+    private static SECRET = '';
+
+  static setSecret(secret: string): void {
+    this.SECRET = secret;
+  }
+
+  // private static readonly SECRET = 'APP_STORAGE_2026';
 
   static encrypt(data: any): string {
 

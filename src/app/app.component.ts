@@ -11,6 +11,7 @@ import { GestionesService  } from './Services/Gestiones/gestiones.service';
 import { AlertService } from './Services/Alert/alert.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { StorageSecurity } from './utils/storage-security.util';
+import { EnvironmentService } from './Services/Enviroment/enviroment.service';
 declare var $: any;
   
 @Component({
@@ -32,9 +33,11 @@ export class AppComponent implements OnInit {
     private notif: AlertService,
     private location: PlatformLocation,
     private clientesGetListService: ClientesGetListService,
-    private Security: SecurityService
+    private Security: SecurityService,
+    private environmentService: EnvironmentService
   ) {
     this.loadUserFromStorage();
+    StorageSecurity.setSecret(this.environmentService.storageSecurity);
   }
 
 ngOnInit(): void {
