@@ -459,3 +459,19 @@ tr.fila-detalle td {
 .numero-detalle:hover {
     opacity: 0.8;
 }
+
+
+.btn-editar-insolvencia {
+    background-color: #6d6b6bc4;
+    color: white !important;
+}
+
+
+.modo-ediccion {
+    cursor: default;
+    pointer-events: none;
+}
+
+.modo-edicion .icon-pencil {
+    margin-right: 8px;
+}

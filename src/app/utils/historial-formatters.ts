@@ -327,4 +327,189 @@ export const formateadoresPorOperacion: Record<number, FormateadorOperacion> = {
       `
     };
   },
+145: (registro) => {
+  if (!registro?.Detalles) {
+    return registro;
+  }
+
+  let detalles: any;
+
+  try {
+    detalles = JSON.parse(registro.Detalles);
+  } catch {
+    const detalleAnterior = String(registro.Detalles)
+      .replace(/^"|"$/g, '')
+      .trim();
+
+    return {
+      ...registro,
+      Detalles: detalleAnterior
+        ? `<strong>Detalle:</strong> ${detalleAnterior}`
+        : registro.Detalles
+    };
+  }
+
+  /*
+   * Compatibilidad con los logs anteriores guardados como texto:
+   * "Fecha de incumplimiento del acuerdo"
+   */
+  if (typeof detalles === 'string') {
+    const detalleAnterior = detalles.trim();
+
+    return {
+      ...registro,
+      Detalles: detalleAnterior
+        ? `<strong>Detalle:</strong> ${detalleAnterior}`
+        : registro.Detalles
+    };
+  }
+
+  if (
+    !detalles ||
+    typeof detalles !== 'object' ||
+    Array.isArray(detalles)
+  ) {
+    return registro;
+  }
+
+  /*
+   * lngCupo cubre los logs de creación que ya fueron guardados.
+   * lngIdCupo cubre los nuevos logs de actualización.
+   */
+  const cupo = detalles.lngIdCupo ?? detalles.lngCupo;
+
+  const tieneCupo =
+    cupo !== undefined &&
+    cupo !== null &&
+    cupo !== '';
+
+  const textoCupo = tieneCupo
+    ? ` | <strong>Cupo:</strong> ${cupo}`
+    : '';
+
+  /*
+   * Logs de creación:
+   *
+   * {
+   *   "Detalle": "Fecha de liquidación"
+   * }
+   *
+   * {
+   *   "Detalle": "Fecha de notificación",
+   *   "lngCupo": 3100
+   * }
+   */
+  if (!detalles.Anterior || !detalles.Actualiza) {
+    const detalle = String(detalles.Detalle ?? '').trim();
+
+    if (!detalle && !tieneCupo) {
+      return registro;
+    }
+
+    const partes: string[] = [];
+
+    if (detalle) {
+      partes.push(
+        `<strong>Detalle:</strong> ${detalle}`
+      );
+    }
+
+    if (tieneCupo) {
+      partes.push(
+        `<strong>Cupo:</strong> ${cupo}`
+      );
+    }
+
+    return {
+      ...registro,
+      Detalles: partes.join(' | ')
+    };
+  }
+
+  /*
+   * Logs de actualización.
+   */
+  const anterior = detalles.Anterior;
+  const actualiza = detalles.Actualiza;
+
+  const detalle = String(
+    detalles.Detalle ?? ''
+  ).trim();
+
+  const textoDetalle = detalle
+    ? `<strong>Detalle:</strong> ${detalle}`
+    : '';
+
+  /*
+   * Actualización de detalles que manejan fecha.
+   */
+  if (
+    anterior?.Fecha !== undefined ||
+    actualiza?.Fecha !== undefined
+  ) {
+    const partes: string[] = [];
+
+    if (textoDetalle) {
+      partes.push(textoDetalle);
+    }
+
+    partes.push(
+      `<strong>Anterior:</strong> ${anterior?.Fecha ?? ''}`
+    );
+
+    partes.push(
+      `<strong>Actualiza:</strong> ${actualiza?.Fecha ?? ''}`
+    );
+
+    if (tieneCupo) {
+      partes.push(
+        `<strong>Cupo:</strong> ${cupo}`
+      );
+    }
+
+    return {
+      ...registro,
+      Detalles: partes.join(' | ')
+    };
+  }
+
+  /*
+   * Actualización del acuerdo de pago.
+   */
+  const formatearAcuerdoPago = (valor: any): string => {
+    return (
+      `Valor reconocido: ${valor?.ValorReconocido ?? 0} - ` +
+      `Capital reconocido: ${valor?.CapitalReconocido ?? 0} - ` +
+      `Intereses reconocidos: ${valor?.InteresesReconocidos ?? 0} - ` +
+      `Condonaciones aprobadas: ${valor?.CondonacionesAprobadas ?? 0} - ` +
+      `Nuevas condiciones de pago: ${valor?.NuevasCondicionesPago ?? ''} - ` +
+      `Número de cuotas pactadas: ${valor?.NumeroCuotasPactadas ?? 0}`
+    );
+  };
+
+  const partes: string[] = [];
+
+  if (textoDetalle) {
+    partes.push(textoDetalle);
+  }
+
+  partes.push(
+    `<strong>Anterior:</strong> ${formatearAcuerdoPago(anterior)}`
+  );
+
+  partes.push(
+    `<strong>Actualiza:</strong> ${formatearAcuerdoPago(actualiza)}`
+  );
+
+  if (tieneCupo) {
+    partes.push(
+      `<strong>Cupo:</strong> ${cupo}`
+    );
+  }
+
+  return {
+    ...registro,
+    Detalles: partes.join(' | ')
+  };
+},
 };

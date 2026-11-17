@@ -696,3 +696,15 @@ export const ERROR_MESSAGES: Record<ErrorCode, string> = {
     [ErrorCode.OTRA_OFICINA]: 'La cuenta pertenece a otra oficina.',
     [ErrorCode.PLAZO_NUEVO_MAYOR]: 'El nuevo plazo debe ser mayor al faltante.',
 };
+
+export interface ActualizarInsolvencia {
+  idSeguimiento: number;
+  fechaEvento?: string;
+  valorReconocido?: number;
+  capitalReconocido?: number;
+  interesesReconocidos?: number;
+  condonacionesAprobadas?: number;
+  nuevasCondicionesPago?: string;
+  numeroCuotasPactadas?: number;
+  usuario: number;
+}
