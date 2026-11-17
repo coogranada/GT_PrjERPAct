@@ -10671,7 +10671,7 @@ export class NaturalesComponent implements OnInit, OnDestroy  {
                this.terceroSave.get('IdCiudadNto')?.setValue(this.basicosFrom.value.ciudadNacimiento);
              }
           } else {
-            this.terceroSave.get('IdCiudadNto')?.setValue(this.BasicosEdit.value.EditCiudadNto.IdCiudad);
+            this.terceroSave.get('IdCiudadNto')?.setValue(this.BasicosEdit.value.EditCiudadNto?.IdCiudad ?? null);
           }
           if (this.basicosFrom.value.paisExpedicion !== null && this.basicosFrom.value.paisExpedicion !== undefined) {
               this.terceroSave.get('IdPaisExpe')?.setValue(+this.basicosFrom.value.paisExpedicion);
