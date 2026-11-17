@@ -10,7 +10,9 @@ export const ERP_MESSAGES = {
     ACTUALIZACION_DEMORADA: 'Asociado no se ha actualizado en los últimos 6 meses.',
     CUENTA_REQUERIDA: 'Debe buscar una cuenta para realizar esta operación.',
     CAMBIO_EXITOSO: 'El cambio de {0} se realizó correctamente.',
-    CAMBIO_NO_REALIZADO: 'El cambio de {0} no se realizó correctamente.',
+    CAMBIO_NO_EXITOSO: 'El cambio de {0} no se realizó correctamente.',
+    ACTUALIZACION_NO_EXITOSA: 'El cambio de {0} no se realizó correctamente.',
+    ACTUALIZACION_EXITOSA: 'La actualización de {0} se realizó correctamente.',
     PERSONA_VETADA_CONTACTO: 'Se encontraron coincidencias en la lista de <b>personas vetadas</b> por favor comuníquese con </b>',
     ASOCIADO_NO_ENCONTRADO: 'No se encontró el asociado.',
     ASESOR_EXT_NO_ENCONTRADO: 'No se encontró el asesor externo.',
@@ -25,6 +27,7 @@ export const ERP_MESSAGES = {
     FECHA_INICIAL_MENOR_A_FINAL: 'La fecha inicial debe ser menor o igual a la fecha final.',
     FECHA_FINAL_OBLIGATORIA: 'La fecha final es obligatoria.',
     FECHA_INICIAL_OBLIGATORIA: 'La fecha inicial es obligatoria.',
+    CREDITO_EN_MORA: 'No se puede realizar esta operación, crédito en mora.',
 };
 
 export const ERP_TOAST = {

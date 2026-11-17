@@ -612,6 +612,7 @@ this.userIdle.onTimeout().subscribe(() => {
       this.loginService.ObtenerPermisoUsuario(dataUser.IdUsuario).subscribe(
         result => {
           if (result !== null && result !== undefined && result !== '') {
+            const garantia = result.find((x: any) => x.IdModulo === 90);
             try {
               StorageSecurity.saveItem('Permisos', result);
               const r1 = StorageSecurity.getItem('Permisos');
@@ -860,14 +861,21 @@ this.userIdle.onTimeout().subscribe(() => {
               this.FichaAnalisis = true;
               this.FichaAnalisisModel = element;
             }
-            else if (element.IdModulo === 90) {
+            else if (element.IdModulo === 89) {
+                              console.log('ENTRO A credito');
+
+            console.log('MODULO', element.IdModulo, element);
+
               this.GestionCredito = true;
               this.GestionCreditoModel = element;
             }
             /* Fin Creditos */
 
             /* Garantías */
-            else if (element.IdModulo === 91) {
+            else if (element.IdModulo === 90) {
+                console.log('ENTRO A GARANTIAS');
+            console.log('MODULO', element.IdModulo, element);
+
               this.Garantias = true;
               this.GarantiasModel = element;
             }

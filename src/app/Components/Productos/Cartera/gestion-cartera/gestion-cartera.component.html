@@ -861,10 +861,16 @@
             <div style="width: 80%; margin: 30px auto; height: 90%;">
                 <div class="modal-content">
                     <div class="modal-header bg-morado">
-                        <button type="button" class="close" data-dismiss="modal" (click)="onClickCerrarModalCodeudores()">&times;</button>
+                        <button type="button" class="close" data-dismiss="modal" (click)="onClickCancelarInsolvencia()">&times;</button>
                         <h6 class="modal-title">Proceso insolvencia</h6>
                     </div>
                     <div class="modal-body">
+                        <div *ngIf="modoEdicionInsolvencia" class="text-right" style="margin-bottom: 12px;">
+                            <a class="alert alert-success no-border modo-edicion">
+                                <i class="icon-pencil"></i>
+                                <span>Editando {{ textoEdicionInsolvencia }}</span>
+                            </a>
+                        </div>                           
                         <div class="panel-body">
                         
                             <form class="mb-3" [formGroup]="insolvenciaForm">
@@ -909,12 +915,20 @@
                                                 (change)="onChangeDetalleInsolvencia()">
                                     
                                                 <option value="">-- Seleccione --</option>
-                                        
-                                                <option
-                                                    *ngFor="let item of tiposSeguimientoInsolvencia"
-                                                    [value]="item.intTipoSeguimiento">
-                                                    {{ obtenerNumeroVisualSeguimiento(item.intTipoSeguimiento) + ' ' + item.strDescripcion }}                                        
-                                                </option>
+                                                                                    
+                                            <option
+                                              *ngFor="let item of tiposSeguimientoInsolvencia"
+                                              [value]="item.intTipoSeguimiento">
+                                            
+                                              {{
+                                                item.intTipoSeguimiento === 9
+                                                  ? item.strDescripcion
+                                                  : obtenerNumeroVisualSeguimiento(item.intTipoSeguimiento) +
+                                                    ' ' +
+                                                    item.strDescripcion
+                                              }}
+                                            
+                                            </option>
                                             
                                             </select>
                                         </div>
@@ -1313,17 +1327,27 @@
 
                                 <div class="row">
                                     <div class="form-group form-group-flex flex-end">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal"
+                                        <button type="button" class="cancelar btn btn-default legitRipple" data-dismiss="modal"
                                             (click)="onClickCancelarInsolvencia()">
                                             Cancelar
                                         </button>
-                                        <button type="button" class="btn Gt-btn-morado" [disabled]="isDisabledLimpiarInsolvenciaButton || isSavingInsolvencia"
-                                            (click)="onClickLimpiarInsolvencia()">
-                                            Limpiar
+                                        <button
+                                          type="button"
+                                          class="btn Gt-btn-morado"
+                                          [disabled]="
+                                            isSavingInsolvencia ||
+                                            (!modoEdicionInsolvencia && isDisabledLimpiarInsolvenciaButton)
+                                          "
+                                          (click)="
+                                            modoEdicionInsolvencia
+                                              ? cancelarEdicionInsolvencia()
+                                              : onClickLimpiarInsolvencia()
+                                          ">
+                                          {{ 'Limpiar' }}
                                         </button>
                                         <button type="button" class="btn Gt-btn-verde" [disabled]="isDisabledGuardarInsolvenciaButton || isSavingInsolvencia"
-                                            (click)="onClickGuardarInsolvencia()">
-                                            Guardar
+                                            (click)=" modoEdicionInsolvencia ? onClickActualizarInsolvencia() : onClickGuardarInsolvencia() ">
+                                            {{ modoEdicionInsolvencia ? 'Actualizar' : 'Guardar' }}
                                         </button>
                                     </div>
                                 </div>
@@ -1367,6 +1391,9 @@
                                                 <th class="text-center">
                                                     <strong>Creación insolvencia</strong>
                                                 </th>
+                                                <th class="text-center">
+                                                    <strong>Acciones</strong>
+                                                </th>                                                
                                             </tr>
                                         </thead>
                                     
@@ -1429,8 +1456,18 @@
                                                     <td class="text-center">
                                                         {{ item.dtmFechaCreacionInsolvencia | date:'yyyy/MM/dd HH:mm:ss' }}
                                                     </td>
-                                                
-                                                </tr>
+                                                    
+                                                    <td class="text-center">
+                                                    
+                                                        <button *ngIf="esEditable(item)"
+                                                          class="btn Gt-btn-verde btn-icon legitRipple ng-star-inserted"
+                                                          title="Editar detalle"
+                                                          (click)="editarInsolvencia(item)">
+                                                           <i class="icon-pencil"></i>
+                                                        </button>
+
+                                                    </td>                                                
+                                                </tr> 
                                             
                                                 <tr
                                                     *ngIf="
