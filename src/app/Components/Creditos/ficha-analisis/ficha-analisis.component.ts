@@ -2468,6 +2468,7 @@ export class FichaAnalisisComponent implements OnInit {
                   this.strDatos = "/Buscar";
                   this.OperacionBuscarFichaAnalisis();
                 }
+                this.obtenerSaldosVigentes(radicado);
                 this.loading.hide();
               } else {
                 this.resultadoCodeudores = [];
