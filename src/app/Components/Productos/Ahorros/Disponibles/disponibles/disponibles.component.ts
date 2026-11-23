@@ -6586,7 +6586,7 @@ export class DisponiblesComponent implements OnInit {
         payload.Codeudor = this.dataObjetCd;
         payload.TipoPagare = this.DisponibleForm.get('TipoPagare')?.value;
         payload.NumeroPagare = this.DisponibleForm.get('NumeroPagare')?.value;        
-        payload.IdAsesor = this.dataUser.IdAsesor;
+        payload.IdAsesor = this.DisponibleForm.get('IdAsesorRadicado')?.value; 
         // console.log(payload);
             // this.GuardarGarantiasAndLog("guardar");
                 // this.loading.hide();
@@ -6595,22 +6595,7 @@ export class DisponiblesComponent implements OnInit {
           result => {
             this.AsignarCupo = true;
             this.loading.hide();
-            this.BloquearAsociado = false;
-            //AQUI
-            // if (this.garantiasAgregar?.length > 0) {
-            //   this.garantiasAgregar.forEach((garantia: any) => {
-              
-            //     this.DisponiblesServices
-            //       .GuardarGarantiaCTD(
-            //         result.IdCuentaCupo,
-            //         garantia.Consecutivo
-            //       )
-            //       .subscribe();
-                
-            //   });
-            
-            // }
-
+            this.BloquearAsociado = false;          
             this.notif.success('Exitoso', 'El asignar cupo se realizó correctamente.', ConfiguracionNotificacion.configRightTop);
             this.accionSeleccionada = false;
             this.btnGuardar = true;
@@ -7619,6 +7604,7 @@ export class DisponiblesComponent implements OnInit {
     this.DisponibleForm.get('IdLinea')?.setValue(Datos.IdLinea);
     this.DisponibleForm.get('NombreLinea')?.setValue(Datos.NombreLinea);
     this.DisponibleForm.get('IdPlazo')?.setValue(Datos.IdPlazo);
+    this.DisponibleForm.get('IdAsesorRadicado')?.setValue(Datos.IdAsesor);
   }
   CancelarCupo() {
     this.loading.show();
@@ -8849,6 +8835,7 @@ export class DisponiblesComponent implements OnInit {
     const CuotaManejo = new FormControl('', []);
     const FechaRediferir = new FormControl('', []);
     const IdPlazo = new FormControl('', []);
+    const IdAsesorRadicado = new FormControl('', []);
     const FechaCambioPlazo = new FormControl('', []);
     const IdDiaCorte = new FormControl('', []);
     const CupoAprobado = new FormControl('', []);
@@ -8976,6 +8963,7 @@ export class DisponiblesComponent implements OnInit {
       CuotaManejo: CuotaManejo,
       FechaRediferir: FechaRediferir,
       IdPlazo: IdPlazo,
+      IdAsesorRadicado: IdAsesorRadicado,
       FechaCambioPlazo: FechaCambioPlazo,
       IdDiaCorte: IdDiaCorte,
       CupoAprobado: CupoAprobado,
