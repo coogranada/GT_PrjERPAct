@@ -52,6 +52,7 @@ export const GT_Permisos = [
     { OperacionesModulos: 50 },
     { DebitosAutomaticos: 51 },
     { GestionBanner: 67 },
-    { Llaves : 68}
+    { Llaves : 68},    
+    { ConsolidarInformes: 92 },
 ];
 

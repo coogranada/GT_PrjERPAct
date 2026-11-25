@@ -176,6 +176,7 @@ export class LayoutComponent implements OnInit,OnDestroy {
   public Utilidades = false;
   public CrearNotificaciones = false;
   public DiferenciasSaldos = false;
+  public ConsolidarInformes = false;
   /* Fin utilidades */
 
   /* auditorias */
@@ -290,7 +291,7 @@ export class LayoutComponent implements OnInit,OnDestroy {
   public InformesModel: any;
   public InformesInternoModel: any;
   public ConciliacionComisionesModel: any;
-  public DebitosAutomaticosModel: any;
+    public DebitosAutomaticosModel: any;
   public GestionOperacionesModel: any;
   public TransaccionesModel: any;
   public CanalesExternosModel: any;
@@ -307,6 +308,7 @@ export class LayoutComponent implements OnInit,OnDestroy {
   public UtilidadesModel: any;
   public CrearNotificacionesModel: any;
   public DiferenciasSaldosModel: any;
+  public ConsolidarInformesModel: any;
   /* Fin utilidades */
 
   /* auditorias */
@@ -982,6 +984,9 @@ this.userIdle.onTimeout().subscribe(() => {
             } else if (element.IdModulo === 41) {
               this.DiferenciasSaldos = true;
               this.DiferenciasSaldosModel = element;
+            } else if (element.IdModulo === 92) {
+              this.ConsolidarInformes = true;
+              this.ConsolidarInformesModel = element;
             }
             /* Fin utilidades */
 

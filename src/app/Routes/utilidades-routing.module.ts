@@ -3,11 +3,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { CrearNotificacionesComponent } from '../Components/Utilidades/crear-notificaciones/crear-notificaciones.component';
 import { ConciliacionCompensacionComponent } from '../Components/Utilidades/conciliacion-compensacion/conciliacion-compensacion.component';
 import { DiferenciasSaldosComponent } from '../Components/Utilidades/diferencias-saldos/diferencias-saldos.component';
+import { ConsolidarInformesComponent } from '../Components/Utilidades/consolidar-informes/consolidar-informes.component';
 
 const routes: Routes = [
   { path: "CrearNotificaciones", component: CrearNotificacionesComponent },
   { path: "ConciliacionCompensacion", component: ConciliacionCompensacionComponent },
   { path: "DiferenciasSaldos", component: DiferenciasSaldosComponent },
+  { path: "ConsolidarInformes", component: ConsolidarInformesComponent },
 ];
 
 @NgModule({

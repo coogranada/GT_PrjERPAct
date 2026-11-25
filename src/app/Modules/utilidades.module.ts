@@ -8,16 +8,18 @@ import { NgxLoadingModule } from 'ngx-loading';
 import { CrearNotificacionesComponent } from '../Components/Utilidades/crear-notificaciones/crear-notificaciones.component';
 import { ConciliacionCompensacionComponent } from '../Components/Utilidades/conciliacion-compensacion/conciliacion-compensacion.component';
 import { DiferenciasSaldosComponent } from '../Components/Utilidades/diferencias-saldos/diferencias-saldos.component';
-
+import { ConsolidarInformesComponent } from '../Components/Utilidades/consolidar-informes/consolidar-informes.component';
 
 
 @NgModule({
   declarations: [
     CrearNotificacionesComponent,
     ConciliacionCompensacionComponent,
-    DiferenciasSaldosComponent
+    DiferenciasSaldosComponent,   
+
   ],
   imports: [
+    ConsolidarInformesComponent,
     CommonModule,
     UtilidadesRoutingModule,
     NguiAutoCompleteModule,

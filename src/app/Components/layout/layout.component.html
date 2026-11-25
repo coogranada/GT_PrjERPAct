@@ -682,6 +682,11 @@
                                                 (click)="setModuloLocalStorage(ConciliacionComisionesModel.IdModuloPermiso)">Conciliación
                                                 compensación</a>
                                         </li>
+                                        <li id="consolidarinformes" *ngIf="ConsolidarInformes">
+                                            <a [routerLink]="['/Utilidades/ConsolidarInformes']"
+                                                (click)="setModuloLocalStorage(ConsolidarInformesModel.IdModuloPermiso)">Consolidar informes
+                                                </a>
+                                        </li>
                                         <!--<li id="conciliacionComisiones">
                                                 <a [routerLink]="['/Informes/ConciliacionCompensacion']" (click)="setModuloLocalStorage(ConciliacionComisionesModel.IdModuloPermiso)">Conciliación compensación</a>
                                             </li>-->
