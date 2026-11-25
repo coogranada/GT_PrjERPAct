@@ -1,0 +1,1012 @@
+.gestion-garantias {
+  width: 100%;
+  padding: 0;
+  color: #565656;
+}
+
+/* ==============================================================
+   PANEL GENERAL
+============================================================== */
+
+.panel-principal {
+  border: 1px solid #dddddd;
+  border-radius: 2px;
+  box-shadow: none;
+}
+
+.encabezado-modulo {
+  display: flex;
+  align-items: center;
+  min-height: 54px;
+  padding: 10px 15px;
+  background: #ffffff;
+  border-bottom: 1px solid #dddddd;
+}
+
+.titulo-modulo {
+  margin: 0;
+  color: #565656;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.subtitulo-modulo {
+  display: block;
+  margin-top: 3px;
+  color: #888888;
+  font-size: 12px;
+}
+
+.panel-body {
+  padding: 18px;
+}
+
+/* ==============================================================
+   BÚSQUEDA
+============================================================== */
+
+.seccion-busqueda {
+  padding-bottom: 14px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.textNegrilla {
+  color: #565656;
+  font-weight: 700;
+}
+
+.selector-estado {
+  display: inline-flex;
+  border: 1px solid #dddddd;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.selector-estado .btn {
+  min-width: 100px;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.selector-activo {
+  background: #2196f3;
+  color: #ffffff;
+}
+
+.selector-activo:hover,
+.selector-activo:focus {
+  background: #1e88e5;
+  color: #ffffff;
+}
+
+.selector-inactivo {
+  background: #ffffff;
+  color: #565656;
+}
+
+.selector-inactivo:hover {
+  background: #f2f2f2;
+}
+
+.acciones-busqueda {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 24px;
+}
+
+.informacion-asociado {
+  margin-top: 12px;
+}
+
+.mensaje-general {
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+
+/* ==============================================================
+   SECCIONES
+============================================================== */
+
+.seccion-contenido,
+.seccion-garantias {
+  margin-top: 20px;
+}
+
+.titulo-seccion,
+.titulo-tabla-garantias {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 36px;
+  padding: 8px 12px;
+  color: #565656;
+  background: #f5f5f5;
+  border: 1px solid #dddddd;
+  border-bottom: 0;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.contador-registros {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 20px;
+  padding: 0 7px;
+  color: #ffffff;
+  background: #8e2867;
+  border-radius: 10px;
+  font-size: 11px;
+}
+
+/* ==============================================================
+   TABLAS
+============================================================== */
+
+.table {
+  margin-bottom: 0;
+}
+
+.table thead th {
+  color: #565656;
+  background: #ffffff;
+  border-bottom: 2px solid #dddddd;
+  font-size: 12px;
+  font-weight: 700;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.table tbody tr {
+  min-height: 42px;
+}
+
+.table tbody td {
+  padding: 9px 10px;
+  font-size: 12px;
+  vertical-align: middle;
+}
+
+.encabezado-fijo thead th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: #ffffff;
+}
+
+.scroll-creditos {
+  max-height: 230px;
+  overflow: auto;
+  border: 1px solid #dddddd;
+}
+
+.scroll-garantias {
+  height: 340px;
+  max-height: 340px;
+  overflow: auto;
+  border: 1px solid #dddddd;
+}
+
+.fila-seleccionable {
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.fila-seleccionable:hover {
+  background: #f7f7f7;
+}
+
+tr.tr-selected,
+tr.tr-selected:hover {
+  background: #e5e5e5 !important;
+  box-shadow: inset 4px 0 0 #8e2867;
+}
+
+.columna-seleccion {
+  width: 105px;
+  text-align: center;
+}
+
+.cuenta {
+  white-space: nowrap;
+}
+
+.descripcion-garantia {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.garantia-tooltip {
+  cursor: help;
+  border-bottom: 1px dotted #777777;
+}
+
+/* ==============================================================
+   GARANTÍAS DISTRIBUIDAS
+============================================================== */
+
+.credito-actual {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  min-height: 40px;
+  margin-bottom: 12px;
+  padding: 9px 12px;
+  background: #fafafa;
+  border: 1px solid #dddddd;
+  font-size: 12px;
+}
+
+.credito-actual-etiqueta {
+  color: #777777;
+}
+
+.separador {
+  color: #bbbbbb;
+}
+
+.distribucion-garantias {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    58px
+    minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+}
+
+.panel-garantias {
+  min-width: 0;
+}
+
+/* ==============================================================
+   BOTONES CENTRALES
+============================================================== */
+
+.acciones-transferencia {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+}
+
+.btn-transferencia {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 34px;
+  padding: 0;
+  border-radius: 3px;
+  font-size: 15px;
+}
+
+.btn-transferencia:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.Gt-btn-verde {
+  color: #ffffff;
+  background: #219653;
+  border-color: #1d874a;
+}
+
+.Gt-btn-verde:hover,
+.Gt-btn-verde:focus {
+  color: #ffffff;
+  background: #197a43;
+  border-color: #176c3c;
+}
+
+.Gt-btn-morado {
+  color: #ffffff;
+  background: #8e2867;
+  border-color: #7c235b;
+}
+
+.Gt-btn-morado:hover,
+.Gt-btn-morado:focus {
+  color: #ffffff;
+  background: #742154;
+  border-color: #651c49;
+}
+
+/* ==============================================================
+   MENSAJES Y CARGA
+============================================================== */
+
+.estado-carga-garantias {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 90px;
+  margin-top: 18px;
+  color: #777777;
+  border: 1px solid #dddddd;
+  background: #fafafa;
+}
+
+.estado-carga-garantias i {
+  margin-right: 8px;
+}
+
+.mensaje-tabla {
+  height: 340px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0;
+  text-align: center;
+}
+
+.spinner {
+  display: inline-block;
+  animation: girar 0.8s linear infinite;
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==============================================================
+   RESUMEN
+============================================================== */
+
+.resumen-garantias {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  max-width: 760px;
+  margin: 26px auto 18px;
+  padding: 15px 20px;
+  background: #ffffff;
+  border: 4px solid #c7c7c7;
+}
+
+.resumen-item {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 170px;
+  padding: 3px 18px;
+  text-align: center;
+}
+
+.resumen-etiqueta {
+  margin-bottom: 5px;
+  color: #666666;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.resumen-valor {
+  color: #444444;
+  font-size: 13px;
+}
+
+.resumen-separador {
+  width: 1px;
+  background: #dddddd;
+}
+
+.valor-negativo {
+  color: #b71c1c;
+}
+
+/* ==============================================================
+   BARRA DE DISPONIBILIDAD
+============================================================== */
+
+.bloque-disponibilidad {
+  margin-top: 18px;
+}
+
+.encabezado-disponibilidad {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+
+.barra-disponibilidad {
+  width: 100%;
+  height: 22px;
+  overflow: hidden;
+  background: #eeeeee;
+  border: 1px solid #d5d5d5;
+  border-radius: 3px;
+}
+
+.barra-disponibilidad-valor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-width: 0;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition:
+    width 0.35s ease,
+    background-color 0.35s ease;
+}
+
+.disponibilidad-verde {
+  background: #219653;
+}
+
+.disponibilidad-amarilla {
+  color: #222222;
+  background: #ffc107;
+}
+
+.disponibilidad-morada {
+  background: #8e2867;
+}
+
+/* ==============================================================
+   RESPONSIVE
+============================================================== */
+
+@media (max-width: 1199px) {
+  .distribucion-garantias {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .acciones-transferencia {
+    flex-direction: row;
+    padding: 2px 0;
+  }
+
+  .btn-transferencia {
+    transform: rotate(90deg);
+  }
+
+  .scroll-garantias {
+    height: 290px;
+    max-height: 290px;
+  }
+
+  .mensaje-tabla {
+    height: 290px;
+  }
+}
+
+@media (max-width: 767px) {
+  .panel-body {
+    padding: 12px;
+  }
+
+  .acciones-busqueda {
+    padding-top: 0;
+  }
+
+  .selector-estado {
+    display: flex;
+    width: 100%;
+  }
+
+  .selector-estado .btn {
+    flex: 1 1 50%;
+  }
+
+  .resumen-garantias {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .resumen-item {
+    min-width: 0;
+    padding: 10px;
+  }
+
+  .resumen-separador {
+    width: 100%;
+    height: 1px;
+  }
+
+  .credito-actual {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .credito-actual .separador {
+    display: none;
+  }
+}
+
+/* ==============================================================
+   BÚSQUEDA PRINCIPAL
+============================================================== */
+
+.seccion-busqueda {
+  padding: 14px 16px 16px;
+  background: #ffffff;
+  border-bottom: 1px solid #e1e1e1;
+}
+
+.barra-busqueda {
+  display: grid;
+  grid-template-columns:
+    minmax(280px, 420px)
+    auto
+    minmax(270px, auto);
+  align-items: end;
+  gap: 12px;
+  width: 100%;
+}
+
+/* ==============================================================
+   DOCUMENTO
+============================================================== */
+
+.bloque-documento {
+  min-width: 0;
+}
+
+.bloque-documento .textNegrilla,
+.informacion-asociado .textNegrilla {
+  display: block;
+  margin-bottom: 7px;
+}
+
+.control-busqueda-documento {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+}
+
+.input-documento {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 34px;
+  padding: 6px 10px;
+
+  border: 0;
+  border-bottom: 1px solid #cccccc;
+  border-radius: 0;
+  box-shadow: none;
+
+  color: #565656;
+  background: transparent;
+}
+
+.input-documento:focus {
+  border-bottom-color: #219653;
+  box-shadow: inset 0 -1px 0 #219653;
+  outline: none;
+}
+
+.input-documento:disabled {
+  background: #f7f7f7;
+  cursor: not-allowed;
+}
+
+/*
+ * Botón de lupa pegado al campo.
+ * Mantiene el verde utilizado por los buscadores del ERP.
+ */
+.btn-consultar-documento {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 36px;
+  width: 36px;
+  height: 34px;
+  min-width: 36px;
+
+  margin: 0;
+  padding: 0;
+
+  border-radius: 2px;
+  font-size: 14px;
+}
+
+.btn-consultar-documento:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* ==============================================================
+   LIMPIAR
+============================================================== */
+
+.bloque-limpiar {
+  display: flex;
+  align-items: flex-end;
+}
+
+.btn-limpiar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+
+  height: 34px;
+  padding: 6px 14px;
+
+  border-radius: 2px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Color institucional morado */
+.Gt-btn-morado {
+  color: #ffffff;
+  background: #8e2867;
+  border-color: #7d245c;
+}
+
+.Gt-btn-morado:hover,
+.Gt-btn-morado:focus,
+.Gt-btn-morado:active {
+  color: #ffffff;
+  background: #742154;
+  border-color: #651c49;
+}
+
+.Gt-btn-morado:disabled {
+  color: #ffffff;
+  background: #b78eaa;
+  border-color: #b78eaa;
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+/* ==============================================================
+   FILTRO DE CRÉDITOS
+============================================================== */
+
+.bloque-filtro-creditos {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-self: end;
+}
+
+.etiqueta-filtro {
+  display: block;
+  margin-bottom: 7px;
+
+  color: #565656;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/*
+ * Switch de dos estados:
+ * izquierda = Activos, verde
+ * derecha = Cancelados, morado
+ */
+.switch-estado {
+  position: relative;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+
+  width: 270px;
+  height: 38px;
+  padding: 3px;
+
+  overflow: hidden;
+
+  background: #eeeeee;
+  border: 1px solid #d4d4d4;
+  border-radius: 20px;
+
+  cursor: pointer;
+  outline: none;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08);
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.switch-estado:hover {
+  border-color: #b5b5b5;
+}
+
+.switch-estado:focus {
+  box-shadow:
+    0 0 0 2px rgba(142, 40, 103, 0.18),
+    inset 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.switch-estado:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+/* Fondo móvil seleccionado */
+.switch-selector {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+
+  width: calc(50% - 3px);
+
+  border-radius: 16px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.18);
+
+  transition:
+    transform 0.25s ease,
+    background-color 0.25s ease;
+}
+
+/* Estado activos */
+.switch-activos .switch-selector {
+  background: #219653;
+  transform: translateX(0);
+}
+
+/* Estado cancelados */
+.switch-cancelados .switch-selector {
+  background: #8e2867;
+  transform: translateX(100%);
+}
+
+/* Texto de cada opción */
+.switch-opcion {
+  position: relative;
+  z-index: 2;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  height: 30px;
+
+  color: #666666;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15px;
+  text-transform: uppercase;
+
+  transition: color 0.2s ease;
+}
+
+.switch-activos .switch-opcion-activos,
+.switch-cancelados .switch-opcion-cancelados {
+  color: #ffffff;
+}
+
+.switch-activos .switch-opcion-cancelados,
+.switch-cancelados .switch-opcion-activos {
+  color: #666666;
+}
+
+/* Indicadores tipo semáforo */
+.semaforo {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, 0.12);
+}
+
+.semaforo-verde {
+  background: #3fc477;
+}
+
+.semaforo-morado {
+  background: #b74a91;
+}
+
+/*
+ * Cuando la opción no está seleccionada, el punto conserva
+ * el color semafórico sobre el fondo gris.
+ */
+.switch-activos .switch-opcion-cancelados .semaforo-morado {
+  border-color: #8e2867;
+}
+
+.switch-cancelados .switch-opcion-activos .semaforo-verde {
+  border-color: #219653;
+}
+
+/* ==============================================================
+   INFORMACIÓN DEL ASOCIADO
+============================================================== */
+
+.informacion-asociado {
+  width: min(100%, 520px);
+  margin-top: 15px;
+}
+
+.input-nombre-asociado {
+  height: 34px;
+
+  border: 0;
+  border-bottom: 1px solid #cccccc;
+  border-radius: 0;
+  box-shadow: none;
+
+  color: #565656;
+  background: #fafafa;
+}
+
+/* ==============================================================
+   MENSAJE
+============================================================== */
+
+.mensaje-general {
+  margin-top: 14px;
+  margin-bottom: 0;
+}
+
+/* ==============================================================
+   SPINNER
+============================================================== */
+
+.spinner {
+  display: inline-block;
+  animation: girar 0.8s linear infinite;
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==============================================================
+   RESPONSIVE
+============================================================== */
+
+@media (max-width: 991px) {
+  .barra-busqueda {
+    grid-template-columns: minmax(240px, 1fr) auto;
+  }
+
+  .bloque-filtro-creditos {
+    grid-column: 1 / -1;
+    align-items: flex-start;
+    justify-self: stretch;
+  }
+}
+
+@media (max-width: 600px) {
+  .barra-busqueda {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .bloque-limpiar {
+    justify-content: flex-start;
+  }
+
+  .bloque-filtro-creditos {
+    grid-column: auto;
+    align-items: stretch;
+  }
+
+  .switch-estado {
+    width: 100%;
+  }
+
+  .btn-limpiar {
+    width: 100%;
+  }
+}
+
+/* ==============================================================
+   IDENTIFICACIÓN DE PROPIETARIOS
+============================================================== */
+
+.mensaje-codeudores {
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  color: #666666;
+  background: #fafafa;
+  border: 1px solid #dddddd;
+  border-left: 4px solid #8e2867;
+  font-size: 11px;
+}
+
+.mensaje-codeudores i {
+  margin-right: 5px;
+  color: #8e2867;
+}
+
+tr.garantia-titular {
+  background-color: #ffffff;
+}
+
+tr.garantia-codeudor-1 {
+  background-color: #f5eaf2;
+}
+
+tr.garantia-codeudor-2 {
+  background-color: #eaf6ef;
+}
+
+tr.garantia-codeudor-3 {
+  background-color: #ebf3fa;
+}
+
+tr.garantia-codeudor-4 {
+  background-color: #fff7df;
+}
+
+tr.garantia-codeudor-5 {
+  background-color: #faecef;
+}
+
+tr.garantia-codeudor-1:hover,
+tr.garantia-codeudor-2:hover,
+tr.garantia-codeudor-3:hover,
+tr.garantia-codeudor-4:hover,
+tr.garantia-codeudor-5:hover {
+  filter: brightness(0.97);
+}
+
+/* La selección prevalece sobre el color del propietario. */
+tr.tr-selected,
+tr.tr-selected:hover {
+  background-color: #e1d3dc !important;
+  box-shadow: inset 4px 0 0 #8e2867;
+}
+
+.columna-propietario {
+  min-width: 155px;
+  cursor: help;
+}
+
+.tipo-propietario {
+  display: block;
+  color: #565656;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.nombre-propietario {
+  display: block;
+  max-width: 180px;
+  overflow: hidden;
+  color: #666666;
+  font-size: 10px;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.documento-propietario {
+  display: block;
+  color: #888888;
+  font-size: 10px;
+  line-height: 1.3;
+}
+
+
+.table tbody tr.tr-selected,
+.table tbody tr.tr-selected:hover {
+  background-color: rgb(229, 229, 229) !important;
+  box-shadow: inset 4px 0 0 #8e2867;
+}
