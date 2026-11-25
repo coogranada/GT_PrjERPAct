@@ -1,1 +1,464 @@
-<p>gestion-garantias works!</p>
+<div class="gestion-garantias">
+  <div class="panel panel-default panel-principal">
+
+    <!-- ENCABEZADO -->
+    <div class="panel-heading encabezado-modulo">
+      <div>
+        <h5 class="titulo-modulo">Gestión de garantías</h5>
+        <span class="subtitulo-modulo">Consulta, matrícula y liberación de garantías</span>
+      </div>
+    </div>
+
+    <div class="panel-body">
+
+      <!-- BÚSQUEDA -->
+      <div class="seccion-busqueda">
+        <div class="barra-busqueda">
+
+          <div class="bloque-documento">
+            <label class="textNegrilla" for="numeroDocumento">Número de documento</label>
+
+            <div class="control-busqueda-documento">
+              <input
+                id="numeroDocumento"
+                name="numeroDocumento"
+                type="text"
+                class="form-control input-documento"
+                [(ngModel)]="numeroDocumento"
+                [disabled]="cargando"
+                placeholder="Ingrese el documento"
+                autocomplete="off"
+                inputmode="numeric"
+                (input)="normalizarDocumento()"
+                (keyup.enter)="consultarCreditos()">
+
+              <button
+                type="button"
+                class="btn Gt-btn-verde btn-consultar-documento legitRipple"
+                [disabled]="cargando || !numeroDocumento.trim()"
+                data-tooltip="Consultar asociado"
+                aria-label="Consultar asociado"
+                (click)="consultarCreditos()">
+
+                <i *ngIf="!cargando" class="icon-search4"></i>
+                <i *ngIf="cargando" class="icon-spinner2 spinner"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="bloque-limpiar">
+            <button
+              type="button"
+              class="btn Gt-btn-morado btn-limpiar legitRipple"
+              [disabled]="cargando"
+              data-tooltip="Limpiar consulta"
+              aria-label="Limpiar consulta"
+              (click)="limpiar()">
+
+              <i class="icon-eraser2"></i>
+              Limpiar
+            </button>
+          </div>
+
+          <div class="bloque-filtro-creditos">
+            <span class="etiqueta-filtro">Estado de los créditos</span>
+
+            <button
+              type="button"
+              class="switch-estado"
+              [class.switch-activos]="!consultarCancelados"
+              [class.switch-cancelados]="consultarCancelados"
+              [disabled]="cargando"
+              [attr.aria-pressed]="consultarCancelados"
+              [attr.aria-label]="consultarCancelados
+                ? 'Mostrando créditos cancelados'
+                : 'Mostrando créditos activos'"
+              (click)="cambiarTipoConsulta(!consultarCancelados)">
+
+              <span class="switch-opcion switch-opcion-activos">
+                <span class="semaforo semaforo-verde"></span>
+                Activos
+              </span>
+
+              <span class="switch-opcion switch-opcion-cancelados">
+                <span class="semaforo semaforo-morado"></span>
+                Cancelados
+              </span>
+
+              <span class="switch-selector"></span>
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="mensaje" class="alert alert-info mensaje-general" role="alert">
+          {{ mensaje }}
+        </div>
+
+        <div *ngIf="nombreAsociado" class="informacion-asociado">
+          <label class="textNegrilla" for="nombreAsociado">Nombre del asociado</label>
+
+          <input
+            id="nombreAsociado"
+            type="text"
+            class="form-control input-nombre-asociado"
+            [value]="nombreAsociado"
+            readonly>
+        </div>
+      </div>
+
+      <!-- CRÉDITOS -->
+      <section *ngIf="creditos.length > 0" class="seccion-contenido">
+        <div class="titulo-seccion">
+          <span>Créditos del asociado</span>
+          <span class="contador-registros">{{ creditos.length }}</span>
+        </div>
+
+        <div class="table-responsive scroll-creditos panel panel-default">
+          <table class="table table-hover encabezado-fijo tabla-creditos">
+            <thead>
+              <tr>
+                <th class="columna-seleccion">Seleccionar</th>
+                <th>Cuenta</th>
+                <th>Línea</th>
+                <th class="text-right">Saldo deuda</th>
+                <th class="text-center">Plazo</th>
+                <th>Estado</th>
+                <th class="text-center">Fecha apertura</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr
+                *ngFor="let credito of creditos"
+                class="fila-seleccionable"
+                [class.tr-selected]="esCreditoSeleccionado(credito)"
+                (click)="seleccionarCredito(credito)">
+
+                <td class="text-center">
+                  <input
+                    type="radio"
+                    name="creditoSeleccionado"
+                    [value]="credito.idCuenta"
+                    [checked]="esCreditoSeleccionado(credito)"
+                    [disabled]="cargandoGarantias || cargandoCodeudores"
+                    aria-label="Seleccionar crédito"
+                    (click)="$event.stopPropagation()"
+                    (change)="seleccionarCredito(credito)">
+                </td>
+
+                <td class="cuenta">{{ credito.cuenta }}</td>
+                <td>{{ credito.codigoNombreLinea }}</td>
+
+                <td class="text-right">
+                  {{ credito.saldoDeuda | currency:'$':'symbol':'1.2-2' }}
+                </td>
+
+                <td class="text-center">{{ credito.plazo }}</td>
+                <td>{{ credito.estado }}</td>
+                <td class="text-center">{{ credito.fechaApertura | date:'yyyy/MM/dd' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- CARGA -->
+      <div *ngIf="cargandoGarantias || cargandoCodeudores" class="estado-carga-garantias">
+        <i class="icon-spinner2 spinner"></i>
+        Consultando garantías del titular y codeudores...
+      </div>
+
+      <!-- GARANTÍAS -->
+      <section
+        *ngIf="creditoSeleccionado && !cargandoGarantias && !cargandoCodeudores"
+        class="seccion-garantias">
+
+        <div class="credito-actual">
+          <span class="credito-actual-etiqueta">Crédito seleccionado:</span>
+          <strong>{{ creditoSeleccionado.cuenta }}</strong>
+          <span class="separador">|</span>
+          <span>{{ creditoSeleccionado.codigoNombreLinea }}</span>
+          <span class="separador">|</span>
+          <strong>{{ creditoSeleccionado.saldoDeuda | currency:'$':'symbol':'1.2-2' }}</strong>
+        </div>
+
+        <div *ngIf="mensajeCodeudores" class="mensaje-codeudores">
+          <i class="icon-info22"></i>
+          {{ mensajeCodeudores }}
+        </div>
+
+        <div class="distribucion-garantias">
+
+          <!-- GARANTÍAS DISPONIBLES -->
+          <div class="panel-garantias">
+            <div class="titulo-tabla-garantias">
+              <span>Garantías disponibles</span>
+              <span class="contador-registros">{{ garantiasDisponibles.length }}</span>
+            </div>
+
+            <div *ngIf="mensajeGarantiasDisponibles" class="alert alert-secondary mensaje-tabla">
+              {{ mensajeGarantiasDisponibles }}
+            </div>
+
+            <div
+              *ngIf="garantiasDisponibles.length > 0"
+              class="table-responsive scroll-garantias panel panel-default">
+
+              <table class="table table-hover encabezado-fijo">
+                <thead>
+                  <tr>
+                    <th>Tipo garantía</th>
+                    <th>Garantía</th>
+                    <th>Clase</th>
+                    <th>Descripción</th>
+                    <th class="text-right">Valor cobertura</th>
+                    <th class="text-right">Valor respalda</th>
+                    <th class="text-center">Créditos</th>
+                    <th class="text-center">Fecha Matricula</th>
+                    <th class="text-center">Fecha último avalúo</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr
+                    *ngFor="let garantia of garantiasDisponibles"
+                    class="fila-seleccionable"
+                    [class.tr-selected]="esGarantiaDisponibleSeleccionada(garantia)"
+                    [class.garantia-titular]="garantia.esTitular"
+                    [class.garantia-codeudor-1]="!garantia.esTitular && garantia.indiceColorPropietario === 1"
+                    [class.garantia-codeudor-2]="!garantia.esTitular && garantia.indiceColorPropietario === 2"
+                    [class.garantia-codeudor-3]="!garantia.esTitular && garantia.indiceColorPropietario === 3"
+                    [class.garantia-codeudor-4]="!garantia.esTitular && garantia.indiceColorPropietario === 4"
+                    [class.garantia-codeudor-5]="!garantia.esTitular && garantia.indiceColorPropietario === 5"
+                    (click)="seleccionarGarantiaDisponible(garantia)">
+
+                    <td>{{ obtenerTipoGarantia(garantia.tipo) }}</td>
+
+                    <td>
+                      <span
+                        class="garantia-tooltip"
+                        [attr.title]="obtenerTooltipPropietarios(
+                          garantia.propietariosGarantia
+                        )">
+
+                        {{ garantia.matricula }}
+                      </span>
+                    </td>
+
+                    <td>{{ garantia.clase }}</td>
+
+                    <td class="descripcion-garantia" [attr.title]="garantia.descripcion">
+                      {{ garantia.descripcion }}
+                    </td>
+
+                    <td class="text-right">
+                      {{ garantia.cobertura | currency:'$':'symbol':'1.2-2' }}
+                    </td>
+
+                    <td class="text-right">
+                      {{ garantia.respalda | currency:'$':'symbol':'1.2-2' }}
+                    </td>
+
+                    <td class="text-center">{{ garantia.cantidadCreditos }}</td>
+
+                    <td class="text-center">
+                      {{
+                        garantia.fechaMatricula
+                          ? (garantia.fechaMatricula | date:'yyyy/MM/dd')
+                          : '-'
+                      }}
+                    </td>
+                    <td class="text-center">
+                      {{
+                        garantia.fechaUltimoAvaluo
+                          ? (garantia.fechaUltimoAvaluo | date:'yyyy/MM/dd')
+                          : '-'
+                      }}
+                    </td>                    
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- BOTONES CENTRALES -->
+          <div class="acciones-transferencia">
+            <button
+              type="button"
+              class="btn Gt-btn-verde btn-transferencia legitRipple"
+              [disabled]="garantiasDisponibles.length === 0"
+              data-tooltip="Matricular todas las garantías"
+              aria-label="Matricular todas las garantías"
+              (click)="matricularTodas()">
+
+              <i class="icon-forward3"></i>
+            </button>
+
+            <button
+              type="button"
+              class="btn Gt-btn-morado btn-transferencia legitRipple"
+              [disabled]="!garantiaAsignadaSeleccionada"
+              data-tooltip="Retirar la garantía seleccionada"
+              aria-label="Retirar la garantía seleccionada"
+              (click)="retirarGarantiaSeleccionada()">
+
+              <i class="icon-backward2"></i>
+            </button>
+
+            <button
+              type="button"
+              class="btn Gt-btn-morado btn-transferencia legitRipple"
+              [disabled]="garantiasAsignadas.length === 0"
+              data-tooltip="Retirar todas las garantías"
+              aria-label="Retirar todas las garantías"
+              (click)="retirarTodasLasGarantias()">
+
+              <i class="icon-backward"></i>
+            </button>
+          </div>
+
+          <!-- GARANTÍAS MATRICULADAS -->
+          <div class="panel-garantias">
+            <div class="titulo-tabla-garantias">
+              <span>Garantías matriculadas</span>
+              <span class="contador-registros">{{ garantiasAsignadas.length }}</span>
+            </div>
+
+            <div *ngIf="mensajeGarantiasAsignadas" class="alert alert-secondary mensaje-tabla">
+              {{ mensajeGarantiasAsignadas }}
+            </div>
+
+            <div
+              *ngIf="garantiasAsignadas.length > 0"
+              class="table-responsive scroll-garantias panel panel-default">
+
+              <table class="table table-hover encabezado-fijo">
+                <thead>
+                  <tr>
+                    <th>Tipo garantía</th>
+                    <th>Garantía</th>
+                    <th>Clase</th>
+                    <th>Descripción</th>
+                    <th class="text-right">Valor cobertura</th>
+                    <th class="text-right">Valor respalda</th>
+                    <th class="text-center">Créditos</th>
+                    <th class="text-center">Fecha Matricula</th>
+                    <th class="text-center">Fecha último avalúo</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr
+                    *ngFor="let garantia of garantiasAsignadas"
+                    class="fila-seleccionable"
+                    [class.tr-selected]="esGarantiaAsignadaSeleccionada(garantia)"
+                    (click)="seleccionarGarantiaAsignada(garantia)">
+
+                    <td>{{ obtenerTipoGarantia(garantia.tipo) }}</td>
+
+                    <td>
+                      <span
+                        class="garantia-tooltip"
+                        [attr.title]="obtenerTooltipPropietarios(
+                          garantia.propietariosGarantia
+                        )">
+                      
+                        {{ garantia.matricula }}
+                      </span>
+                    </td>
+
+                    <td>{{ garantia.clase }}</td>
+
+                    <td class="descripcion-garantia" [attr.title]="garantia.descripcion">
+                      {{ garantia.descripcion }}
+                    </td>
+
+                    <td class="text-right">
+                      {{ garantia.cobertura | currency:'$':'symbol':'1.2-2' }}
+                    </td>
+
+                    <td class="text-right">
+                      {{ garantia.totalDeuda | currency:'$':'symbol':'1.2-2' }}
+                    </td>
+
+                    <td class="text-center">{{ garantia.cantidadCreditos }}</td>
+
+                    <td class="text-center">
+                      {{
+                        garantia.fechaUltimoAvaluo
+                          ? (garantia.fechaMatricula | date:'yyyy/MM/dd')
+                          : '-'
+                      }}
+                    </td>
+
+                    <td class="text-center">
+                      {{
+                        garantia.fechaUltimoAvaluo
+                          ? (garantia.fechaUltimoAvaluo | date:'yyyy/MM/dd')
+                          : '-'
+                      }}
+                    </td>                    
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- RESUMEN -->
+        <div class="resumen-garantias">
+          <div class="resumen-item">
+            <span class="resumen-etiqueta">Total cobertura</span>
+            <strong class="resumen-valor">
+              {{ totalCobertura | currency:'$':'symbol':'1.2-2' }}
+            </strong>
+          </div>
+
+          <div class="resumen-separador"></div>
+
+          <div class="resumen-item">
+            <span class="resumen-etiqueta">Total respaldado</span>
+            <strong class="resumen-valor">
+              {{ totalRespaldado | currency:'$':'symbol':'1.2-2' }}
+            </strong>
+          </div>
+
+          <div class="resumen-separador"></div>
+
+          <div class="resumen-item">
+            <span class="resumen-etiqueta">Valor disponible</span>
+
+            <strong class="resumen-valor" [class.valor-negativo]="valorDisponible < 0">
+              {{ valorDisponible | currency:'$':'symbol':'1.2-2' }}
+            </strong>
+          </div>
+        </div>
+
+        <!-- DISPONIBILIDAD -->
+        <div class="bloque-disponibilidad">
+          <div class="encabezado-disponibilidad">
+            <span class="textNegrilla">Disponibilidad de garantías</span>
+            <strong>{{ porcentajeDisponible | number:'1.0-0' }}%</strong>
+          </div>
+
+          <div
+            class="barra-disponibilidad"
+            role="progressbar"
+            [attr.aria-valuenow]="porcentajeDisponible"
+            aria-valuemin="0"
+            aria-valuemax="100">
+
+            <div
+              class="barra-disponibilidad-valor"
+              [ngClass]="claseDisponibilidad"
+              [style.width.%]="porcentajeDisponible">
+
+              <span>{{ porcentajeDisponible | number:'1.0-0' }}% disponible</span>
+            </div>
+          </div>
+        </div>
+
+      </section>
+    </div>
+  </div>
+</div>
